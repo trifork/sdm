@@ -1,0 +1,7 @@
+.pmd
+.project
+.settings
+.classpath
+build
+bin
+.gradle
