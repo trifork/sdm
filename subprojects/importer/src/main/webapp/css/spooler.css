@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+body { font-family: verdana, helvetica, sans-serif; background-color: #ffffff; background-image: url(../images/body_bg.gif); background-repeat: repeat-x; margin-top: 10px; margin-bottom: 10px; }
+
+table { text-align: left; margin-left: auto; margin-right: auto; border: 1px solid black; width: 752px; }
+table.element { text-align: left; border: 0px; width: 700px; }
+tr { background-color: #ffffff; }
+tr.header { font-size: 48px; }
+
+td { padding-left: 5px; }
+.success { color: #7db171; }
+.warning { color: #ffd700; }
+.failure { color: #db0000; }
+
+img.header { width: 0.8em; height: 0.9em; vertical-align:middle; }
+
+div.centered { text-align: center;} 
+div.space {margin: 15px 15px 15px 15px;}
+

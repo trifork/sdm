@@ -1,0 +1,14 @@
+include 'shared'
+include 'replication-gui'
+include 'replication-service'
+include 'importer'
+
+rootProject.name = 'stamdata'
+rootProject.children.each {project ->
+    String fileBaseName = project.name.replaceAll("\\p{Upper}") { "-${it.toLowerCase()}" }
+    String projectDirName = "subprojects/$fileBaseName"
+    project.projectDir = new File(settingsDir, projectDirName)
+    project.buildFileName = "${fileBaseName}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}

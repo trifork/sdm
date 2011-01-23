@@ -1,0 +1,57 @@
+apply plugin: 'java-base'
+
+libs = [
+	commons_io: 'commons-io:commons-io:2.0@jar',
+	commons_codec: 'commons-codec:commons-codec:1.4@jar',
+	slf4j_api: 'org.slf4j:slf4j-api:1.6.1@jar',
+	logback_core: 'ch.qos.logback:logback-core:0.9.27@jar',
+	logback_classic: 'ch.qos.logback:logback-classic:0.9.27@jar',
+	junit: 'junit:junit:4.8.2',
+	servlet_api: 'javax.servlet:servlet-api:2.4',
+	reflections: 'org.reflections:reflections:0.9.5-RC2',
+	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1@jar',
+	mysql_driver: 'mysql:mysql-connector-java:5.1.13',
+	mockito: 'org.mockito:mockito-core:1.8.5'
+]
+
+allprojects {
+	group = 'com.trifork'
+	version = '3.0.0'
+
+	repositories {
+		mavenRepo urls: 'http://gradle.artifactoryonline.com/gradle/libs'
+		mavenRepo urls: 'http://repository.jboss.com/maven2'
+		mavenRepo urls: 'http://download.java.net/maven/2/'
+		mavenRepo urls: 'http://reflections.googlecode.com/svn/repo'
+		mavenRepo urls: 'http://nexus.ci81.trifork.com/content/groups/public'
+	}
+
+	apply plugin: 'eclipse'
+
+	eclipseClasspath {
+		variables = [:]
+	}
+}
+
+subprojects {
+	apply plugin: 'java'
+	apply plugin: 'jetty'
+	
+	sourceCompatibility = 1.6
+	targetCompatibility = 1.6
+	
+	plugins.withType(WarPlugin).whenPluginAdded {
+		project.webXml = new File(webAppDir, 'WEB-INF/web.xml')
+		assert project.webAppDir.isDirectory()
+		assert project.webXml.isFile()
+	}
+	
+	// Exclude commons-logging from all dependencies
+	// since we will be using slf4j and backlog.
+	
+	configurations {
+		compile {
+			exclude group:"commons-logging"
+		}
+	}
+}

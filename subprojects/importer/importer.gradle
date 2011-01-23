@@ -1,0 +1,37 @@
+apply plugin: 'war'
+
+dependencies {
+	
+	// PARSERS
+	
+	compile project(':shared')
+
+	compile 'cron4j:cron4j:2.2.3'
+	compile 'joda-time:joda-time:1.6.2'
+	
+	compile libs.commons_io
+	compile libs.commons_codec
+	
+	runtime libs.mysql_driver
+	
+	testCompile libs.junit
+	testCompile libs.mockito
+	
+	// GUI
+	
+	providedCompile libs.servlet_api
+	runtime 'apache-taglibs:jstl:1.1.2@jar'
+    runtime 'apache-taglibs:standard:1.1.2@jar'
+	
+	// LOGGING
+	
+	compile libs.slf4j_api
+	runtime libs.logback_core
+	runtime libs.logback_classic
+}
+
+// To allow the app to be deployed to a webserver
+// inside eclise, we have to add the compile configuration
+// the the eclipse WTP project explicitly.
+
+eclipseWtp.plusConfigurations = [configurations.compile, configurations.runtime]
