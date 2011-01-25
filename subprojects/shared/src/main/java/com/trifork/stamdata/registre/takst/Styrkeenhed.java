@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlName;
+
 
 @Entity
 public class Styrkeenhed extends TakstRecord {
@@ -19,6 +21,7 @@ public class Styrkeenhed extends TakstRecord {
 
 	@Id
 	@Column
+	@XmlName("kode")
 	public String getStyrkeenhedKode() {
 
 		return enheder.getKode();
@@ -26,6 +29,7 @@ public class Styrkeenhed extends TakstRecord {
 
 
 	@Column
+	@XmlName("tekst")
 	public String getStyrkeenhedTekst() {
 
 		return enheder.getTekst();

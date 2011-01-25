@@ -1,18 +1,18 @@
 package com.trifork.stamdata.registre.yder;
 
+
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.DateUtils;
+import com.trifork.stamdata.*;
 
 
 @Entity
-public class Yderregister extends AbstractRecord {
-
+public class Yderregister extends AbstractRecord
+{
 	private String nummer;
 	private String telefon;
 	private String navn;
@@ -31,195 +31,202 @@ public class Yderregister extends AbstractRecord {
 
 	@Id
 	@Column
-	public String getNummer() {
+	public String getNummer()
+	{
 
 		return nummer;
 	}
 
 
-	public void setNummer(String nummer) {
+	public void setNummer(String nummer)
+	{
 
 		this.nummer = nummer;
 	}
 
 
 	@Column
-	public String getTelefon() {
-
+	public String getTelefon()
+	{
 		return telefon;
 	}
 
 
-	public void setTelefon(String telefon) {
-
+	public void setTelefon(String telefon)
+	{
 		this.telefon = telefon;
 	}
 
 
 	@Column
-	public String getNavn() {
-
+	public String getNavn()
+	{
 		return navn;
 	}
 
 
-	public void setNavn(String navn) {
-
+	public void setNavn(String navn)
+	{
 		this.navn = navn;
 	}
 
 
 	@Column
-	public String getVejnavn() {
-
+	public String getVejnavn()
+	{
 		return vejnavn;
 	}
 
 
-	public void setVejnavn(String vejnavn) {
-
+	public void setVejnavn(String vejnavn)
+	{
 		this.vejnavn = vejnavn;
 	}
 
 
 	@Column
-	public String getPostnummer() {
-
+	public String getPostnummer()
+	{
 		return postnummer;
 	}
 
 
-	public void setPostnummer(String postnummer) {
-
+	public void setPostnummer(String postnummer)
+	{
 		this.postnummer = postnummer;
 	}
 
 
 	@Column
-	public String getBynavn() {
-
+	public String getBynavn()
+	{
 		return bynavn;
 	}
 
 
-	public void setBynavn(String bynavn) {
-
+	public void setBynavn(String bynavn)
+	{
 		this.bynavn = bynavn;
 	}
 
 
 	@Column
-	public int getAmtNummer() {
-
+	public int getAmtNummer()
+	{
 		return amtNummer;
 	}
 
 
-	public void setAmtNummer(int amtNummer) {
-
+	public void setAmtNummer(int amtNummer)
+	{
 		this.amtNummer = amtNummer;
 	}
 
 
 	@Column
-	public String getEmail() {
-
+	public String getEmail()
+	{
 		return email;
 	}
 
 
-	public void setEmail(String email) {
-
+	public void setEmail(String email)
+	{
 		this.email = email;
 	}
 
 
 	@Column
-	public String getWww() {
-
+	public String getWww()
+	{
 		return www;
 	}
 
 
-	public void setWww(String www) {
-
+	public void setWww(String www)
+	{
 		this.www = www;
 	}
 
 
 	@Column
-	public String getHovedSpecialeKode() {
-
+	@XmlName("hovedspecialekode")
+	public String getHovedSpecialeKode()
+	{
 		return hovedSpecialeKode;
 	}
 
 
-	public void setHovedSpecialeKode(String hovedSpecialeKode) {
+	public void setHovedSpecialeKode(String hovedSpecialeKode)
+	{
 
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
 
 	@Column
-	public String getHovedSpecialeTekst() {
-
+	@XmlName("hovedspecialetekst")
+	public String getHovedSpecialeTekst()
+	{
 		return hovedSpecialeTekst;
 	}
 
 
-	public void setHovedSpecialeTekst(String hovedSpecialeTekst) {
+	public void setHovedSpecialeTekst(String hovedSpecialeTekst)
+	{
 
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
 
 	@Column
-	public String getHistID() {
-
+	public String getHistID()
+	{
 		return histID;
 	}
 
 
-	public void setHistID(String histID) {
+	public void setHistID(String histID)
+	{
 
 		this.histID = histID;
 	}
 
 
-	public Date getTilgangDato() {
-
+	public Date getTilgangDato()
+	{
 		return tilgangDato;
 	}
 
 
-	public void setTilgangDato(Date tilgangDato) {
-
+	public void setTilgangDato(Date tilgangDato)
+	{
 		this.tilgangDato = tilgangDato;
 	}
 
 
-	public Date getAfgangDato() {
-
+	public Date getAfgangDato()
+	{
 		return afgangDato;
 	}
 
 
-	public void setAfgangDato(Date afgangDato) {
-
+	public void setAfgangDato(Date afgangDato)
+	{
 		this.afgangDato = afgangDato;
 	}
 
 
 	@Override
-	public Date getValidFrom() {
-
+	public Date getValidFrom()
+	{
 		return tilgangDato;
 	}
 
 
 	@Override
-	public Date getValidTo() {
-
+	public Date getValidTo()
+	{
 		Date validTo;
 
 		if (afgangDato != null)
@@ -229,5 +236,4 @@ public class Yderregister extends AbstractRecord {
 
 		return validTo;
 	}
-
 }

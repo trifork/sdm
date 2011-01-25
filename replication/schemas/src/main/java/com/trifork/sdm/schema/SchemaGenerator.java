@@ -285,13 +285,11 @@ public class SchemaGenerator
 
 	private void handleColumns(XMLStreamWriter writer, Method method) throws XMLStreamException
 	{
-
 		// If the property is annotated with @ID we set minOccurs="1",
 		// and write that the element defined the natural key for this record.
 
 		if (method.isAnnotationPresent(Id.class))
 		{
-
 			writer.writeStartElement("annotation");
 			writer.writeStartElement("documentation");
 			writer.writeCharacters("This element's value can be used as this entity set's natural key.");
@@ -300,7 +298,6 @@ public class SchemaGenerator
 		}
 		else
 		{
-
 			writer.writeAttribute("minOccurs", "0");
 		}
 	}
@@ -308,7 +305,6 @@ public class SchemaGenerator
 
 	private String getXMLType(Method method) throws InvalidClassException, XMLStreamException
 	{
-
 		// Determine the type of the element based on the property's
 		// return type.
 
@@ -349,19 +345,16 @@ public class SchemaGenerator
 
 	private SortedMap<String, Method> findAllElementsForVersion(Class<? extends Record> type, int version) throws InvalidClassException
 	{
-
 		SortedMap<String, Method> elements = new TreeMap<String, Method>();
 
 		for (Method method : NamingConvention.getColumns(type, version))
 		{
-
 			String elementName = NamingConvention.getXMLElementName(method);
 
 			// Elements cannot have the same name!
 
 			if (elements.containsKey(elementName))
 			{
-
 				String message = String.format("The class '%s' contains several output properties that will result in the same element name '%s'.", type.getSimpleName(), elementName);
 				throw new InvalidClassException(message);
 			}

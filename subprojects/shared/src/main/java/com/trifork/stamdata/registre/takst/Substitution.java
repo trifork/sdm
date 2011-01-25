@@ -1,7 +1,8 @@
 package com.trifork.stamdata.registre.takst;
 
-public class Substitution extends TakstRecord {
 
+public class Substitution extends TakstRecord
+{
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long receptensVarenummer; // Varenr. hvis substitutionsmuligheder
 										// skal findes
@@ -12,80 +13,93 @@ public class Substitution extends TakstRecord {
 	private Long billigsteVarenummer; // Henvisning til billigste pakning
 
 
-	public Long getSubstitutionsgruppenummer() {
+	public Long getSubstitutionsgruppenummer()
+	{
 
 		return this.substitutionsgruppenummer;
 	}
 
 
-	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer) {
+	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	{
 
 		this.substitutionsgruppenummer = substitutionsgruppenummer;
 	}
 
 
-	public Long getReceptensVarenummer() {
+	public Long getReceptensVarenummer()
+	{
 
 		return this.receptensVarenummer;
 	}
 
 
-	public void setReceptensVarenummer(Long receptensVarenummer) {
+	public void setReceptensVarenummer(Long receptensVarenummer)
+	{
 
 		this.receptensVarenummer = receptensVarenummer;
 	}
 
 
-	public Long getNumeriskPakningsstoerrelse() {
+	public Long getNumeriskPakningsstoerrelse()
+	{
 
 		return this.numeriskPakningsstoerrelse;
 	}
 
 
-	public void setNumeriskPakningsstoerrelse(Long numeriskPakningsstoerrelse) {
+	public void setNumeriskPakningsstoerrelse(Long numeriskPakningsstoerrelse)
+	{
 
 		this.numeriskPakningsstoerrelse = numeriskPakningsstoerrelse;
 	}
 
 
-	public String getProdAlfabetiskeSekvensplads() {
+	public String getProdAlfabetiskeSekvensplads()
+	{
 
 		return this.prodAlfabetiskeSekvensplads;
 	}
 
 
-	public void setProdAlfabetiskeSekvensplads(String prodAlfabetiskeSekvensplads) {
+	public void setProdAlfabetiskeSekvensplads(String prodAlfabetiskeSekvensplads)
+	{
 
 		this.prodAlfabetiskeSekvensplads = prodAlfabetiskeSekvensplads;
 	}
 
 
-	public String getSubstitutionskodeForPakning() {
+	public String getSubstitutionskodeForPakning()
+	{
 
 		return this.substitutionskodeForPakning;
 	}
 
 
-	public void setSubstitutionskodeForPakning(String substitutionskodeForPakning) {
+	public void setSubstitutionskodeForPakning(String substitutionskodeForPakning)
+	{
 
 		this.substitutionskodeForPakning = substitutionskodeForPakning;
 	}
 
 
-	public Long getBilligsteVarenummer() {
+	public Long getBilligsteVarenummer()
+	{
 
 		return this.billigsteVarenummer;
 	}
 
 
-	public void setBilligsteVarenummer(Long billigsteVarenummer) {
+	public void setBilligsteVarenummer(Long billigsteVarenummer)
+	{
 
 		this.billigsteVarenummer = billigsteVarenummer;
 	}
 
 
 	@Override
-	public Long getKey() {
+	public Long getKey()
+	{
 
 		return receptensVarenummer;
 	}

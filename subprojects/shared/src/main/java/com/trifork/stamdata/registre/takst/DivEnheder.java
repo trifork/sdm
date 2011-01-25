@@ -1,10 +1,12 @@
 package com.trifork.stamdata.registre.takst;
 
-// the entities of this type are output by these classes:
-// Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
-public class DivEnheder extends TakstRecord {
-
+/**
+ * Entities of this type are output by these classes:
+ * Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
+ */
+public class DivEnheder extends TakstRecord
+{
 	private static final long ENHEDSTYPE_TID = 1;
 	private static final long ENHEDSTYPE_STYRKE = 3;
 	private static final long ENHEDSTYPE_PAKNING = 4;
@@ -15,73 +17,82 @@ public class DivEnheder extends TakstRecord {
 	private String tekst;
 
 
-	public boolean isEnhedstypeTid() {
-
+	public boolean isEnhedstypeTid()
+	{
 		return this.enhedstype == ENHEDSTYPE_TID;
 	}
 
 
-	public boolean isEnhedstypeStyrke() {
+	public boolean isEnhedstypeStyrke()
+	{
 
 		return this.enhedstype == ENHEDSTYPE_STYRKE;
 	}
 
 
-	public boolean isEnhedstypePakning() {
+	public boolean isEnhedstypePakning()
+	{
 
 		return this.enhedstype == ENHEDSTYPE_PAKNING;
 	}
 
 
-	public void setEnhedstype(Long enhedstype) {
+	public void setEnhedstype(Long enhedstype)
+	{
 
 		this.enhedstype = enhedstype;
 	}
 
 
-	public String getKode() {
+	public String getKode()
+	{
 
 		return this.kode;
 	}
 
 
-	public void setKode(String kode) {
+	public void setKode(String kode)
+	{
 
 		this.kode = kode;
 	}
 
 
-	public String getKortTekst() {
+	public String getKortTekst()
+	{
 
 		return this.kortTekst;
 	}
 
 
-	public void setKortTekst(String kortTekst) {
+	public void setKortTekst(String kortTekst)
+	{
 
 		this.kortTekst = kortTekst;
 	}
 
 
-	public String getTekst() {
+	public String getTekst()
+	{
 
 		return this.tekst;
 	}
 
 
-	public void setTekst(String tekst) {
+	public void setTekst(String tekst)
+	{
 
 		this.tekst = tekst;
 	}
 
 
 	@Override
-	public String getKey() {
+	public String getKey()
+	{
 
 		/*
-		 * This is a pseudo table that is not referenced or persisted The 'kode'
-		 * is not unique alone because the different 'Enhed' can have the same
-		 * code
+		 * This is a pseudo table that is not referenced or persisted The 'kode' is not unique alone
+		 * because the different 'Enhed' can have the same code
 		 */
 		return enhedstype + kode;
 	}

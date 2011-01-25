@@ -1,5 +1,6 @@
 package com.trifork.stamdata.registre.sks;
 
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,10 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.AbstractRecord;
+import com.trifork.stamdata.XmlName;
 
 
 @Entity
-public class Organisation extends AbstractRecord {
+public class Organisation extends AbstractRecord
+{
 	private String navn;
 	private String nummer;
 
@@ -20,88 +23,95 @@ public class Organisation extends AbstractRecord {
 	private final OrgatizationType orgatizationType;
 
 
-	public enum OrgatizationType {
+	public enum OrgatizationType
+	{
 		Department("Afdeling"), Hospital("Sygehus");
 
 		private String text;
 
-
-		private OrgatizationType(String text) {
-
+		private OrgatizationType(String text)
+		{
 			this.text = text;
 		}
 
 
 		@Override
-		public String toString() {
-
+		public String toString()
+		{
 			return text;
 		}
 	}
 
 
-	public Organisation(OrgatizationType orgatizationType) {
-
+	public Organisation(OrgatizationType orgatizationType)
+	{
 		this.orgatizationType = orgatizationType;
 	}
 
 
 	@Id
 	@Column
-	public String getNummer() {
-
+	public String getNummer()
+	{
 		return nummer;
 	}
 
 
-	public void setNummer(String nummer) {
-
+	public void setNummer(String nummer)
+	{
 		this.nummer = nummer;
 	}
 
 
 	@Column
-	public String getNavn() {
-
+	public String getNavn()
+	{
 		return navn;
 	}
 
 
-	public void setNavn(String navn) {
+	public void setNavn(String navn)
+	{
 
 		this.navn = navn;
 	}
 
 
 	@Override
-	public Date getValidTo() {
+	public Date getValidTo()
+	{
 
 		return validTo;
 	}
 
 
-	public void setValidTo(Date validTo) {
+	public void setValidTo(Date validTo)
+	{
 
 		this.validTo = validTo;
 	}
 
 
 	@Override
-	public Date getValidFrom() {
+	public Date getValidFrom()
+	{
 
 		return validFrom;
 	}
 
 
 	@Column
-	public String getOrganisationstype() {
+	@XmlName("type")
+	public String getOrganisationstype()
+	{
 
 		return orgatizationType.toString();
 	}
 
 
 	@Override
-	public void setValidFrom(Date validFrom) {
+	public void setValidFrom(Date validFrom)
+	{
 
 		this.validFrom = validFrom;
 	}

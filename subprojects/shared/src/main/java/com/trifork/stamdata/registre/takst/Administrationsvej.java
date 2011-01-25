@@ -1,61 +1,59 @@
 package com.trifork.stamdata.registre.takst;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlName;
+
 
 @Entity
-public class Administrationsvej extends TakstRecord {
-
+public class Administrationsvej extends TakstRecord
+{
 	private String kode; // Ref. t. LMS01, felt 16
 	private String kortTekst;
 	private String tekst;
 
 
+	@Override
 	@Id
 	@Column(name = "AdministrationsvejKode")
-	public String getKode() {
-
-		return this.kode;
+	@XmlName("kode")
+	public String getKey()
+	{
+		return kode;
 	}
 
 
-	public void setKode(String kode) {
-
+	public void setKode(String kode)
+	{
 		this.kode = kode;
 	}
 
 
-	public String getKortTekst() {
-
+	public String getKortTekst()
+	{
 		return this.kortTekst;
 	}
 
 
-	public void setKortTekst(String kortTekst) {
-
+	public void setKortTekst(String kortTekst)
+	{
 		this.kortTekst = kortTekst;
 	}
 
 
 	@Column(name = "AdministrationsvejTekst")
-	public String getTekst() {
-
+	@XmlName("tekst")
+	public String getTekst()
+	{
 		return this.tekst;
 	}
 
 
-	public void setTekst(String tekst) {
-
+	public void setTekst(String tekst)
+	{
 		this.tekst = tekst;
 	}
-
-
-	@Override
-	public String getKey() {
-
-		return "" + this.kode;
-	}
-
 }

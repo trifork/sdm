@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.stamdata.XmlName;
+
 
 @Entity
 @Table(name = "Person")
@@ -26,6 +28,7 @@ public class Navnebeskyttelse extends CPRRecord {
 
 
 	@Column
+	@XmlName("startdato")
 	public Date getNavneBeskyttelseStartDato() {
 
 		return navneBeskyttelseStartDato;
@@ -39,6 +42,7 @@ public class Navnebeskyttelse extends CPRRecord {
 
 
 	@Column
+	@XmlName("slutdato")
 	public Date getNavneBeskyttelseSletteDato() {
 
 		return navneBeskyttelseSletteDato;

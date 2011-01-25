@@ -99,8 +99,7 @@ public abstract class AbstractRecord implements Record
 		catch (Exception e)
 		{
 			throw new RuntimeException(format(
-				"Error getting id for object of class '%s'.", getClass()
-						.getSimpleName()));
+				"Error getting id for object of class '%s'.", getClass().getSimpleName()));
 		}
 	}
 }

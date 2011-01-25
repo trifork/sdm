@@ -1,5 +1,6 @@
 package com.trifork.stamdata.registre.takst;
 
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.stamdata.XmlName;
 import com.trifork.stamdata.Record;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.persistence.Dataset;
@@ -16,8 +18,9 @@ import com.trifork.stamdata.persistence.Dataset;
 
 @Entity
 @Table(name = "TakstVersion")
-public class Takst extends TakstRecord {
-
+@XmlName("takstversion")
+public class Takst extends TakstRecord
+{
 	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
@@ -29,24 +32,25 @@ public class Takst extends TakstRecord {
 	private final Date validTo;
 
 
-	public Takst(Date validFrom, Date validTo) {
-
+	public Takst(Date validFrom, Date validTo)
+	{
 		this.validFrom = validFrom;
 		this.validTo = validTo;
 	}
 
 
 	/**
-	 * @param type
-	 *            the Type that the returned entities should have.
+	 * @param type the Type that the returned entities should have.
 	 * 
 	 * @return All entities of the given type in this takst.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends TakstRecord> TakstDataset<T> getDatasetOfType(Class<T> type) {
-
-		for (CompleteDataset<? extends Record> dataset : datasets) {
-			if (type.equals(dataset.getType())) {
+	public <T extends TakstRecord> TakstDataset<T> getDatasetOfType(Class<T> type)
+	{
+		for (CompleteDataset<? extends Record> dataset : datasets)
+		{
+			if (type.equals(dataset.getType()))
+			{
 				return (TakstDataset<T>) dataset;
 			}
 		}
@@ -55,17 +59,19 @@ public class Takst extends TakstRecord {
 	}
 
 
-	public List<CompleteDataset<? extends Record>> getDatasets() {
-
+	public List<CompleteDataset<? extends Record>> getDatasets()
+	{
 		return datasets;
 	}
 
 
-	public List<Record> getEntities() {
+	public List<Record> getEntities()
+	{
 
 		List<Record> result = new ArrayList<Record>();
 
-		for (CompleteDataset<? extends Record> dataset : datasets) {
+		for (CompleteDataset<? extends Record> dataset : datasets)
+		{
 			result.addAll(dataset.getEntities());
 		}
 
@@ -73,21 +79,19 @@ public class Takst extends TakstRecord {
 	}
 
 
-	// TODO: What should the type argument be here?
-	public void addDataset(TakstDataset<?> dataset) {
-
+	public void addDataset(TakstDataset<?> dataset)
+	{
 		datasets.add(dataset);
 	}
 
 
 	/**
-	 * @param type
-	 *            the type of the requested entity
-	 * @param entityId
-	 *            the id of the requested entity
+	 * @param type the type of the requested entity
+	 * @param entityId the id of the requested entity
 	 * @return the requested entity
 	 */
-	public <T extends TakstRecord> T getEntity(Class<T> type, Object entityId) {
+	public <T extends TakstRecord> T getEntity(Class<T> type, Object entityId)
+	{
 
 		if (entityId == null) return null;
 
@@ -100,19 +104,23 @@ public class Takst extends TakstRecord {
 
 
 	@Column(name = "TakstUge")
-	public String getStableWeek() {
+	@XmlName("uge")
+	public String getStableWeek()
+	{
 
 		return "" + validityYear + validityWeekNumber;
 	}
 
 
-	public void setValidityYear(int validityYear) {
+	public void setValidityYear(int validityYear)
+	{
 
 		this.validityYear = validityYear;
 	}
 
 
-	public void setValidityWeekNumber(int validityWeekNumber) {
+	public void setValidityWeekNumber(int validityWeekNumber)
+	{
 
 		this.validityWeekNumber = validityWeekNumber;
 	}
@@ -120,15 +128,15 @@ public class Takst extends TakstRecord {
 
 	@Override
 	@Id
-	public Date getValidFrom() {
-
+	public Date getValidFrom()
+	{
 		return validFrom;
 	}
 
 
 	@Override
-	public Date getValidTo() {
-
+	public Date getValidTo()
+	{
 		return validTo;
 	}
 }

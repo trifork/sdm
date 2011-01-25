@@ -1,16 +1,17 @@
 package com.trifork.stamdata.registre.cpr;
 
+
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.trifork.stamdata.XmlName;
 
 
 @Entity
 @Table(name = "Person")
-public class Navneoplysninger extends CPRRecord {
+public class Navneoplysninger extends CPRRecord
+{
 	String fornavn;
 	String fornavnMarkering;
 	String mellemnavn;
@@ -25,119 +26,119 @@ public class Navneoplysninger extends CPRRecord {
 	@Override
 	@Id
 	@Column
-	public String getCpr() {
-
+	public String getCpr()
+	{
 		return super.getCpr();
 	}
 
 
 	@Column
-	public String getFornavn() {
-
+	public String getFornavn()
+	{
 		return fornavn;
 	}
 
 
-	public void setFornavn(String fornavn) {
-
+	public void setFornavn(String fornavn)
+	{
 		this.fornavn = fornavn;
 	}
 
 
-	public String getFornavnMarkering() {
-
+	public String getFornavnMarkering()
+	{
 		return fornavnMarkering;
 	}
 
 
-	public void setFornavnMarkering(String fornavnMarkering) {
-
+	public void setFornavnMarkering(String fornavnMarkering)
+	{
 		this.fornavnMarkering = fornavnMarkering;
 	}
 
 
 	@Column
-	public String getMellemnavn() {
-
+	public String getMellemnavn()
+	{
 		return mellemnavn;
 	}
 
 
-	public void setMellemnavn(String mellemnavn) {
-
+	public void setMellemnavn(String mellemnavn)
+	{
 		this.mellemnavn = mellemnavn;
 	}
 
 
-	public String getMellemnavnMarkering() {
-
+	public String getMellemnavnMarkering()
+	{
 		return mellemnavnMarkering;
 	}
 
 
-	public void setMellemnavnMarkering(String mellemnavnMarkering) {
-
+	public void setMellemnavnMarkering(String mellemnavnMarkering)
+	{
 		this.mellemnavnMarkering = mellemnavnMarkering;
 	}
 
 
 	@Column
-	public String getEfternavn() {
-
+	public String getEfternavn()
+	{
 		return efternavn;
 	}
 
 
-	public void setEfternavn(String efternavn) {
-
+	public void setEfternavn(String efternavn)
+	{
 		this.efternavn = efternavn;
 	}
 
 
-	public String getEfternavnMarkering() {
-
+	public String getEfternavnMarkering()
+	{
 		return efternavnMarkering;
 	}
 
 
-	public void setEfternavnMarkering(String efternavnMarkering) {
-
+	public void setEfternavnMarkering(String efternavnMarkering)
+	{
 		this.efternavnMarkering = efternavnMarkering;
 	}
 
 
-	public Date getStartDato() {
-
+	public Date getStartDato()
+	{
 		return startDato;
 	}
 
 
-	public void setStartDato(Date startDato) {
-
+	public void setStartDato(Date startDato)
+	{
 		this.startDato = startDato;
 	}
 
 
-	public String getStartDatoMarkering() {
-
+	public String getStartDatoMarkering()
+	{
 		return startDatoMarkering;
 	}
 
 
-	public void setStartDatoMarkering(String startDatoMarkering) {
-
+	public void setStartDatoMarkering(String startDatoMarkering)
+	{
 		this.startDatoMarkering = startDatoMarkering;
 	}
 
 
-	public String getAdresseringsNavn() {
-
+	public String getAdresseringsNavn()
+	{
 		return adresseringsNavn;
 	}
 
 
-	public void setAdresseringsNavn(String adresseringsNavn) {
-
+	public void setAdresseringsNavn(String adresseringsNavn)
+	{
 		this.adresseringsNavn = adresseringsNavn;
 	}
 }

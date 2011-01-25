@@ -1,43 +1,45 @@
 package com.trifork.stamdata.registre.takst;
 
+
 import javax.persistence.Column;
 
 
-public class Beregningsregler extends TakstRecord {
+public class Beregningsregler extends TakstRecord
+{
 	private String kode; // Ref. t. LMS02, felt 21
 	private String tekst;
 
 
 	@Column
-	public String getKode() {
-
-		return this.kode;
+	public String getKode()
+	{
+		return kode;
 	}
 
 
-	public void setKode(String kode) {
-
+	public void setKode(String kode)
+	{
 		this.kode = kode;
 	}
 
 
 	@Column
-	public String getTekst() {
-
-		return this.tekst;
+	public String getTekst()
+	{
+		return tekst;
 	}
 
 
-	public void setTekst(String tekst) {
-
+	public void setTekst(String tekst)
+	{
 		this.tekst = tekst;
 	}
 
 
 	@Override
-	public String getKey() {
-
-		return "" + this.kode;
+	public String getKey()
+	{
+		return kode;
 	}
 
 }

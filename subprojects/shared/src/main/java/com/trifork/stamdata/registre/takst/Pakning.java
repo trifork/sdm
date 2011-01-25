@@ -1,5 +1,6 @@
 package com.trifork.stamdata.registre.takst;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,13 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.DateUtils;
-import com.trifork.stamdata.Record;
+import com.trifork.stamdata.*;
 import com.trifork.stamdata.persistence.Dataset;
 
 
 @Entity
-public class Pakning extends TakstRecord {
+public class Pakning extends TakstRecord
+{
 
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer;
@@ -42,317 +43,356 @@ public class Pakning extends TakstRecord {
 
 
 	@Column(name = "DrugID")
-	public Long getDrugid() {
-
-		return this.drugid;
+	public Long getDrugid()
+	{
+		return drugid;
 	}
 
 
-	public void setDrugid(Long drugid) {
-
+	public void setDrugid(Long drugid)
+	{
 		this.drugid = drugid;
 	}
 
 
 	@Id
 	@Column
-	public Long getVarenummer() {
-
+	public Long getVarenummer()
+	{
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer) {
-
+	public void setVarenummer(Long varenummer)
+	{
 		this.varenummer = varenummer;
 	}
 
 
-	public Long getAlfabetSekvensnr() {
-
+	public Long getAlfabetSekvensnr()
+	{
 		return this.alfabetSekvensnr;
 	}
 
 
-	public void setAlfabetSekvensnr(Long alfabetSekvensnr) {
-
+	public void setAlfabetSekvensnr(Long alfabetSekvensnr)
+	{
 		this.alfabetSekvensnr = alfabetSekvensnr;
 	}
 
 
 	@Column(name = "VarenummerDelpakning")
-	public Long getVarenummerForDelpakning() {
-
+	public Long getVarenummerForDelpakning()
+	{
 		return this.varenummerForDelpakning;
 	}
 
 
-	public void setVarenummerForDelpakning(Long varenummerForDelpakning) {
-
+	public void setVarenummerForDelpakning(Long varenummerForDelpakning)
+	{
 		this.varenummerForDelpakning = varenummerForDelpakning;
 	}
 
 
-	public Long getAntalDelpakninger() {
-
+	public Long getAntalDelpakninger()
+	{
 		return this.antalDelpakninger;
 	}
 
 
-	public void setAntalDelpakninger(Long antalDelpakninger) {
-
+	public void setAntalDelpakninger(Long antalDelpakninger)
+	{
 		this.antalDelpakninger = antalDelpakninger;
 	}
 
 
 	@Column(name = "PakningsstoerrelseTekst")
-	public String getPakningsstoerrelseKlartekst() {
-
+	public String getPakningsstoerrelseKlartekst()
+	{
 		return this.pakningsstoerrelseKlartekst;
 	}
 
 
-	public void setPakningsstoerrelseKlartekst(String pakningsstoerrelseKlartekst) {
-
+	public void setPakningsstoerrelseKlartekst(String pakningsstoerrelseKlartekst)
+	{
 		this.pakningsstoerrelseKlartekst = pakningsstoerrelseKlartekst;
 	}
 
 
 	@Column(name = "PakningsstoerrelseNumerisk")
-	public Double getPakningsstoerrelseNumerisk() {
-
-		if (this.pakningsstoerrelseNumerisk == 0) {
+	@XmlName("numeriskPakningsstoerrelse")
+	public Double getPakningsstoerrelseNumerisk()
+	{
+		if (this.pakningsstoerrelseNumerisk == 0)
+		{
 			return null;
 		}
+
 		return this.pakningsstoerrelseNumerisk / 100.0;
 	}
 
 
-	public void setPakningsstoerrelseNumerisk(Long pakningsstoerrelseNumerisk) {
+	public void setPakningsstoerrelseNumerisk(Long pakningsstoerrelseNumerisk)
+	{
 
 		this.pakningsstoerrelseNumerisk = pakningsstoerrelseNumerisk;
 	}
 
 
 	@Column(name = "Pakningsstoerrelsesenhed")
-	public String getPakningsstorrelseEnhed() {
+	public String getPakningsstorrelseEnhed()
+	{
 
-		if (this.pakningsstoerrelseNumerisk == 0) {
+		if (this.pakningsstoerrelseNumerisk == 0)
+		{
 			return null;
 		}
+
 		return this.pakningsstoerrelseEnhed;
 	}
 
 
-	public void setPakningsstoerrelseEnhed(String pakningsstoerrelseEnhed) {
-
+	public void setPakningsstoerrelseEnhed(String pakningsstoerrelseEnhed)
+	{
 		this.pakningsstoerrelseEnhed = pakningsstoerrelseEnhed;
 	}
 
 
 	@Column(name = "EmballageTypeKode")
-	public String getEmballagetype() {
+	public String getEmballagetype()
+	{
 
 		return emballagetype;
 	}
 
 
-	public void setEmballagetype(String emballagetype) {
-
+	public void setEmballagetype(String emballagetype)
+	{
 		this.emballagetype = emballagetype;
 	}
 
 
-	public Udleveringsbestemmelser getUdleveringsbestemmelse() {
-
+	public Udleveringsbestemmelser getUdleveringsbestemmelse()
+	{
 		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
 	}
 
 
-	public void setUdleveringsbestemmelse(String udleveringsbestemmelse) {
+	public void setUdleveringsbestemmelse(String udleveringsbestemmelse)
+	{
 
 		this.udleveringsbestemmelse = udleveringsbestemmelse;
 	}
 
 
-	public SpecialeForNBS getUdleveringSpeciale() {
+	public SpecialeForNBS getUdleveringSpeciale()
+	{
 
 		return takst.getEntity(SpecialeForNBS.class, udleveringSpeciale);
 	}
 
 
-	public void setUdleveringSpeciale(String udleveringSpeciale) {
+	public void setUdleveringSpeciale(String udleveringSpeciale)
+	{
 
 		this.udleveringSpeciale = udleveringSpeciale;
 	}
 
 
 	@Column(name = "MedicintilskudsKode")
-	public String getMedicintilskudskode() {
+	@XmlName("medicintilskudskode")
+	public String getMedicintilskudskode()
+	{
 
 		return this.medicintilskudskode;
 	}
 
 
-	public void setMedicintilskudskode(String medicintilskudskode) {
-
+	public void setMedicintilskudskode(String medicintilskudskode)
+	{
 		this.medicintilskudskode = medicintilskudskode;
 	}
 
 
 	@Column(name = "KlausuleringsKode")
-	public String getKlausulForMedicintilskud() {
+	@XmlName("klausuleringskode")
+	public String getKlausulForMedicintilskud()
+	{
 
 		return this.klausulForMedicintilskud;
 	}
 
 
-	public void setKlausulForMedicintilskud(String klausulForMedicintilskud) {
+	public void setKlausulForMedicintilskud(String klausulForMedicintilskud)
+	{
 
 		this.klausulForMedicintilskud = klausulForMedicintilskud;
 	}
 
 
-	public Double getAntalDDDPrPakning() {
+	public Double getAntalDDDPrPakning()
+	{
 
 		return (this.antalDDDPrPakning) / 1000.0;
 	}
 
 
-	public void setAntalDDDPrPakning(Long antalDDDPrPakning) {
+	public void setAntalDDDPrPakning(Long antalDDDPrPakning)
+	{
 
 		this.antalDDDPrPakning = antalDDDPrPakning;
 	}
 
 
-	public Long getOpbevaringstidNumerisk() {
+	public Long getOpbevaringstidNumerisk()
+	{
 
 		return this.opbevaringstidNumerisk;
 	}
 
 
-	public void setOpbevaringstidNumerisk(Long opbevaringstidNumerisk) {
+	public void setOpbevaringstidNumerisk(Long opbevaringstidNumerisk)
+	{
 
 		this.opbevaringstidNumerisk = opbevaringstidNumerisk;
 	}
 
 
-	public NumeriskMedEnhed getOpbevaringstid() {
+	public NumeriskMedEnhed getOpbevaringstid()
+	{
 
 		final int enhedstype = 1;
-		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getRecordById(
-				opbevaringstidEnhed + "-" + enhedstype);
+		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getRecordById(opbevaringstidEnhed + "-" + enhedstype);
 		return new NumeriskMedEnhed(takst, null, opbevaringstidNumerisk, enhed);
 
 	}
 
 
-	public void setOpbevaringstidEnhed(String opbevaringstidEnhed) {
+	public void setOpbevaringstidEnhed(String opbevaringstidEnhed)
+	{
 
 		this.opbevaringstidEnhed = opbevaringstidEnhed;
 	}
 
 
-	public Opbevaringsbetingelser getOpbevaringsbetingelser() {
+	public Opbevaringsbetingelser getOpbevaringsbetingelser()
+	{
 
 		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getRecordById(opbevaringsbetingelser);
 	}
 
 
-	public void setOpbevaringsbetingelser(String opbevaringsbetingelser) {
+	public void setOpbevaringsbetingelser(String opbevaringsbetingelser)
+	{
 
 		this.opbevaringsbetingelser = opbevaringsbetingelser;
 	}
 
 
-	public String getOprettelsesdato() {
+	public String getOprettelsesdato()
+	{
 
 		return DateUtils.toISO8601date(this.oprettelsesdato);
 	}
 
 
-	public void setOprettelsesdato(Long oprettelsesdato) {
+	public void setOprettelsesdato(Long oprettelsesdato)
+	{
 
 		this.oprettelsesdato = oprettelsesdato;
 	}
 
 
-	public String getDatoForSenestePrisaendring() {
+	public String getDatoForSenestePrisaendring()
+	{
 
 		return DateUtils.toISO8601date(this.datoForSenestePrisaendring);
 	}
 
 
-	public void setDatoForSenestePrisaendring(Long datoForSenestePrisaendring) {
+	public void setDatoForSenestePrisaendring(Long datoForSenestePrisaendring)
+	{
 
 		this.datoForSenestePrisaendring = datoForSenestePrisaendring;
 	}
 
 
-	public String getUdgaaetDato() {
+	public String getUdgaaetDato()
+	{
 
 		return DateUtils.toISO8601date(this.udgaaetDato);
 	}
 
 
-	public void setUdgaaetDato(Long udgaaetDato) {
+	public void setUdgaaetDato(Long udgaaetDato)
+	{
 
 		this.udgaaetDato = udgaaetDato;
 	}
 
 
-	public Beregningsregler getBeregningskodeAIPRegpris() {
+	public Beregningsregler getBeregningskodeAIPRegpris()
+	{
 
 		return takst.getEntity(Beregningsregler.class, this.beregningskodeAIPRegpris);
 	}
 
 
-	public void setBeregningskodeAIPRegpris(String beregningskodeAIPRegpris) {
+	public void setBeregningskodeAIPRegpris(String beregningskodeAIPRegpris)
+	{
 
 		this.beregningskodeAIPRegpris = beregningskodeAIPRegpris;
 	}
 
 
-	public boolean getPakningOptagetITilskudsgruppe() {
+	public boolean getPakningOptagetITilskudsgruppe()
+	{
 
 		return "F".equalsIgnoreCase(this.pakningOptagetITilskudsgruppe);
 	}
 
 
-	public void setPakningOptagetITilskudsgruppe(String pakningOptagetITilskudsgruppe) {
+	public void setPakningOptagetITilskudsgruppe(String pakningOptagetITilskudsgruppe)
+	{
 
 		this.pakningOptagetITilskudsgruppe = pakningOptagetITilskudsgruppe;
 	}
 
 
-	public boolean getFaerdigfremstillingsgebyr() {
+	public boolean getFaerdigfremstillingsgebyr()
+	{
 
 		return "B".equalsIgnoreCase(this.faerdigfremstillingsgebyr);
 	}
 
 
-	public void setFaerdigfremstillingsgebyr(String faerdigfremstillingsgebyr) {
+	public void setFaerdigfremstillingsgebyr(String faerdigfremstillingsgebyr)
+	{
 
 		this.faerdigfremstillingsgebyr = faerdigfremstillingsgebyr;
 	}
 
 
-	public Firma getPakningsdistributoer() {
+	public Firma getPakningsdistributoer()
+	{
 
 		return takst.getEntity(Firma.class, pakningsdistributoer);
 	}
 
 
-	public void setPakningsdistributoer(Long pakningsdistributoer) {
+	public void setPakningsdistributoer(Long pakningsdistributoer)
+	{
 
 		this.pakningsdistributoer = pakningsdistributoer;
 	}
 
 
-	public Laegemiddel getLaegemiddel() {
+	public Laegemiddel getLaegemiddel()
+	{
 
 		Dataset<Laegemiddel> laegemidler = takst.getDatasetOfType(Laegemiddel.class);
-		for (Record sde : laegemidler.getEntities()) {
+		for (Record sde : laegemidler.getEntities())
+		{
 			Laegemiddel lm = (Laegemiddel) sde;
 			if (drugid.equals(lm.getDrugid())) return lm;
 		}
@@ -360,47 +400,48 @@ public class Pakning extends TakstRecord {
 	}
 
 
-	public List<Pakning> getSubstitutioner() {
+	public List<Pakning> getSubstitutioner()
+	{
 
 		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
-		Dataset<SubstitutionAfLaegemidlerUdenFastPris> substufp = takst
-				.getDatasetOfType(SubstitutionAfLaegemidlerUdenFastPris.class);
+		Dataset<SubstitutionAfLaegemidlerUdenFastPris> substufp = takst.getDatasetOfType(SubstitutionAfLaegemidlerUdenFastPris.class);
 		List<Long> substitutionsgrupper = new ArrayList<Long>();
-		for (Substitution substitution : subst.getEntities()) {
-			if (substitution.getReceptensVarenummer().equals(varenummer))
-				substitutionsgrupper.add(substitution.getSubstitutionsgruppenummer());
+		for (Substitution substitution : subst.getEntities())
+		{
+			if (substitution.getReceptensVarenummer().equals(varenummer)) substitutionsgrupper.add(substitution.getSubstitutionsgruppenummer());
 		}
-		for (SubstitutionAfLaegemidlerUdenFastPris substitutionufp : substufp.getEntities()) {
-			if (substitutionufp.getVarenummer().equals(varenummer))
-				substitutionsgrupper.add(substitutionufp.getSubstitutionsgruppenummer());
+		for (SubstitutionAfLaegemidlerUdenFastPris substitutionufp : substufp.getEntities())
+		{
+			if (substitutionufp.getVarenummer().equals(varenummer)) substitutionsgrupper.add(substitutionufp.getSubstitutionsgruppenummer());
 		}
 
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
 		List<Pakning> substitutioner = new ArrayList<Pakning>();
-		for (Long substgruppe : substitutionsgrupper) {
-			for (Substitution substitution : subst.getEntities()) {
-				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe)
-						&& !substitution.getReceptensVarenummer().equals(this.varenummer))
-					substitutioner.add(pakninger.getRecordById(substitution.getReceptensVarenummer()));
+		for (Long substgruppe : substitutionsgrupper)
+		{
+			for (Substitution substitution : subst.getEntities())
+			{
+				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe) && !substitution.getReceptensVarenummer().equals(this.varenummer)) substitutioner.add(pakninger.getRecordById(substitution.getReceptensVarenummer()));
 			}
-			for (SubstitutionAfLaegemidlerUdenFastPris substitution : substufp.getEntities()) {
-				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe)
-						&& !substitution.getVarenummer().equals(this.varenummer))
-					substitutioner.add(pakninger.getRecordById(substitution.getVarenummer()));
+			for (SubstitutionAfLaegemidlerUdenFastPris substitution : substufp.getEntities())
+			{
+				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe) && !substitution.getVarenummer().equals(this.varenummer)) substitutioner.add(pakninger.getRecordById(substitution.getVarenummer()));
 			}
 		}
 		return substitutioner;
 	}
 
 
-	public List<Pakning> getBilligsteSubstitution() {
+	public List<Pakning> getBilligsteSubstitution()
+	{
 
 		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
 		List<Pakning> substitutioner = new ArrayList<Pakning>();
-		for (Substitution substitution : subst.getEntities()) {
-			if (substitution.getReceptensVarenummer().equals(varenummer)
-					&& !this.varenummer.equals(substitution.getBilligsteVarenummer())) {
+		for (Substitution substitution : subst.getEntities())
+		{
+			if (substitution.getReceptensVarenummer().equals(varenummer) && !this.varenummer.equals(substitution.getBilligsteVarenummer()))
+			{
 				Pakning p = pakninger.getRecordById(substitution.getBilligsteVarenummer());
 				if (p != null) substitutioner.add(p);
 			}
@@ -411,13 +452,15 @@ public class Pakning extends TakstRecord {
 	}
 
 
-	public Priser getPriser() {
+	public Priser getPriser()
+	{
 
 		return takst.getEntity(Priser.class, varenummer);
 	}
 
 
-	public Boolean isTilHumanAnvendelse() {
+	public Boolean isTilHumanAnvendelse()
+	{
 
 		Laegemiddel lm = takst.getEntity(Laegemiddel.class, drugid);
 		if (lm == null) return null;
@@ -426,7 +469,8 @@ public class Pakning extends TakstRecord {
 
 
 	@Column
-	public Integer getDosisdispenserbar() {
+	public Integer getDosisdispenserbar()
+	{
 
 		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
 	}

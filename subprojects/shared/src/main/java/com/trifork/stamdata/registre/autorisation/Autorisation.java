@@ -6,8 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.DateUtils;
+import com.trifork.stamdata.*;
 
 
 @Entity
@@ -26,6 +25,7 @@ public class Autorisation extends AbstractRecord {
 
 	@Id
 	@Column
+	@XmlName("nummer")
 	public String getAutorisationsnummer() {
 
 		return nummer;
@@ -33,6 +33,7 @@ public class Autorisation extends AbstractRecord {
 
 
 	@Column
+	@XmlName("cpr")
 	public String getCpr() {
 
 		return cpr;

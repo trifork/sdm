@@ -1,63 +1,59 @@
 package com.trifork.stamdata.registre.takst;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlName;
+
 
 @Entity
-public class LaegemiddelAdministrationsvejRelation extends TakstRecord {
+public class LaegemiddelAdministrationsvejRelation extends TakstRecord
+{
 	private long drugId;
-	private String AdministrationsvejKode;
+	private String administrationsvejKode;
 
 
-	public LaegemiddelAdministrationsvejRelation(Laegemiddel lm, Administrationsvej av) {
-
-		this.drugId = lm.getDrugid();
-		this.AdministrationsvejKode = av.getKode();
+	public LaegemiddelAdministrationsvejRelation(Laegemiddel drug, Administrationsvej av)
+	{
+		this.drugId = drug.getDrugid();
+		this.administrationsvejKode = av.getKey();
 	}
 
 
 	@Id
 	@Column
-	public String getCID() {
-
-		return drugId + "-" + AdministrationsvejKode;
+	@XmlName("cid")
+	public String getCID()
+	{
+		return drugId + "-" + administrationsvejKode;
 	}
 
 
 	@Column
-	public long getDrugId() {
-
+	public long getDrugId()
+	{
 		return drugId;
 	}
 
 
-	public void setDrugId(long drugId) {
-
+	public void setDrugId(long drugId)
+	{
 		this.drugId = drugId;
 	}
 
 
 	@Column
-	public String getAdministrationsvejKode() {
-
-		return AdministrationsvejKode;
+	@XmlName("administrationsvejkode")
+	public String getAdministrationsvejKode()
+	{
+		return administrationsvejKode;
 	}
 
 
-	public void setAdministrationsvejKode(String administrationsvejKode) {
-
-		AdministrationsvejKode = administrationsvejKode;
+	public void setAdministrationsvejKode(String administrationsvejKode)
+	{
+		this.administrationsvejKode = administrationsvejKode;
 	}
-
 }
-
-/*
- * 
- * DrugID BIGINT(12) NOT NULL, AdministrationsvejKode CHAR(2) NOT NULL,
- * ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate DATETIME NOT NULL, ValidFrom
- * DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200) NOT NULL, CreatedDate
- * DATETIME NOT NULL, INDEX (ValidFrom, ValidTo, DrugID, DoseringKode) )
- * ENGINE=InnoDB
- */

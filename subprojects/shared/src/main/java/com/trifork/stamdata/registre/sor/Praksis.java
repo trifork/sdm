@@ -1,17 +1,18 @@
 package com.trifork.stamdata.registre.sor;
 
+
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.DateUtils;
+import com.trifork.stamdata.*;
 
 
 @Entity
-public class Praksis extends AbstractRecord {
+public class Praksis extends AbstractRecord
+{
 	private Date validFrom;
 	private String navn;
 	private Long eanLokationsnummer;
@@ -20,45 +21,52 @@ public class Praksis extends AbstractRecord {
 	private Date validTo;
 
 
-	public Praksis() {
+	public Praksis()
+	{
 
 	}
 
 
 	@Column
-	public String getNavn() {
-
+	public String getNavn()
+	{
 		return navn;
 	}
 
 
-	public void setNavn(String navn) {
+	public void setNavn(String navn)
+	{
 
 		this.navn = navn;
 	}
 
 
 	@Column
-	public Long getEanLokationsnummer() {
+	public Long getEanLokationsnummer()
+	{
 
 		return eanLokationsnummer;
 	}
 
 
-	public void setEanLokationsnummer(Long eanLokationsnummer) {
+	public void setEanLokationsnummer(Long eanLokationsnummer)
+	{
 
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
 
 	@Column
-	public Long getRegionCode() {
+	@XmlName("regionskode")
+	public Long getRegionCode()
+	{
 
 		return regionCode;
 	}
 
 
-	public void setRegionCode(Long regionCode) {
+	public void setRegionCode(Long regionCode)
+	{
 
 		this.regionCode = regionCode;
 	}
@@ -66,40 +74,47 @@ public class Praksis extends AbstractRecord {
 
 	@Id
 	@Column
-	public Long getSorNummer() {
+	@XmlName("sornummer")
+	public Long getSorNummer()
+	{
 
 		return sorNummer;
 	}
 
 
-	public void setSorNummer(Long sorNummer) {
+	public void setSorNummer(Long sorNummer)
+	{
 
 		this.sorNummer = sorNummer;
 	}
 
 
 	@Override
-	public Date getValidFrom() {
+	public Date getValidFrom()
+	{
 
 		return validFrom;
 	}
 
 
 	@Override
-	public void setValidFrom(Date validFrom) {
+	public void setValidFrom(Date validFrom)
+	{
 
 		this.validFrom = validFrom;
 	}
 
 
 	@Override
-	public Date getValidTo() {
+	public Date getValidTo()
+	{
 
 		return (validTo != null) ? validTo : DateUtils.FOREVER;
 	}
 
 
-	public void setValidTo(Date validTo) {
+	public void setValidTo(Date validTo)
+	{
 
 		this.validTo = validTo;
 	}

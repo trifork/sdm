@@ -1,7 +1,8 @@
 package com.trifork.stamdata.registre.takst;
 
-public class Rekommandationer extends TakstRecord {
 
+public class Rekommandationer extends TakstRecord
+{
 	private Long rekommandationsgruppe;
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
@@ -9,56 +10,65 @@ public class Rekommandationer extends TakstRecord {
 											// forbehold / …ikke
 
 
-	public Long getRekommandationsgruppe() {
+	public Long getRekommandationsgruppe()
+	{
 
 		return this.rekommandationsgruppe;
 	}
 
 
-	public void setRekommandationsgruppe(Long rekommandationsgruppe) {
+	public void setRekommandationsgruppe(Long rekommandationsgruppe)
+	{
 
 		this.rekommandationsgruppe = rekommandationsgruppe;
 	}
 
 
-	public Long getDrugID() {
+	public Long getDrugID()
+	{
 
 		return this.drugID;
 	}
 
 
-	public void setDrugID(Long drugID) {
+	public void setDrugID(Long drugID)
+	{
 
 		this.drugID = drugID;
 	}
 
 
-	public Long getVarenummer() {
+	public Long getVarenummer()
+	{
 
 		return this.varenummer;
 	}
 
 
-	public void setVarenummer(Long varenummer) {
+	public void setVarenummer(Long varenummer)
+	{
 
 		this.varenummer = varenummer;
 	}
 
 
-	public String getRekommandationsniveau() {
+	public String getRekommandationsniveau()
+	{
 
 		return this.rekommandationsniveau;
 	}
 
 
-	public void setRekommandationsniveau(String rekommandationsniveau) {
+	public void setRekommandationsniveau(String rekommandationsniveau)
+	{
 
 		this.rekommandationsniveau = rekommandationsniveau;
 	}
 
 
 	@Override
-	public Long getKey() {
+	public Long getKey()
+	{
 
 		return varenummer;
 	}
