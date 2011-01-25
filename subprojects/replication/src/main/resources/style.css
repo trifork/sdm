@@ -1,0 +1,102 @@
+body {
+	size: 12px;
+	background: #000;
+	margin: 0;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 62.5%;
+}
+
+input {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+div#header {
+	background: #FFF;
+	border-bottom: 4px solid #ddd;
+	padding: 15px;
+}
+
+.delete {
+	color: red;	
+}
+
+div#content {
+	margin: 20px;
+	background: #FFF;
+	padding: 15px;
+	border: 2px solid #eee;
+}
+
+div#footer {
+	font-size: 10px;
+}
+
+#logo {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+p {
+	font-size: 1.2em;	
+}
+
+ul#nav {
+	float: right;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	font-size: 1.4em;
+}
+
+ul#nav li {
+	display: inline;
+	margin-right: 20px;
+}
+
+table#log {
+	margin-top: 15px;
+	width: 100%;
+}
+
+table#log th {
+	text-align: left;
+}
+
+table#log td, table#log th {
+	border-bottom: 1px solid #CCC;	
+}
+
+a:link, a:hover, a:visited {
+	color: #20A102;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;	
+}
+
+ul#users {
+	font-size: 14px;
+	list-style-type: none;
+	margin: 20px 0 0 0;
+	padding: 0;
+}
+
+ul#users li {
+	display: block;
+	border-bottom: 1px solid #CCC;
+}
+
+h1, h2, h3 {
+
+	margin: 0;
+	padding: 0 0 5px;
+	font-weight: normal;
+	display: block;
+	border-bottom: 2px solid #eee;
+}
+
+label {
+	display: block;
+	font-weight: bold;
+}

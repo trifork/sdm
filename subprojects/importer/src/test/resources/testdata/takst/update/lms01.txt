@@ -1,0 +1,100 @@
+28100009555SPLMKEMADR00100065Kemadron                      tabletter           TAB           5 mg                0000005000MG 059300059300 N04AA04OR               D                
+28100010554SPLMMARZIN00101348Marzine                       tabletter           TAB           50 mg               0000050000MG 258318258318 R06AE03OR      J        D                
+28100011055SPLMKEFAMY00100934Kefamycin Vet.                intramamm‘r salve   INTMASA                           0000000000   254979011596QJ51RC  MA                                
+28100020455SPLMELTROX00200077Eltroxin                      tabletter           TAB           100 mikrogram       0000100000RG 059300059300 H03AA01OR               D                
+28100021255SPLMPOSTAF00100084Postafen                      tabletter           TAB           25 mg               0000025000MG 255816255816 R06AE05OR      J        D                
+28100041255SPLMDIAMOX00200206Diamox                        tabletter           TAB           250 mg              0000250000MG 012565012565 S01EC01OR               D                
+28100042755SPLMCALCIU00200177Calcium-Sandoz                inj.v‘ske, opl›sningINJVSKO       9 mg Ca/ml          0000009000MGM255483255483 A12AA02IMIV                              
+28100042855SPLMMETHER00200223Methergin                     overtrukne tabletterTABOTR        0,125 mg            0000000125MG 011768011768 G02AB01OR               D                
+28100049355SPLMHYDROC00200299Hydrocortison med Terramycin  salve               SALV          10 + 30 mg/g        0000000000   061800061800 D07CA01KU                                
+28100049555SPLMHEPARI00300501Heparin "Leo"                 inj.v‘ske, opl›sningINJVSKO       5.000 IE/ml         0005000000IUM034800034800 B01AB01IV                                
+28100052255SPLMTERRAM00400071Terramycin-Polymyxin B        salve               SALV          30+1 mg/g           0000000000   061800061800 D06AA03KU                                
+28100055455SPLMNITROM00100545Nitromex                      resoribl., subling. RESOSUB       0,25 mg             0000000250MG 255237257213 C01DA02SL                                
+28100074555SPLMPARAGH00100690Paraghurt                     tabletter           TAB                               0000000000   256939256939 A07FA01OR               D                
+28100076255SPLMASPIRI00100708Aspirin                       tabletter           TAB           500 mg              0000500000MG 056800056800 N02BA01OR       G   0214D                
+28100081155SPLMPENTOT00100739Pentothal-natrium             injektionssubstans  INJSUB        0,5 g               0000000500G  256231259247 N01AF03IV                                
+28100082155SPLMSELSUN00100229Selsun                        shampoo             SHAM          25 mg/ml            0000025000MGM257766257766 D11AC03KU                                
+28100086455SPLMIDOTYL00100795Idotyl                        brusetabletter      BRUTAB        500 mg              0000500000MG 026100026100 N02BA01OR                                
+28100096555SPLMNEO-ME00100864Neo-mercazole                 tabletter           TAB           5 mg                0000005000MG 255247255247 H03BB01OR               D                
+28100103155SPLMHIRUDO00200920Hirudoid                      salve               SALV          3 mg/g              0000003000MGG147100250000 C05BA01KU                                
+28100105055SPLMINOTYO00100892Inotyol                       salve               SALV                              0000000000   258403011823 D05AA  KU                                
+28100107155SPLMBENYLA00200958Benylan                       oral opl›sning      ORALOPL       2,8 mg/ml           0000002800MGM258318258318 R05DB20OR      J                         
+28100110949SPLMXYLOCA00200985Xylocain                      inj.v‘ske, opl›sningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          
+28100111155SPLMXYLOCA00700986Xylocain-adrenalin            inj.v‘ske, opl›sningINJVSKO       10 mg/ml+5 mikrog/ml0000000000   056100056100 N01BB52EDIRPE                            
+28100115155SPLMVETALG00100104Vetalgin Vet.                 injektionsv‘ske     INJVSK        500 mg/ml           0000500000MGM031500059800QN02BB02IV                                
+28100122055SPLMBUSCOP00201074Buscopan                      overtrukne tabletterTABOTR        10 mg               0000010000MG 013525205600 A03BB01OR               D                
+28100123253SPLMMARCOU00101085Marcoumar                     tabletter           TAB           3 mg                0000003000MG 254766254766 B01AA04OR       G   0514D                
+28100123355SPLMMESTIN00201086Mestinon                      tabletter           TAB           60 mg               0000060000MG 254766254766 N07AA02OR       G   0672D                
+28100136355SPLMMACROD00101180Macrodex 60 mg/ml m. Natr.kl  inf.v‘ske, opl›sningINFVSKO                           0000000000   254766254766 B05AA05IV                                
+28100137555SPLMSALAZO00101190Salazopyrin                   tabletter           TAB           500 mg              0000500000MG 061800061800 A07EC01OR       G   0505D                
+28100142255SPLMPHENER00101215Phenergan                     oral opl›sning      ORALOPL       1 mg/ml             0000001000MGM257842257842 R06AD02OR      J                         
+28100161255SPLMKONAKI00101088Konakion Novum                injektionsv‘ske     INJVSK        10 mg/ml            0000010000MGM062700062700 B02BA01IMIVOR                            
+28100161355SPLMHEPARI00400501Heparin "Leo"                 inj.v‘ske, opl›sningINJVSKO       25.000 IE/ml        0025000000IUM034800034800 B01AB01IV                                
+28100165055SPLMSOLU-C00101328Solu-cortef                   pulv.og sol.t.inj.opINJPSO        100 mg              0000100000MG 061800061800 H02AB09IMIV                              
+28100165654SPLMHIBITA00101630Hibitane                      vaginalcreme        VAGCREM       1 %                 0000001000PC 257171257171 D08AC02VA                                
+28100173055SPLMPANKRE00101359Pankreatin  "Recip"           enterogranulat      ENTGRA                            0000000000   259936254766 A09AA02OR                                
+28100174756SPLMATARAX00101632Atarax                        filmovertrukne tabl.TABFILM       10 mg               0000010000MG 255816255816 N05BB01OR      J        D                
+28100185956SPLMARCOSA00101624Arcosal                       tabletter           TAB           500 mg              0000500000MG 254766254766 A10BB03OR               D                
+28100186556SPLMSILAN 00101391Silan                         salve               SALV                              0000000000   254702254702 D02AA  KU                                
+28100187056SPLMRITALI00101408Ritalin                       tabletter           TAB           10 mg               0000010000MG 011768011768 N06BA04OR      JG   0975D                
+28100193656SPLMSTREPT00401398Streptocillin Vet.            inj.v‘ske,suspensionINJVSKS       200000 IE +250 mg/ml0000000000   205600205600QJ01RA01IM                                
+28100223956SPLMDIHYDR00100258Dihydrostreptomycin Agrov. Vettabletter           TAB           500 mg              0000500000MG 205600205600QA07AA90OR                                
+28100225957SPLMPERILA00101636Perilax                       enterotabletter     ENTTAB        5 mg                0000005000MG 012582257625 A06AB02OR               D                
+28100230857SPLMULTRAC00101646Ultracortenol                 ›jensalve           OJSALV        0,5%                0000000500PC 011768011768 S01BA04CO                                
+28100231857SPLMAKINET00201659Akineton                      tabletter           TAB           2 mg                0000002000MG 255906255906 N04AA02OR               D                
+28100232757SPLMDULCOL00101603Dulcolax                      enterotabletter     ENTTAB        5 mg                0000005000MG 013525205600 A06AB02OR               D                
+28100234057SPLMSTEMET00101717Stemetil                      tabletter           TAB           5 mg                0000005000MG 257842257842 N05AB04OR               D                
+28100245657SPLMSYNTOC00101709Syntocinon                    inj.v‘ske, opl›sningINJVSKO       10 IE/ml            0000010000IUM011768011768 H01BB02IV                                
+28100245757SPLMMEDROL00101708Medrol                        tabletter           TAB           4 mg                0000004000MG 061800061800 H02AB04OR       G   2093D                
+28100249157SPLMAKINET00101659Akineton                      inj.v‘ske, opl›sningINJVSKO       5 mg/ml             0000005000MGM255906255906 N04AA02IV                                
+28100257458SPLMPLEGIC00101750Plegicil                      tabletter           TAB           10 mg               0000010000MG 254979011596 N05AA04OR               D                
+28100257658SPLMPLEGIC00201750Plegicil Vet.                 inj.v‘ske, opl›sningINJVSKO       10 mg/ml            0000010000MGM254979011596QN05AA04IMIV                              
+28100259658SPLMPLAQUE00101756Plaquenil                     filmovertrukne tabl.TABFILM       200 mg              0000200000MG 257842257842 P01BA02OR               D                
+28100268558SPLMFUNGIZ00101782Fungizone                     pulv.t.inf.v‘ske,oplINFPULO       50 mg               0000050000MG 249900254856 J02AA01IV       G   0453                 
+28100270558SPLMSENDOX00401785Sendoxan                      overtrukne tabletterTABOTR        50 mg               0000050000MG 135400135400 L01AA01OR                                
+28100272558SPLMGLYCIF00102034Glycifer                      orale dr†ber, opl›snORALDRO       30 mg/ml            0000030000MGM020800020802 B03AA01OR                                
+28100280558SPLMNOACID00101828Noacid                        tabletter           TAB           400 mg              0000400000MG 011763011763 A02AB04OR               D                
+28100281758SPLMKENALO00401819Kenalog                       salve               SALV          0,1%                0000000100PC 249900254856 D07AB09KU                                
+28100286458SPLMTERRAM00300071Terramycin-Polymyxin B        ›jensalve           OJSALV        5 + 1 mg/g          0000000000   061800061800 S01AA30CO                                
+28100289759SPLMANTABU00200599Antabus                       brusetabletter      BRUTAB        400 mg              0000400000MG 255237257213 N07BB01OR                                
+28100290259SPLMSTREPS00101854Strepsils                     sugetabletter       SUGTAB                            0000000000   257628011768 R02AA03OR                                
+28100290359SPLMSTREPT00301831Streptipenprokain Rosco Vet.  injektionsv‘ske     INJVSK        200 mg/ml +335 mg/ml0000000000   258503258503QJ01RA01IM                                
+28100295459SPLMPOLARA00101792Polaramin                     depottabletter      DEPTAB        6 mg                0000006000MG 011716257309 R06AB02OR      JG   0488D                
+28100300959SPLMRESONI00101887Resonium                      pulv.t.oral/rekt.susPULORES                           0000000000   257842257842 V03AE01ORPR     G   0491                 
+28100304259SPLMSERENA00201907Serenase                      orale dr†ber, opl›snORALDRO       2 mg/ml             0000002000MGM059900059900 N05AD01OR                                
+28100310059SPLMGENABI00102018Genabil Vet.                  inj.v‘ske, opl›sningINJVSKO       100 mg/ml           0000100000MGM149500205600QA05AX90IV                                
+28100312259SPLMKLYX  00101941Klyx                          rektalv‘ske, opl›sn.REKVSKO       1 + 250 mg/ml       0000000000   011483011483 A06AG10PR       G   2401                 
+28100315259SPLMSYNTOC00201709Syntocinon                    n‘sespray, opl›sningNASSPRO       6,7 mikrog/dosis    0000006700RGD011768011768 H01BB02IN                                
+28100320959SPLMDULCOL00201603Dulcolax                      suppositorier       SUP           10 mg               0000010000MG 013525205600 A06AB02PR                                
+28100321859SPLMPERLUT00101968Perlutex                      tabletter           TAB           5 mg                0000005000MG 034800034800 G03DA02OR                                
+28100323959SPLMDEPO-M00101980Depo-medrol                   inj.v‘ske,suspensionINJVSKS       40 mg/ml            0000040000MGM061800061800 H02AB04IMIR                              
+28100327560SPLMCENTYL00201987Centyl med Kaliumklorid       overtrukne tabletterTABOTR        2,5+573 mg          0000000000   034800034800 C03AB01OR       G   0876D                
+28100327860SPLMNOZINA00101996Nozinan                       tabletter           TAB           5 mg                0000005000MG 257842257842 N05AA02OR               D                
+28100328060SPLMVANQUI00101990Vanquin                       oral suspension     ORALSUS       10 mg/ml            0000010000MGM259936254766 P02CX01OR                                
+28100329660SPLMMARPLA00102035Marplan                       tabletter           TAB           10 mg               0000010000MG 011565011565 N06AF01OR               D                
+28100330160SPLMREGENO00102008Regenon                       kapsler             KAP           25 mg               0000025000MG 049900012080 A08AA03OR      J                         
+28100335260SPLMXYLOCA00500985Xylocain                      kutanspray, opl›sn. KUTSPRO       10 mg/dosis         0000010000MGD056100056100 N01BB02KU       G   0465                 
+28100338960SPLMERCORI00101949Ercoril                       tabletter           TAB           15 mg               0000015000MG 192000192000 A03AB05OR               D                
+28100340560SPLMBETOLV00102273Betolvex                      inj.v‘ske,suspensionINJVSKS       1 mg/ml             0000001000MGM255237257213 B03BA02IM                                
+28100342360SPLMFLAGYL00402048Flagyl                        tabletter           TAB           200 mg              0000200000MG 257842257842 P01AB01OR               D                
+28100348960SPLMVILAN 00102078Vilan                         inj.v‘ske, opl›sningINJVSKO       10 mg/ml            0000010000MGM034200257625 N02AA04IMIVSC  J                         
+28100350760SPLMGLUCOP00102155Glucophage                    filmovertrukne tabl.TABFILM       500 mg              0000500000MG 013763020802 A10BA02OR       G   0019D                
+28100366461SPLMVELBE 00102247Velbe                         pulv.t.inj.v‘ske,oplINJPULO       10 mg               0000010000MG 250000250000 L01CA01IV                                
+28100368661SPLMSAROTE00202162Saroten                       tabletter           TAB           25 mg               0000025000MG 035800035801 N06AA09OR       G   0273D                
+28100372861SPLMOTRIVI00102164Otrivin                       n‘sedr†ber, opl›sn. NASDRBO       0,5 mg/ml           0000000500MGM011768011768 R01AA07IN                                
+28100375161SPLMERCOQU00102107Ercoquin                      tabletter           TAB           250 mg              0000250000MG 192000192000 P01BA02OR               D                
+28100376261SPLMALDOME00102191Aldomet                       filmovertrukne tabl.TABFILM       250 mg              0000250000MG 260307260307 C02AB01OR               D                
+28100385861SPLMPROCTO00102593Proctosedyl                   rektalsalve         REKSALV                           0000000000   257842257842 C05AA01PR       G   0426                 
+28100388961SPLMSULFA-00102227Sulfa-Streptocillin Vet.      uteritorier, tabl.  UTETAB        4 g + 250 mg +500 mg0000000000   205600205600QG51BE  IU                                
+28100389161SPLMVANQUI00201990Vanquin                       tabletter           TAB           50 mg               0000050000MG 259936254766 P02CX01OR               D                
+28100389461SPLMINTRAL00102229Intralipid                    inf.v‘ske, emulsion INFVSKE       10%                 0000010000PC 012263256331 B05BA02IV                                
+28100389961SPLMRHEOMA00102243Rheomacrodex 100 mg/ml m.Natr.inf.v‘ske, opl›sningINFVSKO                           0000000000   254766254766 B05AA05IV                                
+28100391161SPLMVIBEDE00102290Vibeden                       inj.v‘ske, opl›sningINJVSKO       1 mg/ml             0000001000MGM255483255483 B03BA03IM                                
+28100396662SPLMTETRAL00102260Tetralysal                    kapsler, h†rde      KAPH          150 mg              0000150000MG 012238012238 J01AA04OR               D                
+28100399462SPLMFUCIDI00602212Fucidin                       filmovertrukne tabl.TABFILM       250 mg              0000250000MG 034800034800 J01XC01OR       G   1114D                
+28100400362SPLMZAROND00102116Zarondan                      oral opl›sning      ORALOPL       50 mg/ml            0000050000MGM061800061800 N03AD01OR      J                         
+28100400562SPLMSYNALA00102278Synalar                       creme               CREME         0,025%              0000000025PC 257171257171 D07AC04KU                                
+28100401662SPLMPRED-C00102546Pred-Clysma                   rektalvsk.,opl,endosREKVSOE       0,25 mg/ml          0000000250MGM258499056800 A07EA01PR                                
+28100402162SPLMKENALO00301819Kenalog                       mundhulepasta       MUHUPAS       0,1%                0000000100PC 249900254856 A01AC01OM                                
+28100405062SPLMKENALO00502297Kenalog Comp. med Mycostatin  creme               CREME                             0000000000   249900254856 D07CB01KU                                
+28100405762SPLMSOFRAD00102508Sofradex                      ›jen- og ›redr†ber  OODRB         0,5 + 5,0 +0,05 mg/g0000000000   257842257842 S03CA01AUOK                              

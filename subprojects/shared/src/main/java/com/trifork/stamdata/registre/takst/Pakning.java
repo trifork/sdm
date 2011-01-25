@@ -7,9 +7,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.DateUtils;
+import com.trifork.stamdata.Record;
 import com.trifork.stamdata.persistence.Dataset;
-import com.trifork.stamdata.util.DateUtils;
-import com.trifork.stamdata.util.Record;
 
 
 @Entity

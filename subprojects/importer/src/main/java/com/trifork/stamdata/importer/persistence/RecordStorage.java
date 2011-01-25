@@ -3,7 +3,7 @@ package com.trifork.stamdata.importer.persistence;
 
 import java.util.Date;
 
-import com.trifork.stamdata.util.Record;
+import com.trifork.stamdata.Record;
 
 
 public interface RecordStorage<T extends Record>

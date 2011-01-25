@@ -9,9 +9,9 @@ import java.util.Map;
 
 import javax.persistence.Table;
 
-import com.trifork.stamdata.util.EntityHelper;
-import com.trifork.stamdata.util.NamingConvention;
-import com.trifork.stamdata.util.Record;
+import com.trifork.stamdata.EntityHelper;
+import com.trifork.stamdata.NamingConvention;
+import com.trifork.stamdata.Record;
 
 
 public class Dataset<T extends Record>

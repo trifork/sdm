@@ -14,6 +14,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.trifork.stamdata.DateUtils;
 import com.trifork.stamdata.importer.jobs.sor.xml.AddressInformation;
 import com.trifork.stamdata.importer.jobs.sor.xml.HealthInstitutionEntity;
 import com.trifork.stamdata.importer.jobs.sor.xml.InstitutionOwnerEntity;
@@ -24,7 +25,6 @@ import com.trifork.stamdata.registre.sor.Praksis;
 import com.trifork.stamdata.registre.sor.Sygehus;
 import com.trifork.stamdata.registre.sor.SygehusAfdeling;
 import com.trifork.stamdata.registre.sor.Yder;
-import com.trifork.stamdata.util.DateUtils;
 
 
 public class SOREventHandler extends DefaultHandler

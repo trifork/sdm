@@ -1,5 +1,0 @@
-apply plugin: 'war'
-
-dependencies {
-	compile libs.servlet_api
-}

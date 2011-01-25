@@ -3,10 +3,10 @@ package com.trifork.stamdata.importer.jobs.yderregisteret;
 
 import java.util.Date;
 
+import com.trifork.stamdata.DateUtils;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.registre.yder.Yderregister;
 import com.trifork.stamdata.registre.yder.YderregisterPerson;
-import com.trifork.stamdata.util.DateUtils;
 
 
 public class YderregisterDatasets

@@ -3,9 +3,9 @@ package com.trifork.stamdata.importer.jobs.autorisationsregisteret;
 
 import java.util.Date;
 
+import com.trifork.stamdata.DateUtils;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.registre.autorisation.Autorisation;
-import com.trifork.stamdata.util.DateUtils;
 
 
 public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation>

@@ -1,6 +1,6 @@
 include 'shared'
-include 'replication-gui'
-include 'replication-service'
+include 'replication'
+include 'replication:schemas'
 include 'importer'
 
 rootProject.name = 'stamdata'

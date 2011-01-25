@@ -1,0 +1,33 @@
+0012.0 LMS-TAKST                               20090729                0131LMS.ZIP     200931
+01025000550001000021900060000000015000000000000
+10Grunddata l‘gemiddel          LMS01.txt   0105336
+10Grunddata pakning             LMS02.txt   0108513
+10Grunddata priser              LMS03.txt   0108513
+10Generel substitution          LMS04.txt   0103229
+10HF/HX-substitution            LMS05.txt   0100402
+10Tilskudsgrupper               LMS07.txt   0102639
+10Firmaliste                    LMS09.txt   0100530
+10Udg†ede navne                 LMS10.txt   0102453
+10Administrationsvej            LMS11.txt   0100088
+10ATC-kode-tekst                LMS12.txt   0111914
+10Beregningsregler              LMS13.txt   0100004
+10Emballage                     LMS14.txt   0100057
+10Enheder                       LMS15.txt   0100113
+10Sygesikringstilskud           LMS16.txt   0100005
+10Klausulering                  LMS17.txt   0100041
+10Udleveringsbestemmelser       LMS18.txt   0100024
+10Speciale                      LMS19.txt   0100036
+10Opbevaringsbetingelser        LMS20.txt   0100014
+10L‘gemiddelnavne               LMS21.txt   0105336
+10L‘gemiddelform-betegnelser    LMS22.txt   0100701
+10Tilskudsintervaller           LMS23.txt   0100017
+10Dosisdispensering             LMS24.txt   0103422
+10Indikationskode               LMS25.txt   0116939
+10Indikation                    LMS26.txt   0100567
+10Doseringskode                 LMS27.txt   0118039
+10Dosering                      LMS28.txt   0101148
+10Rekommandationer              LMS29.txt   0100191
+10Indholdsstoffer               LMS30.txt   0111981
+10Enhedspriser                  LMS31.txt   0108513
+10Pakningskombinationer         LMS32.txt   0116167
+10Systemfil                     system.txt  0100033

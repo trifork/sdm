@@ -14,7 +14,7 @@
 
 	<servlet-mapping>
 		<servlet-name>importerServlet</servlet-name>
-		<url-pattern>/*.html</url-pattern>
+		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
 
 </web-app>

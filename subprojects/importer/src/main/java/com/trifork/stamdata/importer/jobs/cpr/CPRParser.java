@@ -23,7 +23,6 @@ import com.trifork.stamdata.registre.cpr.UmyndiggoerelseVaergeRelation;
 
 public class CPRParser
 {
-
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
 	static final String EMPTY_DATE_STRING = "000000000000";
@@ -31,7 +30,6 @@ public class CPRParser
 
 	public static CPRDataset parse(File f) throws FileParseException
 	{
-
 		CPRDataset cpr = new CPRDataset();
 
 		BufferedReader reader = null;
@@ -44,7 +42,8 @@ public class CPRParser
 				String line = reader.readLine();
 				if (line.length() > 0)
 				{
-					switch (getRecordType(line)) {
+					switch (getRecordType(line))
+					{
 					case 0:
 						cpr.setValidFrom(getValidFrom(line));
 						Date forrigeIKraftdato = getForrigeIkraftDato(line);
@@ -96,8 +95,7 @@ public class CPRParser
 		}
 		catch (ParseException pe)
 		{
-			throw new FileParseException("Der opstod en parsnings fejl under indlæsning af CPR Person fil.",
-					pe);
+			throw new FileParseException("Der opstod en parsnings fejl under indlæsning af CPR Person fil.", pe);
 		}
 
 		finally
@@ -116,7 +114,7 @@ public class CPRParser
 	}
 
 
-	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws ParseException
+	public static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws ParseException
 	{
 
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
@@ -138,7 +136,7 @@ public class CPRParser
 	}
 
 
-	static Foraeldremyndighedsrelation foraeldreMyndighedRelation(String line) throws ParseException
+	public static Foraeldremyndighedsrelation foraeldreMyndighedRelation(String line) throws ParseException
 	{
 
 		Foraeldremyndighedsrelation f = new Foraeldremyndighedsrelation();
@@ -155,7 +153,7 @@ public class CPRParser
 	}
 
 
-	static BarnRelation barnRelation(String line)
+	public static BarnRelation barnRelation(String line)
 	{
 
 		BarnRelation b = new BarnRelation();
@@ -165,7 +163,7 @@ public class CPRParser
 	}
 
 
-	static Navneoplysninger navneoplysninger(String line) throws ParseException
+	public static Navneoplysninger navneoplysninger(String line) throws ParseException
 	{
 
 		Navneoplysninger n = new Navneoplysninger();
@@ -185,7 +183,7 @@ public class CPRParser
 	}
 
 
-	static Navnebeskyttelse navneBeskyttelse(String line) throws ParseException
+	public static Navnebeskyttelse navneBeskyttelse(String line) throws ParseException
 	{
 
 		Navnebeskyttelse n = new Navnebeskyttelse();
@@ -198,7 +196,7 @@ public class CPRParser
 	}
 
 
-	static Klarskriftadresse klarskriftadresse(String line) throws FileParseException
+	public static Klarskriftadresse klarskriftadresse(String line) throws FileParseException
 	{
 
 		Klarskriftadresse k = new Klarskriftadresse();
@@ -223,7 +221,7 @@ public class CPRParser
 	}
 
 
-	static Personoplysninger personoplysninger(String line) throws ParseException
+	public static Personoplysninger personoplysninger(String line) throws ParseException
 	{
 
 		Personoplysninger p = new Personoplysninger();
@@ -277,13 +275,11 @@ public class CPRParser
 		}
 		catch (NumberFormatException nfe)
 		{
-			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line
-					+ "], på positionen from: " + from + ", to: " + to, nfe);
+			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, nfe);
 		}
 		catch (StringIndexOutOfBoundsException se)
 		{
-			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line
-					+ "], på positionen from: " + from + ", to: " + to, se);
+			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, se);
 		}
 	}
 
@@ -297,13 +293,11 @@ public class CPRParser
 		}
 		catch (NumberFormatException nfe)
 		{
-			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line
-					+ "], på positionen from: " + from + ", to: " + to, nfe);
+			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, nfe);
 		}
 		catch (StringIndexOutOfBoundsException se)
 		{
-			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line
-					+ "], på positionen from: " + from + ", to: " + to, se);
+			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, se);
 		}
 	}
 
@@ -312,8 +306,7 @@ public class CPRParser
 	{
 
 		String dateString = cut(line, from, to);
-		if (dateString != null && dateString.trim().length() == to - from
-				&& !dateString.equals(EMPTY_DATE_STRING))
+		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING))
 		{
 			return format.parse(dateString);
 		}
@@ -331,9 +324,7 @@ public class CPRParser
 		}
 		catch (ParseException pe)
 		{
-			throw new FileParseException(
-					"Der opstod en fejl und parsning af ikrafttrædelsesdato for cpr vejregister fil. "
-							+ pe.getMessage(), pe);
+			throw new FileParseException("Der opstod en fejl und parsning af ikrafttrædelsesdato for cpr vejregister fil. " + pe.getMessage(), pe);
 		}
 	}
 
@@ -350,9 +341,7 @@ public class CPRParser
 			}
 			catch (ParseException pe)
 			{
-				throw new FileParseException(
-						"Der opstod en fejl und parsning af FORRIGE ikrafttrædelsesdato for cpr vejregister fil. "
-								+ pe.getMessage(), pe);
+				throw new FileParseException("Der opstod en fejl und parsning af FORRIGE ikrafttrædelsesdato for cpr vejregister fil. " + pe.getMessage(), pe);
 			}
 		}
 		return null;

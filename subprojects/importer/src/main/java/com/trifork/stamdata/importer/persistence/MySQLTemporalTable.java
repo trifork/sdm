@@ -18,11 +18,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.EntityHelper;
+import com.trifork.stamdata.NamingConvention;
+import com.trifork.stamdata.Record;
 import com.trifork.stamdata.importer.jobs.FilePersistException;
 import com.trifork.stamdata.persistence.Dataset;
-import com.trifork.stamdata.util.EntityHelper;
-import com.trifork.stamdata.util.NamingConvention;
-import com.trifork.stamdata.util.Record;
 
 
 public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>

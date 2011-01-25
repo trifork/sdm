@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<SorTree xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" xmlns:xkom-1="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:dkcc2005-2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" xmlns:dkcc2005="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0">
+	<CreatedAtTime>2010-01-26T00:00:00+01:00</CreatedAtTime>
+	<SnapshotDate>2010-01-26</SnapshotDate>
+<InstitutionOwnerEntity>
+		<InstitutionOwner>
+			<SorIdentifier>306011000016003</SorIdentifier>
+			<EntityName>Værløse Apotek</EntityName>
+			<OwnerType>550891000005100</OwnerType>
+			<EanLocationCodeEntity>
+				<EanLocationCode>5790000173624</EanLocationCode>
+				<OnlyInternalIndicator>false</OnlyInternalIndicator>
+				<NonActiveIndicator>false</NonActiveIndicator>
+				<SystemSupplier>1001000055001</SystemSupplier>
+				<SystemType>221000045007</SystemType>
+				<CommunicationSupplier>41000035001</CommunicationSupplier>
+				<RegionCode>1084</RegionCode>
+				<EdiAdministrator>106</EdiAdministrator>
+				<SorStatus>
+					<FromDate>1995-02-20</FromDate>
+					<UpdatedAt>2009-04-02</UpdatedAt>
+					<FirstFromDate>1995-02-20</FirstFromDate>
+				</SorStatus>
+			</EanLocationCodeEntity>
+			<PostalAddressInformation>
+				<xkom-1:AddressPostal>
+					<dkcc2005:StreetName>Bymidten</dkcc2005:StreetName>
+					<dkcc:StreetBuildingIdentifier>13</dkcc:StreetBuildingIdentifier>
+					<dkcc2005:PostCodeIdentifier>3500</dkcc2005:PostCodeIdentifier>
+					<dkcc2005:DistrictName>Værløse</dkcc2005:DistrictName>
+					<dkcc:CountryIdentificationCode scheme="iso3166-alpha2">DK</dkcc:CountryIdentificationCode>
+				</xkom-1:AddressPostal>
+			</PostalAddressInformation>
+			<VirtualAddressInformation>
+				<TelephoneNumberIdentifier>42482209</TelephoneNumberIdentifier>
+				<FaxNumberIdentifier>42484748</FaxNumberIdentifier>
+			</VirtualAddressInformation>
+			<SorStatus>
+				<FromDate>1995-02-20</FromDate>
+				<UpdatedAt>2009-04-02</UpdatedAt>
+				<FirstFromDate>1995-02-20</FirstFromDate>
+			</SorStatus>
+		</InstitutionOwner>
+		<HealthInstitutionEntity>
+			<HealthInstitution>
+				<SorIdentifier>306021000016007</SorIdentifier>
+				<EntityName>Værløse Apotek</EntityName>
+				<InstitutionType>264372000</InstitutionType>
+				<OptionalEanLocationCode>
+					<EntityInheritedIndicator>true</EntityInheritedIndicator>
+				</OptionalEanLocationCode>
+				<GeographicalParent>
+					<GeographicalParentRelation>1</GeographicalParentRelation>
+				</GeographicalParent>
+				<SorStatus>
+					<FromDate>1995-02-20</FromDate>
+					<UpdatedAt>2009-04-02</UpdatedAt>
+					<FirstFromDate>1995-02-20</FirstFromDate>
+				</SorStatus>
+			</HealthInstitution>
+			<OrganizationalUnitEntity>
+				<OrganizationalUnit>
+					<SorIdentifier>306031000016009</SorIdentifier>
+					<EntityName>Værløse Apotek</EntityName>
+					<PharmacyIdentifier>362,1</PharmacyIdentifier>
+					<OptionalEanLocationCode>
+						<EntityInheritedIndicator>true</EntityInheritedIndicator>
+					</OptionalEanLocationCode>
+					<GeographicalParent>
+						<GeographicalParentRelation>2</GeographicalParentRelation>
+					</GeographicalParent>
+					<SorStatus>
+						<FromDate>1995-02-20</FromDate>
+						<UpdatedAt>2009-04-02</UpdatedAt>
+						<FirstFromDate>1995-02-20</FirstFromDate>
+					</SorStatus>
+				</OrganizationalUnit>
+			</OrganizationalUnitEntity>
+		</HealthInstitutionEntity>
+	</InstitutionOwnerEntity>
+</SorTree>

@@ -55,7 +55,8 @@ public class Configuration
 	public boolean getBooleanProperty(String key) throws ConfigurationException
 	{
 		String stringValue = getStringProperty(key);
-		return Boolean.getBoolean(stringValue);
+		boolean value = Boolean.parseBoolean(stringValue);
+		return value;
 	}
 
 

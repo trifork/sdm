@@ -1,0 +1,113 @@
+1D  dag       dag(e)                                             
+1H  time      timer                                              
+1I  minut     minut(ter)                                         
+1K  kort      Kort tid, uspecificeret                            
+1L  lang      lang tid, uspecificeret                            
+1M  m†ned     m†ned(er)                                          
+1S  sekund    sekund(er)                                         
+1U  ukendt    ukendt                                             
+1W  uge       uger                                               
+1X  flere     flere opbevaringstider                             
+1Y  †r        †r                                                 
+3AUHaur/htgl  aur/htgl                                           
+3AUMaur/ml    aur/ml                                             
+3BABMia. bakt.milliard bakterier                                 
+3BHSbeh.s‘t   behandlingss‘t                                     
+3DOSdoser     doser                                              
+3EIDEID       egg infection doses                                
+3EUDEU/dosis  ELISA units/dosis                                  
+3EUMEU/ml     ELISA units/ml                                     
+3G  g         g                                                  
+3GB GBq       gigabecquerel                                      
+3GBKGBq/kaps. Gigabecquerel/kapsel                               
+3GBMGBq/ml    Gigabecquerel/ml                                   
+3GDOg/dosis   g/dosis                                            
+3GL g/l       g/l                                                
+3GMLg/ml      g/ml                                               
+3HAEHAE       h‘magglutinationsenheder                           
+3HEPHEP       histamin‘kvivalenter, priktest                     
+3INSInit.s‘t  initials‘t                                         
+3IU IE        internationale enheder                             
+3IUDIE/dosis  Internationale enheder/dosis                       
+3IUGIE/g      Internationale enheder/g                           
+3IUMIE/ml     Internationale enheder/ml                          
+3KB kBq       kilobecquerel                                      
+3KBKkBq/kaps. kilobecquerel/kapsel                               
+3KIMkie/ml    kallikrein inactivation units/ml                   
+3KITkit       kit                                                
+3LFMLf/ml     Lf/ml                                              
+3MB MBq       megabecquerel                                      
+3MBKMBq/kaps. megabecquerel/kapsel                               
+3MBMMBq/ml    megabecquerel/ml                                   
+3MG mg        mg                                                 
+3MGCmg/cm     mg/cm                                              
+3MGDmg/dosis  mg/dosis                                           
+3MGFmg/72timermg/72 timer                                        
+3MGGmg/g      mg/g                                               
+3MGHmg/24timermg/24 timer                                        
+3MGKmg/cmx2   mg/cmx2                                            
+3MGLmg/l      mg/l                                               
+3MGMmg/ml     mg/ml                                              
+3MGSmg/16timermg/16 timer                                        
+3MGTmg/time   mg/time                                            
+3MILMill. E   million enheder                                    
+3MIMMill.IE/mlmillion internationale enheder/ml                  
+3MIUMill. IE  Million internationale enheder                     
+3MJMmg jod/ml mg jod/ml                                          
+3ML ml        ml                                                 
+3MMLmmol/l    millimol/l                                         
+3MMOmmol      millimol                                           
+3MOLmol       mol                                                
+3MOMmmol/ml   millimol/ml                                        
+3PC %         procent                                            
+3PDOpfu/dosis plaque forming units/dosis                         
+3PFUpfu       plaque forming units                               
+3PPMppm       parts pr. million                                  
+3PRSpr‘p.s‘t  pr‘parationss‘t                                    
+3PV % w/v     % w/v                                              
+3PW % w/w     % w/w                                              
+3RG mikg      mikrogram                                          
+3RGDmikg/dosismikrogram/dosis                                    
+3RGGmikg/g    mikrogram/g                                        
+3RGHmikg/24 t mikrogram/24 timer                                 
+3RGMmikg/ml   mikrogram/ml                                       
+3RGTmikg/time mikrogram/time                                     
+3RGVmikg/htgl mikrogram/htgl                                     
+3RLMmikrol./mlmikroliter/ml                                      
+3SQ sq-E      standardized quantity units                        
+3SQMsq-E/ml   standardized quantity units/ml                     
+3SQVsq-E/htgl standardized quantity units/htgl                   
+3TCITCID 50   tissue culture infection doses 50                  
+3UDOenh./dosisenheder/dosis                                      
+3UMLenh./ml   enheder/ml                                         
+3UN enh.      enheder                                            
+3WV w/v       v‘gt/volumen                                       
+3XAMa-XaIE/ml anti-Xa international units/ml                     
+4AM amp.      ampuller                                           
+4AS amp+solv  amp.+solv.                                         
+4BR breve     breve                                              
+4CK cmx2      cmx2                                               
+4CM cm        cm                                                 
+4DO doser     doser                                              
+4DS dos.+solv.doser+solv.                                        
+4DU dos+utens.doser+utens.                                       
+4ES eng.spr.  engangsspr.                                        
+4FL flasker   flasker                                            
+4G  g         g                                                  
+4HD htgl+dil. htgl+dil.                                          
+4HS htgl+solv htgl+solv.                                         
+4HT htgl      htgl                                               
+4IF Infus.fl. Inf.flaske                                         
+4IS IE+solv.  IE+solv.                                           
+4IU IE        internationale enheder                             
+4KG kg        kg                                                 
+4LT l         liter                                              
+4MG mg        mg                                                 
+4ML ml        ml                                                 
+4MT m         meter                                              
+4PK pakn.     pakninger                                          
+4PS poser     poser                                              
+4SE s‘t       s‘t                                                
+4ST stk.      stk.                                               
+4TL tubuler   tubuler                                            
+4UN enh.      enheder                                            

@@ -20,13 +20,13 @@ import com.trifork.stamdata.importer.persistence.MySQLTemporalDao;
 
 public class AutorisationImporter extends FileImporter
 {
+	private static final Logger LOGGER = getLogger(AutorisationImporter.class);
+
+	
 	public AutorisationImporter(File rootDir, ConnectionFactory factory)
 	{
 		super(rootDir, factory);
 	}
-
-
-	private static final Logger LOGGER = getLogger(AutorisationImporter.class);
 
 
 	public boolean areRequiredInputFilesPresent(List<File> files)
@@ -133,7 +133,7 @@ public class AutorisationImporter extends FileImporter
 	@Override
 	public String getName()
 	{
-		return null;
+		return "Autoritetsregister Importer";
 	}
 
 
@@ -147,5 +147,4 @@ public class AutorisationImporter extends FileImporter
 	{
 		return 30;
 	}
-
 }

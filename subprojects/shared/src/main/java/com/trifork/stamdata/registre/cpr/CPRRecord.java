@@ -1,6 +1,6 @@
 package com.trifork.stamdata.registre.cpr;
 
-import com.trifork.stamdata.util.AbstractRecord;
+import com.trifork.stamdata.AbstractRecord;
 
 
 public abstract class CPRRecord extends AbstractRecord {

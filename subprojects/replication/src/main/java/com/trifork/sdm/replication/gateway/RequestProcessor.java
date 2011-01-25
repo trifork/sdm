@@ -1,0 +1,12 @@
+package com.trifork.sdm.replication.gateway;
+
+public interface RequestProcessor {
+	
+	void process(String request, String method);
+	
+	String getResponse();
+	
+	int getResponseCode();
+	
+	String getContentType();
+}

@@ -10,11 +10,11 @@ import javax.persistence.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.Record;
 import com.trifork.stamdata.importer.jobs.FilePersistException;
 import com.trifork.stamdata.importer.persistence.MySQLTemporalTable.RecordVersion;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.persistence.Dataset;
-import com.trifork.stamdata.util.Record;
 
 
 public class MySQLTemporalDao implements RecordPersister

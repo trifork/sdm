@@ -9,9 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.stamdata.Record;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.persistence.Dataset;
-import com.trifork.stamdata.util.Record;
 
 
 @Entity

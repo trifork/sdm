@@ -1,6 +1,6 @@
 package com.trifork.stamdata.registre.takst;
 
-import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.DateUtils;
 
 
 public class UdgaaedeNavne extends TakstRecord {

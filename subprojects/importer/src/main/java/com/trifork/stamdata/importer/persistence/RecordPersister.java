@@ -3,10 +3,10 @@ package com.trifork.stamdata.importer.persistence;
 
 import java.util.List;
 
+import com.trifork.stamdata.Record;
 import com.trifork.stamdata.importer.jobs.FilePersistException;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.persistence.Dataset;
-import com.trifork.stamdata.util.Record;
 
 
 public interface RecordPersister

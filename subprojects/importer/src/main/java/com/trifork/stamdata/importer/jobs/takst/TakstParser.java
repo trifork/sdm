@@ -1,7 +1,7 @@
 package com.trifork.stamdata.importer.jobs.takst;
 
 
-import static com.trifork.stamdata.util.DateUtils.FOREVER;
+import static com.trifork.stamdata.DateUtils.FOREVER;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -336,7 +336,7 @@ public class TakstParser
 	 * 
 	 * @param takst
 	 */
-	static void filterOutVetDrugs(Takst takst)
+	public static void filterOutVetDrugs(Takst takst)
 	{
 		List<Pakning> pakningerToBeRemoved = new ArrayList<Pakning>();
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);

@@ -4,6 +4,7 @@ package com.trifork.stamdata.importer;
 import static com.trifork.stamdata.importer.AppAttributes.CONFIGURATION;
 import static com.trifork.stamdata.importer.AppAttributes.CONNECTION_FACTORY;
 import static com.trifork.stamdata.importer.AppAttributes.ERROR;
+import static com.trifork.stamdata.importer.AppAttributes.JOB_MANAGER;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -56,7 +57,7 @@ public class ApplicationManager implements ServletContextListener
 
 			LOG.info("Initializing worker threads.");
 
-			prepareJobs();
+			prepareJobs(context);
 
 			LOG.info("Application initialized.");
 
@@ -93,7 +94,7 @@ public class ApplicationManager implements ServletContextListener
 	}
 
 
-	private void prepareJobs() throws ConfigurationException
+	private void prepareJobs(ServletContext context) throws ConfigurationException
 	{
 		rootDir = new File(config.getStringProperty("rootDir"));
 		defaultSchedule = config.getStringProperty("defaultSchedule");
@@ -107,6 +108,10 @@ public class ApplicationManager implements ServletContextListener
 		scheduleJob(manager, "sksImporter", new SksImporter(rootDir, connectionFactory));
 		scheduleJob(manager, "sorImporter", new SorImporter(rootDir, connectionFactory));
 		scheduleJob(manager, "yderImporter", new YderImporter(rootDir, connectionFactory));
+		
+		manager.run();
+		
+		context.setAttribute(JOB_MANAGER, manager);
 	}
 
 

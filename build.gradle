@@ -6,12 +6,19 @@ libs = [
 	slf4j_api: 'org.slf4j:slf4j-api:1.6.1@jar',
 	logback_core: 'ch.qos.logback:logback-core:0.9.27@jar',
 	logback_classic: 'ch.qos.logback:logback-classic:0.9.27@jar',
-	junit: 'junit:junit:4.8.2',
 	servlet_api: 'javax.servlet:servlet-api:2.4',
 	reflections: 'org.reflections:reflections:0.9.5-RC2',
 	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1@jar',
-	mysql_driver: 'mysql:mysql-connector-java:5.1.13',
-	mockito: 'org.mockito:mockito-core:1.8.5'
+	mysql_driver: 'mysql:mysql-connector-java:5.1.13@jar',
+	junit: 'junit:junit:4.8.2',
+	mockito: 'org.mockito:mockito-core:1.8.5@jar',
+	hamcrest: 'org.hamcrest:hamcrest-library:1.2@jar',
+	bouncycastle: 'bouncycastle:bcprov-jdk16:140@jar',
+	jodi_time: 'joda-time:joda-time:1.6@jar',
+	velocity: 'apache-velocity:velocity:1.5@jar',
+	guice_api: 'com.google.inject:guice:3.0-rc2@jar',
+	guice_servlet: 'com.google.inject:guice-servlet:3.0-rc2@jar',
+	guice_assistedinject: 'com.google.inject:guice-assistedinject:3.0-rc2@jar'
 ]
 
 allprojects {
@@ -35,7 +42,6 @@ allprojects {
 
 subprojects {
 	apply plugin: 'java'
-	apply plugin: 'jetty'
 	
 	sourceCompatibility = 1.6
 	targetCompatibility = 1.6
@@ -46,12 +52,13 @@ subprojects {
 		assert project.webXml.isFile()
 	}
 	
-	// Exclude commons-logging from all dependencies
+	// Exclude other logging from all dependencies
 	// since we will be using slf4j and backlog.
 	
 	configurations {
-		compile {
-			exclude group:"commons-logging"
+		runtime {
+			exclude group: "commons-logging"
+			exclude group: "log4j"
 		}
 	}
 }

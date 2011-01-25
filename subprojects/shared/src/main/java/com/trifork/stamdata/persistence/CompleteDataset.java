@@ -3,7 +3,7 @@ package com.trifork.stamdata.persistence;
 import java.util.Date;
 import java.util.List;
 
-import com.trifork.stamdata.util.Record;
+import com.trifork.stamdata.Record;
 
 
 /**

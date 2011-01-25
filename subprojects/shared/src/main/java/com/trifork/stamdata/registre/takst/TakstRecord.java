@@ -2,7 +2,7 @@ package com.trifork.stamdata.registre.takst;
 
 import java.util.Date;
 
-import com.trifork.stamdata.util.AbstractRecord;
+import com.trifork.stamdata.AbstractRecord;
 
 
 public abstract class TakstRecord extends AbstractRecord {

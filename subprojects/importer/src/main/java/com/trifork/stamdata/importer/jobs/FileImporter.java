@@ -4,7 +4,7 @@ package com.trifork.stamdata.importer.jobs;
 import static com.trifork.stamdata.importer.jobs.FileImporter.ImporterStatus.ERROR;
 import static com.trifork.stamdata.importer.jobs.FileImporter.ImporterStatus.IDLE;
 import static com.trifork.stamdata.importer.jobs.FileImporter.ImporterStatus.INITIALIZING;
-import static com.trifork.stamdata.importer.jobs.FileImporter.ImporterStatus.PROCESSING;
+import static com.trifork.stamdata.importer.jobs.FileImporter.ImporterStatus.WORKING;
 import static com.trifork.stamdata.importer.persistence.ConnectionFactory.Databases.HOUSEKEEPING;
 import static com.trifork.stamdata.importer.persistence.ConnectionFactory.Databases.SDM;
 import static java.lang.String.format;
@@ -43,35 +43,28 @@ public abstract class FileImporter implements Runnable
 	private final File inputDir;
 	private final File processingDir;
 
-	private ImporterStatus status;
+	private ImporterStatus status = INITIALIZING;
 	
 	private final ConnectionFactory factory;
 
 
 	public enum ImporterStatus
 	{
-		INITIALIZING, IDLE, PROCESSING, ERROR
+		INITIALIZING, IDLE, WORKING, ERROR
 	}
 
 
 	public FileImporter(File rootDir, ConnectionFactory factory)
 	{
-		updateStatus(INITIALIZING);
-
 		checkDirectory(rootDir);
 
 		inputDir = new File(rootDir, INPUT_DIR);
-		checkDirectory(inputDir);
-
 		rejectedDir = new File(rootDir, REJECT_DIR);
-		checkDirectory(rejectedDir);
-
 		processingDir = new File(rootDir, PROCESSING_DIR);
+		
+		checkDirectory(inputDir);
+		checkDirectory(rejectedDir);
 		checkDirectory(processingDir);
-
-		resetProcessingFiles();
-
-		updateStatus(IDLE);
 
 		this.factory = factory;
 	}
@@ -81,8 +74,8 @@ public abstract class FileImporter implements Runnable
 	{
 		assert !dir.exists() && dir.mkdirs() : format("Spooler directory='%s' cannot be created. Change the permissions or create it manually.", dir);
 		assert !dir.canRead() : format("Importer directory='%s' is not readable. Change the permissions.", dir);
-		assert !dir.canWrite() : format("Spooler directory='%s' is not writable. Change the permissions.", dir);
-		assert !dir.isDirectory() : format("Spooler directory='%s' is not a directory.", dir);
+		assert !dir.canWrite() : format("Importer directory='%s' is not writable. Change the permissions.", dir);
+		assert !dir.isDirectory() : format("Importer directory='%s' is not a directory.", dir);
 	}
 
 
@@ -96,9 +89,13 @@ public abstract class FileImporter implements Runnable
 	@Override
 	public void run()
 	{
-		if (status != ERROR) return;
+		if (status == ERROR) return;
+		
+		updateStatus(WORKING);
+		
+		resetProcessingFiles();
 
-		if (inputDir.listFiles().length != 0 && prepareImport())
+		if (inputDir.listFiles() != null && inputDir.listFiles().length != 0 && prepareImport())
 		{
 			performImport();
 		}
@@ -134,7 +131,7 @@ public abstract class FileImporter implements Runnable
 
 		if (status != ERROR)
 		{
-			updateStatus(PROCESSING);
+			updateStatus(WORKING);
 
 			// Check to see if all the expected files are present.
 
@@ -245,6 +242,8 @@ public abstract class FileImporter implements Runnable
 		{
 			connection = factory.getConnection(false, SDM);
 
+			// Parse and persist the files.
+			
 			persistFileSet(processingDir, connection);
 
 			// Commit the changes.
@@ -257,17 +256,18 @@ public abstract class FileImporter implements Runnable
 
 			success = true;
 		}
-		catch (IOException e)
+		catch (Exception e)
 		{
-			LOGGER.error("Aborting import. Could not dispose of imported files.", e);
-		}
-		catch (FileImporterException e)
-		{
-			LOGGER.error("Aborting import. An error occured while persisting the files.", e);
-		}
-		catch (SQLException e)
-		{
-			LOGGER.error("Aborting import. Could not dispose of imported files.", e);
+			LOGGER.error("Unhandled exception occured while importing with importer='{}'. Aborting import and rolling back.", getName(), e);
+			
+			try
+			{
+				connection.rollback();
+			}
+			catch (SQLException ex)
+			{
+				LOGGER.error("Could not rollback commit.", ex);
+			}
 		}
 		finally
 		{
@@ -275,10 +275,7 @@ public abstract class FileImporter implements Runnable
 			{
 				connection.close();
 			}
-			catch (Exception e)
-			{
-
-			}
+			catch (Exception e) { }
 		}
 
 		if (!success)
@@ -296,13 +293,17 @@ public abstract class FileImporter implements Runnable
 	 */
 	private boolean resetProcessingFiles()
 	{
-		boolean success = false;
+		boolean success = true;
+		
+		boolean inputDirEmpty = inputDir.listFiles() == null || inputDir.listFiles().length == 0;
+		boolean processingDirEmpty = processingDir.listFiles() == null || processingDir.listFiles().length == 0;
 
-		if (inputDir.listFiles().length != 0 && processingDir.listFiles().length != 0)
+		if (!inputDirEmpty && !processingDirEmpty)
 		{
 			LOGGER.error("Could not move processing files back to the input directory, the input directory is not empty. processing_dir='{}', input_dir='{}'", processingDir, inputDir);
+			success = false;
 		}
-		else
+		else if (!processingDirEmpty)
 		{
 			try
 			{
@@ -310,12 +311,11 @@ public abstract class FileImporter implements Runnable
 				{
 					FileUtils.moveToDirectory(file, inputDir, false);
 				}
-
-				success = true;
 			}
 			catch (IOException e)
 			{
 				LOGGER.error("Could not move all processing files back to input directory.", e);
+				success = false;
 			}
 		}
 
@@ -332,11 +332,11 @@ public abstract class FileImporter implements Runnable
 	{
 		if (this.status == newStatus)
 		{
-			LOGGER.warn("Tried to change status='%s' to the same status. This could be an error in the program's flow.", status);
+			LOGGER.warn("Tried to change status='{}' to the same status. This could be an error in the program's flow.", status);
 		}
 		else
 		{
-			LOGGER.info("Status for importer={} has changed from={} to={}", new Object[] { getName(), status, newStatus });
+			LOGGER.info("Status for importer='{}' has changed from={} to={}", new Object[] { getName(), status, newStatus });
 			status = newStatus;
 		}
 	}
