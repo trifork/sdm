@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -24,6 +25,7 @@ public class LaegemiddelAdministrationsvejRelation extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@XmlName("cid")
 	public String getCID()
 	{
@@ -32,6 +34,7 @@ public class LaegemiddelAdministrationsvejRelation extends TakstRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public long getDrugId()
 	{
 		return drugId;
@@ -45,6 +48,7 @@ public class LaegemiddelAdministrationsvejRelation extends TakstRecord
 
 
 	@Column
+	@XmlOrder(3)
 	@XmlName("administrationsvejkode")
 	public String getAdministrationsvejKode()
 	{

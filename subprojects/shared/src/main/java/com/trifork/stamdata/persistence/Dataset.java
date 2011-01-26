@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.persistence.Table;
 
 import com.trifork.stamdata.EntityHelper;
-import com.trifork.stamdata.NamingConvention;
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
 
@@ -143,13 +143,13 @@ public class Dataset<T extends Record>
 	public String getIdOutputName()
 	{
 
-		return NamingConvention.getColumnName(EntityHelper.getIdMethod(type));
+		return Entities.getColumnName(EntityHelper.getIdMethod(type));
 	}
 
 
 	public static String getIdOutputName(Class<? extends Record> type)
 	{
 
-		return NamingConvention.getColumnName(EntityHelper.getIdMethod(type));
+		return Entities.getColumnName(EntityHelper.getIdMethod(type));
 	}
 }

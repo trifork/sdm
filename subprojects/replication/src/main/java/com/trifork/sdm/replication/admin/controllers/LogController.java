@@ -1,42 +1,39 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import com.trifork.sdm.replication.admin.models.LogEntryRepository;
+import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import freemarker.template.*;
 
 
 @Singleton
-public class LogController extends HttpServlet {
-
+public class LogController extends HttpServlet
+{
 	private static final long serialVersionUID = 1L;
 
 	@Inject
 	private Configuration config;
-	
+
 	@Inject
 	private LogEntryRepository logEntryRepository;
 
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+	@Transactional
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		response.setContentType("text/html; charset=utf-8");
-		
+
 		Template template = config.getTemplate("log/list.ftl");
 
 		Map<String, Object> root = new HashMap<String, Object>();
@@ -45,12 +42,12 @@ public class LogController extends HttpServlet {
 
 		Writer writer = new OutputStreamWriter(response.getOutputStream());
 
-		try {
+		try
+		{
 			template.process(root, writer);
-			
 		}
-		catch (TemplateException e) {
-
+		catch (TemplateException e)
+		{
 			throw new ServletException(e);
 		}
 	}

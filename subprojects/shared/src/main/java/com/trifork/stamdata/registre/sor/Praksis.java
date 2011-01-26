@@ -3,9 +3,7 @@ package com.trifork.stamdata.registre.sor;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.trifork.stamdata.*;
 
@@ -28,6 +26,7 @@ public class Praksis extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getNavn()
 	{
 		return navn;
@@ -42,6 +41,7 @@ public class Praksis extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public Long getEanLokationsnummer()
 	{
 
@@ -57,6 +57,7 @@ public class Praksis extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	@XmlName("regionskode")
 	public Long getRegionCode()
 	{
@@ -74,6 +75,7 @@ public class Praksis extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@XmlName("sornummer")
 	public Long getSorNummer()
 	{

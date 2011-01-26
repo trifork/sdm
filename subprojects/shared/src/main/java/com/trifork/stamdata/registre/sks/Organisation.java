@@ -3,12 +3,9 @@ package com.trifork.stamdata.registre.sks;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.*;
 
 
 @Entity
@@ -51,6 +48,7 @@ public class Organisation extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getNummer()
 	{
 		return nummer;
@@ -64,6 +62,7 @@ public class Organisation extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getNavn()
 	{
 		return navn;
@@ -101,6 +100,7 @@ public class Organisation extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	@XmlName("type")
 	public String getOrganisationstype()
 	{

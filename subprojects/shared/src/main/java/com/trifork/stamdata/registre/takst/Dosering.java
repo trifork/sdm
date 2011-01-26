@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -24,6 +25,7 @@ public class Dosering extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@XmlName("kode")
 	public Long getDoseringKode()
 	{
@@ -54,10 +56,10 @@ public class Dosering extends TakstRecord
 
 
 	@Column(name = "DoseringTekst")
+	@XmlOrder(2)
 	@XmlName("tekst")
 	public String getDoseringstekstTotal()
 	{
-
 		return this.doseringstekstTotal;
 	}
 
@@ -70,6 +72,7 @@ public class Dosering extends TakstRecord
 
 	@Column(name = "AntalEnhederPrDoegn")
 	@XmlName("enhederPerDoegn")
+	@XmlOrder(3)
 	public Double getAntalEnhDoegn()
 	{
 		return this.antalEnhDoegn / 1000.0;
@@ -119,6 +122,7 @@ public class Dosering extends TakstRecord
 
 
 	@Column(name = "Aktiv")
+	@XmlOrder(4)
 	public Boolean getAktivInaktiv()
 	{
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
@@ -136,5 +140,4 @@ public class Dosering extends TakstRecord
 	{
 		return this.doseringKode;
 	}
-
 }

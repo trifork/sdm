@@ -1,20 +1,23 @@
 package com.trifork.stamdata.registre.cpr;
 
+
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
 @Table(name = "ForaeldreMyndighedRelation")
-public class Foraeldremyndighedsrelation extends CPRRecord {
+public class Foraeldremyndighedsrelation extends CPRRecord
+{
 
-	public enum ForaeldreMyndighedRelationsType {
+	public enum ForaeldreMyndighedRelationsType
+	{
 		MOTHER, FARTHER, OTHER_RELATIONSHIP_1, OTHER_RELATIONSHIP_2
 	}
+
 
 	String typeKode;
 	ForaeldreMyndighedRelationsType type;
@@ -30,12 +33,16 @@ public class Foraeldremyndighedsrelation extends CPRRecord {
 
 	@Id
 	@Column
-	public String getId() {
+	@XmlOrder(1)
+	public String getId()
+	{
 
-		if (type == ForaeldreMyndighedRelationsType.MOTHER) {
+		if (type == ForaeldreMyndighedRelationsType.MOTHER)
+		{
 			return getCpr() + "-mor";
 		}
-		else if (type == ForaeldreMyndighedRelationsType.FARTHER) {
+		else if (type == ForaeldreMyndighedRelationsType.FARTHER)
+		{
 			return getCpr() + "-far";
 		}
 		return getCpr() + "-" + relationCpr;
@@ -44,15 +51,18 @@ public class Foraeldremyndighedsrelation extends CPRRecord {
 
 	@Column
 	@Override
-	public String getCpr() {
+	@XmlOrder(2)
+	public String getCpr()
+	{
 
 		return super.getCpr();
 	}
 
 
 	@Column
-	public String getTypeTekst() {
-
+	@XmlOrder(3)
+	public String getTypeTekst()
+	{
 		if (type == null)
 			return "Ukendt forældre myndigheds relation";
 		else if (type == ForaeldreMyndighedRelationsType.MOTHER)
@@ -67,14 +77,15 @@ public class Foraeldremyndighedsrelation extends CPRRecord {
 
 
 	@Column
-	public String getTypeKode() {
-
+	@XmlOrder(4)
+	public String getTypeKode()
+	{
 		return typeKode;
 	}
 
 
-	public void setType(String type) {
-
+	public void setType(String type)
+	{
 		if (type.equals("0003"))
 			this.type = ForaeldreMyndighedRelationsType.MOTHER;
 		else if (type.equals("0004"))
@@ -90,76 +101,89 @@ public class Foraeldremyndighedsrelation extends CPRRecord {
 	}
 
 
-	public Date getForaeldreMyndighedStartDato() {
+	public Date getForaeldreMyndighedStartDato()
+	{
 
 		return foraeldreMyndighedStartDato;
 	}
 
 
-	public void setForaeldreMyndighedStartDato(Date foraeldreMyndighedStartDato) {
+	public void setForaeldreMyndighedStartDato(Date foraeldreMyndighedStartDato)
+	{
 
 		this.foraeldreMyndighedStartDato = foraeldreMyndighedStartDato;
 	}
 
 
-	public String getForaeldreMyndighedMarkering() {
+	public String getForaeldreMyndighedMarkering()
+	{
 
 		return foraeldreMyndighedMarkering;
 	}
 
 
-	public void setForaeldreMyndighedMarkering(String foraeldreMyndighedMarkering) {
+	public void setForaeldreMyndighedMarkering(String foraeldreMyndighedMarkering)
+	{
 
 		this.foraeldreMyndighedMarkering = foraeldreMyndighedMarkering;
 	}
 
 
-	public Date getForaeldreMyndighedSlettedato() {
+	public Date getForaeldreMyndighedSlettedato()
+	{
 
 		return foraeldreMyndighedSlettedato;
 	}
 
 
-	public void setForaeldreMyndighedSlettedato(Date foraeldreMyndighedSlettedato) {
+	public void setForaeldreMyndighedSlettedato(Date foraeldreMyndighedSlettedato)
+	{
 
 		this.foraeldreMyndighedSlettedato = foraeldreMyndighedSlettedato;
 	}
 
 
 	@Column
-	public String getRelationCpr() {
+	@XmlOrder(5)
+	public String getRelationCpr()
+	{
 
 		return relationCpr;
 	}
 
 
-	public void setRelationCpr(String relationCpr) {
+	public void setRelationCpr(String relationCpr)
+	{
 
 		this.relationCpr = relationCpr;
 	}
 
 
-	public Date getRelationCprStartDato() {
+	public Date getRelationCprStartDato()
+	{
 
 		return relationCprStartDato;
 	}
 
 
-	public void setRelationCprStartDato(Date relationCprStartDato) {
+	public void setRelationCprStartDato(Date relationCprStartDato)
+	{
 
 		this.relationCprStartDato = relationCprStartDato;
 	}
 
 
 	@Override
-	public Date getValidFrom() {
+	public Date getValidFrom()
+	{
 
 		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : foraeldreMyndighedStartDato;
 	}
 
 
 	@Override
-	public Date getValidTo() {
+	public Date getValidTo()
+	{
 
 		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : foraeldreMyndighedSlettedato;
 	}

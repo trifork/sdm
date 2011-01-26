@@ -1,33 +1,40 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
+
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+
+import java.io.*;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class ApplicationController extends HttpServlet {
-	protected static final String REQUEST_CPR_PARAMETER = "cpr";
 
-	private static final long serialVersionUID = 1L;
+public class ApplicationController extends HttpServlet
+{
+	private static final long serialVersionUID = -7480013116213951161L;
 
-	protected void render(HttpServletResponse response, Template template, Map<String, Object> root) throws IOException, ServletException {
 
+	protected void render(HttpServletResponse response, Template template, Map<String, Object> root) throws IOException, ServletException
+	{
 		Writer writer = new OutputStreamWriter(response.getOutputStream());
 
-		try {
+		try
+		{
 			template.process(root, writer);
-
 		}
-		catch (TemplateException e) {
-
+		catch (TemplateException e)
+		{
 			throw new ServletException(e);
 		}
+	}
+
+
+	protected String getUserCPR(HttpServletRequest request)
+	{
+		return request.getAttribute(USER_CPR).toString();
 	}
 }

@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlOrder;
+
 
 @Entity
 public class Klausulering extends TakstRecord {
@@ -15,6 +17,7 @@ public class Klausulering extends TakstRecord {
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getKode() {
 
 		return this.kode;
@@ -28,6 +31,7 @@ public class Klausulering extends TakstRecord {
 
 
 	@Column
+	@XmlOrder(2)
 	public String getKortTekst() {
 
 		return this.kortTekst;
@@ -41,6 +45,7 @@ public class Klausulering extends TakstRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	public String getTekst() {
 
 		return this.tekst;

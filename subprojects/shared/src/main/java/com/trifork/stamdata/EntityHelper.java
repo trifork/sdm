@@ -5,8 +5,8 @@ import static java.lang.String.format;
 
 import java.lang.reflect.Method;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.Map.Entry;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -40,9 +40,9 @@ public class EntityHelper
 
 	public static Method getMethodForColumnName(Class<? extends Record> entitySet, String name)
 	{
-		for (Method method : NamingConvention.getColumns(entitySet))
+		for (Method method : Entities.getColumns(entitySet))
 		{
-			if (name.equals(NamingConvention.getColumnName(method)))
+			if (name.equals(Entities.getColumnName(method)))
 			{
 				return method;
 			}
@@ -127,13 +127,13 @@ public class EntityHelper
 	}
 
 
-	public static Class<? extends Record> getResourceByName(String name)
+	public static Class<? extends Record> getEntityByName(String name)
 	{
 		Class<? extends Record> type = null;
 
 		for (Class<? extends Record> resourceType : getAllResources())
 		{
-			if (NamingConvention.getResourceName(resourceType).equals(name))
+			if (Entities.getEntityName(resourceType).equals(name))
 			{
 				type = resourceType;
 				break;
@@ -141,5 +141,15 @@ public class EntityHelper
 		}
 
 		return type;
+	}
+
+
+	public static int getOrder(Entry<String, Method> o1)
+	{
+		XmlOrder order = o1.getValue().getAnnotation(XmlOrder.class);
+		
+		assert order != null;
+		System.out.println(o1.getValue().getName());
+		return order.value();
 	}
 }

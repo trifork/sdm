@@ -2,17 +2,20 @@ package com.trifork.sdm.replication.gateway;
 
 
 import static dk.sosi.seal.model.AuthenticationLevel.*;
+import static dk.sosi.seal.model.constants.DGWSConstants.*;
 import static dk.sosi.seal.model.constants.FaultCodeValues.*;
 import static dk.sosi.seal.model.constants.FlowStatusValues.*;
 import static org.slf4j.LoggerFactory.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 
+import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.util.URLFactory;
 
 import dk.sosi.seal.SOSIFactory;
@@ -30,7 +33,7 @@ public class SoapProcessor implements RequestProcessor
 	private static final int SOAP_OK = 200;
 	private static final int SOAP_FAULT = 500;
 
-	private static final String SOAP_CONTENT_ENCODING = "application/soap+xml; charset=UTF-8";
+	private static final String SOAP_CONTENT_TYPE = "application/soap+xml; charset=UTF-8";
 
 	private final SOSIFactory factory;
 
@@ -38,28 +41,31 @@ public class SoapProcessor implements RequestProcessor
 	private int responseCode = SOAP_FAULT;
 	private final URLFactory urlFactory;
 
+	private final PermissionRepository permissionRepository;
+
 
 	@Inject
-	SoapProcessor(URLFactory urlFactory)
+	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository)
 	{
 		this.urlFactory = urlFactory;
+		this.permissionRepository = permissionRepository;
 
 		Properties encryptionSetting = SignatureUtil.setupCryptoProviderForJVM();
 
-		// TODO: Inject the real federation or the test.
+		// TODO: Inject the factory or the test.
 		SOSITestFederation federation = new SOSITestFederation(encryptionSetting);
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), encryptionSetting);
 	}
 
 
 	@Override
-	public void process(String xml, String method)
+	public void process(String xml, String clientCVR, String method)
 	{
-		Reply error = null;
+		Reply reply;
 
 		try
 		{
-			Reply reply = null;
+			Reply error = null;
 
 			Request request = factory.deserializeRequest(xml);
 
@@ -72,39 +78,47 @@ public class SoapProcessor implements RequestProcessor
 
 			GatewayRequest soapBody = GatewayRequest.deserialize(request.getBody());
 
-			if (!method.equals("GET"))
+			if (!method.equals("POST"))
 			{
-				reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "", "", ILLEGAL_HTTP_METHOD, "Unsupported HTTP method. Use a POST.");
+				reply = factory.createNewErrorReply(request, "Client", "Unsupported HTTP method. Use a POST.");
 			}
 			else if ((error = checkIdentityCard(request)) != null || (error = checkRequestIntegrity(request, soapBody)) != null)
 			{
 				reply = error;
 			}
+			else if (clientCVR == null || !canAccessEntity(soapBody, clientCVR))
+			{
+				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
+			}
 			else
 			{
 				// Construct the URL and return it in SOAP.
 
-				String resourceURL = urlFactory.create(soapBody.getResourceType(), soapBody.rows, soapBody.since);
+				String resourceURL = urlFactory.create(soapBody.getEntityType(), soapBody.pageSize, soapBody.historyId);
 
 				GatewayResponse responseBody = new GatewayResponse(resourceURL);
 
 				reply = factory.createNewReply(request, FLOW_FINALIZED_SUCCESFULLY);
 				reply.setBody(responseBody.serialize());
 			}
-
-			// Set the correct response code.
-
-			responseCode = reply.isFault() ? SOAP_FAULT : SOAP_OK;
-
-			response = XmlUtil.node2String(reply.serialize2DOMDocument());
 		}
 		catch (Throwable t)
 		{
-			// FIXME: Make a SOAP error envelope without using the request since
-			// it might not have been parsed.
-
-			responseCode = SOAP_FAULT;
+			LOG.error("Unhandled exception has thrown in the gateway.", t);
+			reply = factory.createNewErrorReply(VERSION_1_0_1, "", "", "Server", "Server error. The event has been logged. Please contact the support.");
 		}
+		
+		// Set the correct response code.
+
+		responseCode = reply.isFault() ? SOAP_FAULT : SOAP_OK;
+
+		response = XmlUtil.node2String(reply.serialize2DOMDocument(), false, false);
+	}
+
+
+	private boolean canAccessEntity(GatewayRequest soapBody, String clientCVR) throws SQLException
+	{
+		return permissionRepository.canAccessEntity(clientCVR, soapBody.entity);
 	}
 
 
@@ -118,20 +132,20 @@ public class SoapProcessor implements RequestProcessor
 		// TODO: Change faultcode (not medcom:faultcode) to Client (instead of Server),
 		// on all these messages, and log them.
 
-		if (soapBody.resource == null || soapBody.resource.isEmpty())
+		if (soapBody.entity == null || soapBody.entity.isEmpty())
 		{
 			// TODO: All log messages should contain a it_system={}.
-			String message = "A request must contain a valid 'resource' parameter.";
+			String message = "A request must contain a valid 'entity' parameter.";
 			LOG.warn(message);
-			error = factory.createNewErrorReply(request, SYNTAX_ERROR, message);
+			error = factory.createNewErrorReply(request, "Client", message);
 		}
-		else if (soapBody.getResourceType() == null)
+		else if (soapBody.getEntityType() == null)
 		{
-			error = factory.createNewErrorReply(request, SYNTAX_ERROR, "An unknown resource was requested.");
+			error = factory.createNewErrorReply(request, "Client", "An unknown entity was requested.");
 		}
 		else if (soapBody.version == null)
 		{
-			error = factory.createNewErrorReply(request, SYNTAX_ERROR, "A request must contain a 'version' parameter.");
+			error = factory.createNewErrorReply(request, "Client", "A request must contain a 'version' parameter.");
 		}
 
 		return error;
@@ -182,6 +196,6 @@ public class SoapProcessor implements RequestProcessor
 	@Override
 	public String getContentType()
 	{
-		return SOAP_CONTENT_ENCODING;
+		return SOAP_CONTENT_TYPE;
 	}
 }

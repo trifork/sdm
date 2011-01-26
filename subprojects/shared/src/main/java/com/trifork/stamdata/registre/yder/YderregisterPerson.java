@@ -6,8 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.DateUtils;
+import com.trifork.stamdata.*;
 
 
 @Entity
@@ -23,6 +22,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getId() {
 
 		return nummer + "-" + cpr;
@@ -30,6 +30,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(2)
 	public String getNummer() {
 
 		return nummer;
@@ -43,6 +44,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	public String getHistIdPerson() {
 
 		return histIdPerson;
@@ -56,6 +58,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(4)
 	public String getCpr() {
 
 		return cpr;
@@ -69,6 +72,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(5)
 	public Long getPersonrolleKode() {
 
 		return personrolleKode;
@@ -82,6 +86,7 @@ public class YderregisterPerson extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(6)
 	public String getPersonrolleTxt() {
 
 		return personrolleTxt;

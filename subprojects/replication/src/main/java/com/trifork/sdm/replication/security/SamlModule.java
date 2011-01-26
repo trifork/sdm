@@ -8,19 +8,22 @@ import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import com.trifork.sdm.replication.util.PropertyServletModule;
 import com.trifork.xmlquery.Namespaces;
 
-import dk.itst.oiosaml.sp.service.DispatcherServlet;
-import dk.itst.oiosaml.sp.service.SPFilter;
-
 
 public class SamlModule extends PropertyServletModule
 {
 	@Override
 	protected void configureServlets()
 	{
+		/*
+		bind(DispatcherServlet.class).in(Singleton.class);
 		serve("/saml/*").with(DispatcherServlet.class);
 
+		bind(SPFilter.class).in(Singleton.class);
 		filter("/admin/*").through(SPFilter.class);
+		
+		bind(SamlFilter.class).in(Singleton.class);
 		filter("/admin/*").through(SamlFilter.class);
+		*/
 	}
 
 

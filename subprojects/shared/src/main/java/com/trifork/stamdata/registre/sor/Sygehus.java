@@ -3,9 +3,7 @@ package com.trifork.stamdata.registre.sor;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.trifork.stamdata.*;
 
@@ -28,6 +26,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(1)
 	public String getNavn()
 	{
 
@@ -43,6 +42,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public Long getEanLokationsnummer()
 	{
 
@@ -58,6 +58,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getNummer()
 	{
 
@@ -73,6 +74,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getTelefon()
 	{
 
@@ -88,6 +90,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public String getVejnavn()
 	{
 
@@ -103,6 +106,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public String getPostnummer()
 	{
 
@@ -118,6 +122,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(7)
 	public String getBynavn()
 	{
 
@@ -133,6 +138,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public String getEmail()
 	{
 
@@ -148,6 +154,7 @@ public class Sygehus extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getWww()
 	{
 
@@ -163,6 +170,7 @@ public class Sygehus extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(10)
 	@XmlName("sornummer")
 	public Long getSorNummer()
 	{

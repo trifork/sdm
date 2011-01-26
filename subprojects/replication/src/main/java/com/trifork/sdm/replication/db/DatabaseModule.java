@@ -2,64 +2,62 @@ package com.trifork.sdm.replication.db;
 
 
 import static com.google.inject.matcher.Matchers.*;
+import static com.google.inject.name.Names.*;
 
-import java.sql.*;
-import java.util.Date;
+import java.sql.Connection;
 
-import javax.inject.Provider;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
 
-import com.google.inject.assistedinject.FactoryModuleBuilder;
-import com.trifork.sdm.replication.settings.*;
-import com.trifork.sdm.replication.util.PropertyModule;
-import com.trifork.stamdata.Record;
+import com.google.inject.*;
+import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 
 
-public class DatabaseModule extends PropertyModule
+public class DatabaseModule extends AbstractModule
 {
 	@Override
 	public void configure()
 	{
-		final String url = property("db.url");
-		final String schema = property("db.schema");
-		final String username = property("db.username");
-		final String password = property("db.password");
-		
-		bindConstant().annotatedWith(DbPassword.class).to(password);
-		bindConstant().annotatedWith(DbUsername.class).to(username);
-		bindConstant().annotatedWith(DbURL.class).to(url);
-		bindConstant().annotatedWith(MainDB.class).to(schema);
-		bindConstant().annotatedWith(DuplicateDB.class).to(property("db.duplicate.schema"));
-		bindConstant().annotatedWith(HousekeepingDB.class).to(property("db.housekeeping.schema"));
-		bindConstant().annotatedWith(AdminDB.class).to(property("db.admin.schema"));
+		requireBinding(Key.get(String.class, named("db.username")));
+		requireBinding(Key.get(String.class, named("db.password")));
+		requireBinding(Key.get(String.class, named("db.host")));
+		requireBinding(Key.get(String.class, named("db.port")));
 
-		Provider<Connection> provider = new Provider<Connection>()
-		{
-			@Override
-			public Connection get()
-			{
-				Connection connection = null;
-				try
-				{
-					connection = DriverManager.getConnection(url + schema, username, password);
-					connection.setAutoCommit(false);
-				}
-				catch (SQLException e)
-				{
-					e.printStackTrace();
-				}
-				
-				return connection;
-			}
-		};
-		
-		bindInterceptor(any(), annotatedWith(Transactional.class), new TransactionManager(provider));
+		// Make it easy to do transactions.
 
-		install(new FactoryModuleBuilder().implement(Query.class, MySQLQuery.class).build(QueryFactory.class));
+		TransactionManager manager = new TransactionManager();
+
+		// Make sure we inject the JDBC support instance,
+		// once configuration is completed.
+
+		requestInjection(manager);
+
+		// Make the appropriate bindings.
+
+		bindInterceptor(any(), annotatedWith(Transactional.class), manager);
+		bind(Connection.class).toProvider(manager);
 	}
 
 
-	public interface QueryFactory
+	@Provides
+	@Singleton
+	protected DataSource provideDataSource(@Named("db.username") String username, @Named("db.password") String password, @Named("db.host") String host, @Named("db.port") int port)
 	{
-		Query create(Class<? extends Record> entity, long recordId, Date since, int pageSize);
+		MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
+
+		dataSource.setUser(username);
+		dataSource.setPassword(password);
+		dataSource.setServerName(host);
+		dataSource.setPort(port);
+
+		// The default schema is 'mysql', I doubt that
+		// you anyone would actually change this by
+		// configuration on the db.
+
+		dataSource.setDatabaseName("mysql");
+
+		return dataSource;
 	}
 }

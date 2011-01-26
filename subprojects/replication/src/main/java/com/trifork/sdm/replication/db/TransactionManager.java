@@ -1,70 +1,120 @@
 package com.trifork.sdm.replication.db;
 
 
+import java.lang.annotation.*;
 import java.sql.Connection;
-import java.sql.SQLException;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.sql.DataSource;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
-public class TransactionManager implements MethodInterceptor
+
+public class TransactionManager implements MethodInterceptor, Provider<Connection>
 {
-	private final Provider<Connection> connectionProvider;
-
-
-	@Inject
-	TransactionManager(Provider<Connection> connectionProvider)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.METHOD)
+	public static @interface Transactional
 	{
-		this.connectionProvider = connectionProvider;
 	}
 
 
-	@Override
-	public Object invoke(MethodInvocation invocation) throws Throwable
+	// We can't use constructor injection with interceptors,
+	// so we are using field injection instead.
+	@Inject
+	private DataSource dataStore;
+	private ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
+
+
+	public Connection get() throws OutOfTransactionException
 	{
-		Connection connection = null;
-		Object invocationResult = null;
+		Connection connection = connectionStore.get();
 
-		Throwable invocationExpection = null;
+		// If the interceptor would fail to get the connection
+		// we would not get to call the provider from client code at all
 
+		if (connection == null)
+		{
+			throw new OutOfTransactionException();
+		}
+
+		return connection;
+	}
+
+
+	public Object invoke(MethodInvocation methodInvocation) throws Throwable
+	{
+		Connection conn = connectionStore.get();
+
+		// The thread local connection can only be set by the interceptor
+		// if it is not null the interceptor was already invoked.
+
+		if (conn != null)
+		{
+			// just continue
+			return methodInvocation.proceed();
+		}
+
+		// We must open a new connection and appropriately close it at the end
+		// if we fail to get the connection, no problem, the target method will not get invoked at
+		// all.
+		conn = dataStore.getConnection();
+
+		// Force auto commit to false.
+		conn.setAutoCommit(false);
+
+		// Set Thread Local connection.
+		connectionStore.set(conn);
+
+		// Make sure we commit/rollback, close the connection and unset the thread local around
+		// top-level method call
 		try
 		{
-			connection = connectionProvider.get();
-			invocationResult = invocation.proceed();
-			connection.commit();
+			Object returnValue = methodInvocation.proceed();
+			conn.commit();
+			return returnValue;
 		}
 		catch (Throwable t)
 		{
-			try
-			{
-				if (connection != null) connection.rollback();
-			}
-			catch (SQLException e)
-			{
-			}
-
-			// We need to throw the original exception
-			// later to be completely transparent.
-
-			invocationExpection = t;
+			conn.rollback();
+			throw t;
 		}
 		finally
 		{
-			try
-			{
-				if (connection != null) connection.close();
-			}
-			catch (SQLException e)
-			{
-			}
+			connectionStore.set(null);
+			conn.close();
+		}
+	}
 
-			if (invocationExpection != null) throw invocationExpection;
+
+	public static class OutOfTransactionException extends RuntimeException
+	{
+		private static final long serialVersionUID = 1L;
+
+
+		public OutOfTransactionException()
+		{
 		}
 
-		return invocationResult;
+
+		public OutOfTransactionException(String message)
+		{
+			super(message);
+		}
+
+
+		public OutOfTransactionException(String message, Throwable cause)
+		{
+			super(message, cause);
+		}
+
+
+		public OutOfTransactionException(Throwable cause)
+		{
+			super(cause);
+		}
 	}
 }

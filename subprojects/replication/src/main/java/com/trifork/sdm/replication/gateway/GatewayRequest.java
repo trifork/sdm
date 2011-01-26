@@ -10,16 +10,22 @@ import com.trifork.stamdata.EntityHelper;
 
 public class GatewayRequest
 {
-	public Integer version = null;
-	public String resource = null;
-	public String since = null;
-	public Integer rows = null;
-	public String format = null;
+	private static final String FORMAT = "format";
+	private static final String PAGE_SIZE = "pageSize";
+	private static final String HISTORY_ID = "offset";
+	private static final String VERSION = "version";
+	private static final String ENTITY = "entity";
+	
+	public Integer version;
+	public String entity;
+	public String historyId;
+	public Integer pageSize;
+	public String format;
 
 
-	public Class<?> getResourceType()
+	public Class<?> getEntityType()
 	{
-		return EntityHelper.getResourceByName(resource);
+		return EntityHelper.getEntityByName(entity);
 	}
 
 
@@ -32,31 +38,31 @@ public class GatewayRequest
 		Element root = doc.createElement("GatewayRequestStructure");
 		doc.appendChild(root);
 
-		Element resource = doc.createElement("resource");
-		resource.setTextContent(this.resource);
-		root.appendChild(resource);
+		Element entity = doc.createElement(ENTITY);
+		entity.setTextContent(this.entity);
+		root.appendChild(entity);
 
-		Element version = doc.createElement("version");
+		Element version = doc.createElement(VERSION);
 		version.setTextContent(Integer.toString(this.version));
 		root.appendChild(version);
 
-		if (this.since != null)
+		if (historyId != null)
 		{
-			Element offset = doc.createElement("offset");
-			offset.setTextContent(this.since);
-			root.appendChild(offset);
+			Element historyId = doc.createElement(HISTORY_ID);
+			historyId.setTextContent(this.historyId);
+			root.appendChild(historyId);
 		}
 
-		if (this.rows != -1)
+		if (pageSize != null)
 		{
-			Element rows = doc.createElement("rows");
-			rows.setTextContent(Integer.toString(this.rows));
-			root.appendChild(rows);
+			Element pageSize = doc.createElement(PAGE_SIZE);
+			pageSize.setTextContent(Integer.toString(this.pageSize));
+			root.appendChild(pageSize);
 		}
 
-		if (this.format != null)
+		if (format != null)
 		{
-			Element format = doc.createElement("format");
+			Element format = doc.createElement(FORMAT);
 			format.setTextContent(this.format);
 			root.appendChild(format);
 		}
@@ -67,31 +73,29 @@ public class GatewayRequest
 
 	public static GatewayRequest deserialize(Element xml)
 	{
-
 		GatewayRequest request = new GatewayRequest();
 
 		for (Node node = xml.getFirstChild(); node != null; node = node.getNextSibling())
 		{
-
 			String elementName = node.getNodeName();
 
-			if ("resource".equals(elementName))
+			if (ENTITY.equals(elementName))
 			{
-				request.resource = node.getTextContent();
+				request.entity = node.getTextContent();
 			}
-			else if ("version".equals(elementName))
+			else if (VERSION.equals(elementName))
 			{
 				request.version = Integer.parseInt(node.getTextContent());
 			}
-			else if ("offset".equals(elementName))
+			else if (HISTORY_ID.equals(elementName))
 			{
-				request.since = node.getTextContent();
+				request.historyId = node.getTextContent();
 			}
-			else if ("rows".equals(elementName))
+			else if (PAGE_SIZE.equals(elementName))
 			{
-				request.rows = Integer.parseInt(node.getTextContent());
+				request.pageSize = Integer.parseInt(node.getTextContent());
 			}
-			else if ("format".equals(elementName))
+			else if (FORMAT.equals(elementName))
 			{
 				request.format = node.getTextContent();
 			}

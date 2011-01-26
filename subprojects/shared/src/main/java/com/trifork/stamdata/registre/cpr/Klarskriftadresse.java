@@ -1,11 +1,9 @@
 package com.trifork.stamdata.registre.cpr;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -30,6 +28,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 	@Id
 	@Column
+	@XmlOrder(4)
 	@Override
 	public String getCpr() {
 
@@ -50,6 +49,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	public String getCoNavn() {
 
 		return coNavn;
@@ -63,6 +63,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(8)
 	public String getLokalitet() {
 
 		return Lokalitet;
@@ -88,6 +89,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(2)
 	@XmlName("bynavn")
 	public String getByNavn() {
 
@@ -102,6 +104,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(10)
 	@XmlName("postnummer")
 	public Long getPostNummer() {
 
@@ -116,6 +119,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(9)
 	@XmlName("postdistrikt")
 	public String getPostDistrikt() {
 
@@ -131,6 +135,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 	@Column
 	@XmlName("kommunekode")
+	@XmlOrder(7)
 	public Long getKommuneKode() {
 
 		return kommuneKode;
@@ -144,6 +149,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(12)
 	@XmlName("vejkode")
 	public Long getVejKode() {
 
@@ -159,6 +165,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 	@Column
 	@XmlName("husnummer")
+	@XmlOrder(6)
 	public String getHusNummer() {
 
 		return husNummer;
@@ -172,6 +179,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(5)
 	public String getEtage() {
 
 		return etage;
@@ -185,6 +193,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(11)
 	@XmlName("side")
 	public String getSideDoerNummer() {
 
@@ -199,6 +208,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(1)
 	@XmlName("bygningsnummer")
 	public String getBygningsNummer() {
 
@@ -213,6 +223,7 @@ public class Klarskriftadresse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(13)
 	@XmlName("vejnavn")
 	public String getVejNavn() {
 

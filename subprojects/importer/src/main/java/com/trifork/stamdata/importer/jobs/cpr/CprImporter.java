@@ -1,14 +1,11 @@
 package com.trifork.stamdata.importer.jobs.cpr;
 
 
+import static java.lang.System.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -26,22 +23,11 @@ public class CprImporter extends FileImporter
 
 	// TODO (thb): Lokalitet <> 'Addressebeskyttelse'? Why, what is the purpose?
 
-	private static String WHERE_PROTECTION_IS_ACTIVE_SQL =
-			"WHERE NavneBeskyttelseStartDato < NOW() " +
-					"AND (NavneBeskyttelseSletteDato > NOW() OR ISNULL(NavneBeskyttelseSletteDato)) " +
-					"AND Lokalitet <> 'Adressebeskyttet' ";
+	private static String WHERE_PROTECTION_IS_ACTIVE_SQL = "WHERE NavneBeskyttelseStartDato < NOW() " + "AND (NavneBeskyttelseSletteDato > NOW() OR ISNULL(NavneBeskyttelseSletteDato)) " + "AND Lokalitet <> 'Adressebeskyttet' ";
 
-	private static String BACKUP_NAME_AND_ADDRESS_SQL =
-			"REPLACE INTO AdresseBeskyttelse "
-					+ "(       CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, NavneBeskyttelseSletteDato, VejKode, KommuneKode) "
-					+ "(SELECT CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, NavneBeskyttelseSletteDato, VejKode, KommuneKode "
-					+ "FROM Person "
-					+ WHERE_PROTECTION_IS_ACTIVE_SQL
-					+ "ORDER BY validTo)";
+	private static String BACKUP_NAME_AND_ADDRESS_SQL = "REPLACE INTO AdresseBeskyttelse " + "(       CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, NavneBeskyttelseSletteDato, VejKode, KommuneKode) " + "(SELECT CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, NavneBeskyttelseSletteDato, VejKode, KommuneKode " + "FROM Person " + WHERE_PROTECTION_IS_ACTIVE_SQL + "ORDER BY validTo)";
 
-	private static String APPLY_NAME_AND_ADDRESS_PROTECTION_SQL =
-			"UPDATE Person SET Fornavn='Navnebeskyttet', Mellemnavn='Navnebeskyttet', Efternavn='Navnebeskyttet', CoNavn='Navnebeskyttet', Lokalitet='Adressebeskyttet', Vejnavn='Adressebeskyttet', Bygningsnummer='99', Husnummer='99', Etage='99', SideDoerNummer='', Bynavn='Adressebeskyttet', Postnummer='9999', PostDistrikt='Adressebeskyttet', VejKode='99', KommuneKode='999', ModifiedBy='Address And Name Protection' "
-					+ WHERE_PROTECTION_IS_ACTIVE_SQL;
+	private static String APPLY_NAME_AND_ADDRESS_PROTECTION_SQL = "UPDATE Person SET Fornavn='Navnebeskyttet', Mellemnavn='Navnebeskyttet', Efternavn='Navnebeskyttet', CoNavn='Navnebeskyttet', Lokalitet='Adressebeskyttet', Vejnavn='Adressebeskyttet', Bygningsnummer='99', Husnummer='99', Etage='99', SideDoerNummer='', Bynavn='Adressebeskyttet', Postnummer='9999', PostDistrikt='Adressebeskyttet', VejKode='99', KommuneKode='999', ModifiedBy='Address And Name Protection' " + WHERE_PROTECTION_IS_ACTIVE_SQL;
 
 
 	public CprImporter(File rootDir, ConnectionFactory factory)
@@ -53,7 +39,7 @@ public class CprImporter extends FileImporter
 	@Override
 	public boolean persistFileSet(File rootDir, Connection connection) throws FileImporterException, SQLException
 	{
-		boolean success = true;
+		boolean success = false;
 
 		LOGGER.info("Starting import of CPR files.");
 
@@ -64,8 +50,7 @@ public class CprImporter extends FileImporter
 			if (!isPersonFile(file))
 			{
 				LOGGER.error("CPR data file='{}' does not appear to be a valid CPR person data file.", file);
-				success = false;
-				break;
+				return false;
 			}
 
 			LOGGER.info("Parsing CPR data file='{}'.", file);
@@ -82,8 +67,8 @@ public class CprImporter extends FileImporter
 
 				if (actualPrevVersion == null)
 				{
-					// FIXME: Why assume, when you could just check if the db is
-					// empty?
+					// FIXME: Why assume, when you could just check if the db is empty?
+					
 					LOGGER.warn("Could not fetch latest CPR version from the database. Asuming empty database and skipping import sequence checks.");
 				}
 
@@ -94,8 +79,7 @@ public class CprImporter extends FileImporter
 				else
 				{
 					LOGGER.error("CPR import out of sequence: expected_previous_date='{}', actual_previous_version='{}'", expectedPrevVersion, actualPrevVersion);
-					success = false;
-					break;
+					return false;
 				}
 			}
 
@@ -112,29 +96,45 @@ public class CprImporter extends FileImporter
 
 		LOGGER.info("Applying name and address protection.");
 
-		// Copy name and addresses to the 'AdresseBeskyttelse' table
-
-		int backupCount = connection.createStatement().executeUpdate(BACKUP_NAME_AND_ADDRESS_SQL);
-
-		// Censor names and addresses for all citizens with active name
-		// and address
-		// protection.
-
-		int censorCount = connection.createStatement().executeUpdate(APPLY_NAME_AND_ADDRESS_PROTECTION_SQL);
-
-		// FIXME: The two statements use NOW(), which could mean that
-		// the updated separately (it is checked below but) this only
-		// handles part of the problem. In an extreme case you could
-		// get the same number of updates, but with different people!
-
-		if (backupCount != censorCount)
+		PreparedStatement statement = null;
+		
+		try
 		{
-			LOGGER.error("Inconsistent data while applying name and address protection. backup_count={}, censored_count={}", backupCount, censorCount);
-			success = false;
-		}
+			Timestamp transactionTime = new Timestamp(currentTimeMillis());
 
-		// NB. Restoring out-dated name and address protections is
-		// handled by a separate job. The reasoning behind this is unclear.
+			// Backup name and address to the 'AdresseBeskyttelse' table for all
+			// citizens with active name and address protection.
+
+			statement = connection.prepareStatement(BACKUP_NAME_AND_ADDRESS_SQL);
+			statement.setTimestamp(1, transactionTime);
+			statement.execute();
+			statement.close();
+			
+			// Censor names and addresses for all citizens with active name and 
+			// address protection.
+
+			statement = connection.prepareStatement(APPLY_NAME_AND_ADDRESS_PROTECTION_SQL);
+			statement.setTimestamp(1, transactionTime);
+			statement.execute();
+			statement.close();
+			
+			success = true;
+		}
+		catch (Exception e)
+		{
+			LOGGER.error("Name and address protection failed.", e);
+		}
+		finally
+		{
+			try
+			{
+				if (statement != null && !statement.isClosed()) statement.close();
+			}
+			catch (Exception e)
+			{
+				LOGGER.error("Could not close database statement.", e);
+			}
+		}
 
 		return success;
 	}

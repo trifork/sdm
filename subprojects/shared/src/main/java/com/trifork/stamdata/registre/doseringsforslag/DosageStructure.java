@@ -1,18 +1,17 @@
 package com.trifork.stamdata.registre.doseringsforslag;
 
+
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.*;
 
 
 @Entity
 @Documented("Indeholder doseringsstrukturer.")
-public class DosageStructure extends AbstractRecord {
+public class DosageStructure extends AbstractRecord
+{
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
@@ -48,7 +47,8 @@ public class DosageStructure extends AbstractRecord {
 	private Date validFrom;
 
 
-	public void setReleaseNumber(long releaseNumber) {
+	public void setReleaseNumber(long releaseNumber)
+	{
 
 		this.releaseNumber = releaseNumber;
 	}
@@ -56,13 +56,15 @@ public class DosageStructure extends AbstractRecord {
 
 	// Don't output this.
 	// @Column(length=15)
-	public long getReleaseNumber() {
+	public long getReleaseNumber()
+	{
 
 		return releaseNumber;
 	}
 
 
-	public void setCode(long code) {
+	public void setCode(long code)
+	{
 
 		this.code = code;
 	}
@@ -70,92 +72,113 @@ public class DosageStructure extends AbstractRecord {
 
 	@Id
 	@Column(length = 11)
-	public long getCode() {
+	@XmlOrder(1)
+	public long getCode()
+	{
 
 		return code;
 	}
 
 
-	public void setType(String type) {
+	public void setType(String type)
+	{
 
 		this.type = type;
 	}
 
 
 	@Column(length = 100)
-	public String getType() {
+	@XmlOrder(2)
+	public String getType()
+	{
 
 		return type;
 	}
 
 
-	public void setSimpleString(String simpleString) {
+	public void setSimpleString(String simpleString)
+	{
 
 		this.simpleString = simpleString;
 	}
 
 
 	@Column(length = 100)
-	public String getSimpleString() {
+	@XmlOrder(3)
+	public String getSimpleString()
+	{
 
 		return simpleString;
 	}
 
 
-	public void setSupplementaryText(String supplementaryText) {
+	public void setSupplementaryText(String supplementaryText)
+	{
 
 		this.supplementaryText = supplementaryText;
 	}
 
 
 	@Column(length = 200)
-	public String getSupplementaryText() {
+	@XmlOrder(4)
+	public String getSupplementaryText()
+	{
 
 		return supplementaryText;
 	}
 
 
-	public void setXml(String xml) {
+	public void setXml(String xml)
+	{
 
 		this.xml = xml;
 	}
 
 
 	@Column(length = 10000)
-	public String getXml() {
+	@XmlOrder(5)
+	public String getXml()
+	{
 
 		return xml;
 	}
 
 
-	public void setShortTranslation(String shortTranslation) {
+	public void setShortTranslation(String shortTranslation)
+	{
 
 		this.shortTranslation = shortTranslation;
 	}
 
 
 	@Column(length = 70)
-	public String getShortTranslation() {
+	@XmlOrder(6)
+	public String getShortTranslation()
+	{
 
 		return shortTranslation;
 	}
 
 
-	public void setLongTranslation(String longTranslation) {
+	public void setLongTranslation(String longTranslation)
+	{
 
 		this.longTranslation = longTranslation;
 	}
 
 
 	@Column(length = 10000)
-	public String getLongTranslation() {
+	@XmlOrder(7)
+	public String getLongTranslation()
+	{
 
 		return longTranslation;
 	}
 
 
 	@Override
-	public Date getValidFrom() {
+	public Date getValidFrom()
+	{
 
 		return validFrom;
 	}

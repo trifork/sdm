@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlOrder;
+
 
 @Entity
 public class Indikation extends TakstRecord {
@@ -38,6 +40,7 @@ public class Indikation extends TakstRecord {
 
 	@Id
 	@Column(name = "IndikationKode")
+	@XmlOrder(1)
 	public Long getIndikationskode() {
 
 		return this.indikationskode;
@@ -51,6 +54,7 @@ public class Indikation extends TakstRecord {
 
 
 	@Column(name = "IndikationTekst")
+	@XmlOrder(2)
 	public String getIndikationstekstTotal() {
 
 		return this.indikationstekstTotal;

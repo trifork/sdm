@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -20,6 +21,7 @@ public class Administrationsvej extends TakstRecord
 	@Id
 	@Column(name = "AdministrationsvejKode")
 	@XmlName("kode")
+	@XmlOrder(1)
 	public String getKey()
 	{
 		return kode;
@@ -45,6 +47,7 @@ public class Administrationsvej extends TakstRecord
 
 
 	@Column(name = "AdministrationsvejTekst")
+	@XmlOrder(2)
 	@XmlName("tekst")
 	public String getTekst()
 	{

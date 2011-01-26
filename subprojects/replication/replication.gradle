@@ -21,10 +21,13 @@ dependencies {
 	
 	// SOSI
 
-	compile fileTree(dir: 'sosi', include: '*.jar')
+	runtime fileTree(dir: 'sosi', include: '*.jar')
 
-	compile 'dk.itst.oiosaml:oiosaml.java:5987'
+	// FIXME: Which ones of these dependencies are transient Thomas?
+
 	compile 'dk.sosi:seal:1.5.13'
+	
+	compile 'dk.itst.oiosaml:oiosaml.java:5987'
 	
 	compile 'opensaml:opensaml:2.2.0'
 	compile 'opensaml:xmltooling:1.1.0'
@@ -53,7 +56,7 @@ dependencies {
 	
 	// MySQL
 	
-	runtime libs.mysql_driver
+	compile libs.mysql_driver
 	
 	// IO Utils
 	
@@ -76,17 +79,23 @@ dependencies {
 
 	// Testing
 	
+	testCompile libs.commons_lang
+	
 	testCompile libs.junit
 	testCompile libs.hamcrest
-	testCompile libs.mockito
 	
-	testCompile 'org.yaml:snakeyaml:1.7@jar'
-	testCompile 'org.dbunit:dbunit:2.4.8@jar'
-	testCompile 'com.h2database:h2:1.3.148@jar'
+	testCompile module(libs.mockito) {
+		dependency libs.objenesis
+	}
+	
+	testCompile 'org.yaml:snakeyaml:1.7'
+	testCompile 'org.dbunit:dbunit:2.4.8'
+	testCompile 'com.h2database:h2:1.3.148'
 	
 	// Logging
 	
-	compile libs.slf4j_api
-	runtime libs.logback_core
-	runtime libs.logback_classic
+	compile module(libs.slf4j_api) {
+		dependency libs.logback_core
+		dependency libs.logback_classic
+	}
 }

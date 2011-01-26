@@ -3,9 +3,9 @@ package com.trifork.stamdata.registre.cpr;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -41,15 +41,16 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getId()
 	{
-
 		return getCpr() + "-" + typeKode;
 	}
 
 
 	@Column
 	@Override
+	@XmlOrder(2)
 	public String getCpr()
 	{
 
@@ -100,9 +101,9 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getTypeTekst()
 	{
-
 		if (type == null)
 			return "Ukendt værge relation";
 		else if (type == VaergeRelationType.ikkeICPR)
@@ -115,16 +116,15 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getTypeKode()
 	{
-
 		return typeKode;
 	}
 
 
 	public void setType(String type)
 	{
-
 		if (type.equals("0000"))
 			this.type = VaergeRelationType.ikkeICPR;
 		else if (type.equals("0001"))
@@ -139,6 +139,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public String getRelationCpr()
 	{
 
@@ -154,6 +155,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public Date getRelationCprStartDato()
 	{
 
@@ -169,6 +171,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(7)
 	public String getVaergesNavn()
 	{
 
@@ -184,6 +187,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public Date getVaergesNavnStartDato()
 	{
 
@@ -199,6 +203,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getRelationsTekst1()
 	{
 
@@ -214,6 +219,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(10)
 	public String getRelationsTekst2()
 	{
 
@@ -229,6 +235,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(11)
 	public String getRelationsTekst3()
 	{
 
@@ -244,6 +251,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(12)
 	public String getRelationsTekst4()
 	{
 
@@ -259,6 +267,7 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 
 	@Column
+	@XmlOrder(13)
 	public String getRelationsTekst5()
 	{
 
@@ -268,7 +277,6 @@ public class UmyndiggoerelseVaergeRelation extends CPRRecord
 
 	public void setRelationsTekst5(String relationsTekst5)
 	{
-
 		this.relationsTekst5 = relationsTekst5;
 	}
 

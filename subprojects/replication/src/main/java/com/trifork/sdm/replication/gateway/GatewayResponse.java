@@ -2,8 +2,6 @@ package com.trifork.sdm.replication.gateway;
 
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,12 +23,6 @@ public class GatewayResponse
 	public String getUrl()
 	{
 		return url;
-	}
-
-
-	public URL buildUrl() throws MalformedURLException
-	{
-		return new URL(url);
 	}
 
 

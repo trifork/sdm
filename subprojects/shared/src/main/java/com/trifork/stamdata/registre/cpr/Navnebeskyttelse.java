@@ -2,12 +2,10 @@ package com.trifork.stamdata.registre.cpr;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -21,6 +19,7 @@ public class Navnebeskyttelse extends CPRRecord {
 	@Override
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getCpr() {
 
 		return super.getCpr();
@@ -28,6 +27,7 @@ public class Navnebeskyttelse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(2)
 	@XmlName("startdato")
 	public Date getNavneBeskyttelseStartDato() {
 
@@ -42,6 +42,7 @@ public class Navnebeskyttelse extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	@XmlName("slutdato")
 	public Date getNavneBeskyttelseSletteDato() {
 

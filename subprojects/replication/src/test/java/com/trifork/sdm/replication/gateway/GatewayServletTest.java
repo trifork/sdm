@@ -17,25 +17,29 @@ import org.junit.*;
 
 import com.google.inject.*;
 import com.trifork.sdm.replication.ProductionModule;
-import com.trifork.sdm.replication.gateway.RequestProcessor;
-import com.trifork.sdm.replication.settings.SOAP;
 
-
+/**
+ * This class it a template I have made for when/if we want to
+ * use an in-memory db (H2 in this case).
+ * 
+ * This would require:
+ * - That we can access the SQL scripts from the build environment at runtime.
+ * - That we get some nice fixtures (test data) loaded into the yaml files.
+ */
 public class GatewayServletTest
 {
 	private static String file = "test.yml";
 
 	private static IDataSet dataSet;
+	@SuppressWarnings("unused")
 	private static Injector injector;
 
-	private RequestProcessor processor;
 	private static Server server;
 
 
 	@BeforeClass
 	public static void init() throws Exception
 	{
-		/*
 		ClassLoader classLoader = GatewayServletTest.class.getClassLoader();
 
 		// Load the test data.
@@ -64,21 +68,19 @@ public class GatewayServletTest
 
 		statement.close();
 		connection.close();
-		*/
 	}
 
 
 	@AfterClass
 	public static void destroy()
 	{
-		//server.stop();
+		server.stop();
 	}
 
 
 	@Before
 	public void setUp() throws Exception
 	{
-		/*
 		// Prepare the database.
 
 		IDatabaseConnection connection = getConnection();
@@ -86,15 +88,7 @@ public class GatewayServletTest
 
 		// Get the unit under test.
 
-		processor = injector.getInstance(Key.get(RequestProcessor.class, SOAP.class));
-		*/
-	}
-
-
-	@Test
-	public void should_require_resource_param() throws Exception
-	{
-
+		// ...
 	}
 
 
@@ -107,12 +101,15 @@ public class GatewayServletTest
 	protected static Connection getJdbcConnection() throws Exception
 	{
 		// Comparability with MySQL SQL.
+		
 		String properties = ";MODE=MySQL";
 
 		// Don't drop the database when no connections.
+		
 		properties += ";DB_CLOSE_DELAY=-1";
 
 		// Use the database as in-memory.
+		
 		String uri = "jdbc:h2:mem:test" + properties;
 
 		Class.forName("org.h2.Driver");

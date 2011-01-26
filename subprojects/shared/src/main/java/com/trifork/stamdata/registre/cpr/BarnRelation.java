@@ -1,8 +1,8 @@
 package com.trifork.stamdata.registre.cpr;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -12,6 +12,7 @@ public class BarnRelation extends CPRRecord {
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getId() {
 
 		return getCpr() + "-" + barnCpr;
@@ -20,6 +21,7 @@ public class BarnRelation extends CPRRecord {
 
 	@Column
 	@Override
+	@XmlOrder(2)
 	public String getCpr() {
 
 		return super.getCpr();
@@ -27,6 +29,7 @@ public class BarnRelation extends CPRRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	public String getBarnCpr() {
 
 		return barnCpr;

@@ -19,7 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.EntityHelper;
-import com.trifork.stamdata.NamingConvention;
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 import com.trifork.stamdata.importer.jobs.FilePersistException;
 import com.trifork.stamdata.persistence.Dataset;
@@ -77,7 +77,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 
 		try
 		{
-			outputMethods = NamingConvention.getColumns(type);
+			outputMethods = Entities.getColumns(type);
 			notUpdatedColumns = locateNotUpdatedColumns();
 			insertRecordStmt = prepareInsertStatement();
 			insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
@@ -107,7 +107,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 
 		long t0 = System.nanoTime();
 
-		String columnName = NamingConvention.getColumnName(method);
+		String columnName = Entities.getColumnName(method);
 
 		tgetOutputFieldName += System.nanoTime() - t0;
 
@@ -180,7 +180,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 		for (Method method : outputMethods)
 		{
 			sql += ", ";
-			String name = NamingConvention.getColumnName(method);
+			String name = Entities.getColumnName(method);
 			sql += name;
 		}
 		for (String notUpdateName : notUpdatedColumns)
@@ -221,7 +221,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 		for (Method method : outputMethods)
 		{
 			sql += ", ";
-			String name = NamingConvention.getColumnName(method);
+			String name = Entities.getColumnName(method);
 			sql += name;
 		}
 		sql += ") values (";
@@ -283,7 +283,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 				+ "', ModifiedDate = ?, ValidFrom = ?, ValidTo = ?";
 		for (Method method : outputMethods)
 		{
-			sql += ", " + NamingConvention.getColumnName(method) + " = ?";
+			sql += ", " + Entities.getColumnName(method) + " = ?";
 		}
 
 		sql += " where " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ? and ValidTo = ?";
@@ -576,7 +576,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 			for (Method method : outputMethods)
 			{
 				columns.append(", ");
-				columns.append(NamingConvention.getColumnName(method));
+				columns.append(Entities.getColumnName(method));
 				values.append(", ?");
 			}
 
@@ -601,7 +601,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 
 			for (Method method : outputMethods)
 			{
-				Object value = currentRS.getObject(NamingConvention.getColumnName(method));
+				Object value = currentRS.getObject(Entities.getColumnName(method));
 				stmt.setObject(i++, value);
 			}
 
@@ -777,7 +777,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 
 		try
 		{
-			String idMethodName = NamingConvention.getColumnName(idMethod);
+			String idMethodName = Entities.getColumnName(idMethod);
 
 			String sql = format("SELECT %s, ValidFrom FROM %s WHERE NOT (ValidTo < ? OR ValidFrom > ?)", idMethodName, tablename);
 
@@ -941,7 +941,7 @@ public class MySQLTemporalTable<T extends Record> implements RecordStorage<T>
 				for (Method method : outputMethods)
 				{
 					// Ignore the columns that are updated by the entity
-					String name = NamingConvention.getColumnName(method);
+					String name = Entities.getColumnName(method);
 					if (colName.equalsIgnoreCase(name))
 					{
 						found = true;

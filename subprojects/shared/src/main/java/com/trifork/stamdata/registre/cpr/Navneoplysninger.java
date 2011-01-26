@@ -5,7 +5,7 @@ import java.util.Date;
 
 import javax.persistence.*;
 
-import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -26,6 +26,7 @@ public class Navneoplysninger extends CPRRecord
 	@Override
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getCpr()
 	{
 		return super.getCpr();
@@ -33,6 +34,7 @@ public class Navneoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getFornavn()
 	{
 		return fornavn;
@@ -58,6 +60,7 @@ public class Navneoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getMellemnavn()
 	{
 		return mellemnavn;
@@ -83,6 +86,7 @@ public class Navneoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getEfternavn()
 	{
 		return efternavn;

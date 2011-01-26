@@ -1,7 +1,7 @@
 package com.trifork.sdm.replication.gateway;
 
 
-import static dk.sosi.seal.model.constants.FaultCodeValues.*;
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,11 +12,7 @@ import javax.servlet.http.*;
 
 import org.apache.commons.io.IOUtils;
 
-import com.trifork.sdm.replication.settings.SOAP;
-
-import dk.sosi.seal.model.Reply;
-import dk.sosi.seal.model.constants.DGWSConstants;
-import dk.sosi.seal.model.constants.FaultCodeValues;
+import com.trifork.sdm.replication.gateway.properties.SOAP;
 
 
 @Singleton
@@ -34,41 +30,6 @@ public class GatewayServlet extends HttpServlet
 	}
 
 
-	@Override
-	protected void doPost(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
-	{
-
-	}
-
-
-	@Override
-	protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
-	{
-		unsupportedMethod(httpRequest, httpResponse);
-	}
-
-
-	@Override
-	protected void doHead(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
-	{
-		unsupportedMethod(httpRequest, httpResponse);
-	}
-
-
-	@Override
-	protected void doPut(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
-	{
-		unsupportedMethod(httpRequest, httpResponse);
-	}
-
-
-	@Override
-	protected void doDelete(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
-	{
-		unsupportedMethod(httpRequest, httpResponse);
-	}
-
-
 	protected void processRequest(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
 	{
 		// Read the HTTP request.
@@ -77,11 +38,15 @@ public class GatewayServlet extends HttpServlet
 		String content = IOUtils.toString(inputStream, "UTF-8");
 		String method = httpRequest.getMethod();
 
+		// Get the client's CVR (This is produced by the STS filter.)
+		
+		String clientCVR = httpRequest.getAttribute(USER_CPR).toString();
+		
 		// Process it.
 
 		RequestProcessor processor = processorProvider.get();
 
-		processor.process(content, method);
+		processor.process(content, clientCVR,  method);
 
 		// Return the result.
 
@@ -92,8 +57,37 @@ public class GatewayServlet extends HttpServlet
 	}
 
 
-	protected void unsupportedMethod(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws IOException
+	@Override
+	protected void doPost(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
 	{
-		
+		processRequest(httpRequest, httpResponse);
+	}
+
+
+	@Override
+	protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
+	{
+		processRequest(httpRequest, httpResponse);
+	}
+
+
+	@Override
+	protected void doHead(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
+	{
+		processRequest(httpRequest, httpResponse);
+	}
+
+
+	@Override
+	protected void doPut(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
+	{
+		processRequest(httpRequest, httpResponse);
+	}
+
+
+	@Override
+	protected void doDelete(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException
+	{
+		processRequest(httpRequest, httpResponse);
 	}
 }

@@ -1,16 +1,12 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-import static java.lang.String.format;
+
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static java.lang.String.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.sql.SQLException;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,15 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import org.reflections.util.*;
 
-import com.trifork.sdm.replication.admin.models.Client;
-import com.trifork.sdm.replication.admin.models.ClientRepository;
-import com.trifork.sdm.replication.admin.models.LogEntryRepository;
-import com.trifork.sdm.replication.admin.models.PermissionRepository;
-import com.trifork.stamdata.NamingConvention;
+import com.trifork.sdm.replication.admin.models.*;
+import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
 import freemarker.template.Configuration;
@@ -37,7 +29,8 @@ import freemarker.template.Template;
 
 
 @Singleton
-public class ClientController extends ApplicationController {
+public class ClientController extends ApplicationController
+{
 
 	private static final long serialVersionUID = 1L;
 
@@ -48,21 +41,24 @@ public class ClientController extends ApplicationController {
 	private ClientRepository clientRepository;
 
 	@Inject
-	private LogEntryRepository logEntryRepository;
+	private LogEntryRepository log;
 
 	@Inject
 	private PermissionRepository permissionRepository;
 
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Transactional
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 
 		response.setContentType("text/html; charset=utf-8");
 
 		// Check if the user requested a form to create
 		// a new user.
 
-		if (request.getRequestURI().endsWith("/new")) {
+		if (request.getRequestURI().endsWith("/new"))
+		{
 
 			getNew(request, response);
 		}
@@ -70,11 +66,13 @@ public class ClientController extends ApplicationController {
 		// If the ID parameter is null, we list all
 		// users. If it is present we show a specific user.
 
-		else if (request.getParameter("id") == null) {
+		else if (request.getParameter("id") == null)
+		{
 
 			getList(request, response);
 		}
-		else {
+		else
+		{
 
 			getEdit(request, response);
 		}
@@ -83,7 +81,9 @@ public class ClientController extends ApplicationController {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Transactional
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 
 		response.setContentType("text/html; charset=utf-8");
 
@@ -91,92 +91,117 @@ public class ClientController extends ApplicationController {
 
 		String action = request.getParameter("action");
 		String id = request.getParameter("id");
-		
-		if (id == null) {
+
+		if (id == null)
+		{
 
 			// We are creating.
-			
+
 			String name = request.getParameter("name");
 			String certificateId = request.getParameter("certificate_id");
 
 			Client client = clientRepository.create(name, certificateId);
 
-			if (client != null) {
+			if (client != null)
+			{
 
-				logEntryRepository.create("Ny client tilf�jet '%s'. Oprettet af '%s'.", name, request.getAttribute(REQUEST_CPR_PARAMETER));
+				log.create("New client added '%s'. Created by '%s'.", name, request.getAttribute(USER_CPR));
 
 				response.sendRedirect(format("admin/users?id=%s", client.getId()));
 			}
 		}
-		else if ("delete".equals(action)) {
+		else if ("delete".equals(action))
+		{
 
 			getDelete(request, response);
 		}
-		else {
-
+		else
+		{
 			// Update an existing client.
-			
-			final String PREFIX = "resource_";
+
+			final String PREFIX = "entity_";
 
 			Enumeration<String> e = request.getParameterNames();
-			
-			List<String> resources = new ArrayList<String>();
 
-			while (e.hasMoreElements()) {
+			List<String> entities = new ArrayList<String>();
 
+			while (e.hasMoreElements())
+			{
 				String param = e.nextElement();
-				
-				if (param.startsWith(PREFIX)) {
 
-					resources.add(param.substring(PREFIX.length()));
+				if (param.startsWith(PREFIX))
+				{
+
+					entities.add(param.substring(PREFIX.length()));
 				}
 			}
-			
-			permissionRepository.setPermissions(id, resources);
-			
-			// Audit log the update of permissions
-			StringBuilder sb = new StringBuilder();
-			for (String resource : resources) {
-				sb.append(resource + " ");
-			}
-			
-			String permissionsAsString = sb.toString().trim();
-			if (permissionsAsString.length() > 400) {
-				permissionsAsString = permissionsAsString.substring(0, 400) + "...";
-			}
-			logEntryRepository.create("Rettigheder redigeret for klient med id '%s' (%s). Redigeret af '%s'.", id, permissionsAsString, request.getAttribute(REQUEST_CPR_PARAMETER));
 
-			response.sendRedirect("/admin/users");
+			try
+			{
+				permissionRepository.setPermissions(id, entities);
+
+				// Audit log the update of permissions.
+
+				StringBuilder stringBuilder = new StringBuilder();
+
+				for (String entity : entities)
+				{
+					stringBuilder.append(entity + " ");
+				}
+
+				String permissionsAsString = stringBuilder.toString().trim();
+
+				if (permissionsAsString.length() > 400)
+				{
+					permissionsAsString = permissionsAsString.substring(0, 400) + "...";
+				}
+
+				String adminCPR = request.getAttribute(USER_CPR).toString();
+
+				// TODO: This is not good enough, must show all entities.
+				// You can make a list by fetching them first, and then seeing,
+				// what the difference if the string becomes too long.
+
+				log.create("Authorization updated for client_id='%s' by '%s' for entities (%s).", id, adminCPR, permissionsAsString);
+
+				response.sendRedirect("/admin/users");
+			}
+			catch (SQLException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
-	
-	
-	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
+	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException
+	{
 		String id = request.getParameter("id");
 
 		Client client = clientRepository.find(id);
-		
-		if (client != null) {
-			
+
+		if (client != null)
+		{
 			clientRepository.destroy(id);
-			
-			logEntryRepository.create("Klient '%s (ID=%s)' blev slettet af '%s'.", client.getName(), client.getId(), request.getAttribute(REQUEST_CPR_PARAMETER));
-			
+
+			log.create("Client '%s (ID=%s)' was deleted by '%s'.", client.getName(), client.getId(), request.getAttribute(USER_CPR));
+
 			response.sendRedirect("/admin/users");
 		}
 	}
 
 
-	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	{
 		Template template = config.getTemplate("user/new.ftl");
 
 		render(response, template, null);
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	{
 
 		Template template = config.getTemplate("user/edit.ftl");
 
@@ -185,15 +210,15 @@ public class ClientController extends ApplicationController {
 		String id = request.getParameter("id");
 		root.put("client", clientRepository.find(id));
 
-		root.put("resources", getResourceNames());
+		root.put("entities", getEntityNames());
 		root.put("permissions", permissionRepository.findByClientId(id));
 
 		render(response, template, root);
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	{
 		Template template = config.getTemplate("user/list.ftl");
 
 		Map<String, Object> root = new HashMap<String, Object>();
@@ -205,15 +230,12 @@ public class ClientController extends ApplicationController {
 
 
 	@SuppressWarnings("unchecked")
-	private Set<String> getResourceNames() {
-
-		SortedSet<String> resources = new TreeSet<String>();
-
-		// Find all entities and serve them as resources.
+	private Set<String> getEntityNames()
+	{
 
 		final String INCLUDE_PACKAGE = Record.class.getPackage().getName();
 
-		// TODO: Include doseringsforslag.
+		// TODO: Include doseringsforslag at a later point.
 
 		// Right now we don't have an importer for doeringsforslag
 		// so they cannot be replicated.
@@ -225,14 +247,15 @@ public class ClientController extends ApplicationController {
 		// Serve all entities by deferring their URLs and using their
 		// annotations.
 
-		Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
+		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
+		Set<String> entities = new TreeSet<String>();
 
-		for (Class<?> entity : entities) {
-
-			String uri = NamingConvention.getResourceName((Class<? extends Record>)entity);
-			resources.add(uri);
+		for (Class<?> entity : classes)
+		{
+			String uri = Entities.getEntityName((Class<? extends Record>) entity);
+			entities.add(uri);
 		}
 
-		return resources;
+		return entities;
 	}
 }

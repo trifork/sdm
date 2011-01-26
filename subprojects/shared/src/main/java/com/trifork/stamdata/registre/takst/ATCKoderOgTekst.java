@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.*;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity(name = "atc")
@@ -82,6 +83,7 @@ public class ATCKoderOgTekst extends TakstRecord
 
 
 	@Column(name = "tekst")
+	@XmlOrder(2)
 	public String getTekst()
 	{
 		return tekst;
@@ -98,6 +100,7 @@ public class ATCKoderOgTekst extends TakstRecord
 	@Id
 	@Column(name = "ATC")
 	@XmlName("kode")
+	@XmlOrder(1)
 	public String getKey()
 	{
 		return aTCNiveau1 + nulltoEmpty(aTCNiveau2) + nulltoEmpty(aTCNiveau3) + nulltoEmpty(aTCNiveau4) + nulltoEmpty(aTCNiveau5);

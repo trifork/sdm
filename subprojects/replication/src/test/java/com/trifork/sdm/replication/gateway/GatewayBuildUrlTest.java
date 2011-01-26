@@ -1,19 +1,11 @@
 package com.trifork.sdm.replication.gateway;
 
 
-import java.io.IOException;
-
 import org.junit.Test;
 
 
 public class GatewayBuildUrlTest
 {
-	private static final String USERNAME_PARAM = "username=([^&]+)";
-	private static final String EXPIRES_PARAM = "expires=(\\d+)";
-	private static final String GATEWAY_USERNAME = "gateway";
-	private static final String SIGNATURE_PARAM = "signature=([^&]+)";
-
-
 	@Test
 	public void can_generate_valid_url() throws Exception
 	{

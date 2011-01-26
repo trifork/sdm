@@ -1,36 +1,35 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-
-public class Client {
-
+public class Client
+{
 	private final String id;
 	private final String name;
 	private final String certificateId;
 
 
-	public Client(String id, String name, String certificateId) {
-
+	public Client(String id, String name, String certificateId)
+	{
 		this.id = id;
 		this.name = name;
 		this.certificateId = certificateId;
 	}
 
 
-	public String getName() {
-
+	public String getName()
+	{
 		return name;
 	}
 
 
-	public String getId() {
-
+	public String getId()
+	{
 		return id;
 	}
 
 
-	public String getCertificateId() {
-
+	public String getCertificateId()
+	{
 		return certificateId;
 	}
 }

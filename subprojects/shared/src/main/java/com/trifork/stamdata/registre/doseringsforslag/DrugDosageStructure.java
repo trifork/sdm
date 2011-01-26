@@ -2,12 +2,9 @@ package com.trifork.stamdata.registre.doseringsforslag;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.*;
 
 
 @Entity
@@ -35,6 +32,7 @@ public class DrugDosageStructure extends AbstractRecord {
 
 	@Id
 	@Column(length = 22)
+	@XmlOrder(1)
 	public String getId() {
 
 		return Long.toString(drugId) + Long.toString(dosageStructureCode);
@@ -56,6 +54,7 @@ public class DrugDosageStructure extends AbstractRecord {
 
 
 	@Column(length = 11)
+	@XmlOrder(2)
 	public long getDrugId() {
 
 		return drugId;
@@ -69,6 +68,7 @@ public class DrugDosageStructure extends AbstractRecord {
 
 
 	@Column(length = 11)
+	@XmlOrder(3)
 	public long getDosageStructureCode() {
 
 		return dosageStructureCode;

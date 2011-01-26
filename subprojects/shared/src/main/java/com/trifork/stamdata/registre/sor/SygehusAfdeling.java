@@ -3,9 +3,7 @@ package com.trifork.stamdata.registre.sor;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.trifork.stamdata.*;
 
@@ -35,6 +33,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public String getNavn()
 	{
 		return navn;
@@ -49,6 +48,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public Long getEanLokationsnummer()
 	{
 		return eanLokationsnummer;
@@ -62,6 +62,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getNummer()
 	{
 		return nummer;
@@ -75,6 +76,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(10)
 	public String getTelefon()
 	{
 		return telefon;
@@ -88,6 +90,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(11)
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -101,6 +104,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(12)
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -114,6 +118,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getBynavn()
 	{
 		return bynavn;
@@ -127,6 +132,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public String getEmail()
 	{
 		return email;
@@ -140,6 +146,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(13)
 	public String getWww()
 	{
 		return www;
@@ -154,6 +161,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 	@Column
 	@XmlName("typekode")
+	@XmlOrder(1)
 	public Long getAfdelingTypeKode()
 	{
 		return afdelingTypeKode;
@@ -167,6 +175,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(6)
 	@XmlName("hovedspecialekode")
 	public Long getHovedSpecialeKode()
 	{
@@ -182,6 +191,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(7)
 	@XmlName("hovedspecialetekst")
 	public String getHovedSpecialeTekst()
 	{
@@ -198,6 +208,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	@XmlName("typetekst")
 	public String getAfdelingTypeTekst()
 	{
@@ -215,6 +226,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(14)
 	@XmlName("sornummer")
 	public Long getSorNummer()
 	{
@@ -231,6 +243,7 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(15)
 	@XmlName("sygehusSornummer")
 	public Long getSygehusSorNummer()
 	{
@@ -241,12 +254,12 @@ public class SygehusAfdeling extends AbstractRecord
 
 	public void setSygehusSorNummer(Long sygehusSorNummer)
 	{
-
 		this.sygehusSorNummer = sygehusSorNummer;
 	}
 
 
 	@Column
+	@XmlOrder(16)
 	@XmlName("overafdelingSornummer")
 	public Long getOverAfdelingSorNummer()
 	{
@@ -263,16 +276,15 @@ public class SygehusAfdeling extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(17)
 	public Long getUnderlagtSygehusSorNummer()
 	{
-
 		return underlagtSygehusSorNummer;
 	}
 
 
 	public void setUnderlagtSygehusSorNummer(Long underlagtSygehusSorNummer)
 	{
-
 		this.underlagtSygehusSorNummer = underlagtSygehusSorNummer;
 	}
 
@@ -280,7 +292,6 @@ public class SygehusAfdeling extends AbstractRecord
 	@Override
 	public void setValidFrom(Date validFrom)
 	{
-
 		this.validFrom = validFrom;
 	}
 
@@ -288,7 +299,6 @@ public class SygehusAfdeling extends AbstractRecord
 	@Override
 	public Date getValidFrom()
 	{
-
 		return validFrom;
 	}
 
@@ -296,14 +306,12 @@ public class SygehusAfdeling extends AbstractRecord
 	@Override
 	public Date getValidTo()
 	{
-
 		return (validTo != null) ? validTo : DateUtils.FOREVER;
 	}
 
 
 	public void setValidTo(Date validTo)
 	{
-
 		this.validTo = validTo;
 	}
 }

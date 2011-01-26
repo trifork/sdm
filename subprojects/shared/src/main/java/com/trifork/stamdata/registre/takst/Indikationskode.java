@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.stamdata.XmlOrder;
+
 
 @Entity
 @Table(name = "IndikationATCRef")
@@ -17,6 +19,7 @@ public class Indikationskode extends TakstRecord {
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getCID() {
 
 		// TODO: Get rid of this ugly calculated ID. Should be handled by the
@@ -28,6 +31,7 @@ public class Indikationskode extends TakstRecord {
 
 
 	@Column
+	@XmlOrder(2)
 	public String getATC() {
 
 		return this.aTC;
@@ -41,6 +45,7 @@ public class Indikationskode extends TakstRecord {
 
 
 	@Column(name = "IndikationKode")
+	@XmlOrder(3)
 	public Long getIndikationskode() {
 
 		return this.indikationskode;

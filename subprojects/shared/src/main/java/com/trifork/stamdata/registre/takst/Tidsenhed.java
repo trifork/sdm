@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -23,6 +24,7 @@ public class Tidsenhed extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@XmlName("kode")
 	public String getTidsenhedKode()
 	{
@@ -31,6 +33,7 @@ public class Tidsenhed extends TakstRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getTidsenhedTekst()
 	{
 		return enheder.getTekst();

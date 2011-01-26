@@ -1,12 +1,9 @@
 package com.trifork.stamdata.registre.sor;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-import com.trifork.stamdata.AbstractRecord;
-import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.*;
 
 
 @Entity
@@ -29,6 +26,7 @@ public class Apotek extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@XmlName("sornummer")
 	public long getSorNummer()
 	{
@@ -45,6 +43,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	@XmlName("apoteksnummer")
 	public Long getApotekNummer()
 	{
@@ -61,6 +60,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	@XmlName("filialnummer")
 	public Long getFilialNummer()
 	{
@@ -71,12 +71,12 @@ public class Apotek extends AbstractRecord
 
 	public void setFilialNummer(long filialNummer)
 	{
-
 		this.filialNummer = filialNummer;
 	}
 
 
 	@Column
+	@XmlOrder(4)
 	public Long getEanLokationsnummer()
 	{
 
@@ -92,6 +92,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public long getCvr()
 	{
 
@@ -107,6 +108,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public long getPcvr()
 	{
 
@@ -122,6 +124,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(7)
 	public String getNavn()
 	{
 
@@ -137,6 +140,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public String getTelefon()
 	{
 
@@ -152,6 +156,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getVejnavn()
 	{
 
@@ -167,6 +172,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(10)
 	public String getPostnummer()
 	{
 
@@ -182,6 +188,7 @@ public class Apotek extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(11)
 	public String getBynavn()
 	{
 
@@ -191,37 +198,34 @@ public class Apotek extends AbstractRecord
 
 	public void setBynavn(String bynavn)
 	{
-
 		this.bynavn = bynavn;
 	}
 
 
 	@Column
+	@XmlOrder(12)
 	public String getEmail()
 	{
-
 		return email;
 	}
 
 
 	public void setEmail(String email)
 	{
-
 		this.email = email;
 	}
 
 
 	@Column
+	@XmlOrder(13)
 	public String getWww()
 	{
-
 		return www;
 	}
 
 
 	public void setWww(String www)
 	{
-
 		this.www = www;
 	}
 }

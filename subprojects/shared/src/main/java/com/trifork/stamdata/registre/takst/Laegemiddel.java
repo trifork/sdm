@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.XmlName;
+import com.trifork.stamdata.XmlOrder;
 import com.trifork.stamdata.persistence.Dataset;
 
 
@@ -21,7 +22,7 @@ import com.trifork.stamdata.persistence.Dataset;
 public class Laegemiddel extends TakstRecord
 {
 
-	private Logger logger = LoggerFactory.getLogger(TakstRecord.class);
+	private Logger LOG = LoggerFactory.getLogger(TakstRecord.class);
 
 	private Long drugid;
 	private String varetype; // Udfyldt med SP (Specialiteter)
@@ -49,6 +50,7 @@ public class Laegemiddel extends TakstRecord
 
 	@Id
 	@Column(name = "DrugID")
+	@XmlOrder(1)
 	public Long getDrugid()
 	{
 
@@ -120,6 +122,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "DrugName")
+	@XmlOrder(2)
 	@XmlName("navn")
 	public String getNavn()
 	{
@@ -151,6 +154,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "FormKode")
+	@XmlOrder(3)
 	@XmlName("formkode")
 	public String getFormKode()
 	{
@@ -178,6 +182,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "StyrkeTekst")
+	@XmlOrder(4)
 	@XmlName("styrketekst")
 	public String getStyrkeKlarTekst()
 	{
@@ -192,6 +197,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "StyrkeNumerisk")
+	@XmlOrder(5)
 	@XmlName("numeriskStyrke")
 	public Double getStyrkeNumerisk()
 	{
@@ -211,6 +217,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "StyrkeEnhed")
+	@XmlOrder(6)
 	public String getStyrke()
 	{
 		if (styrkeNumerisk == null || styrkeNumerisk == 0)
@@ -302,6 +309,7 @@ public class Laegemiddel extends TakstRecord
 
 	/* TODO: INT? */
 	@Column(name = "Dosisdispenserbar")
+	@XmlOrder(7)
 	public Integer getEgnetTilDosisdispensering()
 	{
 		return ("D".equals(this.egnetTilDosisdispensering)) ? 1 : 0;
@@ -330,7 +338,7 @@ public class Laegemiddel extends TakstRecord
 		}
 		catch (ParseException e)
 		{
-			logger.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string: '" + this.datoForAfregistrAfLaegemiddel + "'");
+			LOG.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string: '" + this.datoForAfregistrAfLaegemiddel + "'");
 			return this.datoForAfregistrAfLaegemiddel;
 		}
 	}
@@ -356,7 +364,7 @@ public class Laegemiddel extends TakstRecord
 		}
 		catch (ParseException e)
 		{
-			logger.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string");
+			LOG.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Returning unformated string");
 			return this.datoForAfregistrAfLaegemiddel;
 		}
 	}
@@ -393,7 +401,7 @@ public class Laegemiddel extends TakstRecord
 			String avKode = administrationsvej.substring(idx, idx + 2);
 			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
 			if (adminVej == null)
-				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
+				LOG.warn("Administaritonvej not found for kode: '" + avKode + "'");
 			else
 				adminveje.add(adminVej);
 		}
@@ -403,6 +411,7 @@ public class Laegemiddel extends TakstRecord
 
 
 	@Column(name = "FormTekst")
+	@XmlOrder(8)
 	public String getForm()
 	{
 		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
@@ -422,7 +431,6 @@ public class Laegemiddel extends TakstRecord
 	 */
 	public List<Dosering> getDoseringer()
 	{
-
 		List<Dosering> result = new ArrayList<Dosering>();
 		Dataset<Doseringskode> doseringskoder = takst.getDatasetOfType(Doseringskode.class);
 		if (doseringskoder == null) return null;
@@ -439,7 +447,6 @@ public class Laegemiddel extends TakstRecord
 
 	public List<Indikation> getIndikationer()
 	{
-
 		List<Indikation> result = new ArrayList<Indikation>();
 		Dataset<Indikationskode> indikationskode = takst.getDatasetOfType(Indikationskode.class);
 		if (indikationskode == null) return null;
@@ -456,7 +463,6 @@ public class Laegemiddel extends TakstRecord
 
 	public List<Pakning> getPakninger()
 	{
-
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
 		if (pakninger == null) return null;
 		List<Pakning> pakningerWithThisLaegemiddel = new ArrayList<Pakning>();
@@ -473,6 +479,7 @@ public class Laegemiddel extends TakstRecord
 
 	@Column(name = "ATCKode")
 	@XmlName("atc")
+	@XmlOrder(9)
 	public String getATC()
 	{
 
@@ -482,6 +489,7 @@ public class Laegemiddel extends TakstRecord
 
 	@Column(name = "ATCTekst")
 	@XmlName("atcTekst")
+	@XmlOrder(10)
 	public String getATCTekst()
 	{
 

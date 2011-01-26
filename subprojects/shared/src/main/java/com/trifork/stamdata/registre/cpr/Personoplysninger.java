@@ -3,10 +3,9 @@ package com.trifork.stamdata.registre.cpr;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import com.trifork.stamdata.XmlOrder;
 
 
 @Entity
@@ -29,6 +28,7 @@ public class Personoplysninger extends CPRRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	@Override
 	public String getCpr()
 	{
@@ -38,6 +38,7 @@ public class Personoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getGaeldendeCpr()
 	{
 
@@ -53,6 +54,7 @@ public class Personoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getStatus()
 	{
 
@@ -96,6 +98,7 @@ public class Personoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getKoen()
 	{
 
@@ -111,6 +114,7 @@ public class Personoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public Date getFoedselsdato()
 	{
 
@@ -196,6 +200,7 @@ public class Personoplysninger extends CPRRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public String getStilling()
 	{
 

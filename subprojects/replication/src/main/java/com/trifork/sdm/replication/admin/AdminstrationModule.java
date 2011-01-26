@@ -12,8 +12,6 @@ public class AdminstrationModule extends PropertyServletModule
 	@Override
 	protected void configureServlets()
 	{
-		// Views
-
 		serve("/admin/admins", "/admin/admins/*").with(AdminController.class);
 		serve("/admin/log", "/admin/log/*").with(LogController.class);
 		serve("/admin", "/admin/users", "/admin/users/*").with(ClientController.class);
@@ -22,7 +20,7 @@ public class AdminstrationModule extends PropertyServletModule
 
 		install(new TemplateModule());
 
-		// Whitelist of CVR numbers that can be used when creating
+		// White list of CVR numbers that can be used when creating
 		// new administrators.
 
 		install(new WhitelistModule());

@@ -5,6 +5,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import com.trifork.stamdata.XmlOrder;
+
 
 @Entity
 public class Medicintilskud extends TakstRecord
@@ -17,6 +19,7 @@ public class Medicintilskud extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getKode()
 	{
 
@@ -32,6 +35,7 @@ public class Medicintilskud extends TakstRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getKortTekst()
 	{
 		return kortTekst;
@@ -45,6 +49,7 @@ public class Medicintilskud extends TakstRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getTekst()
 	{
 		return tekst;

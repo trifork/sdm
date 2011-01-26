@@ -10,8 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.trifork.stamdata.XmlName;
-import com.trifork.stamdata.Record;
+import com.trifork.stamdata.*;
 import com.trifork.stamdata.persistence.CompleteDataset;
 import com.trifork.stamdata.persistence.Dataset;
 
@@ -105,9 +104,9 @@ public class Takst extends TakstRecord
 
 	@Column(name = "TakstUge")
 	@XmlName("uge")
+	@XmlOrder(1)
 	public String getStableWeek()
 	{
-
 		return "" + validityYear + validityWeekNumber;
 	}
 

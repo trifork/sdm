@@ -9,8 +9,7 @@ import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.trifork.sdm.replication.settings.Secret;
-import com.trifork.stamdata.Nullable;
+import com.trifork.sdm.replication.gateway.properties.Secret;
 
 
 public class SignatureFactory
@@ -27,7 +26,7 @@ public class SignatureFactory
 	}
 
 
-	public String create(String type, long expires, @Nullable String historyId, int pageSize)
+	public String create(String type, long expires, String historyId, int pageSize)
 	{
 		String signature = null;
 

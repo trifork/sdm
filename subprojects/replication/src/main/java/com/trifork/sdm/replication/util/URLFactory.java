@@ -5,64 +5,69 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import com.trifork.sdm.replication.settings.TTL;
-import com.trifork.stamdata.NamingConvention;
+import com.trifork.sdm.replication.gateway.properties.DefaultPageSize;
+import com.trifork.sdm.replication.gateway.properties.TTL;
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Nullable;
 
 
 public class URLFactory
 {
-	private static final long SECONDS = 1000l;
+	private static final String BEGINING_OF_TIME = "00000000000000000000";
+
+	private static final long MILLIS_TO_SECS = 1000;
 
 	private final long ttl;
 	private final URL baseURL;
 	private final SignatureFactory signatureFactory;
+	private final int defaultPageSize;
 
 
 	@Inject
-	URLFactory(URL baseURL, @TTL int ttl, SignatureFactory signatureFactory)
+	URLFactory(URL baseURL, @DefaultPageSize int defaultPageSize, @TTL int ttl, SignatureFactory signatureFactory)
 	{
-
 		this.baseURL = baseURL;
 		this.ttl = ttl;
 		this.signatureFactory = signatureFactory;
+		this.defaultPageSize = defaultPageSize;
 	}
 
 
 	public String create(Class<?> resourceType, @Nullable Integer pageSize, @Nullable String historyId)
 	{
-		// Calculate the parameter values.
-
-		String type = NamingConvention.getResourceName(resourceType);
-
-		long expires = System.currentTimeMillis() / SECONDS + ttl;
-
-		// Build the URL String
-
-		StringBuilder resource = new StringBuilder(baseURL.toString());
-
-		resource.append("replicate");
-
-		resource.append("?type=").append(type);
-
-		if (historyId != null)
-		{
-
-			resource.append("&historyId=").append(historyId);
-		}
+		// Set the default values for the optional parameters if non are supplied.
 
 		if (pageSize == null)
 		{
-			pageSize = 1000; // TODO: Inject default page size.
+			pageSize = defaultPageSize;
 		}
 
-		resource.append("&pageSize=").append(pageSize);
+		if (historyId == null)
+		{
+			historyId = BEGINING_OF_TIME;
+		}
 
-		resource.append("&expires=").append(expires);
+		String type = Entities.getEntityName(resourceType);
 
-		resource.append("&signature=");
-		resource.append(signatureFactory.create(type, expires, historyId, pageSize));
+		// Calculate the parameter values.
 
-		return resource.toString();
+		long expires = System.currentTimeMillis() / MILLIS_TO_SECS + ttl;
+
+		// Calculate the signature.
+		
+		String signature = signatureFactory.create(type, expires, historyId, pageSize);
+		
+		// Build the URL String
+
+		StringBuilder resultingURL = new StringBuilder(baseURL.toString());
+
+		resultingURL.append("replicate")
+			.append("?entity=").append(type)
+			.append("&historyId=").append(historyId)
+			.append("&pageSize=").append(pageSize)
+			.append("&expires=").append(expires)
+			.append("&signature=").append(signature);
+
+		return resultingURL.toString();
 	}
 }

@@ -31,6 +31,7 @@ public class Yderregister extends AbstractRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getNummer()
 	{
 
@@ -46,6 +47,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getTelefon()
 	{
 		return telefon;
@@ -59,6 +61,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getNavn()
 	{
 		return navn;
@@ -72,6 +75,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -85,6 +89,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -98,6 +103,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public String getBynavn()
 	{
 		return bynavn;
@@ -111,6 +117,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(7)
 	public int getAmtNummer()
 	{
 		return amtNummer;
@@ -124,6 +131,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public String getEmail()
 	{
 		return email;
@@ -137,6 +145,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getWww()
 	{
 		return www;
@@ -150,6 +159,7 @@ public class Yderregister extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(10)
 	@XmlName("hovedspecialekode")
 	public String getHovedSpecialeKode()
 	{
@@ -159,12 +169,12 @@ public class Yderregister extends AbstractRecord
 
 	public void setHovedSpecialeKode(String hovedSpecialeKode)
 	{
-
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
 
 	@Column
+	@XmlOrder(11)
 	@XmlName("hovedspecialetekst")
 	public String getHovedSpecialeTekst()
 	{
@@ -174,12 +184,12 @@ public class Yderregister extends AbstractRecord
 
 	public void setHovedSpecialeTekst(String hovedSpecialeTekst)
 	{
-
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
 
 	@Column
+	@XmlOrder(12)
 	public String getHistID()
 	{
 		return histID;
@@ -188,7 +198,6 @@ public class Yderregister extends AbstractRecord
 
 	public void setHistID(String histID)
 	{
-
 		this.histID = histID;
 	}
 

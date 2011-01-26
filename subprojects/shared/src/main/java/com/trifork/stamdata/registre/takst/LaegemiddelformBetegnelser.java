@@ -6,8 +6,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.trifork.stamdata.XmlOrder;
 
-@Entity
+
+@Entity(name = "formbetegnelse")
 @Table(name = "Formbetegnelse")
 public class LaegemiddelformBetegnelser extends TakstRecord
 {
@@ -22,6 +24,7 @@ public class LaegemiddelformBetegnelser extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(1)
 	public String getKode()
 	{
 		return this.kode;
@@ -35,6 +38,7 @@ public class LaegemiddelformBetegnelser extends TakstRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public String getTekst()
 	{
 		return this.tekst;

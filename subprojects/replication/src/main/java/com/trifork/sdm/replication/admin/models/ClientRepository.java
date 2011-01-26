@@ -1,34 +1,35 @@
 package com.trifork.sdm.replication.admin.models;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.settings.AdminDB;
 
-public class ClientRepository {
+
+public class ClientRepository
+{
 
 	private final Provider<Connection> provider;
 
 
 	@Inject
-	public ClientRepository(@AdminDB Provider<Connection> provider) {
+	public ClientRepository(Provider<Connection> provider)
+	{
 		this.provider = provider;
 	}
 
 
-	public Client find(String id) {
+	public Client find(String id)
+	{
 
 		Client client = null;
 
-		try {
+		try
+		{
 			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients WHERE (id = ?)");
 			stm.setObject(1, id);
 			ResultSet result = stm.executeQuery();
@@ -37,7 +38,8 @@ public class ClientRepository {
 
 			client = extractClient(result);
 		}
-		catch (SQLException e) {
+		catch (SQLException e)
+		{
 			new RuntimeException(e);
 
 			// TODO: Log this error.
@@ -45,11 +47,14 @@ public class ClientRepository {
 
 		return client;
 	}
-	
-	public Client findByCertificateId(String certificateId) {
+
+
+	public Client findByCertificateId(String certificateId)
+	{
 		Client client = null;
 
-		try {
+		try
+		{
 			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients WHERE (certificate_id = ?)");
 			stm.setObject(1, certificateId);
 			ResultSet result = stm.executeQuery();
@@ -58,7 +63,8 @@ public class ClientRepository {
 
 			client = extractClient(result);
 		}
-		catch (SQLException e) {
+		catch (SQLException e)
+		{
 			new RuntimeException(e);
 
 			// TODO: Log this error.
@@ -66,17 +72,20 @@ public class ClientRepository {
 
 		return client;
 	}
-	
-	
-	public void destroy(String id) {
 
-		try {
+
+	public void destroy(String id)
+	{
+
+		try
+		{
 			PreparedStatement stm = provider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
 			stm.setObject(1, id);
 			stm.execute();
 			stm.close();
 		}
-		catch (SQLException e) {
+		catch (SQLException e)
+		{
 			new RuntimeException(e);
 
 			// TODO: Log this error.
@@ -84,7 +93,8 @@ public class ClientRepository {
 	}
 
 
-	private Client extractClient(ResultSet resultSet) throws SQLException {
+	private Client extractClient(ResultSet resultSet) throws SQLException
+	{
 
 		String id = resultSet.getString("id");
 		String name = resultSet.getString("name");
@@ -96,14 +106,16 @@ public class ClientRepository {
 	}
 
 
-	public Client create(String name, String certificateId) {
+	public Client create(String name, String certificateId)
+	{
 
 		assert name != null && !name.isEmpty();
 		assert certificateId != null && !certificateId.isEmpty();
 
 		Client client = null;
 
-		try {
+		try
+		{
 			PreparedStatement stm = provider.get().prepareStatement("INSERT INTO clients SET name = ?, certificate_id = ?", Statement.RETURN_GENERATED_KEYS);
 
 			stm.setString(1, name);
@@ -112,16 +124,18 @@ public class ClientRepository {
 			stm.executeUpdate();
 			ResultSet resultSet = stm.getGeneratedKeys();
 
-			//connection.commit();
-			
-			if (resultSet != null && resultSet.next()) {
+			// connection.commit();
+
+			if (resultSet != null && resultSet.next())
+			{
 
 				String id = resultSet.getString(1);
 
 				client = new Client(id, name, certificateId);
 			}
 		}
-		catch (SQLException e) {
+		catch (SQLException e)
+		{
 			new RuntimeException(e);
 
 			// TODO: Log this error.
@@ -131,28 +145,32 @@ public class ClientRepository {
 	}
 
 
-	public List<Client> findAll() {
+	public List<Client> findAll()
+	{
 
 		List<Client> clients = new ArrayList<Client>();
 
-		try {
+		try
+		{
 			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients ORDER BY name");
 
 			ResultSet resultSet = stm.executeQuery();
 
-			while (resultSet.next()) {
+			while (resultSet.next())
+			{
 
 				Client client = extractClient(resultSet);
 
 				clients.add(client);
 			}
 		}
-		catch (SQLException e) {
+		catch (SQLException e)
+		{
 			new RuntimeException(e);
 
 			// TODO: Log this error.
 		}
-		
+
 		return clients;
 	}
 }

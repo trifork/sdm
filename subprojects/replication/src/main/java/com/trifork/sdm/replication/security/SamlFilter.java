@@ -16,9 +16,9 @@ import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import dk.itst.oiosaml.sp.UserAssertion;
 import dk.itst.oiosaml.sp.UserAssertionHolder;
 
+
 /**
- * Inserts the user's CPR into a request attribute
- * called 'CPR'.
+ * Inserts the user's CPR into a request attribute called 'CPR'.
  */
 @Singleton
 public class SamlFilter implements Filter
@@ -62,7 +62,7 @@ public class SamlFilter implements Filter
 			String userCPR = ridHelper.getCPR(userID);
 
 			request.setAttribute("CPR", userCPR);
-			
+
 			LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID={}.", userCPR, userID);
 
 			chain.doFilter(request, response);

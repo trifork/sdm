@@ -1,138 +1,134 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import java.math.BigInteger;
+import static java.lang.String.*;
+import static org.slf4j.LoggerFactory.*;
+
 import java.sql.*;
-import java.util.*;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import org.slf4j.Logger;
+
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.settings.AdminDB;
 
 
 public class LogEntryRepository
 {
+	private static Logger LOG = getLogger(LogEntryRepository.class);
 
-	private final Provider<Connection> provider;
+	private final Provider<Connection> connectionProvider;
 
 
 	@Inject
-	LogEntryRepository(@AdminDB Provider<Connection> provider)
+	LogEntryRepository(Provider<Connection> provider)
 	{
-		this.provider = provider;
-	}
-
-
-	public LogEntry find(BigInteger id)
-	{
-		LogEntry entry = null;
-
-		try
-		{
-			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM auditlog WHERE (id = ?)");
-			stm.setObject(1, id);
-			ResultSet result = stm.executeQuery();
-
-			result.next();
-
-			entry = extractEntry(result);
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
-		}
-
-		return entry;
-	}
-
-
-	private LogEntry extractEntry(ResultSet resultSet) throws SQLException
-	{
-
-		String id = resultSet.getString("id");
-		String message = resultSet.getString("message");
-		Timestamp created_at = resultSet.getTimestamp("created_at");
-
-		LogEntry entry = new LogEntry(id, message, created_at);
-
-		return entry;
+		this.connectionProvider = provider;
 	}
 
 
 	public List<LogEntry> findAll()
 	{
+		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
 
-		List<LogEntry> entries = new ArrayList<LogEntry>();
+		List<LogEntry> logEntries = new ArrayList<LogEntry>();
+
+		Statement statement = null;
 
 		try
 		{
-			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM auditlog ORDER BY created_at DESC");
+			Connection connection = connectionProvider.get();
+			statement = connection.createStatement();
 
-			ResultSet resultSet = stm.executeQuery();
+			ResultSet resultSet = statement.executeQuery(SQL);
 
 			while (resultSet.next())
 			{
-
 				LogEntry entry = extractEntry(resultSet);
-
-				entries.add(entry);
+				logEntries.add(entry);
 			}
 		}
 		catch (SQLException e)
 		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
+			LOG.error("Database error file fetching audit log.", e);
 		}
-
-		return entries;
-	}
-
-
-	public LogEntry create(String message, Object... args)
-	{
-		return create(String.format(message, args));
-	}
-
-
-	public LogEntry create(String message)
-	{
-
-		assert message != null && !message.isEmpty();
-
-		Timestamp currentTime = new Timestamp(new Date().getTime());
-
-		LogEntry entry = null;
-
-		try
+		finally
 		{
-			PreparedStatement stm = provider.get().prepareStatement("INSERT INTO auditlog SET message = ?, created_at = ?", Statement.RETURN_GENERATED_KEYS);
-
-			stm.setString(1, message);
-			stm.setTimestamp(2, currentTime);
-
-			stm.executeUpdate();
-			ResultSet resultSet = stm.getGeneratedKeys();
-
-			if (resultSet != null && resultSet.next())
+			try
 			{
-
-				String id = resultSet.getString(1);
-				entry = new LogEntry(id, message, currentTime);
+				if (statement != null) statement.close();
 			}
-
-			stm.close();
+			catch (SQLException e)
+			{
+				LOG.error("Could not close database statement.", e);
+			}
 		}
-		catch (SQLException e)
+
+		return logEntries;
+	}
+
+
+	public boolean create(String message, Object... args)
+	{
+		return create(format(message, args));
+	}
+
+
+	public boolean create(String message)
+	{
+		final String CREATE_SQL = "INSERT INTO auditlog SET message = ?, created_at = NOW()";
+
+		boolean success = false;
+
+		if (message != null && !message.isEmpty())
 		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
+			LOG.warn("Trying to log an empty audit message.");
 		}
+		else
+		{
+			PreparedStatement statement = null;
+
+			try
+			{
+				Connection connection = connectionProvider.get();
+
+				statement = connection.prepareStatement(CREATE_SQL);
+				statement.setString(1, message);
+
+				int created = statement.executeUpdate();
+
+				success = created != -1;
+			}
+			catch (SQLException e)
+			{
+				LOG.error("Database error while writing to the audit log.", e);
+			}
+			finally
+			{
+				try
+				{
+					if (statement != null) statement.close();
+				}
+				catch (SQLException e)
+				{
+					LOG.error("Could not close database statement.", e);
+				}
+			}
+		}
+
+		return success;
+	}
+
+
+	private LogEntry extractEntry(ResultSet resultSet) throws SQLException
+	{
+		String id = resultSet.getString("id");
+		String message = resultSet.getString("message");
+		Timestamp created_at = resultSet.getTimestamp("created_at");
+
+		LogEntry entry = new LogEntry(id, message, created_at);
 
 		return entry;
 	}

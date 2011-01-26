@@ -1,127 +1,96 @@
 package com.trifork.sdm.replication.replication;
 
+
+import static com.trifork.sdm.replication.replication.URLParameters.*;
+import static java.net.HttpURLConnection.*;
+import static org.slf4j.LoggerFactory.*;
+
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Date;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import javax.inject.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-import com.trifork.sdm.replication.db.DatabaseModule.QueryFactory;
-import com.trifork.sdm.replication.db.Query;
-import com.trifork.sdm.replication.util.URLFactory;
-import com.trifork.stamdata.*;
+import org.slf4j.Logger;
+
+import com.trifork.stamdata.Record;
 
 
 @Singleton
-public class ResourceServlet extends HttpServlet {
+public class ResourceServlet extends HttpServlet
+{
+	private static final long serialVersionUID = -172563300590543180L;
 
-	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = getLogger(ResourceServlet.class);
 
+	private static final int MILLIS_TO_SECS = 1000;
 
-	private final QueryFactory queryFactory;
+	private final Provider<EntityWriter> writerProvider;
 
-	private final URLFactory urlFactory;
+	private final ResourceResolver resourceResolver;
 
 
 	@Inject
-	ResourceServlet(QueryFactory queryFactory, URLFactory urlFactory) {
-
-		this.queryFactory = queryFactory;
-		this.urlFactory = urlFactory;
+	ResourceServlet(Provider<EntityWriter> writerProvider, ResourceResolver resourceResolver)
+	{
+		this.writerProvider = writerProvider;
+		this.resourceResolver = resourceResolver;
 	}
 
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
+		// We do not have to validate the request parameters here. That is the
+		// gateway's responsibility. The integrity of the URL is checked before,
+		// we get this far.
 
-		// Fetch the query parameters.
+		try
+		{
+			OutputStream outputStream = response.getOutputStream();
 
-		String sinceParam = request.getParameter(ParameterName.HISTORY_ID);
+			// Fetch the query parameters.
 
-		Date sinceDate;
-		long sinceId;
+			String historyIdParam = request.getParameter(HISTORY_ID);
 
-		if (sinceParam != null) {
-			
 			// We don't know exactly how long the token string is so we have the
 			// PID offset on the strings' lengths.
-			
-			String sinceDateStr = sinceParam.substring(0, sinceParam.length() - 10);
-			sinceDate = new Date(Long.parseLong(sinceDateStr) * 1000);
 
-			String sinceIdStr = sinceParam.substring(sinceParam.length() - 9);
-			sinceId = Long.parseLong(sinceIdStr);
+			// FIXME: Magic numbers.
+
+			String sinceDateParam = historyIdParam.substring(0, historyIdParam.length() - 10);
+			Date sinceDate = new Date(Long.parseLong(sinceDateParam) * MILLIS_TO_SECS);
+
+			String sinceIdParam = historyIdParam.substring(historyIdParam.length() - 9);
+			long sinceId = Long.parseLong(sinceIdParam);
+
+			// Determine the output format.
+
+			String formatParam = request.getParameter(FORMAT);
+			OutputFormat format = OutputFormat.valueOf(formatParam);
+
+			// Determine the page size.
+
+			String pageSizeParam = request.getParameter(PAGE_SIZE);
+			int pageSize = Integer.parseInt(pageSizeParam);
+
+			// Determine the resource type.
+
+			String resourceName = request.getParameter(ENTITY_TYPE);
+			Class<? extends Record> resourceType = resourceResolver.get(resourceName);
+
+			// Construct a query using the request parameters.
+
+			EntityWriter writer = writerProvider.get();
+
+			writer.write(outputStream, resourceType, format, pageSize, sinceDate, sinceId);
 		}
-		else {
-			sinceDate = DateUtils.PAST;
-			sinceId = 0;
-		}
-
-		// Figure out which resource has been requested.
-
-		String resourceName = request.getParameter("type");
-		Class<? extends Record> resourceType = EntityHelper.getResourceByName(resourceName);
-
-		// Determine the output format.
-
-		String formatParam = request.getParameter(ParameterName.FORMAT);
-		OutputFormat format = OutputFormat.XML;
-
-		if (formatParam != null) {
-
-			if (formatParam.equals(OutputFormat.XML.name())) {
-
-				format = OutputFormat.XML;
-			}
-			else if (formatParam.equals(OutputFormat.FastInfoset.name())) {
-
-				format = OutputFormat.FastInfoset;
-			}
-			else {
-
-				response.sendError(400, "Unsupported output format requested.");
-				return;
-			}
-		}
-		
-		// Determine the page size.
-		
-		String pageSizeParam;
-		int pageSize;
-		
-		if ((pageSizeParam = request.getParameter(ParameterName.PAGE_SIZE)) != null) {
-			
-			try {
-				pageSize = Integer.parseInt(pageSizeParam);
-				
-				if (pageSize <= 0) throw new Exception();
-			}
-			catch (Throwable t) {
-				response.sendError(400, "Invalid pageSize parameter.");
-				return;
-			}
-		}
-		else {
-			
-			pageSize = 2000;
-		}
-
-		EntitySerializer writer = new XMLEntitySerializer(resourceType, urlFactory);
-
-		// Construct a query.
-
-		Query query = queryFactory.create(resourceType, sinceId, sinceDate, pageSize);
-
-		// Return the resulting records.
-
-		try {
-			writer.output(query, response.getOutputStream(), format, pageSize);
-		}
-		catch (Exception e) {
-
-			throw new ServletException(e);
+		catch (Exception e)
+		{
+			LOGGER.error("Unhandled exception was thrown during replication.", e);
+			response.sendError(HTTP_INTERNAL_ERROR);
 		}
 	}
 }

@@ -2,9 +2,7 @@ package com.trifork.stamdata.registre.autorisation;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.trifork.stamdata.*;
 
@@ -26,6 +24,7 @@ public class Autorisation extends AbstractRecord {
 	@Id
 	@Column
 	@XmlName("nummer")
+	@XmlOrder(1)
 	public String getAutorisationsnummer() {
 
 		return nummer;
@@ -34,6 +33,7 @@ public class Autorisation extends AbstractRecord {
 
 	@Column
 	@XmlName("cpr")
+	@XmlOrder(2)
 	public String getCpr() {
 
 		return cpr;
@@ -41,6 +41,7 @@ public class Autorisation extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(3)
 	public String getEfternavn() {
 
 		return efternavn;
@@ -48,6 +49,7 @@ public class Autorisation extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(4)
 	public String getFornavn() {
 
 		return fornavn;
@@ -55,6 +57,7 @@ public class Autorisation extends AbstractRecord {
 
 
 	@Column
+	@XmlOrder(5)
 	public String getUddannelsesKode() {
 
 		return uddKode;

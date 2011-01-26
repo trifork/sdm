@@ -3,9 +3,7 @@ package com.trifork.stamdata.registre.sor;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import com.trifork.stamdata.*;
 
@@ -31,6 +29,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(1)
 	public String getNummer()
 	{
 		return nummer;
@@ -44,6 +43,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(2)
 	public Long getEanLokationsnummer()
 	{
 
@@ -59,6 +59,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(3)
 	public String getTelefon()
 	{
 
@@ -74,6 +75,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(4)
 	public String getNavn()
 	{
 
@@ -89,6 +91,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(5)
 	public String getVejnavn()
 	{
 
@@ -104,6 +107,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(6)
 	public String getPostnummer()
 	{
 
@@ -119,9 +123,9 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(7)
 	public String getBynavn()
 	{
-
 		return bynavn;
 	}
 
@@ -134,6 +138,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(8)
 	public String getEmail()
 	{
 
@@ -149,6 +154,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(9)
 	public String getWww()
 	{
 
@@ -164,6 +170,7 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(10)
 	@XmlName("hovedspecialekode")
 	public Long getHovedSpecialeKode()
 	{
@@ -179,6 +186,8 @@ public class Yder extends AbstractRecord
 	}
 
 
+	@Column
+	@XmlOrder(11)
 	@XmlName("hovedspecialetekst")
 	public String getHovedSpecialeTekst()
 	{
@@ -189,16 +198,15 @@ public class Yder extends AbstractRecord
 
 	public void setHovedSpecialeTekst(String hovedSpecialeTekst)
 	{
-
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
 
 	@Id
 	@Column
+	@XmlOrder(12)
 	public Long getSorNummer()
 	{
-
 		return sorNummer;
 	}
 
@@ -211,16 +219,15 @@ public class Yder extends AbstractRecord
 
 
 	@Column
+	@XmlOrder(13)
 	public Long getPraksisSorNummer()
 	{
-
 		return praktisSorNummer;
 	}
 
 
 	public void setPraksisSorNummer(Long praktisSorNummer)
 	{
-
 		this.praktisSorNummer = praktisSorNummer;
 	}
 
@@ -228,7 +235,6 @@ public class Yder extends AbstractRecord
 	@Override
 	public Date getValidFrom()
 	{
-
 		return validFrom;
 	}
 
@@ -236,7 +242,6 @@ public class Yder extends AbstractRecord
 	@Override
 	public void setValidFrom(Date validFrom)
 	{
-
 		this.validFrom = validFrom;
 	}
 

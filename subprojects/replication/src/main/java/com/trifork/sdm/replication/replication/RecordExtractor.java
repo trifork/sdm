@@ -9,7 +9,7 @@ import java.util.*;
 
 import javax.persistence.Column;
 
-import com.trifork.stamdata.NamingConvention;
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
 
@@ -22,7 +22,7 @@ public class RecordExtractor
 
 	public RecordExtractor(Class<? extends Record> entity)
 	{
-		this.pidColumn = NamingConvention.getIdColumnName(entity);
+		this.pidColumn = Entities.getIdColumnName(entity);
 
 		for (Method getter : entity.getMethods())
 		{
@@ -110,7 +110,7 @@ public class RecordExtractor
 		public EntityEntry(Method getter)
 		{
 
-			this.columnName = NamingConvention.getColumnName(getter);
+			this.columnName = Entities.getColumnName(getter);
 			this.parameterType = getter.getReturnType();
 		}
 	}

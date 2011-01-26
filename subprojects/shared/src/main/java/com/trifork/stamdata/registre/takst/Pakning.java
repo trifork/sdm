@@ -43,6 +43,7 @@ public class Pakning extends TakstRecord
 
 
 	@Column(name = "DrugID")
+	@XmlOrder(1)
 	public Long getDrugid()
 	{
 		return drugid;
@@ -57,6 +58,7 @@ public class Pakning extends TakstRecord
 
 	@Id
 	@Column
+	@XmlOrder(2)
 	public Long getVarenummer()
 	{
 		return this.varenummer;
@@ -82,6 +84,7 @@ public class Pakning extends TakstRecord
 
 
 	@Column(name = "VarenummerDelpakning")
+	@XmlOrder(3)
 	public Long getVarenummerForDelpakning()
 	{
 		return this.varenummerForDelpakning;
@@ -107,6 +110,7 @@ public class Pakning extends TakstRecord
 
 
 	@Column(name = "PakningsstoerrelseTekst")
+	@XmlOrder(4)
 	public String getPakningsstoerrelseKlartekst()
 	{
 		return this.pakningsstoerrelseKlartekst;
@@ -121,6 +125,7 @@ public class Pakning extends TakstRecord
 
 	@Column(name = "PakningsstoerrelseNumerisk")
 	@XmlName("numeriskPakningsstoerrelse")
+	@XmlOrder(5)
 	public Double getPakningsstoerrelseNumerisk()
 	{
 		if (this.pakningsstoerrelseNumerisk == 0)
@@ -140,6 +145,7 @@ public class Pakning extends TakstRecord
 
 
 	@Column(name = "Pakningsstoerrelsesenhed")
+	@XmlOrder(6)
 	public String getPakningsstorrelseEnhed()
 	{
 
@@ -159,6 +165,8 @@ public class Pakning extends TakstRecord
 
 
 	@Column(name = "EmballageTypeKode")
+	@XmlOrder(7)
+	@XmlName("emballagetypekode")
 	public String getEmballagetype()
 	{
 
@@ -201,6 +209,7 @@ public class Pakning extends TakstRecord
 
 	@Column(name = "MedicintilskudsKode")
 	@XmlName("medicintilskudskode")
+	@XmlOrder(8)
 	public String getMedicintilskudskode()
 	{
 
@@ -216,6 +225,7 @@ public class Pakning extends TakstRecord
 
 	@Column(name = "KlausuleringsKode")
 	@XmlName("klausuleringskode")
+	@XmlOrder(9)
 	public String getKlausulForMedicintilskud()
 	{
 
@@ -454,14 +464,12 @@ public class Pakning extends TakstRecord
 
 	public Priser getPriser()
 	{
-
 		return takst.getEntity(Priser.class, varenummer);
 	}
 
 
 	public Boolean isTilHumanAnvendelse()
 	{
-
 		Laegemiddel lm = takst.getEntity(Laegemiddel.class, drugid);
 		if (lm == null) return null;
 		return lm.isTilHumanAnvendelse();
@@ -469,10 +477,9 @@ public class Pakning extends TakstRecord
 
 
 	@Column
+	@XmlOrder(10)
 	public Integer getDosisdispenserbar()
 	{
-
 		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
 	}
-
 }
