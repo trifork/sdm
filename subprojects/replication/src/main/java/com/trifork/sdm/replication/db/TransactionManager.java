@@ -26,7 +26,7 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 	// so we are using field injection instead.
 	@Inject
 	private DataSource dataStore;
-	private ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
+	private static ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
 
 
 	public Connection get() throws OutOfTransactionException
@@ -68,7 +68,6 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 
 		// Set Thread Local connection.
 		connectionStore.set(conn);
-		Connection deleteMe = connectionStore.get();
 
 		// Make sure we commit/rollback, close the connection and unset the thread local around
 		// top-level method call

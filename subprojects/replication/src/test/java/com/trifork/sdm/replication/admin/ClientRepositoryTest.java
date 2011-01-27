@@ -1,23 +1,16 @@
 package com.trifork.sdm.replication.admin;
 
 
-import java.sql.Connection;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import org.junit.*;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
-import com.trifork.sdm.replication.ConfigurationModule;
 import com.trifork.sdm.replication.ProductionModule;
 import com.trifork.sdm.replication.admin.models.Client;
 import com.trifork.sdm.replication.admin.models.ClientRepository;
-import com.trifork.sdm.replication.db.DatabaseModule;
-import com.trifork.sdm.replication.db.TransactionManager;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
-
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
 
 
 public class ClientRepositoryTest
@@ -37,13 +30,10 @@ public class ClientRepositoryTest
 	@Before
 	public void setUp()
 	{
-		Provider<Connection> provider = injector.getProvider(Connection.class);
-		
 		clientRepository = injector.getInstance(ClientRepository.class);
 	}
 
-
-	@Transactional
+	
 	@Test
 	public void can_find_client_by_certificate_id() throws Exception
 	{
