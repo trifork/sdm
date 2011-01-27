@@ -5,6 +5,7 @@ import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 import static java.lang.String.*;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -19,6 +20,7 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.*;
 
 import com.trifork.sdm.replication.admin.models.*;
+import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
@@ -54,21 +56,21 @@ public class ClientController extends AbstractController
 		// Check if the user requested a form to create
 		// a new user.
 
-		if (request.getRequestURI().endsWith("/new"))
-		{
-			getNew(request, response);
-		}
+		try {
+			if (request.getRequestURI().endsWith("/new")) {
+				getNew(request, response);
+			}
 
-		// If the ID parameter is null, we list all
-		// users. If it is present we show a specific user.
+			// If the ID parameter is null, we list all
+			// users. If it is present we show a specific user.
 
-		else if (request.getParameter("id") == null)
-		{
-			getList(request, response);
-		}
-		else
-		{
-			getEdit(request, response);
+			else if (request.getParameter("id") == null) {
+				getList(request, response);
+			} else {
+				getEdit(request, response);
+			}
+		} catch (Throwable e) {
+			throw new ServletException(e);
 		}
 	}
 
@@ -201,7 +203,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
 	{
 
 		Template template = config.getTemplate("user/edit.ftl");
@@ -218,7 +220,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
 	{
 		Template template = config.getTemplate("user/list.ftl");
 

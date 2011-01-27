@@ -68,6 +68,7 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 
 		// Set Thread Local connection.
 		connectionStore.set(conn);
+		Connection deleteMe = connectionStore.get();
 
 		// Make sure we commit/rollback, close the connection and unset the thread local around
 		// top-level method call

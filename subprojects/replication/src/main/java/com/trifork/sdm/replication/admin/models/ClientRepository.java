@@ -1,95 +1,73 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.inject.Provider;
+import com.trifork.sdm.replication.db.TransactionManager;
+import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
+import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 
 
 public class ClientRepository
 {
 
-	private final Provider<Connection> provider;
+	private final TransactionManager connectionProvider;
 
 
 	@Inject
-	public ClientRepository(Provider<Connection> provider)
+	public ClientRepository(TransactionManager transactionManager)
 	{
-		this.provider = provider;
+		this.connectionProvider = transactionManager;
 	}
 
-
-	public Client find(String id)
+	@Transactional
+	public Client find(String id) throws OutOfTransactionException, SQLException
 	{
 
 		Client client = null;
 
-		try
-		{
-			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients WHERE (id = ?)");
-			stm.setObject(1, id);
-			ResultSet result = stm.executeQuery();
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM clients WHERE (id = ?)");
+		stm.setObject(1, id);
+		ResultSet result = stm.executeQuery();
 
-			result.next();
+		result.next();
 
-			client = extractClient(result);
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
+		client = extractClient(result);
 
-			// TODO: Log this error.
-		}
+		return client;
+	}
+
+	@Transactional
+	public Client findByCertificateId(String certificateId) throws OutOfTransactionException, SQLException
+	{
+		Client client = null;
+
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM clients WHERE (certificate_id = ?)");
+		stm.setObject(1, certificateId);
+		ResultSet result = stm.executeQuery();
+
+		result.next();
+
+		client = extractClient(result);
 
 		return client;
 	}
 
 
-	public Client findByCertificateId(String certificateId)
+	@Transactional
+	public void destroy(String id) throws OutOfTransactionException, SQLException
 	{
-		Client client = null;
-
-		try
-		{
-			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients WHERE (certificate_id = ?)");
-			stm.setObject(1, certificateId);
-			ResultSet result = stm.executeQuery();
-
-			result.next();
-
-			client = extractClient(result);
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
-		}
-
-		return client;
-	}
-
-
-	public void destroy(String id)
-	{
-
-		try
-		{
-			PreparedStatement stm = provider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
-			stm.setObject(1, id);
-			stm.execute();
-			stm.close();
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
-		}
+		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
+		stm.setObject(1, id);
+		stm.execute();
+		stm.close();
 	}
 
 
@@ -106,7 +84,8 @@ public class ClientRepository
 	}
 
 
-	public Client create(String name, String certificateId)
+	@Transactional
+	public Client create(String name, String certificateId) throws OutOfTransactionException, SQLException
 	{
 
 		assert name != null && !name.isEmpty();
@@ -114,61 +93,42 @@ public class ClientRepository
 
 		Client client = null;
 
-		try
+		PreparedStatement stm = connectionProvider.get().prepareStatement("INSERT INTO clients SET name = ?, certificate_id = ?", Statement.RETURN_GENERATED_KEYS);
+
+		stm.setString(1, name);
+		stm.setString(2, certificateId);
+
+		stm.executeUpdate();
+		ResultSet resultSet = stm.getGeneratedKeys();
+
+		if (resultSet != null && resultSet.next())
 		{
-			PreparedStatement stm = provider.get().prepareStatement("INSERT INTO clients SET name = ?, certificate_id = ?", Statement.RETURN_GENERATED_KEYS);
 
-			stm.setString(1, name);
-			stm.setString(2, certificateId);
+			String id = resultSet.getString(1);
 
-			stm.executeUpdate();
-			ResultSet resultSet = stm.getGeneratedKeys();
-
-			// connection.commit();
-
-			if (resultSet != null && resultSet.next())
-			{
-
-				String id = resultSet.getString(1);
-
-				client = new Client(id, name, certificateId);
-			}
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
+			client = new Client(id, name, certificateId);
 		}
 
 		return client;
 	}
 
 
-	public List<Client> findAll()
+	@Transactional
+	public List<Client> findAll() throws OutOfTransactionException, SQLException
 	{
 
 		List<Client> clients = new ArrayList<Client>();
 
-		try
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM clients ORDER BY name");
+
+		ResultSet resultSet = stm.executeQuery();
+
+		while (resultSet.next())
 		{
-			PreparedStatement stm = provider.get().prepareStatement("SELECT * FROM clients ORDER BY name");
 
-			ResultSet resultSet = stm.executeQuery();
+			Client client = extractClient(resultSet);
 
-			while (resultSet.next())
-			{
-
-				Client client = extractClient(resultSet);
-
-				clients.add(client);
-			}
-		}
-		catch (SQLException e)
-		{
-			new RuntimeException(e);
-
-			// TODO: Log this error.
+			clients.add(client);
 		}
 
 		return clients;

@@ -1,51 +1,46 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.google.inject.Provider;
+import com.trifork.sdm.replication.db.TransactionManager;
+import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 
 
 public class PermissionRepository
 {
-	private final Provider<Connection> connectionProvider;
+	private final TransactionManager connectionProvider;
 
 
 	@Inject
-	public PermissionRepository(Provider<Connection> provider)
+	public PermissionRepository(TransactionManager connectionProvider)
 	{
-		this.connectionProvider = provider;
+		this.connectionProvider = connectionProvider;
 	}
 
-
-	public List<String> findByClientId(String id)
+	@Transactional
+	public List<String> findByClientId(String id) throws OutOfTransactionException, SQLException
 	{
 		List<String> permissions = new ArrayList<String>();
 
-		try
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT resource_id FROM clients_permissions WHERE (client_id = ?)");
+		stm.setObject(1, id);
+
+		ResultSet resultSet = stm.executeQuery();
+
+		while (resultSet.next())
 		{
-			PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT resource_id FROM clients_permissions WHERE (client_id = ?)");
-			stm.setObject(1, id);
+			String entityId = resultSet.getString(1);
 
-			ResultSet resultSet = stm.executeQuery();
-
-			while (resultSet.next())
-			{
-				String entityId = resultSet.getString(1);
-
-				permissions.add(entityId);
-			}
-		}
-		catch (SQLException e)
-		{
-			throw new RuntimeException(e);
-
-			// TODO: log
+			permissions.add(entityId);
 		}
 
 		return permissions;
