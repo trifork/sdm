@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.AdminTransaction;
 
 
 public class AuditLogRepository
@@ -30,7 +30,7 @@ public class AuditLogRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public List<LogEntry> findAll() throws SQLException
 	{
 		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";

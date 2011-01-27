@@ -21,7 +21,7 @@ import org.reflections.util.*;
 
 import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.AdminTransaction;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
@@ -48,7 +48,7 @@ public class ClientController extends AbstractController
 
 
 	@Override
-	@Transactional
+	@AdminTransaction
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -76,7 +76,7 @@ public class ClientController extends AbstractController
 
 	@Override
 	@SuppressWarnings("unchecked")
-	@Transactional
+	@AdminTransaction
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");

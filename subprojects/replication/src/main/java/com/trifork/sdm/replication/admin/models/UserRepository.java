@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.AdminTransaction;
 
 
 public class UserRepository
@@ -23,6 +23,7 @@ public class UserRepository
 	}
 
 
+	@AdminTransaction
 	public User find(String id)
 	{
 		User admin = null;
@@ -64,7 +65,7 @@ public class UserRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public User create(String name, String cpr, String cvr)
 	{
 		User admin = null;

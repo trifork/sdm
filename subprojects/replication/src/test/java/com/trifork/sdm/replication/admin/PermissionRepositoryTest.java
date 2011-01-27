@@ -32,7 +32,8 @@ public class PermissionRepositoryTest {
 	}
 
 	@Before
-	public void setUp() {
+	public void setUp()
+	{
 		permissionRepository = injector.getInstance(PermissionRepository.class);
 		clientRepository = injector.getInstance(ClientRepository.class);
 	}

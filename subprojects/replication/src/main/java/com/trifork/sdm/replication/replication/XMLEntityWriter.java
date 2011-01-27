@@ -18,7 +18,6 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 import com.trifork.sdm.replication.util.URLFactory;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
@@ -47,7 +46,6 @@ public class XMLEntityWriter implements EntityWriter
 
 
 	@Override
-	@Transactional
 	public void write(OutputStream outputStream, Class<? extends Record> resourceType, OutputFormat format, int pageSize, Date sinceDate, long sinceId) throws Exception
 	{
 		XMLOutputFactory factory;
@@ -64,26 +62,26 @@ public class XMLEntityWriter implements EntityWriter
 		XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream);
 
 		// Infer some names.
-		
+
 		String tableName = Entities.getTableName(resourceType);
 		String pidName = Entities.getPIDName(resourceType);
 		String resourceXMLName = Entities.getXMLTypeName(resourceType);
-		
+
 		// Construct the SQL.
 
 		String query = format("SELECT * FROM %1$s WHERE (%2$s > ? AND ModifiedDate = ?) OR (ModifiedDate > ?) ORDER BY %2$s, ModifiedDate, CreatedDate LIMIT %3$d", tableName, pidName, pageSize);
-		
+
 		// Get db connection.
-		
+
 		Connection connection = connectionProvider.get();
-		
+
 		PreparedStatement statement = connection.prepareStatement(query);
 		statement.setLong(1, sinceId);
 		statement.setObject(2, sinceDate);
 		statement.setObject(3, sinceDate);
-		
+
 		ResultSet records = statement.executeQuery();
-		
+
 		String lastHistoryId = null;
 
 		// <? ... ?>
@@ -91,7 +89,7 @@ public class XMLEntityWriter implements EntityWriter
 
 		// <page>
 		writer.writeStartElement("page");
-		
+
 		// For each record in this page.
 		while (records.next())
 		{
@@ -107,7 +105,7 @@ public class XMLEntityWriter implements EntityWriter
 			lastHistoryId = generateHistoryID(records, pid);
 			writer.writeAttribute("historyId", lastHistoryId);
 
-			// Write the validity period.
+			// Write out the validity period. 
 
 			String effectuationDate = toXMLTimeStamp(records.getTimestamp("ValidFrom"), USE_ZULU_TIME);
 			writer.writeAttribute("effectuationDate", effectuationDate);
@@ -117,12 +115,12 @@ public class XMLEntityWriter implements EntityWriter
 
 			// For each output method (column) we write an element.
 			// TODO: The element names should be pre-calculated and cached.
-			
+
 			for (Method column : getColumns(resourceType))
 			{
 				String elementName = getXMLElementName(column);
 				String columnName = getColumnName(column);
-				
+
 				Object value = records.getObject(columnName);
 
 				// Only write the element if it is not null.
@@ -134,7 +132,7 @@ public class XMLEntityWriter implements EntityWriter
 					// manner.
 					if (value instanceof Timestamp)
 					{
-						String date = toXMLTimeStamp((Date)value, USE_ZULU_TIME);
+						String date = toXMLTimeStamp((Date) value, USE_ZULU_TIME);
 						writer.writeCharacters(date);
 					}
 
@@ -155,7 +153,7 @@ public class XMLEntityWriter implements EntityWriter
 			// Write the data to the output stream.
 			writer.flush();
 		}
-		
+
 		statement.close();
 
 		if (lastHistoryId != null)
@@ -207,7 +205,7 @@ public class XMLEntityWriter implements EntityWriter
 		}
 
 		// Construct the update token used to request future updates.
-		
+
 		return modifiedDate + pid;
 	}
 }

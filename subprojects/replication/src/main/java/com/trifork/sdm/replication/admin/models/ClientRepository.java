@@ -1,36 +1,32 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.trifork.sdm.replication.db.TransactionManager;
+import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.AdminTransaction;
 
 
 public class ClientRepository
 {
-
-	private final TransactionManager connectionProvider;
+	private final Provider<Connection> connectionProvider;
 
 
 	@Inject
-	public ClientRepository(TransactionManager transactionManager)
+	public ClientRepository(@AdminTransaction Provider<Connection> transactionManager)
 	{
 		this.connectionProvider = transactionManager;
 	}
 
-	@Transactional
+
+	@AdminTransaction
 	public Client find(String id) throws OutOfTransactionException, SQLException
 	{
-
 		Client client = null;
 
 		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM clients WHERE (id = ?)");
@@ -44,7 +40,8 @@ public class ClientRepository
 		return client;
 	}
 
-	@Transactional
+
+	@AdminTransaction
 	public Client findByCertificateId(String certificateId) throws OutOfTransactionException, SQLException
 	{
 		Client client = null;
@@ -61,7 +58,7 @@ public class ClientRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public void destroy(String id) throws OutOfTransactionException, SQLException
 	{
 		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
@@ -73,7 +70,6 @@ public class ClientRepository
 
 	private Client extractClient(ResultSet resultSet) throws SQLException
 	{
-
 		String id = resultSet.getString("id");
 		String name = resultSet.getString("name");
 		String certificateId = resultSet.getString("certificate_id");
@@ -84,10 +80,9 @@ public class ClientRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public Client create(String name, String certificateId) throws OutOfTransactionException, SQLException
 	{
-
 		assert name != null && !name.isEmpty();
 		assert certificateId != null && !certificateId.isEmpty();
 
@@ -103,7 +98,6 @@ public class ClientRepository
 
 		if (resultSet != null && resultSet.next())
 		{
-
 			String id = resultSet.getString(1);
 
 			client = new Client(id, name, certificateId);
@@ -113,10 +107,9 @@ public class ClientRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public List<Client> findAll() throws OutOfTransactionException, SQLException
 	{
-
 		List<Client> clients = new ArrayList<Client>();
 
 		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM clients ORDER BY name");

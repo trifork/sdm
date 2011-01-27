@@ -33,7 +33,7 @@ public class ClientRepositoryTest
 		clientRepository = injector.getInstance(ClientRepository.class);
 	}
 
-	
+
 	@Test
 	public void can_find_client_by_certificate_id() throws Exception
 	{

@@ -3,16 +3,17 @@ package com.trifork.sdm.replication.db;
 
 import static com.google.inject.matcher.Matchers.*;
 import static com.google.inject.name.Names.*;
+import static com.trifork.sdm.replication.db.properties.Database.*;
+import static com.trifork.sdm.replication.db.properties.Transactions.*;
 
 import java.sql.Connection;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
-import com.google.inject.*;
+import com.google.inject.AbstractModule;
+import com.google.inject.Key;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.*;
 
 
 public class DatabaseModule extends AbstractModule
@@ -27,23 +28,21 @@ public class DatabaseModule extends AbstractModule
 
 		// Make it easy to do transactions.
 
-		TransactionManager manager = new TransactionManager();
-
-		// Make sure we inject the JDBC support instance,
-		// once configuration is completed.
-
-		requestInjection(manager);
-
-		// Make the appropriate bindings.
-
-		bindInterceptor(any(), annotatedWith(Transactional.class), manager);
-		bind(Connection.class).toProvider(manager);
+		DataSource dataSource;
+		
+		dataSource = createDataSource("root", "", "localhost", 3306, "sdm");
+		TransactionManager adminTM = new TransactionManager(dataSource);
+		bindInterceptor(any(), annotatedWith(Transaction.class), adminTM);
+		bind(Key.get(Connection.class, Transaction.class)).toProvider(adminTM);
+		
+		dataSource = createDataSource("root", "", "", 3306, "sdm_admin");
+		TransactionManager mainTM = new TransactionManager(dataSource);
+		bindInterceptor(any(), annotatedWith(transaction(SDM)), mainTM);
+		bind(Key.get(Connection.class, AdminTransaction.class)).toProvider(mainTM);
 	}
 
 
-	@Provides
-	@Singleton
-	protected DataSource provideDataSource(@Named("db.username") String username, @Named("db.password") String password, @Named("db.host") String host, @Named("db.port") int port)
+	protected DataSource createDataSource(String username, String password, String host, int port, String schema)
 	{
 		MysqlConnectionPoolDataSource dataSource = new MysqlConnectionPoolDataSource();
 
@@ -51,12 +50,7 @@ public class DatabaseModule extends AbstractModule
 		dataSource.setPassword(password);
 		dataSource.setServerName(host);
 		dataSource.setPort(port);
-
-		// The default schema is 'mysql', I doubt that
-		// you anyone would actually change this by
-		// configuration on the db.
-
-		dataSource.setDatabaseName("mysql");
+		dataSource.setDatabaseName(schema);
 
 		return dataSource;
 	}

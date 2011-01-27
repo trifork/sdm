@@ -1,32 +1,29 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import com.trifork.sdm.replication.db.TransactionManager;
+import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
+import com.trifork.sdm.replication.db.properties.AdminTransaction;
 
 
 public class PermissionRepository
 {
-	private final TransactionManager connectionProvider;
+	private final Provider<Connection> connectionProvider;
 
 
 	@Inject
-	public PermissionRepository(TransactionManager connectionProvider)
+	public PermissionRepository(@AdminTransaction Provider<Connection> connectionProvider)
 	{
 		this.connectionProvider = connectionProvider;
 	}
 
-	@Transactional
+	@AdminTransaction
 	public List<String> findByClientId(String id) throws OutOfTransactionException, SQLException
 	{
 		List<String> permissions = new ArrayList<String>();
@@ -47,7 +44,7 @@ public class PermissionRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public void setPermissions(String id, List<String> entities) throws SQLException
 	{
 		Connection connection = connectionProvider.get();
@@ -68,7 +65,7 @@ public class PermissionRepository
 	}
 
 
-	@Transactional
+	@AdminTransaction
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
 		String SQL = "SELECT COUNT(*) FROM clients_permissions JOIN ON (client_id) WHERE (resource_id = ? AND certificate_id = ?)";

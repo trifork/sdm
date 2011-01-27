@@ -1,7 +1,6 @@
 package com.trifork.sdm.replication.db;
 
 
-import java.lang.annotation.*;
 import java.sql.Connection;
 
 import javax.sql.DataSource;
@@ -9,24 +8,19 @@ import javax.sql.DataSource;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 
 public class TransactionManager implements MethodInterceptor, Provider<Connection>
 {
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.METHOD)
-	public static @interface Transactional
-	{
-	}
-
-
-	// We can't use constructor injection with interceptors,
-	// so we are using field injection instead.
-	@Inject
 	private DataSource dataStore;
-	private static ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
+	private ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
+
+
+	public TransactionManager(DataSource source)
+	{
+		this.dataStore = source;
+	}
 
 
 	public Connection get() throws OutOfTransactionException

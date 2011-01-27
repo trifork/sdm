@@ -17,7 +17,6 @@ import javax.xml.stream.*;
 import org.slf4j.Logger;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 import com.trifork.sdm.replication.replication.RecordPersister;
 import com.trifork.stamdata.*;
 
@@ -39,7 +38,6 @@ public class JdbcXMLRecordPersister implements RecordPersister
 
 
 	@Override
-	@Transactional
 	public URL persist(InputStream inputStream, Class<? extends Record> entitySet) throws Exception
 	{
 		URL nextPageURL = null;
