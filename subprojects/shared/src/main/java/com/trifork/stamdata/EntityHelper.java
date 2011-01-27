@@ -104,8 +104,8 @@ public class EntityHelper
 			Reflections reflector = new Reflections(new ConfigurationBuilder()
 				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(INCLUDE_PACKAGE))
 				.filterInputsBy(new FilterBuilder()
-					.include(FilterBuilder.prefix(INCLUDE_PACKAGE))
-					.exclude(FilterBuilder.prefix(EXCLUDE_PACKAGE)))
+				.include(FilterBuilder.prefix(INCLUDE_PACKAGE))
+				.exclude(FilterBuilder.prefix(EXCLUDE_PACKAGE)))
 				.setScanners(new TypeAnnotationsScanner()));
 
 			// Serve all entities by deferring their URLs and using their
@@ -147,7 +147,7 @@ public class EntityHelper
 	public static int getOrder(Entry<String, Method> o1)
 	{
 		XmlOrder order = o1.getValue().getAnnotation(XmlOrder.class);
-		
+
 		assert order != null;
 		System.out.println(o1.getValue().getName());
 		return order.value();

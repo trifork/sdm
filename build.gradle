@@ -59,8 +59,11 @@ subprojects {
 	// Include transitive compile dependencies by default.
 	
 	configurations.compile.transitive = true
-		
+	
 	configurations {
+		compile {
+			exclude group: "log4j"
+		}
 		runtime {
 			// Exclude other logging from all dependencies
 			// since we will be using slf4j and backlog.
