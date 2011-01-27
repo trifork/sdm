@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.trifork.sdm.replication.client.SoapHelper;
+import com.trifork.sdm.replication.util.SoapHelper;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;

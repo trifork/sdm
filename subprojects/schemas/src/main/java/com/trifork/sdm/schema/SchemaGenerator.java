@@ -98,7 +98,7 @@ public class SchemaGenerator
 
 		// Determine the schema's name.
 
-		String resourceName = NamingConvention.getXMLTypeName(type);
+		String resourceName = Entities.getXMLTypeName(type);
 
 		// Make sure the destination folder exists.
 
@@ -353,9 +353,9 @@ public class SchemaGenerator
 	{
 		SortedMap<String, Method> elements = new TreeMap<String, Method>();
 
-		for (Method method : NamingConvention.getColumns(type, version))
+		for (Method method : Entities.getColumns(type, version))
 		{
-			String elementName = NamingConvention.getXMLElementName(method);
+			String elementName = Entities.getXMLElementName(method);
 
 			// Elements cannot have the same name!
 

@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
+import com.trifork.sdm.replication.gateway.properties.DefaultPageSize;
 import com.trifork.sdm.replication.util.URLFactory;
 
 import dk.sosi.seal.SOSIFactory;
@@ -34,6 +35,7 @@ public class SoapProcessor implements RequestProcessor
 	private static final int SOAP_FAULT = 500;
 
 	private static final String SOAP_CONTENT_TYPE = "application/soap+xml; charset=UTF-8";
+	private static final String BEGINING_OF_TIME = "0";
 
 	private final SOSIFactory factory;
 
@@ -43,12 +45,15 @@ public class SoapProcessor implements RequestProcessor
 
 	private final PermissionRepository permissionRepository;
 
+	private final int defaultPageSize;
+
 
 	@Inject
-	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository)
+	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository, @DefaultPageSize int defaultPageSize)
 	{
 		this.urlFactory = urlFactory;
 		this.permissionRepository = permissionRepository;
+		this.defaultPageSize = defaultPageSize;
 
 		Properties encryptionSetting = SignatureUtil.setupCryptoProviderForJVM();
 
@@ -76,25 +81,46 @@ public class SoapProcessor implements RequestProcessor
 				LOG.warn("Unsupported version of DGWS is being used.");
 			}
 
-			GatewayRequest soapBody = GatewayRequest.deserialize(request.getBody());
+			GatewayRequest params = GatewayRequest.deserialize(request.getBody());
+
+			// Set the default if not present.
+			
+			if (params.pageSize == null)
+			{
+				params.pageSize = defaultPageSize;
+			}
+			if (params.historyId == null)
+			{
+				params.historyId = BEGINING_OF_TIME;
+			}
+			if (params.format == null)
+			{
+				params.format = "XML";
+			}
+
+			// Validate the parameters.
 
 			if (!method.equals("POST"))
 			{
 				reply = factory.createNewErrorReply(request, "Client", "Unsupported HTTP method. Use a POST.");
 			}
-			else if ((error = checkIdentityCard(request)) != null || (error = checkRequestIntegrity(request, soapBody)) != null)
+			else if ((error = checkIdentityCard(request)) != null || (error = checkRequestIntegrity(request, params)) != null)
 			{
 				reply = error;
 			}
-			else if (clientCVR == null || !canAccessEntity(soapBody, clientCVR))
+			else if (clientCVR == null || !canAccessEntity(params, clientCVR))
+			{
+				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
+			}
+			else if (params.format != null && !"XML".equals(params.format) && !"FastInfoset".equals(params.format))
 			{
 				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
 			}
 			else
-			{
+			{				
 				// Construct the URL and return it in SOAP.
 
-				String resourceURL = urlFactory.create(soapBody.getEntityType(), soapBody.pageSize, soapBody.historyId);
+				String resourceURL = urlFactory.create(params.getEntityType(), params.pageSize, params.historyId, params.format);
 
 				GatewayResponse responseBody = new GatewayResponse(resourceURL);
 
@@ -107,7 +133,7 @@ public class SoapProcessor implements RequestProcessor
 			LOG.error("Unhandled exception has thrown in the gateway.", t);
 			reply = factory.createNewErrorReply(VERSION_1_0_1, "", "", "Server", "Server error. The event has been logged. Please contact the support.");
 		}
-		
+
 		// Set the correct response code.
 
 		responseCode = reply.isFault() ? SOAP_FAULT : SOAP_OK;

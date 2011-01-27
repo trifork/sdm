@@ -18,7 +18,7 @@ public class Entities
 
 		if (annotation == null)
 		{
-			name = getEntityName(entity);
+			name = getName(entity);
 		}
 		else
 		{
@@ -54,7 +54,7 @@ public class Entities
 	}
 
 
-	public static String getEntityName(Class<?> entity)
+	public static String getName(Class<?> entity)
 	{
 		String name;
 

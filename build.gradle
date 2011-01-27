@@ -48,6 +48,8 @@ subprojects {
 	sourceCompatibility = 1.6
 	targetCompatibility = 1.6
 	
+	// Check that the war-projects' layout match the convention.
+	
 	plugins.withType(WarPlugin).whenPluginAdded {
 		project.webXml = new File(webAppDir, 'WEB-INF/web.xml')
 		assert project.webAppDir.isDirectory()
@@ -57,12 +59,12 @@ subprojects {
 	// Include transitive compile dependencies by default.
 	
 	configurations.compile.transitive = true
-	
-	// Exclude other logging from all dependencies
-	// since we will be using slf4j and backlog.
-	
+		
 	configurations {
 		runtime {
+			// Exclude other logging from all dependencies
+			// since we will be using slf4j and backlog.
+		
 			exclude group: "commons-logging"
 			exclude group: "log4j"
 		}

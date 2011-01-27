@@ -133,7 +133,7 @@ public class EntityHelper
 
 		for (Class<? extends Record> resourceType : getAllResources())
 		{
-			if (Entities.getEntityName(resourceType).equals(name))
+			if (Entities.getName(resourceType).equals(name))
 			{
 				type = resourceType;
 				break;

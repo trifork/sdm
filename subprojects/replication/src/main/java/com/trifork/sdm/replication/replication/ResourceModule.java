@@ -10,6 +10,6 @@ public class ResourceModule extends ServletModule
 	protected void configureServlets()
 	{
 		filter("/replicate").through(ReplicationFilter.class);
-		serve("/replicate").with(ResourceServlet.class);
+		serve("/replicate").with(EntityServlet.class);
 	}
 }

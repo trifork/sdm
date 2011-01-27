@@ -5,7 +5,6 @@ import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 import static java.lang.String.*;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 import javax.inject.Inject;
@@ -29,9 +28,8 @@ import freemarker.template.Template;
 
 
 @Singleton
-public class ClientController extends ApplicationController
+public class ClientController extends AbstractController
 {
-
 	private static final long serialVersionUID = 1L;
 
 	@Inject
@@ -41,7 +39,7 @@ public class ClientController extends ApplicationController
 	private ClientRepository clientRepository;
 
 	@Inject
-	private LogEntryRepository log;
+	private AuditLogRepository auditlogRepository;
 
 	@Inject
 	private PermissionRepository permissionRepository;
@@ -51,7 +49,6 @@ public class ClientController extends ApplicationController
 	@Transactional
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-
 		response.setContentType("text/html; charset=utf-8");
 
 		// Check if the user requested a form to create
@@ -59,7 +56,6 @@ public class ClientController extends ApplicationController
 
 		if (request.getRequestURI().endsWith("/new"))
 		{
-
 			getNew(request, response);
 		}
 
@@ -68,23 +64,19 @@ public class ClientController extends ApplicationController
 
 		else if (request.getParameter("id") == null)
 		{
-
 			getList(request, response);
 		}
 		else
 		{
-
 			getEdit(request, response);
 		}
 	}
 
-
-	@SuppressWarnings("unchecked")
 	@Override
+	@SuppressWarnings("unchecked")
 	@Transactional
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-
 		response.setContentType("text/html; charset=utf-8");
 
 		// See if we are updating or creating.
@@ -92,52 +84,50 @@ public class ClientController extends ApplicationController
 		String action = request.getParameter("action");
 		String id = request.getParameter("id");
 
-		if (id == null)
+		// TODO: Clean this method up.
+
+		try
 		{
-
-			// We are creating.
-
-			String name = request.getParameter("name");
-			String certificateId = request.getParameter("certificate_id");
-
-			Client client = clientRepository.create(name, certificateId);
-
-			if (client != null)
+			if (id == null)
 			{
+				// We are creating.
 
-				log.create("New client added '%s'. Created by '%s'.", name, request.getAttribute(USER_CPR));
+				String name = request.getParameter("name");
+				String certificateId = request.getParameter("certificate_id");
 
-				response.sendRedirect(format("admin/users?id=%s", client.getId()));
-			}
-		}
-		else if ("delete".equals(action))
-		{
+				Client client = clientRepository.create(name, certificateId);
 
-			getDelete(request, response);
-		}
-		else
-		{
-			// Update an existing client.
-
-			final String PREFIX = "entity_";
-
-			Enumeration<String> e = request.getParameterNames();
-
-			List<String> entities = new ArrayList<String>();
-
-			while (e.hasMoreElements())
-			{
-				String param = e.nextElement();
-
-				if (param.startsWith(PREFIX))
+				if (client != null)
 				{
+					auditlogRepository.create("New client added '%s'. Created by '%s'.", name, request.getAttribute(USER_CPR));
 
-					entities.add(param.substring(PREFIX.length()));
+					response.sendRedirect(format("admin/users?id=%s", client.getId()));
 				}
 			}
-
-			try
+			else if ("delete".equals(action))
 			{
+				getDelete(request, response);
+			}
+			else
+			{
+				// Update an existing client.
+
+				final String PREFIX = "entity_";
+
+				Enumeration<String> e = request.getParameterNames();
+
+				List<String> entities = new ArrayList<String>();
+
+				while (e.hasMoreElements())
+				{
+					String param = e.nextElement();
+
+					if (param.startsWith(PREFIX))
+					{
+						entities.add(param.substring(PREFIX.length()));
+					}
+				}
+
 				permissionRepository.setPermissions(id, entities);
 
 				// Audit log the update of permissions.
@@ -162,32 +152,43 @@ public class ClientController extends ApplicationController
 				// You can make a list by fetching them first, and then seeing,
 				// what the difference if the string becomes too long.
 
-				log.create("Authorization updated for client_id='%s' by '%s' for entities (%s).", id, adminCPR, permissionsAsString);
+				auditlogRepository.create("Authorization updated for client_id='%s' by '%s' for entities (%s).", id, adminCPR, permissionsAsString);
 
 				response.sendRedirect("/admin/users");
 			}
-			catch (SQLException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+
+		}
+		catch (Throwable t)
+		{
+			// TODO: Log
+			
+			throw new ServletException(t);
 		}
 	}
 
 
-	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException
+	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException
 	{
 		String id = request.getParameter("id");
 
-		Client client = clientRepository.find(id);
-
-		if (client != null)
+		try
 		{
-			clientRepository.destroy(id);
+			Client client = clientRepository.find(id);
 
-			log.create("Client '%s (ID=%s)' was deleted by '%s'.", client.getName(), client.getId(), request.getAttribute(USER_CPR));
+			if (client != null)
+			{
+				clientRepository.destroy(id);
 
-			response.sendRedirect("/admin/users");
+				auditlogRepository.create("Client '%s (ID=%s)' was deleted by '%s'.", client.getName(), client.getId(), request.getAttribute(USER_CPR));
+
+				response.sendRedirect("/admin/users");
+			}
+		}
+		catch (Throwable t)
+		{
+			// TODO: Log
+
+			throw new ServletException(t);
 		}
 	}
 
@@ -232,6 +233,7 @@ public class ClientController extends ApplicationController
 	@SuppressWarnings("unchecked")
 	private Set<String> getEntityNames()
 	{
+		// TODO: Make thid method part of the Entities class.
 
 		final String INCLUDE_PACKAGE = Record.class.getPackage().getName();
 
@@ -252,7 +254,7 @@ public class ClientController extends ApplicationController
 
 		for (Class<?> entity : classes)
 		{
-			String uri = Entities.getEntityName((Class<? extends Record>) entity);
+			String uri = Entities.getName((Class<? extends Record>) entity);
 			entities.add(uri);
 		}
 

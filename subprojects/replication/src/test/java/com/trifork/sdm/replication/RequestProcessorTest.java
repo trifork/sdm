@@ -142,7 +142,7 @@ public class RequestProcessorTest
 	{
 		sendRequest();
 
-		assertThat(processor.getResponseCode(), is(SOAP_OK_STATUS));
+		assertNotSoapFault();
 	}
 
 
@@ -162,7 +162,7 @@ public class RequestProcessorTest
 
 		sendRequest();
 
-		assertSoapFault(processor);
+		assertSoapFault();
 	}
 
 
@@ -173,7 +173,7 @@ public class RequestProcessorTest
 
 		sendRequest();
 
-		assertSoapFault(processor);
+		assertSoapFault();
 	}
 
 
@@ -184,7 +184,7 @@ public class RequestProcessorTest
 
 		sendRequest();
 
-		assertSoapFault(processor);
+		assertSoapFault();
 	}
 
 
@@ -195,7 +195,40 @@ public class RequestProcessorTest
 
 		sendRequest();
 
-		assertSoapFault(processor);
+		assertSoapFault();
+	}
+
+
+	@Test
+	public void should_return_the_requested_format() throws Exception
+	{
+		requestBody.format = "FastInfoset";
+
+		sendRequest();
+
+		assertParam(FORMAT, is("FastInfoset"));
+	}
+
+
+	@Test
+	public void should_allow_xml_format_to_be_requested() throws Exception
+	{
+		requestBody.format = "XML";
+
+		sendRequest();
+
+		assertParam(FORMAT, is("XML"));
+	}
+
+
+	@Test
+	public void should_not_allow_other_formats_to_be_requested() throws Exception
+	{
+		requestBody.format = "SomeFormat";
+		
+		sendRequest();
+		
+		assertSoapFault();
 	}
 
 
@@ -274,7 +307,7 @@ public class RequestProcessorTest
 		// TODO: Move to URL factory test.
 
 		sendRequest();
-		
+
 		assertParamNotNull(SIGNATURE);
 	}
 
@@ -358,12 +391,18 @@ public class RequestProcessorTest
 	}
 
 
-	protected void assertSoapFault(RequestProcessor processor)
+	protected void assertSoapFault()
 	{
 		assertThat(processor.getResponseCode(), is(SOAP_FAULT_STATUS));
 		assertTrue(response.isFault());
 	}
 
+	protected void assertNotSoapFault()
+	{
+		assertThat(processor.getResponseCode(), is(SOAP_OK_STATUS));
+		assertFalse(response.isFault());
+	}
+	
 
 	protected String createValidRequest() throws Exception
 	{

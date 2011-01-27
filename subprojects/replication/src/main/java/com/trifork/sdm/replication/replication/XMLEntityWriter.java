@@ -56,7 +56,7 @@ public class XMLEntityWriter implements EntityWriter
 		{
 			factory = XMLOutputFactory.newInstance();
 		}
-		else
+		else // FastInfoset
 		{
 			factory = StAXOutputFactory.newInstance();
 		}
@@ -167,7 +167,7 @@ public class XMLEntityWriter implements EntityWriter
 			// <nextPageURL>...</nextPageURL>
 			// when there are no more rows to replicate.
 
-			String nextURL = urlFactory.create(resourceType, pageSize, lastHistoryId);
+			String nextURL = urlFactory.create(resourceType, pageSize, lastHistoryId, format.toString());
 
 			writer.writeStartElement("nextPageURL");
 			writer.writeCharacters(nextURL);

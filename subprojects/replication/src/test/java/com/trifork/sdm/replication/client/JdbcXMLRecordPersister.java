@@ -1,7 +1,8 @@
 package com.trifork.sdm.replication.client;
-/*
+
 
 import static javax.xml.stream.XMLStreamConstants.*;
+import static org.slf4j.LoggerFactory.*;
 
 import java.io.InputStream;
 import java.math.BigInteger;
@@ -13,10 +14,10 @@ import java.util.Vector;
 import javax.inject.Inject;
 import javax.xml.stream.*;
 
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
 
-import com.trifork.sdm.replication.db.JdbcConnectionFactory;
-import com.trifork.sdm.replication.db.JdbcConnectionFactory.DB;
+import com.google.inject.Provider;
+import com.trifork.sdm.replication.db.TransactionManager.Transactional;
 import com.trifork.sdm.replication.replication.RecordPersister;
 import com.trifork.stamdata.*;
 
@@ -25,19 +26,20 @@ import dk.sosi.seal.xml.XmlUtil;
 
 public class JdbcXMLRecordPersister implements RecordPersister
 {
+	private static final Logger LOG = getLogger(JdbcXMLRecordPersister.class);
 
-	private JdbcConnectionFactory connectionFactory;
+	protected Provider<Connection> connectionProvider;
 
 
 	@Inject
-	JdbcXMLRecordPersister(JdbcConnectionFactory connectionFactory)
+	JdbcXMLRecordPersister(Provider<Connection> connectionProvider)
 	{
-
-		this.connectionFactory = connectionFactory;
+		this.connectionProvider = connectionProvider;
 	}
 
 
 	@Override
+	@Transactional
 	public URL persist(InputStream inputStream, Class<? extends Record> entitySet) throws Exception
 	{
 		URL nextPageURL = null;
@@ -46,37 +48,27 @@ public class JdbcXMLRecordPersister implements RecordPersister
 		{
 			// Pre-calculate the expected names.
 
-			String entitySetName = NamingConvention.getResourceName(entitySet);
-			String tableName = NamingConvention.getTableName(entitySet);
+			String entityName = Entities.getName(entitySet);
 
 			// Cache the entity's method's.
 
 			XMLInputFactory factory = XMLInputFactory.newInstance();
 			XMLStreamReader reader = factory.createXMLStreamReader(inputStream);
 
-			Connection connection = connectionFactory.create(DB.SdmDuplicateDB);
+			Connection connection = connectionProvider.get();
 
 			String columns = null;
 			Vector<Object> columnValues = null;
 
 			for (int event = reader.next(); event != END_DOCUMENT; event = reader.next())
 			{
-
 				String name = reader.getLocalName();
 
 				if (event == START_ELEMENT)
 				{
-
-					// The root element.
-
-					if (name.equals("page"))
-					{
-						// noop
-					}
-
 					// A record.
 
-					else if (name.equals(entitySetName))
+					if (name.equals(entityName))
 					{
 
 						// Reset the column values.
@@ -117,7 +109,6 @@ public class JdbcXMLRecordPersister implements RecordPersister
 
 					else
 					{
-
 						// Add the column name to the list of columns.
 
 						columns = String.format("%s, %s = ?", columns, name);
@@ -163,20 +154,20 @@ public class JdbcXMLRecordPersister implements RecordPersister
 				}
 				else if (event == XMLStreamConstants.END_ELEMENT)
 				{
+					// Once we reach the end write the entity to the db.
 
-					if (name.equals(entitySetName))
+					if (name.equals(entityName))
 					{
+						String tableName = Entities.getTableName(entitySet);
 
 						// Once we have parsed a complete record, we can
 						// put it in the database with the column order we
 						// parsed them in.
 
-						PreparedStatement statement = connection.prepareStatement(String
-								.format("REPLACE INTO %s SET %s", tableName, columns));
+						PreparedStatement statement = connection.prepareStatement(String.format("REPLACE INTO %s SET %s", tableName, columns));
 
 						for (int i = 1; i < columnValues.size() + 1; i++)
 						{
-
 							statement.setObject(i, columnValues.get(i - 1));
 						}
 
@@ -186,18 +177,12 @@ public class JdbcXMLRecordPersister implements RecordPersister
 					}
 				}
 			}
-
-			// connection.commit();
-			connection.close();
-
 		}
 		catch (Throwable t)
 		{
-
-			IOUtils.copy(inputStream, System.out);
+			LOG.error("Error while persisting entity.", t);
 		}
 
 		return nextPageURL;
 	}
 }
-*/
