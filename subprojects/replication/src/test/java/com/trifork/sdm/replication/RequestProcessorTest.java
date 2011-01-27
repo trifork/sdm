@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication;
 
-
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static com.trifork.sdm.replication.sosi.SOSITestConstants.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;
@@ -32,7 +31,6 @@ import com.trifork.sdm.replication.sosi.TestSTSModule;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
-
 
 public class RequestProcessorTest
 {
@@ -225,9 +223,9 @@ public class RequestProcessorTest
 	public void should_not_allow_other_formats_to_be_requested() throws Exception
 	{
 		requestBody.format = "SomeFormat";
-		
+
 		sendRequest();
-		
+
 		assertSoapFault();
 	}
 
@@ -397,12 +395,13 @@ public class RequestProcessorTest
 		assertTrue(response.isFault());
 	}
 
+
 	protected void assertNotSoapFault()
 	{
 		assertThat(processor.getResponseCode(), is(SOAP_OK_STATUS));
 		assertFalse(response.isFault());
 	}
-	
+
 
 	protected String createValidRequest() throws Exception
 	{

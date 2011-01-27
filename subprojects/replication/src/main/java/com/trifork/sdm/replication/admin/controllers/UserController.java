@@ -1,11 +1,13 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-
-import static java.lang.String.*;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static java.lang.String.format;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -13,19 +15,18 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.trifork.sdm.replication.admin.models.*;
+import com.trifork.sdm.replication.admin.models.AuditLogRepository;
+import com.trifork.sdm.replication.admin.models.User;
+import com.trifork.sdm.replication.admin.models.UserRepository;
 import com.trifork.sdm.replication.admin.properties.Whitelist;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-
 @Singleton
 public class UserController extends AbstractController
 {
-	private static final long serialVersionUID = 1L;
-
 	@Inject
 	private Configuration config;
 
@@ -42,7 +43,7 @@ public class UserController extends AbstractController
 
 
 	@Override
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -71,15 +72,14 @@ public class UserController extends AbstractController
 
 
 	@Override
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
 
-		String action = request.getParameter("action");
-
 		try
 		{
+			String action = request.getParameter("action");
 
 			if ("delete".equals(action))
 			{
@@ -108,10 +108,11 @@ public class UserController extends AbstractController
 					response.sendRedirect(format("/admin/admins?id=%s", user.getId()));
 				}
 			}
+
 		}
-		catch (SQLException e)
+		catch (Throwable t)
 		{
-			// TODO: Log.
+			throw new ServletException(t);
 		}
 
 		// TODO: Should always redirect.
@@ -175,4 +176,6 @@ public class UserController extends AbstractController
 
 		render(response, template, root);
 	}
+
+	private static final long serialVersionUID = 0;
 }

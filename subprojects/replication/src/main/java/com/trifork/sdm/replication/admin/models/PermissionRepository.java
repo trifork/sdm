@@ -1,7 +1,11 @@
 package com.trifork.sdm.replication.admin.models;
 
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +13,16 @@ import javax.inject.Inject;
 
 import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
-
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 public class PermissionRepository
 {
-	private final Provider<Connection> connectionProvider;
-
-
 	@Inject
-	public PermissionRepository(@AdminTransaction Provider<Connection> connectionProvider)
-	{
-		this.connectionProvider = connectionProvider;
-	}
+	@Transaction(ADMINISTRATION)
+	private Provider<Connection> connectionProvider;
 
-	@AdminTransaction
+
+	@Transaction(ADMINISTRATION)
 	public List<String> findByClientId(String id) throws OutOfTransactionException, SQLException
 	{
 		List<String> permissions = new ArrayList<String>();
@@ -44,11 +43,11 @@ public class PermissionRepository
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public void setPermissions(String id, List<String> entities) throws SQLException
 	{
 		Connection connection = connectionProvider.get();
-		
+
 		PreparedStatement statement = connection.prepareStatement("DELETE FROM clients_permissions WHERE (client_id = ?)");
 		statement.setObject(1, id);
 		statement.execute();
@@ -65,19 +64,19 @@ public class PermissionRepository
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
 		String SQL = "SELECT COUNT(*) FROM clients_permissions JOIN ON (client_id) WHERE (resource_id = ? AND certificate_id = ?)";
-		
+
 		Connection connection = connectionProvider.get();
-		
+
 		PreparedStatement statement = connection.prepareStatement(SQL);
 		statement.setString(1, entityID);
 		statement.setString(2, certificateID);
 		statement.execute();
 		statement.close();
-		
+
 		return false;
 	}
 }

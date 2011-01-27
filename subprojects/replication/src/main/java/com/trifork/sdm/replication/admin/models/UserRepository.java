@@ -1,29 +1,27 @@
 package com.trifork.sdm.replication.admin.models;
 
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
-
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 public class UserRepository
 {
-	private final Provider<Connection> connectionProvider;
-
-
 	@Inject
-	UserRepository(Provider<Connection> provider)
-	{
-		this.connectionProvider = provider;
-	}
+	@Transaction(ADMINISTRATION)
+	private Provider<Connection> connectionProvider;
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public User find(String id)
 	{
 		User admin = null;
@@ -37,7 +35,7 @@ public class UserRepository
 			result.next();
 
 			admin = extract(result);
-			
+
 			statement.close();
 		}
 		catch (SQLException e)
@@ -51,21 +49,7 @@ public class UserRepository
 	}
 
 
-	private User extract(ResultSet resultSet) throws SQLException
-	{
-
-		String id = resultSet.getString("id");
-		String name = resultSet.getString("name");
-		String cpr = resultSet.getString("cpr");
-		String cvr = resultSet.getString("cvr");
-
-		User admin = new User(id, name, cpr, cvr);
-
-		return admin;
-	}
-
-
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public User create(String name, String cpr, String cvr)
 	{
 		User admin = null;
@@ -81,13 +65,9 @@ public class UserRepository
 			stm.executeUpdate();
 			ResultSet resultSet = stm.getGeneratedKeys();
 
-			// connection.commit();
-
 			if (resultSet != null && resultSet.next())
 			{
-
 				String id = resultSet.getString(1);
-
 				admin = new User(id, name, cpr, cvr);
 			}
 		}
@@ -102,9 +82,9 @@ public class UserRepository
 	}
 
 
+	@Transaction(ADMINISTRATION)
 	public List<User> findAll()
 	{
-
 		List<User> admins = new ArrayList<User>();
 
 		try
@@ -115,9 +95,7 @@ public class UserRepository
 
 			while (resultSet.next())
 			{
-
 				User client = extract(resultSet);
-
 				admins.add(client);
 			}
 		}
@@ -132,9 +110,9 @@ public class UserRepository
 	}
 
 
+	@Transaction(ADMINISTRATION)
 	public void destroy(String id)
 	{
-
 		try
 		{
 			PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM administrators WHERE (id = ?)");
@@ -148,5 +126,18 @@ public class UserRepository
 
 			// TODO: Log this.
 		}
+	}
+
+
+	protected User extract(ResultSet resultSet) throws SQLException
+	{
+		String id = resultSet.getString("id");
+		String name = resultSet.getString("name");
+		String cpr = resultSet.getString("cpr");
+		String cvr = resultSet.getString("cvr");
+
+		User admin = new User(id, name, cpr, cvr);
+
+		return admin;
 	}
 }

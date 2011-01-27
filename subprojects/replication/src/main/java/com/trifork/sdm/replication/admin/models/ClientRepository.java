@@ -1,7 +1,12 @@
 package com.trifork.sdm.replication.admin.models;
 
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,22 +14,16 @@ import javax.inject.Inject;
 
 import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
-
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 public class ClientRepository
 {
-	private final Provider<Connection> connectionProvider;
-
-
 	@Inject
-	public ClientRepository(@AdminTransaction Provider<Connection> transactionManager)
-	{
-		this.connectionProvider = transactionManager;
-	}
+	@Transaction(ADMINISTRATION)
+	private Provider<Connection> connectionProvider;
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public Client find(String id) throws OutOfTransactionException, SQLException
 	{
 		Client client = null;
@@ -35,13 +34,13 @@ public class ClientRepository
 
 		result.next();
 
-		client = extractClient(result);
+		client = serialize(result);
 
 		return client;
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public Client findByCertificateId(String certificateId) throws OutOfTransactionException, SQLException
 	{
 		Client client = null;
@@ -52,13 +51,13 @@ public class ClientRepository
 
 		result.next();
 
-		client = extractClient(result);
+		client = serialize(result);
 
 		return client;
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public void destroy(String id) throws OutOfTransactionException, SQLException
 	{
 		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
@@ -68,19 +67,7 @@ public class ClientRepository
 	}
 
 
-	private Client extractClient(ResultSet resultSet) throws SQLException
-	{
-		String id = resultSet.getString("id");
-		String name = resultSet.getString("name");
-		String certificateId = resultSet.getString("certificate_id");
-
-		Client client = new Client(id, name, certificateId);
-
-		return client;
-	}
-
-
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public Client create(String name, String certificateId) throws OutOfTransactionException, SQLException
 	{
 		assert name != null && !name.isEmpty();
@@ -107,7 +94,7 @@ public class ClientRepository
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public List<Client> findAll() throws OutOfTransactionException, SQLException
 	{
 		List<Client> clients = new ArrayList<Client>();
@@ -119,11 +106,23 @@ public class ClientRepository
 		while (resultSet.next())
 		{
 
-			Client client = extractClient(resultSet);
+			Client client = serialize(resultSet);
 
 			clients.add(client);
 		}
 
 		return clients;
+	}
+
+
+	protected Client serialize(ResultSet resultSet) throws SQLException
+	{
+		String id = resultSet.getString("id");
+		String name = resultSet.getString("name");
+		String certificateId = resultSet.getString("certificate_id");
+
+		Client client = new Client(id, name, certificateId);
+
+		return client;
 	}
 }

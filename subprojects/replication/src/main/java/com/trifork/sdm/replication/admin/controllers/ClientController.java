@@ -1,12 +1,19 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 
-import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
-import static java.lang.String.*;
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.USER_CPR;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static java.lang.String.format;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,11 +24,16 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.*;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
-import com.trifork.sdm.replication.admin.models.*;
+import com.trifork.sdm.replication.admin.models.AuditLogRepository;
+import com.trifork.sdm.replication.admin.models.Client;
+import com.trifork.sdm.replication.admin.models.ClientRepository;
+import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
+import com.trifork.sdm.replication.db.properties.Transaction;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
@@ -32,8 +44,6 @@ import freemarker.template.Template;
 @Singleton
 public class ClientController extends AbstractController
 {
-	private static final long serialVersionUID = 1L;
-
 	@Inject
 	private Configuration config;
 
@@ -48,7 +58,7 @@ public class ClientController extends AbstractController
 
 
 	@Override
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -75,8 +85,7 @@ public class ClientController extends AbstractController
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -116,6 +125,7 @@ public class ClientController extends AbstractController
 
 				final String PREFIX = "entity_";
 
+				@SuppressWarnings("unchecked")
 				Enumeration<String> e = request.getParameterNames();
 
 				List<String> entities = new ArrayList<String>();
@@ -262,4 +272,6 @@ public class ClientController extends AbstractController
 
 		return entities;
 	}
+	
+	private static final long serialVersionUID = 0;
 }

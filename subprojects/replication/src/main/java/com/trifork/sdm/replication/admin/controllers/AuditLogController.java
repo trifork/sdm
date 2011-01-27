@@ -1,21 +1,26 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 
-import java.io.*;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.trifork.sdm.replication.admin.models.AuditLogRepository;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-
 
 @Singleton
 public class AuditLogController extends HttpServlet
@@ -30,7 +35,7 @@ public class AuditLogController extends HttpServlet
 
 
 	@Override
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try

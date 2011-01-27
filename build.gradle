@@ -56,12 +56,15 @@ subprojects {
 		assert project.webXml.isFile()
 	}
 	
-	// Include transitive compile dependencies by default.
+	// TODO: Include transitive compile dependencies by default.
+	// This has been disabled for now since we have some problems
+	// we log4j.
 	
-	configurations.compile.transitive = true
+	configurations.compile.transitive = false
 	
 	configurations {
 		compile {
+			exclude group: "commons-logging"
 			exclude group: "log4j"
 		}
 		runtime {
@@ -72,4 +75,8 @@ subprojects {
 			exclude group: "log4j"
 		}
 	}
+	
+	// Calculate test coverage.
+	
+	apply from: rootProject.file("config/cobertura.groovy")
 }

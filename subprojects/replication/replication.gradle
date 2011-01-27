@@ -96,8 +96,7 @@ dependencies {
 	
 	// Logging
 	
-	compile module(libs.slf4j_api) {
-		dependency libs.logback_core
-		dependency libs.logback_classic
-	}
+	compile libs.slf4j_api
+	runtime libs.logback_core
+	runtime libs.logback_classic
 }

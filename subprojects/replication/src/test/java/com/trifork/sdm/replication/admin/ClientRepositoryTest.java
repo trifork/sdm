@@ -1,9 +1,9 @@
 package com.trifork.sdm.replication.admin;
 
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 
 import com.google.inject.Guice;
@@ -12,12 +12,14 @@ import com.trifork.sdm.replication.ProductionModule;
 import com.trifork.sdm.replication.admin.models.Client;
 import com.trifork.sdm.replication.admin.models.ClientRepository;
 
-
 public class ClientRepositoryTest
 {
-	private static final String TEST_CLIENT = "TestClient";
 	private static Injector injector;
 	private ClientRepository clientRepository;
+
+	// Test data.
+
+	private String clientName;
 
 
 	@BeforeClass
@@ -31,6 +33,10 @@ public class ClientRepositoryTest
 	public void setUp()
 	{
 		clientRepository = injector.getInstance(ClientRepository.class);
+
+		// Generate some test random data.
+
+		clientName = RandomStringUtils.random(50);
 	}
 
 
@@ -40,7 +46,7 @@ public class ClientRepositoryTest
 		// Arrange
 
 		String certificateId = "" + System.currentTimeMillis();
-		clientRepository.create(TEST_CLIENT, certificateId);
+		clientRepository.create(clientName, certificateId);
 
 		// Act
 
@@ -48,7 +54,7 @@ public class ClientRepositoryTest
 
 		// Assert
 
-		assertThat(client.getName(), is(equalTo(TEST_CLIENT)));
+		assertThat(client.getName(), is(clientName));
 		assertThat(client.getCertificateId(), is(certificateId));
 	}
 
@@ -56,9 +62,13 @@ public class ClientRepositoryTest
 	@Test
 	public void null_result_when_searching_by_certificate_id_which_does_not_exists() throws Exception
 	{
+		// Arrange
+
+		// Notice we are not inserting the client first.
+
 		// Act
 
-		Client client = clientRepository.findByCertificateId("unknown");
+		Client client = clientRepository.findByCertificateId(clientName);
 
 		// Assert
 

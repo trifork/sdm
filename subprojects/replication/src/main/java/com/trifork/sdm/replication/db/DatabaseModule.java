@@ -1,10 +1,10 @@
 package com.trifork.sdm.replication.db;
 
-
-import static com.google.inject.matcher.Matchers.*;
-import static com.google.inject.name.Names.*;
-import static com.trifork.sdm.replication.db.properties.Database.*;
-import static com.trifork.sdm.replication.db.properties.Transactions.*;
+import static com.google.inject.matcher.Matchers.annotatedWith;
+import static com.google.inject.matcher.Matchers.any;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static com.trifork.sdm.replication.db.properties.Database.WAREHOUSE;
+import static com.trifork.sdm.replication.db.properties.Transactions.transaction;
 
 import java.sql.Connection;
 
@@ -13,32 +13,27 @@ import javax.sql.DataSource;
 import com.google.inject.AbstractModule;
 import com.google.inject.Key;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
-import com.trifork.sdm.replication.db.properties.*;
-
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 public class DatabaseModule extends AbstractModule
 {
 	@Override
 	public void configure()
 	{
-		requireBinding(Key.get(String.class, named("db.username")));
-		requireBinding(Key.get(String.class, named("db.password")));
-		requireBinding(Key.get(String.class, named("db.host")));
-		requireBinding(Key.get(String.class, named("db.port")));
-
 		// Make it easy to do transactions.
+		
+		bindTransactionManager(transaction(WAREHOUSE), "root", "", "localhost", 3306, "sdm_admin");
+		bindTransactionManager(transaction(ADMINISTRATION), "root", "", "localhost", 3306, "sdm_admin");
+	}
 
-		DataSource dataSource;
+
+	protected void bindTransactionManager(Transaction transaction, String username, String password, String host, int port, String schema)
+	{
+		DataSource dataSource = createDataSource(username, password, host, port, schema);
+		TransactionManager manager = new TransactionManager(dataSource);
 		
-		dataSource = createDataSource("root", "", "localhost", 3306, "sdm");
-		TransactionManager adminTM = new TransactionManager(dataSource);
-		bindInterceptor(any(), annotatedWith(Transaction.class), adminTM);
-		bind(Key.get(Connection.class, Transaction.class)).toProvider(adminTM);
-		
-		dataSource = createDataSource("root", "", "", 3306, "sdm_admin");
-		TransactionManager mainTM = new TransactionManager(dataSource);
-		bindInterceptor(any(), annotatedWith(transaction(SDM)), mainTM);
-		bind(Key.get(Connection.class, AdminTransaction.class)).toProvider(mainTM);
+		bindInterceptor(any(), annotatedWith(transaction), manager);
+		bind(Key.get(Connection.class, transaction)).toProvider(manager);
 	}
 
 

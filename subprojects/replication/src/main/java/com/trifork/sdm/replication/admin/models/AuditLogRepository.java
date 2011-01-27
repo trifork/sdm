@@ -1,10 +1,16 @@
 package com.trifork.sdm.replication.admin.models;
 
 
-import static java.lang.String.*;
-import static org.slf4j.LoggerFactory.*;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static java.lang.String.format;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +19,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.properties.AdminTransaction;
+import com.trifork.sdm.replication.db.properties.Transaction;
 
 
 public class AuditLogRepository
@@ -30,7 +36,7 @@ public class AuditLogRepository
 	}
 
 
-	@AdminTransaction
+	@Transaction(ADMINISTRATION)
 	public List<LogEntry> findAll() throws SQLException
 	{
 		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
@@ -54,12 +60,14 @@ public class AuditLogRepository
 	}
 
 
+	@Transaction(ADMINISTRATION)
 	public boolean create(String message, Object... args) throws SQLException
 	{
 		return create(format(message, args));
 	}
 
 
+	@Transaction(ADMINISTRATION)
 	public boolean create(String message) throws SQLException
 	{
 		final String CREATE_SQL = "INSERT INTO auditlog SET message = ?, created_at = NOW()";
@@ -86,7 +94,7 @@ public class AuditLogRepository
 	}
 
 
-	private LogEntry serialize(ResultSet resultSet) throws SQLException
+	protected LogEntry serialize(ResultSet resultSet) throws SQLException
 	{
 		String id = resultSet.getString("id");
 		String message = resultSet.getString("message");

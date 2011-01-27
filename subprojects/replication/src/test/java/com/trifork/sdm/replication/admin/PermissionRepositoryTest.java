@@ -21,9 +21,11 @@ import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.db.DatabaseModule;
 
 public class PermissionRepositoryTest {
+	
 	private PermissionRepository permissionRepository;
 	private ClientRepository clientRepository;
 	private static Injector injector;
+	
 	
 	@BeforeClass
 	public static void init()
@@ -31,6 +33,7 @@ public class PermissionRepositoryTest {
 		injector = Guice.createInjector(new ConfigurationModule(), new DatabaseModule());
 	}
 
+	
 	@Before
 	public void setUp()
 	{
@@ -38,6 +41,7 @@ public class PermissionRepositoryTest {
 		clientRepository = injector.getInstance(ClientRepository.class);
 	}
 
+	
 	@Test
 	public void can_find_permissions_by_client_id() throws Exception {
 
@@ -66,6 +70,7 @@ public class PermissionRepositoryTest {
 		assertThat(permissions.size(), is(2));
 		assertThat(permissions, contains("Apotek", "CPR"));
 	}
+	
 	
 	@Test
 	public void can_set_permissions() throws Exception {
