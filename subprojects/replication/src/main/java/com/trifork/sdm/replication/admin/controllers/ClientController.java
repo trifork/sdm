@@ -33,7 +33,7 @@ import com.trifork.sdm.replication.admin.models.Client;
 import com.trifork.sdm.replication.admin.models.ClientRepository;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
 
@@ -58,7 +58,7 @@ public class ClientController extends AbstractController
 
 
 	@Override
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -85,7 +85,7 @@ public class ClientController extends AbstractController
 	}
 
 	@Override
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");

@@ -1,21 +1,31 @@
 package com.trifork.sdm.replication.admin.security;
 
-
-import static org.slf4j.LoggerFactory.*;
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.USER_CPR;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
+import java.sql.Connection;
 
 import javax.inject.Inject;
-import javax.servlet.*;
+import javax.inject.Provider;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import org.slf4j.Logger;
 
 import com.google.inject.Singleton;
-import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
+import com.trifork.rid2cpr.RID2CPRFacade;
+import com.trifork.sdm.replication.admin.models.IUserRepository;
+import com.trifork.sdm.replication.db.properties.Database;
+import com.trifork.sdm.replication.db.properties.Transactional;
+import com.trifork.sdm.replication.saml.SingleSignonHelper;
 
 import dk.itst.oiosaml.sp.UserAssertion;
-import dk.itst.oiosaml.sp.UserAssertionHolder;
-
 
 /**
  * Inserts the user's CPR into a request attribute called 'CPR'.
@@ -25,14 +35,14 @@ public class SamlFilter implements Filter
 {
 	private static final Logger LOG = getLogger(SamlFilter.class);
 
-	private CachingRID2CPRFacadeImpl ridHelper;
-
+	@Inject
+	private RID2CPRFacade ridHelper;
 
 	@Inject
-	public SamlFilter(CachingRID2CPRFacadeImpl ridHelper)
-	{
-		this.ridHelper = ridHelper;
-	}
+	private SingleSignonHelper singleSignonHelper;
+
+	@Inject
+	private IUserRepository userRepository;
 
 
 	@Override
@@ -40,24 +50,34 @@ public class SamlFilter implements Filter
 	{
 		try
 		{
+			UserAssertion user = singleSignonHelper.getUser();
+
 			// Look up the user's CPR by converting the
 			// rID (user id) via a remote webservice.
 			// The results are cached.
 
-			UserAssertion user = UserAssertionHolder.get();
-
 			String userID = user.getUserId();
 			String userCPR = ridHelper.getCPR(userID);
+			String userCVR = user.getCPRNumber();
 
-			request.setAttribute("CPR", userCPR);
-
-			LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID={}.", userCPR, userID);
-
-			chain.doFilter(request, response);
+			// Make sure that the user is authorized as admin.
+			
+			if (userRepository.isAdmin(userCPR, userCVR))
+			{
+				LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID={}.", userCPR, userID);
+				
+				request.setAttribute(USER_CPR, userCPR);
+				
+				chain.doFilter(request, response);
+			}
+			else
+			{
+				LOG.warn("Unauthorized access attempt by user CPR={}, CVR={}.", userCPR, userCVR);
+			}
 		}
 		catch (Exception e)
 		{
-			LOG.error("Could not look up rID in the SAML filter.", e);
+			LOG.error("Could not look up user in the SAML filter.", e);
 		}
 	}
 

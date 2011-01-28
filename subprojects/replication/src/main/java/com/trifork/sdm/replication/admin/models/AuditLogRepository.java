@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
 
 public class AuditLogRepository
@@ -36,7 +36,7 @@ public class AuditLogRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public List<LogEntry> findAll() throws SQLException
 	{
 		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
@@ -60,14 +60,14 @@ public class AuditLogRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public boolean create(String message, Object... args) throws SQLException
 	{
 		return create(format(message, args));
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public boolean create(String message) throws SQLException
 	{
 		final String CREATE_SQL = "INSERT INTO auditlog SET message = ?, created_at = NOW()";

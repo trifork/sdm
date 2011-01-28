@@ -5,6 +5,7 @@ def classesCopy="${classesOriginal}-copy"
 
 dependencies {
 	testRuntime 'net.sourceforge.cobertura:cobertura:1.9.4'
+	testCompile 'junit:junit:4.5'
 }
 
 
@@ -42,15 +43,9 @@ test.doLast {
 			move(file: classesCopy, tofile: classesOriginal)
 		}
 		
-		def outputFormat = 'html'
-		
-		if (settings.test.cobertura != null && settings.test.cobertura.format != null) {
-			outputFormat = settings.test.cobertura.format
-		}
-		
 		// Create cobertura HTML reports.
 		ant.'cobertura-report'(destdir:"${project.reportsDir}/coverage",
-			format:outputFormat, srcdir:'src/main/java', datafile:cobSerFile)
+			format:'html', srcdir:'src/main/java', datafile:cobSerFile)
 		
 		//TODO: Figure out why we can't have the ser file in the build dir
 		// If we do so it creates two files...

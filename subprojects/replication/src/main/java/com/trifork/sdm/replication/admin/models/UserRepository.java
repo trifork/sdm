@@ -12,16 +12,20 @@ import java.util.List;
 import javax.inject.Inject;
 
 import com.google.inject.Provider;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
-public class UserRepository
+public class UserRepository implements IUserRepository
 {
 	@Inject
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
 
 
-	@Transaction(ADMINISTRATION)
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#find(java.lang.String)
+	 */
+	@Override
+	@Transactional(ADMINISTRATION)
 	public User find(String id)
 	{
 		User admin = null;
@@ -49,7 +53,11 @@ public class UserRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#create(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	@Transactional(ADMINISTRATION)
 	public User create(String name, String cpr, String cvr)
 	{
 		User admin = null;
@@ -82,7 +90,11 @@ public class UserRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#findAll()
+	 */
+	@Override
+	@Transactional(ADMINISTRATION)
 	public List<User> findAll()
 	{
 		List<User> admins = new ArrayList<User>();
@@ -110,31 +122,51 @@ public class UserRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
-	public void destroy(String id)
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#destroy(java.lang.String)
+	 */
+	@Override
+	@Transactional(ADMINISTRATION)
+	public void destroy(String id) throws SQLException
 	{
-		try
-		{
-			PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM administrators WHERE (id = ?)");
-			stm.setObject(1, id);
-			stm.execute();
-			stm.close();
-		}
-		catch (SQLException e)
-		{
-			throw new RuntimeException(e);
-
-			// TODO: Log this.
-		}
+		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM administrators WHERE (id = ?)");
+		stm.setObject(1, id);
+		stm.execute();
+		stm.close();
 	}
 
 
-	protected User extract(ResultSet resultSet) throws SQLException
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#isAdmin(java.lang.String, java.lang.String)
+	 */
+	@Override
+	@Transactional(ADMINISTRATION)
+	public boolean isAdmin(String userCPR, String userCVR) throws SQLException
 	{
-		String id = resultSet.getString("id");
-		String name = resultSet.getString("name");
-		String cpr = resultSet.getString("cpr");
-		String cvr = resultSet.getString("cvr");
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT COUNT(*) FROM administrators WHERE (cpr = ?)");
+		stm.setObject(1, userCPR);
+		ResultSet row = stm.executeQuery();
+		stm.close();
+
+		boolean isAdmin = false;
+
+		if (row.next())
+		{
+			isAdmin = row.getInt(1) > 0;
+		}
+
+		return isAdmin;
+	}
+
+
+	// Helper Methods
+
+	protected User extract(ResultSet row) throws SQLException
+	{
+		String id = row.getString("id");
+		String name = row.getString("name");
+		String cpr = row.getString("cpr");
+		String cvr = row.getString("cvr");
 
 		User admin = new User(id, name, cpr, cvr);
 

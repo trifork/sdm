@@ -3,7 +3,7 @@ dependencies {
 	compile libs.reflections
 	compile libs.commons_io
 	
-	testCompile libs.junit
+	testCompile 'junit:junit:4.5'
 }
 
 task(generate, dependsOn: [':shared:classes', 'classes'], type: JavaExec) {

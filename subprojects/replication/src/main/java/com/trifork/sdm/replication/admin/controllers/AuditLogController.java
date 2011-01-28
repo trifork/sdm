@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trifork.sdm.replication.admin.models.AuditLogRepository;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -35,7 +35,7 @@ public class AuditLogController extends HttpServlet
 
 
 	@Override
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		try

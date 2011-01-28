@@ -13,16 +13,16 @@ import javax.inject.Inject;
 
 import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
 public class PermissionRepository
 {
 	@Inject
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public List<String> findByClientId(String id) throws OutOfTransactionException, SQLException
 	{
 		List<String> permissions = new ArrayList<String>();
@@ -43,7 +43,7 @@ public class PermissionRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public void setPermissions(String id, List<String> entities) throws SQLException
 	{
 		Connection connection = connectionProvider.get();
@@ -64,7 +64,7 @@ public class PermissionRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
 		String SQL = "SELECT COUNT(*) FROM clients_permissions JOIN ON (client_id) WHERE (resource_id = ? AND certificate_id = ?)";

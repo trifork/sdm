@@ -2,7 +2,7 @@ package com.trifork.sdm.replication.db.properties;
 
 import java.lang.annotation.Annotation;
 
-class TransactionImpl implements Transaction
+class TransactionImpl implements Transactional
 {
 	private final Database database;
 
@@ -16,7 +16,7 @@ class TransactionImpl implements Transaction
 	@Override
 	public Class<? extends Annotation> annotationType()
 	{
-		return Transaction.class;
+		return Transactional.class;
 	}
 
 
@@ -38,12 +38,12 @@ class TransactionImpl implements Transaction
 	@Override
 	public boolean equals(Object o)
 	{
-		if (!(o instanceof Transaction))
+		if (!(o instanceof Transactional))
 		{
 			return false;
 		}
 
-		Transaction other = (Transaction) o;
+		Transactional other = (Transactional) o;
 		return database.equals(other.value());
 	}
 
@@ -51,7 +51,7 @@ class TransactionImpl implements Transaction
 	@Override
 	public String toString()
 	{
-		return "@" + Transaction.class.getName() + "(database=" + database + ")";
+		return "@" + Transactional.class.getName() + "(database=" + database + ")";
 	}
 	
 

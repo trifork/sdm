@@ -14,16 +14,16 @@ import javax.inject.Inject;
 
 import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
 public class ClientRepository
 {
 	@Inject
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public Client find(String id) throws OutOfTransactionException, SQLException
 	{
 		Client client = null;
@@ -40,7 +40,7 @@ public class ClientRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public Client findByCertificateId(String certificateId) throws OutOfTransactionException, SQLException
 	{
 		Client client = null;
@@ -49,15 +49,16 @@ public class ClientRepository
 		stm.setObject(1, certificateId);
 		ResultSet result = stm.executeQuery();
 
-		result.next();
-
-		client = serialize(result);
-
+		if (result.next())
+		{
+			client = serialize(result);
+		}
+			
 		return client;
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public void destroy(String id) throws OutOfTransactionException, SQLException
 	{
 		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM clients WHERE (id = ?)");
@@ -67,7 +68,7 @@ public class ClientRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public Client create(String name, String certificateId) throws OutOfTransactionException, SQLException
 	{
 		assert name != null && !name.isEmpty();
@@ -94,7 +95,7 @@ public class ClientRepository
 	}
 
 
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	public List<Client> findAll() throws OutOfTransactionException, SQLException
 	{
 		List<Client> clients = new ArrayList<Client>();
@@ -105,7 +106,6 @@ public class ClientRepository
 
 		while (resultSet.next())
 		{
-
 			Client client = serialize(resultSet);
 
 			clients.add(client);

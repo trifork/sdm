@@ -16,10 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trifork.sdm.replication.admin.models.AuditLogRepository;
+import com.trifork.sdm.replication.admin.models.IUserRepository;
 import com.trifork.sdm.replication.admin.models.User;
-import com.trifork.sdm.replication.admin.models.UserRepository;
 import com.trifork.sdm.replication.admin.properties.Whitelist;
-import com.trifork.sdm.replication.db.properties.Transaction;
+import com.trifork.sdm.replication.db.properties.Transactional;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -31,7 +31,7 @@ public class UserController extends AbstractController
 	private Configuration config;
 
 	@Inject
-	private UserRepository userRepository;
+	private IUserRepository userRepository;
 
 	@Inject
 	private AuditLogRepository log;
@@ -43,7 +43,7 @@ public class UserController extends AbstractController
 
 
 	@Override
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");
@@ -72,7 +72,7 @@ public class UserController extends AbstractController
 
 
 	@Override
-	@Transaction(ADMINISTRATION)
+	@Transactional(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		response.setContentType("text/html; charset=utf-8");

@@ -54,7 +54,9 @@ dependencies {
 	runtime 'xerces:xercesImpl:2.9.1'
 	runtime 'xalan:xalan:2.7.1'
 	
-	testRuntime 'log4j:log4j:1.2.16'
+	runtime libs.reflections
+	
+	testRuntime 'log4j:log4j:1.2.16' // HACK: Should be removed.
 	
 	// MySQL
 	

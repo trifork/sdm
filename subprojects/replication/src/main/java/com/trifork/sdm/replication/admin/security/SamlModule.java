@@ -1,16 +1,15 @@
 package com.trifork.sdm.replication.admin.security;
 
-
 import javax.inject.Singleton;
 
 import com.google.inject.Provides;
 import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
+import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.util.PropertyServletModule;
 import com.trifork.xmlquery.Namespaces;
 
 import dk.itst.oiosaml.sp.service.DispatcherServlet;
 import dk.itst.oiosaml.sp.service.SPFilter;
-
 
 public class SamlModule extends PropertyServletModule
 {
@@ -22,7 +21,7 @@ public class SamlModule extends PropertyServletModule
 
 		bind(SPFilter.class).in(Singleton.class);
 		filter("/admin", "/admin/*").through(SPFilter.class);
-		
+
 		bind(SamlFilter.class).in(Singleton.class);
 		filter("admin", "/admin/*").through(SamlFilter.class);
 	}
@@ -30,7 +29,7 @@ public class SamlModule extends PropertyServletModule
 
 	@Provides
 	@Singleton
-	protected CachingRID2CPRFacadeImpl providerRidHelper()
+	protected RID2CPRFacade providerRidHelper()
 	{
 		String endpoint = property("replication.rid2cpr.endpoint");
 		String keystore = property("replication.rid2cpr.keystore");
@@ -45,7 +44,7 @@ public class SamlModule extends PropertyServletModule
 		ridHelper.setEndpoint(endpoint);
 		ridHelper.setKeystore(keystore);
 		ridHelper.setKeystorePassword(password);
-		ridHelper.setReadTimeout(60000);
+		ridHelper.setReadTimeout(60000); // TODO: What excatly is this number?
 
 		ridHelper.init();
 

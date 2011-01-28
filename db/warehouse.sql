@@ -496,7 +496,7 @@ ENGINE=INNODB;
 
 CREATE TABLE umyndiggoerelsevaergerelation
   (
-     umyndiggoerelsevaergerelationpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARYKEY,
+     umyndiggoerelsevaergerelationpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
      id                               VARCHAR(21) NOT NULL,
      cpr                              VARCHAR(10) NOT NULL,
      typekode                         VARCHAR(4) NOT NULL,

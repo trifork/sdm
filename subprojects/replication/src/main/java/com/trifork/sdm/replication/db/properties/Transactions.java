@@ -8,7 +8,7 @@ public class Transactions
 	}
 
 
-	public static Transaction transaction(Database database)
+	public static Transactional transaction(Database database)
 	{
 		return new TransactionImpl(database);
 	}

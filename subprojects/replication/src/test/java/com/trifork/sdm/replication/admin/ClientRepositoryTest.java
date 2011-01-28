@@ -36,7 +36,7 @@ public class ClientRepositoryTest
 
 		// Generate some test random data.
 
-		clientName = RandomStringUtils.random(50);
+		clientName = RandomStringUtils.randomAscii(20);
 	}
 
 
