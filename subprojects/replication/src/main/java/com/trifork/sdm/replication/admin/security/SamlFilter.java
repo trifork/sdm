@@ -1,31 +1,23 @@
 package com.trifork.sdm.replication.admin.security;
 
-import static com.trifork.sdm.replication.admin.models.RequestAttributes.USER_CPR;
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
-import static org.slf4j.LoggerFactory.getLogger;
+
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static org.slf4j.LoggerFactory.*;
 
 import java.io.IOException;
-import java.sql.Connection;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 
 import org.slf4j.Logger;
 
 import com.google.inject.Singleton;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
-import com.trifork.sdm.replication.db.properties.Database;
-import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.saml.SingleSignonHelper;
 
 import dk.itst.oiosaml.sp.UserAssertion;
+
 
 /**
  * Inserts the user's CPR into a request attribute called 'CPR'.
@@ -61,13 +53,13 @@ public class SamlFilter implements Filter
 			String userCVR = user.getCPRNumber();
 
 			// Make sure that the user is authorized as admin.
-			
+
 			if (userRepository.isAdmin(userCPR, userCVR))
 			{
 				LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID={}.", userCPR, userID);
-				
+
 				request.setAttribute(USER_CPR, userCPR);
-				
+
 				chain.doFilter(request, response);
 			}
 			else

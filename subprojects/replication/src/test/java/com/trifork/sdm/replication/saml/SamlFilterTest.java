@@ -1,29 +1,20 @@
 package com.trifork.sdm.replication.saml;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mockito;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
+import com.google.inject.*;
 import com.google.inject.util.Modules;
 import com.trifork.rid2cpr.RID2CPRFacade;
+import com.trifork.sdm.replication.ProductionModule;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
-import com.trifork.sdm.replication.admin.models.UserRepository;
 import com.trifork.sdm.replication.admin.security.SamlFilter;
-import com.trifork.sdm.replication.admin.security.SamlModule;
 
 import dk.itst.oiosaml.sp.UserAssertion;
 
@@ -47,7 +38,7 @@ public class SamlFilterTest
 	@BeforeClass
 	public static void init()
 	{
-		Module config = Modules.override(new SamlModule()).with(new AbstractModule()
+		Module config = Modules.override(new ProductionModule()).with(new AbstractModule()
 		{
 			@Override
 			protected void configure()

@@ -5,11 +5,12 @@ import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.google.inject.ImplementedBy;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
+@ImplementedBy(UserRepository.class)
 public interface IUserRepository
 {
-
 	@Transactional(ADMINISTRATION)
 	User find(String id) throws SQLException;
 
