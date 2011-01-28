@@ -26,28 +26,19 @@ public class UserRepository implements IUserRepository
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public User find(String id)
+	public User find(String id) throws SQLException
 	{
 		User admin = null;
 
-		try
-		{
-			PreparedStatement statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
-			statement.setObject(1, id);
-			ResultSet result = statement.executeQuery();
+		PreparedStatement statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
+		statement.setObject(1, id);
+		ResultSet result = statement.executeQuery();
 
-			result.next();
+		result.next();
 
-			admin = extract(result);
-
-			statement.close();
-		}
-		catch (SQLException e)
-		{
-			throw new RuntimeException(e);
-
-			// TODO: Log this.
-		}
+		admin = extract(result);
+		
+		statement.close();
 
 		return admin;
 	}
@@ -58,32 +49,27 @@ public class UserRepository implements IUserRepository
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public User create(String name, String cpr, String cvr)
+	public User create(String name, String cpr, String cvr) throws SQLException
 	{
 		User admin = null;
 
-		try
+		PreparedStatement stm = connectionProvider.get().prepareStatement("INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?");
+
+		stm.setString(1, name);
+		stm.setString(2, cpr);
+		stm.setString(3, cvr);
+
+		stm.executeUpdate();
+		ResultSet resultSet = stm.getGeneratedKeys();
+
+		// connection.commit();
+
+		if (resultSet != null && resultSet.next())
 		{
-			PreparedStatement stm = connectionProvider.get().prepareStatement("INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?");
 
-			stm.setString(1, name);
-			stm.setString(2, cpr);
-			stm.setString(3, cvr);
+			String id = resultSet.getString(1);
 
-			stm.executeUpdate();
-			ResultSet resultSet = stm.getGeneratedKeys();
-
-			if (resultSet != null && resultSet.next())
-			{
-				String id = resultSet.getString(1);
-				admin = new User(id, name, cpr, cvr);
-			}
-		}
-		catch (SQLException e)
-		{
-			throw new RuntimeException(e);
-
-			// TODO: Log this.
+			admin = new User(id, name, cpr, cvr);
 		}
 
 		return admin;
@@ -95,32 +81,21 @@ public class UserRepository implements IUserRepository
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public List<User> findAll()
-	{
+	public List<User> findAll() throws SQLException {
 		List<User> admins = new ArrayList<User>();
 
-		try
+		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
+
+		ResultSet resultSet = stm.executeQuery();
+
+		while (resultSet.next())
 		{
-			PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
-
-			ResultSet resultSet = stm.executeQuery();
-
-			while (resultSet.next())
-			{
-				User client = extract(resultSet);
-				admins.add(client);
-			}
-		}
-		catch (SQLException e)
-		{
-			throw new RuntimeException(e);
-
-			// TODO: Log this.
+			User client = extract(resultSet);
+			admins.add(client);
 		}
 
 		return admins;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#destroy(java.lang.String)

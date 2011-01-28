@@ -63,7 +63,6 @@ public class PermissionRepository
 		}
 	}
 
-
 	@Transactional(ADMINISTRATION)
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
@@ -74,9 +73,14 @@ public class PermissionRepository
 		PreparedStatement statement = connection.prepareStatement(SQL);
 		statement.setString(1, entityID);
 		statement.setString(2, certificateID);
-		statement.execute();
+		ResultSet resultSet = statement.executeQuery();
 		statement.close();
-
-		return false;
+		
+		boolean hasAccess = false;
+		if (resultSet.next()) {
+			hasAccess = resultSet.getInt(1) > 0;
+		}
+		
+		return hasAccess;
 	}
 }

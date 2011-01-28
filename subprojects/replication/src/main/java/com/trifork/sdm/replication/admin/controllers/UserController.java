@@ -75,18 +75,14 @@ public class UserController extends AbstractController
 	@Transactional(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		response.setContentType("text/html; charset=utf-8");
+		try {
+			response.setContentType("text/html; charset=utf-8");
 
-		try
-		{
 			String action = request.getParameter("action");
 
-			if ("delete".equals(action))
-			{
+			if ("delete".equals(action)) {
 				getDelete(request, response);
-			}
-			else
-			{
+			} else {
 				// Get the new administrator's info from the
 				// HTML form.
 
@@ -96,23 +92,22 @@ public class UserController extends AbstractController
 				String newUserFirm = request.getParameter("firm");
 				String newUserCVR = (String) whitelist.get(newUserFirm);
 
-				User user = userRepository.create(newUserName, newUserCPR, newUserCVR);
+				User user = userRepository.create(newUserName, newUserCPR,
+						newUserCVR);
 
-				if (user != null)
-				{
+				if (user != null) {
 					// We also need info about the user creating the new
 
 					String userCPR = getUserCPR(request);
 
-					log.create("Ny admin tilføjet '%s'. Oprettet af '%s'.", newUserName, userCPR);
-					response.sendRedirect(format("/admin/admins?id=%s", user.getId()));
+					log.create("Ny admin tilføjet '%s'. Oprettet af '%s'.",
+							newUserName, userCPR);
+					response.sendRedirect(format("/admin/admins?id=%s",
+							user.getId()));
 				}
 			}
-
-		}
-		catch (Throwable t)
-		{
-			throw new ServletException(t);
+		} catch (Throwable e) {
+			throw new ServletException(e);
 		}
 
 		// TODO: Should always redirect.
@@ -140,13 +135,17 @@ public class UserController extends AbstractController
 
 	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("admin/list.ftl");
+		try {
+			Template template = config.getTemplate("admin/list.ftl");
 
-		Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<String, Object>();
 
-		root.put("admins", userRepository.findAll());
+			root.put("admins", userRepository.findAll());
 
-		render(response, template, root);
+			render(response, template, root);
+		} catch (Throwable e) {
+			throw new ServletException(e);
+		}
 	}
 
 
@@ -166,15 +165,19 @@ public class UserController extends AbstractController
 
 	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("admin/edit.ftl");
+		try {
+			Template template = config.getTemplate("admin/edit.ftl");
 
-		Map<String, Object> root = new HashMap<String, Object>();
+			Map<String, Object> root = new HashMap<String, Object>();
 
-		String id = request.getParameter("id");
-		User user = userRepository.find(id);
-		root.put("admin", user);
+			String id = request.getParameter("id");
+			User user = userRepository.find(id);
+			root.put("admin", user);
 
-		render(response, template, root);
+			render(response, template, root);
+		} catch (Throwable e) {
+			throw new ServletException(e);
+		}
 	}
 
 	private static final long serialVersionUID = 0;

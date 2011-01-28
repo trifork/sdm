@@ -11,15 +11,15 @@ public interface IUserRepository
 {
 
 	@Transactional(ADMINISTRATION)
-	User find(String id);
+	User find(String id) throws SQLException;
 
 
 	@Transactional(ADMINISTRATION)
-	User create(String name, String cpr, String cvr);
+	User create(String name, String cpr, String cvr) throws SQLException;
 
 
 	@Transactional(ADMINISTRATION)
-	List<User> findAll();
+	List<User> findAll() throws SQLException;
 
 
 	@Transactional(ADMINISTRATION)

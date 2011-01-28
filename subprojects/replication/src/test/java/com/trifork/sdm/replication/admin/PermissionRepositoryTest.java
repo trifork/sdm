@@ -2,46 +2,19 @@ package com.trifork.sdm.replication.admin;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.trifork.sdm.replication.ConfigurationModule;
 import com.trifork.sdm.replication.admin.models.Client;
-import com.trifork.sdm.replication.admin.models.ClientRepository;
-import com.trifork.sdm.replication.admin.models.PermissionRepository;
-import com.trifork.sdm.replication.db.DatabaseModule;
 
-public class PermissionRepositoryTest {
-	
-	private PermissionRepository permissionRepository;
-	private ClientRepository clientRepository;
-	private static Injector injector;
-	
-	
-	@BeforeClass
-	public static void init()
-	{
-		injector = Guice.createInjector(new ConfigurationModule(), new DatabaseModule());
-	}
-
-	
-	@Before
-	public void setUp()
-	{
-		permissionRepository = injector.getInstance(PermissionRepository.class);
-		clientRepository = injector.getInstance(ClientRepository.class);
-	}
-
-	
+public class PermissionRepositoryTest extends RepositoryTest {
 	@Test
 	public void can_find_permissions_by_client_id() throws Exception {
 
@@ -90,5 +63,31 @@ public class PermissionRepositoryTest {
 		List<String> updatedPermissions = permissionRepository.findByClientId(client.getId());
 		assertThat(updatedPermissions.size(), is(2));
 		assertThat(updatedPermissions, contains("Test2", "Test3"));
+	}
+	
+	@Test
+	public void can_access_entity_when_permissions_are_correctly_setup() throws Exception {
+		// Arrange
+		Client client = clientRepository.create("name", "certIdToSearchFor");
+		ArrayList<String> permissions = new ArrayList<String>();
+		permissions.add("Apotek");
+		permissionRepository.setPermissions(client.getId(), permissions);
+		
+		// Act
+		boolean canAccessEntity = permissionRepository.canAccessEntity("certIdToSearchFor", "Apotek");
+		
+		// Assert
+		assertTrue(canAccessEntity);
+	}
+	
+	@Test
+	public void cannot_access_entity_when_permissions_are_not_correctly_setup() throws Exception {
+		// Arrange
+		
+		// Act
+		boolean canAccessEntity = permissionRepository.canAccessEntity("certificateID", "Unkown");
+		
+		// Assert
+		assertFalse(canAccessEntity);
 	}
 }
