@@ -51,7 +51,6 @@ public class PermissionRepository
 		PreparedStatement statement = connection.prepareStatement("DELETE FROM clients_permissions WHERE (client_id = ?)");
 		statement.setObject(1, id);
 		statement.execute();
-		statement.close();
 
 		for (String entity : entities)
 		{
@@ -61,12 +60,14 @@ public class PermissionRepository
 			statement.execute();
 			statement.close();
 		}
+
+		statement.close();
 	}
 
 	@Transactional(ADMINISTRATION)
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
-		String SQL = "SELECT COUNT(*) FROM clients_permissions JOIN ON (client_id) WHERE (resource_id = ? AND certificate_id = ?)";
+		String SQL = "SELECT COUNT(*) FROM clients_permissions JOIN clients ON clients_permissions.client_id = clients.id WHERE (resource_id = ? AND certificate_id = ?)";
 
 		Connection connection = connectionProvider.get();
 
@@ -74,12 +75,13 @@ public class PermissionRepository
 		statement.setString(1, entityID);
 		statement.setString(2, certificateID);
 		ResultSet resultSet = statement.executeQuery();
-		statement.close();
 		
 		boolean hasAccess = false;
 		if (resultSet.next()) {
 			hasAccess = resultSet.getInt(1) > 0;
 		}
+
+		statement.close();
 		
 		return hasAccess;
 	}

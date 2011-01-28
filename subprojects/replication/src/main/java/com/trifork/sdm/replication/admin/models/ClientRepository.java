@@ -32,9 +32,11 @@ public class ClientRepository
 		stm.setObject(1, id);
 		ResultSet result = stm.executeQuery();
 
-		result.next();
-
-		client = serialize(result);
+		if (result.next()) {
+			client = serialize(result);
+		}
+		
+		stm.close();
 
 		return client;
 	}
@@ -81,14 +83,14 @@ public class ClientRepository
 		stm.setString(1, name);
 		stm.setString(2, certificateId);
 
-		stm.executeUpdate();
-		ResultSet resultSet = stm.getGeneratedKeys();
+		if (stm.executeUpdate() != 0) {
+			ResultSet resultSet = stm.getGeneratedKeys();
 
-		if (resultSet != null && resultSet.next())
-		{
-			String id = resultSet.getString(1);
+			if (resultSet != null && resultSet.next()) {
+				String id = resultSet.getString(1);
 
-			client = new Client(id, name, certificateId);
+				client = new Client(id, name, certificateId);
+			}
 		}
 
 		return client;

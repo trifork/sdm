@@ -15,8 +15,7 @@ import com.trifork.sdm.replication.admin.models.Client;
 public class ClientRepositoryTest extends RepositoryTest {
 	// Test data.
 
-	private String clientName;
-	private static final String TEST_CLIENT = "TestClient";
+	private String clientName = "TestClient";
 
 	@Test
 	public void cannot_find_client_with_unknown_id() throws Exception {

@@ -26,16 +26,9 @@ public class AuditLogRepository
 {
 	private static Logger LOG = getLogger(AuditLogRepository.class);
 
-	@Transactional(ADMINISTRATION)
-	private final Provider<Connection> connectionProvider;
-
-
 	@Inject
-	AuditLogRepository(Provider<Connection> provider)
-	{
-		this.connectionProvider = provider;
-	}
-
+	@Transactional(ADMINISTRATION)
+	private Provider<Connection> connectionProvider;
 
 	@Transactional(ADMINISTRATION)
 	public List<LogEntry> findAll() throws SQLException
@@ -60,13 +53,10 @@ public class AuditLogRepository
 		return logEntries;
 	}
 
-
-	@Transactional(ADMINISTRATION)
 	public boolean create(String message, Object... args) throws SQLException
 	{
 		return create(format(message, args));
 	}
-
 
 	@Transactional(ADMINISTRATION)
 	public boolean create(String message) throws SQLException
@@ -75,7 +65,7 @@ public class AuditLogRepository
 
 		boolean success = false;
 
-		if (message != null && !message.isEmpty())
+		if (message == null || message.isEmpty())
 		{
 			LOG.warn("Trying to log an empty audit message.");
 		}

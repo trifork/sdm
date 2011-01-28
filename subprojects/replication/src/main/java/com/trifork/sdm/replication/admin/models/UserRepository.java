@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +35,9 @@ public class UserRepository implements IUserRepository
 		statement.setObject(1, id);
 		ResultSet result = statement.executeQuery();
 
-		result.next();
-
-		admin = extract(result);
+		if (result.next()) {
+			admin = extract(result);
+		}
 		
 		statement.close();
 
@@ -53,24 +54,27 @@ public class UserRepository implements IUserRepository
 	{
 		User admin = null;
 
-		PreparedStatement stm = connectionProvider.get().prepareStatement("INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?");
+		Connection conn = connectionProvider.get();
+		String sql = "INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?";
+		PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
 		stm.setString(1, name);
 		stm.setString(2, cpr);
 		stm.setString(3, cvr);
 
-		stm.executeUpdate();
-		ResultSet resultSet = stm.getGeneratedKeys();
+		if (stm.executeUpdate() != 0) {
+			ResultSet resultSet = stm.getGeneratedKeys();
 
-		// connection.commit();
+			if (resultSet != null && resultSet.next())
+			{
 
-		if (resultSet != null && resultSet.next())
-		{
+				String id = resultSet.getString(1);
 
-			String id = resultSet.getString(1);
-
-			admin = new User(id, name, cpr, cvr);
+				admin = new User(id, name, cpr, cvr);
+			}
 		}
+		
+		stm.close();
 
 		return admin;
 	}
