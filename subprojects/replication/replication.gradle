@@ -87,12 +87,11 @@ dependencies {
 	testCompile 'org.yaml:snakeyaml:1.7'
 	testCompile 'org.dbunit:dbunit:2.4.8'
 	testCompile 'com.h2database:h2:1.3.148'
-	
+
 	// SOSI test key store where the SealKetstore.jks
 	// is stored.
 
 	testRuntime fileTree(dir: 'sosi', include: '*.jar')
-
 	testCompile 'xmlunit:xmlunit:1.1'
 	
 	// Logging
