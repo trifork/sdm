@@ -26,6 +26,7 @@ public class AuditLogRepository
 {
 	private static Logger LOG = getLogger(AuditLogRepository.class);
 
+	@Transactional(ADMINISTRATION)
 	private final Provider<Connection> connectionProvider;
 
 
