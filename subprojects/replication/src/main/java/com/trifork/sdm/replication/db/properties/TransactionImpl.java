@@ -2,6 +2,7 @@ package com.trifork.sdm.replication.db.properties;
 
 import java.lang.annotation.Annotation;
 
+
 @SuppressWarnings("all")
 class TransactionImpl implements Transactional
 {

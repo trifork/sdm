@@ -10,14 +10,12 @@ import javax.servlet.http.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 
-import com.google.inject.*;
-import com.google.inject.util.Modules;
-import com.trifork.sdm.replication.ProductionModule;
-import com.trifork.sdm.replication.replication.ReplicationFilter;
+import com.google.inject.Injector;
+import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.util.SignatureFactory;
 
 
-public class ResourceFilterTest
+public class ResourceFilterTest extends GuiceTest
 {
 	private static final int MILLIS_TO_SECS = 1000;
 	private static final int TIME_TO_LIVE = 100;
@@ -35,26 +33,17 @@ public class ResourceFilterTest
 	private FilterChain filterChain;
 
 
-	@BeforeClass
-	public static void init()
+	@Override
+	protected void configure()
 	{
-		Module module = Modules.override(new ProductionModule()).with(new AbstractModule()
-		{
-			@Override
-			protected void configure()
-			{
-				// Since we have to check the signature in the filter, we have
-				// to stub the
-				// create method on the signature factory.
+		// Since we have to check the signature in the filter, we have
+		// to stub the
+		// create method on the signature factory.
 
-				SignatureFactory factory = mock(SignatureFactory.class);
-				when(factory.create(anyString(), anyLong(), anyString(), anyInt())).thenReturn(generatedSignature);
+		SignatureFactory factory = mock(SignatureFactory.class);
+		when(factory.create(anyString(), anyLong(), anyString(), anyInt())).thenReturn(generatedSignature);
 
-				bind(SignatureFactory.class).toInstance(factory);
-			}
-		});
-
-		injector = Guice.createInjector(module);
+		bind(SignatureFactory.class).toInstance(factory);
 	}
 
 

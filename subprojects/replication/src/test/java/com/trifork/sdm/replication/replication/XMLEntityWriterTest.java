@@ -1,30 +1,48 @@
 package com.trifork.sdm.replication.replication;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
-
-import java.sql.Connection;
 
 import org.junit.Test;
 
-import com.google.inject.Provider;
+import com.google.inject.Provides;
+import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.util.URLFactory;
 
 
-public class XMLEntityWriterTest
+public class XMLEntityWriterTest extends GuiceTest
 {
-	@SuppressWarnings("unchecked")
+	protected String nextURL;
+
+
+	@Override
+	protected void configure()
+	{
+
+	}
+
+
 	@Test
 	public void test() throws Exception
 	{
 		// Arrange
-		Provider<Connection> provider = mock(Provider.class);
-		URLFactory urlFactory = mock(URLFactory.class);
-		XMLEntityWriter xmlEntityWriter = new XMLEntityWriter(provider, urlFactory);
+
+		// XMLEntityWriter xmlEntityWriter = new XMLEntityWriter(provider, urlFactory);
 
 		// Act
 		// xmlEntityWriter.write(outputStream, resourceType, OutputFormat.XML,
 		// 100, sinceDate, sinceId)
 
 		// Assert
+	}
+
+
+	@Provides
+	public URLFactory provideURLFactory()
+	{
+		URLFactory factory = mock(URLFactory.class);
+		when(factory.create(any(Class.class), anyInt(), anyString(), anyString())).thenReturn(nextURL);
+
+		return factory;
 	}
 }

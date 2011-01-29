@@ -1,7 +1,7 @@
 package com.trifork.sdm.replication.gateway;
 
+import static com.trifork.sdm.replication.gateway.SOSITestConstants.*;
 import static com.trifork.sdm.replication.replication.URLParameters.*;
-import static com.trifork.sdm.replication.sosi.SOSITestConstants.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.number.IsCloseTo.*;
@@ -22,17 +22,15 @@ import org.junit.*;
 import org.w3c.dom.Element;
 
 import com.google.inject.*;
-import com.google.inject.util.Modules;
-import com.trifork.sdm.replication.ProductionModule;
+import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.gateway.properties.*;
-import com.trifork.sdm.replication.sosi.TestSTSModule;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
 
 
-public class RequestProcessorTest
+public class RequestProcessorTest extends GuiceTest
 {
 	protected static Injector injector;
 
@@ -55,30 +53,18 @@ public class RequestProcessorTest
 	protected String requestedEntity;
 
 
+	@Override
+	protected void configure()
+	{
+		bind(PermissionRepository.class).toInstance(mock(PermissionRepository.class));
+
+		install(new TestSTSModule());
+	}
+
+
 	@BeforeClass
 	public static void init()
 	{
-		// Override the production setup with the setting we need.
-
-		Module testModule = Modules.override(new ProductionModule()).with(new AbstractModule()
-		{
-			@Override
-			public void configure()
-			{
-				// Mock the permission repository so we can control permissions.
-
-				bind(PermissionRepository.class).toInstance(mock(PermissionRepository.class));
-
-				// Use the test STS.
-
-				install(new TestSTSModule());
-			}
-		});
-
-		// Bind the Guice modules.
-
-		injector = Guice.createInjector(testModule);
-
 		factory = injector.getInstance(SOSIFactory.class);
 		idCard = injector.getInstance(IDCard.class);
 	}
@@ -312,33 +298,8 @@ public class RequestProcessorTest
 
 
 	//
-	// Helper Methods
+	// Assertions
 	//
-
-	protected void sendRequest() throws Exception
-	{
-		request.setBody(requestBody.serialize());
-
-		String xml = requestToString(request);
-
-		processor.process(xml, clientCVR, httpMethod);
-
-		response = factory.deserializeReply(processor.getResponse());
-
-		Element element = response.getBody();
-
-		if (element != null)
-		{
-			responseBody = GatewayResponse.deserialize(element);
-		}
-	}
-
-
-	protected URL getResponseURL() throws Exception
-	{
-		return new URL(responseBody.getUrl());
-	}
-
 
 	private void assertIntegerParam(String paramName, Matcher<Integer> matcher) throws Exception
 	{
@@ -368,6 +329,49 @@ public class RequestProcessorTest
 	}
 
 
+	protected void assertSoapFault()
+	{
+		assertThat(processor.getResponseCode(), is(SOAP_FAULT_STATUS));
+		assertTrue(response.isFault());
+	}
+
+
+	protected void assertNotSoapFault()
+	{
+		assertThat(processor.getResponseCode(), is(SOAP_OK_STATUS));
+		assertFalse(response.isFault());
+	}
+
+
+	//
+	// Helper Methods
+	//
+
+	protected void sendRequest() throws Exception
+	{
+		request.setBody(requestBody.serialize());
+
+		String xml = requestToString(request);
+
+		processor.process(xml, clientCVR, httpMethod);
+
+		response = factory.deserializeReply(processor.getResponse());
+
+		Element element = response.getBody();
+
+		if (element != null)
+		{
+			responseBody = GatewayResponse.deserialize(element);
+		}
+	}
+
+
+	protected URL getResponseURL() throws Exception
+	{
+		return new URL(responseBody.getUrl());
+	}
+
+
 	protected String getResponseURLParam(String paramName) throws Exception
 	{
 		return getUrlParams(getResponseURL()).get(paramName);
@@ -387,20 +391,6 @@ public class RequestProcessorTest
 		}
 
 		return params;
-	}
-
-
-	protected void assertSoapFault()
-	{
-		assertThat(processor.getResponseCode(), is(SOAP_FAULT_STATUS));
-		assertTrue(response.isFault());
-	}
-
-
-	protected void assertNotSoapFault()
-	{
-		assertThat(processor.getResponseCode(), is(SOAP_OK_STATUS));
-		assertFalse(response.isFault());
 	}
 
 

@@ -8,7 +8,6 @@ import java.sql.*;
 import org.apache.commons.io.FileUtils;
 import org.dbunit.database.*;
 import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.yaml.YamlDataSet;
 import org.h2.tools.Server;
 import org.junit.*;
 

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.replication;
 
+import static com.trifork.sdm.replication.db.properties.Database.*;
 import static com.trifork.sdm.replication.replication.OutputFormat.*;
 import static com.trifork.stamdata.Entities.*;
 import static dk.sosi.seal.xml.XmlUtil.*;
@@ -14,6 +15,7 @@ import javax.persistence.Column;
 import javax.xml.stream.*;
 
 import com.google.inject.*;
+import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.util.URLFactory;
 import com.trifork.stamdata.*;
 
@@ -29,11 +31,12 @@ public class XMLEntityWriter implements EntityWriter
 {
 	private static final boolean USE_ZULU_TIME = true;
 	private final URLFactory urlFactory;
+	
 	private final Provider<Connection> connectionProvider;
 
 
 	@Inject
-	XMLEntityWriter(Provider<Connection> connectionProvider, URLFactory urlFactory)
+	XMLEntityWriter(@Transactional(WAREHOUSE) Provider<Connection> connectionProvider, URLFactory urlFactory)
 	{
 		this.connectionProvider = connectionProvider;
 		this.urlFactory = urlFactory;
