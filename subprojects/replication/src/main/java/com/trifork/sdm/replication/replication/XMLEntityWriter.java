@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.replication;
 
-
 import static com.trifork.sdm.replication.replication.OutputFormat.*;
 import static com.trifork.stamdata.Entities.*;
 import static dk.sosi.seal.xml.XmlUtil.*;
@@ -11,24 +10,20 @@ import java.lang.reflect.Method;
 import java.sql.*;
 import java.util.Date;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.persistence.Column;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.*;
 
-import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
+import com.google.inject.*;
 import com.trifork.sdm.replication.util.URLFactory;
-import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.Record;
+import com.trifork.stamdata.*;
 
 
 /**
- * Class that given an entity type, can output instances of that entity to an output stream in XML
- * format.
+ * Class that given an entity type, can output instances of that entity to an
+ * output stream in XML format.
  * 
- * The class uses the information entity's {@link Column} annotations, and the naming convention to
- * infer names.
+ * The class uses the information entity's {@link Column} annotations, and the
+ * naming convention to infer names.
  */
 public class XMLEntityWriter implements EntityWriter
 {
@@ -54,9 +49,10 @@ public class XMLEntityWriter implements EntityWriter
 		{
 			factory = XMLOutputFactory.newInstance();
 		}
-		else // FastInfoset
+		else
+		// FastInfoset
 		{
-			factory = StAXOutputFactory.newInstance();
+			factory = XMLOutputFactory.newInstance();
 		}
 
 		XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream);
@@ -105,7 +101,7 @@ public class XMLEntityWriter implements EntityWriter
 			lastHistoryId = generateHistoryID(records, pid);
 			writer.writeAttribute("historyId", lastHistoryId);
 
-			// Write out the validity period. 
+			// Write out the validity period.
 
 			String effectuationDate = toXMLTimeStamp(records.getTimestamp("ValidFrom"), USE_ZULU_TIME);
 			writer.writeAttribute("effectuationDate", effectuationDate);

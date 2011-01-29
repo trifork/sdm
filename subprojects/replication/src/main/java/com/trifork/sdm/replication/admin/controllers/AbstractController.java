@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
 import java.io.*;
@@ -9,8 +8,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import freemarker.template.*;
 
 
 public class AbstractController extends HttpServlet

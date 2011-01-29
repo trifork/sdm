@@ -1,12 +1,10 @@
 package com.trifork.sdm.replication;
 
-
 import static org.slf4j.LoggerFactory.*;
 
 import org.slf4j.Logger;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.*;
 import com.google.inject.servlet.GuiceServletContextListener;
 
 

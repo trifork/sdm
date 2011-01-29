@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication;
 
-
 import com.google.inject.AbstractModule;
 import com.trifork.sdm.replication.admin.AdminstrationModule;
 import com.trifork.sdm.replication.db.DatabaseModule;
@@ -14,13 +13,13 @@ public class ProductionModule extends AbstractModule
 	protected void configure()
 	{
 		install(new ConfigurationModule());
-		
+
 		install(new DatabaseModule());
-		
+
 		install(new GatewayModule());
-		
+
 		install(new ResourceModule());
-		
+
 		install(new AdminstrationModule());
 	}
 }

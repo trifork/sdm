@@ -1,24 +1,15 @@
 package com.trifork.sdm.replication.admin.models;
 
+import static com.trifork.sdm.replication.db.properties.Database.*;
+import static java.lang.String.*;
+import static org.slf4j.LoggerFactory.*;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
-import static java.lang.String.format;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
+import java.sql.*;
+import java.util.*;
 
 import org.slf4j.Logger;
 
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
@@ -29,6 +20,7 @@ public class AuditLogRepository
 	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
+
 
 	@Transactional(ADMINISTRATION)
 	public List<LogEntry> findAll() throws SQLException
@@ -53,10 +45,12 @@ public class AuditLogRepository
 		return logEntries;
 	}
 
+
 	public boolean create(String message, Object... args) throws SQLException
 	{
 		return create(format(message, args));
 	}
+
 
 	@Transactional(ADMINISTRATION)
 	public boolean create(String message) throws SQLException

@@ -1,10 +1,8 @@
 package com.trifork.sdm.replication.gateway;
 
-
 import java.io.IOException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
 

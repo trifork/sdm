@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.util;
 
-
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;

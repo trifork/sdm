@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.replication;
 
-
 import java.util.Map;
 
 import com.trifork.stamdata.Record;
@@ -9,7 +8,8 @@ import com.trifork.stamdata.Record;
 /**
  * Resolves a class based on it's resource name.
  * 
- * This is in fact a glorified map that is easy to inject. You can also think of it as a factory.
+ * This is in fact a glorified map that is easy to inject. You can also think of
+ * it as a factory.
  */
 public class EntityResolver
 {
@@ -19,7 +19,8 @@ public class EntityResolver
 	/**
 	 * Creates a new instance of the class.
 	 * 
-	 * @param mappings a map from resource name to type.
+	 * @param mappings
+	 * a map from resource name to type.
 	 */
 	public EntityResolver(Map<String, Class<? extends Record>> mappings)
 	{
@@ -32,8 +33,10 @@ public class EntityResolver
 	/**
 	 * Resolves a resource name to a type.
 	 * 
-	 * @param resourceName name of the resource.
-	 * @return the type mapped to the resource name, or null if it doesn't exist.
+	 * @param resourceName
+	 * name of the resource.
+	 * @return the type mapped to the resource name, or null if it doesn't
+	 * exist.
 	 */
 	public Class<? extends Record> get(String resourceName)
 	{

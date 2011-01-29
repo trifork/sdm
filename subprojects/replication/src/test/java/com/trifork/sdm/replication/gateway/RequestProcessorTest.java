@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication;
+package com.trifork.sdm.replication.gateway;
 
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static com.trifork.sdm.replication.sosi.SOSITestConstants.*;
@@ -12,8 +12,7 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.*;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -24,13 +23,14 @@ import org.w3c.dom.Element;
 
 import com.google.inject.*;
 import com.google.inject.util.Modules;
+import com.trifork.sdm.replication.ProductionModule;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
-import com.trifork.sdm.replication.gateway.*;
 import com.trifork.sdm.replication.gateway.properties.*;
 import com.trifork.sdm.replication.sosi.TestSTSModule;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
+
 
 public class RequestProcessorTest
 {
@@ -62,6 +62,7 @@ public class RequestProcessorTest
 
 		Module testModule = Modules.override(new ProductionModule()).with(new AbstractModule()
 		{
+			@Override
 			public void configure()
 			{
 				// Mock the permission repository so we can control permissions.

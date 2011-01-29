@@ -1,19 +1,14 @@
 package com.trifork.sdm.replication.admin.models;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static com.trifork.sdm.replication.db.properties.Database.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
-import javax.inject.Inject;
-
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.properties.Transactional;
+
 
 public class PermissionRepository
 {
@@ -64,6 +59,7 @@ public class PermissionRepository
 		statement.close();
 	}
 
+
 	@Transactional(ADMINISTRATION)
 	public boolean canAccessEntity(String certificateID, String entityID) throws SQLException
 	{
@@ -75,14 +71,15 @@ public class PermissionRepository
 		statement.setString(1, entityID);
 		statement.setString(2, certificateID);
 		ResultSet resultSet = statement.executeQuery();
-		
+
 		boolean hasAccess = false;
-		if (resultSet.next()) {
+		if (resultSet.next())
+		{
 			hasAccess = resultSet.getInt(1) > 0;
 		}
 
 		statement.close();
-		
+
 		return hasAccess;
 	}
 }

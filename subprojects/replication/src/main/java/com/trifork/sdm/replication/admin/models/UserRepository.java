@@ -1,19 +1,13 @@
 package com.trifork.sdm.replication.admin.models;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static com.trifork.sdm.replication.db.properties.Database.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
-import javax.inject.Inject;
-
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
+
 
 public class UserRepository implements IUserRepository
 {
@@ -22,8 +16,12 @@ public class UserRepository implements IUserRepository
 	private Provider<Connection> connectionProvider;
 
 
-	/* (non-Javadoc)
-	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#find(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.trifork.sdm.replication.admin.models.IUserRepository#find(java.lang
+	 * .String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
@@ -35,18 +33,23 @@ public class UserRepository implements IUserRepository
 		statement.setObject(1, id);
 		ResultSet result = statement.executeQuery();
 
-		if (result.next()) {
+		if (result.next())
+		{
 			admin = extract(result);
 		}
-		
+
 		statement.close();
 
 		return admin;
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#create(java.lang.String, java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.trifork.sdm.replication.admin.models.IUserRepository#create(java.
+	 * lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
@@ -62,7 +65,8 @@ public class UserRepository implements IUserRepository
 		stm.setString(2, cpr);
 		stm.setString(3, cvr);
 
-		if (stm.executeUpdate() != 0) {
+		if (stm.executeUpdate() != 0)
+		{
 			ResultSet resultSet = stm.getGeneratedKeys();
 
 			if (resultSet != null && resultSet.next())
@@ -73,19 +77,22 @@ public class UserRepository implements IUserRepository
 				admin = new User(id, name, cpr, cvr);
 			}
 		}
-		
+
 		stm.close();
 
 		return admin;
 	}
 
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#findAll()
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public List<User> findAll() throws SQLException {
+	public List<User> findAll() throws SQLException
+	{
 		List<User> admins = new ArrayList<User>();
 
 		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
@@ -101,8 +108,13 @@ public class UserRepository implements IUserRepository
 		return admins;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#destroy(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.trifork.sdm.replication.admin.models.IUserRepository#destroy(java
+	 * .lang.String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
@@ -115,8 +127,12 @@ public class UserRepository implements IUserRepository
 	}
 
 
-	/* (non-Javadoc)
-	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#isAdmin(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.trifork.sdm.replication.admin.models.IUserRepository#isAdmin(java
+	 * .lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)

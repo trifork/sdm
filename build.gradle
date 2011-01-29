@@ -1,26 +1,29 @@
 apply plugin: 'java-base'
 
 libs = [
-	commons_io: 'commons-io:commons-io:2.0',
-	commons_codec: 'commons-codec:commons-codec:1.4',
-	commons_lang: 'commons-lang:commons-lang:2.5',
-	slf4j_api: 'org.slf4j:slf4j-api:1.6.1',
-	logback_core: 'ch.qos.logback:logback-core:0.9.27',
-	logback_classic: 'ch.qos.logback:logback-classic:0.9.27',
-	servlet_api: 'javax.servlet:servlet-api:2.4',
+	commons_io: 'commons-io:commons-io:2.0@jar',
+	commons_codec: 'commons-codec:commons-codec:1.4@jar',
+	commons_lang: 'commons-lang:commons-lang:2.5@jar',
+	commons_configuration: 'commons-configuration:commons-configuration:1.6@jar',
+	slf4j_api: 'org.slf4j:slf4j-api:1.6.1@jar',
+	log4j_over_slf4j: 'org.slf4j:jcl-over-slf4j:1.6.1@jar',
+	jcl_over_sl4j: 'org.slf4j:jcl-over-slf4j:1.6.1@jar',
+	logback_core: 'ch.qos.logback:logback-core:0.9.27@jar',
+	logback_classic: 'ch.qos.logback:logback-classic:0.9.27@jar',
+	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 	reflections: 'org.reflections:reflections:0.9.5-RC2',
-	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1',
-	mysql_driver: 'mysql:mysql-connector-java:5.1.13',
+	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1@jar',
+	mysql_driver: 'mysql:mysql-connector-java:5.1.13@jar',
 	junit: 'junit:junit:4.8.2',
 	mockito: 'org.mockito:mockito-core:1.8.5',
 	objenesis: 'org.objenesis:objenesis:1.2',
 	hamcrest: 'org.hamcrest:hamcrest-library:1.2',
-	bouncycastle: 'bouncycastle:bcprov-jdk16:140',
-	jodi_time: 'joda-time:joda-time:1.6',
-	velocity: 'apache-velocity:velocity:1.5',
-	guice_api: 'com.google.inject:guice:3.0-rc2',
-	guice_servlet: 'com.google.inject:guice-servlet:3.0-rc2',
-	guice_assistedinject: 'com.google.inject:guice-assistedinject:3.0-rc2'
+	bouncycastle: 'bouncycastle:bcprov-jdk16:140@jar',
+	jodi_time: 'joda-time:joda-time:1.6@jar',
+	velocity: 'apache-velocity:velocity:1.5@jar',
+	guice_api: 'com.google.inject:guice:3.0-rc2@jar',
+	guice_servlet: 'com.google.inject:guice-servlet:3.0-rc2@jar',
+	guice_assistedinject: 'com.google.inject:guice-assistedinject:3.0-rc2@jar'
 ]
 
 allprojects {
@@ -55,28 +58,18 @@ subprojects {
 		assert project.webAppDir.isDirectory()
 		assert project.webXml.isFile()
 	}
-	
-	// TODO: Include transitive compile dependencies by default.
-	// This has been disabled for now since we have some problems
-	// we log4j.
-	
-	configurations.compile.transitive = true
-	/*
+
 	configurations {
-		compile {
-			exclude group: "commons-logging"
-			exclude group: "log4j"
-		}
 		runtime {
 			// Exclude other logging from all dependencies
-			// since we will be using slf4j and backlog.
+			// since we will be using slf4j and logback.
 		
 			exclude group: "commons-logging"
 			exclude group: "log4j"
 		}
 	}
-	*/
-	// Calculate test coverage.
+	
+	// Test coverage.
 	
 	apply from: rootProject.file("config/cobertura.groovy")
 }

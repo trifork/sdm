@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.admin.models;
 
-
 public class Client
 {
 	private final String id;

@@ -1,22 +1,19 @@
 package com.trifork.sdm.replication.client;
 
-
 import static javax.xml.stream.XMLStreamConstants.*;
 import static org.slf4j.LoggerFactory.*;
 
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import java.sql.*;
 import java.util.Vector;
 
-import javax.inject.Inject;
 import javax.xml.stream.*;
 
 import org.slf4j.Logger;
 
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.replication.RecordPersister;
 import com.trifork.stamdata.*;
 

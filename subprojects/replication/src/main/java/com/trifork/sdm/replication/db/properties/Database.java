@@ -14,8 +14,8 @@ public enum Database
 	HOUSEKEEPING,
 
 	/**
-	 * A database used for storing authorizations and other managment data.
-	 * This is primarily for use this the GUI. 
+	 * A database used for storing authorizations and other managment data. This
+	 * is primarily for use this the GUI.
 	 */
 	ADMINISTRATION
 }

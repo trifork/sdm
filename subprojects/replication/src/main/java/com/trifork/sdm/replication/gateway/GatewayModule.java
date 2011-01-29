@@ -1,15 +1,14 @@
 package com.trifork.sdm.replication.gateway;
 
-
 import static com.google.inject.name.Names.*;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 
 import javax.inject.*;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-import com.google.inject.Key;
-import com.google.inject.Provides;
+import com.google.inject.*;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.sdm.replication.gateway.properties.*;
 

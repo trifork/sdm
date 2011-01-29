@@ -1,11 +1,8 @@
 package com.trifork.sdm.replication.util;
 
-
-import javax.inject.Inject;
-
 import org.apache.commons.configuration.Configuration;
 
-import com.google.inject.AbstractModule;
+import com.google.inject.*;
 
 
 public abstract class ConfiguredModule extends AbstractModule
@@ -15,7 +12,7 @@ public abstract class ConfiguredModule extends AbstractModule
 
 
 	public ConfiguredModule()
-	{		
+	{
 		requireBinding(Configuration.class);
 		requestInjection(this);
 	}

@@ -1,7 +1,6 @@
 package com.trifork.sdm.replication.admin.security;
 
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.RetentionPolicy.*;
 
 import java.lang.annotation.Retention;
 

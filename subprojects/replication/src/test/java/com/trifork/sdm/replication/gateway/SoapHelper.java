@@ -1,12 +1,9 @@
-package com.trifork.sdm.replication.util;
-
+package com.trifork.sdm.replication.gateway;
 
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 

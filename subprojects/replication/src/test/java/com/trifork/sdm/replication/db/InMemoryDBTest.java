@@ -1,15 +1,12 @@
-package com.trifork.sdm.replication;
-
+package com.trifork.sdm.replication.db;
 
 import static org.dbunit.operation.DatabaseOperation.*;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 
 import org.apache.commons.io.FileUtils;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
+import org.dbunit.database.*;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.yaml.YamlDataSet;
 import org.h2.tools.Server;
@@ -18,13 +15,14 @@ import org.junit.*;
 import com.google.inject.*;
 import com.trifork.sdm.replication.ProductionModule;
 
+
 /**
- * This class it a template I have made for when/if we want to
- * use an in-memory db (H2 in this case).
+ * This class it a template I have made for when/if we want to use an in-memory
+ * db (H2 in this case).
  * 
- * This would require:
- * - That we can access the SQL scripts from the build environment at runtime.
- * - That we get some nice fixtures (test data) loaded into the yaml files.
+ * This would require: - That we can access the SQL scripts from the build
+ * environment at runtime. - That we get some nice fixtures (test data) loaded
+ * into the yaml files.
  */
 public class InMemoryDBTest
 {
@@ -101,15 +99,15 @@ public class InMemoryDBTest
 	protected static Connection getJdbcConnection() throws Exception
 	{
 		// Comparability with MySQL SQL.
-		
+
 		String properties = ";MODE=MySQL";
 
 		// Don't drop the database when no connections.
-		
+
 		properties += ";DB_CLOSE_DELAY=-1";
 
 		// Use the database as in-memory.
-		
+
 		String uri = "jdbc:h2:mem:test" + properties;
 
 		Class.forName("org.h2.Driver");

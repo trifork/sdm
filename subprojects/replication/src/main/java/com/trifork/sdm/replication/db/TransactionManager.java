@@ -1,20 +1,18 @@
 package com.trifork.sdm.replication.db;
 
-
 import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import org.aopalliance.intercept.MethodInterceptor;
-import org.aopalliance.intercept.MethodInvocation;
+import org.aopalliance.intercept.*;
 
 import com.google.inject.Provider;
 
 
 public class TransactionManager implements MethodInterceptor, Provider<Connection>
 {
-	private DataSource dataStore;
-	private ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
+	private final DataSource dataStore;
+	private final ThreadLocal<Connection> connectionStore = new ThreadLocal<Connection>();
 
 
 	public TransactionManager(DataSource source)
@@ -23,6 +21,7 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 	}
 
 
+	@Override
 	public Connection get() throws OutOfTransactionException
 	{
 		Connection connection = connectionStore.get();
@@ -39,13 +38,13 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 	}
 
 
+	@Override
 	public Object invoke(MethodInvocation methodInvocation) throws Throwable
 	{
 		Connection conn = connectionStore.get();
 
 		// The thread local connection can only be set by the interceptor
 		// if it is not null the interceptor was already invoked.
-
 		if (conn != null)
 		{
 			// just continue
@@ -53,7 +52,8 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 		}
 
 		// We must open a new connection and appropriately close it at the end
-		// if we fail to get the connection, no problem, the target method will not get invoked at
+		// if we fail to get the connection, no problem, the target method will
+		// not get invoked at
 		// all.
 		conn = dataStore.getConnection();
 
@@ -63,7 +63,8 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 		// Set Thread Local connection.
 		connectionStore.set(conn);
 
-		// Make sure we commit/rollback, close the connection and unset the thread local around
+		// Make sure we commit/rollback, close the connection and unset the
+		// thread local around
 		// top-level method call
 		try
 		{
@@ -82,7 +83,6 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 			conn.close();
 		}
 	}
-
 
 	public static class OutOfTransactionException extends RuntimeException
 	{

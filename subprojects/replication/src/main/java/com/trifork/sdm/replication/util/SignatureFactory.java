@@ -1,14 +1,13 @@
 package com.trifork.sdm.replication.util;
 
-
 import java.security.SignatureException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.inject.Inject;
 
 import org.apache.commons.codec.binary.Base64;
 
+import com.google.inject.Inject;
 import com.trifork.sdm.replication.gateway.properties.Secret;
 
 
@@ -48,10 +47,13 @@ public class SignatureFactory
 	/**
 	 * Computes RFC 2104-complaint HMAC signature.
 	 * 
-	 * @param data The data to be signed.
-	 * @param key The signing key.
+	 * @param data
+	 * The data to be signed.
+	 * @param key
+	 * The signing key.
 	 * @return The Base64-encoded RFC 2104-complaint HMAC signature.
-	 * @throws java.security.SignatureException when signature generation fails
+	 * @throws java.security.SignatureException
+	 * when signature generation fails
 	 */
 	private static String calculateRFC2104HMAC(String data, String key) throws SignatureException
 	{

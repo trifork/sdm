@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.gateway;
 
-
 import javax.xml.parsers.*;
 
 import org.w3c.dom.*;
@@ -15,7 +14,7 @@ public class GatewayRequest
 	private static final String HISTORY_ID = "offset";
 	private static final String VERSION = "version";
 	private static final String ENTITY = "entity";
-	
+
 	public Integer version;
 	public String entity;
 	public String historyId;

@@ -5,12 +5,11 @@ import static org.slf4j.LoggerFactory.*;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
 import javax.servlet.*;
 
 import org.slf4j.Logger;
 
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
 

@@ -1,16 +1,14 @@
 package com.trifork.sdm.replication.monitoring;
 
-
 import static com.trifork.sdm.replication.db.properties.Database.*;
 
 import java.io.IOException;
 import java.sql.*;
 
-import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
@@ -37,7 +35,7 @@ public class StatusServlet extends HttpServlet
 			resp.getOutputStream().println("ERROR: Could not connect to the data warehouse database.");
 			resp.setStatus(500);
 		}
-		
+
 		try
 		{
 			checkAdminConnection();
@@ -55,11 +53,11 @@ public class StatusServlet extends HttpServlet
 	{
 		Connection conn = warehouseConnection.get();
 		Statement stm = conn.createStatement();
-		
+
 		stm.execute("SELECT 1");
-		
+
 		stm.close();
-		
+
 		return true;
 	}
 
@@ -69,14 +67,13 @@ public class StatusServlet extends HttpServlet
 	{
 		Connection conn = adminConnection.get();
 		Statement stm = conn.createStatement();
-		
+
 		stm.execute("SELECT 1");
-		
+
 		stm.close();
-		
+
 		return true;
 	}
-
 
 	private static final long serialVersionUID = 0;
 }

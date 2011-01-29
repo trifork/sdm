@@ -1,26 +1,19 @@
 package com.trifork.sdm.replication.admin.controllers;
 
+import static com.trifork.sdm.replication.db.properties.Database.*;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import java.io.*;
+import java.util.*;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
+import com.google.inject.*;
 import com.trifork.sdm.replication.admin.models.AuditLogRepository;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import freemarker.template.*;
+
 
 @Singleton
 public class AuditLogController extends HttpServlet

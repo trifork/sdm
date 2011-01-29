@@ -1,28 +1,22 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
-import static java.lang.String.format;
+import static com.trifork.sdm.replication.db.properties.Database.*;
+import static java.lang.String.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
-import com.trifork.sdm.replication.admin.models.AuditLogRepository;
-import com.trifork.sdm.replication.admin.models.IUserRepository;
-import com.trifork.sdm.replication.admin.models.User;
+import com.google.inject.*;
+import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.admin.properties.Whitelist;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import freemarker.template.*;
+
 
 @Singleton
 public class UserController extends AbstractController
@@ -75,14 +69,18 @@ public class UserController extends AbstractController
 	@Transactional(ADMINISTRATION)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		try {
+		try
+		{
 			response.setContentType("text/html; charset=utf-8");
 
 			String action = request.getParameter("action");
 
-			if ("delete".equals(action)) {
+			if ("delete".equals(action))
+			{
 				getDelete(request, response);
-			} else {
+			}
+			else
+			{
 				// Get the new administrator's info from the
 				// HTML form.
 
@@ -92,21 +90,21 @@ public class UserController extends AbstractController
 				String newUserFirm = request.getParameter("firm");
 				String newUserCVR = (String) whitelist.get(newUserFirm);
 
-				User user = userRepository.create(newUserName, newUserCPR,
-						newUserCVR);
+				User user = userRepository.create(newUserName, newUserCPR, newUserCVR);
 
-				if (user != null) {
+				if (user != null)
+				{
 					// We also need info about the user creating the new
 
 					String userCPR = getUserCPR(request);
 
-					log.create("Ny admin tilføjet '%s'. Oprettet af '%s'.",
-							newUserName, userCPR);
-					response.sendRedirect(format("/admin/admins?id=%s",
-							user.getId()));
+					log.create("Ny admin tilføjet '%s'. Oprettet af '%s'.", newUserName, userCPR);
+					response.sendRedirect(format("/admin/admins?id=%s", user.getId()));
 				}
 			}
-		} catch (Throwable e) {
+		}
+		catch (Throwable e)
+		{
 			throw new ServletException(e);
 		}
 
@@ -135,7 +133,8 @@ public class UserController extends AbstractController
 
 	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		try {
+		try
+		{
 			Template template = config.getTemplate("admin/list.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
@@ -143,7 +142,9 @@ public class UserController extends AbstractController
 			root.put("admins", userRepository.findAll());
 
 			render(response, template, root);
-		} catch (Throwable e) {
+		}
+		catch (Throwable e)
+		{
 			throw new ServletException(e);
 		}
 	}
@@ -165,7 +166,8 @@ public class UserController extends AbstractController
 
 	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		try {
+		try
+		{
 			Template template = config.getTemplate("admin/edit.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
@@ -175,7 +177,9 @@ public class UserController extends AbstractController
 			root.put("admin", user);
 
 			render(response, template, root);
-		} catch (Throwable e) {
+		}
+		catch (Throwable e)
+		{
 			throw new ServletException(e);
 		}
 	}

@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.db;
 
-
 public final class Databases
 {
 	public static enum Database
@@ -16,6 +15,6 @@ public final class Databases
 
 	public static void database(Database database)
 	{
-		
+
 	}
 }

@@ -1,25 +1,18 @@
 package com.trifork.sdm.replication.sosi;
 
-
 import static com.trifork.sdm.replication.sosi.SOSITestConstants.*;
 import static java.lang.String.*;
 
 import java.util.Properties;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.trifork.sdm.replication.util.SoapHelper;
+import com.google.inject.*;
+import com.trifork.sdm.replication.gateway.SoapHelper;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
 import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
-import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.pki.SOSITestFederation;
-import dk.sosi.seal.vault.ClasspathCredentialVault;
-import dk.sosi.seal.vault.CredentialVault;
+import dk.sosi.seal.pki.*;
+import dk.sosi.seal.vault.*;
 
 
 public class TestSTSModule extends AbstractModule
@@ -51,7 +44,8 @@ public class TestSTSModule extends AbstractModule
 	/*
 	 * Fetches an updated id card.
 	 * 
-	 * The id card is valid for 24 hours starting from the time it was requested minus 5 minutes.
+	 * The id card is valid for 24 hours starting from the time it was requested
+	 * minus 5 minutes.
 	 */
 	@Provides
 	@Inject
@@ -59,8 +53,7 @@ public class TestSTSModule extends AbstractModule
 	{
 		// Create a SEAL ID card.
 
-		IDCard unsignedCard = factory.createNewSystemIDCard
-		(
+		IDCard unsignedCard = factory.createNewSystemIDCard(
 			TEST_IT_SYSTEM_NAME,
 			new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, TEST_CVR, "dk"),
 			AuthenticationLevel.VOCES_TRUSTED_SYSTEM,

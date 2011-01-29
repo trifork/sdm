@@ -1,18 +1,15 @@
 package com.trifork.sdm.replication.replication;
 
-
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static java.lang.String.*;
 import static java.net.HttpURLConnection.*;
 
 import java.io.IOException;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
+import com.google.inject.*;
 import com.trifork.sdm.replication.util.SignatureFactory;
 
 

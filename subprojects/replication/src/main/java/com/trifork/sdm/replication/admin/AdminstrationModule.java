@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.admin;
 
-
 import com.trifork.sdm.replication.admin.controllers.*;
 import com.trifork.sdm.replication.admin.security.SamlModule;
 import com.trifork.sdm.replication.admin.views.TemplateModule;

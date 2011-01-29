@@ -2,6 +2,7 @@ package com.trifork.sdm.replication.db.properties;
 
 import java.lang.annotation.Annotation;
 
+@SuppressWarnings("all")
 class TransactionImpl implements Transactional
 {
 	private final Database database;
@@ -31,7 +32,7 @@ class TransactionImpl implements Transactional
 	public int hashCode()
 	{
 		// This is specified in java.lang.Annotation.
-		return (127 * "value".hashCode()) ^ database.hashCode();
+		return 127 * "value".hashCode() ^ database.hashCode();
 	}
 
 
@@ -53,7 +54,6 @@ class TransactionImpl implements Transactional
 	{
 		return "@" + Transactional.class.getName() + "(database=" + database + ")";
 	}
-	
 
 	private static final long serialVersionUID = 0;
 }

@@ -1,10 +1,8 @@
 package com.trifork.sdm.replication.util;
 
-
 import java.net.URL;
 
-import javax.inject.Inject;
-
+import com.google.inject.Inject;
 import com.trifork.sdm.replication.gateway.properties.TTL;
 import com.trifork.stamdata.Entities;
 
@@ -36,20 +34,14 @@ public class URLFactory
 		long expires = System.currentTimeMillis() / MILLIS_TO_SECS + ttl;
 
 		// Calculate the signature.
-		
+
 		String signature = signatureFactory.create(entity, expires, historyId, pageSize);
-		
+
 		// Build the URL String
 
 		StringBuilder resultingURL = new StringBuilder(baseURL.toString());
 
-		resultingURL.append("replicate")
-			.append("?entity=").append(entity)
-			.append("&historyId=").append(historyId)
-			.append("&pageSize=").append(pageSize)
-			.append("&expires=").append(expires)
-			.append("&format=").append(format)
-			.append("&signature=").append(signature);
+		resultingURL.append("replicate").append("?entity=").append(entity).append("&historyId=").append(historyId).append("&pageSize=").append(pageSize).append("&expires=").append(expires).append("&format=").append(format).append("&signature=").append(signature);
 
 		return resultingURL.toString();
 	}

@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.db.properties;
 
-
 import java.lang.annotation.*;
 
 import com.google.inject.BindingAnnotation;

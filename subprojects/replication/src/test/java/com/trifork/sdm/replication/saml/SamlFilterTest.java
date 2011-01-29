@@ -1,29 +1,27 @@
 package com.trifork.sdm.replication.saml;
 
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 import static org.mockito.Mockito.*;
 
 import javax.servlet.FilterChain;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import org.junit.*;
-import org.mockito.Mockito;
+import org.mockito.Matchers;
 
 import com.google.inject.*;
-import com.google.inject.util.Modules;
 import com.trifork.rid2cpr.RID2CPRFacade;
-import com.trifork.sdm.replication.ProductionModule;
+import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
 import com.trifork.sdm.replication.admin.security.SamlFilter;
 
 import dk.itst.oiosaml.sp.UserAssertion;
 
-public class SamlFilterTest
+
+public class SamlFilterTest extends GuiceTest
 {
 	private static Injector injector;
-	
-	private SingleSignonHelper singleSignonHelper;
-	private RID2CPRFacade rIDHelper;
+
 	private IUserRepository userRepository;
 
 	private String userRID;
@@ -31,35 +29,19 @@ public class SamlFilterTest
 
 	private SamlFilter filter;
 	private FilterChain filterChain;
+
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
+	private RID2CPRFacade ridService;
+	private Provider<UserAssertion> userAssertionProvider;
 
-	@BeforeClass
-	public static void init()
+
+	@Override
+	protected void configure()
 	{
-		Module config = Modules.override(new ProductionModule()).with(new AbstractModule()
-		{
-			@Override
-			protected void configure()
-			{
-				// Unfortunately the user assertion holder uses static
-				// methods, and thus makes it hard to test.
-				// But we inject a mocked object and access the static on that.
-
-				bind(SingleSignonHelper.class).toInstance(mock(SingleSignonHelper.class));
-
-				// Let us control who is admin and who is not.
-
-				bind(IUserRepository.class).toInstance(mock(IUserRepository.class));
-
-				// Mock the RID2CPR.
-				
-				bind(RID2CPRFacade.class).toInstance(mock(RID2CPRFacade.class));
-			}
-		});
-
-		injector = Guice.createInjector(config);
+		bind(IUserRepository.class).toInstance(mock(IUserRepository.class));
+		bind(RID2CPRFacade.class).toInstance(mock(RID2CPRFacade.class));
 	}
 
 
@@ -67,18 +49,18 @@ public class SamlFilterTest
 	public void setUp()
 	{
 		filter = injector.getInstance(SamlFilter.class);
-		
+
 		request = mock(HttpServletRequest.class);
 		response = mock(HttpServletResponse.class);
 		filterChain = mock(FilterChain.class);
-		
+
 		// TODO: There is not much use in injecting an instance if
 		// we do not reset its behavior after each run. It does not
 		// break the test, but it could in the future.
-		
-		rIDHelper = injector.getInstance(RID2CPRFacade.class);
+
+		ridService = injector.getInstance(RID2CPRFacade.class);
 		userRepository = injector.getInstance(IUserRepository.class);
-		singleSignonHelper = injector.getInstance(SingleSignonHelper.class);
+		userAssertionProvider = injector.getProvider(UserAssertion.class);
 	}
 
 
@@ -110,12 +92,14 @@ public class SamlFilterTest
 
 	protected void assertAccessDenied() throws Exception
 	{
+		verify(request, times(0)).setAttribute(USER_CPR, Matchers.anyString());
 		verify(filterChain, times(0)).doFilter(request, response);
 	}
 
 
 	protected void assertAccessAllowed() throws Exception
 	{
+		verify(request, times(1)).setAttribute(USER_CPR, userCPR);
 		verify(filterChain, times(1)).doFilter(request, response);
 	}
 
@@ -126,29 +110,38 @@ public class SamlFilterTest
 
 	protected void doFilter() throws Exception
 	{
-		// Create a user with the settings from the test.
-
-		UserAssertion userAssertion = mock(UserAssertion.class);
-		
-		when(userAssertion.getRIDNumber()).thenReturn(userRID);
-		when(singleSignonHelper.getUser()).thenReturn(userAssertion);
-		
-		when(rIDHelper.getCPR(userRID)).thenReturn(userCPR);
-
-		// Call the filter.
-
 		filter.doFilter(request, response, filterChain);
 	}
 
 
 	protected void denyAccess() throws Exception
 	{
-		when(userRepository.isAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(false);
+		when(userRepository.isAdmin(Matchers.anyString(), Matchers.anyString())).thenReturn(false);
 	}
 
 
 	protected void allowAccess() throws Exception
 	{
-		when(userRepository.isAdmin(Mockito.anyString(), Mockito.anyString())).thenReturn(true);
+		when(userRepository.isAdmin(Matchers.anyString(), Matchers.anyString())).thenReturn(true);
+	}
+
+
+	//
+	// Test Providers
+	//
+
+	@Provides
+	public UserAssertion provideUserAssertion() throws Exception
+	{
+		// Make the user assertion holder testable,
+		// you can see the provider at the bottom of this class.
+
+		UserAssertion userAssertion = mock(UserAssertion.class);
+
+		when(userAssertion.getRIDNumber()).thenReturn(userRID);
+		when(userAssertionProvider.get()).thenReturn(userAssertion);
+		when(ridService.getCPR(userRID)).thenReturn(userCPR);
+
+		return userAssertion;
 	}
 }

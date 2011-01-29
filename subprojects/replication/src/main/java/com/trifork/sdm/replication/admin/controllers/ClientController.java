@@ -1,44 +1,28 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-
-import static com.trifork.sdm.replication.admin.models.RequestAttributes.USER_CPR;
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
-import static java.lang.String.format;
+import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static com.trifork.sdm.replication.db.properties.Database.*;
+import static java.lang.String.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.persistence.Entity;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import org.reflections.util.*;
 
-import com.trifork.sdm.replication.admin.models.AuditLogRepository;
-import com.trifork.sdm.replication.admin.models.Client;
-import com.trifork.sdm.replication.admin.models.ClientRepository;
-import com.trifork.sdm.replication.admin.models.PermissionRepository;
+import com.google.inject.*;
+import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.properties.Transactional;
-import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.Record;
+import com.trifork.stamdata.*;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import freemarker.template.*;
 
 
 @Singleton
@@ -66,23 +50,31 @@ public class ClientController extends AbstractController
 		// Check if the user requested a form to create
 		// a new user.
 
-		try {
-			if (request.getRequestURI().endsWith("/new")) {
+		try
+		{
+			if (request.getRequestURI().endsWith("/new"))
+			{
 				getNew(request, response);
 			}
 
 			// If the ID parameter is null, we list all
 			// users. If it is present we show a specific user.
 
-			else if (request.getParameter("id") == null) {
+			else if (request.getParameter("id") == null)
+			{
 				getList(request, response);
-			} else {
+			}
+			else
+			{
 				getEdit(request, response);
 			}
-		} catch (Throwable e) {
+		}
+		catch (Throwable e)
+		{
 			throw new ServletException(e);
 		}
 	}
+
 
 	@Override
 	@Transactional(ADMINISTRATION)
@@ -173,7 +165,7 @@ public class ClientController extends AbstractController
 		catch (Throwable t)
 		{
 			// TODO: Log
-			
+
 			throw new ServletException(t);
 		}
 	}
@@ -242,10 +234,9 @@ public class ClientController extends AbstractController
 	}
 
 
-	@SuppressWarnings("unchecked")
 	private Set<String> getEntityNames()
 	{
-		// TODO: Make thid method part of the Entities class.
+		// TODO: Make this method part of the Entities class.
 
 		final String INCLUDE_PACKAGE = Record.class.getPackage().getName();
 
@@ -266,12 +257,12 @@ public class ClientController extends AbstractController
 
 		for (Class<?> entity : classes)
 		{
-			String uri = Entities.getName((Class<? extends Record>) entity);
+			String uri = Entities.getName(entity);
 			entities.add(uri);
 		}
 
 		return entities;
 	}
-	
+
 	private static final long serialVersionUID = 0;
 }

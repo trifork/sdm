@@ -1,16 +1,13 @@
 package com.trifork.sdm.replication.replication;
 
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.lang.reflect.*;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 import javax.persistence.Column;
 
-import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.Record;
+import com.trifork.stamdata.*;
 
 
 public class RecordExtractor
@@ -93,12 +90,11 @@ public class RecordExtractor
 		return properties;
 	}
 
-
 	/**
 	 * Helper class that generates the XML.
 	 * 
-	 * We might as well generate the start- and end-tags at initialization, that way we don't have
-	 * to do it on a per instance basis.
+	 * We might as well generate the start- and end-tags at initialization, that
+	 * way we don't have to do it on a per instance basis.
 	 */
 	protected class EntityEntry
 	{

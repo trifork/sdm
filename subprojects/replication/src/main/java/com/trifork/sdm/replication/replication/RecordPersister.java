@@ -6,8 +6,8 @@ import java.net.URL;
 import com.trifork.stamdata.Record;
 
 
-
-public interface RecordPersister {
+public interface RecordPersister
+{
 
 	URL persist(InputStream inputStream, Class<? extends Record> entitySet) throws Exception;
 }

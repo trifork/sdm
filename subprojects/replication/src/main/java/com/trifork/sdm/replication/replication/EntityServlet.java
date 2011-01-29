@@ -1,12 +1,10 @@
 package com.trifork.sdm.replication.replication;
 
-
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static java.net.HttpURLConnection.*;
 import static org.slf4j.LoggerFactory.*;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Date;
 
 import javax.inject.*;
@@ -46,7 +44,7 @@ public class EntityServlet extends HttpServlet
 		// We do not have to validate the request parameters here. That is the
 		// gateway's responsibility. The integrity of the URL is checked before,
 		// we get this far.
-		
+
 		try
 		{
 			OutputStream outputStream = response.getOutputStream();

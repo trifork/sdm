@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.db;
 
-
 import static com.google.inject.matcher.Matchers.*;
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static com.trifork.sdm.replication.db.properties.Transactions.*;
@@ -9,11 +8,10 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.configuration.*;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Key;
+import com.google.inject.*;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
@@ -28,25 +26,13 @@ public class DatabaseModule extends AbstractModule
 
 		try
 		{
-			PropertiesConfiguration properties = new PropertiesConfiguration("config.properties"); 
-			
+			PropertiesConfiguration properties = new PropertiesConfiguration("config.properties");
+
 			// Make it easy to do transactions.
 
-			bindTransactionManager(transaction(WAREHOUSE),
-				properties.getString("db.warehouse.username"),
-				properties.getString("db.warehouse.password"),
-				properties.getString("db.warehouse.host"),
-				properties.getInt("db.warehouse.port"),
-				properties.getString("db.warehouse.schema")
-			);
-			
-			bindTransactionManager(transaction(ADMINISTRATION),
-				properties.getString("db.administration.username"),
-				properties.getString("db.administration.password"),
-				properties.getString("db.administration.host"),
-				properties.getInt("db.administration.port"),
-				properties.getString("db.administration.schema")
-			);
+			bindTransactionManager(transaction(WAREHOUSE), properties.getString("db.warehouse.username"), properties.getString("db.warehouse.password"), properties.getString("db.warehouse.host"), properties.getInt("db.warehouse.port"), properties.getString("db.warehouse.schema"));
+
+			bindTransactionManager(transaction(ADMINISTRATION), properties.getString("db.administration.username"), properties.getString("db.administration.password"), properties.getString("db.administration.host"), properties.getInt("db.administration.port"), properties.getString("db.administration.schema"));
 		}
 		catch (ConfigurationException e)
 		{

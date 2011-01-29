@@ -1,8 +1,6 @@
 package org.dbunit.dataset.yaml;
 
-
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 import org.dbunit.dataset.*;
@@ -12,7 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 
 public class YamlDataSet implements IDataSet
 {
-	private Map<String, MyTable> tables = new HashMap<String, MyTable>();
+	private final Map<String, MyTable> tables = new HashMap<String, MyTable>();
 
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -26,7 +24,6 @@ public class YamlDataSet implements IDataSet
 			createTable(tableName, rows);
 		}
 	}
-
 
 	@SuppressWarnings("rawtypes")
 	public class MyTable implements ITable
@@ -52,7 +49,9 @@ public class YamlDataSet implements IDataSet
 			{
 				columns = new Column[columnNames.size()];
 				for (int i = 0; i < columnNames.size(); i++)
+				{
 					columns[i] = new Column(columnNames.get(i), DataType.UNKNOWN);
+				}
 			}
 			return new DefaultTableMetaData(name, columns);
 		}
@@ -75,7 +74,10 @@ public class YamlDataSet implements IDataSet
 		@Override
 		public Object getValue(int row, String column) throws DataSetException
 		{
-			if (data.size() <= row) throw new RowOutOfBoundsException("" + row);
+			if (data.size() <= row)
+			{
+				throw new RowOutOfBoundsException("" + row);
+			}
 			return data.get(row).get(column.toUpperCase());
 		}
 
@@ -106,7 +108,9 @@ public class YamlDataSet implements IDataSet
 	{
 		MyTable table = new MyTable(name, rows.size() > 0 ? new ArrayList(rows.get(0).keySet()) : null);
 		for (Map values : rows)
+		{
 			table.addRow(values);
+		}
 		tables.put(name, table);
 		return table;
 	}

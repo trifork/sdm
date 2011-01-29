@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.gateway;
 
-
 import static dk.sosi.seal.model.AuthenticationLevel.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;
 import static dk.sosi.seal.model.constants.FaultCodeValues.*;
@@ -11,10 +10,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 
+import com.google.inject.Inject;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.gateway.properties.DefaultPageSize;
 import com.trifork.sdm.replication.util.URLFactory;
@@ -84,7 +82,7 @@ public class SoapProcessor implements RequestProcessor
 			GatewayRequest params = GatewayRequest.deserialize(request.getBody());
 
 			// Set the default if not present.
-			
+
 			if (params.pageSize == null)
 			{
 				params.pageSize = defaultPageSize;
@@ -117,7 +115,7 @@ public class SoapProcessor implements RequestProcessor
 				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
 			}
 			else
-			{				
+			{
 				// Construct the URL and return it in SOAP.
 
 				String resourceURL = urlFactory.create(params.getEntityType(), params.pageSize, params.historyId, params.format);
@@ -155,7 +153,8 @@ public class SoapProcessor implements RequestProcessor
 	{
 		Reply error = null;
 
-		// TODO: Change faultcode (not medcom:faultcode) to Client (instead of Server),
+		// TODO: Change faultcode (not medcom:faultcode) to Client (instead of
+		// Server),
 		// on all these messages, and log them.
 
 		if (soapBody.entity == null || soapBody.entity.isEmpty())

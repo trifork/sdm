@@ -1,10 +1,8 @@
 package com.trifork.sdm.replication.gateway;
 
-
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.inject.*;
 import javax.servlet.ServletException;
@@ -39,14 +37,14 @@ public class GatewayServlet extends HttpServlet
 		String method = httpRequest.getMethod();
 
 		// Get the client's CVR (This is produced by the STS filter.)
-		
+
 		String clientCVR = httpRequest.getAttribute(USER_CPR).toString();
-		
+
 		// Process it.
 
 		RequestProcessor processor = processorProvider.get();
 
-		processor.process(content, clientCVR,  method);
+		processor.process(content, clientCVR, method);
 
 		// Return the result.
 

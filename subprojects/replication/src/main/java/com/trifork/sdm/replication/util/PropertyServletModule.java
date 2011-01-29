@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.util;
 
-
 import java.util.Properties;
 
 import com.google.inject.servlet.ServletModule;
@@ -8,7 +7,7 @@ import com.google.inject.servlet.ServletModule;
 
 public abstract class PropertyServletModule extends ServletModule
 {
-	private PropertyHelper properties = new PropertyHelper();
+	private final PropertyHelper properties = new PropertyHelper();
 
 
 	protected String property(String key)

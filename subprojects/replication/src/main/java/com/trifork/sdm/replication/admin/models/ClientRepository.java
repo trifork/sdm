@@ -1,20 +1,14 @@
 package com.trifork.sdm.replication.admin.models;
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static com.trifork.sdm.replication.db.properties.Database.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
-import javax.inject.Inject;
-
-import com.google.inject.Provider;
+import com.google.inject.*;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.properties.Transactional;
+
 
 public class ClientRepository
 {
@@ -32,10 +26,11 @@ public class ClientRepository
 		stm.setObject(1, id);
 		ResultSet result = stm.executeQuery();
 
-		if (result.next()) {
+		if (result.next())
+		{
 			client = serialize(result);
 		}
-		
+
 		stm.close();
 
 		return client;
@@ -55,7 +50,7 @@ public class ClientRepository
 		{
 			client = serialize(result);
 		}
-			
+
 		return client;
 	}
 
@@ -83,10 +78,12 @@ public class ClientRepository
 		stm.setString(1, name);
 		stm.setString(2, certificateId);
 
-		if (stm.executeUpdate() != 0) {
+		if (stm.executeUpdate() != 0)
+		{
 			ResultSet resultSet = stm.getGeneratedKeys();
 
-			if (resultSet != null && resultSet.next()) {
+			if (resultSet != null && resultSet.next())
+			{
 				String id = resultSet.getString(1);
 
 				client = new Client(id, name, certificateId);

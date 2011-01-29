@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.db.properties;
 
-
 public class Transactions
 {
 	public Transactions()
