@@ -3,11 +3,14 @@ package com.trifork.sdm.replication.admin.security;
 import javax.inject.Singleton;
 
 import com.google.inject.Provides;
+import com.google.inject.servlet.RequestScoped;
 import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.util.PropertyServletModule;
 import com.trifork.xmlquery.Namespaces;
 
+import dk.itst.oiosaml.sp.UserAssertion;
+import dk.itst.oiosaml.sp.UserAssertionHolder;
 import dk.itst.oiosaml.sp.service.DispatcherServlet;
 import dk.itst.oiosaml.sp.service.SPFilter;
 
@@ -24,30 +27,38 @@ public class SamlModule extends PropertyServletModule
 
 		bind(SamlFilter.class).in(Singleton.class);
 		filter("admin", "/admin/*").through(SamlFilter.class);
-	}
 
+		// Bind the RID 2 CPR helper to get the users' CPR
+		// from a remote service.
 
-	@Provides
-	@Singleton
-	protected RID2CPRFacade providerRidHelper()
-	{
-		String endpoint = property("replication.rid2cpr.endpoint");
-		String keystore = property("replication.rid2cpr.keystore");
-		String password = property("replication.rid2cpr.keystorePassword");
+		String endpoint = property("rid2cpr.endpoint");
+		String keystore = property("rid2cpr.keystore");
+		String password = property("rid2cpr.keystorePassword");
 
-		CachingRID2CPRFacadeImpl ridHelper = new CachingRID2CPRFacadeImpl();
+		CachingRID2CPRFacadeImpl ridService = new CachingRID2CPRFacadeImpl();
 
 		// FIXME: Figure out what these namespaces should be.
 		// Setting the defaults is deprecated, supposedly insecure!
-		ridHelper.setNamespaces(Namespaces.getOIONamespaces());
+		ridService.setNamespaces(Namespaces.getOIONamespaces());
+		ridService.setEndpoint(endpoint);
+		ridService.setKeystore(keystore);
+		ridService.setKeystorePassword(password);
+		ridService.setReadTimeout(60000); // TODO: What excatly is this number?
 
-		ridHelper.setEndpoint(endpoint);
-		ridHelper.setKeystore(keystore);
-		ridHelper.setKeystorePassword(password);
-		ridHelper.setReadTimeout(60000); // TODO: What excatly is this number?
+		ridService.init();
 
-		ridHelper.init();
+		bind(RID2CPRFacade.class).toInstance(ridService);
+	}
 
-		return ridHelper;
+
+	/**
+	 * This provider's only purpose is to wrap the UserAssertionHolder class, to
+	 * make it easier (read not insanely difficult) to test SAML.
+	 */
+	@Provides
+	@RequestScoped
+	public UserAssertion providerUserAssertion()
+	{
+		return UserAssertionHolder.get();
 	}
 }

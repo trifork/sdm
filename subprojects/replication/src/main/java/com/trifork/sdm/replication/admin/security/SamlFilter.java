@@ -1,6 +1,5 @@
 package com.trifork.sdm.replication.admin.security;
 
-
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 import static org.slf4j.LoggerFactory.*;
 
@@ -14,7 +13,6 @@ import org.slf4j.Logger;
 import com.google.inject.Singleton;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
-import com.trifork.sdm.replication.saml.SingleSignonHelper;
 
 import dk.itst.oiosaml.sp.UserAssertion;
 
@@ -31,7 +29,7 @@ public class SamlFilter implements Filter
 	private RID2CPRFacade ridHelper;
 
 	@Inject
-	private SingleSignonHelper singleSignonHelper;
+	private Provider<UserAssertion> userAssertionProvider;
 
 	@Inject
 	private IUserRepository userRepository;
@@ -42,7 +40,7 @@ public class SamlFilter implements Filter
 	{
 		try
 		{
-			UserAssertion user = singleSignonHelper.getUser();
+			UserAssertion user = userAssertionProvider.get();
 
 			// Look up the user's CPR by converting the
 			// rID (user id) via a remote webservice.
