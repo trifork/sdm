@@ -14,18 +14,26 @@ import com.trifork.sdm.replication.db.properties.Transactional;
 
 public class StatusServlet extends HttpServlet
 {
-	@Inject
 	@Transactional(WAREHOUSE)
 	private Provider<Connection> warehouseConnection;
 
-	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> adminConnection;
+
+
+	@Inject
+	public StatusServlet(@Transactional(ADMINISTRATION) Provider<Connection> adminConnection, @Transactional(WAREHOUSE) Provider<Connection> warehouseConnection)
+	{
+		this.adminConnection = adminConnection;
+		this.warehouseConnection = warehouseConnection;
+	}
 
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		int statusCode = 200;
+		
 		try
 		{
 			checkWarehouseConnection();
@@ -33,7 +41,7 @@ public class StatusServlet extends HttpServlet
 		catch (SQLException e)
 		{
 			resp.getOutputStream().println("ERROR: Could not connect to the data warehouse database.");
-			resp.setStatus(500);
+			statusCode = 500;
 		}
 
 		try
@@ -43,8 +51,10 @@ public class StatusServlet extends HttpServlet
 		catch (SQLException e)
 		{
 			resp.getOutputStream().println("ERROR: Could not connect to the administration database.");
-			resp.setStatus(500);
+			statusCode = 500;
 		}
+		
+		resp.setStatus(statusCode);
 	}
 
 
@@ -54,7 +64,7 @@ public class StatusServlet extends HttpServlet
 		Connection conn = warehouseConnection.get();
 		Statement stm = conn.createStatement();
 
-		stm.execute("SELECT 1");
+		stm.executeQuery("SELECT 1");
 
 		stm.close();
 
@@ -68,7 +78,7 @@ public class StatusServlet extends HttpServlet
 		Connection conn = adminConnection.get();
 		Statement stm = conn.createStatement();
 
-		stm.execute("SELECT 1");
+		stm.executeQuery("SELECT 1");
 
 		stm.close();
 

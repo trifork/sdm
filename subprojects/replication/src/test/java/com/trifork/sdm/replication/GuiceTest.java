@@ -2,6 +2,8 @@ package com.trifork.sdm.replication;
 
 import static com.google.inject.util.Modules.*;
 
+import org.junit.After;
+
 import com.google.inject.*;
 
 
@@ -21,11 +23,11 @@ public abstract class GuiceTest extends AbstractModule
 	 * This is left static since JUnit is quite *special* when it comes to how
 	 * it wants to initialize its tests.
 	 */
-	private static Injector injector;
+	private final Injector injector;
 
 
 	protected GuiceTest()
-	{
+	{		
 		Module production = new ProductionModule();
 		Module test = override(production).with(this);
 
@@ -40,7 +42,7 @@ public abstract class GuiceTest extends AbstractModule
 	@Override
 	protected void configure()
 	{
-		// Noop
+		// No action by default.
 	}
 
 
