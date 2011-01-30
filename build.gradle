@@ -71,5 +71,5 @@ subprojects {
 	
 	// Test coverage.
 	
-	apply from: rootProject.file("config/cobertura.groovy")
+	apply from:'https://github.com/breskeby/gradleplugins/raw/master/emmaPlugin/emmaFull.gradle'
 }
