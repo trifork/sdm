@@ -5,5 +5,5 @@ build
 bin
 /.gradle
 *.ser
-config.properties
+**/config.properties
 .DS_Store
