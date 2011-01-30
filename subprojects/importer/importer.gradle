@@ -26,6 +26,7 @@ dependencies {
 	// LOGGING
 	
 	compile libs.slf4j_api
+	compile libs.log4j_over_slf4j
 	runtime libs.logback_core
 	runtime libs.logback_classic
 }
