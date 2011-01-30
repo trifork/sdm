@@ -98,7 +98,7 @@ public class UserController extends AbstractController
 
 					String userCPR = getUserCPR(request);
 
-					LOG.create("Ny administrator tilføjet '%s'. Oprettet af '%s'.", newUserName, userCPR);
+					LOG.create("Ny administrator tilf√∏jet '%s'. Oprettet af '%s'.", newUserName, userCPR);
 				}
 			}
 
