@@ -45,7 +45,7 @@ public class SamlFilter implements Filter
 			// rID (user id) via a remote webservice.
 			// The results are cached.
 
-			String userID = user.getUserId();
+			String userID = user.getRIDNumber();
 			String userCPR = ridHelper.getCPR(userID);
 			String userCVR = user.getCPRNumber();
 
@@ -53,7 +53,7 @@ public class SamlFilter implements Filter
 
 			if (userRepository.isAdmin(userCPR, userCVR))
 			{
-				LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID={}.", userCPR, userID);
+				LOG.info("User CPR='{}' accessing the admin GUI. Converted from rID='{}'.", userCPR, userID);
 
 				request.setAttribute(USER_CPR, userCPR);
 

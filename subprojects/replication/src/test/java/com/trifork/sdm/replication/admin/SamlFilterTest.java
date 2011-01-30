@@ -1,15 +1,16 @@
-package com.trifork.sdm.replication.saml;
+package com.trifork.sdm.replication.admin;
 
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static org.apache.commons.lang.RandomStringUtils.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import javax.servlet.FilterChain;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.junit.*;
-import org.mockito.Matchers;
 
-import com.google.inject.*;
+import com.google.inject.Provides;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.admin.models.IUserRepository;
@@ -20,8 +21,6 @@ import dk.itst.oiosaml.sp.UserAssertion;
 
 public class SamlFilterTest extends GuiceTest
 {
-	private static Injector injector;
-
 	private IUserRepository userRepository;
 
 	private String userRID;
@@ -34,7 +33,6 @@ public class SamlFilterTest extends GuiceTest
 	private HttpServletResponse response;
 
 	private RID2CPRFacade ridService;
-	private Provider<UserAssertion> userAssertionProvider;
 
 
 	@Override
@@ -48,7 +46,7 @@ public class SamlFilterTest extends GuiceTest
 	@Before
 	public void setUp()
 	{
-		filter = injector.getInstance(SamlFilter.class);
+		filter = getInjector().getInstance(SamlFilter.class);
 
 		request = mock(HttpServletRequest.class);
 		response = mock(HttpServletResponse.class);
@@ -58,9 +56,11 @@ public class SamlFilterTest extends GuiceTest
 		// we do not reset its behavior after each run. It does not
 		// break the test, but it could in the future.
 
-		ridService = injector.getInstance(RID2CPRFacade.class);
-		userRepository = injector.getInstance(IUserRepository.class);
-		userAssertionProvider = injector.getProvider(UserAssertion.class);
+		ridService = getInjector().getInstance(RID2CPRFacade.class);
+		userRepository = getInjector().getInstance(IUserRepository.class);
+
+		userRID = randomNumeric(20);
+		userCPR = randomNumeric(10);
 	}
 
 
@@ -92,8 +92,8 @@ public class SamlFilterTest extends GuiceTest
 
 	protected void assertAccessDenied() throws Exception
 	{
-		verify(request, times(0)).setAttribute(USER_CPR, Matchers.anyString());
-		verify(filterChain, times(0)).doFilter(request, response);
+		verify(request, times(0)).setAttribute(eq(USER_CPR), anyString());
+		verify(filterChain, times(0)).doFilter(any(ServletRequest.class), any(ServletResponse.class));
 	}
 
 
@@ -110,19 +110,21 @@ public class SamlFilterTest extends GuiceTest
 
 	protected void doFilter() throws Exception
 	{
+		when(ridService.getCPR(userRID)).thenReturn(userCPR);
+
 		filter.doFilter(request, response, filterChain);
 	}
 
 
 	protected void denyAccess() throws Exception
 	{
-		when(userRepository.isAdmin(Matchers.anyString(), Matchers.anyString())).thenReturn(false);
+		when(userRepository.isAdmin(anyString(), anyString())).thenReturn(false);
 	}
 
 
 	protected void allowAccess() throws Exception
 	{
-		when(userRepository.isAdmin(Matchers.anyString(), Matchers.anyString())).thenReturn(true);
+		when(userRepository.isAdmin(anyString(), anyString())).thenReturn(true);
 	}
 
 
@@ -139,8 +141,6 @@ public class SamlFilterTest extends GuiceTest
 		UserAssertion userAssertion = mock(UserAssertion.class);
 
 		when(userAssertion.getRIDNumber()).thenReturn(userRID);
-		when(userAssertionProvider.get()).thenReturn(userAssertion);
-		when(ridService.getCPR(userRID)).thenReturn(userCPR);
 
 		return userAssertion;
 	}

@@ -12,7 +12,7 @@ import javax.servlet.http.*;
 
 import com.google.inject.*;
 import com.trifork.sdm.replication.admin.models.*;
-import com.trifork.sdm.replication.admin.properties.Whitelist;
+import com.trifork.sdm.replication.admin.security.WhitelistModule.Whitelist;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 import freemarker.template.*;

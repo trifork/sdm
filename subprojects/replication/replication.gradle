@@ -31,9 +31,11 @@ dependencies {
 	
 	// SAML
 	
-	compile('dk.itst.oiosaml:oiosaml.java:5987') {
-		runtime libs.velocity
-		runtime "org.apache.santuario:xmlsec:1.4.3@jar"
+	compile module('dk.itst.oiosaml:oiosaml.java:5987') {
+		dependency libs.velocity
+		dependency 'opensaml:opensaml:2.2.0'
+		dependency 'opensaml:xmltooling:1.1.0'
+		dependency 'opensaml:openws:1.2.0'
 	}
 	
 	compile('com.trifork:rid2cprclient:1.2') {

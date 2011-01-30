@@ -1,7 +1,7 @@
 package com.trifork.sdm.replication.admin;
 
 import com.trifork.sdm.replication.admin.controllers.*;
-import com.trifork.sdm.replication.admin.security.SamlModule;
+import com.trifork.sdm.replication.admin.security.WhitelistModule;
 import com.trifork.sdm.replication.admin.views.TemplateModule;
 import com.trifork.sdm.replication.util.PropertyServletModule;
 
@@ -27,6 +27,6 @@ public class AdminstrationModule extends PropertyServletModule
 		// Filter users through SAML, redirecting then to login
 		// if needed.
 
-		install(new SamlModule());
+		// TODO: install(new SamlModule());
 	}
 }

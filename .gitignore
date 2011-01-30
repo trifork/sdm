@@ -1,9 +1,9 @@
-.pmd
 .project
 .settings
 .classpath
 build
 bin
-.gradle
-.properties
-.ser
+/.gradle
+*.ser
+config.properties
+.DS_Store

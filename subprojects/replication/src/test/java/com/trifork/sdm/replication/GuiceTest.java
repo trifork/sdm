@@ -7,7 +7,7 @@ import com.google.inject.*;
 
 public abstract class GuiceTest extends AbstractModule
 {
-	private final Injector injector;
+	private static Injector injector;
 
 
 	protected GuiceTest()

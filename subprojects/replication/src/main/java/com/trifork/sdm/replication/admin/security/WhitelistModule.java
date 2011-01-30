@@ -1,13 +1,14 @@
-package com.trifork.sdm.replication.admin;
+package com.trifork.sdm.replication.admin.security;
 
+import static java.lang.annotation.ElementType.*;
 import static org.slf4j.LoggerFactory.*;
 
+import java.lang.annotation.*;
 import java.util.*;
 
 import org.slf4j.Logger;
 
 import com.google.inject.*;
-import com.trifork.sdm.replication.admin.properties.Whitelist;
 
 
 public class WhitelistModule extends AbstractModule
@@ -22,7 +23,6 @@ public class WhitelistModule extends AbstractModule
 	}
 
 
-	@Inject
 	@Provides
 	@Whitelist
 	@Singleton
@@ -54,5 +54,12 @@ public class WhitelistModule extends AbstractModule
 		}
 
 		return whitelist;
+	}
+
+	@BindingAnnotation
+	@Target({ FIELD, PARAMETER, METHOD })
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Whitelist
+	{
 	}
 }

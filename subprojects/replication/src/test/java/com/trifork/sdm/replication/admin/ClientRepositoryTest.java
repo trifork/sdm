@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Test;
 
 import com.trifork.sdm.replication.admin.models.Client;
@@ -20,8 +21,6 @@ public class ClientRepositoryTest extends RepositoryTest
 	@Test
 	public void cannot_find_client_with_unknown_id() throws Exception
 	{
-		// Arrange
-
 		// Act
 		Client client = clientRepository.find("IllegalId");
 
@@ -49,7 +48,7 @@ public class ClientRepositoryTest extends RepositoryTest
 	{
 		// Arrange
 
-		String certificateId = "" + System.currentTimeMillis();
+		String certificateId = RandomStringUtils.randomAlphabetic(10);
 		clientRepository.create(clientName, certificateId);
 
 		// Act

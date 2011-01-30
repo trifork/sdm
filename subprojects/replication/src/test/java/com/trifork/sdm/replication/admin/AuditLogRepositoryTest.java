@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.List;
@@ -14,26 +15,22 @@ public class AuditLogRepositoryTest extends RepositoryTest
 	@Test
 	public void can_create_audit_log() throws Exception
 	{
-		// Arrange
-
 		// Act
-		boolean created = auditLogRepository.create("This is a %s statement", "log");
+		boolean isCreated = auditLogRepository.create("This is a %s statement", "log");
 
 		// Assert
-		assertTrue(created);
+		assertThat(isCreated, is(true));
 	}
 
 
 	@Test
 	public void unsuccessfull_when_trying_to_log_empty_message() throws Exception
 	{
-		// Arrange
-
 		// Act
-		boolean created = auditLogRepository.create("%s", "");
+		boolean isCreated = auditLogRepository.create("%s", "");
 
 		// Assert
-		assertFalse(created);
+		assertThat(isCreated, is(false));
 	}
 
 

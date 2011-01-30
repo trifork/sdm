@@ -31,7 +31,7 @@ public class XMLEntityWriter implements EntityWriter
 {
 	private static final boolean USE_ZULU_TIME = true;
 	private final URLFactory urlFactory;
-	
+
 	private final Provider<Connection> connectionProvider;
 
 

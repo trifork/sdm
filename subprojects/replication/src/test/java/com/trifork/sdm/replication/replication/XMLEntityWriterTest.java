@@ -27,7 +27,8 @@ public class XMLEntityWriterTest extends GuiceTest
 	{
 		// Arrange
 
-		// XMLEntityWriter xmlEntityWriter = new XMLEntityWriter(provider, urlFactory);
+		// XMLEntityWriter xmlEntityWriter = new XMLEntityWriter(provider,
+		// urlFactory);
 
 		// Act
 		// xmlEntityWriter.write(outputStream, resourceType, OutputFormat.XML,

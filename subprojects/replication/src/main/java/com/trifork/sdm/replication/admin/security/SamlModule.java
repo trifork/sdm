@@ -14,14 +14,14 @@ public class SamlModule extends PropertyServletModule
 	@Override
 	protected void configureServlets()
 	{
-		bind(DispatcherServlet.class).in(Singleton.class);
-		serve("/saml/*").with(DispatcherServlet.class);
-
 		bind(SPFilter.class).in(Singleton.class);
 		filter("/admin", "/admin/*").through(SPFilter.class);
 
 		bind(SamlFilter.class).in(Singleton.class);
-		filter("admin", "/admin/*").through(SamlFilter.class);
+		filter("/admin", "/admin/*").through(SamlFilter.class);
+
+		bind(DispatcherServlet.class).in(Singleton.class);
+		serve("/saml/*").with(DispatcherServlet.class);
 
 		// Bind the RID 2 CPR helper to get the users' CPR
 		// from a remote service.
@@ -35,7 +35,7 @@ public class SamlModule extends PropertyServletModule
 		ridService.setKeystorePassword(property("rid2cpr.keystorePassword"));
 
 		int timeout = Integer.parseInt(property("rid2cpr.callTimeout"));
-		ridService.setReadTimeout(timeout);
+		ridService.setReadTimeout(timeout * 1000);
 
 		ridService.init();
 
