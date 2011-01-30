@@ -10,7 +10,6 @@ import javax.servlet.http.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.*;
 
-import com.google.inject.Injector;
 import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.util.SignatureFactory;
 
@@ -19,8 +18,6 @@ public class ResourceFilterTest extends GuiceTest
 {
 	private static final int MILLIS_TO_SECS = 1000;
 	private static final int TIME_TO_LIVE = 100;
-
-	private static Injector injector;
 
 	private ReplicationFilter filter;
 
@@ -50,7 +47,7 @@ public class ResourceFilterTest extends GuiceTest
 	@Before
 	public void setUp()
 	{
-		filter = injector.getInstance(ReplicationFilter.class);
+		filter = getInjector().getInstance(ReplicationFilter.class);
 
 		// The filter chain is used to tell us if the filter continued or
 		// returned.

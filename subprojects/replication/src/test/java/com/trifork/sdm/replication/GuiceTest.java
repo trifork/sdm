@@ -12,8 +12,8 @@ import com.google.inject.*;
  * test classes.
  * 
  * Generally the injector should be interacted with during the set up phase.
- * This means while the {@code @Before} methods are executed. It is not available
- * in before {@code @BeforeClass} methods.
+ * This means while the {@code @Before} methods are executed. It is not
+ * available in before {@code @BeforeClass} methods.
  */
 public abstract class GuiceTest extends AbstractModule
 {
@@ -37,6 +37,7 @@ public abstract class GuiceTest extends AbstractModule
 	 * This method is designed to be implemented by subclasses when they need
 	 * special dependencies overridden in the DI graph.
 	 */
+	@Override
 	protected void configure()
 	{
 		// Noop

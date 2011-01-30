@@ -1,8 +1,6 @@
 apply plugin: 'war'
 apply plugin: 'jetty'
 
-// def dbDir = new File(rootProject.projectDir, 'db')
-
 dependencies {
 	
 	compile project(':shared')
@@ -27,7 +25,15 @@ dependencies {
 	
 	// STS
 	
-	compile 'dk.sosi:seal:1.5.13'
+	// The SEAL component has not been properly packed with a pom
+	// or ivy file and thus we have to declare the dependencies ourselves.
+	
+	compile('dk.sosi:seal:1.5.13') {
+		runtime 'xml-security:xmlsec:1.3.0'
+		runtime('xalan:xalan:2.7.1') {
+			runtime 'xerces:xercesImpl:2.9.1'
+		}
+	}
 	
 	// SAML
 	

@@ -21,7 +21,7 @@ import org.hamcrest.Matcher;
 import org.junit.*;
 import org.w3c.dom.Element;
 
-import com.google.inject.*;
+import com.google.inject.Key;
 import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.gateway.properties.*;
@@ -32,8 +32,6 @@ import dk.sosi.seal.model.*;
 
 public class RequestProcessorTest extends GuiceTest
 {
-	protected static Injector injector;
-
 	private static final int SOAP_OK_STATUS = 200;
 	private static final int SOAP_FAULT_STATUS = 500;
 
@@ -62,22 +60,17 @@ public class RequestProcessorTest extends GuiceTest
 	}
 
 
-	@BeforeClass
-	public static void init()
-	{
-		factory = injector.getInstance(SOSIFactory.class);
-		idCard = injector.getInstance(IDCard.class);
-	}
-
-
 	@Before
 	public void setUp() throws Exception
 	{
 		// Get the unit under test.
 
-		processor = injector.getInstance(Key.get(RequestProcessor.class, SOAP.class));
+		processor = getInjector().getInstance(Key.get(RequestProcessor.class, SOAP.class));
 
 		// Create a new request.
+
+		factory = getInjector().getInstance(SOSIFactory.class);
+		idCard = getInjector().getInstance(IDCard.class);
 
 		request = factory.createNewRequest(false, null);
 		request.setIDCard(idCard);
@@ -235,7 +228,7 @@ public class RequestProcessorTest extends GuiceTest
 
 		sendRequest();
 
-		int pageSize = injector.getInstance(Key.get(int.class, DefaultPageSize.class));
+		int pageSize = getInjector().getInstance(Key.get(int.class, DefaultPageSize.class));
 
 		assertIntegerParam(PAGE_SIZE, is(pageSize));
 	}
@@ -246,7 +239,7 @@ public class RequestProcessorTest extends GuiceTest
 	{
 		sendRequest();
 
-		int ttl = injector.getInstance(Key.get(int.class, TTL.class));
+		int ttl = getInjector().getInstance(Key.get(int.class, TTL.class));
 
 		long expectedExpires = System.currentTimeMillis() / 1000 + ttl;
 		long errorMargin = 1;
@@ -428,14 +421,14 @@ public class RequestProcessorTest extends GuiceTest
 
 	private void authorizeAccessToEntity(String userCVR, String entityID) throws Exception
 	{
-		PermissionRepository repo = injector.getInstance(PermissionRepository.class);
+		PermissionRepository repo = getInjector().getInstance(PermissionRepository.class);
 		when(repo.canAccessEntity(userCVR, entityID)).thenReturn(true);
 	}
 
 
 	private void deauthorizeAccessToEntity(String userCVR, String entityID) throws Exception
 	{
-		PermissionRepository repo = injector.getInstance(PermissionRepository.class);
+		PermissionRepository repo = getInjector().getInstance(PermissionRepository.class);
 		when(repo.canAccessEntity(userCVR, entityID)).thenReturn(false);
 	}
 }
