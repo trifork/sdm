@@ -5,21 +5,32 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.sdm.replication.admin.models.User;
+import com.trifork.sdm.replication.GuiceTest;
+import com.trifork.sdm.replication.admin.models.*;
 
 
-public class UserRepositoryTest extends RepositoryTest
+public class UserRepositoryTest extends GuiceTest
 {
+	private UserRepository repository;
+
+
+	@Before
+	public void setUp()
+	{
+		repository = getInjector().getInstance(UserRepository.class);
+	}
+
+
 	@Test
 	public void can_find_user_by_id() throws Exception
 	{
 		// Arrange
-		User user = userRepository.create("name", "cpr", "cvr");
+		User user = repository.create("name", "cpr", "cvr");
 
 		// Act
-		User foundUser = userRepository.find(user.getId());
+		User foundUser = repository.find(user.getId());
 
 		// Assert
 		assertUser(user, foundUser);
@@ -30,13 +41,14 @@ public class UserRepositoryTest extends RepositoryTest
 	public void can_find_all_users() throws Exception
 	{
 		// Arrange
-		userRepository.create("name1", "cpr1", "cvr1");
-		userRepository.create("name2", "cpr2", "cvr2");
+		repository.create("name1", "cpr1", "cvr1");
+		repository.create("name2", "cpr2", "cvr2");
 
 		// Act
-		List<User> allUsers = userRepository.findAll();
+		List<User> allUsers = repository.findAll();
 
 		// Assert
+		// TODO: This should say == 2 once we have fixed the in memory db.
 		assertTrue(allUsers.size() > 1);
 	}
 
@@ -45,13 +57,13 @@ public class UserRepositoryTest extends RepositoryTest
 	public void can_delete_user() throws Exception
 	{
 		// Arrange
-		User user = userRepository.create("name", "cpr", "cvr");
+		User user = repository.create("name", "cpr", "cvr");
 
 		// Act
-		userRepository.destroy(user.getId());
+		repository.destroy(user.getId());
 
 		// Assert
-		assertNull(userRepository.find(user.getId()));
+		assertNull(repository.find(user.getId()));
 	}
 
 

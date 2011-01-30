@@ -6,23 +6,31 @@ import static org.junit.Assert.*;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.sdm.replication.admin.models.Client;
+import com.trifork.sdm.replication.GuiceTest;
+import com.trifork.sdm.replication.admin.models.*;
 
 
-public class ClientRepositoryTest extends RepositoryTest
+public class ClientRepositoryTest extends GuiceTest
 {
-	// Test data.
-
 	private final String clientName = "TestClient";
+
+	private ClientRepository repository;
+
+
+	@Before
+	public void setUp()
+	{
+		repository = getInjector().getInstance(ClientRepository.class);
+	}
 
 
 	@Test
 	public void cannot_find_client_with_unknown_id() throws Exception
 	{
 		// Act
-		Client client = clientRepository.find("IllegalId");
+		Client client = repository.find("IllegalId");
 
 		// Assert
 		assertNull(client);
@@ -33,10 +41,10 @@ public class ClientRepositoryTest extends RepositoryTest
 	public void can_find_client_by_id() throws Exception
 	{
 		// Arrange
-		Client client = clientRepository.create("name", "certificateId");
+		Client client = repository.create("name", "certificateId");
 
 		// Act
-		Client fetchedClient = clientRepository.find(client.getId());
+		Client fetchedClient = repository.find(client.getId());
 
 		// Assert
 		assertThat(fetchedClient.getId(), equalTo(client.getId()));
@@ -49,11 +57,11 @@ public class ClientRepositoryTest extends RepositoryTest
 		// Arrange
 
 		String certificateId = RandomStringUtils.randomAlphabetic(10);
-		clientRepository.create(clientName, certificateId);
+		repository.create(clientName, certificateId);
 
 		// Act
 
-		Client client = clientRepository.findByCertificateId(certificateId);
+		Client client = repository.findByCertificateId(certificateId);
 
 		// Assert
 
@@ -71,7 +79,7 @@ public class ClientRepositoryTest extends RepositoryTest
 
 		// Act
 
-		Client client = clientRepository.findByCertificateId(clientName);
+		Client client = repository.findByCertificateId(clientName);
 
 		// Assert
 
@@ -83,13 +91,13 @@ public class ClientRepositoryTest extends RepositoryTest
 	public void can_delete_client() throws Exception
 	{
 		// Arrange
-		Client client = clientRepository.create("name", "certificateId");
+		Client client = repository.create("name", "certificateId");
 
 		// Act
-		clientRepository.destroy(client.getId());
+		repository.destroy(client.getId());
 
 		// Assert
-		Client deletedClient = clientRepository.find(client.getId());
+		Client deletedClient = repository.find(client.getId());
 		assertNull(deletedClient);
 	}
 
@@ -98,11 +106,11 @@ public class ClientRepositoryTest extends RepositoryTest
 	public void can_find_all_clients() throws Exception
 	{
 		// Arrange
-		clientRepository.create("name1", "certificateId");
-		clientRepository.create("name2", "certificateId");
+		repository.create("name1", "certificateId");
+		repository.create("name2", "certificateId");
 
 		// Act
-		List<Client> result = clientRepository.findAll();
+		List<Client> result = repository.findAll();
 
 		// Assert
 		assertTrue(result.size() > 1);

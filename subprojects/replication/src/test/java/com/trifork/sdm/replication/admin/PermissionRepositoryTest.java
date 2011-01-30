@@ -5,17 +5,36 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.sdm.replication.admin.models.Client;
+import com.trifork.sdm.replication.GuiceTest;
+import com.trifork.sdm.replication.admin.models.*;
 
 
-public class PermissionRepositoryTest extends RepositoryTest
+public class PermissionRepositoryTest extends GuiceTest
 {
+	// TODO: The client repository should not be used for this test at all.
+	// This test should only be dependent on the unit under test.
+	// This could for instance be fixed by having test data loaded into the
+	// db before the tests are run.
+	// For now the two repository classes should be merged I believe, and
+	// permissions be accessed directly on the user model.
+	private ClientRepository clientRepository;
+
+	private PermissionRepository permissionRepository;
+
+
+	@Before
+	public void setUp()
+	{
+		clientRepository = getInjector().getInstance(ClientRepository.class);
+		permissionRepository = getInjector().getInstance(PermissionRepository.class);
+	}
+
+
 	@Test
 	public void can_find_permissions_by_client_id() throws Exception
 	{
-
 		// Arrange
 
 		Client client1 = clientRepository.create("TestClient1", "certificateId");

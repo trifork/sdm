@@ -5,13 +5,24 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.sdm.replication.admin.models.LogEntry;
+import com.trifork.sdm.replication.GuiceTest;
+import com.trifork.sdm.replication.admin.models.*;
 
 
-public class AuditLogRepositoryTest extends RepositoryTest
+public class AuditLogRepositoryTest extends GuiceTest
 {
+	private AuditLogRepository auditLogRepository;
+
+
+	@Before
+	public void setUp()
+	{
+		auditLogRepository = getInjector().getInstance(AuditLogRepository.class);
+	}
+
+
 	@Test
 	public void can_create_audit_log() throws Exception
 	{
@@ -24,7 +35,7 @@ public class AuditLogRepositoryTest extends RepositoryTest
 
 
 	@Test
-	public void unsuccessfull_when_trying_to_log_empty_message() throws Exception
+	public void unsuccessful_when_trying_to_log_empty_message() throws Exception
 	{
 		// Act
 		boolean isCreated = auditLogRepository.create("%s", "");
