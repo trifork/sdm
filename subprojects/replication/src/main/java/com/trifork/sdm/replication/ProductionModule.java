@@ -12,8 +12,6 @@ public class ProductionModule extends AbstractModule
 	@Override
 	protected void configure()
 	{
-		install(new ConfigurationModule());
-
 		install(new DatabaseModule());
 
 		install(new GatewayModule());

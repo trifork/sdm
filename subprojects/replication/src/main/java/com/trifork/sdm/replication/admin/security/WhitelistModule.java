@@ -9,51 +9,28 @@ import java.util.*;
 import org.slf4j.Logger;
 
 import com.google.inject.*;
+import com.trifork.sdm.replication.util.ConfiguredModule;
 
 
-public class WhitelistModule extends AbstractModule
+public class WhitelistModule extends ConfiguredModule
 {
 	private static final Logger LOG = getLogger(WhitelistModule.class);
 
 
 	@Override
-	protected void configure()
+	protected void configureServlets()
 	{
-		requireBinding(Properties.class);
-	}
+		String[] cvrNumbers = getConfig().getStringArray("whitelist");
+		Set<String> whitelist = new HashSet<String>(Arrays.asList(cvrNumbers));
 
-
-	@Provides
-	@Whitelist
-	@Singleton
-	protected Map<String, String> provideWhitelist(Properties properties)
-	{
-		final String PREFIX = "replication.whitelist.";
-
-		TreeMap<String, String> whitelist = new TreeMap<String, String>();
-
-		@SuppressWarnings("rawtypes")
-		Enumeration names = properties.propertyNames();
-
-		if (!names.hasMoreElements())
+		if (whitelist.size() == 0)
 		{
-			LOG.warn("No CVRs have been white-listed.");
+			LOG.warn("No CVR-numbers have been whitelisted. Change the configuration file.");
 		}
 
-		while (names.hasMoreElements())
+		bind(new TypeLiteral<Set<String>>()
 		{
-			String propertyName = (String) names.nextElement();
-
-			if (propertyName.startsWith(PREFIX))
-			{
-				String firmName = propertyName.substring(PREFIX.length());
-				String cvr = properties.getProperty(propertyName);
-
-				whitelist.put(firmName, cvr);
-			}
-		}
-
-		return whitelist;
+		}).annotatedWith(Whitelist.class).toInstance(whitelist);
 	}
 
 	@BindingAnnotation

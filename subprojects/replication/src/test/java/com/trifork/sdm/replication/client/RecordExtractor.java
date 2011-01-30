@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.replication;
+package com.trifork.sdm.replication.client;
 
 import java.lang.reflect.*;
 import java.sql.*;
@@ -43,7 +43,6 @@ public class RecordExtractor
 
 		for (EntityEntry entry : elements)
 		{
-
 			Object value;
 
 			if (entry.parameterType.isAssignableFrom(String.class))

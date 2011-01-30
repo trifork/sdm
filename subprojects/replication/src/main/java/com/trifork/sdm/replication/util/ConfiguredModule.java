@@ -1,19 +1,39 @@
 package com.trifork.sdm.replication.util;
 
-import org.apache.commons.configuration.Configuration;
+import java.net.URL;
 
-import com.google.inject.*;
+import org.apache.commons.configuration.*;
+
+import com.google.inject.servlet.ServletModule;
 
 
-public abstract class ConfiguredModule extends AbstractModule
+/**
+ * Superclass granting modules easy access to the app's configuration.
+ * 
+ * Loads the application's configuration file 'config.properties', and combines
+ * the properties in them with the JVM system properties. The properties file
+ * will only be loaded once.
+ */
+public abstract class ConfiguredModule extends ServletModule
 {
-	@Inject
-	protected Configuration config;
+	private static CompositeConfiguration config;
 
-
-	public ConfiguredModule()
 	{
-		requireBinding(Configuration.class);
-		requestInjection(this);
+		try
+		{
+			URL configFile = getClass().getClassLoader().getResource("config.properties");
+			config = new CompositeConfiguration(new PropertiesConfiguration(configFile));
+			config.addConfiguration(new SystemConfiguration());
+		}
+		catch (ConfigurationException e)
+		{
+			addError("Could not load configuration.", e);
+		}
+	}
+
+
+	protected Configuration getConfig()
+	{
+		return config;
 	}
 }

@@ -2,10 +2,15 @@ package com.trifork.stamdata;
 
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.persistence.*;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.*;
+
+import com.trifork.stamdata.registre.doseringsforslag.Drug;
 
 
 public class Entities
@@ -188,5 +193,47 @@ public class Entities
 	public static String getPIDName(Class<? extends Record> entitySet)
 	{
 		return getTableName(entitySet) + "PID";
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public static Set<Class<? extends Record>> all()
+	{
+		if (EntityHelper.resourceTypes == null)
+		{
+			// Find all entities and serve them as resources.
+	
+			final String INCLUDE_PACKAGE = com.trifork.stamdata.Record.class.getPackage().getName();
+	
+			// TODO: Include doseringsforslag.
+	
+			// Right now we don't have an importer for doeringsforslag
+			// so they cannot be replicated.
+	
+			final String EXCLUDE_PACKAGE = com.trifork.stamdata.registre.doseringsforslag.Drug.class.getPackage().getName();
+	
+			Reflections reflector = new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(INCLUDE_PACKAGE))
+				.filterInputsBy(new FilterBuilder()
+				.include(FilterBuilder.prefix(INCLUDE_PACKAGE))
+				.exclude(FilterBuilder.prefix(EXCLUDE_PACKAGE)))
+				.setScanners(new TypeAnnotationsScanner()));
+	
+			// Serve all entities by deferring their URLs and using their
+			// annotations.
+	
+			Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
+	
+			Set<Class<? extends Record>> resources = new HashSet<Class<? extends Record>>();
+	
+			for (Class<?> entity : entities)
+			{
+				resources.add((Class<? extends Record>) entity);
+			}
+	
+			EntityHelper.resourceTypes = resources;
+		}
+	
+		return EntityHelper.resourceTypes;
 	}
 }

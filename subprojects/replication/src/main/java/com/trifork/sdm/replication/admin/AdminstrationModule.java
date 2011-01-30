@@ -3,10 +3,10 @@ package com.trifork.sdm.replication.admin;
 import com.trifork.sdm.replication.admin.controllers.*;
 import com.trifork.sdm.replication.admin.security.WhitelistModule;
 import com.trifork.sdm.replication.admin.views.TemplateModule;
-import com.trifork.sdm.replication.util.PropertyServletModule;
+import com.trifork.sdm.replication.util.ConfiguredModule;
 
 
-public class AdminstrationModule extends PropertyServletModule
+public class AdminstrationModule extends ConfiguredModule
 {
 	@Override
 	protected void configureServlets()

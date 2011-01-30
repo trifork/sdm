@@ -1,7 +1,6 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 import static com.trifork.sdm.replication.db.properties.Database.*;
-import static java.lang.String.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,12 +27,11 @@ public class UserController extends AbstractController
 	private IUserRepository userRepository;
 
 	@Inject
-	private AuditLogRepository log;
+	private AuditLogRepository LOG;
 
-	@SuppressWarnings("rawtypes")
 	@Inject
 	@Whitelist
-	private Map whitelist;
+	private Set<String> whitelist;
 
 
 	@Override
@@ -86,22 +84,25 @@ public class UserController extends AbstractController
 
 				String newUserName = request.getParameter("name");
 				String newUserCPR = request.getParameter("cpr");
-
-				String newUserFirm = request.getParameter("firm");
-				String newUserCVR = (String) whitelist.get(newUserFirm);
+				String newUserCVR = request.getParameter("firm");
 
 				User user = userRepository.create(newUserName, newUserCPR, newUserCVR);
 
-				if (user != null)
+				if (!whitelist.contains(newUserCPR))
+				{
+
+				}
+				else if (user != null)
 				{
 					// We also need info about the user creating the new
 
 					String userCPR = getUserCPR(request);
 
-					log.create("Ny admin tilf√∏jet '%s'. Oprettet af '%s'.", newUserName, userCPR);
-					response.sendRedirect(format("/admin/admins?id=%s", user.getId()));
+					LOG.create("Ny administrator tilføjet '%s'. Oprettet af '%s'.", newUserName, userCPR);
 				}
 			}
+
+			response.sendRedirect("/admin/users");
 		}
 		catch (Throwable e)
 		{
@@ -124,10 +125,10 @@ public class UserController extends AbstractController
 
 			userRepository.destroy(id);
 
-			log.create(format("User '%s (ID=%s)' blev slettet af '%s'.", deletedUser.getName(), deletedUser.getId(), userCPR));
+			LOG.create("Administrator '%s (ID=%s)' blev slettet af '%s'.", deletedUser.getName(), deletedUser.getId(), userCPR);
 		}
 
-		response.sendRedirect("/admin/admins");
+		response.sendRedirect("/admin/users");
 	}
 
 
@@ -135,11 +136,11 @@ public class UserController extends AbstractController
 	{
 		try
 		{
-			Template template = config.getTemplate("admin/list.ftl");
+			Template template = config.getTemplate("/admin/list.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
 
-			root.put("admins", userRepository.findAll());
+			root.put("users", userRepository.findAll());
 
 			render(response, template, root);
 		}
@@ -150,15 +151,14 @@ public class UserController extends AbstractController
 	}
 
 
-	@SuppressWarnings("unchecked")
 	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("admin/new.ftl");
+		Template template = config.getTemplate("/admin/new.ftl");
 
 		// List the white listed firms (CVR).
 
 		Map<String, Object> root = new HashMap<String, Object>();
-		root.put("firms", new ArrayList<String>(whitelist.keySet()));
+		root.put("firms", whitelist);
 
 		render(response, template, root);
 	}
@@ -168,7 +168,7 @@ public class UserController extends AbstractController
 	{
 		try
 		{
-			Template template = config.getTemplate("admin/edit.ftl");
+			Template template = config.getTemplate("/admin/edit.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
 

@@ -8,14 +8,8 @@ import java.sql.Date;
 import java.util.*;
 import java.util.Map.Entry;
 
-import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 
 public class EntityHelper
@@ -82,56 +76,14 @@ public class EntityHelper
 	}
 
 
-	private static Set<Class<? extends Record>> resourceTypes = null;
-
-
-	@SuppressWarnings("unchecked")
-	public static Set<Class<? extends Record>> getAllResources()
-	{
-		if (resourceTypes == null)
-		{
-			// Find all entities and serve them as resources.
-
-			final String INCLUDE_PACKAGE = com.trifork.stamdata.Record.class.getPackage().getName();
-
-			// TODO: Include doseringsforslag.
-
-			// Right now we don't have an importer for doeringsforslag
-			// so they cannot be replicated.
-
-			final String EXCLUDE_PACKAGE = com.trifork.stamdata.registre.doseringsforslag.Drug.class.getPackage().getName();
-
-			Reflections reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.getUrlsForPackagePrefix(INCLUDE_PACKAGE))
-				.filterInputsBy(new FilterBuilder()
-				.include(FilterBuilder.prefix(INCLUDE_PACKAGE))
-				.exclude(FilterBuilder.prefix(EXCLUDE_PACKAGE)))
-				.setScanners(new TypeAnnotationsScanner()));
-
-			// Serve all entities by deferring their URLs and using their
-			// annotations.
-
-			Set<Class<?>> entities = reflector.getTypesAnnotatedWith(Entity.class);
-
-			Set<Class<? extends Record>> resources = new HashSet<Class<? extends Record>>();
-
-			for (Class<?> entity : entities)
-			{
-				resources.add((Class<? extends Record>) entity);
-			}
-
-			resourceTypes = resources;
-		}
-
-		return resourceTypes;
-	}
+	static Set<Class<? extends Record>> resourceTypes = null;
 
 
 	public static Class<? extends Record> getEntityByName(String name)
 	{
 		Class<? extends Record> type = null;
 
-		for (Class<? extends Record> resourceType : getAllResources())
+		for (Class<? extends Record> resourceType : Entities.all())
 		{
 			if (Entities.getName(resourceType).equals(name))
 			{

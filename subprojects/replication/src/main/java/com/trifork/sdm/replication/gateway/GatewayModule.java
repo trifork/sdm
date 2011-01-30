@@ -1,28 +1,17 @@
 package com.trifork.sdm.replication.gateway;
 
-import static com.google.inject.name.Names.*;
-
 import java.net.*;
 
-import javax.inject.*;
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import com.google.inject.*;
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.Provides;
 import com.trifork.sdm.replication.gateway.properties.*;
+import com.trifork.sdm.replication.util.ConfiguredModule;
 
 
-public class GatewayModule extends ServletModule
+public class GatewayModule extends ConfiguredModule
 {
 	@Override
 	protected void configureServlets()
 	{
-		requireBinding(Key.get(String.class, named("replication.url")));
-		requireBinding(Key.get(int.class, named("replication.urlTTL")));
-		requireBinding(Key.get(int.class, named("replication.defaultPageSize")));
-		requireBinding(Key.get(String.class, named("replication.secret")));
-
 		bind(RequestProcessor.class).annotatedWith(SOAP.class).to(SoapProcessor.class);
 
 		// Set up the route.
@@ -31,38 +20,33 @@ public class GatewayModule extends ServletModule
 	}
 
 
-	@Inject
 	@Provides
-	@Singleton
-	protected URL provideURL(@Named("replication.url") String url) throws MalformedURLException
+	protected URL provideURL() throws MalformedURLException
 	{
-		return new URL(url);
+		return new URL(getConfig().getString("replication.url"));
 	}
 
 
-	@Inject
 	@Provides
 	@TTL
-	protected int provideTTL(@Named("replication.urlTTL") int ttl) throws MalformedURLException
+	protected int provideTTL() throws MalformedURLException
 	{
-		return ttl;
+		return getConfig().getInt("replication.urlTTL");
 	}
 
 
-	@Inject
 	@Provides
 	@DefaultPageSize
-	protected int provideDefaultPageSize(@Named("replication.defaultPageSize") int pageSize) throws MalformedURLException
+	protected int provideDefaultPageSize() throws MalformedURLException
 	{
-		return pageSize;
+		return getConfig().getInt("replication.defaultPageSize");
 	}
 
 
-	@Inject
 	@Provides
 	@Secret
-	protected String provideSecret(@Named("replication.secret") String secret)
+	protected String provideSecret()
 	{
-		return secret;
+		return getConfig().getString("replication.secret");
 	}
 }

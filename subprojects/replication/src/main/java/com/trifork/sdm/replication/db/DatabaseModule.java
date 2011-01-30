@@ -8,36 +8,38 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.configuration.*;
-import org.apache.commons.configuration.ConfigurationException;
-
-import com.google.inject.*;
+import com.google.inject.Key;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import com.trifork.sdm.replication.db.properties.Transactional;
+import com.trifork.sdm.replication.util.ConfiguredModule;
 
 
-public class DatabaseModule extends AbstractModule
+public class DatabaseModule extends ConfiguredModule
 {
 	@Override
-	public void configure()
+	public void configureServlets()
 	{
-		// NOTE: We load the configuration file another time, since we have
-		// to bind the 'at config time' we can't put it off.
+		// @formatter:off
+		
+		// Make it easy to do transactions.
 
-		try
-		{
-			PropertiesConfiguration properties = new PropertiesConfiguration("config.properties");
+		bindTransactionManager(transaction(WAREHOUSE),
+			getConfig().getString("db.warehouse.username"),
+			getConfig().getString("db.warehouse.password"),
+			getConfig().getString("db.warehouse.host"),
+			getConfig().getInt("db.warehouse.port"),
+			getConfig().getString("db.warehouse.schema")
+		);
 
-			// Make it easy to do transactions.
-
-			bindTransactionManager(transaction(WAREHOUSE), properties.getString("db.warehouse.username"), properties.getString("db.warehouse.password"), properties.getString("db.warehouse.host"), properties.getInt("db.warehouse.port"), properties.getString("db.warehouse.schema"));
-
-			bindTransactionManager(transaction(ADMINISTRATION), properties.getString("db.administration.username"), properties.getString("db.administration.password"), properties.getString("db.administration.host"), properties.getInt("db.administration.port"), properties.getString("db.administration.schema"));
-		}
-		catch (ConfigurationException e)
-		{
-			addError("Could not bind database connections during setup.", e);
-		}
+		bindTransactionManager(transaction(ADMINISTRATION),
+			getConfig().getString("db.administration.username"),
+			getConfig().getString("db.administration.password"),
+			getConfig().getString("db.administration.host"),
+			getConfig().getInt("db.administration.port"),
+			getConfig().getString("db.administration.schema")
+		);
+	
+		// @formatter:on
 	}
 
 

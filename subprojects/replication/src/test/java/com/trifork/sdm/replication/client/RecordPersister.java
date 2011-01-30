@@ -1,4 +1,4 @@
-package com.trifork.sdm.replication.replication;
+package com.trifork.sdm.replication.client;
 
 import java.io.InputStream;
 import java.net.URL;

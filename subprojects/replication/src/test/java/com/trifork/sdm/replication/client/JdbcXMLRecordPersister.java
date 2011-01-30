@@ -14,7 +14,6 @@ import javax.xml.stream.*;
 import org.slf4j.Logger;
 
 import com.google.inject.*;
-import com.trifork.sdm.replication.replication.RecordPersister;
 import com.trifork.stamdata.*;
 
 import dk.sosi.seal.xml.XmlUtil;
