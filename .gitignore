@@ -3,7 +3,6 @@
 .classpath
 build
 bin
-/.gradle
-*.ser
-**/config.properties
-.DS_Store
+.gradle
+.properties
+.ser

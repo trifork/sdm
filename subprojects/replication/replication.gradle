@@ -92,6 +92,8 @@ dependencies {
 	// is stored.
 
 	testRuntime fileTree(dir: 'sosi', include: '*.jar')
+
+	testCompile 'xmlunit:xmlunit:1.1'
 	
 	// Logging
 	
