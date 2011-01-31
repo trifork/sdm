@@ -13,13 +13,13 @@ import com.trifork.sdm.replication.admin.models.*;
 
 public class AuditLogRepositoryTest extends GuiceTest
 {
-	private AuditLogRepository auditLogRepository;
+	private AuditLog auditLogRepository;
 
 
 	@Before
 	public void setUp()
 	{
-		auditLogRepository = getInjector().getInstance(AuditLogRepository.class);
+		auditLogRepository = getInjector().getInstance(AuditLog.class);
 	}
 
 
@@ -53,7 +53,7 @@ public class AuditLogRepositoryTest extends GuiceTest
 		auditLogRepository.create("message2");
 
 		// Act
-		List<LogEntry> auditLogs = auditLogRepository.findAll();
+		List<LogEntry> auditLogs = auditLogRepository.all();
 
 		// Assert
 		assertTrue(auditLogs.size() > 1);

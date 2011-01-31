@@ -39,7 +39,7 @@ public class PermissionRepository
 
 
 	@Transactional(ADMINISTRATION)
-	public void setPermissions(String id, List<String> entities) throws SQLException
+	public void update(String id, List<String> entities) throws SQLException
 	{
 		Connection connection = connectionProvider.get();
 

@@ -1,9 +1,12 @@
 package com.trifork.sdm.replication.admin.models;
 
 import static com.trifork.sdm.replication.db.properties.Database.*;
+import static org.slf4j.LoggerFactory.*;
 
 import java.sql.*;
 import java.util.*;
+
+import org.slf4j.*;
 
 import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
@@ -11,6 +14,8 @@ import com.trifork.sdm.replication.db.properties.Transactional;
 
 public class UserRepository implements IUserRepository
 {
+	private static final Logger LOG = getLogger(UserRepository.class);
+	
 	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
@@ -27,7 +32,7 @@ public class UserRepository implements IUserRepository
 	@Transactional(ADMINISTRATION)
 	public User find(String id) throws SQLException
 	{
-		User admin = null;
+		User user = null;
 
 		PreparedStatement statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
 		statement.setObject(1, id);
@@ -35,12 +40,13 @@ public class UserRepository implements IUserRepository
 
 		if (result.next())
 		{
-			admin = extract(result);
+			user = extract(result);
+			LOG.info("User ID=" + id);
 		}
 
 		statement.close();
 
-		return admin;
+		return user;
 	}
 
 

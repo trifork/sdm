@@ -10,8 +10,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.*;
 
-import com.trifork.stamdata.registre.doseringsforslag.Drug;
-
 
 public class Entities
 {

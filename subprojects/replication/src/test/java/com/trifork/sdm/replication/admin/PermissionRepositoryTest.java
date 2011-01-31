@@ -47,8 +47,8 @@ public class PermissionRepositoryTest extends GuiceTest
 		List<String> client2Permissions = new ArrayList<String>();
 		client2Permissions.add("Apotek");
 
-		permissionRepository.setPermissions(client1.getId(), client1Permissions);
-		permissionRepository.setPermissions(client2.getId(), client2Permissions);
+		permissionRepository.update(client1.getId(), client1Permissions);
+		permissionRepository.update(client2.getId(), client2Permissions);
 
 		// Act
 
@@ -69,13 +69,13 @@ public class PermissionRepositoryTest extends GuiceTest
 		Client client = clientRepository.create("TestClient", "certificateId");
 		ArrayList<String> permissions = new ArrayList<String>();
 		permissions.add("Test");
-		permissionRepository.setPermissions(client.getId(), permissions);
+		permissionRepository.update(client.getId(), permissions);
 
 		// Act
 		permissions.clear();
 		permissions.add("Test2");
 		permissions.add("Test3");
-		permissionRepository.setPermissions(client.getId(), permissions);
+		permissionRepository.update(client.getId(), permissions);
 
 		// Assert
 		List<String> updatedPermissions = permissionRepository.findByClientId(client.getId());
@@ -91,7 +91,7 @@ public class PermissionRepositoryTest extends GuiceTest
 		Client client = clientRepository.create("name", "certIdToSearchFor");
 		ArrayList<String> permissions = new ArrayList<String>();
 		permissions.add("Apotek");
-		permissionRepository.setPermissions(client.getId(), permissions);
+		permissionRepository.update(client.getId(), permissions);
 
 		// Act
 		boolean canAccessEntity = permissionRepository.canAccessEntity("certIdToSearchFor", "Apotek");

@@ -12,35 +12,32 @@ import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
+@Singleton
 public class StatusServlet extends HttpServlet
 {
+	@Inject
 	@Transactional(WAREHOUSE)
 	private Provider<Connection> warehouseConnection;
 
+	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> adminConnection;
-
-
-	@Inject
-	public StatusServlet(@Transactional(ADMINISTRATION) Provider<Connection> adminConnection, @Transactional(WAREHOUSE) Provider<Connection> warehouseConnection)
-	{
-		this.adminConnection = adminConnection;
-		this.warehouseConnection = warehouseConnection;
-	}
 
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
+		resp.setContentType("text/plain");
+
 		int statusCode = 200;
-		
+
 		try
 		{
 			checkWarehouseConnection();
 		}
 		catch (SQLException e)
 		{
-			resp.getOutputStream().println("ERROR: Could not connect to the data warehouse database.");
+			resp.getWriter().println("ERROR: Could not connect to the data warehouse database.");
 			statusCode = 500;
 		}
 
@@ -50,10 +47,15 @@ public class StatusServlet extends HttpServlet
 		}
 		catch (SQLException e)
 		{
-			resp.getOutputStream().println("ERROR: Could not connect to the administration database.");
+			resp.getWriter().println("ERROR: Could not connect to the administration database.");
 			statusCode = 500;
 		}
-		
+
+		if (statusCode == 200)
+		{
+			resp.getWriter().println("200 OK");
+		}
+
 		resp.setStatus(statusCode);
 	}
 
@@ -85,5 +87,5 @@ public class StatusServlet extends HttpServlet
 		return true;
 	}
 
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 1L;
 }

@@ -1,6 +1,7 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 import static com.trifork.sdm.replication.db.properties.Database.*;
+import static org.slf4j.LoggerFactory.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -9,25 +10,21 @@ import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import org.slf4j.*;
+
 import com.google.inject.*;
 import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.admin.security.WhitelistModule.Whitelist;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
-import freemarker.template.*;
-
 
 @Singleton
 public class UserController extends AbstractController
 {
-	@Inject
-	private Configuration config;
+	private static final Logger LOG = getLogger(UserController.class);
 
 	@Inject
-	private IUserRepository userRepository;
-
-	@Inject
-	private AuditLogRepository LOG;
+	private IUserRepository users;
 
 	@Inject
 	@Whitelist
@@ -38,27 +35,30 @@ public class UserController extends AbstractController
 	@Transactional(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
-		response.setContentType("text/html; charset=utf-8");
-
-		// Check if the user requested a form to create
-		// a new user.
-
-		if (request.getRequestURI().endsWith("/new"))
+		try
 		{
-			getNew(request, response);
+			// Check if the user requested a form to create
+			// a new user.
+
+			if (request.getRequestURI().endsWith("/new"))
+			{
+				getNew(request, response);
+			}
+			else if (request.getParameter("id") == null)
+			{
+				// If the ID parameter is null, we list all
+				// users. If it is present we show a specific user.
+
+				getList(request, response);
+			}
+			else
+			{
+				getEdit(request, response);
+			}
 		}
-
-		// If the ID parameter is null, we list all
-		// users. If it is present we show a specific user.
-
-		else if (request.getParameter("id") == null)
+		catch (SQLException e)
 		{
-			getList(request, response);
-		}
-
-		else
-		{
-			getEdit(request, response);
+			throw new ServletException(e);
 		}
 	}
 
@@ -69,47 +69,45 @@ public class UserController extends AbstractController
 	{
 		try
 		{
-			response.setContentType("text/html; charset=utf-8");
+			String method = request.getParameter("method");
 
-			String action = request.getParameter("action");
-
-			if ("delete".equals(action))
+			if ("DELETE".equals(method))
 			{
 				getDelete(request, response);
 			}
 			else
 			{
-				// Get the new administrator's info from the
-				// HTML form.
-
-				String newUserName = request.getParameter("name");
-				String newUserCPR = request.getParameter("cpr");
-				String newUserCVR = request.getParameter("firm");
-
-				User user = userRepository.create(newUserName, newUserCPR, newUserCVR);
-
-				if (!whitelist.contains(newUserCPR))
-				{
-
-				}
-				else if (user != null)
-				{
-					// We also need info about the user creating the new
-
-					String userCPR = getUserCPR(request);
-
-					LOG.create("Ny administrator tilføjet '%s'. Oprettet af '%s'.", newUserName, userCPR);
-				}
+				getCreate(request, response);
 			}
-
-			response.sendRedirect("/admin/users");
 		}
 		catch (Throwable e)
 		{
 			throw new ServletException(e);
 		}
+	}
 
-		// TODO: Should always redirect.
+
+	private void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
+	{
+		// Get the new administrator's info from the
+		// HTML form.
+
+		String newUserName = request.getParameter("name");
+		String newUserCPR = request.getParameter("cpr");
+		String newUserCVR = request.getParameter("firm");
+
+		User user = users.create(newUserName, newUserCPR, newUserCVR);
+
+		if (!whitelist.contains(newUserCVR))
+		{
+			// TODO: Log and write the CVR
+		}
+		else if (user != null)
+		{
+			writeAudit("New administrator created (new_user_cpr=%s, new_user_cvr=%s). Created by user_cpr=%s.", newUserCPR, newUserCVR, getUserCPR(request));
+		}
+
+		redirect(request, response, "/admin/users");
 	}
 
 
@@ -117,72 +115,54 @@ public class UserController extends AbstractController
 	{
 		String id = request.getParameter("id");
 
-		User deletedUser = userRepository.find(id);
+		User deletedUser = users.find(id);
 
 		if (deletedUser != null)
 		{
 			String userCPR = getUserCPR(request);
 
-			userRepository.destroy(id);
+			users.destroy(id);
 
-			LOG.create("Administrator '%s (ID=%s)' blev slettet af '%s'.", deletedUser.getName(), deletedUser.getId(), userCPR);
+			writeAudit("Administrator '%s (ID=%s)' was deleted by user %s.", deletedUser.getName(), deletedUser.getId(), userCPR);
 		}
 
-		response.sendRedirect("/admin/users");
+		redirect(request, response, "/admin/users");
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
-		try
-		{
-			Template template = config.getTemplate("/user/list.ftl");
+		Map<String, Object> root = new HashMap<String, Object>();
 
-			Map<String, Object> root = new HashMap<String, Object>();
+		root.put("users", users.findAll());
 
-			root.put("users", userRepository.findAll());
-
-			render(request, response, template, root);
-		}
-		catch (Throwable e)
-		{
-			throw new ServletException(e);
-		}
+		render("/user/list.ftl", root, request, response);
 	}
 
 
 	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("/user/new.ftl");
-
 		// List the white listed firms (CVR).
 
 		Map<String, Object> root = new HashMap<String, Object>();
+
 		root.put("firms", whitelist);
 
-		render(request, response, template, root);
+		render("/user/new.ftl", root, request, response);
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException
 	{
-		try
-		{
-			Template template = config.getTemplate("/user/edit.ftl");
+		Map<String, Object> root = new HashMap<String, Object>();
 
-			Map<String, Object> root = new HashMap<String, Object>();
+		String id = request.getParameter("id");
+		LOG.info("User found ID=" + id);
+		User user = users.find(id);
+		root.put("user", user);
 
-			String id = request.getParameter("id");
-			User user = userRepository.find(id);
-			root.put("user", user);
-
-			render(request, response, template, root);
-		}
-		catch (Throwable e)
-		{
-			throw new ServletException(e);
-		}
+		render("/user/edit.ftl", root, request, response);
 	}
 
-	private static final long serialVersionUID = 0;
+	private static final long serialVersionUID = 1L;
 }

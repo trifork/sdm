@@ -3,28 +3,49 @@ package com.trifork.sdm.replication.admin.controllers;
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
 import java.io.*;
-import java.util.Map;
+import java.sql.SQLException;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
+
+import com.google.inject.*;
+import com.trifork.sdm.replication.admin.models.AuditLog;
 
 import freemarker.template.*;
 
 
 public class AbstractController extends HttpServlet
 {
-	private static final long serialVersionUID = -7480013116213951161L;
+	@Inject
+	protected Configuration templates;
+
+	@Inject
+	protected AuditLog auditLog;
 
 
-	protected void render(HttpServletRequest request, HttpServletResponse response, Template template, Map<String, Object> root) throws IOException, ServletException
+	protected void render(String templatePath, Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Writer writer = new OutputStreamWriter(response.getOutputStream());
+		response.setContentType("text/html; charset=utf-8");
 
-		root.put("contextRoot", request.getContextPath());
+		if (root == null)
+		{
+			root = new HashMap<String, Object>();
+		}
 		
+		root.put("contextRoot", request.getContextPath());
+
 		try
 		{
-			template.process(root, writer);
+			Template page = templates.getTemplate(templatePath, "UTF-8");
+
+			StringWriter bodyWriter = new StringWriter();
+			page.process(root, bodyWriter);
+			root.put("body", bodyWriter.toString());
+			bodyWriter.close();
+
+			Template html = templates.getTemplate("application.ftl");
+			html.process(root, response.getWriter());
 		}
 		catch (TemplateException e)
 		{
@@ -33,8 +54,34 @@ public class AbstractController extends HttpServlet
 	}
 
 
+	protected void writeAudit(String format, Object... args) throws SQLException
+	{
+		auditLog.create(format, args);
+	}
+
+
 	protected String getUserCPR(HttpServletRequest request)
 	{
-		return request.getAttribute(USER_CPR).toString();
+		String cpr;
+		
+		if (request.getAttribute(USER_CPR) != null)
+		{
+			cpr = request.getAttribute(USER_CPR).toString();
+		}
+		else
+		{
+			cpr = "UNKNOWN";
+		}
+		
+		return cpr;
 	}
+	
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException
+	{
+		String contextPath = request.getContextPath();
+		String encodedUrl = response.encodeURL(contextPath + path);
+		response.sendRedirect(encodedUrl);
+	}
+
+	private static final long serialVersionUID = 1L;
 }

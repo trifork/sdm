@@ -4,10 +4,10 @@ import static com.trifork.sdm.replication.db.properties.Database.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.PrintWriter;
 import java.sql.*;
 import java.util.*;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.*;
 
 import org.junit.*;
@@ -23,7 +23,7 @@ public class StatusServletTest extends GuiceTest
 
 	private HttpServletResponse response;
 	private HttpServletRequest request;
-	private ServletOutputStream outputStream;
+	private PrintWriter outputWriter;
 
 	private List<Database> upDatabases;
 
@@ -34,13 +34,13 @@ public class StatusServletTest extends GuiceTest
 		servlet = getInjector().getInstance(StatusServlet.class);
 
 		// The request and response.
-		
+
 		request = mock(HttpServletRequest.class);
-		
+
 		response = mock(HttpServletResponse.class);
-		outputStream = mock(ServletOutputStream.class);
-		when(response.getOutputStream()).thenReturn(outputStream);
-		
+		outputWriter = mock(PrintWriter.class);
+		when(response.getWriter()).thenReturn(outputWriter);
+
 		// A list containing the databases we simulate as being up
 		// and running.
 

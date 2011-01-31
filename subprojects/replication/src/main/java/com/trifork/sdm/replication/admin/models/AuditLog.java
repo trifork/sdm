@@ -13,9 +13,9 @@ import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
-public class AuditLogRepository
+public class AuditLog
 {
-	private static Logger LOG = getLogger(AuditLogRepository.class);
+	private static Logger LOG = getLogger(AuditLog.class);
 
 	@Inject
 	@Transactional(ADMINISTRATION)
@@ -23,7 +23,7 @@ public class AuditLogRepository
 
 
 	@Transactional(ADMINISTRATION)
-	public List<LogEntry> findAll() throws SQLException
+	public List<LogEntry> all() throws SQLException
 	{
 		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
 

@@ -20,7 +20,7 @@ public class ProductionModule extends AbstractModule
 		install(new ResourceModule());
 
 		install(new AdminstrationModule());
-		
+
 		install(new MonitoringModule());
 	}
 }

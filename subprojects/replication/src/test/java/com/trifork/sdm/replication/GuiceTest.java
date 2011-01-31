@@ -25,7 +25,7 @@ public abstract class GuiceTest extends AbstractModule
 
 
 	protected GuiceTest()
-	{		
+	{
 		Module production = new ProductionModule();
 		Module test = override(production).with(this);
 
