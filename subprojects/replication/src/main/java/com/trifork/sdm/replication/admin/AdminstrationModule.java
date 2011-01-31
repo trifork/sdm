@@ -11,9 +11,9 @@ public class AdminstrationModule extends ConfiguredModule
 	@Override
 	protected void configureServlets()
 	{
-		serve("/admin/admins", "/admin/admins/*").with(UserController.class);
+		serve("/admin/users", "/admin/users/*").with(UserController.class);
 		serve("/admin/log", "/admin/log/*").with(AuditLogController.class);
-		serve("/admin", "/admin/users", "/admin/users/*").with(ClientController.class);
+		serve("/admin", "/admin/clients", "/admin/clients/*").with(ClientController.class);
 
 		// Template Engine used for the views' HTML.
 

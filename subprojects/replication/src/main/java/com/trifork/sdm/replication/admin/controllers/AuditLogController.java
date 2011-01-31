@@ -16,7 +16,7 @@ import freemarker.template.*;
 
 
 @Singleton
-public class AuditLogController extends HttpServlet
+public class AuditLogController extends AbstractController
 {
 	private static final long serialVersionUID = 1L;
 
@@ -41,9 +41,7 @@ public class AuditLogController extends HttpServlet
 
 			root.put("entries", repository.findAll());
 
-			Writer writer = new OutputStreamWriter(response.getOutputStream());
-
-			template.process(root, writer);
+			render(request, response, template, root);
 		}
 		catch (Exception e)
 		{

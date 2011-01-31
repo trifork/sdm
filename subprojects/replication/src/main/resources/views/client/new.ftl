@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>SDM Replikering – Ny Administrator</title>
+	<title>SDM Replikering – Ny Bruger</title>
 	<link type="text/css" rel="stylesheet" href="${contextRoot}/style.css" />
 </head>
 <body>
@@ -14,23 +14,15 @@
 		<span id="logo">SDM Replikering</span>
 	</div>
 	<div id="content">
-		<h2>Ny Administrator</h2>
-		<form action="${contextRoot}/admin/users" method="POST">
+		<h2>Ny Klient</h2>
+		<form action="${contextRoot}/admin/clients" method="POST">
 		<p>
 			<label for="name">Navn:</label>
 			<input name="name" type="text" size="60" />
 		</p>
 		<p>
-			<label for="cpr">CPR-nummer:</label>
-			<input name="cpr" type="text" size="60" />
-		</p>
-		<p>
-			<label for="firm">Organisation:</label>
-			<select name="firm">
-				<#list firms as firm>
-				<option value="${firm}">${firm}</option>
-				</#list>
-			</select>
+			<label for="certificate_id">Certifikat ID:</label>
+			<input name="certificate_id" type="text" size="60" />
 		</p>
 		<hr />
 		<p>

@@ -2,8 +2,6 @@ package com.trifork.sdm.replication;
 
 import static com.google.inject.util.Modules.*;
 
-import org.junit.After;
-
 import com.google.inject.*;
 
 

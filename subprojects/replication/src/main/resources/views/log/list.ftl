@@ -2,14 +2,14 @@
 <html>
 <head>
 	<title>SDM Replikering – Brugere</title>
-	<link type="text/css" rel="stylesheet" href="/style.css" /> 
+	<link type="text/css" rel="stylesheet" href="${contextRoot}/style.css" />
 </head>
 <body>
 	<div id="header">
 		<ul id="nav">
-			<li><a href="/admin/users">Klienter</a></li>
-			<li><a href="/admin/admins">Administratorer</a></li>
-			<li><a href="/admin/log">Audit Log</a></li>
+			<li><a href="${contextRoot}/admin/users">Klienter</a></li>
+			<li><a href="${contextRoot}/admin/admins">Administratorer</a></li>
+			<li><a href="${contextRoot}/admin/log">Audit Log</a></li>
 		</ul>
 		<span id="logo">SDM Replikering</span>
 	</div>

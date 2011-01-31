@@ -16,10 +16,12 @@ public class AbstractController extends HttpServlet
 	private static final long serialVersionUID = -7480013116213951161L;
 
 
-	protected void render(HttpServletResponse response, Template template, Map<String, Object> root) throws IOException, ServletException
+	protected void render(HttpServletRequest request, HttpServletResponse response, Template template, Map<String, Object> root) throws IOException, ServletException
 	{
 		Writer writer = new OutputStreamWriter(response.getOutputStream());
 
+		root.put("contextRoot", request.getContextPath());
+		
 		try
 		{
 			template.process(root, writer);

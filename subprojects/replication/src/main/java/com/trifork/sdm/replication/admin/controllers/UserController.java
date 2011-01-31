@@ -136,13 +136,13 @@ public class UserController extends AbstractController
 	{
 		try
 		{
-			Template template = config.getTemplate("/admin/list.ftl");
+			Template template = config.getTemplate("/user/list.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
 
 			root.put("users", userRepository.findAll());
 
-			render(response, template, root);
+			render(request, response, template, root);
 		}
 		catch (Throwable e)
 		{
@@ -153,14 +153,14 @@ public class UserController extends AbstractController
 
 	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("/admin/new.ftl");
+		Template template = config.getTemplate("/user/new.ftl");
 
 		// List the white listed firms (CVR).
 
 		Map<String, Object> root = new HashMap<String, Object>();
 		root.put("firms", whitelist);
 
-		render(response, template, root);
+		render(request, response, template, root);
 	}
 
 
@@ -168,15 +168,15 @@ public class UserController extends AbstractController
 	{
 		try
 		{
-			Template template = config.getTemplate("/admin/edit.ftl");
+			Template template = config.getTemplate("/user/edit.ftl");
 
 			Map<String, Object> root = new HashMap<String, Object>();
 
 			String id = request.getParameter("id");
 			User user = userRepository.find(id);
-			root.put("admin", user);
+			root.put("user", user);
 
-			render(response, template, root);
+			render(request, response, template, root);
 		}
 		catch (Throwable e)
 		{

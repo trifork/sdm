@@ -14,7 +14,6 @@ public class TemplateModule extends AbstractModule
 	@Override
 	protected void configure()
 	{
-
 		// We use freemaker to template HTML.
 		// The template files can be found in the webapp-dir
 		// and all have the extension .ftl.
@@ -42,7 +41,6 @@ public class TemplateModule extends AbstractModule
 		}
 		catch (Throwable t)
 		{
-
 			addError("Invalid template directory.", t);
 		}
 	}

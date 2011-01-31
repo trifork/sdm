@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>SDM Replikering – Administratorer</title>
+	<title>SDM Replikering – Klienter</title>
 	<link type="text/css" rel="stylesheet" href="${contextRoot}/style.css" />
 </head>
 <body>
@@ -14,13 +14,13 @@
 		<span id="logo">SDM Replikering</span>
 	</div>
 	<div id="content">
-		<h2>Administratorer</h2>
-		<a href="${contextRoot}/admin/users/new">Opret ny administrator</a>
+		<h2>Klienter</h2>
+		<a href="${contextRoot}/admin/clients/new">Opret ny klient</a>
 		<ul id="users">
-			<#list users as user>
-			<li><a href="${contextRoot}/admin/users?id=${user.id}">${user.name}</a></li>
+			<#list clients as client>
+			<li><a href="${contextRoot}/admin/users?id=${client.id}">${client.name}</a></li>
 			</#list>
 		</ul>
 	</div>
 </body>
-</html>
+</html>  

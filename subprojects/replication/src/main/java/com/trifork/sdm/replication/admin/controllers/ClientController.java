@@ -104,7 +104,7 @@ public class ClientController extends AbstractController
 				{
 					auditlogRepository.create("New client added '%s'. Created by '%s'.", name, request.getAttribute(USER_CPR));
 
-					response.sendRedirect(format("admin/users?id=%s", client.getId()));
+					response.sendRedirect(format("admin/clients?id=%s", client.getId()));
 				}
 			}
 			else if ("delete".equals(action))
@@ -158,7 +158,7 @@ public class ClientController extends AbstractController
 
 				auditlogRepository.create("Authorization updated for client_id='%s' by '%s' for entities (%s).", id, adminCPR, permissionsAsString);
 
-				response.sendRedirect("/admin/users");
+				response.sendRedirect("/admin/clients");
 			}
 
 		}
@@ -185,7 +185,7 @@ public class ClientController extends AbstractController
 
 				auditlogRepository.create("Client '%s (ID=%s)' was deleted by '%s'.", client.getName(), client.getId(), request.getAttribute(USER_CPR));
 
-				response.sendRedirect("/admin/users");
+				response.sendRedirect("/admin/clients");
 			}
 		}
 		catch (Throwable t)
@@ -199,16 +199,16 @@ public class ClientController extends AbstractController
 
 	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
-		Template template = config.getTemplate("user/new.ftl");
+		Template template = config.getTemplate("client/new.ftl");
 
-		render(response, template, null);
+		render(request, response, template, null);
 	}
 
 
 	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
 	{
 
-		Template template = config.getTemplate("user/edit.ftl");
+		Template template = config.getTemplate("client/edit.ftl");
 
 		Map<String, Object> root = new HashMap<String, Object>();
 
@@ -218,19 +218,19 @@ public class ClientController extends AbstractController
 		root.put("entities", getEntityNames());
 		root.put("permissions", permissionRepository.findByClientId(id));
 
-		render(response, template, root);
+		render(request, response, template, root);
 	}
 
 
 	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
 	{
-		Template template = config.getTemplate("user/list.ftl");
+		Template template = config.getTemplate("client/list.ftl");
 
 		Map<String, Object> root = new HashMap<String, Object>();
 
 		root.put("clients", clientRepository.findAll());
 
-		render(response, template, root);
+		render(request, response, template, root);
 	}
 
 
