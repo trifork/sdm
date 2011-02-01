@@ -6,3 +6,4 @@ bin
 .gradle
 .properties
 .ser
+access.log
