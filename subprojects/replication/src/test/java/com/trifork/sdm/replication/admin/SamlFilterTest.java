@@ -52,10 +52,6 @@ public class SamlFilterTest extends GuiceTest
 		response = mock(HttpServletResponse.class);
 		filterChain = mock(FilterChain.class);
 
-		// TODO: There is not much use in injecting an instance if
-		// we do not reset its behavior after each run. It does not
-		// break the test, but it could in the future.
-
 		ridService = getInjector().getInstance(RID2CPRFacade.class);
 		userRepository = getInjector().getInstance(IUserRepository.class);
 

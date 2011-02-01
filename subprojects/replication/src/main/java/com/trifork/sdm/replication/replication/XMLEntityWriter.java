@@ -29,6 +29,7 @@ import com.trifork.stamdata.*;
  */
 public class XMLEntityWriter implements EntityWriter
 {
+	private static final int PADDING_MAX_LENGTH = 10;
 	private static final boolean USE_ZULU_TIME = true;
 	private final URLFactory urlFactory;
 
@@ -187,9 +188,8 @@ public class XMLEntityWriter implements EntityWriter
 		String modifiedDate = Long.toString(modifiedProperty.getTime() / 1000);
 
 		// Pad the PID if needed (which it probably always will).
-		// TODO: Magic numbers.
 
-		int paddingLength = 10 - pid.length();
+		int paddingLength = PADDING_MAX_LENGTH - pid.length();
 
 		if (paddingLength > 0)
 		{

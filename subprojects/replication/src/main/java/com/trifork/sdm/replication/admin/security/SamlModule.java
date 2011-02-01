@@ -30,7 +30,6 @@ public class SamlModule extends PropertyServletModule
 
 		CachingRID2CPRFacadeImpl ridService = new CachingRID2CPRFacadeImpl();
 
-		// FIXME: Figure out what these namespaces should be.
 		// Setting the defaults is deprecated.
 		ridService.setEndpoint(property("rid2cpr.endpoint"));
 		ridService.setKeystore(property("rid2cpr.keystore"));
