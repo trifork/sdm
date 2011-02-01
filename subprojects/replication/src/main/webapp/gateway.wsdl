@@ -1,0 +1,77 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsa="http://www.w3.org/2005/08/addressing"
+                  xmlns:wsaw="http://www.w3.org/2005/08/addressing/wsdl"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://trifork.com/schemas/sdm/2010-12-22"
+                  targetNamespace="http://trifork.com/schemas/sdm/2010-12-22">
+    <wsdl:types>
+		<xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" 
+			xmlns:sdm="http://trifork.com/schemas/sdm/2010-12-22" 
+			targetNamespace="http://trifork.com/schemas/sdm/2010-12-22" 
+			elementFormDefault="qualified"
+			attributeFormDefault="unqualified">
+			<element name="GatewayRequestStructure" type="sdm:GatewayRequestType">
+				<annotation>
+					<documentation xml:lang="en-GB">Element for a request for stamdata</documentation>
+					<documentation xml:lang="da-DK">Element for en forespørgsel efter stamdata</documentation>
+				</annotation>
+			</element>
+			<complexType name="GatewayRequestType">
+				<sequence>
+					<element name="resource" type="string" minOccurs="1" maxOccurs="1"/>
+		            <element name="version" type="int" minOccurs="1" maxOccurs="1"></element>
+		            <element name="offset" type="float" minOccurs="0" maxOccurs="1"></element>
+					<element name="rows" type="int" minOccurs="0" maxOccurs="1"></element>
+					<element name="format" type="string" minOccurs="0" maxOccurs="1"></element>
+				</sequence>
+			</complexType>
+			<element name="GatewayResponseStructure" type="sdm:GatewayResponseType">
+				<annotation>
+					<documentation xml:lang="en-GB">Outer container element for a response with gateway reply.</documentation>
+					<documentation xml:lang="da-DK">Ydre container-element for et svar fra gateway.</documentation>
+				</annotation>
+			</element>
+			<complexType name="GatewayResponseType">
+				<sequence>
+					<element name="url" type="string" minOccurs="1" maxOccurs="1"/>
+				</sequence>
+			</complexType>
+		</xsd:schema>
+    </wsdl:types>
+    
+    <wsdl:message name="GatewayRequestMessage">
+        <wsdl:part element="tns:GatewayRequestStructure" name="GatewayRequestPart"/>
+    </wsdl:message>
+    <wsdl:message name="GatewayResponseMessage">
+        <wsdl:part element="tns:GatewayResponseStructure" name="GatewayResponsePart"/>
+    </wsdl:message>
+    
+    <wsdl:portType name="GatewayPortType">
+        <wsdl:operation name="Gateway">
+            <wsdl:input message="tns:GatewayRequestMessage" name="GatewayRequestStructureInput"/>
+            <wsdl:output message="tns:GatewayResponseMessage" name="GatewayResponseStructureOutput"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    
+    <wsdl:binding name="GatewayBinding" type="tns:GatewayPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <!--wsaw:UsingAddressing wsdl:required="true" /-->
+        <wsdl:operation name="Gateway">
+            <soap:operation soapAction="http://trifork.com/sdm/Gateway"/>
+            <wsdl:input name="GatewayRequestStructureInput">
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output name="GatewayResponseStructureOutput">
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    
+    <wsdl:service name="GatewayService">
+        <wsdl:port binding="tns:GatewayBinding" name="GatewayPort">
+        	<!-- The following is required in the wsdl, but the actual url is defined elsewhere -->
+            <soap:address location="http://localhost:8080/gateway"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
