@@ -27,8 +27,6 @@ public class XMLEntityWriterTest extends XMLTestCase
 	private URLFactory urlFactory;
 	private Calendar now;
 
-
-	@Override
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception
