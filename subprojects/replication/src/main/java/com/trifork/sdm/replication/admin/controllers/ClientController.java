@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.controllers;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 
 import java.io.IOException;
@@ -249,6 +250,7 @@ public class ClientController extends AbstractController
 
 		return entities;
 	}
+
 
 	private static final long serialVersionUID = 1L;
 }

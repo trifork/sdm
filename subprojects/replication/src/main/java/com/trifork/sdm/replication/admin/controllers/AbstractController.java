@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.controllers;
 
+
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
 import java.io.*;
@@ -32,7 +33,7 @@ public class AbstractController extends HttpServlet
 		{
 			root = new HashMap<String, Object>();
 		}
-		
+
 		root.put("contextRoot", request.getContextPath());
 
 		try
@@ -63,7 +64,7 @@ public class AbstractController extends HttpServlet
 	protected String getUserCPR(HttpServletRequest request)
 	{
 		String cpr;
-		
+
 		if (request.getAttribute(USER_CPR) != null)
 		{
 			cpr = request.getAttribute(USER_CPR).toString();
@@ -72,16 +73,18 @@ public class AbstractController extends HttpServlet
 		{
 			cpr = "UNKNOWN";
 		}
-		
+
 		return cpr;
 	}
-	
+
+
 	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException
 	{
 		String contextPath = request.getContextPath();
 		String encodedUrl = response.encodeURL(contextPath + path);
 		response.sendRedirect(encodedUrl);
 	}
+
 
 	private static final long serialVersionUID = 1L;
 }

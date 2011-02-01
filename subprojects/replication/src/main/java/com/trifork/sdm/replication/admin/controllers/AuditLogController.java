@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.controllers;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 
 import java.io.IOException;
@@ -10,6 +11,7 @@ import javax.servlet.http.*;
 
 import com.google.inject.Singleton;
 import com.trifork.sdm.replication.db.properties.Transactional;
+
 
 @Singleton
 public class AuditLogController extends AbstractController
@@ -31,6 +33,7 @@ public class AuditLogController extends AbstractController
 			throw new ServletException(e);
 		}
 	}
+
 
 	private static final long serialVersionUID = 1L;
 }

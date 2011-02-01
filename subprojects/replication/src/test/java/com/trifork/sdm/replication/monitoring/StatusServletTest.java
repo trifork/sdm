@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.monitoring;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;

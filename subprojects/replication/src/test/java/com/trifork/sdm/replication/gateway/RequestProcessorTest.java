@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.gateway;
 
+
 import static com.trifork.sdm.replication.gateway.SOSITestConstants.*;
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;

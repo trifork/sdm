@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.controllers;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static org.slf4j.LoggerFactory.*;
 
@@ -163,6 +164,7 @@ public class UserController extends AbstractController
 
 		render("/user/edit.ftl", root, request, response);
 	}
+
 
 	private static final long serialVersionUID = 1L;
 }

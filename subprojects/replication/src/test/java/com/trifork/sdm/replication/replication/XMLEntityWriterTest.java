@@ -10,11 +10,8 @@ import java.io.*;
 import java.sql.*;
 import java.util.Calendar;
 
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.*;
 
-import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +29,8 @@ public class XMLEntityWriterTest extends XMLTestCase
 	private URLFactory urlFactory;
 	private Calendar now;
 
+
+	@Override
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception
@@ -78,11 +77,13 @@ public class XMLEntityWriterTest extends XMLTestCase
 
 		InputStream page = new ByteArrayInputStream(outputStream.toByteArray());
 		XMLStreamReader streamReader = new StAXDocumentParser(page);
-		
+
 		// Run through all the document and make sure we can parse it.
 		// TODO: Validate it against a schema.
-		
-		while (streamReader.next() != streamReader.END_DOCUMENT) {}
+
+		while (streamReader.next() != XMLStreamConstants.END_DOCUMENT)
+		{
+		}
 	}
 
 

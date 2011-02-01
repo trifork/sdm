@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db;
 
+
 import java.io.*;
 import java.util.*;
 
@@ -24,6 +25,7 @@ public class YamlDataSet implements IDataSet
 			createTable(tableName, rows);
 		}
 	}
+
 
 	@SuppressWarnings("rawtypes")
 	public class MyTable implements ITable

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db.properties;
 
+
 public enum Database
 {
 	/**
@@ -8,14 +9,14 @@ public enum Database
 	WAREHOUSE,
 
 	/**
-	 * A maintenance database used for keeping track of versions and e.g. name
-	 * and address protection.
+	 * A maintenance database used for keeping track of versions and e.g. name and address
+	 * protection.
 	 */
 	HOUSEKEEPING,
 
 	/**
-	 * A database used for storing authorizations and other managment data. This
-	 * is primarily for use this the GUI.
+	 * A database used for storing authorizations and other managment data. This is primarily for
+	 * use this the GUI.
 	 */
 	ADMINISTRATION
 }

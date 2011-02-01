@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.models;
 
+
 public class User
 {
 

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.models;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static org.slf4j.LoggerFactory.*;
 
@@ -15,7 +16,7 @@ import com.trifork.sdm.replication.db.properties.Transactional;
 public class UserRepository implements IUserRepository
 {
 	private static final Logger LOG = getLogger(UserRepository.class);
-	
+
 	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;
@@ -24,29 +25,27 @@ public class UserRepository implements IUserRepository
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.trifork.sdm.replication.admin.models.IUserRepository#find(java.lang
-	 * .String)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#find(java.lang .String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
 	public User find(String id) throws SQLException
 	{
 		PreparedStatement statement = null;
-		
+
 		try
 		{
 			User admin = null;
-	
+
 			statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
 			statement.setObject(1, id);
 			ResultSet result = statement.executeQuery();
-	
+
 			if (result.next())
 			{
 				admin = extract(result);
 			}
-			
+
 			return admin;
 		}
 		finally
@@ -62,9 +61,8 @@ public class UserRepository implements IUserRepository
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.trifork.sdm.replication.admin.models.IUserRepository#create(java.
-	 * lang.String, java.lang.String, java.lang.String)
+	 * @see com.trifork.sdm.replication.admin.models.IUserRepository#create(java. lang.String,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
@@ -79,20 +77,20 @@ public class UserRepository implements IUserRepository
 			Connection conn = connectionProvider.get();
 			String sql = "INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?";
 			statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-	
+
 			statement.setString(1, name);
 			statement.setString(2, cpr);
 			statement.setString(3, cvr);
-	
+
 			if (statement.executeUpdate() != 0)
 			{
 				ResultSet resultSet = statement.getGeneratedKeys();
-	
+
 				if (resultSet != null && resultSet.next())
 				{
-	
+
 					String id = resultSet.getString(1);
-	
+
 					admin = new User(id, name, cpr, cvr);
 				}
 			}
@@ -116,10 +114,12 @@ public class UserRepository implements IUserRepository
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public List<User> findAll() throws SQLException {
+	public List<User> findAll() throws SQLException
+	{
 		PreparedStatement statement = null;
 
-		try {
+		try
+		{
 			List<User> admins = new ArrayList<User>();
 
 			statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
@@ -133,8 +133,11 @@ public class UserRepository implements IUserRepository
 			}
 
 			return admins;
-		} finally {
-			if (statement != null && !statement.isClosed()) {
+		}
+		finally
+		{
+			if (statement != null && !statement.isClosed())
+			{
 				statement.close();
 			}
 		}

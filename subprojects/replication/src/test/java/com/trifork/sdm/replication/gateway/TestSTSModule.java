@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.gateway;
 
+
 import static com.trifork.sdm.replication.gateway.SOSITestConstants.*;
 import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.*;
 import static java.lang.String.*;
@@ -43,8 +44,7 @@ public class TestSTSModule extends AbstractModule
 	/*
 	 * Fetches an updated id card.
 	 * 
-	 * The id card is valid for 24 hours starting from the time it was requested
-	 * minus 5 minutes.
+	 * The id card is valid for 24 hours starting from the time it was requested minus 5 minutes.
 	 */
 	@Provides
 	protected IDCard provideTestIDCard(SOSIFactory factory) throws Exception
@@ -52,16 +52,10 @@ public class TestSTSModule extends AbstractModule
 		// Create a SEAL ID card.
 
 		// @formatter:off
-		IDCard unsignedCard = factory.createNewSystemIDCard
-		(
-			TEST_IT_SYSTEM_NAME,
-			new CareProvider(CVR_NUMBER, TEST_CVR, "dk"),
-			AuthenticationLevel.VOCES_TRUSTED_SYSTEM,
-			null, // Username
-			null, // Password
-			factory.getCredentialVault().getSystemCredentialPair().getCertificate(),
-			null // Alternative
-		);
+		IDCard unsignedCard = factory.createNewSystemIDCard(TEST_IT_SYSTEM_NAME, new CareProvider(CVR_NUMBER, TEST_CVR, "dk"), AuthenticationLevel.VOCES_TRUSTED_SYSTEM, null, // Username
+		null, // Password
+		factory.getCredentialVault().getSystemCredentialPair().getCertificate(), null // Alternative
+				);
 		// @formatter:on
 
 		SecurityTokenRequest stsRequest = factory.createNewSecurityTokenRequest();

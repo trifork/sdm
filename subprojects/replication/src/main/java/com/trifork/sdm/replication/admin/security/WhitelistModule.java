@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.security;
 
+
 import static java.lang.annotation.ElementType.*;
 
 import java.lang.annotation.*;
@@ -23,12 +24,17 @@ public class WhitelistModule extends ConfiguredModule
 		}
 		else
 		{
-			bind(new TypeLiteral<Set<String>>() {}).annotatedWith(Whitelist.class).toInstance(whitelist);
+			bind(new TypeLiteral<Set<String>>()
+			{
+			}).annotatedWith(Whitelist.class).toInstance(whitelist);
 		}
 	}
+
 
 	@BindingAnnotation
 	@Target({ FIELD, PARAMETER, METHOD })
 	@Retention(RetentionPolicy.RUNTIME)
-	public @interface Whitelist { }
+	public @interface Whitelist
+	{
+	}
 }

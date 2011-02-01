@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.admin.security;
 
+
 import com.google.inject.*;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.rid2cpr.*;
@@ -46,8 +47,8 @@ public class SamlModule extends PropertyServletModule
 
 
 	/**
-	 * This provider's only purpose is to wrap the UserAssertionHolder class, to
-	 * make it easier (read not insanely difficult) to test SAML.
+	 * This provider's only purpose is to wrap the UserAssertionHolder class, to make it easier
+	 * (read not insanely difficult) to test SAML.
 	 */
 	@Provides
 	@RequestScoped

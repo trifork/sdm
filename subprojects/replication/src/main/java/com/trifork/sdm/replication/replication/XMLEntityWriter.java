@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.replication;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static com.trifork.sdm.replication.replication.OutputFormat.*;
 import static com.trifork.stamdata.Entities.*;
@@ -22,11 +23,11 @@ import com.trifork.stamdata.*;
 
 
 /**
- * Class that given an entity type, can output instances of that entity to an
- * output stream in XML format.
+ * Class that given an entity type, can output instances of that entity to an output stream in XML
+ * format.
  * 
- * The class uses the information entity's {@link Column} annotations, and the
- * naming convention to infer names.
+ * The class uses the information entity's {@link Column} annotations, and the naming convention to
+ * infer names.
  */
 public class XMLEntityWriter implements EntityWriter
 {
@@ -49,7 +50,7 @@ public class XMLEntityWriter implements EntityWriter
 	public void write(OutputStream outputStream, Class<? extends Record> resourceType, OutputFormat format, int pageSize, Date sinceDate, long sinceId) throws Exception
 	{
 		XMLStreamWriter writer;
-		
+
 		if (format == XML)
 		{
 			XMLOutputFactory factory = XMLOutputFactory.newInstance();
@@ -61,7 +62,7 @@ public class XMLEntityWriter implements EntityWriter
 			staxDocumentSerializer.setOutputStream(outputStream);
 			writer = staxDocumentSerializer;
 		}
-		
+
 		// Infer some names.
 
 		String tableName = Entities.getTableName(resourceType);

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.gateway;
 
+
 public interface SOSITestConstants
 {
 	String KEY_STORE_PASSWORD = "Test1234";
