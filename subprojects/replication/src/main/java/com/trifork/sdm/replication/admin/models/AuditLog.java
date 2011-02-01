@@ -25,24 +25,30 @@ public class AuditLog
 	@Transactional(ADMINISTRATION)
 	public List<LogEntry> all() throws SQLException
 	{
-		final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
-
-		List<LogEntry> logEntries = new ArrayList<LogEntry>();
-
 		Statement statement = null;
-
-		Connection connection = connectionProvider.get();
-		statement = connection.createStatement();
-
-		ResultSet row = statement.executeQuery(SQL);
-
-		while (row.next())
-		{
-			LogEntry entry = serialize(row);
-			logEntries.add(entry);
+		
+		try {
+			final String SQL = "SELECT * FROM auditlog ORDER BY created_at DESC";
+	
+			List<LogEntry> logEntries = new ArrayList<LogEntry>();
+	
+			Connection connection = connectionProvider.get();
+			statement = connection.createStatement();
+	
+			ResultSet row = statement.executeQuery(SQL);
+	
+			while (row.next())
+			{
+				LogEntry entry = serialize(row);
+				logEntries.add(entry);
+			}
+	
+			return logEntries;
+		} finally {
+			if (statement != null && !statement.isClosed()) {
+				statement.close();
+			}
 		}
-
-		return logEntries;
 	}
 
 
@@ -55,29 +61,35 @@ public class AuditLog
 	@Transactional(ADMINISTRATION)
 	public boolean create(String message) throws SQLException
 	{
-		final String CREATE_SQL = "INSERT INTO auditlog SET message = ?, created_at = NOW()";
-
-		boolean success = false;
-
-		if (message == null || message.isEmpty())
-		{
-			LOG.warn("Trying to log an empty audit message.");
-		}
-		else
-		{
-			Connection connection = connectionProvider.get();
-
-			PreparedStatement statement = connection.prepareStatement(CREATE_SQL);
-			statement.setString(1, message);
-
-			int created = statement.executeUpdate();
-
-			success = created != -1;
-		}
-
-		return success;
+		PreparedStatement statement = null;
+		try {
+			final String CREATE_SQL = "INSERT INTO auditlog SET message = ?, created_at = NOW()";
+	
+			boolean success = false;
+	
+			if (message == null || message.isEmpty())
+			{
+				LOG.warn("Trying to log an empty audit message.");
+			}
+			else
+			{
+				Connection connection = connectionProvider.get();
+	
+				statement = connection.prepareStatement(CREATE_SQL);
+				statement.setString(1, message);
+	
+				int created = statement.executeUpdate();
+	
+				success = created != -1;
+			}
+	
+			return success;
+		} finally {
+			if (statement != null && !statement.isClosed()) {
+				statement.close();
+			}
+		} 
 	}
-
 
 	protected LogEntry serialize(ResultSet resultSet) throws SQLException
 	{

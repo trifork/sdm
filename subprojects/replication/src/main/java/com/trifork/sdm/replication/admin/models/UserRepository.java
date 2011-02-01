@@ -32,21 +32,30 @@ public class UserRepository implements IUserRepository
 	@Transactional(ADMINISTRATION)
 	public User find(String id) throws SQLException
 	{
-		User user = null;
-
-		PreparedStatement statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
-		statement.setObject(1, id);
-		ResultSet result = statement.executeQuery();
-
-		if (result.next())
+		PreparedStatement statement = null;
+		
+		try
 		{
-			user = extract(result);
-			LOG.info("User ID=" + id);
+			User admin = null;
+	
+			statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators WHERE (id = ?)");
+			statement.setObject(1, id);
+			ResultSet result = statement.executeQuery();
+	
+			if (result.next())
+			{
+				admin = extract(result);
+			}
+			
+			return admin;
 		}
-
-		statement.close();
-
-		return user;
+		finally
+		{
+			if (statement != null && !statement.isClosed())
+			{
+				statement.close();
+			}
+		}
 	}
 
 
@@ -61,32 +70,42 @@ public class UserRepository implements IUserRepository
 	@Transactional(ADMINISTRATION)
 	public User create(String name, String cpr, String cvr) throws SQLException
 	{
-		User admin = null;
+		PreparedStatement statement = null;
 
-		Connection conn = connectionProvider.get();
-		String sql = "INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?";
-		PreparedStatement stm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-
-		stm.setString(1, name);
-		stm.setString(2, cpr);
-		stm.setString(3, cvr);
-
-		if (stm.executeUpdate() != 0)
+		try
 		{
-			ResultSet resultSet = stm.getGeneratedKeys();
+			User admin = null;
 
-			if (resultSet != null && resultSet.next())
+			Connection conn = connectionProvider.get();
+			String sql = "INSERT INTO administrators SET name = ?, cpr = ?, cvr = ?";
+			statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+	
+			statement.setString(1, name);
+			statement.setString(2, cpr);
+			statement.setString(3, cvr);
+	
+			if (statement.executeUpdate() != 0)
 			{
+				ResultSet resultSet = statement.getGeneratedKeys();
+	
+				if (resultSet != null && resultSet.next())
+				{
+	
+					String id = resultSet.getString(1);
+	
+					admin = new User(id, name, cpr, cvr);
+				}
+			}
 
-				String id = resultSet.getString(1);
-
-				admin = new User(id, name, cpr, cvr);
+			return admin;
+		}
+		finally
+		{
+			if (statement != null && !statement.isClosed())
+			{
+				statement.close();
 			}
 		}
-
-		stm.close();
-
-		return admin;
 	}
 
 
@@ -97,66 +116,81 @@ public class UserRepository implements IUserRepository
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public List<User> findAll() throws SQLException
-	{
-		List<User> admins = new ArrayList<User>();
+	public List<User> findAll() throws SQLException {
+		PreparedStatement statement = null;
 
-		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
+		try {
+			List<User> admins = new ArrayList<User>();
 
-		ResultSet resultSet = stm.executeQuery();
+			statement = connectionProvider.get().prepareStatement("SELECT * FROM administrators ORDER BY name");
 
-		while (resultSet.next())
-		{
-			User client = extract(resultSet);
-			admins.add(client);
+			ResultSet resultSet = statement.executeQuery();
+
+			while (resultSet.next())
+			{
+				User client = extract(resultSet);
+				admins.add(client);
+			}
+
+			return admins;
+		} finally {
+			if (statement != null && !statement.isClosed()) {
+				statement.close();
+			}
 		}
-
-		return admins;
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.trifork.sdm.replication.admin.models.IUserRepository#destroy(java
-	 * .lang.String)
-	 */
 	@Override
 	@Transactional(ADMINISTRATION)
 	public void destroy(String id) throws SQLException
 	{
-		PreparedStatement stm = connectionProvider.get().prepareStatement("DELETE FROM administrators WHERE (id = ?)");
-		stm.setObject(1, id);
-		stm.execute();
-		stm.close();
+		PreparedStatement statement = null;
+
+		try
+		{
+			statement = connectionProvider.get().prepareStatement("DELETE FROM administrators WHERE (id = ?)");
+			statement.setObject(1, id);
+			statement.execute();
+		}
+		finally
+		{
+			if (statement != null && !statement.isClosed())
+			{
+				statement.close();
+			}
+		}
 	}
 
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.trifork.sdm.replication.admin.models.IUserRepository#isAdmin(java
-	 * .lang.String, java.lang.String)
-	 */
 	@Override
 	@Transactional(ADMINISTRATION)
 	public boolean isAdmin(String userCPR, String userCVR) throws SQLException
 	{
-		PreparedStatement stm = connectionProvider.get().prepareStatement("SELECT COUNT(*) FROM administrators WHERE (cpr = ?)");
-		stm.setObject(1, userCPR);
-		ResultSet row = stm.executeQuery();
-		stm.close();
+		PreparedStatement statement = null;
 
-		boolean isAdmin = false;
-
-		if (row.next())
+		try
 		{
-			isAdmin = row.getInt(1) > 0;
-		}
+			statement = connectionProvider.get().prepareStatement("SELECT COUNT(*) FROM administrators WHERE (cpr = ?)");
+			statement.setObject(1, userCPR);
+			ResultSet row = statement.executeQuery();
 
-		return isAdmin;
+			boolean isAdmin = false;
+
+			if (row.next())
+			{
+				isAdmin = row.getInt(1) > 0;
+			}
+
+			return isAdmin;
+		}
+		finally
+		{
+			if (statement != null && !statement.isClosed())
+			{
+				statement.close();
+			}
+		}
 	}
 
 
