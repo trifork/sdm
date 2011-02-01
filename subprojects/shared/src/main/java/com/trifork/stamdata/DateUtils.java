@@ -20,9 +20,8 @@ public class DateUtils
 
 	private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
-	// TODO: How do these date combine with java.util.Date?
-	public static final Date FOREVER = toDate(2999, 12, 31);
-	public static final Date PAST = new Date(0l);
+	public static final Date FOREVER = new Date(Long.MAX_VALUE);
+	public static final Date PAST = new Date(Long.MIN_VALUE);
 
 
 	/**

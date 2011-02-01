@@ -18,10 +18,10 @@ public class AdminstrationModule extends ConfiguredModule
 		serve("/admin/log", "/admin/log/*").with(AuditLogController.class);
 		serve("/admin", "/admin/clients", "/admin/clients/*").with(ClientController.class);
 
-		bindInterceptor(
-				inPackage(Package.getPackage("com.trifork.sdm.replication.admin.models")),
-				annotatedWith(Transactional.class),
-				new RepositoryErrorLogger());
+//		bindInterceptor(
+//				inPackage(Package.getPackage("com.trifork.sdm.replication.admin.models")),
+//				annotatedWith(Transactional.class),
+//				new RepositoryErrorLogger());
 		
 		// Template Engine used for the views' HTML.
 

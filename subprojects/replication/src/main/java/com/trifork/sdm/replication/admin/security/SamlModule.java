@@ -4,6 +4,7 @@ import com.google.inject.*;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.rid2cpr.*;
 import com.trifork.sdm.replication.util.PropertyServletModule;
+import com.trifork.xmlquery.Namespaces;
 
 import dk.itst.oiosaml.sp.*;
 import dk.itst.oiosaml.sp.service.*;
@@ -11,6 +12,7 @@ import dk.itst.oiosaml.sp.service.*;
 
 public class SamlModule extends PropertyServletModule
 {
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void configureServlets()
 	{
@@ -33,6 +35,7 @@ public class SamlModule extends PropertyServletModule
 		ridService.setEndpoint(property("rid2cpr.endpoint"));
 		ridService.setKeystore(property("rid2cpr.keystore"));
 		ridService.setKeystorePassword(property("rid2cpr.keystorePassword"));
+		ridService.setNamespaces(Namespaces.getOIONamespaces());
 
 		int timeout = Integer.parseInt(property("rid2cpr.callTimeout"));
 		ridService.setReadTimeout(timeout * 1000);

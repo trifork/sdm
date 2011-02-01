@@ -153,10 +153,6 @@ public class SoapProcessor implements RequestProcessor
 	{
 		Reply error = null;
 
-		// TODO: Change faultcode (not medcom:faultcode) to Client (instead of
-		// Server),
-		// on all these messages, and log them.
-
 		if (soapBody.entity == null || soapBody.entity.isEmpty())
 		{
 			// TODO: All log messages should contain a it_system={}.

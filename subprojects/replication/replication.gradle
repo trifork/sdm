@@ -48,9 +48,9 @@ dependencies {
 		// TODO: Make the person who made RID2CPR
 		// fix his ivy file. The runtime dependencies are messed up.
 		runtime 'commons-httpclient:commons-httpclient:3.1@jar'
-		runtime 'com.trifork:xmlobject:1.9'
+		compile 'com.trifork:xmlobject:1.11'
 	}
-	
+
 	// MySQL
 	
 	compile libs.mysql_driver

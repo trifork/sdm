@@ -1,33 +1,42 @@
 package com.trifork.sdm.replication.admin.controllers;
 
-import static com.trifork.sdm.replication.db.properties.Database.*;
-import static org.slf4j.LoggerFactory.*;
+import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.Entity;
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.*;
-import org.slf4j.*;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
-import com.google.inject.*;
-import com.trifork.sdm.replication.admin.models.*;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.trifork.sdm.replication.admin.models.Client;
+import com.trifork.sdm.replication.admin.models.ClientRepository;
+import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.properties.Transactional;
-import com.trifork.stamdata.*;
+import com.trifork.stamdata.Entities;
+import com.trifork.stamdata.Record;
 
 
 @Singleton
 public class ClientController extends AbstractController
 {
-	private static final Logger LOG = getLogger(ClientController.class);
-	
 	@Inject
 	private ClientRepository clients;
 
@@ -77,8 +86,6 @@ public class ClientController extends AbstractController
 		String method = request.getParameter("method");
 		String id = request.getParameter("id");
 
-		LOG.info("method='" + method + "' id=" + id);
-		
 		try
 		{
 			if (id == null)
@@ -87,7 +94,6 @@ public class ClientController extends AbstractController
 			}
 			else if ("DELETE".equals(method))
 			{
-				LOG.info("DELETE id=" + id);
 				getDelete(request, response);
 			}
 			else
@@ -97,8 +103,6 @@ public class ClientController extends AbstractController
 		}
 		catch (Throwable t)
 		{
-			// TODO: Log
-
 			throw new ServletException(t);
 		}
 	}
