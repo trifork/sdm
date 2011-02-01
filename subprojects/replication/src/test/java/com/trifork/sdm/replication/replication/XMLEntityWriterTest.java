@@ -11,7 +11,10 @@ import java.sql.*;
 import java.util.Calendar;
 
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
+import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.*;
 import org.junit.Before;
 import org.junit.Test;
