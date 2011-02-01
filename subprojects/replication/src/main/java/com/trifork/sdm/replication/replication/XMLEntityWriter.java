@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.xml.stream.*;
 
 import com.google.inject.*;
+import com.sun.xml.fastinfoset.stax.StAXDocumentSerializer;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.util.URLFactory;
 import com.trifork.stamdata.*;
@@ -47,20 +48,20 @@ public class XMLEntityWriter implements EntityWriter
 	@Override
 	public void write(OutputStream outputStream, Class<? extends Record> resourceType, OutputFormat format, int pageSize, Date sinceDate, long sinceId) throws Exception
 	{
-		XMLOutputFactory factory;
-
+		XMLStreamWriter writer;
+		
 		if (format == XML)
 		{
-			factory = XMLOutputFactory.newInstance();
+			XMLOutputFactory factory = XMLOutputFactory.newInstance();
+			writer = factory.createXMLStreamWriter(outputStream);
 		}
 		else
-		// FastInfoset
 		{
-			factory = XMLOutputFactory.newInstance();
+			StAXDocumentSerializer staxDocumentSerializer = new StAXDocumentSerializer();
+			staxDocumentSerializer.setOutputStream(outputStream);
+			writer = staxDocumentSerializer;
 		}
-
-		XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream);
-
+		
 		// Infer some names.
 
 		String tableName = Entities.getTableName(resourceType);
