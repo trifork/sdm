@@ -88,7 +88,7 @@ public class UserController extends AbstractController
 	}
 
 
-	private void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
+	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
 	{
 		// Get the new administrator's info from the
 		// HTML form.
@@ -112,7 +112,7 @@ public class UserController extends AbstractController
 	}
 
 
-	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException
+	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException
 	{
 		String id = request.getParameter("id");
 
@@ -131,7 +131,7 @@ public class UserController extends AbstractController
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
+	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
@@ -141,7 +141,7 @@ public class UserController extends AbstractController
 	}
 
 
-	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		// List the white listed firms (CVR).
 
@@ -153,7 +153,7 @@ public class UserController extends AbstractController
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException
+	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
