@@ -9,10 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.trifork.sdm.replication.GuiceTest;
 
-public class ClientControllerTest
+
+public class ClientControllerTest extends GuiceTest
 {
-	private ClientController clientController;
+	private ClientController controller;
+
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
@@ -20,16 +23,15 @@ public class ClientControllerTest
 	@Before
 	public void setUp() throws Throwable
 	{
-		clientController = spy(new ClientController());
 		request = mock(HttpServletRequest.class);
 		response = mock(HttpServletResponse.class);
-		doNothing().when(clientController).getNew(request, response);
-		doNothing().when(clientController).getList(request, response);
-		doNothing().when(clientController).getEdit(request, response);
-		doNothing().when(clientController).getCreate(request, response);
-		doNothing().when(clientController).getDelete(request, response);
-		doNothing().when(clientController).getUpdate(request, response);
 
+		doNothing().when(controller).getNew(request, response);
+		doNothing().when(controller).getList(request, response);
+		doNothing().when(controller).getEdit(request, response);
+		doNothing().when(controller).getCreate(request, response);
+		doNothing().when(controller).getDelete(request, response);
+		doNothing().when(controller).getUpdate(request, response);
 	}
 
 
@@ -40,12 +42,12 @@ public class ClientControllerTest
 		when(request.getRequestURI()).thenReturn("SomeUrlEndingWith/new");
 
 		// Act
-		clientController.doGet(request, response);
+		controller.doGet(request, response);
 
 		// Assert
-		verify(clientController).getNew(request, response);
-		verify(clientController, never()).getList(request, response);
-		verify(clientController, never()).getEdit(request, response);
+		verify(controller).getNew(request, response);
+		verify(controller, never()).getList(request, response);
+		verify(controller, never()).getEdit(request, response);
 	}
 
 
@@ -58,12 +60,12 @@ public class ClientControllerTest
 															// null value returned
 
 		// Act
-		clientController.doGet(request, response);
+		controller.doGet(request, response);
 
 		// Assert
-		verify(clientController).getList(request, response);
-		verify(clientController, never()).getNew(request, response);
-		verify(clientController, never()).getEdit(request, response);
+		verify(controller).getList(request, response);
+		verify(controller, never()).getNew(request, response);
+		verify(controller, never()).getEdit(request, response);
 	}
 
 
@@ -75,12 +77,12 @@ public class ClientControllerTest
 		when(request.getParameter("id")).thenReturn("42");
 
 		// Act
-		clientController.doGet(request, response);
+		controller.doGet(request, response);
 
 		// Assert
-		verify(clientController).getEdit(request, response);
-		verify(clientController, never()).getNew(request, response);
-		verify(clientController, never()).getList(request, response);
+		verify(controller).getEdit(request, response);
+		verify(controller, never()).getNew(request, response);
+		verify(controller, never()).getList(request, response);
 	}
 
 
@@ -90,12 +92,12 @@ public class ClientControllerTest
 		// Arrange
 
 		// Act
-		clientController.doPost(request, response);
+		controller.doPost(request, response);
 
 		// Assert
-		verify(clientController).getCreate(request, response);
-		verify(clientController, never()).getDelete(request, response);
-		verify(clientController, never()).getUpdate(request, response);
+		verify(controller).getCreate(request, response);
+		verify(controller, never()).getDelete(request, response);
+		verify(controller, never()).getUpdate(request, response);
 	}
 
 
@@ -107,12 +109,12 @@ public class ClientControllerTest
 		when(request.getParameter("method")).thenReturn("DELETE");
 
 		// Act
-		clientController.doPost(request, response);
+		controller.doPost(request, response);
 
 		// Assert
-		verify(clientController, never()).getCreate(request, response);
-		verify(clientController).getDelete(request, response);
-		verify(clientController, never()).getUpdate(request, response);
+		verify(controller, never()).getCreate(request, response);
+		verify(controller).getDelete(request, response);
+		verify(controller, never()).getUpdate(request, response);
 	}
 
 
@@ -124,11 +126,11 @@ public class ClientControllerTest
 		when(request.getParameter("method")).thenReturn("OTHER");
 
 		// Act
-		clientController.doPost(request, response);
+		controller.doPost(request, response);
 
 		// Assert
-		verify(clientController, never()).getCreate(request, response);
-		verify(clientController, never()).getDelete(request, response);
-		verify(clientController).getUpdate(request, response);
+		verify(controller, never()).getCreate(request, response);
+		verify(controller, never()).getDelete(request, response);
+		verify(controller).getUpdate(request, response);
 	}
 }
