@@ -88,27 +88,6 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 	{
 		private static final long serialVersionUID = 1L;
 
-
-		public OutOfTransactionException()
-		{
-		}
-
-
-		public OutOfTransactionException(String message)
-		{
-			super(message);
-		}
-
-
-		public OutOfTransactionException(String message, Throwable cause)
-		{
-			super(message, cause);
-		}
-
-
-		public OutOfTransactionException(Throwable cause)
-		{
-			super(cause);
-		}
+		public OutOfTransactionException() {}
 	}
 }

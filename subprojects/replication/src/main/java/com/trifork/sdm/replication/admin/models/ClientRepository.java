@@ -133,7 +133,7 @@ public class ClientRepository
 
 
 	@Transactional(ADMINISTRATION)
-	public List<Client> findAll() throws OutOfTransactionException, SQLException
+	public List<Client> findAll() throws SQLException
 	{
 		PreparedStatement statement = null;
 		

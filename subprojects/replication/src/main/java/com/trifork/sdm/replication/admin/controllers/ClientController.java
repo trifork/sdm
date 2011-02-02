@@ -108,7 +108,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getCreate(HttpServletRequest request, HttpServletResponse response) throws OutOfTransactionException, SQLException, IOException
+	private void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
 	{
 		// Create a new client.
 
@@ -174,7 +174,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, OutOfTransactionException, SQLException, IOException
+	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, SQLException, IOException
 	{
 		String id = request.getParameter("id");
 
@@ -196,7 +196,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
+	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
@@ -210,7 +210,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, OutOfTransactionException, SQLException
+	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
