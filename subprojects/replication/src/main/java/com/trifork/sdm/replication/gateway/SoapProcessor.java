@@ -14,6 +14,7 @@ import java.util.Properties;
 import org.slf4j.Logger;
 
 import com.google.inject.Inject;
+import com.trifork.sdm.replication.admin.models.IAuditLog;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
 import com.trifork.sdm.replication.gateway.properties.DefaultPageSize;
 import com.trifork.sdm.replication.util.URLFactory;
@@ -44,15 +45,18 @@ public class SoapProcessor implements RequestProcessor
 
 	private final PermissionRepository permissionRepository;
 
+	private final IAuditLog auditLog;
+
 	private final int defaultPageSize;
 
 
 	@Inject
-	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository, @DefaultPageSize int defaultPageSize)
+	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository, @DefaultPageSize int defaultPageSize, IAuditLog auditLog)
 	{
 		this.urlFactory = urlFactory;
 		this.permissionRepository = permissionRepository;
 		this.defaultPageSize = defaultPageSize;
+		this.auditLog = auditLog;
 
 		Properties encryptionSetting = SignatureUtil.setupCryptoProviderForJVM();
 
@@ -84,18 +88,7 @@ public class SoapProcessor implements RequestProcessor
 
 			// Set the default if not present.
 
-			if (params.pageSize == null)
-			{
-				params.pageSize = defaultPageSize;
-			}
-			if (params.historyId == null)
-			{
-				params.historyId = BEGINING_OF_TIME;
-			}
-			if (params.format == null)
-			{
-				params.format = "XML";
-			}
+			setDefaultParameters(params);
 
 			// Validate the parameters.
 
@@ -117,11 +110,20 @@ public class SoapProcessor implements RequestProcessor
 			}
 			else
 			{
-				// Construct the URL and return it in SOAP.
-				
-				if (LOG.isInfoEnabled()) {
-					LOG.info(String.format("Generating resourceURL with params: entityType=%s, pageSize=%s, historyId=%s, format=%s" + params.getEntityType(), params.pageSize, params.historyId, params.format));
+				// Write the request to the audit log.
+
+				String message = String.format("Gateway Request: clientCVR=%s, entityType=%s, pageSize=%s, historyId=%s, format=%s", clientCVR, params.getEntityType(), params.pageSize, params.historyId, params.format);
+				auditLog.create(message);
+
+				// Log some statistics if it is enabled.
+
+				if (LOG.isInfoEnabled())
+				{
+					Object[] info = new Object[] {};
+					LOG.info(message, info);
 				}
+
+				// Construct the URL and return it in SOAP.
 
 				String resourceURL = urlFactory.create(params.getEntityType(), params.pageSize, params.historyId, params.format);
 
@@ -131,7 +133,7 @@ public class SoapProcessor implements RequestProcessor
 				reply.setBody(responseBody.serialize());
 			}
 		}
-		catch (Throwable t)
+		catch (Exception t)
 		{
 			LOG.error("Unhandled exception has thrown in the gateway.", t);
 			reply = factory.createNewErrorReply(VERSION_1_0_1, "", "", "Server", "Server error. The event has been logged. Please contact the support.");
@@ -142,6 +144,23 @@ public class SoapProcessor implements RequestProcessor
 		responseCode = reply.isFault() ? SOAP_FAULT : SOAP_OK;
 
 		response = XmlUtil.node2String(reply.serialize2DOMDocument(), false, false);
+	}
+
+
+	private void setDefaultParameters(GatewayRequest params)
+	{
+		if (params.pageSize == null)
+		{
+			params.pageSize = defaultPageSize;
+		}
+		if (params.historyId == null)
+		{
+			params.historyId = BEGINING_OF_TIME;
+		}
+		if (params.format == null)
+		{
+			params.format = "XML";
+		}
 	}
 
 
