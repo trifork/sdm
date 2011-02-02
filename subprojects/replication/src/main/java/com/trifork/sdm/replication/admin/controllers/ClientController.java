@@ -29,7 +29,6 @@ import com.google.inject.Singleton;
 import com.trifork.sdm.replication.admin.models.Client;
 import com.trifork.sdm.replication.admin.models.ClientRepository;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
-import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
@@ -109,7 +108,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
+	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
 	{
 		// Create a new client.
 
@@ -127,7 +126,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getUpdate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
+	protected void getUpdate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
 	{
 		// Update an the permissions for a client.
 
@@ -175,7 +174,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, SQLException, IOException
+	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, SQLException, IOException
 	{
 		String id = request.getParameter("id");
 
@@ -191,13 +190,13 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
+	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
 		render("client/new.ftl", null, request, response);
 	}
 
 
-	private void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
+	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
@@ -211,7 +210,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	private void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
+	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
 	{
 		Map<String, Object> root = new HashMap<String, Object>();
 
