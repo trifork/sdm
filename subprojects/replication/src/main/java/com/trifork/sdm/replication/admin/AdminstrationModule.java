@@ -9,6 +9,7 @@ import com.trifork.sdm.replication.admin.views.TemplateModule;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.util.ConfiguredModule;
 
+
 public class AdminstrationModule extends ConfiguredModule
 {
 	@Override

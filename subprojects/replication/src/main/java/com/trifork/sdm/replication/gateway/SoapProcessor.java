@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.gateway;
 
+
 import static dk.sosi.seal.model.AuthenticationLevel.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;
 import static dk.sosi.seal.model.constants.FaultCodeValues.*;

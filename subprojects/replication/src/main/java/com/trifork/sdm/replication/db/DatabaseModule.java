@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db;
 
+
 import static com.google.inject.matcher.Matchers.*;
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static com.trifork.sdm.replication.db.properties.Transactions.*;
@@ -20,25 +21,13 @@ public class DatabaseModule extends ConfiguredModule
 	public void configureServlets()
 	{
 		// @formatter:off
-		
+
 		// Make it easy to do transactions.
 
-		bindTransactionManager(transaction(WAREHOUSE),
-			getConfig().getString("db.warehouse.username"),
-			getConfig().getString("db.warehouse.password"),
-			getConfig().getString("db.warehouse.host"),
-			getConfig().getInt("db.warehouse.port"),
-			getConfig().getString("db.warehouse.schema")
-		);
+		bindTransactionManager(transaction(WAREHOUSE), getConfig().getString("db.warehouse.username"), getConfig().getString("db.warehouse.password"), getConfig().getString("db.warehouse.host"), getConfig().getInt("db.warehouse.port"), getConfig().getString("db.warehouse.schema"));
 
-		bindTransactionManager(transaction(ADMINISTRATION),
-			getConfig().getString("db.administration.username"),
-			getConfig().getString("db.administration.password"),
-			getConfig().getString("db.administration.host"),
-			getConfig().getInt("db.administration.port"),
-			getConfig().getString("db.administration.schema")
-		);
-	
+		bindTransactionManager(transaction(ADMINISTRATION), getConfig().getString("db.administration.username"), getConfig().getString("db.administration.password"), getConfig().getString("db.administration.host"), getConfig().getInt("db.administration.port"), getConfig().getString("db.administration.schema"));
+
 		// @formatter:on
 	}
 

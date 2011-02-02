@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db;
 
+
 import static org.dbunit.operation.DatabaseOperation.*;
 
 import java.io.*;
@@ -16,12 +17,11 @@ import com.trifork.sdm.replication.ProductionModule;
 
 
 /**
- * This class it a template I have made for when/if we want to use an in-memory
- * db (H2 in this case).
+ * This class it a template I have made for when/if we want to use an in-memory db (H2 in this
+ * case).
  * 
- * This would require: - That we can access the SQL scripts from the build
- * environment at runtime. - That we get some nice fixtures (test data) loaded
- * into the yaml files.
+ * This would require: - That we can access the SQL scripts from the build environment at runtime. -
+ * That we get some nice fixtures (test data) loaded into the yaml files.
  */
 public class InMemoryDBTest
 {

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.monitoring;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 
 import java.io.IOException;
@@ -86,6 +87,7 @@ public class StatusServlet extends HttpServlet
 
 		return true;
 	}
+
 
 	private static final long serialVersionUID = 1L;
 }

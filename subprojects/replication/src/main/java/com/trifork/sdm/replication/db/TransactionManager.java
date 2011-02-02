@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db;
 
+
 import java.sql.Connection;
 
 import javax.sql.DataSource;
@@ -83,6 +84,7 @@ public class TransactionManager implements MethodInterceptor, Provider<Connectio
 			conn.close();
 		}
 	}
+
 
 	public static class OutOfTransactionException extends RuntimeException
 	{

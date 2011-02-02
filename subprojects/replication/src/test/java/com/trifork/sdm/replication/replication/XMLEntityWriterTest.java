@@ -6,10 +6,11 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.Calendar;
+
+import javax.xml.stream.*;
 
 import org.custommonkey.xmlunit.*;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 import com.google.inject.Provider;
+import com.sun.xml.fastinfoset.stax.StAXDocumentParser;
 import com.trifork.sdm.replication.util.URLFactory;
 import com.trifork.stamdata.registre.sor.Apotek;
 
@@ -27,6 +29,8 @@ public class XMLEntityWriterTest extends XMLTestCase
 	private URLFactory urlFactory;
 	private Calendar now;
 
+
+	@Override
 	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception
@@ -71,8 +75,15 @@ public class XMLEntityWriterTest extends XMLTestCase
 
 		// Assert
 
-		String fi = outputStream.toString();
-		assertNotNull(fi);
+		InputStream page = new ByteArrayInputStream(outputStream.toByteArray());
+		XMLStreamReader streamReader = new StAXDocumentParser(page);
+
+		// Run through all the document and make sure we can parse it.
+		// TODO: Validate it against a schema.
+
+		while (streamReader.next() != XMLStreamConstants.END_DOCUMENT)
+		{
+		}
 	}
 
 

@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.replication;
 
+
 import java.util.*;
 
 import com.google.inject.TypeLiteral;
@@ -26,9 +27,9 @@ public class ResourceModule extends ServletModule
 		// Bind the map to the generic type annotated with @Routes.
 
 		// @formatter:off
-		bind(new TypeLiteral<Map<String, Class<? extends Record>>>() {})
-			.annotatedWith(Routes.class)
-			.toInstance(routes);
+		bind(new TypeLiteral<Map<String, Class<? extends Record>>>()
+		{
+		}).annotatedWith(Routes.class).toInstance(routes);
 		// @formatter:on
 
 		// Serve the replication service

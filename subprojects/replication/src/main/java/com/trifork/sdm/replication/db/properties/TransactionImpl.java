@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.db.properties;
 
+
 import java.lang.annotation.Annotation;
 
 
@@ -55,6 +56,7 @@ class TransactionImpl implements Transactional
 	{
 		return "@" + Transactional.class.getName() + "(database=" + database + ")";
 	}
+
 
 	private static final long serialVersionUID = 0;
 }

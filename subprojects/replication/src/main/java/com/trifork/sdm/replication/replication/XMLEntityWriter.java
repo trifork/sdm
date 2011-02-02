@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.replication;
 
+
 import static com.trifork.sdm.replication.db.properties.Database.*;
 import static com.trifork.sdm.replication.replication.OutputFormat.*;
 import static com.trifork.stamdata.Entities.*;
@@ -15,17 +16,18 @@ import javax.persistence.Column;
 import javax.xml.stream.*;
 
 import com.google.inject.*;
+import com.sun.xml.fastinfoset.stax.StAXDocumentSerializer;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.util.URLFactory;
 import com.trifork.stamdata.*;
 
 
 /**
- * Class that given an entity type, can output instances of that entity to an
- * output stream in XML format.
+ * Class that given an entity type, can output instances of that entity to an output stream in XML
+ * format.
  * 
- * The class uses the information entity's {@link Column} annotations, and the
- * naming convention to infer names.
+ * The class uses the information entity's {@link Column} annotations, and the naming convention to
+ * infer names.
  */
 public class XMLEntityWriter implements EntityWriter
 {
@@ -47,19 +49,19 @@ public class XMLEntityWriter implements EntityWriter
 	@Override
 	public void write(OutputStream outputStream, Class<? extends Record> resourceType, OutputFormat format, int pageSize, Date sinceDate, long sinceId) throws Exception
 	{
-		XMLOutputFactory factory;
+		XMLStreamWriter writer;
 
 		if (format == XML)
 		{
-			factory = XMLOutputFactory.newInstance();
+			XMLOutputFactory factory = XMLOutputFactory.newInstance();
+			writer = factory.createXMLStreamWriter(outputStream);
 		}
 		else
-		// FastInfoset
 		{
-			factory = XMLOutputFactory.newInstance();
+			StAXDocumentSerializer staxDocumentSerializer = new StAXDocumentSerializer();
+			staxDocumentSerializer.setOutputStream(outputStream);
+			writer = staxDocumentSerializer;
 		}
-
-		XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream);
 
 		// Infer some names.
 

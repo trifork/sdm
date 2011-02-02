@@ -1,5 +1,6 @@
 package com.trifork.sdm.replication.replication;
 
+
 import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
