@@ -118,6 +118,10 @@ public class SoapProcessor implements RequestProcessor
 			else
 			{
 				// Construct the URL and return it in SOAP.
+				
+				if (LOG.isInfoEnabled()) {
+					LOG.info(String.format("Generating resourceURL with params: entityType=%s, pageSize=%s, historyId=%s, format=%s" + params.getEntityType(), params.pageSize, params.historyId, params.format));
+				}
 
 				String resourceURL = urlFactory.create(params.getEntityType(), params.pageSize, params.historyId, params.format);
 
@@ -193,7 +197,6 @@ public class SoapProcessor implements RequestProcessor
 		}
 		else if (!card.isValidInTime())
 		{
-			LOG.warn("");
 			error = factory.createNewErrorReply(request, EXPIRED_IDCARD, "The ID card has expired.");
 		}
 
