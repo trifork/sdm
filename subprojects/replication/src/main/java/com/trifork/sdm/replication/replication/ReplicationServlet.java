@@ -25,14 +25,14 @@ public class ReplicationServlet extends HttpServlet
 
 	private static final int HISTORY_ID_SEGMENT_LENGTH = 10;
 	private static final long serialVersionUID = -172563300590543180L;
-	private static final int MILLIS_TO_SECS = 1000;
+	private static final int SECS_TO_MILLIS = 1000;
 
 	@Inject
-	private Provider<EntityWriter> writerProvider;
+	protected Provider<EntityWriter> writerProvider;
 
 	@Inject
 	@Routes
-	private Map<String, Class<? extends Record>> routes;
+	protected Map<String, Class<? extends Record>> routes;
 
 
 	@Override
@@ -54,9 +54,9 @@ public class ReplicationServlet extends HttpServlet
 			// PID offset on the strings' lengths.
 
 			String sinceDateParam = historyIdParam.substring(0, historyIdParam.length() - HISTORY_ID_SEGMENT_LENGTH);
-			Date sinceDate = new Date(Long.parseLong(sinceDateParam) * MILLIS_TO_SECS);
+			Date sinceDate = new Date(Long.parseLong(sinceDateParam) * SECS_TO_MILLIS);
 
-			String sinceIdParam = historyIdParam.substring(historyIdParam.length() - HISTORY_ID_SEGMENT_LENGTH - 1);
+			String sinceIdParam = historyIdParam.substring(historyIdParam.length() - HISTORY_ID_SEGMENT_LENGTH);
 			long sinceId = Long.parseLong(sinceIdParam);
 
 			// Determine the output format.
