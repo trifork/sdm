@@ -1,17 +1,21 @@
 package com.trifork.sdm.replication.admin.security;
 
 
-import com.google.inject.*;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import com.google.inject.servlet.RequestScoped;
-import com.trifork.rid2cpr.*;
-import com.trifork.sdm.replication.util.PropertyServletModule;
+import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
+import com.trifork.rid2cpr.RID2CPRFacade;
+import com.trifork.sdm.replication.util.ConfiguredModule;
 import com.trifork.xmlquery.Namespaces;
 
-import dk.itst.oiosaml.sp.*;
-import dk.itst.oiosaml.sp.service.*;
+import dk.itst.oiosaml.sp.UserAssertion;
+import dk.itst.oiosaml.sp.UserAssertionHolder;
+import dk.itst.oiosaml.sp.service.DispatcherServlet;
+import dk.itst.oiosaml.sp.service.SPFilter;
 
 
-public class SamlModule extends PropertyServletModule
+public class SamlModule extends ConfiguredModule
 {
 	@SuppressWarnings("deprecation")
 	@Override
@@ -31,13 +35,15 @@ public class SamlModule extends PropertyServletModule
 
 		CachingRID2CPRFacadeImpl ridService = new CachingRID2CPRFacadeImpl();
 
+		ridService.setEndpoint(getConfig().getString("rid2cpr.endpoint"));
+		ridService.setKeystore(getConfig().getString("rid2cpr.keystore"));
+		ridService.setKeystorePassword(getConfig().getString("rid2cpr.keystorePassword"));
+		
 		// Setting the defaults is deprecated.
-		ridService.setEndpoint(property("rid2cpr.endpoint"));
-		ridService.setKeystore(property("rid2cpr.keystore"));
-		ridService.setKeystorePassword(property("rid2cpr.keystorePassword"));
+		
 		ridService.setNamespaces(Namespaces.getOIONamespaces());
 
-		int timeout = Integer.parseInt(property("rid2cpr.callTimeout"));
+		int timeout = getConfig().getInt("rid2cpr.callTimeout");
 		ridService.setReadTimeout(timeout * 1000);
 
 		ridService.init();
