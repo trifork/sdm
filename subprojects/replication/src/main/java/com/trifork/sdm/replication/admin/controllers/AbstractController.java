@@ -10,7 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import com.google.inject.*;
-import com.trifork.sdm.replication.admin.models.AuditLog;
+import com.trifork.sdm.replication.admin.models.IAuditLog;
 
 import freemarker.template.*;
 
@@ -21,8 +21,7 @@ public class AbstractController extends HttpServlet
 	protected Configuration templates;
 
 	@Inject
-	protected AuditLog auditLog;
-
+	protected IAuditLog auditLog;
 
 	protected void render(String templatePath, Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{

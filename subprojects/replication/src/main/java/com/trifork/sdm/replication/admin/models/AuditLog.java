@@ -13,7 +13,7 @@ import com.google.inject.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
-public class AuditLog
+public class AuditLog implements IAuditLog
 {
 	private static Logger LOG = getLogger(AuditLog.class);
 
@@ -22,6 +22,10 @@ public class AuditLog
 	private Provider<Connection> connectionProvider;
 
 
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IAuditLog#all()
+	 */
+	@Override
 	@Transactional(ADMINISTRATION)
 	public List<LogEntry> all() throws SQLException
 	{
@@ -52,12 +56,20 @@ public class AuditLog
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IAuditLog#create(java.lang.String, java.lang.Object)
+	 */
+	@Override
 	public boolean create(String message, Object... args) throws SQLException
 	{
 		return create(format(message, args));
 	}
 
 
+	/* (non-Javadoc)
+	 * @see com.trifork.sdm.replication.admin.models.IAuditLog#create(java.lang.String)
+	 */
+	@Override
 	@Transactional(ADMINISTRATION)
 	public boolean create(String message) throws SQLException
 	{
