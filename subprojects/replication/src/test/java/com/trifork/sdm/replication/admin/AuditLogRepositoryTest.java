@@ -14,7 +14,7 @@ import com.trifork.sdm.replication.admin.models.*;
 
 public class AuditLogRepositoryTest extends GuiceTest
 {
-	private IAuditLog auditLogRepository;
+	private AuditLog auditLogRepository;
 
 
 	@Before
