@@ -117,11 +117,7 @@ public class SoapProcessor implements RequestProcessor
 
 				// Log some statistics if it is enabled.
 
-				if (LOG.isInfoEnabled())
-				{
-					Object[] info = new Object[] {};
-					LOG.info(message, info);
-				}
+				LOG.info(message);
 
 				// Construct the URL and return it in SOAP.
 
