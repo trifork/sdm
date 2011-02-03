@@ -23,6 +23,8 @@ public class ClientControllerTest extends GuiceTest
 	@Before
 	public void setUp() throws Throwable
 	{
+		controller = spy(new ClientController());
+
 		request = mock(HttpServletRequest.class);
 		response = mock(HttpServletResponse.class);
 
@@ -132,5 +134,33 @@ public class ClientControllerTest extends GuiceTest
 		verify(controller, never()).getCreate(request, response);
 		verify(controller, never()).getDelete(request, response);
 		verify(controller).getUpdate(request, response);
+	}
+
+
+	@Test
+	public void should_delete_user() throws Throwable
+	{
+		controller.getDelete(request, response);
+	}
+
+
+	@Test
+	public void should_create_user() throws Throwable
+	{
+		controller.getCreate(request, response);
+	}
+
+
+	@Test
+	public void should_update_user() throws Throwable
+	{
+		controller.getUpdate(request, response);
+	}
+
+
+	@Test
+	public void should_list_users() throws Throwable
+	{
+		controller.getList(request, response);
 	}
 }
