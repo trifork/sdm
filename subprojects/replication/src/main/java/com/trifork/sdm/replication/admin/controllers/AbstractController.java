@@ -18,11 +18,17 @@ import freemarker.template.*;
 
 public class AbstractController extends HttpServlet
 {
-	@Inject
-	protected Configuration templates;
+	protected final Configuration templates;
+	protected final IAuditLog auditLog;
+
 
 	@Inject
-	protected IAuditLog auditLog;
+	public AbstractController(Configuration templates, IAuditLog auditLog)
+	{
+		this.templates = templates;
+		this.auditLog = auditLog;
+	}
+
 
 	protected void render(String templatePath, Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
 	{
@@ -45,7 +51,9 @@ public class AbstractController extends HttpServlet
 			bodyWriter.close();
 
 			Template html = templates.getTemplate("application.ftl");
-			html.process(root, response.getWriter());
+
+			PrintWriter w = response.getWriter();
+			html.process(root, w);
 		}
 		catch (TemplateException e)
 		{

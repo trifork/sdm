@@ -1,36 +1,42 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.google.inject.Provides;
 import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.admin.models.IAuditLog;
 import com.trifork.sdm.replication.admin.models.LogEntry;
 
-import static org.hamcrest.Matchers.containsString;
+import freemarker.template.Configuration;
 
 
 public class AuditLogControllerTest extends GuiceTest
 {
 	private AuditLogController controller;
 
-	private static List<LogEntry> entries;
-
 	private HttpServletRequest request;
+
 	private HttpServletResponse response;
 
-	private OutputStream output;
+	private ByteArrayOutputStream output;
+
 	private PrintWriter outputWriter;
+
+	private static List<LogEntry> entries;
+
+	private IAuditLog auditLog;
 
 
 	@Override
@@ -43,12 +49,16 @@ public class AuditLogControllerTest extends GuiceTest
 	@Before
 	public void setUp() throws Exception
 	{
-		controller = getInjector().getInstance(AuditLogController.class);
-
-		// Mock the request and response.
+		//
+		// Mock the request.
+		//
 
 		request = mock(HttpServletRequest.class);
 		when(request.getContextPath()).thenReturn("/replication");
+
+		//
+		// Mock the response.
+		//
 
 		response = mock(HttpServletResponse.class);
 
@@ -57,6 +67,15 @@ public class AuditLogControllerTest extends GuiceTest
 		output = new ByteArrayOutputStream();
 		outputWriter = new PrintWriter(output, true);
 		when(response.getWriter()).thenReturn(outputWriter);
+
+		auditLog = mock(IAuditLog.class);
+		when(auditLog.all()).thenReturn(entries);
+
+		// The controller under test.
+
+		Configuration config = getInjector().getInstance(Configuration.class);
+
+		controller = spy(new AuditLogController(config, auditLog));
 	}
 
 
@@ -75,16 +94,6 @@ public class AuditLogControllerTest extends GuiceTest
 
 	public void assertPageContains(String content)
 	{
-		String page = output.toString();
-		assertThat(page, containsString(content));
-	}
-
-
-	@Provides
-	public IAuditLog provideAuditLog() throws Exception
-	{
-		IAuditLog log = mock(IAuditLog.class);
-		when(log.all()).thenReturn(entries);
-		return log;
+		assertThat(output.toString(), containsString(content));
 	}
 }

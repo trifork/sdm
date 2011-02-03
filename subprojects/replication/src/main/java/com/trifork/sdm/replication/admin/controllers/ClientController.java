@@ -26,22 +26,29 @@ import org.reflections.util.FilterBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.trifork.sdm.replication.admin.models.Client;
-import com.trifork.sdm.replication.admin.models.ClientRepository;
-import com.trifork.sdm.replication.admin.models.PermissionRepository;
+import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Record;
+
+import freemarker.template.Configuration;
 
 
 @Singleton
 public class ClientController extends AbstractController
 {
-	@Inject
-	private ClientRepository clients;
+	private final ClientRepository clients;
+	private final PermissionRepository permissions;
+
 
 	@Inject
-	private PermissionRepository permissions;
+	public ClientController(ClientRepository clients, PermissionRepository permissions, Configuration templates, IAuditLog auditlog)
+	{
+		super(templates, auditlog);
+
+		this.clients = clients;
+		this.permissions = permissions;
+	}
 
 
 	@Override
@@ -130,20 +137,18 @@ public class ClientController extends AbstractController
 	{
 		// Update an the permissions for a client.
 
-		final String PREFIX = "entity_";
-
 		@SuppressWarnings("unchecked")
-		Enumeration<String> e = request.getParameterNames();
+		Enumeration<String> params = request.getParameterNames();
 
 		List<String> entities = new ArrayList<String>();
 
-		while (e.hasMoreElements())
+		while (params.hasMoreElements())
 		{
-			String param = e.nextElement();
+			String param = params.nextElement();
 
-			if (param.startsWith(PREFIX))
+			if (param.startsWith("entity_"))
 			{
-				entities.add(param.substring(PREFIX.length()));
+				entities.add(param.substring("entity_".length()));
 			}
 		}
 

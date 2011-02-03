@@ -1,7 +1,11 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
+
+import java.io.*;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,30 +14,72 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.sdm.replication.GuiceTest;
+import com.trifork.sdm.replication.admin.models.*;
+
+import freemarker.template.Configuration;
 
 
 public class ClientControllerTest extends GuiceTest
 {
 	private ClientController controller;
 
-	private HttpServletRequest request;
-	private HttpServletResponse response;
+	private ClientRepository clientRepository;
+	private PermissionRepository permissionRepository;
+
+	protected HttpServletRequest request;
+	protected HttpServletResponse response;
+
+	protected OutputStream output;
+	protected PrintWriter outputWriter;
 
 
 	@Before
-	public void setUp() throws Throwable
+	public void setUp() throws Exception
 	{
-		controller = spy(new ClientController());
+		//
+		// Mock the request.
+		//
 
 		request = mock(HttpServletRequest.class);
+		when(request.getContextPath()).thenReturn("/replication");
+
+		//
+		// Mock the response.
+		//
+
 		response = mock(HttpServletResponse.class);
 
-		doNothing().when(controller).getNew(request, response);
-		doNothing().when(controller).getList(request, response);
-		doNothing().when(controller).getEdit(request, response);
-		doNothing().when(controller).getCreate(request, response);
-		doNothing().when(controller).getDelete(request, response);
-		doNothing().when(controller).getUpdate(request, response);
+		// Make sure we can access the output.
+
+		output = new ByteArrayOutputStream();
+		outputWriter = new PrintWriter(output, true);
+		when(response.getWriter()).thenReturn(outputWriter);
+
+		clientRepository = mock(ClientRepository.class);
+
+		when(clientRepository.create(anyString(), anyString())).thenReturn(new Client("1", "1", "1"));
+		when(clientRepository.find(anyString())).thenReturn(new Client("1", "1", "1"));
+
+		// Setup permissions.
+		
+		permissionRepository = mock(PermissionRepository.class);
+		
+		List<String> permissions = new ArrayList<String>();
+		permissions.add("Foo");
+		permissions.add("Bar");
+		when(permissionRepository.findByClientId(anyString())).thenReturn(permissions);
+
+		// Templates
+		
+		Configuration templates = getInjector().getInstance(Configuration.class);
+		
+		// Auditlog
+		
+		IAuditLog auditlog = mock(AuditLog.class);
+		
+		// The controller under test.
+		
+		controller = spy(new ClientController(clientRepository, permissionRepository, templates, auditlog));
 	}
 
 
@@ -48,8 +94,6 @@ public class ClientControllerTest extends GuiceTest
 
 		// Assert
 		verify(controller).getNew(request, response);
-		verify(controller, never()).getList(request, response);
-		verify(controller, never()).getEdit(request, response);
 	}
 
 
@@ -58,16 +102,16 @@ public class ClientControllerTest extends GuiceTest
 	{
 		// Arrange
 		when(request.getRequestURI()).thenReturn("SomeUrlNotEndingWithSlashNew");
-		when(request.getParameter("id")).thenReturn(null); // Not needed, but here to document the
-															// null value returned
+
+		// Not needed, but here to document the
+		// null value returned
+		when(request.getParameter("id")).thenReturn(null);
 
 		// Act
 		controller.doGet(request, response);
 
 		// Assert
 		verify(controller).getList(request, response);
-		verify(controller, never()).getNew(request, response);
-		verify(controller, never()).getEdit(request, response);
 	}
 
 
@@ -83,8 +127,6 @@ public class ClientControllerTest extends GuiceTest
 
 		// Assert
 		verify(controller).getEdit(request, response);
-		verify(controller, never()).getNew(request, response);
-		verify(controller, never()).getList(request, response);
 	}
 
 
@@ -98,8 +140,6 @@ public class ClientControllerTest extends GuiceTest
 
 		// Assert
 		verify(controller).getCreate(request, response);
-		verify(controller, never()).getDelete(request, response);
-		verify(controller, never()).getUpdate(request, response);
 	}
 
 
@@ -114,9 +154,7 @@ public class ClientControllerTest extends GuiceTest
 		controller.doPost(request, response);
 
 		// Assert
-		verify(controller, never()).getCreate(request, response);
 		verify(controller).getDelete(request, response);
-		verify(controller, never()).getUpdate(request, response);
 	}
 
 
@@ -125,42 +163,18 @@ public class ClientControllerTest extends GuiceTest
 	{
 		// Arrange
 		when(request.getParameter("id")).thenReturn("42");
-		when(request.getParameter("method")).thenReturn("OTHER");
+		when(request.getParameter("method")).thenReturn("UPDATE");
+
+		@SuppressWarnings("unchecked")
+		Enumeration<String> paramNames = mock(Enumeration.class);
+		when(paramNames.nextElement()).thenReturn("entity_Apotek", "entity_Sygehus");
+		when(paramNames.hasMoreElements()).thenReturn(true, true, false);
+		when(request.getParameterNames()).thenReturn(paramNames);
 
 		// Act
 		controller.doPost(request, response);
 
 		// Assert
-		verify(controller, never()).getCreate(request, response);
-		verify(controller, never()).getDelete(request, response);
 		verify(controller).getUpdate(request, response);
-	}
-
-
-	@Test
-	public void should_delete_user() throws Throwable
-	{
-		controller.getDelete(request, response);
-	}
-
-
-	@Test
-	public void should_create_user() throws Throwable
-	{
-		controller.getCreate(request, response);
-	}
-
-
-	@Test
-	public void should_update_user() throws Throwable
-	{
-		controller.getUpdate(request, response);
-	}
-
-
-	@Test
-	public void should_list_users() throws Throwable
-	{
-		controller.getList(request, response);
 	}
 }

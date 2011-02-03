@@ -9,13 +9,24 @@ import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.trifork.sdm.replication.admin.models.IAuditLog;
 import com.trifork.sdm.replication.db.properties.Transactional;
+
+import freemarker.template.Configuration;
 
 
 @Singleton
 public class AuditLogController extends AbstractController
 {
+	@Inject
+	public AuditLogController(Configuration templates, IAuditLog auditLog)
+	{
+		super(templates, auditLog);
+	}
+
+
 	@Override
 	@Transactional(ADMINISTRATION)
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

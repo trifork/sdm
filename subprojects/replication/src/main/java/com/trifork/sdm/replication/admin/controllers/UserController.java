@@ -18,18 +18,26 @@ import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.admin.security.WhitelistModule.Whitelist;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
+import freemarker.template.Configuration;
+
 
 @Singleton
 public class UserController extends AbstractController
 {
 	private static final Logger LOG = getLogger(UserController.class);
 
-	@Inject
-	private IUserRepository users;
+	private final IUserRepository users;
+	private final Set<String> whitelist;
+
 
 	@Inject
-	@Whitelist
-	private Set<String> whitelist;
+	public UserController(@Whitelist Set<String> whitelist, IUserRepository users, Configuration templates, IAuditLog auditlog)
+	{
+		super(templates, auditlog);
+		
+		this.whitelist = whitelist;
+		this.users = users;
+	}
 
 
 	@Override
