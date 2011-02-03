@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 
 public class RepositoryErrorLogger implements MethodInterceptor
 {
-
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable
 	{
@@ -27,5 +26,4 @@ public class RepositoryErrorLogger implements MethodInterceptor
 			throw t;
 		}
 	}
-
 }
