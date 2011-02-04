@@ -1,0 +1,11 @@
+dependencies {
+  compile(libs.guice_api) {
+		compile "javax.inject:javax.inject:1.0@jar"
+		compile "aopalliance:aopalliance:1.0@jar"
+	}
+	
+	compile (libs.slf4j_api) {
+    runtime libs.logback_core
+    runtime libs.logback_classic
+  }
+}
