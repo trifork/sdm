@@ -57,13 +57,29 @@ configure(install.repositories.mavenInstaller) {
 
 // Settings for deploying to the repository.
 
+// Usually when we have assembled a project we also want to
+// install it in our local repo.
+// TODO: These two lines might be removed or at least commented
+// out in the future.
+
 assemble.doLast( { install } )
 uploadArchives.dependsOn install
 
+// In order to deploy the artifacts we need some dependencies.
+// The actually jars needed depend on how we are going to deploy.
+// By default we just use HTTP to deploy.
+
+configurations {
+    deployerJars
+}
+
+dependencies {
+    deployerJars "org.apache.maven.wagon:wagon-http:1.0-beta-2"
+}
+
 uploadArchives {
 	repositories.mavenDeployer {
-		name = 'triforkDeployer'
-		configuration = configurations.runtime
+		configuration = configurations.deployerJars
 		pom.project pomConfig
 		repository(id: 'trifork-releases', 
 			url: 'http://nexus.ci81.trifork.com/content/repositories/releases/')
