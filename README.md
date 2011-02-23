@@ -15,10 +15,24 @@ There are two example sub-projects, one Java and one Scala.
 Suggestions and patches (or pull requests) are very welcome. If you encounter
 any bugs please make an issue on Github.
 
-Git Hooks
-=========
+Git Tips
+========
 
-TBA
+It is a good idea to check your code before you push anything to other central
+repositories. While you don't necessarily want to run tests and check code for
+every commit you do locally.
+
+You can setup a git command alias to check your code before you push anything.
+
+    git config alias.publish '! gradle check && git push "$@"'
+
+This will allow you to e.g. write:
+
+    git publish origin master
+
+as an alternative to `git push`. Please note that since you will be running
+tests and other code checks this will usually take considerably longer than
+a normal push.
 
 Requirements
 ============
