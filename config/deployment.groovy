@@ -4,7 +4,7 @@
 // different URLs.
 //////////////////////////////////////////////////////////////////////////////
 
-def PROJECT_NAME = 'example'
+def PROJECT_NAME = project.rootProject.projectName
 
 // Contents of the deployed POM files.
 
@@ -20,12 +20,12 @@ def pomConfig = {
 
 	issueManagement {
 		system 'jira'
-		url 'http://jira.trifork.com/projects/${PROJECT_NAME}/browse/HHH'
+		url "http://jira.trifork.com/projects/${PROJECT_NAME}/browse/HHH"
 	}
 	scm {
-		url 'http://github.com/trifork/${PROJECT_NAME}'
-		connection 'scm:git:http://github.com/trifork/${PROJECT_NAME}.git'
-		developerConnection 'scm:git:git@github.com:trifork/${PROJECT_NAME}.git'
+		url "http://github.com/trifork/${PROJECT_NAME}"
+		connection "scm:git:http://github.com/trifork/${PROJECT_NAME}.git"
+		developerConnection "scm:git:git@github.com:trifork/${PROJECT_NAME}.git"
 	}
 
 	// You MUST have to update this section to point to any embedded licenses
