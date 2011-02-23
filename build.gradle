@@ -22,12 +22,11 @@ allprojects {
 	// Usually you will want to add proxy repositories to nexus instead on
 	// adding explicitly here.
 	repositories {
-		mavenRepo name: 'trifork-releases',
-			urls: 'http://nexus.ci81.trifork.com/content/repositories/releases/'
+		mavenRepo name: 'trifork-nexus',
+			urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
 		mavenRepo name: 'trifork-snapshots',
-			urls: 'http://nexus.ci81.trifork.com/content/repositories/snapshots/'
+			urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
 		mavenLocal()
-		mavenCentral()
     }
 }
 
