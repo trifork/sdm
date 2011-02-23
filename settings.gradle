@@ -1,0 +1,16 @@
+// Declare subprojects in this file.
+// The prefered way is to list them, one per line,
+// as below.
+
+include 'subproject1'
+include 'subproject2'
+
+// To avoid every gradle file being called 'build.gradle',
+// subprojects are required to name theirs 
+// e.g. subproject1/subproject1.gradle.
+
+rootProject.children.each { project ->
+    project.buildFileName = "${project.name}.gradle"
+    assert project.projectDir.isDirectory()
+    assert project.buildFile.isFile()
+}

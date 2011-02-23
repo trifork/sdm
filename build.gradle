@@ -1,0 +1,68 @@
+apply plugin: 'java-base'
+
+//////////////////////////////////////////////////////////////////////////////
+// This file is the base build-script for the project. There are additional
+// config files in the 'config'-directory, that handle different aspects of
+// the build and deployment for the project.
+//////////////////////////////////////////////////////////////////////////////
+
+allprojects {
+	// You can use 'gradle eclipse' to generate eclipse project files.
+	apply plugin: 'eclipse'
+
+	defaultTasks 'build'
+
+	// Generally you will want to deploy SNAPSHOT versions during development.
+	// You can also manually rename the version removing
+	// the suffix, when you want to release.
+	// TODO: Make a release task that automates versioning etc.
+	group = 'com.trifork'
+	version = '3.0.0-SNAPSHOT'
+
+	// Usually you will want to add proxy repositories to nexus instead on
+	// adding explicitly here.
+	repositories {
+		mavenRepo name: 'trifork-releases',
+			urls: 'http://nexus.ci81.trifork.com/content/repositories/releases/'
+		mavenRepo name: 'trifork-snapshots',
+			urls: 'http://nexus.ci81.trifork.com/content/repositories/snapshots/'
+		mavenLocal()
+		mavenCentral()
+    }
+}
+
+apply from: 'config/dependencies.groovy'
+
+subprojects { subproject ->
+	// If you are making WARs take a look at the 'war' plugin.
+	apply plugin: 'java'
+
+	targetCompatibility = '1.6'
+	sourceCompatibility = '1.6'
+
+	// Settings for deploying the produced artifacts to nexus etc.
+	apply from: "$rootDir/config/deployment.groovy"
+
+	// Checkstyle source coding standards.
+	// TODO: These setting are a bit verbose, but
+	// the implementation seems to be a bit broken (in Gradle 0.9.2).
+
+	apply plugin: 'code-quality'
+	checkstyleConfigDir = "$rootDir/config/checkstyle"
+	checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
+	checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
+
+	// Shared dependencies for all subprojects.
+	// Logging is a common shared dependency.
+
+	dependencies {
+		testCompile	libraries.testng
+	}
+
+	// Add some extra memory for testing, this is usually useful.
+	test {
+		maxHeapSize = "1024m"
+	}
+}
+
+dependsOnChildren()

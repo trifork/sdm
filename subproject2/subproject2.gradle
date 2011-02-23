@@ -1,0 +1,18 @@
+//////////////////////////////////////////////////////////////////////////////
+// This project is a simple scala project example. You can enable it in
+// settings.gradle by uncommenting the include line. Remember that you need
+// scala installed to build it.
+//////////////////////////////////////////////////////////////////////////////
+
+apply plugin: 'scala'
+
+def SCALA_VERSION = "2.8.1"
+
+dependencies {
+    // Libraries needed to run the scala tools.
+    scalaTools 'org.scala-lang:scala-compiler:' + SCALA_VERSION
+    scalaTools 'org.scala-lang:scala-library:' + SCALA_VERSION
+
+    // Libraries needed for scala api.
+    compile 'org.scala-lang:scala-library:' + SCALA_VERSION
+}
