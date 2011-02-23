@@ -14,25 +14,25 @@ def pomConfig = {
 		name 'Trifork'
 		url 'http://trifork.com'
 	}
-	
+
 	// If your are not using Jira or Git you should ofcourse leave the
 	// appropriate sections out or edit them accordingly.
-	
+
 	issueManagement {
-	    system 'jira'
-	    url 'http://jira.trifork.com/projects/${PROJECT_NAME}/browse/HHH'
+		system 'jira'
+		url 'http://jira.trifork.com/projects/${PROJECT_NAME}/browse/HHH'
 	}
-	scm {		
+	scm {
 		url 'http://github.com/trifork/${PROJECT_NAME}'
 		connection 'scm:git:http://github.com/trifork/${PROJECT_NAME}.git'
 		developerConnection 'scm:git:git@github.com:trifork/${PROJECT_NAME}.git'
 	}
-	
+
 	// You MUST have to update this section to point to any embedded licenses
 	// or link to additional online licenses.
-	
+
 	licenses {
-	    license {
+		license {
 			name 'GNU Lesser General Public License'
 			url 'http://www.gnu.org/licenses/lgpl-2.1.html'
 			distribution 'repo'
