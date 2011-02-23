@@ -43,7 +43,7 @@ def pomConfig = {
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// You SHOULD not have to edit this file below this point,
+// You should not have to edit this file below this point,
 // unless you need special behaviour.
 //////////////////////////////////////////////////////////////////////////////
 
@@ -51,16 +51,14 @@ apply plugin: 'maven'
 
 basePomConfig = pomConfig
 
-configure(install.repositories.mavenInstaller) {
-	pom.project pomConfig
-}
-
-// Settings for deploying to the repository.
-
 // Usually when we have assembled a project we also want to
 // install it in our local repo.
 // TODO: These two lines might be removed or at least commented
 // out in the future.
+
+configure(install.repositories.mavenInstaller) {
+	pom.project pomConfig
+}
 
 assemble.doLast( { install } )
 uploadArchives.dependsOn install
@@ -80,6 +78,7 @@ dependencies {
 uploadArchives {
 	repositories.mavenDeployer {
 		configuration = configurations.deployerJars
+		pom.artifactId = project.hasProperty('artifactId') ? project.artifactId : project.name
 		pom.project pomConfig
 		repository(id: 'trifork-releases', 
 			url: 'http://nexus.ci81.trifork.com/content/repositories/releases/')
@@ -100,6 +99,23 @@ artifacts {
 }
 
 uploadArchives.dependsOn sourcesJar
+
+gradle.taskGraph.whenReady { taskGraph ->
+	def v = nextReleaseVersion
+	if (!taskGraph.hasTask(deployRelease)) v += '-SNAPSHOT'
+	allprojects { version = v }
+}
+
+task deploySnapshot(dependsOn: 'uploadArchives')
+
+task deployRelease(dependsOn: 'uploadArchives') << {
+	println ""
+	println "RELEASE COMPLETED"
+	println ""
+	println "Update the property 'nextReleaseVersion' in 'gradle.properties'"
+	println "right away and push the change to the central repository."
+	println ""
+}
 
 // Standard information for the MANIFEST.MF files.
 // Use the 'osgi' plugin if you need osgi support.
