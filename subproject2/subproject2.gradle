@@ -1,7 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
-// This project is a simple scala project example. You can enable it in
-// settings.gradle by uncommenting the include line. Remember that you need
-// scala installed to build it.
+// This project is a simple scala project example. Remember that you need
+// scala installed to actually run it.
 //////////////////////////////////////////////////////////////////////////////
 
 apply plugin: 'scala'
