@@ -16,7 +16,7 @@ Suggestions and patches (or pull requests) are very welcome. If you encounter
 any bugs please make an issue on Github.
 
 Build Customization
-===================
+-------------------
 
 There are very few things that actually need to be changed in the build,
 configuration – at least to start out with.
@@ -42,7 +42,7 @@ Coding standards and formatting is checked using checkstyle. You can edit them
 to fit your project in 'config/checkstyle/checkstyle.xml'.
 
 Git Tips
-========
+--------
 
 It is a good idea to check your code before you push anything to other central
 repositories. While you don't necessarily want to run tests and check code for
@@ -61,9 +61,9 @@ tests and other code checks this will usually take considerably longer than
 a normal push.
 
 Requirements
-============
+------------
 
-This build setup is made for Gradle 9.2+.
+This build setup is made for Gradle 0.9.2+.
 
 If you want to run the Scala subproject you will need to have install a
 version of Scala.
