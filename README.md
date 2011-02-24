@@ -12,7 +12,7 @@ To get started make a git repository and add this repository as a remote:
 
 That way you can also easily get any future additions:
 
-    git pull template
+    git pull template master
 
 The template contains two example sub-projects, one Java and one Scala.
 
