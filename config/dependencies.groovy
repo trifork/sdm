@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// This file contains a handy list of dependencies names and versions.
+// This file contains a handy list of dependencies' names and versions.
 // This can be used to make sure dependencies are consistently versioned 
 // in your projects.
 //////////////////////////////////////////////////////////////////////////////
