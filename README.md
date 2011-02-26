@@ -79,12 +79,18 @@ the rough, you can use _Snapshot_ versions. Snapshots of a given version can
 be deployed with any number of times. For people familiar with Ivy, snapshots
 can be used as a 'latest integration' dependencies.
 
-When making a release artifact it is important to make sure that you don't
+Deploy a snapshot artifact:
+
+    gradle deploySnapshot
+
+When making a release it is important to make sure that you don't
 depend on any snapshot artifacts. Since snapshots change over time, future
 snapshot versions will potentially break your release (which is bad).
 
 So make sure you have no '-SNAPSHOT' dependencies when you call
 `deployRelease` or at the very least, as few of them as possible.
+
+TODO: In future this check might be automated.
 
 Git Tips
 --------
