@@ -6,9 +6,8 @@
 
 apply plugin: 'java-base'
 
-// Check that the required properties have been set.
-assert hasProperty('projectName')
-assert hasProperty('nextReleaseVersion')
+// Please make sure you read the README.md file before you try to understand
+// what is going on.
 
 allprojects {
 	// You can use 'gradle eclipse' to generate eclipse project files.
@@ -17,31 +16,26 @@ allprojects {
 
 	defaultTasks 'build'
 
-	group = 'com.trifork.' + projectName
-
 	// Usually you will want to add proxy repositories to nexus instead on
 	// adding explicitly here.
 	repositories {
-		mavenRepo name: 'trifork-nexus',
-			urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
-		mavenRepo name: 'trifork-snapshots',
-			urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
 		mavenLocal()
-    }
+		mavenRepo name: 'trifork-releases', urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
+		mavenRepo name: 'trifork-snapshots', urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
+	}
 }
 
-apply from: 'config/dependencies.groovy'
+apply from: 'config/libraries.groovy'
 
 subprojects { subproject ->
+	
 	// Subproject currently always default to java. This might change in the future.
 	// If you are making WARs take a look at the 'war' plugin.
 	apply plugin: 'java'
+	apply plugin: 'deployment'
 
 	targetCompatibility = '1.6'
 	sourceCompatibility = '1.6'
-
-	// Settings for deploying the produced artifacts to nexus etc.
-	apply from: "$rootDir/config/deployment.groovy"
 
 	// Checkstyle source coding standards.
 	// TODO: These setting are a bit verbose, but
@@ -64,3 +58,18 @@ subprojects { subproject ->
 }
 
 dependsOnChildren()
+
+// The following is section is adds the plugins from
+// https://github.com/trifork/gradle-plugins.
+
+buildscript {
+	repositories {
+		mavenLocal()
+		mavenRepo name: 'trifork-releases', urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
+		mavenRepo name: 'trifork-snapshots', urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
+		
+	}
+	dependencies {
+		classpath 'com.trifork:gradle-plugins:0.1.0'
+	}
+}

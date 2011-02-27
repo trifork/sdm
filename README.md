@@ -45,23 +45,39 @@ Dependency Management
 ---------------------
 
 It is a good idea to keep a list of dependencies you use in several
-sub-projects in the `config/dependencies.groovy` file. That way you can keep
+sub-projects in the `config/libraries.groovy` file. That way you can keep
 versions consistent. There is of course nothing that is stopping your from
-declaring dependencies on an ad-hoc basis in your subprojects. But this can
+declaring dependencies on an ad-hoc basis in your sub-projects. But this can
 quickly get out of hand for larger projects.
 
-Check out [Gradle Java Dependencies](http://bit.ly/fwBqFF) to see how to
-manage dependencies effectively.
+Plugins
+-------
+
+Gradle has a good plugin system.  By default Gradle comes with a lot of handy
+plugins, but they are quite general and need some customization.  Therefore
+there is a set plugin specificly made for Trifork projects. 
+
+By default only the `deployment` plugin is added.  It helps you use the
+Trifork nexus server correctly and use a consistent scheme for deployment of
+artifacts, both class and source files.
+
+All the plugins are described in the Plugin Project's README. You can find it
+[here](https://github.com/trifork/gradle-plugins).
 
 Releases & Snapshots
 --------------------
 
-It is important to have a well-defined and uniform way of sharing jar files
-and other artifacts. Maven repos are the de-facto standard for artifact
-sharing. To leverage this and keep a high degree of interoperability.
+When you apply the deployment-plugin you get a few extra tasks to help you
+share your artifacts.
 
-The property `nextReleaseVersion` plays an important roll in this respect.
-You should always update it when you have made a release to the repository.
+It is important to have a well-defined and consistent way of sharing jar files
+and other artifacts. Maven repos are the de-facto standard for artifact
+sharing and by using it you get a high degree of interoperability between
+build systems.
+
+When using the deployment-plugin it is important to manage your build version.
+The property `version` should always update it when you have made a release to
+the repository. It is defined in the 'gradle.properties' file.
 
 You will only be able to release an artifact of a given version once. If you
 try to redeploy a release artifact, the deployment will fail (as it should).
@@ -114,7 +130,7 @@ a normal push.
 Requirements
 ------------
 
-This build setup is made for Gradle 0.9.2+.
+This build setup is made for Gradle 1.0-milestone-1+.
 
 If you want to run the Scala subproject you will need to have install a
 version of Scala.
