@@ -25,8 +25,6 @@ allprojects {
 	}
 }
 
-apply from: 'config/libraries.groovy'
-
 subprojects { subproject ->
 	
 	// Subproject currently always default to java. This might change in the future.
@@ -36,6 +34,11 @@ subprojects { subproject ->
 
 	targetCompatibility = '1.6'
 	sourceCompatibility = '1.6'
+	
+	// Include references to common dependencies so you can keep
+	// versions consistent accross your sub-projects.
+	
+	apply from: 'config/libraries.groovy'
 
 	// Checkstyle source coding standards.
 	// TODO: These setting are a bit verbose, but
