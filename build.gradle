@@ -1,29 +1,47 @@
 apply plugin: 'java-base'
 
+def guiceVersion = '2.0'
+
 libs = [
-	commons_io: 'commons-io:commons-io:2.0@jar',
-	commons_codec: 'commons-codec:commons-codec:1.4@jar',
-	commons_lang: 'commons-lang:commons-lang:2.5@jar',
-	commons_configuration: 'commons-configuration:commons-configuration:1.6@jar',
-	slf4j_api: 'org.slf4j:slf4j-api:1.6.1@jar',
-	log4j_over_slf4j: 'org.slf4j:jcl-over-slf4j:1.6.1@jar',
-	jcl_over_slf4j: 'org.slf4j:jcl-over-slf4j:1.6.1@jar',
-	logback_core: 'ch.qos.logback:logback-core:0.9.27@jar',
-	logback_classic: 'ch.qos.logback:logback-classic:0.9.27@jar',
+	commons_io: 'commons-io:commons-io:2.0',
+	commons_codec: 'commons-codec:commons-codec:1.4',
+	commons_lang: 'commons-lang:commons-lang:2.5',
+	commons_configuration: 'commons-configuration:commons-configuration:1.6',
+	
+	slf4j_api: 'org.slf4j:slf4j-api:1.6.1',
+	log4j_over_slf4j: 'org.slf4j:jcl-over-slf4j:1.6.1',
+	jcl_over_slf4j: 'org.slf4j:jcl-over-slf4j:1.6.1',
+	
+	logback_core: 'ch.qos.logback:logback-core:0.9.27',
+	logback_classic: 'ch.qos.logback:logback-classic:0.9.27',
+	
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
+	
 	reflections: 'org.reflections:reflections:0.9.5-RC2',
+	
 	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1@jar',
+	
 	mysql_driver: 'mysql:mysql-connector-java:5.1.13@jar',
+	
 	junit: 'junit:junit:4.8.2',
 	mockito: 'org.mockito:mockito-core:1.8.5',
-	objenesis: 'org.objenesis:objenesis:1.2',
+	
 	hamcrest: 'org.hamcrest:hamcrest-library:1.2',
+	
 	bouncycastle: 'bouncycastle:bcprov-jdk16:140@jar',
-	jodi_time: 'joda-time:joda-time:1.6@jar',
-	velocity: 'apache-velocity:velocity:1.5@jar',
-	guice_api: 'com.google.inject:guice:3.0-rc2@jar',
-	guice_servlet: 'com.google.inject:guice-servlet:3.0-rc2@jar',
-	guice_assistedinject: 'com.google.inject:guice-assistedinject:3.0-rc2@jar'
+	
+	jodi_time: 'joda-time:joda-time:1.6',
+	
+	seal: 'dk.sosi:seal:1.5.13',
+	
+	velocity: 'apache-velocity:velocity:1.5',
+	
+	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
+	
+	
+	aopalliance: 'aopalliance:aopalliance:1.0@jar',
+	guice: 'com.google.code.guice:guice:' + guiceVersion,
+	guice_servlet: 'com.google.code.guice:guice-servlet:' + guiceVersion
 ]
 
 allprojects {
@@ -31,39 +49,25 @@ allprojects {
 	version = '3.0.0'
 
 	repositories {
-		mavenRepo urls: 'http://gradle.artifactoryonline.com/gradle/libs'
-		mavenRepo urls: 'http://repository.jboss.com/maven2'
-		mavenRepo urls: 'http://download.java.net/maven/2/'
-		mavenRepo urls: 'http://reflections.googlecode.com/svn/repo'
-		mavenRepo urls: 'http://nexus.ci81.trifork.com/content/groups/public'
+
+		mavenRepo urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
+		mavenRepo urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
 	}
 
 	apply plugin: 'eclipse'
-
-	eclipseClasspath {
-		variables = [:]
-	}
 }
 
 subprojects {
 	apply plugin: 'java'
-	
+
 	sourceCompatibility = 1.6
 	targetCompatibility = 1.6
-	
-	// Check that the war-projects' layout match the convention.
-	
-	plugins.withType(WarPlugin).whenPluginAdded {
-		project.webXml = new File(webAppDir, 'WEB-INF/web.xml')
-		assert project.webAppDir.isDirectory()
-		assert project.webXml.isFile()
-	}
 
 	configurations {
 		runtime {
 			// Exclude other logging from all dependencies
 			// since we will be using slf4j and logback.
-		
+
 			exclude group: "commons-logging"
 			exclude group: "log4j"
 		}

@@ -18,6 +18,6 @@ public interface IAuditLog {
 			throws SQLException;
 
 	@Transactional(ADMINISTRATION)
-	public abstract boolean create(String message) throws SQLException;
+	public abstract boolean log(String message) throws SQLException;
 
 }

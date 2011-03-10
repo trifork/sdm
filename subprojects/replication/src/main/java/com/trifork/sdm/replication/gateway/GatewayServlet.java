@@ -3,15 +3,15 @@ package com.trifork.sdm.replication.gateway;
 
 import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
-import javax.inject.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.apache.commons.io.IOUtils;
 
-import com.trifork.sdm.replication.gateway.properties.SOAP;
+import com.google.inject.*;
 
 
 @Singleton
@@ -23,7 +23,7 @@ public class GatewayServlet extends HttpServlet
 
 
 	@Inject
-	GatewayServlet(@SOAP Provider<RequestProcessor> processorProvider)
+	GatewayServlet(Provider<RequestProcessor> processorProvider)
 	{
 		this.processorProvider = processorProvider;
 	}

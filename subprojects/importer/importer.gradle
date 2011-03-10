@@ -30,9 +30,3 @@ dependencies {
 	runtime libs.logback_core
 	runtime libs.logback_classic
 }
-
-// To allow the app to be deployed to a webserver
-// inside eclise, we have to add the compile configuration
-// the the eclipse WTP project explicitly.
-
-eclipseWtp.plusConfigurations = [configurations.compile, configurations.runtime]

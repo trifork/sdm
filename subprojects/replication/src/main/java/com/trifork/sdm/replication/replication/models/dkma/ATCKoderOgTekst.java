@@ -1,0 +1,79 @@
+package com.trifork.sdm.replication.replication.models.dkma;
+
+import java.math.BigInteger;
+import java.util.Date;
+
+import javax.persistence.*;
+import javax.xml.bind.annotation.*;
+
+import com.trifork.sdm.replication.replication.models.Record;
+import com.trifork.sdm.replication.util.Namespace;
+
+@Entity(name = "dkma/atc/v1")
+@Table(name = "ATC")
+@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
+@XmlAccessorType(XmlAccessType.FIELD)
+public class ATCKoderOgTekst extends Record
+{
+	@Id
+	@GeneratedValue
+	@Column(name = "ATCPID")
+	@XmlTransient
+	private BigInteger recordID;
+
+	@Column(name = "ATC")
+	protected String code;
+
+	@Column(name = "ATCTekst")
+	protected String text;
+
+	@Column(name = "ATCNiveau1")
+	protected String niveau1;
+
+	@Column(name = "ATCNiveau2")
+	protected String niveau2;
+
+	@Column(name = "ATCNiveau3")
+	protected String niveau3;
+
+	@Column(name = "ATCNiveau4")
+	protected String niveau4;
+
+	@Column(name = "ATCNiveau5")
+	protected String niveau5;
+
+	@XmlTransient
+	@Column(name = "ModifiedDate")
+	private Date modifiedDate;
+
+	@XmlTransient
+	@Column(name = "ValidFrom")
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date validFrom;
+
+	@XmlTransient
+	@Column(name = "ValidTo")
+	@Temporal(TemporalType.TIMESTAMP)
+	protected Date validTo;
+
+
+	@Override
+	public String getID()
+	{
+		return code;
+	}
+
+
+	@Override
+	public Date getUpdated()
+	{
+		return modifiedDate;
+	}
+
+
+	@Override
+	public BigInteger getRecordID()
+	{
+		return recordID;
+	}
+}

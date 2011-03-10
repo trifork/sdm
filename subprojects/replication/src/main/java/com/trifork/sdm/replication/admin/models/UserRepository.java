@@ -2,21 +2,18 @@ package com.trifork.sdm.replication.admin.models;
 
 
 import static com.trifork.sdm.replication.db.properties.Database.*;
-import static org.slf4j.LoggerFactory.*;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.slf4j.*;
-
-import com.google.inject.*;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 
 public class UserRepository implements IUserRepository
 {
-	private static final Logger LOG = getLogger(UserRepository.class);
-
 	@Inject
 	@Transactional(ADMINISTRATION)
 	private Provider<Connection> connectionProvider;

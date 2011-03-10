@@ -1,46 +1,36 @@
 package com.trifork.sdm.replication.gateway;
 
-
-import java.net.*;
+import javax.xml.bind.*;
 
 import com.google.inject.Provides;
-import com.trifork.sdm.replication.gateway.properties.*;
+import com.trifork.sdm.replication.gateway.properties.Secret;
+import com.trifork.sdm.replication.util.AuthorizationManager;
 import com.trifork.sdm.replication.util.ConfiguredModule;
-
 
 public class GatewayModule extends ConfiguredModule
 {
+	private JAXBContext context;
+
+
 	@Override
 	protected void configureServlets()
 	{
-		bind(RequestProcessor.class).annotatedWith(SOAP.class).to(SoapProcessor.class);
+		bind(RequestProcessor.class).to(SoapProcessor.class);
 
 		// Set up the route.
 
 		serve("/gateway").with(GatewayServlet.class);
-	}
 
-
-	@Provides
-	protected URL provideURL() throws MalformedURLException
-	{
-		return new URL(getConfig().getString("replication.url"));
-	}
-
-
-	@Provides
-	@TTL
-	protected int provideTTL() throws MalformedURLException
-	{
-		return getConfig().getInt("replication.urlTTL");
-	}
-
-
-	@Provides
-	@DefaultPageSize
-	protected int provideDefaultPageSize() throws MalformedURLException
-	{
-		return getConfig().getInt("replication.defaultPageSize");
+		bind(AuthorizationManager.class).toInstance(new AuthorizationManager("21312kjhdskjb123123"));
+		
+		try
+		{
+			context = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
+		}
+		catch (Exception e)
+		{
+			addError(e);
+		}
 	}
 
 
@@ -49,5 +39,19 @@ public class GatewayModule extends ConfiguredModule
 	protected String provideSecret()
 	{
 		return getConfig().getString("replication.secret");
+	}
+
+
+	@Provides
+	protected Marshaller provideMarshaller() throws JAXBException
+	{
+		return context.createMarshaller();
+	}
+
+
+	@Provides
+	protected Unmarshaller provideUnmarshaller() throws JAXBException
+	{
+		return context.createUnmarshaller();
 	}
 }

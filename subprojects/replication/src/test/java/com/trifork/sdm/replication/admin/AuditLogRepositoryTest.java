@@ -50,8 +50,8 @@ public class AuditLogRepositoryTest extends GuiceTest
 	public void can_find_all_audit_logs() throws Exception
 	{
 		// Arrange
-		auditLogRepository.create("message1");
-		auditLogRepository.create("message2");
+		auditLogRepository.log("message1");
+		auditLogRepository.log("message2");
 
 		// Act
 		List<LogEntry> auditLogs = auditLogRepository.all();

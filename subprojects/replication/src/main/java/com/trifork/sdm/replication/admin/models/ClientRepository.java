@@ -4,10 +4,11 @@ package com.trifork.sdm.replication.admin.models;
 import static com.trifork.sdm.replication.db.properties.Database.*;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.inject.*;
-import com.trifork.sdm.replication.db.TransactionManager.OutOfTransactionException;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 

@@ -67,7 +67,7 @@ public class AuditLog implements IAuditLog
 	@Override
 	public boolean create(String message, Object... args) throws SQLException
 	{
-		return create(format(message, args));
+		return log(format(message, args));
 	}
 
 
@@ -76,7 +76,7 @@ public class AuditLog implements IAuditLog
 	 */
 	@Override
 	@Transactional(ADMINISTRATION)
-	public boolean create(String message) throws SQLException
+	public boolean log(String message) throws SQLException
 	{
 		PreparedStatement statement = null;
 		try

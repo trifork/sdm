@@ -16,40 +16,53 @@ dependencies {
 	
 	// Guice
 	
-	compile(libs.guice_api) {
-		compile "javax.inject:javax.inject:1.0@jar"
-		compile "aopalliance:aopalliance:1.0@jar"
+	compile(libs.guice_servlet) {
+		compile libs.guice
+		compile libs.aopalliance
 	}
-	compile libs.guice_servlet
-	compile libs.guice_assistedinject
 	
 	// STS
 	
-	// The SEAL component has not been properly packed with a pom
-	// or ivy file and thus we have to declare the dependencies ourselves.
+	compile libs.seal
+
+	// SAML
+
+	compile(libraries.oiosaml) {
+		exclude module: 'commons-logging'
+		exclude module: 'servlet-api'
+		exclude group: 'org.slf4j'
+		runtime('org.opensaml:opensaml:2.4.1') {
+			exclude module: 'velocity' // Wrong name in the POM.
+			runtime(libraries.velocity) {
+				exclude module: 'oro' // Not needed
+			}
+		}
+	}
+
+	// RID2CPR Client
 	
-	compile('dk.sosi:seal:1.5.13') {
-		runtime 'xml-security:xmlsec:1.3.0'
-		runtime('xalan:xalan:2.7.1') {
-			runtime 'xerces:xercesImpl:2.9.1'
+	// TODO: The POM is completely messed up in this dep. 
+
+	compile('com.trifork:rid2cprclient:1.4@jar') {
+		runtime 'commons-httpclient:commons-httpclient:3.1'
+		compile ('com.trifork:xmlobject:1.11') {
+		
+			runtime libs.jodi_time    
+
+        	runtime 'org.apache.ws.commons.axiom:axiom-api:1.2.6@jar'
+        	runtime 'org.apache.ws.commons.axiom:axiom-dom:1.2.6@jar'
+        	runtime 'org.apache.ws.commons.axiom:axiom-impl:1.2.6@jar'
+        
+       		runtime libraries.commons_io
+        
+        	exclude group: "javax.servlet"
+        	exclude group: "avalon"
 		}
 	}
 	
-	// SAML
+	// JAXB
 	
-	compile module('dk.itst.oiosaml:oiosaml.java:5987') {
-		dependency libs.velocity
-		dependency 'opensaml:opensaml:2.2.0'
-		dependency 'opensaml:xmltooling:1.1.0'
-		dependency 'opensaml:openws:1.2.0'
-	}
-	
-	compile('com.trifork:rid2cprclient:1.2') {
-		// TODO: Make the person who made RID2CPR
-		// fix his ivy file. The runtime dependencies are messed up.
-		runtime 'commons-httpclient:commons-httpclient:3.1@jar'
-		compile 'com.trifork:xmlobject:1.11'
-	}
+	compile libs.jaxb
 
 	// MySQL
 	
@@ -80,13 +93,7 @@ dependencies {
 	testCompile libs.junit
 	testCompile libs.hamcrest
 	
-	testCompile module(libs.mockito) {
-		dependency libs.objenesis
-	}
-	
-	testCompile 'org.yaml:snakeyaml:1.7'
-	testCompile 'org.dbunit:dbunit:2.4.8'
-	testCompile 'com.h2database:h2:1.3.148'
+	testCompile libs.mockito
 
 	// SOSI test key store where the SealKetstore.jks
 	// is stored.

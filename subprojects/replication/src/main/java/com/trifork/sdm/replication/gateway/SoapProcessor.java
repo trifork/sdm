@@ -11,13 +11,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
 
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.slf4j.Logger;
+import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
 import com.trifork.sdm.replication.admin.models.IAuditLog;
 import com.trifork.sdm.replication.admin.models.PermissionRepository;
-import com.trifork.sdm.replication.gateway.properties.DefaultPageSize;
-import com.trifork.sdm.replication.util.URLFactory;
+import com.trifork.sdm.replication.util.AuthorizationManager;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
@@ -29,34 +33,36 @@ import dk.sosi.seal.xml.XmlUtil;
 
 public class SoapProcessor implements RequestProcessor
 {
-	private static final Logger LOG = getLogger(SoapProcessor.class);
+	private static final Logger logger = getLogger(SoapProcessor.class);
 
 	private static final int SOAP_OK = 200;
 	private static final int SOAP_FAULT = 500;
 
 	private static final String SOAP_CONTENT_TYPE = "application/soap+xml; charset=UTF-8";
-	private static final String BEGINING_OF_TIME = "0";
 
 	private final SOSIFactory factory;
 
 	private String response = null;
 	private int responseCode = SOAP_FAULT;
-	private final URLFactory urlFactory;
 
 	private final PermissionRepository permissionRepository;
 
-	private final IAuditLog auditLog;
+	private final IAuditLog audit;
 
-	private final int defaultPageSize;
+	private final Marshaller marshaller;
+	private final Unmarshaller unmarshaller;
+
+	private final AuthorizationManager authorizationManager;
 
 
 	@Inject
-	SoapProcessor(URLFactory urlFactory, PermissionRepository permissionRepository, @DefaultPageSize int defaultPageSize, IAuditLog auditLog)
+	SoapProcessor(PermissionRepository permissionRepository, IAuditLog auditLog, Marshaller marshaller, Unmarshaller unmarshaller, AuthorizationManager authorizationManager)
 	{
-		this.urlFactory = urlFactory;
 		this.permissionRepository = permissionRepository;
-		this.defaultPageSize = defaultPageSize;
-		this.auditLog = auditLog;
+		this.marshaller = marshaller;
+		this.unmarshaller = unmarshaller;
+		this.audit = auditLog;
+		this.authorizationManager = authorizationManager;
 
 		Properties encryptionSetting = SignatureUtil.setupCryptoProviderForJVM();
 
@@ -69,124 +75,98 @@ public class SoapProcessor implements RequestProcessor
 	@Override
 	public void process(String xml, String clientCVR, String method)
 	{
-		Reply reply;
+		Reply responseEnvelope;
 
 		try
 		{
 			Reply error = null;
 
-			Request request = factory.deserializeRequest(xml);
+			Request requestEnvelope = factory.deserializeRequest(xml);
 
 			// Check that the clients are using the right version of DGWS.
 
-			if (!DGWSConstants.VERSION_1_0_1.equals(request.getDGWSVersion()))
+			if (!DGWSConstants.VERSION_1_0_1.equals(requestEnvelope.getDGWSVersion()))
 			{
-				LOG.warn("Unsupported version of DGWS is being used.");
+				logger.warn("Unsupported version of DGWS is being used.");
 			}
 
-			GatewayRequest params = GatewayRequest.deserialize(request.getBody());
-
-			// Set the default if not present.
-
-			setDefaultParameters(params);
+			AuthorizationRequestStructure request = unmarshaller.unmarshal(requestEnvelope.getBody(), AuthorizationRequestStructure.class).getValue();
 
 			// Validate the parameters.
 
 			if (!method.equals("POST"))
 			{
-				reply = factory.createNewErrorReply(request, "Client", "Unsupported HTTP method. Use a POST.");
+				responseEnvelope = factory.createNewErrorReply(requestEnvelope, "Client", "Unsupported HTTP method. Use a POST.");
 			}
-			else if ((error = checkIdentityCard(request)) != null || (error = checkRequestIntegrity(request, params)) != null)
+			else if ((error = checkIdentityCard(requestEnvelope)) != null || (error = checkRequestIntegrity(requestEnvelope, request)) != null)
 			{
-				reply = error;
+				responseEnvelope = error;
 			}
-			else if (clientCVR == null || !canAccessEntity(params, clientCVR))
+			else if (clientCVR == null || !canAccessEntity(request, clientCVR))
 			{
-				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
-			}
-			else if (params.format != null && !"XML".equals(params.format) && !"FastInfoset".equals(params.format))
-			{
-				reply = factory.createNewErrorReply(request, "Client", "You do not have access to the requested entity.");
+				responseEnvelope = factory.createNewErrorReply(requestEnvelope, "Client", "You do not have access to the requested entity.");
 			}
 			else
 			{
 				// Write the request to the audit log.
 
-				String message = String.format("Gateway Request: clientCVR=%s, entityType=%s, pageSize=%s, historyId=%s, format=%s", clientCVR, params.getEntityType(), params.pageSize, params.historyId, params.format);
-				auditLog.create(message);
+				String message = String.format("Gateway Request: clientCVR=%s, entityURI=%s", clientCVR, request.entityURI);
+				audit.log(message);
 
 				// Log some statistics if it is enabled.
 
-				LOG.info(message);
+				logger.info(message);
+				
+				// Authorize the client.
+
+				AuthorizationResponseStructure responseBody = new AuthorizationResponseStructure();
+				responseBody.authorization = authorizationManager.create(request.entityURI, requestEnvelope.getIDCard().getExpiryDate());
 
 				// Construct the URL and return it in SOAP.
 
-				String resourceURL = urlFactory.create(params.getEntityType(), params.pageSize, params.historyId, params.format);
+				responseEnvelope = factory.createNewReply(requestEnvelope, FLOW_FINALIZED_SUCCESFULLY);
 
-				GatewayResponse responseBody = new GatewayResponse(resourceURL);
+				DocumentBuilderFactory documentBuilder = DocumentBuilderFactory.newInstance();
+				documentBuilder.setNamespaceAware(true);
+				Document doc = documentBuilder.newDocumentBuilder().newDocument();
 
-				reply = factory.createNewReply(request, FLOW_FINALIZED_SUCCESFULLY);
-				reply.setBody(responseBody.serialize());
+				marshaller.marshal(responseBody, doc);
+				responseEnvelope.setBody(doc.getDocumentElement());
 			}
 		}
 		catch (Exception t)
 		{
-			LOG.error("Unhandled exception has thrown in the gateway.", t);
-			reply = factory.createNewErrorReply(VERSION_1_0_1, "", "", "Server", "Server error. The event has been logged. Please contact the support.");
+			logger.error("Unhandled exception has thrown in the gateway.", t);
+			responseEnvelope = factory.createNewErrorReply(VERSION_1_0_1, "", "", "Server", "Server error. The event has been logged. Please contact the support.");
 		}
 
 		// Set the correct response code.
 
-		responseCode = reply.isFault() ? SOAP_FAULT : SOAP_OK;
+		responseCode = responseEnvelope.isFault() ? SOAP_FAULT : SOAP_OK;
 
-		response = XmlUtil.node2String(reply.serialize2DOMDocument(), false, false);
+		response = XmlUtil.node2String(responseEnvelope.serialize2DOMDocument(), false, false);
 	}
 
 
-	private void setDefaultParameters(GatewayRequest params)
+	private boolean canAccessEntity(AuthorizationRequestStructure soapBody, String clientCVR) throws SQLException
 	{
-		if (params.pageSize == null)
-		{
-			params.pageSize = defaultPageSize;
-		}
-		if (params.historyId == null)
-		{
-			params.historyId = BEGINING_OF_TIME;
-		}
-		if (params.format == null)
-		{
-			params.format = "XML";
-		}
-	}
-
-
-	private boolean canAccessEntity(GatewayRequest soapBody, String clientCVR) throws SQLException
-	{
-		return permissionRepository.canAccessEntity(clientCVR, soapBody.entity);
+		return permissionRepository.canAccessEntity(clientCVR, soapBody.entityURI);
 	}
 
 
 	/**
 	 * Ensures that all required parameters are present.
 	 */
-	private Reply checkRequestIntegrity(Request request, GatewayRequest soapBody)
+	private Reply checkRequestIntegrity(Request request, AuthorizationRequestStructure soapBody)
 	{
 		Reply error = null;
 
-		if (soapBody.entity == null || soapBody.entity.isEmpty())
+		if (soapBody.entityURI == null || soapBody.entityURI.isEmpty())
 		{
 			// TODO: All log messages should contain a it_system={}.
 			String message = "A request must contain a valid 'entity' parameter.";
-			LOG.warn(message);
+			logger.warn(message);
 			error = factory.createNewErrorReply(request, "Client", message);
-		}
-		else if (soapBody.getEntityType() == null)
-		{
-			error = factory.createNewErrorReply(request, "Client", "An unknown entity was requested.");
-		}
-		else if (soapBody.version == null)
-		{
-			error = factory.createNewErrorReply(request, "Client", "A request must contain a 'version' parameter.");
 		}
 
 		return error;

@@ -5,15 +5,17 @@ import static com.trifork.sdm.replication.replication.URLParameters.*;
 import static java.net.HttpURLConnection.*;
 import static org.slf4j.LoggerFactory.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Date;
+import java.util.Map;
 
-import javax.inject.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
 import org.slf4j.Logger;
 
+import com.google.inject.*;
 import com.trifork.sdm.replication.replication.properties.Routes;
 import com.trifork.stamdata.Record;
 
