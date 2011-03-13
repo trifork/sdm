@@ -8,57 +8,51 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 
-public class AuthorizationManager
-{
-	private static final long MILLIS_TO_SECS = 1000;
+public class AuthorizationManager {
+
 	private static final String SEPARATOR = ":";
 
 	private final String sharedSecret;
 
 
-	public AuthorizationManager(String sharedSecret)
-	{
+	public AuthorizationManager(String sharedSecret) {
+
 		this.sharedSecret = sharedSecret;
 	}
 
 
-	public String create(String path, Date date)
-	{
-		long expires = date.getTime() / MILLIS_TO_SECS;
-		
-		try
-		{
-			String signature = calculateRFC2104HMAC(path + expires, sharedSecret);
+	public String create(String cvrNumber, String path, Date date) {
+
+		long expires = date.getTime();
+
+		try {
+			String signaturePayload = createPayload(path, cvrNumber, date.getTime());
+			String signature = calculateRFC2104HMAC(signaturePayload, sharedSecret);
 			return expires + SEPARATOR + signature;
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 
-	public boolean validate(String path, String authorization)
-	{
-		long now = System.currentTimeMillis() / MILLIS_TO_SECS;
-
-		try
-		{
-			String[] parts = authorization.split(SEPARATOR);
-			long expires = Long.parseLong(parts[0]);
-			String signature = parts[1];
-
-			if (now <= expires)
-			{
-				String expectedSignature = calculateRFC2104HMAC(path + expires, sharedSecret);
-				return signature.equals(expectedSignature);
+	public boolean validate(String path, Authorization authorization) {
+		try {
+			if (System.currentTimeMillis() <= authorization.getExpirationDate()) {
+				String signaturePayload = createPayload(path, authorization.getCvrNumber(), authorization.getExpirationDate());
+				String expectedSignature = calculateRFC2104HMAC(signaturePayload, sharedSecret);
+				return authorization.getSignature().equals(expectedSignature);
 			}
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 		}
 
 		return false;
+	}
+
+
+	private String createPayload(String path, String cvrNumber, long expirationDate) {
+		return cvrNumber + path + expirationDate;
 	}
 
 
@@ -70,14 +64,12 @@ public class AuthorizationManager
 	 * @return The Base64-encoded RFC 2104-complaint HMAC signature.
 	 * @throws java.security.SignatureException when signature generation fails
 	 */
-	private static String calculateRFC2104HMAC(String data, String key) throws SignatureException
-	{
+	private static String calculateRFC2104HMAC(String data, String key) throws SignatureException {
 		final String ENCRYPTION_ALGORITHM = "HmacSHA1";
 
 		String result;
 
-		try
-		{
+		try {
 			// get an hmac_sha1 key from the raw key bytes
 			SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), ENCRYPTION_ALGORITHM);
 
@@ -91,8 +83,7 @@ public class AuthorizationManager
 			// base64-encode the hmac
 			result = Base64.encodeBase64URLSafeString(rawHmac);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			throw new SignatureException("Failed to generate HMAC encoding: " + e.getMessage());
 		}
 

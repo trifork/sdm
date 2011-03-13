@@ -19,12 +19,12 @@ import com.trifork.sdm.replication.admin.models.*;
 import freemarker.template.Configuration;
 
 
-public class ClientControllerTest extends GuiceTest
-{
+public class ClientControllerTest extends GuiceTest {
+
 	private ClientController controller;
 
 	private ClientRepository clientRepository;
-	private PermissionRepository permissionRepository;
+	private PermissionDao permissionRepository;
 
 	protected HttpServletRequest request;
 	protected HttpServletResponse response;
@@ -34,8 +34,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() throws Exception {
 		//
 		// Mock the request.
 		//
@@ -61,31 +60,30 @@ public class ClientControllerTest extends GuiceTest
 		when(clientRepository.find(anyString())).thenReturn(new Client("1", "1", "1"));
 
 		// Setup permissions.
-		
-		permissionRepository = mock(PermissionRepository.class);
-		
+
+		permissionRepository = mock(PermissionDao.class);
+
 		List<String> permissions = new ArrayList<String>();
 		permissions.add("Foo");
 		permissions.add("Bar");
 		when(permissionRepository.findByClientId(anyString())).thenReturn(permissions);
 
 		// Templates
-		
+
 		Configuration templates = getInjector().getInstance(Configuration.class);
-		
+
 		// Auditlog
-		
-		IAuditLog auditlog = mock(AuditLog.class);
-		
+
+		IAuditLog audit = mock(AuditLog.class);
+
 		// The controller under test.
-		
-		controller = spy(new ClientController(clientRepository, permissionRepository, templates, auditlog));
+
+		controller = spy(new ClientController(clientRepository, permissionRepository, templates, audit));
 	}
 
 
 	@Test
-	public void test_do_new_on_get() throws Throwable
-	{
+	public void test_do_new_on_get() throws Throwable {
 		// Arrange
 		when(request.getRequestURI()).thenReturn("SomeUrlEndingWith/new");
 
@@ -98,8 +96,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Test
-	public void test_do_list_on_get() throws Throwable
-	{
+	public void test_do_list_on_get() throws Throwable {
 		// Arrange
 		when(request.getRequestURI()).thenReturn("SomeUrlNotEndingWithSlashNew");
 
@@ -116,8 +113,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Test
-	public void test_do_edit_on_get() throws Throwable
-	{
+	public void test_do_edit_on_get() throws Throwable {
 		// Arrange
 		when(request.getRequestURI()).thenReturn("SomeUrlNotEndingWithSlashNew");
 		when(request.getParameter("id")).thenReturn("42");
@@ -131,8 +127,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Test
-	public void test_do_create_on_post() throws Throwable
-	{
+	public void test_do_create_on_post() throws Throwable {
 		// Arrange
 
 		// Act
@@ -144,8 +139,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Test
-	public void test_do_delete_on_post() throws Throwable
-	{
+	public void test_do_delete_on_post() throws Throwable {
 		// Arrange
 		when(request.getParameter("id")).thenReturn("42");
 		when(request.getParameter("method")).thenReturn("DELETE");
@@ -159,8 +153,7 @@ public class ClientControllerTest extends GuiceTest
 
 
 	@Test
-	public void test_do_update_on_post() throws Throwable
-	{
+	public void test_do_update_on_post() throws Throwable {
 		// Arrange
 		when(request.getParameter("id")).thenReturn("42");
 		when(request.getParameter("method")).thenReturn("UPDATE");

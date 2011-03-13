@@ -18,33 +18,30 @@ import freemarker.template.Configuration;
 
 
 @Singleton
-public class AuditLogController extends AbstractController
-{
+public class AuditLogController extends AbstractController {
+
+	private static final long serialVersionUID = -4877311712952056542L;
+
+
 	@Inject
-	public AuditLogController(Configuration templates, IAuditLog auditLog)
-	{
+	public AuditLogController(Configuration templates, IAuditLog auditLog) {
 		super(templates, auditLog);
 	}
 
 
 	@Override
 	@Transactional(ADMINISTRATION)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		try
-		{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		try {
 			Map<String, Object> root = new HashMap<String, Object>();
 
 			root.put("entries", auditLog.all());
 
 			render("log/list.ftl", root, request, response);
 		}
-		catch (Exception e)
-		{
+		catch (Exception e) {
 			throw new ServletException(e);
 		}
 	}
-
-
-	private static final long serialVersionUID = 1L;
 }

@@ -5,12 +5,12 @@ dependencies {
 	
 	compile project(':shared')
 	
-	runtime libs.reflections
+	compile libs.reflections
 	
 	// Configuration
 	
 	compile(libs.commons_configuration) {
-		compile libs.commons_lang
+		exclude module: 'commons-logging'
 		runtime libs.jcl_over_slf4j
 	}
 	
@@ -21,19 +21,23 @@ dependencies {
 		compile libs.aopalliance
 	}
 	
+	// Hibernate
+	
+	runtime libs.hibernate
+	
 	// STS
 	
 	compile libs.seal
 
 	// SAML
 
-	compile(libraries.oiosaml) {
+	compile(libs.oiosaml) {
 		exclude module: 'commons-logging'
 		exclude module: 'servlet-api'
 		exclude group: 'org.slf4j'
 		runtime('org.opensaml:opensaml:2.4.1') {
 			exclude module: 'velocity' // Wrong name in the POM.
-			runtime(libraries.velocity) {
+			runtime(libs.velocity) {
 				exclude module: 'oro' // Not needed
 			}
 		}
@@ -53,7 +57,7 @@ dependencies {
         	runtime 'org.apache.ws.commons.axiom:axiom-dom:1.2.6@jar'
         	runtime 'org.apache.ws.commons.axiom:axiom-impl:1.2.6@jar'
         
-       		runtime libraries.commons_io
+       		runtime libs.commons_io
         
         	exclude group: "javax.servlet"
         	exclude group: "avalon"
@@ -102,8 +106,11 @@ dependencies {
 	testCompile 'xmlunit:xmlunit:1.1'
 	
 	// Logging
+	//
+	// Unfortunatly we have to use Log4J since OIOSAML
+	// uses some custom configuration that is log4j specific.
+	// Logback would have less overhead.
 	
 	compile libs.slf4j_api
-	runtime libs.logback_core
-	runtime libs.logback_classic
+	runtime libs.log4j_slf4j
 }

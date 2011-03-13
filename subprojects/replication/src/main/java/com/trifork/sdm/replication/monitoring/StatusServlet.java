@@ -14,8 +14,8 @@ import com.trifork.sdm.replication.db.properties.Transactional;
 
 
 @Singleton
-public class StatusServlet extends HttpServlet
-{
+public class StatusServlet extends HttpServlet {
+
 	@Inject
 	@Transactional(WAREHOUSE)
 	private Provider<Connection> warehouseConnection;
@@ -26,34 +26,28 @@ public class StatusServlet extends HttpServlet
 
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	{
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		resp.setContentType("text/plain");
 
 		int statusCode = 200;
 
-		try
-		{
+		try {
 			checkWarehouseConnection();
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			resp.getWriter().println("ERROR: Could not connect to the data warehouse database.");
 			statusCode = 500;
 		}
 
-		try
-		{
+		try {
 			checkAdminConnection();
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			resp.getWriter().println("ERROR: Could not connect to the administration database.");
 			statusCode = 500;
 		}
 
-		if (statusCode == 200)
-		{
+		if (statusCode == 200) {
 			resp.getWriter().println("200 OK");
 		}
 
@@ -62,8 +56,7 @@ public class StatusServlet extends HttpServlet
 
 
 	@Transactional(WAREHOUSE)
-	protected boolean checkWarehouseConnection() throws SQLException
-	{
+	protected boolean checkWarehouseConnection() throws SQLException {
 		Connection conn = warehouseConnection.get();
 		Statement stm = conn.createStatement();
 
@@ -76,8 +69,7 @@ public class StatusServlet extends HttpServlet
 
 
 	@Transactional(ADMINISTRATION)
-	protected boolean checkAdminConnection() throws SQLException
-	{
+	protected boolean checkAdminConnection() throws SQLException {
 		Connection conn = adminConnection.get();
 		Statement stm = conn.createStatement();
 

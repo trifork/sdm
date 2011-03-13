@@ -4,6 +4,11 @@ package com.trifork.sdm.replication;
 import static com.google.inject.util.Modules.*;
 
 import com.google.inject.*;
+import com.trifork.sdm.replication.admin.AdminstrationModule;
+import com.trifork.sdm.replication.db.DatabaseModule;
+import com.trifork.sdm.replication.dgws.DGWSModule;
+import com.trifork.sdm.replication.monitoring.MonitoringModule;
+import com.trifork.sdm.replication.replication.RegistryModule;
 
 
 /**
@@ -25,7 +30,17 @@ public abstract class GuiceTest extends AbstractModule
 
 	protected GuiceTest()
 	{
-		Module production = new ProductionModule();
+		Module production = new Module() {
+			@Override
+			public void configure(Binder binder) {
+				install(new DatabaseModule());
+				install(new DGWSModule());
+				install(new RegistryModule());
+				install(new AdminstrationModule());
+				install(new MonitoringModule());
+			}
+		};
+		
 		Module test = override(production).with(this);
 
 		injector = Guice.createInjector(test);

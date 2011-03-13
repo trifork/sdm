@@ -24,7 +24,7 @@ public abstract class Record
 	 * Each of the two section is 10 characters long and padded width 0's. The updated date is
 	 * represented in seconds since the last epoch.
 	 */
-	public final String getRevision()
+	public final String getOffset()
 	{
 		return String.format("%010d%010d", getUpdated().getTime(), getRecordID());
 	}

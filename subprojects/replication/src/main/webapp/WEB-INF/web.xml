@@ -14,12 +14,31 @@
 
 	<filter-mapping>
 		<filter-name>guiceFilter</filter-name>
-		<url-pattern>/*</url-pattern>
+		<url-pattern>/stamdata/*</url-pattern>
+	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>guiceFilter</filter-name>
+		<url-pattern>/admin/*</url-pattern>
 	</filter-mapping>
 
 	<context-param>
 		<description>The name of the configuration directory for OIOSAML.</description>
 		<param-name>oiosaml-j.name</param-name>
-		<param-value>sdm</param-value>
+		<param-value>stamdata</param-value>
 	</context-param>
+	
+		<listener>
+		<listener-class>dk.itst.oiosaml.sp.service.session.SessionDestroyListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>SamlDispatcher</servlet-name>
+		<servlet-class>dk.itst.oiosaml.sp.service.DispatcherServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>SamlDispatcher</servlet-name>
+		<url-pattern>/saml/*</url-pattern>
+	</servlet-mapping>
 </web-app>

@@ -5,12 +5,4 @@ dependencies {
 	compile libs.jpa_api
 	
 	testCompile libs.junit
-	
-	// Logging
-	// TODO: All logging form shared should be removed,
-	// it does not make sense to have it in a util lib. 
-	
-	compile libs.slf4j_api
-	runtime libs.logback_core
-	runtime libs.logback_classic
 }

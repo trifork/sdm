@@ -9,32 +9,36 @@ import java.sql.SQLException;
 import java.util.*;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.*;
+import org.slf4j.Logger;
 
-import com.google.inject.*;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.trifork.sdm.replication.admin.annotations.Whitelist;
 import com.trifork.sdm.replication.admin.models.*;
-import com.trifork.sdm.replication.admin.security.WhitelistModule.Whitelist;
 import com.trifork.sdm.replication.db.properties.Transactional;
 
 import freemarker.template.Configuration;
 
 
 @Singleton
-public class UserController extends AbstractController
-{
-	private static final Logger LOG = getLogger(UserController.class);
+public class UserController extends AbstractController {
+
+	private static final long serialVersionUID = 6245011626700765816L;
+
+	private static final Logger logger = getLogger(UserController.class);
 
 	private final IUserRepository users;
 	private final Set<String> whitelist;
 
 
 	@Inject
-	public UserController(@Whitelist Set<String> whitelist, IUserRepository users, Configuration templates, IAuditLog auditlog)
-	{
-		super(templates, auditlog);
+	public UserController(@Whitelist Set<String> whitelist, IUserRepository users, Configuration templates, IAuditLog auditlog) {
 		
+		super(templates, auditlog);
+
 		this.whitelist = whitelist;
 		this.users = users;
 	}
@@ -42,31 +46,25 @@ public class UserController extends AbstractController
 
 	@Override
 	@Transactional(ADMINISTRATION)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		try
-		{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
 			// Check if the user requested a form to create
 			// a new user.
 
-			if (request.getRequestURI().endsWith("/new"))
-			{
+			if (request.getRequestURI().endsWith("/new")) {
 				getNew(request, response);
 			}
-			else if (request.getParameter("id") == null)
-			{
+			else if (request.getParameter("id") == null) {
 				// If the ID parameter is null, we list all
 				// users. If it is present we show a specific user.
 
 				getList(request, response);
 			}
-			else
-			{
+			else {
 				getEdit(request, response);
 			}
 		}
-		catch (SQLException e)
-		{
+		catch (SQLException e) {
 			throw new ServletException(e);
 		}
 	}
@@ -74,30 +72,25 @@ public class UserController extends AbstractController
 
 	@Override
 	@Transactional(ADMINISTRATION)
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
-		try
-		{
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		try {
 			String method = request.getParameter("method");
 
-			if ("DELETE".equals(method))
-			{
+			if ("DELETE".equals(method)) {
 				getDelete(request, response);
 			}
-			else
-			{
+			else {
 				getCreate(request, response);
 			}
 		}
-		catch (Throwable e)
-		{
+		catch (Throwable e) {
 			throw new ServletException(e);
 		}
 	}
 
 
-	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
-	{
+	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
+		
 		// Get the new administrator's info from the
 		// HTML form.
 
@@ -107,12 +100,10 @@ public class UserController extends AbstractController
 
 		User user = users.create(newUserName, newUserCPR, newUserCVR);
 
-		if (!whitelist.contains(newUserCVR))
-		{
+		if (!whitelist.contains(newUserCVR)) {
 			// TODO: Log and write the CVR
 		}
-		else if (user != null)
-		{
+		else if (user != null) {
 			writeAudit("New administrator created (new_user_cpr=%s, new_user_cvr=%s). Created by user_cpr=%s.", newUserCPR, newUserCVR, getUserCPR(request));
 		}
 
@@ -120,14 +111,12 @@ public class UserController extends AbstractController
 	}
 
 
-	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException
-	{
+	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
 		String id = request.getParameter("id");
 
 		User deletedUser = users.find(id);
 
-		if (deletedUser != null)
-		{
+		if (deletedUser != null) {
 			String userCPR = getUserCPR(request);
 
 			users.destroy(id);
@@ -139,8 +128,7 @@ public class UserController extends AbstractController
 	}
 
 
-	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
-	{
+	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		Map<String, Object> root = new HashMap<String, Object>();
 
 		root.put("users", users.findAll());
@@ -149,8 +137,8 @@ public class UserController extends AbstractController
 	}
 
 
-	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-	{
+	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		
 		// List the white listed firms (CVR).
 
 		Map<String, Object> root = new HashMap<String, Object>();
@@ -161,18 +149,14 @@ public class UserController extends AbstractController
 	}
 
 
-	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException
-	{
+	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
 		Map<String, Object> root = new HashMap<String, Object>();
 
 		String id = request.getParameter("id");
-		LOG.info("User found ID=" + id);
+		logger.info("User found ID=" + id);
 		User user = users.find(id);
 		root.put("user", user);
 
 		render("/user/edit.ftl", root, request, response);
 	}
-
-
-	private static final long serialVersionUID = 1L;
 }

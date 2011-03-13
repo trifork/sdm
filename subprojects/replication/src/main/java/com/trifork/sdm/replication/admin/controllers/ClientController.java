@@ -1,84 +1,68 @@
 package com.trifork.sdm.replication.admin.controllers;
 
 
-import static com.trifork.sdm.replication.db.properties.Database.ADMINISTRATION;
+import static com.trifork.sdm.replication.db.properties.Database.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
-import javax.persistence.Entity;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trifork.sdm.replication.admin.models.*;
 import com.trifork.sdm.replication.db.properties.Transactional;
-import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.Record;
+import com.trifork.sdm.replication.replication.annotations.Registry;
+import com.trifork.sdm.replication.replication.models.Record;
 
 import freemarker.template.Configuration;
 
 
 @Singleton
-public class ClientController extends AbstractController
-{
+public class ClientController extends AbstractController {
+
+	private static final long serialVersionUID = 6725511977937323744L;
+
 	private final ClientRepository clients;
-	private final PermissionRepository permissions;
+	private final PermissionDao permissions;
+	private final Map<String, Class<? extends Record>> registry;
 
 
 	@Inject
-	public ClientController(ClientRepository clients, PermissionRepository permissions, Configuration templates, IAuditLog auditlog)
-	{
-		super(templates, auditlog);
+	public ClientController(ClientRepository clients, PermissionDao permissions, Configuration templates, IAuditLog audit, @Registry Map<String, Class<? extends Record>> registry) {
+		super(templates, audit);
 
 		this.clients = clients;
 		this.permissions = permissions;
+		this.registry = registry;
 	}
 
 
 	@Override
 	@Transactional(ADMINISTRATION)
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// Check if the user requested a form to create
 		// a new user.
 
-		try
-		{
-			if (request.getRequestURI().endsWith("/new"))
-			{
+		try {
+			if (request.getRequestURI().endsWith("/new")) {
 				getNew(request, response);
 			}
 
 			// If the ID parameter is null, we list all
 			// users. If it is present we show a specific user.
 
-			else if (request.getParameter("id") == null)
-			{
+			else if (request.getParameter("id") == null) {
 				getList(request, response);
 			}
-			else
-			{
+			else {
 				getEdit(request, response);
 			}
 		}
-		catch (Throwable e)
-		{
+		catch (Throwable e) {
 			throw new ServletException(e);
 		}
 	}
@@ -86,37 +70,30 @@ public class ClientController extends AbstractController
 
 	@Override
 	@Transactional(ADMINISTRATION)
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
-	{
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// See if we are updating or creating.
 
 		String method = request.getParameter("method");
 		String id = request.getParameter("id");
 
-		try
-		{
-			if (id == null)
-			{
+		try {
+			if (id == null) {
 				getCreate(request, response);
 			}
-			else if ("DELETE".equals(method))
-			{
+			else if ("DELETE".equals(method)) {
 				getDelete(request, response);
 			}
-			else
-			{
+			else {
 				getUpdate(request, response);
 			}
 		}
-		catch (Throwable t)
-		{
+		catch (Throwable t) {
 			throw new ServletException(t);
 		}
 	}
 
 
-	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
-	{
+	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		// Create a new client.
 
 		String name = request.getParameter("name");
@@ -124,8 +101,7 @@ public class ClientController extends AbstractController
 
 		Client client = clients.create(name, certificateId);
 
-		if (client != null)
-		{
+		if (client != null) {
 			writeAudit("New client added '%s'. Created by '%s'.", name, getUserCPR(request));
 
 			redirect(request, response, "/admin/clients?id=" + client.getId());
@@ -133,8 +109,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	protected void getUpdate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException
-	{
+	protected void getUpdate(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {
 		// Update an the permissions for a client.
 
 		@SuppressWarnings("unchecked")
@@ -142,12 +117,10 @@ public class ClientController extends AbstractController
 
 		List<String> entities = new ArrayList<String>();
 
-		while (params.hasMoreElements())
-		{
+		while (params.hasMoreElements()) {
 			String param = params.nextElement();
 
-			if (param.startsWith("entity_"))
-			{
+			if (param.startsWith("entity_")) {
 				entities.add(param.substring("entity_".length()));
 			}
 		}
@@ -161,15 +134,13 @@ public class ClientController extends AbstractController
 
 		StringBuilder stringBuilder = new StringBuilder();
 
-		for (String entity : entities)
-		{
+		for (String entity : entities) {
 			stringBuilder.append(entity).append(" ");
 		}
 
 		String permissionsAsString = stringBuilder.toString().trim();
 
-		if (permissionsAsString.length() > 400)
-		{
+		if (permissionsAsString.length() > 400) {
 			permissionsAsString = permissionsAsString.substring(0, 400) + "...";
 		}
 
@@ -179,14 +150,12 @@ public class ClientController extends AbstractController
 	}
 
 
-	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, SQLException, IOException
-	{
+	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, SQLException, IOException {
 		String id = request.getParameter("id");
 
 		Client client = clients.find(id);
 
-		if (client != null)
-		{
+		if (client != null) {
 			clients.destroy(id);
 			writeAudit("Client '%s (ID=%s)' was deleted by '%s'.", client.getName(), client.getId(), getUserCPR(request));
 		}
@@ -195,14 +164,12 @@ public class ClientController extends AbstractController
 	}
 
 
-	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-	{
+	protected void getNew(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		render("client/new.ftl", null, request, response);
 	}
 
 
-	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
-	{
+	protected void getEdit(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		Map<String, Object> root = new HashMap<String, Object>();
 
 		String id = request.getParameter("id");
@@ -215,8 +182,7 @@ public class ClientController extends AbstractController
 	}
 
 
-	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException
-	{
+	protected void getList(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		Map<String, Object> root = new HashMap<String, Object>();
 
 		root.put("clients", clients.findAll());
@@ -225,36 +191,8 @@ public class ClientController extends AbstractController
 	}
 
 
-	private Set<String> getEntityNames()
-	{
-		// TODO: Make this method part of the Entities class.
+	private Set<String> getEntityNames() {
 
-		final String INCLUDE_PACKAGE = Record.class.getPackage().getName();
-
-		// TODO: Include doseringsforslag at a later point.
-
-		// Right now we don't have an importer for doeringsforslag
-		// so they cannot be replicated.
-
-		final String EXCLUDE_PACKAGE = com.trifork.stamdata.registre.doseringsforslag.Drug.class.getPackage().getName();
-
-		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForPackagePrefix(INCLUDE_PACKAGE)).filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(INCLUDE_PACKAGE)).exclude(FilterBuilder.prefix(EXCLUDE_PACKAGE))).setScanners(new TypeAnnotationsScanner()));
-
-		// Serve all entities by deferring their URLs and using their
-		// annotations.
-
-		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
-		Set<String> entities = new TreeSet<String>();
-
-		for (Class<?> entity : classes)
-		{
-			String uri = Entities.getName(entity);
-			entities.add(uri);
-		}
-
-		return entities;
+		return registry.keySet();
 	}
-
-
-	private static final long serialVersionUID = 1L;
 }

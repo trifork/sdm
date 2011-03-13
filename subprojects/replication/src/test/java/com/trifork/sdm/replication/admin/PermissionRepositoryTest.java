@@ -22,14 +22,14 @@ public class PermissionRepositoryTest extends GuiceTest
 	// permissions be accessed directly on the user model.
 	private ClientRepository clientRepository;
 
-	private PermissionRepository permissionRepository;
+	private PermissionDao permissionRepository;
 
 
 	@Before
 	public void setUp()
 	{
 		clientRepository = getInjector().getInstance(ClientRepository.class);
-		permissionRepository = getInjector().getInstance(PermissionRepository.class);
+		permissionRepository = getInjector().getInstance(PermissionDao.class);
 	}
 
 

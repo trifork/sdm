@@ -16,33 +16,29 @@ import com.trifork.sdm.replication.admin.models.IAuditLog;
 import freemarker.template.*;
 
 
-public class AbstractController extends HttpServlet
-{
+public class AbstractController extends HttpServlet {
+
 	protected final Configuration templates;
 	protected final IAuditLog auditLog;
 
 
 	@Inject
-	public AbstractController(Configuration templates, IAuditLog auditLog)
-	{
+	public AbstractController(Configuration templates, IAuditLog auditLog) {
 		this.templates = templates;
 		this.auditLog = auditLog;
 	}
 
 
-	protected void render(String templatePath, Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException
-	{
+	protected void render(String templatePath, Map<String, Object> root, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html; charset=utf-8");
 
-		if (root == null)
-		{
+		if (root == null) {
 			root = new HashMap<String, Object>();
 		}
 
 		root.put("contextRoot", request.getContextPath());
 
-		try
-		{
+		try {
 			Template page = templates.getTemplate(templatePath, "UTF-8");
 
 			StringWriter bodyWriter = new StringWriter();
@@ -55,29 +51,24 @@ public class AbstractController extends HttpServlet
 			PrintWriter w = response.getWriter();
 			html.process(root, w);
 		}
-		catch (TemplateException e)
-		{
+		catch (TemplateException e) {
 			throw new ServletException(e);
 		}
 	}
 
 
-	protected void writeAudit(String format, Object... args) throws SQLException
-	{
+	protected void writeAudit(String format, Object... args) throws SQLException {
 		auditLog.create(format, args);
 	}
 
 
-	protected String getUserCPR(HttpServletRequest request)
-	{
+	protected String getUserCPR(HttpServletRequest request) {
 		String cpr;
 
-		if (request.getAttribute(USER_CPR) != null)
-		{
+		if (request.getAttribute(USER_CPR) != null) {
 			cpr = request.getAttribute(USER_CPR).toString();
 		}
-		else
-		{
+		else {
 			cpr = "UNKNOWN";
 		}
 
@@ -85,8 +76,7 @@ public class AbstractController extends HttpServlet
 	}
 
 
-	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException
-	{
+	protected void redirect(HttpServletRequest request, HttpServletResponse response, String path) throws IOException {
 		String contextPath = request.getContextPath();
 		String encodedUrl = response.encodeURL(contextPath + path);
 		response.sendRedirect(encodedUrl);

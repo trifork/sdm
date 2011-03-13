@@ -15,8 +15,8 @@ import com.trifork.sdm.replication.GuiceTest;
 import com.trifork.sdm.replication.util.SignatureFactory;
 
 
-public class ResourceFilterTest extends GuiceTest
-{
+public class ResourceFilterTest extends GuiceTest {
+
 	private static final int MILLIS_TO_SECS = 1000;
 	private static final int TIME_TO_LIVE = 100;
 
@@ -32,8 +32,7 @@ public class ResourceFilterTest extends GuiceTest
 
 
 	@Override
-	protected void configure()
-	{
+	protected void configure() {
 		// Since we have to check the signature in the filter, we have
 		// to stub the
 		// create method on the signature factory.
@@ -46,8 +45,7 @@ public class ResourceFilterTest extends GuiceTest
 
 
 	@Before
-	public void setUp()
-	{
+	public void setUp() {
 		filter = getInjector().getInstance(ReplicationFilter.class);
 
 		// The filter chain is used to tell us if the filter continued or
@@ -66,8 +64,7 @@ public class ResourceFilterTest extends GuiceTest
 
 
 	@Test
-	public void should_allowed_valid_requests() throws Exception
-	{
+	public void should_allowed_valid_requests() throws Exception {
 		sendRequest();
 
 		assertDidAcceptRequest();
@@ -75,8 +72,7 @@ public class ResourceFilterTest extends GuiceTest
 
 
 	@Test
-	public void should_rejects_expired_requests() throws Exception
-	{
+	public void should_rejects_expired_requests() throws Exception {
 		requestExpires = Long.toString(getCurrentTimeInSecs());
 
 		sendRequest();
@@ -86,8 +82,7 @@ public class ResourceFilterTest extends GuiceTest
 
 
 	@Test
-	public void should_reject_requests_with_invalid_signatures() throws Exception
-	{
+	public void should_reject_requests_with_invalid_signatures() throws Exception {
 		requestSignature = RandomStringUtils.randomAlphabetic(20);
 
 		sendRequest();
@@ -100,14 +95,12 @@ public class ResourceFilterTest extends GuiceTest
 	// Assertions
 	//
 
-	protected void assertDidRejectRequest() throws Exception
-	{
+	protected void assertDidRejectRequest() throws Exception {
 		verify(filterChain, times(0)).doFilter(any(ServletRequest.class), any(ServletResponse.class));
 	}
 
 
-	protected void assertDidAcceptRequest() throws Exception
-	{
+	protected void assertDidAcceptRequest() throws Exception {
 		verify(filterChain, times(1)).doFilter(any(ServletRequest.class), any(ServletResponse.class));
 	}
 
@@ -116,8 +109,7 @@ public class ResourceFilterTest extends GuiceTest
 	// Helper methods
 	//
 
-	protected void sendRequest() throws Exception
-	{
+	protected void sendRequest() throws Exception {
 		// Build a request we the given parameters.
 
 		HttpServletRequest request = mock(HttpServletRequest.class);
@@ -139,8 +131,7 @@ public class ResourceFilterTest extends GuiceTest
 	}
 
 
-	private long getCurrentTimeInSecs()
-	{
+	private long getCurrentTimeInSecs() {
 		return System.currentTimeMillis() / MILLIS_TO_SECS;
 	}
 }
