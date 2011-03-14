@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.sdm.replication.gui.models.IAuditLog;
-import com.trifork.sdm.replication.gui.models.LogEntry;
+import com.trifork.sdm.replication.gui.models.*;
 
 
 public class AuditLogControllerTest {
@@ -26,7 +25,7 @@ public class AuditLogControllerTest {
 
 	private static List<LogEntry> entries;
 
-	private IAuditLog auditLog;
+	private AuditLog auditLog;
 
 	private PageRenderer renderer;
 
@@ -46,7 +45,7 @@ public class AuditLogControllerTest {
 
 		// AUDIT
 
-		auditLog = mock(IAuditLog.class);
+		auditLog = mock(AuditLog.class);
 		when(auditLog.all()).thenReturn(entries);
 
 		// HTML RENDERER

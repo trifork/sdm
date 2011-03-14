@@ -20,7 +20,7 @@ public class UserControllerTest {
 	private UserController userController;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private IAuditLog auditLog;
+	private AuditLog auditLog;
 
 	private Set<String> whitelist;
 
@@ -37,7 +37,7 @@ public class UserControllerTest {
 
 		response = mock(HttpServletResponse.class);
 
-		auditLog = mock(IAuditLog.class);
+		auditLog = mock(AuditLog.class);
 
 		// The controller under test.
 

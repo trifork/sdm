@@ -63,7 +63,7 @@ public class ClientControllerTest {
 
 		// Auditlog
 
-		IAuditLog audit = mock(AuditLog.class);
+		AuditLog audit = mock(AuditLog.class);
 
 		// Mock some Entity types.
 
