@@ -1,11 +1,11 @@
-<h2>Klient: ${client.name}</h2>
+<h2>Serviceaftager: ${client.name}</h2>
 <form action="${contextRoot}/admin/clients?id=${client.id}" method="POST">
 <input type="hidden" name="id" value="${client.id}" />
 <p>
-	<b>Certifikat ID: ${client.certificateId}</b>
+	<b>Cvr-nummer: ${client.cvrNumber}</b>
 </p>
 <p>
-	<strong>Kan replikere:</strong><br />
+	<h3>Serviceaftager har adgang til:</h3><hr />
 	<#list entities as e>
 	<input type="checkbox" name="entity_${e}" ${permissions?seq_contains(e)?string("checked", "")} /> ${e} <br />
 	</#list>

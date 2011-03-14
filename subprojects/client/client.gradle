@@ -1,0 +1,43 @@
+apply plugin: 'java'
+
+dependencies {
+	
+	compile project(":replication")
+	
+	// Commons
+	
+	testCompile libs.commons_lang
+	
+	// Persistence
+	
+	compile libs.jpa_api
+	
+	// STS
+	
+	compile libs.seal
+	
+	// JAXB
+	
+	compile libs.jaxb
+	
+	// Fast infoset
+	
+	compile 'com.sun.xml.fastinfoset:FastInfoset:1.2.8'
+
+	// Testing
+	
+	testCompile libs.junit
+	testCompile libs.hamcrest
+	testCompile libs.mockito
+
+	// SOSI test key store where the SealKetstore.jks
+	// is stored.
+
+	testRuntime fileTree(dir: 'sosi', include: '*.jar')
+	testCompile 'xmlunit:xmlunit:1.1'
+	
+	// Logging
+	
+	compile libs.slf4j_api
+	runtime libs.log4j_slf4j
+}

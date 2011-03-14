@@ -10,7 +10,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.*;
 
-import com.trifork.sdm.replication.replication.models.Record;
+import com.trifork.stamdata.replication.replication.models.Record;
 
 
 public class SchemaGenerator {

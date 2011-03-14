@@ -13,7 +13,18 @@ input {
 div#header {
 	background: #FFF;
 	border-bottom: 4px solid #ddd;
-	padding: 15px;
+	padding: 15px 0;
+}
+
+div.container {
+	width: 830px;
+	margin: 0 auto;	
+}
+
+.new_link {
+	float: right;
+	font-size: 15px;
+	text-align: left;
 }
 
 .delete {
@@ -21,7 +32,8 @@ div#header {
 }
 
 div#content {
-	margin: 20px;
+	width: 800px;
+	margin: 15px auto;
 	background: #FFF;
 	padding: 15px;
 	border: 2px solid #eee;
@@ -54,6 +66,7 @@ ul#nav li {
 }
 
 table#log {
+	border-collapse: collapse;
 	margin-top: 15px;
 	width: 100%;
 }
@@ -64,6 +77,21 @@ table#log th {
 
 table#log td, table#log th {
 	border-bottom: 1px solid #CCC;	
+	height: 20px;
+}
+
+table#log td.timestamp {
+	width: 150px;
+}
+
+table#log tr:nth-child(odd) {
+	background: #ddd;
+}
+
+p#info {
+	border: 1px solid #236611;
+	background: #FAFAD2;
+	padding: 15px;
 }
 
 a:link, a:hover, a:visited {

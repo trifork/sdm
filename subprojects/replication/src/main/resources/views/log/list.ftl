@@ -1,13 +1,22 @@
-<h2>Audit Log</h2>
+<h2>Revisionslog</h2>
+<p id="info">
+	Revitionsloggen viser alle tilgange til data samt alle oprettelser og nedlæggelser af klienter og administratore. 
+</p>
 <table id="log">
 	<tr>
 		<th>Tid</th>
-		<th>Message</th>
+		<th>Indtog</th>
 	</tr>
 	<#list entries as entry>
 	<tr>
-		<td>${entry.createdAt?datetime}</td>
+		<td class="timestamp">${entry.createdAt?datetime}</td>
 		<td>${entry.message}</td>
 	</tr>
 	</#list>
+	<#if prevOffset??>
+		<a style="float:left;" href="${contextRoot}/admin/log?offset=${prevOffset}">« Forige Side</a>
+	</#if>
+	<#if nextOffset??>
+		<a style="float:right;" href="${contextRoot}/admin/log?offset=${nextOffset}">Næste Side »</a>
+	</#if>
 </table>

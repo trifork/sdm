@@ -1,7 +1,574 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<xs:schema version="1.0" targetNamespace="http://trifork.com/-/stamdata/3.0/cpr" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
-  <xs:import schemaLocation="schema4.xsd"/>
+  <xs:complexType name="indikationskode">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="indikationskode" type="xs:string" minOccurs="0"/>
+          <xs:element name="atc" type="xs:string" minOccurs="0"/>
+          <xs:element name="drugID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="record" abstract="true">
+    <xs:all/>
+  </xs:complexType>
+
+  <xs:complexType name="doseringskode">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:integer" minOccurs="0"/>
+          <xs:element name="dosageCode" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="praksis">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="eanLokationsnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="regionCode" type="xs:integer" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="atcKoderOgTekst">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="code" type="xs:string" minOccurs="0"/>
+          <xs:element name="text" type="xs:string" minOccurs="0"/>
+          <xs:element name="niveau1" type="xs:string" minOccurs="0"/>
+          <xs:element name="niveau2" type="xs:string" minOccurs="0"/>
+          <xs:element name="niveau3" type="xs:string" minOccurs="0"/>
+          <xs:element name="niveau4" type="xs:string" minOccurs="0"/>
+          <xs:element name="niveau5" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pakning">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="varenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummerDelpakning" type="xs:integer" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:string" minOccurs="0"/>
+          <xs:element name="pakningsstoerrelseNumerisk" type="xs:double" minOccurs="0"/>
+          <xs:element name="pakningsstoerrelseEnhed" type="xs:string" minOccurs="0"/>
+          <xs:element name="pakningsstoerrelseTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="emballageTypeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="dosisdispenserbar" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="medicintilskudsKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="klausuleringsKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="alfabetSekvensNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="antalDelpakninger" type="xs:integer" minOccurs="0"/>
+          <xs:element name="udleveringsbestemmelse" type="xs:string" minOccurs="0"/>
+          <xs:element name="udleveringSpeciale" type="xs:string" minOccurs="0"/>
+          <xs:element name="antalDDDPrPakning" type="xs:double" minOccurs="0"/>
+          <xs:element name="opbevaringstidNumerisk" type="xs:integer" minOccurs="0"/>
+          <xs:element name="opbevaringstid" type="xs:integer" minOccurs="0"/>
+          <xs:element name="opbevaringsbetingelser" type="xs:string" minOccurs="0"/>
+          <xs:element name="oprettelsesdato" type="xs:string" minOccurs="0"/>
+          <xs:element name="datoForSenestePrisaendring" type="xs:string" minOccurs="0"/>
+          <xs:element name="udgaaetDato" type="xs:string" minOccurs="0"/>
+          <xs:element name="BeregningskodeAIRegpris" type="xs:string" minOccurs="0"/>
+          <xs:element name="pakningOptagetITilskudsgruppe" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="faerdigfremstillingsgebyr" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="pakningsdistributoer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="substitutionAfLaegemidlerUdenFastPris">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="varenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="substitutionsgruppenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="drug">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:long" minOccurs="0"/>
+          <xs:element name="name" type="xs:string" minOccurs="0"/>
+          <xs:element name="formCode" type="xs:string" minOccurs="0"/>
+          <xs:element name="formDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="strengthDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="stength" type="xs:double" minOccurs="0"/>
+          <xs:element name="stengthUnit" type="xs:string" minOccurs="0"/>
+          <xs:element name="atcID" type="xs:string" minOccurs="0"/>
+          <xs:element name="atcDescription" type="xs:string" minOccurs="0"/>
+          <xs:element name="isDosageDispensable" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="beregningsregler">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="code" type="xs:string" minOccurs="0"/>
+          <xs:element name="text" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="sygehus">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="eanLokationsnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="nummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="telefon" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="www" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="umyndiggoerelseVaergeRelation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="cpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="typeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="typeTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="relationCpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="relationCprStartDato" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="vaergesNavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="vaergesNavnStartDato" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="RelationsTekst1" type="xs:string" minOccurs="0"/>
+          <xs:element name="RelationsTekst2" type="xs:string" minOccurs="0"/>
+          <xs:element name="RelationsTekst3" type="xs:string" minOccurs="0"/>
+          <xs:element name="RelationsTekst4" type="xs:string" minOccurs="0"/>
+          <xs:element name="RelationsTekst5" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="styrkeenhed">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="enhedspriser">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="text" type="xs:string" minOccurs="0"/>
+          <xs:element name="shortText" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="indikation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:integer" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekstLinje1" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekstLinje2" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekstLinje3" type="xs:string" minOccurs="0"/>
+          <xs:element name="aktiv" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="oplysningerOmDosisdispensering">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:integer" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:integer" minOccurs="0"/>
+          <xs:element name="substitutionsgruppe" type="xs:string" minOccurs="0"/>
+          <xs:element name="mindsteAIPPrEnhed" type="xs:integer" minOccurs="0"/>
+          <xs:element name="mindsteRegisterprisEnh" type="xs:integer" minOccurs="0"/>
+          <xs:element name="tspPrEnhed" type="xs:integer" minOccurs="0"/>
+          <xs:element name="billigsteDrugid" type="xs:integer" minOccurs="0"/>
+          <xs:element name="KodeForBilligsteDrugid" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="autorisation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="cpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="fornavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="efternavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="uddannelsesKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="specialeForNBS">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="klausulering">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="medicintilskud">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="administrationsvej">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="apotek">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="apotekNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="filialNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="eanLokationsnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="cvr" type="xs:integer" minOccurs="0"/>
+          <xs:element name="pcvr" type="xs:integer" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="telefon" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="www" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="foraeldremyndighedsRelation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="cpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="typeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="typeTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="relationCpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="laegemiddelnavn">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:integer" minOccurs="0"/>
+          <xs:element name="administrationsvejId" type="xs:string" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="emballagetypeKoder">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="text" type="xs:string" minOccurs="0"/>
+          <xs:element name="shortText" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="priser">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="varenummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="apoteketsIndkoebspris" type="xs:integer" minOccurs="0"/>
+          <xs:element name="registerpris" type="xs:integer" minOccurs="0"/>
+          <xs:element name="ekspeditionensSamledePris" type="xs:integer" minOccurs="0"/>
+          <xs:element name="tilskudspris" type="xs:integer" minOccurs="0"/>
+          <xs:element name="leveranceprisTilHospitaler" type="xs:integer" minOccurs="0"/>
+          <xs:element name="ikkeTilskudsberettigetDel" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pakningsstoerrelsesenhed">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="barnRelation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="cpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="barnCPR" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="laegemiddelAdministrationsvejRelation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:string" minOccurs="0"/>
+          <xs:element name="administrationsvejId" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pakningskombinationerUdenPriser">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="varenummerOrdineret" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummerSubstitueret" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummerAlternativt" type="xs:integer" minOccurs="0"/>
+          <xs:element name="antalPakninger" type="xs:integer" minOccurs="0"/>
+          <xs:element name="informationspligtMarkering" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="indholdsstoffer">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="stofklasse" type="xs:string" minOccurs="0"/>
+          <xs:element name="substans" type="xs:string" minOccurs="0"/>
+          <xs:element name="substansgruppe" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="dosering">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="code" type="xs:integer" minOccurs="0"/>
+          <xs:element name="text" type="xs:string" minOccurs="0"/>
+          <xs:element name="shortText" type="xs:string" minOccurs="0"/>
+          <xs:element name="descriptionLine1" type="xs:string" minOccurs="0"/>
+          <xs:element name="descriptionLinie2" type="xs:string" minOccurs="0"/>
+          <xs:element name="descriptionLinie3" type="xs:string" minOccurs="0"/>
+          <xs:element name="numberOfUnitsPerDay" type="xs:float" minOccurs="0"/>
+          <xs:element name="active" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="yderregister">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="nummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="telefon" type="xs:string" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="amtNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="histID" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="www" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeTekst" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="sygehusAfdeling">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sygehusSorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="overafdelingSorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="underlagtSygehusSorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="eanLokationsnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="afdelingTypeKode" type="xs:integer" minOccurs="0"/>
+          <xs:element name="afdelingTypeTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="nummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="telefon" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="www" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="rekommandation">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="varenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="gruppe" type="xs:integer" minOccurs="0"/>
+          <xs:element name="drugId" type="xs:integer" minOccurs="0"/>
+          <xs:element name="niveau" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
 
   <xs:complexType name="person">
     <xs:complexContent>
@@ -30,6 +597,106 @@
           <xs:element name="stilling" type="xs:string" minOccurs="0"/>
           <xs:element name="vejKode" type="xs:integer" minOccurs="0"/>
           <xs:element name="kommuneKode" type="xs:integer" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="substitution">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="receptvarenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="substitutionsgruppenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="PakningsstoerrelseNumerisk" type="xs:integer" minOccurs="0"/>
+          <xs:element name="ProdAlfabetiskeSekvensplads" type="xs:string" minOccurs="0"/>
+          <xs:element name="SubstitutionskodeForPakning" type="xs:string" minOccurs="0"/>
+          <xs:element name="billigsteVarenummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="yder">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="sorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="praksisSorNummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="eanLokationsnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="nummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="navn" type="xs:string" minOccurs="0"/>
+          <xs:element name="telefon" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="email" type="xs:string" minOccurs="0"/>
+          <xs:element name="www" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeKode" type="xs:string" minOccurs="0"/>
+          <xs:element name="hovedSpecialeTekst" type="xs:string" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="opbevaringsbetingelser">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="kortTekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="pakningskombination">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="varenummerOrdineret" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummerSubstitueret" type="xs:integer" minOccurs="0"/>
+          <xs:element name="varenummerAlternativt" type="xs:integer" minOccurs="0"/>
+          <xs:element name="antalPakninger" type="xs:integer" minOccurs="0"/>
+          <xs:element name="ekspeditionensSamledePris" type="xs:integer" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="firma">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="firmanummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="firmamaerkeKortNavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="firmamaerkeLangtNavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="parallelimportoerId" type="xs:string" minOccurs="0"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="formbetegnelser">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="tekst" type="xs:string" minOccurs="0"/>
+          <xs:element name="aktiv" type="xs:boolean"/>
+          <xs:element name="validFrom" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="validTo" type="xs:dateTime" minOccurs="0"/>
         </xs:all>
       </xs:extension>
     </xs:complexContent>

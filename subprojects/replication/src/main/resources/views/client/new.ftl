@@ -1,4 +1,4 @@
-<h2>Ny Klient</h2>
+<h2>Ny Serviceaftager</h2>
 <form action="${contextRoot}/admin/clients" method="POST">
 <p>
 	<label for="name">Systemnavn:</label>

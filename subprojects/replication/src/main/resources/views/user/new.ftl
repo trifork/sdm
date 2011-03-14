@@ -1,4 +1,4 @@
-<h2>Ny Administrator</h2>
+<h2>Opret Ny Administrator</h2>
 <form action="${contextRoot}/admin/users" method="POST">
 <p>
 	<label for="name">Navn:</label>
@@ -9,7 +9,7 @@
 	<input name="cpr" type="text" size="60" />
 </p>
 <p>
-	<label for="firm">Organisation:</label>
+	<label for="firm">Organisation (CVR):</label>
 	<select name="firm">
 		<#list firms as firm>
 		<option value="${firm}">${firm}</option>

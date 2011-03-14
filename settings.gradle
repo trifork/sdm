@@ -2,6 +2,7 @@ include 'shared'
 include 'replication'
 include 'schemas'
 include 'importer'
+include 'client'
 
 rootProject.name = 'stamdata'
 rootProject.children.each {project ->
