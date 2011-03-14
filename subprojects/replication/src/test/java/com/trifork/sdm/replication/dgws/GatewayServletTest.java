@@ -1,6 +1,6 @@
 package com.trifork.sdm.replication.dgws;
 
-import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static com.trifork.sdm.replication.gui.models.RequestAttributes.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 

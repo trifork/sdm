@@ -19,8 +19,9 @@ import org.slf4j.Logger;
 import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
-import com.trifork.sdm.replication.admin.models.IAuditLog;
-import com.trifork.sdm.replication.admin.models.PermissionDao;
+import com.trifork.sdm.replication.dgws.annotations.SOAP;
+import com.trifork.sdm.replication.gui.models.AuditLog;
+import com.trifork.sdm.replication.gui.models.PermissionDao;
 import com.trifork.sdm.replication.util.AuthorizationManager;
 
 import dk.sosi.seal.SOSIFactory;
@@ -47,7 +48,7 @@ public class RequestProcessor {
 
 	private final PermissionDao permissionRepository;
 
-	private final IAuditLog audit;
+	private final AuditLog audit;
 
 	private final Marshaller marshaller;
 	private final Unmarshaller unmarshaller;
@@ -56,7 +57,7 @@ public class RequestProcessor {
 
 
 	@Inject
-	RequestProcessor(PermissionDao permissionRepository, IAuditLog auditLog, Marshaller marshaller, Unmarshaller unmarshaller, AuthorizationManager authorizationManager) {
+	RequestProcessor(PermissionDao permissionRepository, AuditLog auditLog, @SOAP Marshaller marshaller, @SOAP Unmarshaller unmarshaller, AuthorizationManager authorizationManager) {
 		this.permissionRepository = permissionRepository;
 		this.marshaller = marshaller;
 		this.unmarshaller = unmarshaller;
@@ -102,7 +103,7 @@ public class RequestProcessor {
 				// Write the request to the audit log.
 
 				String message = String.format("Access request: client_cvr=%s, entity_uri=%s", cvrNumber, request.entityURI);
-				audit.log(message);
+				audit.write(message);
 
 				// Log some statistics if it is enabled.
 

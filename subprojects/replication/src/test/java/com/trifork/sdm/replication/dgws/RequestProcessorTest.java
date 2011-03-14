@@ -4,7 +4,6 @@ package com.trifork.sdm.replication.dgws;
 import static com.trifork.sdm.replication.dgws.SOSITestConstants.*;
 import static dk.sosi.seal.model.constants.DGWSConstants.*;
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.number.IsCloseTo.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -27,7 +26,7 @@ import org.w3c.dom.Element;
 
 import com.google.inject.Key;
 import com.trifork.sdm.replication.GuiceTest;
-import com.trifork.sdm.replication.admin.models.PermissionDao;
+import com.trifork.sdm.replication.gui.models.PermissionDao;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
@@ -174,19 +173,6 @@ public class RequestProcessorTest extends GuiceTest {
 		sendRequest();
 
 		assertSoapFault();
-	}
-
-
-	@Test
-	public void should_return_a_expires_date_that_matches_the_time_to_live() throws Exception {
-		sendRequest();
-
-		long expectedExpires = request.getIDCard().getExpiryDate().getTime() / 1000;
-		long errorMargin = 1;
-
-		double authorizationExpiration = Long.parseLong(responseBody.authorization.split(":")[0]);
-
-		assertThat(authorizationExpiration, is(closeTo(expectedExpires, errorMargin)));
 	}
 
 

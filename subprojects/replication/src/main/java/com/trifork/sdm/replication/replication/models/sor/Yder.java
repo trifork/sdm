@@ -4,17 +4,14 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.sdm.replication.replication.models.Record;
-import com.trifork.sdm.replication.util.Namespace;
 
 @Entity(name = "sor/yder/v1")
 @Table(name = "Yder")
-@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Yder extends Record
-{
+public class Yder extends Record {
+
 	@Id
 	@GeneratedValue
 	@Column(name = "YderPID")
@@ -22,7 +19,7 @@ public class Yder extends Record
 
 	@Column(name = "SorNummer")
 	protected BigInteger sorNummer;
-	
+
 	@Column(name = "PraksisSorNummer")
 	protected BigInteger praksisSorNummer;
 
@@ -52,10 +49,10 @@ public class Yder extends Record
 
 	@Column(name = "Www")
 	protected String www;
-	
+
 	@Column(name = "HovedSpecialeKode")
 	protected String hovedSpecialeKode;
-	
+
 	@Column(name = "HovedSpecialeTekst")
 	protected String hovedSpecialeTekst;
 
@@ -73,22 +70,21 @@ public class Yder extends Record
 	@Column(name = "ValidTo")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validTo;
-	public BigInteger getRecordID()
-	{
+
+
+	public BigInteger getRecordID() {
 		return recordID;
 	}
 
 
 	@Override
-	public String getID()
-	{
+	public String getID() {
 		return sorNummer.toString();
 	}
 
 
 	@Override
-	public Date getUpdated()
-	{
+	public Date getUpdated() {
 		return modifiedDate;
 	}
 }

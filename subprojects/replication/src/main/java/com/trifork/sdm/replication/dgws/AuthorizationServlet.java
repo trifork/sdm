@@ -1,7 +1,7 @@
 package com.trifork.sdm.replication.dgws;
 
 
-import static com.trifork.sdm.replication.admin.models.RequestAttributes.*;
+import static com.trifork.sdm.replication.gui.models.RequestAttributes.*;
 
 import java.io.IOException;
 import java.io.InputStream;

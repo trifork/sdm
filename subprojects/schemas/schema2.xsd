@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://trifork.com/-/stamdata/3.0/cpr" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:import schemaLocation="schema4.xsd"/>
+
+  <xs:complexType name="person">
+    <xs:complexContent>
+      <xs:extension base="record">
+        <xs:all>
+          <xs:element name="recordID" type="xs:integer" minOccurs="0"/>
+          <xs:element name="id" type="xs:string" minOccurs="0"/>
+          <xs:element name="cpr" type="xs:string" minOccurs="0"/>
+          <xs:element name="koen" type="xs:string" minOccurs="0"/>
+          <xs:element name="fornavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="mellemnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="efternavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="coNavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="lokalitet" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejnavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="bygningsnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="husnummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="etage" type="xs:string" minOccurs="0"/>
+          <xs:element name="sideDoerNummer" type="xs:string" minOccurs="0"/>
+          <xs:element name="bynavn" type="xs:string" minOccurs="0"/>
+          <xs:element name="postnummer" type="xs:integer" minOccurs="0"/>
+          <xs:element name="postdistrikt" type="xs:string" minOccurs="0"/>
+          <xs:element name="status" type="xs:string" minOccurs="0"/>
+          <xs:element name="gaeldendeCPR" type="xs:string" minOccurs="0"/>
+          <xs:element name="foedselsdato" type="xs:dateTime" minOccurs="0"/>
+          <xs:element name="stilling" type="xs:string" minOccurs="0"/>
+          <xs:element name="vejKode" type="xs:integer" minOccurs="0"/>
+          <xs:element name="kommuneKode" type="xs:integer" minOccurs="0"/>
+        </xs:all>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>
+

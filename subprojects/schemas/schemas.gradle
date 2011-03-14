@@ -1,16 +1,7 @@
 dependencies {
-	compile project(':shared')
+	compile project(':replication')
 	compile libs.reflections
 	compile libs.commons_io
 	
 	testCompile 'junit:junit:4.5'
-}
-
-task(generate, dependsOn: [':shared:classes', 'classes'], type: JavaExec) {
-	main = 'com.trifork.sdm.schema.SchemaGenerator'
-	classpath = files(sourceSets.main.runtimeClasspath, project(":shared").sourceSets.main.classesDir)
-	args = [
-		new File(project(":shared").buildDir, "schemas"),
-		"com.trifork.stamdata.registre"
-	]
 }

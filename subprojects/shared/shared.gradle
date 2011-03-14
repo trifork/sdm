@@ -1,8 +1,4 @@
 dependencies {
 	
-	compile libs.reflections
-	
-	compile libs.jpa_api
-	
 	testCompile libs.junit
 }

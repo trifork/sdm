@@ -1,599 +1,924 @@
-CREATE TABLE administrationsvej
-  (
-     administrationsvejpid   BIGINT(15) NOT NULL AUTO_INCREMENT,
-     administrationsvejkode  CHAR(2) NOT NULL,
-     administrationsvejtekst VARCHAR(50) NOT NULL,
-     modifiedby              VARCHAR(200) NOT NULL,
-     modifieddate            DATETIME NOT NULL,
-     validfrom               DATETIME,
-     validto                 DATETIME,
-     createdby               VARCHAR(200),
-     createddate             DATETIME,
-     INDEX (validfrom, validto),
-     PRIMARY KEY (administrationsvejpid)
-  )
-ENGINE=INNODB;
+CREATE TABLE Administrationsvej (
+ AdministrationsvejPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ AdministrationsvejKode CHAR(2) NOT NULL,
+ AdministrationsvejTekst VARCHAR(50) NOT NULL,
+ AdministrationsvejKortTekst VARCHAR(10),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME ,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200),
+ CreatedDate DATETIME
+, INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Administrationsvej_1 UNIQUE (AdministrationsvejKode, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE apotek
-  (
-     apotekpid          BIGINT(15) NOT NULL AUTO_INCREMENT,
-     sornummer          BIGINT(20) NOT NULL,
-     apoteknummer       BIGINT(15),
-     filialnummer       BIGINT(15),
-     eanlokationsnummer BIGINT(20),
-     cvr                BIGINT(15),
-     pcvr               BIGINT(15),
-     navn               VARCHAR(256),
-     telefon            VARCHAR(20),
-     vejnavn            VARCHAR(100),
-     postnummer         VARCHAR(10),
-     bynavn             VARCHAR(30),
-     email              VARCHAR(100),
-     www                VARCHAR(100),
-     modifiedby         VARCHAR(200) NOT NULL,
-     modifieddate       DATETIME NOT NULL,
-     validfrom          DATETIME,
-     validto            DATETIME,
-     createdby          VARCHAR(200) NOT NULL,
-     createddate        DATETIME NOT NULL,
-     PRIMARY KEY (apotekpid),
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Apotek (
+ ApotekPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ SorNummer BIGINT(20) NOT NULL,
+ ApotekNummer BIGINT(15),
+ FilialNummer BIGINT(15),
+ EanLokationsnummer BIGINT(20),
+ cvr BIGINT(15),
+ pcvr BIGINT(15),
+ Navn VARCHAR(256),
+ Telefon VARCHAR(20),
+ Vejnavn VARCHAR(100),
+ Postnummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ Email VARCHAR(100),
+ Www VARCHAR(100),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE atc
-  (
-     atcpid       BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     atc          VARCHAR(10) NOT NULL,
-     atctekst     VARCHAR(72) NOT NULL,
-     modifiedby   VARCHAR(200) NOT NULL,
-     modifieddate DATETIME NOT NULL,
-     validfrom    DATETIME,
-     validto      DATETIME,
-     createdby    VARCHAR(200) NOT NULL,
-     createddate  DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
 
-CREATE TABLE autorisation
-  (
-     autorisationpid     BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     autorisationsnummer VARCHAR(10) NOT NULL,
-     cpr                 VARCHAR(10) NOT NULL,
-     fornavn             VARCHAR(100) NOT NULL,
-     efternavn           VARCHAR(100) NOT NULL,
-     uddannelseskode     INT(4),
-     modifiedby          VARCHAR(200) NOT NULL,
-     modifieddate        DATETIME NOT NULL,
-     validfrom           DATETIME,
-     validto             DATETIME,
-     createdby           VARCHAR(200) NOT NULL,
-     createddate         DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE ATC (
+ ATCPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ ATC VARCHAR(10) NOT NULL,
+ ATCTekst VARCHAR(72) NOT NULL,
+ ATCNiveau1 VARCHAR(2),
+ ATCNiveau2 VARCHAR(2),
+ ATCNiveau3 VARCHAR(1),
+ ATCNiveau4 VARCHAR(1),
+ ATCNiveau5 VARCHAR(2),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE barnrelation
-  (
-     barnrelationpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     id              VARCHAR(21) NOT NULL,
-     cpr             VARCHAR(10) NOT NULL,
-     barncpr         VARCHAR(10) NOT NULL,
-     modifiedby      VARCHAR(200) NOT NULL,
-     modifieddate    DATETIME NOT NULL,
-     validfrom       DATETIME,
-     validto         DATETIME,
-     createdby       VARCHAR(200) NOT NULL,
-     createddate     DATETIME NOT NULL,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_person_1 UNIQUE (id, validfrom)
-  )
-ENGINE=INNODB;
+CREATE TABLE Autorisation (
+ AutorisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Autorisationsnummer VARCHAR(10) NOT NULL,
+ cpr VARCHAR(10) NOT NULL,
+ Fornavn VARCHAR(100) NOT NULL,
+ Efternavn VARCHAR(100) NOT NULL,
+ UddannelsesKode INT(4),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE dosering
-  (
-     doseringpid         BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     doseringkode        BIGINT(12) NOT NULL,
-     doseringtekst       VARCHAR(100) NOT NULL,
-     antalenhederprdoegn FLOAT(10) NOT NULL,
-     aktiv               BOOLEAN,
-     modifiedby          VARCHAR(200) NOT NULL,
-     modifieddate        DATETIME NOT NULL,
-     validfrom           DATETIME,
-     validto             DATETIME,
-     createdby           VARCHAR(200) NOT NULL,
-     createddate         DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE BarnRelation (
+ BarnRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Id VARCHAR(21) NOT NULL,
+ CPR VARCHAR(10) NOT NULL,
+ BarnCPR VARCHAR(10) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE foraeldremyndighedrelation
-  (
-     foraeldremyndighedrelationpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY
-     KEY,
-     id                            VARCHAR(21) NOT NULL,
-     cpr                           CHAR(10) NOT NULL,
-     typekode                      VARCHAR(4) NOT NULL,
-     typetekst                     VARCHAR(50) NOT NULL,
-     relationcpr                   CHAR(10),
-     modifiedby                    VARCHAR(200) NOT NULL,
-     modifieddate                  DATETIME NOT NULL,
-     validfrom                     DATETIME,
-     validto                       DATETIME,
-     createdby                     VARCHAR(200) NOT NULL,
-     createddate                   DATETIME NOT NULL,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_person_1 UNIQUE (id, validfrom)
-  )
-ENGINE=INNODB;
+CREATE TABLE Beregningsregler (
+ BeregningsreglerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(1) NOT NULL,
+ Tekst VARCHAR(50), 
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE formbetegnelse
-  (
-     formbetegnelsepid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     kode              VARCHAR(10) NOT NULL,
-     tekst             VARCHAR(150) NOT NULL,
-     modifiedby        VARCHAR(200) NOT NULL,
-     modifieddate      DATETIME NOT NULL,
-     validfrom         DATETIME,
-     validto           DATETIME,
-     createdby         VARCHAR(200) NOT NULL,
-     createddate       DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Dosering (
+ DoseringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ DoseringKode BIGINT(12) NOT NULL,
+ DoseringTekst VARCHAR(100) NOT NULL,
+ AntalEnhederPrDoegn FLOAT(10) NOT NULL,
+ Aktiv BOOLEAN,
+ DoseringKortTekst VARCHAR(10),
+ DoseringstekstLinie1 VARCHAR(26),
+ DoseringstekstLinie2 VARCHAR(26),
+ DoseringstekstLinie3 VARCHAR(26),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL
+, INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE indikation
-  (
-     indikationpid   BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     indikationkode  BIGINT(15),
-     indikationtekst VARCHAR(100),
-     modifiedby      VARCHAR(200) NOT NULL,
-     modifieddate    DATETIME NOT NULL,
-     validfrom       DATETIME,
-     validto         DATETIME,
-     createdby       VARCHAR(200) NOT NULL,
-     createddate     DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE EmballagetypeKoder (
+ EmballagetypeKoderPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(4) NOT NULL,
+ KortTekst VARCHAR(10),
+ Tekst VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE indikationatcref
-  (
-     indikationatcrefpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     cid                 VARCHAR(22) NOT NULL,
-     indikationkode      BIGINT(15) NOT NULL,
-     atc                 VARCHAR(10) NOT NULL,
-     modifiedby          VARCHAR(200) NOT NULL,
-     modifieddate        DATETIME NOT NULL,
-     validfrom           DATETIME,
-     validto             DATETIME,
-     createdby           VARCHAR(200) NOT NULL,
-     createddate         DATETIME NOT NULL,
-     INDEX (validfrom, validto, indikationkode, atc)
-  )
-ENGINE=INNODB;
+CREATE TABLE Enhedspriser (
+ EnhedspriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ DrugID BIGINT(12),
+ PrisPrEnhed BIGINT(12),
+ PrisPrDDD BIGINT(12),
+ BilligstePakning VARCHAR(1),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE kommune
-  (
-     kommunepid   BIGINT(15) NOT NULL PRIMARY KEY,
-     nummer       VARCHAR(12) NOT NULL,
-     navn         VARCHAR(100) NOT NULL,
-     modifiedby   VARCHAR(200) NOT NULL,
-     modifieddate DATETIME NOT NULL,
-     validfrom    DATETIME,
-     validto      DATETIME,
-     createdby    VARCHAR(200) NOT NULL,
-     createddate  DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Firma (
+ FirmaPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Firmanummer BIGINT(12) NOT NULL,
+ FirmamaerkeKort VARCHAR(20),
+ FirmamaerkeLangtNavn VARCHAR(32),
+ ParallelimportoerKode VARCHAR(2),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE laegemiddel
-  (
-     laegemiddelpid    BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     drugid            BIGINT(12) NOT NULL,
-     drugname          VARCHAR(30) NOT NULL,
-     formkode          VARCHAR(10),
-     formtekst         VARCHAR(150),
-     atckode           VARCHAR(10),
-     atctekst          VARCHAR(100),
-     styrkenumerisk    DECIMAL(10, 3),
-     styrkeenhed       VARCHAR(100),
-     styrketekst       VARCHAR(30),
-     dosisdispenserbar BOOLEAN,
-     modifiedby        VARCHAR(200) NOT NULL,
-     modifieddate      DATETIME NOT NULL,
-     validfrom         DATETIME,
-     validto           DATETIME,
-     createdby         VARCHAR(200) NOT NULL,
-     createddate       DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE ForaeldreMyndighedRelation (
+ ForaeldreMyndighedRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Id VARCHAR(21) NOT NULL,
+ CPR VARCHAR(10) NOT NULL,
+ TypeKode VARCHAR(4) NOT NULL,
+ TypeTekst VARCHAR(50) NOT NULL,
+ RelationCpr VARCHAR(10),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE laegemiddeladministrationsvejref
-  (
-     laegemiddeladministrationsvejrefpid BIGINT(15) AUTO_INCREMENT NOT NULL
-     PRIMARY
-     KEY,
-     cid                                 VARCHAR(22) NOT NULL,
-     drugid                              BIGINT(12) NOT NULL,
-     administrationsvejkode              CHAR(2) NOT NULL,
-     modifiedby                          VARCHAR(200) NOT NULL,
-     modifieddate                        DATETIME NOT NULL,
-     validfrom                           DATETIME,
-     validto                             DATETIME,
-     createdby                           VARCHAR(200) NOT NULL,
-     createddate                         DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Formbetegnelse (
+ FormbetegnelsePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(10) NOT NULL,
+ Tekst VARCHAR(150) NOT NULL,
+ Aktiv BOOLEAN,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE laegemiddeldoseringref
-  (
-     laegemiddeldoseringrefpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     cid                       VARCHAR(22) NOT NULL,
-     drugid                    BIGINT(12) NOT NULL,
-     doseringkode              BIGINT(12) NOT NULL,
-     modifiedby                VARCHAR(200) NOT NULL,
-     modifieddate              DATETIME NOT NULL,
-     validfrom                 DATETIME,
-     validto                   DATETIME,
-     createdby                 VARCHAR(200) NOT NULL,
-     createddate               DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Indholdsstoffer (
+ IndholdsstofferPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY, 
+ CID VARCHAR(364) NOT NULL,
+ DrugID BIGINT(12),
+ Varenummer BIGINT(12),
+ Stofklasse VARCHAR(100),
+ Substansgruppe VARCHAR(100),
+ Substans VARCHAR(150),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE klausulering
-  (
-     klausuleringpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     kode            VARCHAR(10) NOT NULL,
-     korttekst       VARCHAR(60),
-     tekst           VARCHAR(600),
-     modifiedby      VARCHAR(200) NOT NULL,
-     modifieddate    DATETIME NOT NULL,
-     validfrom       DATETIME,
-     validto         DATETIME,
-     createdby       VARCHAR(200) NOT NULL,
-     createddate     DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Indikation (
+ IndikationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ IndikationKode BIGINT(15),
+ IndikationTekst VARCHAR(100),
+ IndikationstekstLinie1 VARCHAR(26),
+ IndikationstekstLinie2 VARCHAR(26),
+ IndikationstekstLinie3 VARCHAR(26),
+ aktiv BOOLEAN,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE medicintilskud
-  (
-     medicintilskudpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     kode              VARCHAR(10) NOT NULL,
-     korttekst         VARCHAR(20),
-     tekst             VARCHAR(60),
-     modifiedby        VARCHAR(200) NOT NULL,
-     modifieddate      DATETIME NOT NULL,
-     validfrom         DATETIME,
-     validto           DATETIME,
-     createdby         VARCHAR(200) NOT NULL,
-     createddate       DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE IndikationATCRef (
+ IndikationATCRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(22) NOT NULL,
+ IndikationKode BIGINT(15) NOT NULL,
+ ATC VARCHAR(10) NOT NULL,
+ DrugID BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo, IndikationKode, ATC)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE organisation
-  (
-     organisationpid   BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     nummer            VARCHAR(30) NOT NULL,
-     navn              VARCHAR(256),
-     organisationstype VARCHAR(30) NOT NULL,
-     modifiedby        VARCHAR(200) NOT NULL,
-     modifieddate      DATETIME NOT NULL,
-     validfrom         DATETIME,
-     validto           DATETIME,
-     createdby         VARCHAR(200) NOT NULL,
-     createddate       DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Kommune (
+ KommunePID BIGINT(15) NOT NULL PRIMARY KEY,
+ Nummer VARCHAR(12) NOT NULL,
+ Navn VARCHAR(100) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE pakning
-  (
-     pakningpid                 BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     varenummer                 BIGINT(12) NOT NULL,
-     varenummerdelpakning       BIGINT(12),
-     drugid                     DECIMAL(12) NOT NULL,
-     pakningsstoerrelsenumerisk DECIMAL(10, 2),
-     pakningsstoerrelsesenhed   VARCHAR(10),
-     pakningsstoerrelsetekst    VARCHAR(30),
-     emballagetypekode          VARCHAR(10),
-     dosisdispenserbar          BOOL,
-     medicintilskudskode        VARCHAR(10),
-     klausuleringskode          VARCHAR(10),
-     modifiedby                 VARCHAR(200) NOT NULL,
-     modifieddate               DATETIME NOT NULL,
-     validfrom                  DATETIME,
-     validto                    DATETIME,
-     createdby                  VARCHAR(200) NOT NULL,
-     createddate                DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
 
-CREATE TABLE pakningsstoerrelsesenhed
-  (
-     pakningsstoerrelsesenhedpid   BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     pakningsstoerrelsesenhedkode  VARCHAR(10) NOT NULL,
-     pakningsstoerrelsesenhedtekst VARCHAR(50) NOT NULL,
-     modifiedby                    VARCHAR(200) NOT NULL,
-     modifieddate                  DATETIME NOT NULL,
-     validfrom                     DATETIME,
-     validto                       DATETIME,
-     createdby                     VARCHAR(200),
-     createddate                   DATETIME,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_pakningsstoerrelsesenhed_1 UNIQUE (
-     pakningsstoerrelsesenhedkode, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Laegemiddel (
+ LaegemiddelPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ DrugID BIGINT(12) NOT NULL,
+ DrugName VARCHAR(30) NOT NULL,
+ FormKode VARCHAR(10),
+ FormTekst VARCHAR(150),
+ ATCKode VARCHAR(10),
+ ATCTekst VARCHAR(100),
+ StyrkeNumerisk DECIMAL(10,3),
+ StyrkeEnhed VARCHAR(100),
+ StyrkeTekst VARCHAR(30),
+ Dosisdispenserbar BOOLEAN,
+ Varetype VARCHAR(2),
+ Varedeltype VARCHAR(2),
+ AlfabetSekvensplads VARCHAR(9),
+ SpecNummer BIGINT(12),
+ LaegemiddelformTekst VARCHAR(20),
+ KodeForYderligereFormOplysn VARCHAR(7),
+ Trafikadvarsel BOOLEAN,
+ Substitution VARCHAR(1),
+ LaegemidletsSubstitutionsgruppe VARCHAR(4),
+ DatoForAfregistrAfLaegemiddel VARCHAR(10),
+ Karantaenedato VARCHAR(8),
+ AdministrationsvejKode VARCHAR(8),
+ MTIndehaverKode BIGINT(12),
+ RepraesentantDistributoerKode BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE person
-  (
-     personpid                  BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     cpr                        VARCHAR(10) NOT NULL,
-     koen                       VARCHAR(1) NOT NULL,
-     fornavn                    VARCHAR(60),
-     mellemnavn                 VARCHAR(60),
-     efternavn                  VARCHAR(60),
-     conavn                     VARCHAR(50),
-     lokalitet                  VARCHAR(50),
-     vejnavn                    VARCHAR(30),
-     bygningsnummer             VARCHAR(10),
-     husnummer                  VARCHAR(10),
-     etage                      VARCHAR(10),
-     sidedoernummer             VARCHAR(10),
-     bynavn                     VARCHAR(30),
-     postnummer                 BIGINT(12),
-     postdistrikt               VARCHAR(30),
-     status                     VARCHAR(2),
-     navnebeskyttelsestartdato  DATETIME,
-     navnebeskyttelseslettedato DATETIME,
-     gaeldendecpr               VARCHAR(10),
-     foedselsdato               DATETIME NOT NULL,
-     stilling                   VARCHAR(50),
-     vejkode                    BIGINT(12),
-     kommunekode                BIGINT(12),
-     modifiedby                 VARCHAR(200) NOT NULL,
-     modifieddate               DATETIME NOT NULL,
-     validfrom                  DATETIME,
-     validto                    DATETIME,
-     createdby                  VARCHAR(200) NOT NULL,
-     createddate                DATETIME NOT NULL,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_person_1 UNIQUE (cpr, validfrom)
-  )
-ENGINE=INNODB;
+CREATE TABLE Laegemiddelnavn (
+ LaegemiddelnavnPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ DrugID BIGINT(12) NOT NULL,
+ LaegemidletsUforkortedeNavn VARCHAR(60),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE personikraft
-  (
-     personikraftpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     ikraftdato      DATETIME NOT NULL
-  )
-ENGINE=INNODB;
 
-CREATE TABLE praksis
-  (
-     praksispid         BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     sornummer          BIGINT(20) NOT NULL,
-     eanlokationsnummer BIGINT(20),
-     regioncode         BIGINT(12),
-     navn               VARCHAR(256),
-     modifiedby         VARCHAR(200) NOT NULL,
-     modifieddate       DATETIME NOT NULL,
-     validfrom          DATETIME,
-     validto            DATETIME,
-     createdby          VARCHAR(200) NOT NULL,
-     createddate        DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE LaegemiddelAdministrationsvejRef (
+ LaegemiddelAdministrationsvejRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(22) NOT NULL,
+ DrugID BIGINT(12) NOT NULL,
+ AdministrationsvejKode CHAR(2) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE styrkeenhed
-  (
-     styrkeenhedpid   BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     styrkeenhedkode  VARCHAR(10) NOT NULL,
-     styrkeenhedtekst VARCHAR(50) NOT NULL,
-     modifiedby       VARCHAR(200) NOT NULL,
-     modifieddate     DATETIME NOT NULL,
-     validfrom        DATETIME,
-     validto          DATETIME,
-     createdby        VARCHAR(200),
-     createddate      DATETIME,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_styrkeenhed_1 UNIQUE (styrkeenhedkode, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE LaegemiddelDoseringRef (
+ LaegemiddelDoseringRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(22) NOT NULL,
+ DrugID BIGINT(12) NOT NULL,
+ DoseringKode BIGINT(12) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE sygehus
-  (
-     sygehuspid         BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     sornummer          BIGINT(20) NOT NULL,
-     eanlokationsnummer BIGINT(20),
-     nummer             VARCHAR(30),
-     telefon            VARCHAR(20),
-     navn               VARCHAR(256),
-     vejnavn            VARCHAR(100),
-     postnummer         VARCHAR(10),
-     bynavn             VARCHAR(30),
-     email              VARCHAR(100),
-     www                VARCHAR(100),
-     modifiedby         VARCHAR(200) NOT NULL,
-     modifieddate       DATETIME NOT NULL,
-     validfrom          DATETIME,
-     validto            DATETIME,
-     createdby          VARCHAR(200) NOT NULL,
-     createddate        DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Klausulering (
+ KlausuleringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(10) NOT NULL,
+ KortTekst  VARCHAR(60),
+ Tekst VARCHAR(600),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE sygehusafdeling
-  (
-     sygehusafdelingpid        BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     sornummer                 BIGINT(20) NOT NULL,
-     eanlokationsnummer        BIGINT(20),
-     nummer                    VARCHAR(30),
-     navn                      VARCHAR(256),
-     sygehussornummer          BIGINT(20),
-     overafdelingsornummer     BIGINT(20),
-     underlagtsygehussornummer BIGINT(20),
-     afdelingtypekode          BIGINT(20),
-     afdelingtypetekst         VARCHAR(50),
-     hovedspecialekode         VARCHAR(20),
-     hovedspecialetekst        VARCHAR(40),
-     telefon                   VARCHAR(20),
-     vejnavn                   VARCHAR(100),
-     postnummer                VARCHAR(10),
-     bynavn                    VARCHAR(30),
-     email                     VARCHAR(100),
-     www                       VARCHAR(100),
-     modifiedby                VARCHAR(200) NOT NULL,
-     modifieddate              DATETIME NOT NULL,
-     validfrom                 DATETIME,
-     validto                   DATETIME,
-     createdby                 VARCHAR(200) NOT NULL,
-     createddate               DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Medicintilskud (
+ MedicintilskudPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(10) NOT NULL,
+ KortTekst VARCHAR(20),
+ Tekst VARCHAR(60),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE takstversion
-  (
-     takstversionpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     takstuge        VARCHAR(8) NOT NULL,
-     modifiedby      VARCHAR(200) NOT NULL,
-     modifieddate    DATETIME NOT NULL,
-     validfrom       DATETIME,
-     validto         DATETIME,
-     createdby       VARCHAR(200) NOT NULL,
-     createddate     DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Opbevaringsbetingelser (
+ OpbevaringsbetingelserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(1) NOT NULL,
+ KortTekst VARCHAR(10),
+ Tekst VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE tidsenhed
-  (
-     tidsenhedpid   BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     tidsenhedkode  VARCHAR(10) NOT NULL,
-     tidsenhedtekst VARCHAR(50) NOT NULL,
-     modifiedby     VARCHAR(200) NOT NULL,
-     modifieddate   DATETIME NOT NULL,
-     validfrom      DATETIME,
-     validto        DATETIME,
-     createdby      VARCHAR(200),
-     createddate    DATETIME,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_tidsenhed_1 UNIQUE (tidsenhedkode, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE OplysningerOmDosisdispensering (
+ OplysningerOmDosisdispenseringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ DrugID BIGINT(12),
+ LaegemidletsSubstitutionsgruppe VARCHAR(4),
+ MindsteAIPPrEnhed BIGINT(12),
+ MindsteRegisterprisEnh BIGINT(12),
+ TSPPrEnhed BIGINT(12),
+ KodeForBilligsteDrugid VARCHAR(1),
+ BilligsteDrugid BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE umyndiggoerelsevaergerelation
-  (
-     umyndiggoerelsevaergerelationpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     id                               VARCHAR(21) NOT NULL,
-     cpr                              VARCHAR(10) NOT NULL,
-     typekode                         VARCHAR(4) NOT NULL,
-     typetekst                        VARCHAR(50) NOT NULL,
-     relationcpr                      VARCHAR(10),
-     relationcprstartdato             DATETIME,
-     vaergesnavn                      VARCHAR(50),
-     vaergesnavnstartdato             DATETIME,
-     relationstekst1                  VARCHAR(50),
-     relationstekst2                  VARCHAR(50),
-     relationstekst3                  VARCHAR(50),
-     relationstekst4                  VARCHAR(50),
-     relationstekst5                  VARCHAR(50),
-     modifiedby                       VARCHAR(200) NOT NULL,
-     modifieddate                     DATETIME NOT NULL,
-     validfrom                        DATETIME,
-     validto                          DATETIME,
-     createdby                        VARCHAR(200) NOT NULL,
-     createddate                      DATETIME NOT NULL,
-     INDEX (validfrom, validto),
-     CONSTRAINT uc_person_1 UNIQUE (id, validfrom)
-  )
-ENGINE=INNODB;
+CREATE TABLE Organisation (
+ organisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Nummer VARCHAR(30) NOT NULL,
+ Navn VARCHAR(256),
+ Organisationstype VARCHAR(30) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE yder
-  (
-     yderpid            BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     nummer             VARCHAR(30),
-     sornummer          BIGINT(20) NOT NULL,
-     praksissornummer   BIGINT(20) NOT NULL,
-     eanlokationsnummer BIGINT(20),
-     telefon            VARCHAR(20),
-     navn               VARCHAR(256),
-     vejnavn            VARCHAR(100),
-     postnummer         VARCHAR(10),
-     bynavn             VARCHAR(30),
-     email              VARCHAR(100),
-     www                VARCHAR(100),
-     hovedspecialekode  VARCHAR(20),
-     hovedspecialetekst VARCHAR(40),
-     modifiedby         VARCHAR(200) NOT NULL,
-     modifieddate       DATETIME NOT NULL,
-     validfrom          DATETIME,
-     validto            DATETIME,
-     createdby          VARCHAR(200) NOT NULL,
-     createddate        DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Pakning (
+ PakningPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ VarenummerDelpakning BIGINT(12),
+ DrugID DECIMAL(12) NOT NULL,
+ PakningsstoerrelseNumerisk DECIMAL(10,2),
+ Pakningsstoerrelsesenhed VARCHAR(10),
+ PakningsstoerrelseTekst VARCHAR(30),
+ EmballageTypeKode VARCHAR(10),
+ Dosisdispenserbar BOOL,
+ MedicintilskudsKode VARCHAR(10),
+ KlausuleringsKode VARCHAR(10),
+ AlfabetSekvensnr BIGINT(12),
+ AntalDelpakninger BIGINT(12),
+ Udleveringsbestemmelse VARCHAR(5),
+ UdleveringSpeciale VARCHAR(5),
+ AntalDDDPrPakning DECIMAL,
+ OpbevaringstidNumerisk BIGINT(12),
+ Opbevaringstid BIGINT(12),
+ Opbevaringsbetingelser VARCHAR(1),
+ Oprettelsesdato VARCHAR(10),
+ DatoForSenestePrisaendring VARCHAR(10),
+ UdgaaetDato VARCHAR(10),
+ BeregningskodeAIRegpris VARCHAR(1),
+ PakningOptagetITilskudsgruppe BOOLEAN,
+ Faerdigfremstillingsgebyr BOOLEAN,
+ Pakningsdistributoer BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE yderloebenummer
-  (
-     yderloebenummerpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     loebenummer        BIGINT(12) NOT NULL
-  )
-ENGINE=INNODB;
+CREATE TABLE Pakningskombinationer (
+ PakningskombinationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(23) NOT NULL,
+ VarenummerOrdineret BIGINT(12),
+ VarenummerSubstitueret BIGINT(12),
+ VarenummerAlternativt BIGINT(12),
+ AntalPakninger BIGINT(12),
+ EkspeditionensSamledePris BIGINT(12),
+ InformationspligtMarkering VARCHAR(1),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE yderregister
-  (
-     yderregisterpid    BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     nummer             VARCHAR(30) NOT NULL,
-     telefon            VARCHAR(10),
-     navn               VARCHAR(256),
-     vejnavn            VARCHAR(100),
-     postnummer         VARCHAR(10),
-     bynavn             VARCHAR(30),
-     amtnummer          BIGINT(12),
-     email              VARCHAR(100),
-     www                VARCHAR(100),
-     hovedspecialekode  VARCHAR(100),
-     hovedspecialetekst VARCHAR(100),
-     histid             VARCHAR(100),
-     modifiedby         VARCHAR(200) NOT NULL,
-     modifieddate       DATETIME NOT NULL,
-     validfrom          DATETIME,
-     validto            DATETIME,
-     createdby          VARCHAR(200) NOT NULL,
-     createddate        DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE PakningskombinationerUdenPriser (
+ PakningskombinationerUdenPriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ VarenummerOrdineret BIGINT(12) NOT NULL,
+ VarenummerSubstitueret BIGINT(12),
+ VarenummerAlternativt BIGINT(12),
+ AntalPakninger BIGINT(12),
+ InformationspligtMarkering VARCHAR(1),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
 
-CREATE TABLE yderregisterperson
-  (
-     yderregisterpersonpid BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-     id                    VARCHAR(20) NOT NULL,
-     nummer                VARCHAR(30) NOT NULL,
-     cpr                   VARCHAR(10),
-     personrollekode       BIGINT(20),
-     personrolletxt        VARCHAR(200),
-     histidperson          VARCHAR(100),
-     modifiedby            VARCHAR(200) NOT NULL,
-     modifieddate          DATETIME NOT NULL,
-     validfrom             DATETIME,
-     validto               DATETIME,
-     createdby             VARCHAR(200) NOT NULL,
-     createddate           DATETIME NOT NULL,
-     INDEX (validfrom, validto)
-  )
-ENGINE=INNODB;
+CREATE TABLE Pakningsstoerrelsesenhed (
+ PakningsstoerrelsesenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ PakningsstoerrelsesenhedKode VARCHAR(10) NOT NULL,
+ PakningsstoerrelsesenhedTekst VARCHAR(50) NOT NULL,
+ PakningsstoerrelsesenhedKortTekst VARCHAR(10),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200),
+ CreatedDate DATETIME
+, INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Pakningsstoerrelsesenhed_1 UNIQUE (PakningsstoerrelsesEnhedKode, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Person (
+ PersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CPR VARCHAR(10) NOT NULL,
+ Koen VARCHAR(1) NOT NULL,
+ Fornavn VARCHAR(60),
+ Mellemnavn VARCHAR(60),
+ Efternavn VARCHAR(60),
+ CoNavn VARCHAR(50),
+ Lokalitet VARCHAR(50),
+ Vejnavn VARCHAR(30),
+ Bygningsnummer VARCHAR(10),
+ Husnummer VARCHAR(10),
+ Etage VARCHAR(10),
+ SideDoerNummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ Postnummer BIGINT(12),
+ PostDistrikt VARCHAR(30),
+ Status VARCHAR(2),
+ NavneBeskyttelseStartDato DATETIME,
+ NavneBeskyttelseSletteDato DATETIME,
+ GaeldendeCPR VARCHAR(10),
+ Foedselsdato DATETIME NOT NULL,
+ Stilling VARCHAR(50),
+ VejKode BIGINT(12), 
+ KommuneKode BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
+) ENGINE=InnoDB
+;
+
+
+CREATE TABLE PersonIkraft (
+ PersonIkraftPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,
+ IkraftDato DATETIME NOT NULL
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Praksis (
+ praksisPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ SorNummer BIGINT(20) NOT NULL,
+ EanLokationsnummer BIGINT(20),
+ RegionCode BIGINT(12),
+ Navn VARCHAR(256),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Priser (
+ PriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ apoteketsIndkoebspris BIGINT(12),
+ Registerpris BIGINT(12),
+ ekspeditionensSamledePris BIGINT(12),
+ tilskudspris BIGINT(12),
+ LeveranceprisTilHospitaler BIGINT(12),
+ IkkeTilskudsberettigetDel BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Rekommandationer (
+ RekommandationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ Rekommandationsgruppe BIGINT(12),
+ DrugID BIGINT(12),
+ Rekommandationsniveau VARCHAR(25),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE SpecialeForNBS (
+ SpecialeForNBSPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(5) NOT NULL,
+ KortTekst VARCHAR(10),
+ Tekst VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Styrkeenhed (
+ StyrkeenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ StyrkeenhedKode VARCHAR(10) NOT NULL,
+ StyrkeenhedTekst VARCHAR(50) NOT NULL,
+ StyrkeenhedKortTekst VARCHAR(10),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200),
+ CreatedDate DATETIME
+, INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Styrkeenhed_1 UNIQUE (StyrkeenhedKode, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Substitution (
+ SubstitutionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ ReceptensVarenummer BIGINT(12) NOT NULL,
+ Substitutionsgruppenummer BIGINT(12),
+ NumeriskPakningsstoerrelse BIGINT(12),
+ ProdAlfabetiskeSekvensplads VARCHAR(9),
+ SubstitutionskodeForPakning VARCHAR(1),
+ BilligsteVarenummer BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE SubstitutionAfLaegemidlerUdenFastPris (
+ SubstitutionAfLaegemidlerUdenFastPrisPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ Substitutionsgruppenummer BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Sygehus (
+ SygeHusPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ SorNummer BIGINT(20) NOT NULL,
+ EanLokationsnummer BIGINT(20),
+ Nummer VARCHAR(30),
+ Telefon VARCHAR(20),
+ Navn VARCHAR(256),
+ Vejnavn VARCHAR(100),
+ Postnummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ Email VARCHAR(100),
+ Www VARCHAR(100),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE SygehusAfdeling (
+ SygeHusAfdelingPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ SorNummer BIGINT(20) NOT NULL,
+ EanLokationsnummer BIGINT(20),
+ Nummer VARCHAR(30),
+ Navn VARCHAR(256),
+ SygehusSorNummer BIGINT(20),
+ OverAfdelingSorNummer BIGINT(20),
+ UnderlagtSygehusSorNummer BIGINT(20),
+ AfdelingTypeKode BIGINT(20),
+ AfdelingTypeTekst VARCHAR(50),
+ HovedSpecialeKode VARCHAR(20),
+ HovedSpecialeTekst VARCHAR(40),
+ Telefon VARCHAR(20),
+ Vejnavn VARCHAR(100),
+ Postnummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ Email VARCHAR(100),
+ Www VARCHAR(100),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE TakstVersion (
+ TakstVersionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ TakstUge VARCHAR(8) NOT NULL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Tidsenhed (
+ TidsenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ TidsenhedKode VARCHAR(10) NOT NULL,
+ TidsenhedTekst VARCHAR(50) NOT NULL,
+ TidsenhedKortTekst VARCHAR(10),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200),
+ CreatedDate DATETIME,
+  INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Tidsenhed_1 UNIQUE (TidsenhedKode, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Tilskudsintervaller (
+ TilskudsintervallerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(4) NOT NULL,
+ Type BIGINT(12),
+ Niveau BIGINT(12),
+ NedreGraense BIGINT(12),
+ OevreGraense BIGINT(12),
+ Procent DECIMAL,
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE TilskudsprisgrupperPakningsniveau (
+ TilskudsprisgrupperPakningsniveauPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Varenummer BIGINT(12) NOT NULL,
+ TilskudsprisGruppe BIGINT(12),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE UdgaaedeNavne (
+ UdgaaedeNavnePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ CID VARCHAR(71) NOT NULL,
+ Drugid BIGINT(12),
+ DatoForAendringen VARCHAR(10),
+ TidligereNavn VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Udleveringsbestemmelser (
+ UdleveringsbestemmelserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Kode VARCHAR(5) NOT NULL,
+ Udleveringsgruppe VARCHAR(1),
+ KortTekst VARCHAR(10),
+ Tekst VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE UmyndiggoerelseVaergeRelation (
+ ForaeldreMyndighedRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Id VARCHAR(21) NOT NULL,
+ CPR VARCHAR(10) NOT NULL,
+ TypeKode VARCHAR(4) NOT NULL,
+ TypeTekst VARCHAR(50) NOT NULL,
+ RelationCpr VARCHAR(10),
+ RelationCprStartDato DATETIME,
+ VaergesNavn VARCHAR(50),
+ VaergesNavnStartDato DATETIME,
+ RelationsTekst1 VARCHAR(50),
+ RelationsTekst2 VARCHAR(50),
+ RelationsTekst3 VARCHAR(50),
+ RelationsTekst4 VARCHAR(50),
+ RelationsTekst5 VARCHAR(50),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo),
+ CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Yder (
+ YderPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Nummer VARCHAR(30),
+ SorNummer BIGINT(20) NOT NULL,
+ PraksisSorNummer BIGINT(20) NOT NULL,
+ EanLokationsnummer BIGINT(20),
+ Telefon VARCHAR(20),
+ Navn VARCHAR(256),
+ Vejnavn VARCHAR(100),
+ Postnummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ Email VARCHAR(100),
+ Www VARCHAR(100),
+ HovedSpecialeKode VARCHAR(20),
+ HovedSpecialeTekst VARCHAR(40),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE YderLoebenummer (
+ YderLoebenummerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,
+ Loebenummer BIGINT(12) NOT NULL
+) ENGINE=InnoDB
+;
+
+CREATE TABLE Yderregister (
+ YderregisterPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Nummer VARCHAR(30) NOT NULL,
+ Telefon VARCHAR(10),
+ Navn VARCHAR(256),
+ Vejnavn VARCHAR(100),
+ Postnummer VARCHAR(10),
+ Bynavn VARCHAR(30),
+ AmtNummer BIGINT(12),
+ Email VARCHAR(100),
+ Www VARCHAR(100),
+ HovedSpecialeKode VARCHAR(100),
+ HovedSpecialeTekst VARCHAR(100),
+ HistID VARCHAR(100),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE YderregisterPerson (
+ YderregisterPersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ Id VARCHAR(20) NOT NULL,
+ Nummer VARCHAR(30) NOT NULL,
+ CPR VARCHAR(10),
+ personrolleKode BIGINT(20),
+ personrolleTxt VARCHAR(200),
+ HistIDPerson VARCHAR(100),
+ ModifiedBy VARCHAR(200) NOT NULL,
+ ModifiedDate DATETIME NOT NULL,
+ ValidFrom DATETIME,
+ ValidTo DATETIME,
+ CreatedBy VARCHAR(200) NOT NULL,
+ CreatedDate DATETIME NOT NULL,
+ INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB
+;

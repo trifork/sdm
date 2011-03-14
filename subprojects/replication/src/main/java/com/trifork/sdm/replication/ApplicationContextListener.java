@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 
 import com.google.inject.*;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.trifork.sdm.replication.admin.AdminstrationModule;
 import com.trifork.sdm.replication.db.DatabaseModule;
 import com.trifork.sdm.replication.dgws.DGWSModule;
+import com.trifork.sdm.replication.gui.GuiModule;
 import com.trifork.sdm.replication.monitoring.MonitoringModule;
 import com.trifork.sdm.replication.replication.RegistryModule;
 
@@ -34,7 +34,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			modules.add(new DatabaseModule());
 			modules.add(new DGWSModule());
 			modules.add(new RegistryModule());
-			modules.add(new AdminstrationModule());
+			modules.add(new GuiModule());
 			modules.add(new MonitoringModule());
 
 			injector = Guice.createInjector(modules);

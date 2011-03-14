@@ -11,10 +11,11 @@ import com.trifork.sdm.replication.util.Namespace;
 
 @Entity(name = "dkma/takstversion/v1")
 @Table(name = "TakstVersion")
-@XmlType(namespace = Namespace.STAMDATA_3_0)
+@XmlType(namespace=Namespace.STAMDATA_3_0)
+@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
-public class TakstVersion extends Record
-{
+public class TakstVersion extends Record {
+
 	@Id
 	@GeneratedValue
 	@Column(name = "TakstVersionPID")
@@ -23,7 +24,7 @@ public class TakstVersion extends Record
 
 	@Column(name = "TakstUge")
 	protected String takstUge;
-	
+
 	// Metadata
 
 	@XmlTransient
@@ -37,22 +38,21 @@ public class TakstVersion extends Record
 	@Column(name = "ValidTo")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validTo;
-	public String getID()
-	{
+
+
+	public String getID() {
 		return takstUge.toString();
 	}
 
 
 	@Override
-	public Date getUpdated()
-	{
+	public Date getUpdated() {
 		return modifiedDate;
 	}
 
 
 	@Override
-	public BigInteger getRecordID()
-	{
+	public BigInteger getRecordID() {
 		return recordID;
 	}
 }

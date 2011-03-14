@@ -1,121 +1,97 @@
 package com.trifork.sdm.replication.replication;
 
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.apache.commons.lang.RandomStringUtils.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.*;
-import java.sql.*;
-import java.util.Calendar;
+import java.util.*;
 
-import javax.xml.stream.*;
+import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.*;
 
-import org.custommonkey.xmlunit.*;
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
+import org.mockito.Mockito;
 
-import com.google.inject.Provider;
-import com.sun.xml.fastinfoset.stax.StAXDocumentParser;
-import com.trifork.sdm.replication.util.URLFactory;
-import com.trifork.stamdata.registre.sor.Apotek;
+import com.trifork.sdm.replication.mocks.MockEntity;
+import com.trifork.sdm.replication.replication.models.Record;
 
 
-public class XMLEntityWriterTest extends XMLTestCase
-{
-	private XMLEntityWriter xmlEntityWriter;
-	private URLFactory urlFactory;
-	private Calendar now;
+public class XMLEntityWriterTest {
+
+	private AtomFeedWriter writer;
+	private XMLStreamWriter streamWriter;
+	private ByteArrayOutputStream outputStream;
 
 
-	@Override
-	@SuppressWarnings("unchecked")
 	@Before
-	public void setUp() throws Exception
-	{
-		now = Calendar.getInstance();
+	public void setUp() throws Exception {
 
-		ResultSet resultSet = mock(ResultSet.class);
-		when(resultSet.next()).thenReturn(true, true, false);
-		when(resultSet.getString("ApotekPID")).thenReturn("42");
-		when(resultSet.getTimestamp("ModifiedDate")).thenReturn(new Timestamp(now.getTimeInMillis()));
-		when(resultSet.getTimestamp("ValidFrom")).thenReturn(new Timestamp(Integer.MIN_VALUE));
-		when(resultSet.getTimestamp("ValidTo")).thenReturn(new Timestamp(Integer.MAX_VALUE));
+		Marshaller marshaller = mock(Marshaller.class);
+		marshaller.marshal(anyObject(), Mockito.any(XMLStreamWriter.class));
 
-		PreparedStatement preparedStatement = mock(PreparedStatement.class);
-		when(preparedStatement.executeQuery()).thenReturn(resultSet);
+		outputStream = new ByteArrayOutputStream();
+		streamWriter = XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream);
 
-		Connection connection = mock(Connection.class);
-		when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
-
-		Provider<Connection> provider = mock(Provider.class);
-		when(provider.get()).thenReturn(connection);
-
-		now.add(Calendar.DAY_OF_MONTH, -1);
-
-		urlFactory = mock(URLFactory.class);
-		when(urlFactory.create(org.mockito.Matchers.any(Class.class), anyInt(), anyString(), anyString())).thenReturn("http://www.some.url");
-
-		xmlEntityWriter = new XMLEntityWriter(provider, urlFactory);
+		writer = new AtomFeedWriter(marshaller);
 	}
 
 
 	@Test
-	public void test_can_generate_valid_fi() throws Exception
-	{
-		// Arrange
+	public void test_can_generate_valid_atom_feed() throws Exception {
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		List<Record> records = new ArrayList<Record>();
 
-		// Act
+		records.add(createRecord());
+		records.add(createRecord());
+		records.add(createRecord());
 
-		xmlEntityWriter.write(outputStream, Apotek.class, OutputFormat.FastInfoset, 100, now.getTime(), 0);
+		writer.write("foo/bar/v1", records, streamWriter);
 
-		// Assert
+		ByteArrayInputStream output = new ByteArrayInputStream(outputStream.toByteArray());
+		
+		// ATOM 1.0 can actually not be described fully by XML Schema.
+		// But for simplicity we use a XSD that is almost complete.
 
-		InputStream page = new ByteArrayInputStream(outputStream.toByteArray());
-		XMLStreamReader streamReader = new StAXDocumentParser(page);
+		// 1. Lookup a factory for the W3C XML Schema language
+		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
-		// Run through all the document and make sure we can parse it.
-		// TODO: Validate it against a schema.
+		// 2. Compile the schema.
+		// Here the schema is loaded from a java.io.File, but you could use
+		// a java.net.URL or a javax.xml.transform.Source instead.
+		File schemaLocation = FileUtils.toFile(getClass().getResource("Atom10.xsd"));
+		Schema schema = factory.newSchema(schemaLocation);
 
-		while (streamReader.next() != XMLStreamConstants.END_DOCUMENT)
-		{
-		}
+		// 3. Get a validator from the schema.
+		Validator validator = schema.newValidator();
+
+		// 4. Parse the document you want to check.
+		Source source = new StreamSource(output);
+
+		// 5. Check the document
+		validator.validate(source);
 	}
 
 
-	@Test
-	public void test_can_generate_valid_xml() throws Exception
-	{
-		// Arrange
+	// TODO: Assert that the entities contain the right info.
 
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	// HELPERS
 
-		// Act
+	public MockEntity createRecord() {
 
-		xmlEntityWriter.write(outputStream, Apotek.class, OutputFormat.XML, 100, now.getTime(), 0);
+		MockEntity entity = mock(MockEntity.class);
 
-		// Assert
+		when(entity.getID()).thenReturn(randomAscii(10));
+		when(entity.getUpdated()).thenReturn(new Date());
+		when(entity.getOffset()).thenCallRealMethod();
 
-		String xml = outputStream.toString();
-		String expected = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<page>" + "<apotek rowId=\"\" historyId=\"\" effectuationDate=\"\" expirationDate=\"\" />" + "<apotek rowId=\"\" historyId=\"\" effectuationDate=\"\" expirationDate=\"\" />" + "<nextPageURL>http://www.some.url</nextPageURL>" + "</page>";
-		assertXMLSimilar(expected, xml);
-		assertThat(xml, containsString("<nextPageURL>http://www.some.url</nextPageURL>"));
-		verify(urlFactory).create(eq(Apotek.class), eq(100), org.mockito.Matchers.endsWith("0000000042"), eq("XML"));
-	}
-
-
-	private void assertXMLSimilar(String expected, String actual) throws SAXException, IOException
-	{
-		assertNotNull(actual);
-
-		IgnoreTextAndAttributeValuesDifferenceListener differenceListener = new IgnoreTextAndAttributeValuesDifferenceListener();
-		Diff diff = new Diff(expected, actual);
-		diff.overrideDifferenceListener(differenceListener);
-
-		assertTrue("Not similar: " + diff, diff.similar());
+		return entity;
 	}
 }

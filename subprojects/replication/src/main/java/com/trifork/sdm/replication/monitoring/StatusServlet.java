@@ -16,13 +16,18 @@ import com.trifork.sdm.replication.db.properties.Transactional;
 @Singleton
 public class StatusServlet extends HttpServlet {
 
-	@Inject
-	@Transactional(WAREHOUSE)
+	private static final long serialVersionUID = 1324005200396944825L;
+
 	private Provider<Connection> warehouseConnection;
+	private Provider<Connection> adminConnection;
+
 
 	@Inject
-	@Transactional(ADMINISTRATION)
-	private Provider<Connection> adminConnection;
+	public StatusServlet(@Transactional(WAREHOUSE) Provider<Connection> warehouseConnection, @Transactional(ADMINISTRATION) Provider<Connection> adminConnection) {
+
+		this.warehouseConnection = warehouseConnection;
+		this.adminConnection = adminConnection;
+	}
 
 
 	@Override
@@ -79,7 +84,4 @@ public class StatusServlet extends HttpServlet {
 
 		return true;
 	}
-
-
-	private static final long serialVersionUID = 1L;
 }

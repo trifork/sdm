@@ -3,9 +3,9 @@ apply plugin: 'jetty'
 
 dependencies {
 	
-	compile project(':shared')
-	
-	compile libs.reflections
+	compile(libs.reflections) {
+		exclude group: 'ch.qos.logback'
+	}
 	
 	// Configuration
 	
@@ -23,7 +23,7 @@ dependencies {
 	
 	// Hibernate
 	
-	runtime libs.hibernate
+	compile libs.hibernate
 	
 	// STS
 	
@@ -61,6 +61,7 @@ dependencies {
         
         	exclude group: "javax.servlet"
         	exclude group: "avalon"
+			exclude group: "org.slf4j"
 		}
 	}
 	

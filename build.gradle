@@ -21,8 +21,7 @@ libs = [
 
 	reflections: 'org.reflections:reflections:0.9.5-RC2',
 
-	jpa_api: 'org.hibernate.java-persistence:jpa-api:2.0-cr-1@jar',
-	hibernate: 'org.hibernate:hibernate-entitymanager:3.4.0.GA',
+	hibernate: 'org.hibernate:hibernate-entitymanager:3.6.2.Final',
 
 	mysql_driver: 'mysql:mysql-connector-java:5.1.13@jar',
 

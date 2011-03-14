@@ -4,17 +4,14 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.sdm.replication.replication.models.Record;
-import com.trifork.sdm.replication.util.Namespace;
 
 @Entity(name = "cpr/person/v1")
 @Table(name = "Person")
-@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
-@XmlAccessorType(XmlAccessType.FIELD)
-public class Person extends Record
-{
+public class Person extends Record {
+
 	@Id
 	@GeneratedValue
 	@Column(name = "PersonPID")
@@ -104,22 +101,19 @@ public class Person extends Record
 
 
 	@Override
-	public BigInteger getRecordID()
-	{
+	public BigInteger getRecordID() {
 		return recordID;
 	}
 
 
 	@Override
-	public String getID()
-	{
+	public String getID() {
 		return id;
 	}
 
 
 	@Override
-	public Date getUpdated()
-	{
+	public Date getUpdated() {
 		return modifiedDate;
 	}
 }

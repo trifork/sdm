@@ -14,26 +14,23 @@ import com.google.inject.servlet.ServletModule;
  * Loads the application's configuration file 'config.properties', and combines the properties in
  * them with the JVM system properties. The properties file will only be loaded once.
  */
-public abstract class ConfiguredModule extends ServletModule
-{
+public abstract class ConfiguredModule extends ServletModule {
+
 	private static CompositeConfiguration config;
 
 	{
-		try
-		{
+		try {
 			URL configFile = getClass().getClassLoader().getResource("config.properties");
 			config = new CompositeConfiguration(new PropertiesConfiguration(configFile));
 			config.addConfiguration(new SystemConfiguration());
 		}
-		catch (ConfigurationException e)
-		{
+		catch (ConfigurationException e) {
 			addError("Could not load configuration.", e);
 		}
 	}
 
 
-	protected Configuration getConfig()
-	{
+	protected Configuration getConfig() {
 		return config;
 	}
 }

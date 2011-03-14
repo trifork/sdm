@@ -4,11 +4,6 @@ package com.trifork.sdm.replication;
 import static com.google.inject.util.Modules.*;
 
 import com.google.inject.*;
-import com.trifork.sdm.replication.admin.AdminstrationModule;
-import com.trifork.sdm.replication.db.DatabaseModule;
-import com.trifork.sdm.replication.dgws.DGWSModule;
-import com.trifork.sdm.replication.monitoring.MonitoringModule;
-import com.trifork.sdm.replication.replication.RegistryModule;
 
 
 /**
@@ -19,8 +14,8 @@ import com.trifork.sdm.replication.replication.RegistryModule;
  * Generally the injector should be interacted with during the set up phase. This means while the
  * {@code @Before} methods are executed. It is not available in before {@code @BeforeClass} methods.
  */
-public abstract class GuiceTest extends AbstractModule
-{
+public abstract class GuiceTest extends AbstractModule {
+
 	/**
 	 * This is left static since JUnit is quite *special* when it comes to how it wants to
 	 * initialize its tests.
@@ -28,19 +23,8 @@ public abstract class GuiceTest extends AbstractModule
 	private final Injector injector;
 
 
-	protected GuiceTest()
-	{
-		Module production = new Module() {
-			@Override
-			public void configure(Binder binder) {
-				install(new DatabaseModule());
-				install(new DGWSModule());
-				install(new RegistryModule());
-				install(new AdminstrationModule());
-				install(new MonitoringModule());
-			}
-		};
-		
+	protected GuiceTest() {
+		Module production = new ProductionModule();
 		Module test = override(production).with(this);
 
 		injector = Guice.createInjector(test);
@@ -52,8 +36,7 @@ public abstract class GuiceTest extends AbstractModule
 	 * overridden in the DI graph.
 	 */
 	@Override
-	protected void configure()
-	{
+	protected void configure() {
 		// No action by default.
 	}
 
@@ -61,8 +44,7 @@ public abstract class GuiceTest extends AbstractModule
 	/**
 	 * Gets the injector that holds the tests' dependency graph.
 	 */
-	protected Injector getInjector()
-	{
+	protected Injector getInjector() {
 		return injector;
 	}
 }

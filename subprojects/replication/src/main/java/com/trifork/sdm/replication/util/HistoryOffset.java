@@ -12,6 +12,18 @@ public class HistoryOffset {
 	protected Date modifiedDate;
 
 
+	public HistoryOffset(BigInteger id, Date modifiedDate) {
+
+		this.recordID = id;
+		this.modifiedDate = modifiedDate;
+	}
+
+
+	public HistoryOffset(String id, Date modifiedDate) {
+		this(new BigInteger(id), modifiedDate);
+	}
+
+
 	public HistoryOffset(String offsetString) {
 
 		if (offsetString == null) {
@@ -35,5 +47,12 @@ public class HistoryOffset {
 
 	public BigInteger getRecordID() {
 		return recordID;
+	}
+
+
+	@Override
+	public String toString() {
+
+		return String.format("%010d%010d", modifiedDate.getTime(), recordID);
 	}
 }

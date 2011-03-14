@@ -13,7 +13,6 @@ import javax.sql.DataSource;
 
 import com.google.inject.Key;
 import com.google.inject.Provides;
-import com.google.inject.servlet.RequestScoped;
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import com.trifork.sdm.replication.db.properties.Transactional;
 import com.trifork.sdm.replication.util.ConfiguredModule;
@@ -46,6 +45,7 @@ public class DatabaseModule extends ConfiguredModule {
 
 
 	protected String getDatabaseURL() {
+
 		String host = getConfig().getString("db.warehouse.host");
 		int port = getConfig().getInt("db.warehouse.port");
 		String schema = getConfig().getString("db.warehouse.schema");
@@ -78,7 +78,6 @@ public class DatabaseModule extends ConfiguredModule {
 
 
 	@Provides
-	@RequestScoped
 	public EntityManager provideEntityManager() {
 
 		return emFactory.createEntityManager();

@@ -4,15 +4,12 @@ import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.sdm.replication.replication.models.Record;
-import com.trifork.sdm.replication.util.Namespace;
 
 @Entity(name = "dkma/indholdsstoffer/v1")
 @Table(name = "Indikation")
-@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Indholdsstoffer extends Record
 {	
 	@Id
