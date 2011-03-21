@@ -21,8 +21,8 @@ dependencies {
 	compile "commons-logging:commons-logging:1.1.1"
 	compile "log4j:log4j:1.2.15"
 	
-	compile "apache-taglibs:jstl:1.1.2"
-	compile "apache-taglibs:standard:1.1.2"
+	runtime "apache-taglibs:jstl:1.1.2"
+	runtime "apache-taglibs:standard:1.1.2"
 	
 	compile "joda-time:joda-time:1.6"
 	
