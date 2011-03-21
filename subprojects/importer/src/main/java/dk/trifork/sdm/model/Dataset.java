@@ -13,11 +13,12 @@ import java.util.Map;
 public class Dataset<T extends StamdataEntity> {
 
 	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
-	private Class<? extends StamdataEntity> type;
+	private Class<T> type;
 
-	public Dataset(List<T> entities, Class<? extends StamdataEntity> T) {
+	public Dataset(List<T> entities, Class<T> type) {
 
-		this.type = T;
+		this.type = type;
+
 		for (T entity : entities) {
 			List<T> ents = new ArrayList<T>();
 			ents.add(entity);
@@ -30,7 +31,7 @@ public class Dataset<T extends StamdataEntity> {
 		return getEntities().size();
 	}
 
-	public Dataset(Class<? extends StamdataEntity> type) {
+	public Dataset(Class<T> type) {
 
 		this.type = type;
 	}
@@ -57,7 +58,7 @@ public class Dataset<T extends StamdataEntity> {
 		return entities.get(id);
 	}
 
-	public Class<? extends StamdataEntity> getType() {
+	public Class<T> getType() {
 
 		return type;
 	}

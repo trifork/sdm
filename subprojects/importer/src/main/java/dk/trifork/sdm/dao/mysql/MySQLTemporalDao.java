@@ -230,7 +230,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	 * @param dataset
 	 * @throws FilePersistException
 	 */
-	private void updateValidToOnRecordsNotInDataset(CompleteDataset<? extends StamdataEntity> dataset) throws FilePersistException {
+	private <T extends StamdataEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws FilePersistException {
 
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
 		Calendar now = Calendar.getInstance();
