@@ -73,15 +73,13 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		int processedEntities = 0;
 
 		for (StamdataEntity sde : dataset.getEntities()) {
+			
 			processedEntities++;
-			// logger.debug("total recs: " + dataset.getEntities().size() +
-			// " inserted: " + insertRecords + " updated: "
-			// + updateRecords + " unmodified: " + unmodififedRecords +
-			// " invalidated: " + invalidateRecords +
-			// " remaining: " + (dataset.getEntities().size() -
-			// (insertRecords+updateRecords+unmodififedRecords+invalidateRecords)));
+			
 			Calendar validFrom = sde.getValidFrom();
+			
 			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
+			
 			if (!exists) {
 				// Entity was not found, so create it
 				table.insertRow(sde, now);
