@@ -19,11 +19,11 @@ public class DosageVersion extends View {
 	@Column(name = "DosageUnitPID")
 	protected BigInteger id;
 
-	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
+	// Dato for Apotekerforeningens mærkevaretakst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.
 	protected Date daDate;
 
-	// lmsDate: Dato for Lægemiddelstyrelsens takst, som datasættet er
+	// Dato for Lægemiddelstyrelsens takst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.
 	protected Date lmsDate;
 
