@@ -12,15 +12,6 @@ public class DateUtils {
 	
 
 	/**
-	 * @return a String representing the ISO 8601 date without time zone.
-	 */
-	public static String toISO8601date(Calendar cal){
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		return sdf.format(cal.getTime());
-		
-	}
-
-	/**
 	 * @param long1 representing a date sing the format: yyyyMMdd.
 	 * @return a String representing the ISO 8601 date without time zone.
 	 */
