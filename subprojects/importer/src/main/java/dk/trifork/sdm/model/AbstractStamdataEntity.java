@@ -33,22 +33,6 @@ public abstract class AbstractStamdataEntity implements StamdataEntity {
 		}
 	}
 
-	@Override
-	public Map<String, Object> serialize() {
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		try {
-			List<Method> outputMethods = getOutputMethods(getClass());
-			for (Method method : outputMethods) {
-				map.put(getOutputFieldName(method), method.invoke(this));
-			}
-		}
-		catch (Exception e) {
-			logger.error("Error serializing object of class: " + getClass() + " id: " + getKey());
-		}
-		return map;
-	}
-
 	/**
 	 * 
 	 * @param class1 . A type of StamdataEntity

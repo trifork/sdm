@@ -232,12 +232,6 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 			return validto;
 		}
 
-		@Override
-		public Map<String, Object> serialize() {
-
-			return null;
-		}
-
 		@Output
 		public String getData() {
 
