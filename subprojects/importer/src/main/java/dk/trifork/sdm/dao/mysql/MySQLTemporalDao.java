@@ -226,13 +226,6 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		return new MySQLTemporalTable<T>(con, clazz);
 	}
 
-	private Calendar nextDay(Calendar cal) {
-
-		Calendar nextDay = (Calendar) cal.clone();
-		nextDay.roll(Calendar.DATE, true);
-		return nextDay;
-	}
-
 	/**
 	 * @param dataset
 	 * @throws FilePersistException
