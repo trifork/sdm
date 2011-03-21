@@ -8,8 +8,6 @@ import java.util.Calendar;
 
 public class DateUtils {
 	public static final Calendar FUTURE = toCalendar(2999,12,31);
-	public static final String MYSQL_FUTURE_DATE = toMySQLdate(FUTURE);
-	public static final Calendar PAST = toCalendar(1950,1,1);
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 	
 
