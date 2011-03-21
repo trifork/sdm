@@ -5,7 +5,6 @@ import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 import dk.trifork.sdm.model.StamdataEntity;
 import dk.trifork.sdm.util.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,6 @@ public class Pakning extends TakstEntity {
     private String pakningOptagetITilskudsgruppe; // 2 muligh.: F eller blank
     private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
     private Long pakningsdistributoer; // Ref. t. LMS09
-
-
-    private Logger logger = Logger.getLogger(getClass());
 
     @Output(name = "DrugID")
     public Long getDrugid() {
