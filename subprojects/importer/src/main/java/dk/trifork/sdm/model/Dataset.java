@@ -99,14 +99,8 @@ public class Dataset<T extends StamdataEntity> {
 		ents.add(entity);
 	}
 
-	public String getIdOutputName() {
-
-		return getOutputFieldName(getIdMethod(type));
-	}
-
 	public static String getIdOutputName(Class<? extends StamdataEntity> clazz) {
 
 		return getOutputFieldName(getIdMethod(clazz));
 	}
-
 }
