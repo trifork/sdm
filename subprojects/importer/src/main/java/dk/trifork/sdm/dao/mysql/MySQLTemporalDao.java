@@ -221,9 +221,9 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 	}
 
-	public MySQLTemporalTable getTable(Class<? extends StamdataEntity> clazz) throws FilePersistException {
+	public <T extends StamdataEntity> MySQLTemporalTable<T> getTable(Class<T> clazz) throws FilePersistException {
 
-		return new MySQLTemporalTable(con, clazz);
+		return new MySQLTemporalTable<T>(con, clazz);
 	}
 
 	private Calendar nextDay(Calendar cal) {
