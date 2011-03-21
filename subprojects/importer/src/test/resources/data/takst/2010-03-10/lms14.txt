@@ -1,0 +1,57 @@
+                                                                 
+AER Aerosol   Aerosolbeholder                                    
+AMP Ampul     Ampuller                                           
+BLI Blister   Blister                                            
+BOX ’ske      ’ske                                               
+BRV Brev      Brev                                               
+CAM Cyl.amp.  Cylinderampuller                                   
+DBH Dr†bebeh. Dr†bebeholder                                      
+DSE D†se      D†se                                               
+DSP DosissprayDosisspray                                         
+DUB Duma-beh. Duma-beholder                                      
+END Endos.beh.Enkeltdosisbeholder                                
+ENP Eng.pip.  Engangspipette                                     
+ENS Eng.spr.  Engangsspr›jte                                     
+FIN Fyl.inj.spFyldt injektionsspr›jte                            
+FLA Flaske    Flaske                                             
+GFL Glasfl.   Glasflaske                                         
+GLA Glas      Glas                                               
+HAM Htgl.+amp.H‘tteglas og ampul                                 
+HTG Htgl      H‘tteglas                                          
+IMS Int.mam.spIntramamm‘rspr›jte                                 
+INP Fyldt pen Fyldt pen                                          
+KAR Karton    Karton                                             
+KBP Komb.pakn.Kombinationspakning                                
+NEB Nebulisat.Nebulisator                                        
+OSP Oral sprt.Oral spr›jte                                       
+PAM Plastamp. Plastampuller                                      
+PBH Plastbeh. Plastbeholder                                      
+PFL Plastfl.  Plastflaske                                        
+PIH Pulv.inh. Pulverinhalator                                    
+PLP Plastpose Plastpose                                          
+POS Pose      Pose                                               
+PUS PumpesprayPumpespray                                         
+SDS Str›d†se  Str›d†se                                           
+SEC Securit.  Securitainer                                       
+SPF Sprayfl.  Sprayflaske                                        
+SPB Spraybeh. Spraybeholder                                      
+STR Strips    Strips                                             
+TAM Tokam.amp.Tokammerampuller                                   
+TBH Tbl.beh.  Tabletbeholder                                     
+TKS To-kammer To-kammer system                                   
+TRB Trykbeh.  Trykbeholder                                       
+TRO Tromle    Tromle                                             
+TUB Tube      Tube                                               
+TUL Tubuler   Tubuler                                            
+UND Unit-dose Unit-dose                                          
+FDB Flerdos.b.Flerdosisbeholder                                  
+FDP Flerd.pumpFlerdosisbeholder med ikke-ventileret pumpe        
+POB Pouron-behPour-on-beholder                                   
+PUB Pumpebeh. Pumpebeholder                                      
+CUP B‘ger     B‘ger                                              
+INH Inhalator Inhalator                                          
+KGS Gasbeh. stOpbevaringsbeholder til kryogen gas, station‘r     
+KGT Gasbeh.traOpbevaringsbeholder til kryogen gas, transportabel 
+JIN just.dos.sJusterbar doseringsspr›jte                         
+PNB Pour-on   Pour-on-beholder                                   
+GBH Gasbeh.   Gasbeholder                                        

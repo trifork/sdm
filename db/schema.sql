@@ -153,6 +153,22 @@ CREATE TABLE DrugDosageStructureRelation (
 	INDEX (releaseNumber)
 );
 
+CREATE TABLE DosageDrug (
+	DosageDrug BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	
+	releaseNumber BIGINT(15) NOT NULL,
+	drugId BIGINT(11) NOT NULL,
+	dosageStructureCode BIGINT(11) NOT NULL,
+	
+	ModifiedBy VARCHAR(200),
+	ModifiedDate DATETIME,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+);
+
 -------------------------------------------------------------------------
 -- Other Registry Tables
 -------------------------------------------------------------------------

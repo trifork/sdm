@@ -1,0 +1,5 @@
+            Intet tilskud                                      
+A Generelt  Generelt medicintilskud                            
+S Klaus recpGenerelt klausuleret medicintilskud, recept        
+V Klaus h†ndGenerelt klausuleret medicintilskud, h†ndk›b       
+D Gen. kombiGenerelt medicintilskud til del af kombi-pakning   

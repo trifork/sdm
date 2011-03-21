@@ -1,32 +1,37 @@
 apply plugin: 'war'
 
 dependencies {
+	runtime "mysql:mysql-connector-java:5.1.14"
 	
-	// PARSERS
+	testCompile "junit:junit:4.8.2"
+	testCompile "org.mockito:mockito-all:1.8.5"
+	testCompile "org.mockftpserver:MockFtpServer:2.1"
 	
-	compile project(':shared')
-
-	compile 'cron4j:cron4j:2.2.3'
-	compile 'joda-time:joda-time:1.6.2'
+	// TODO: What for?
+	compile "oro:oro:2.0.8"
 	
-	compile libs.commons_io
-	compile libs.commons_codec
+	providedCompile "javax.servlet:servlet-api:2.4"
 	
-	runtime libs.mysql_driver
+	compile "commons-io:commons-io:1.4"
+	compile "commons-fileupload:commons-fileupload:1.2"
+	compile "commons-net:commons-net:2.0"
+	compile "commons-vfs:commons-vfs:1.0"
 	
-	testCompile libs.junit
-	testCompile libs.mockito
+	// TODO: Use SLF4J
+	compile "commons-logging:commons-logging:1.1.1"
+	compile "log4j:log4j:1.2.15"
 	
-	// GUI
+	compile "apache-taglibs:jstl:1.1.2"
+	compile "apache-taglibs:standard:1.1.2"
 	
-	providedCompile libs.servlet_api
-	runtime 'apache-taglibs:jstl:1.1.2@jar'
-    runtime 'apache-taglibs:standard:1.1.2@jar'
+	compile "joda-time:joda-time:1.6"
 	
-	// LOGGING
+	compile "cron4j:cron4j:2.2.3"
 	
-	compile libs.slf4j_api
-	compile libs.log4j_over_slf4j
-	runtime libs.logback_core
-	runtime libs.logback_classic
+	// For JSON in Doseringsforslag Parsers.
+	
+	compile "com.google.code.gson:gson:1.6"
 }
+
+// TODO: <exclude org="com.sun.jdmk" module="jmxtools"/>
+// TODO: <exclude org="com.sun.jmx" module="jmxri"/>

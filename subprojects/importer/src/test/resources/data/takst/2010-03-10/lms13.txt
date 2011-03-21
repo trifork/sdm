@@ -1,0 +1,4 @@
+AAUP beregnet efter ~2, stk. 1                      
+EAUP = AIP + moms                                   
+FAUP = AIP                                          
+VAUP ikke beregnet, vet. frihandel                  

@@ -1,0 +1,635 @@
+0000001til forebyggelse af caries                                                    til forebyggelse af caries                                                    A
+0000002mod for meget mavesyre                                                        mod for meget mavesyre                                                        A
+0000003mod maves†r                                                                   mod maves†r                                                                   A
+0000004mod spiser›rskatar                                                            mod spiser›rskatar                                                            A
+0000006mod mavesyre i spiser›ret                                                     mod mavesyre i spiser›ret                                                     A
+0000007mod Zollinger-Ellisons syndrom                                                mod Zollinger-Ellisons    syndrom                                             A
+0000008mod luft i maven                                                              mod luft i maven                                                              A
+0000009mod sp‘dbarnskolik                                                            mod sp‘dbarnskolik                                                            A
+0000010mod glidebrok                                                                 mod glidebrok                                                                 A
+0000011mod koliksmerter                                                              mod koliksmerter                                                              A
+0000012mod tyktarmskatar                                                             mod tyktarmskatar                                                             A
+0000013mod forsinket t›mning af maves‘kken                                           mod forsinket t›mning af  maves‘kken                                          I
+0000014mod kvalme                                                                    mod kvalme                                                                    A
+0000015mod opkastninger                                                              mod opkastninger                                                              A
+0000017mod svimmelhed                                                                mod svimmelhed                                                                A
+0000247mod bivirkninger ved str†lebehandling                                         mod bivirkninger ved      str†lebehandling                                    A
+0000248mod bivirkninger ved kemoterapi                                               mod bivirkninger ved      kemoterapi                                          A
+0000005mod forstoppelse                                                              mod forstoppelse                                                              A
+0000018tarmt›mning f›r unders›gelse                                                  tarmt›mning f›r           unders›gelse                                        A
+0000019mod svampeinfektion i tarmen                                                  mod svampeinfektion i     tarmen                                              A
+0000129mod svamp i mundhulen                                                         mod svamp i mundhulen                                                         A
+0000020mod tr›ske                                                                    mod tr›ske                                                                    A
+0000022mod colitis ulcerosa                                                          mod colitis ulcerosa                                                          A
+0000023mod morbus Crohn                                                              mod morbus Crohn                                                              A
+0000249mod bet‘ndelse i tyktarmen                                                    mod bet‘ndelse i          tyktarmen                                           A
+0000024mod bet‘ndelse i tarmen                                                       mod bet‘ndelse i tarmen                                                       A
+0000025mod m‘lkeallergi                                                              mod m‘lkeallergi                                                              A
+0000026mod diare                                                                     mod diare                                                                     A
+0000027til regulering af tarmfloraen                                                 til regulering af         tarmfloraen                                         A
+0000028appetitneds‘ttende                                                            appetitneds‘ttende                                                            A
+0000029mod enzymmangel                                                               mod enzymmangel                                                               A
+0000030mod fedtdiare                                                                 mod fedtdiare                                                                 A
+0000031mod sukkersyge                                                                mod sukkersyge                                                                A
+0000032vitamin- og mineral- tilskud                                                  vitamin- og mineral-      tilskud                                             A
+0000033vitamintilskud                                                                vitamintilskud                                                                A
+0000250mod A-vitaminmangel                                                           mod A-vitaminmangel                                                           I
+0000251mod forstyrrelser i kalkstofskiftet                                           mod forstyrrelser i       kalkstofskiftet                                     A
+0000034A- og D-vitamintilskud                                                        A- og D-vitamintilskud                                                        I
+0000253mod B-vitaminmangel                                                           mod B-vitaminmangel                                                           I
+0000254mod vitamin B-6-mangel                                                        mod vitamin B-6-mangel                                                        I
+0000255mod vitamin B-1-mangel                                                        mod vitamin B-1-mangel                                                        I
+0000036C-vitamintilskud                                                              C-vitamintilskud                                                              I
+0000037mod kalkmangel                                                                mod kalkmangel                                                                I
+0000038kalktilskud                                                                   kalktilskud                                                                   A
+0000039kalciumtilskud                                                                kalciumtilskud                                                                I
+0000040mod lavt kalcium i blodet                                                     mod lavt kalcium i blodet                                                     A
+0000291tilskud af kalk og vitamin D                                                  tilskud af kalk og        vitamin D                                           A
+0000041mod lavt kalium i blodet                                                      mod lavt kalium i blodet                                                      A
+0000042kaliumtilskud                                                                 kaliumtilskud                                                                 A
+0000043salttilskud                                                                   salttilskud                                                                   I
+0000044til forebyggelse af saltmangel                                                til forebyggelse af       saltmangel                                          I
+0000045zinktilskud                                                                   zinktilskud                                                                   A
+0000046til forebyggelse af zinkmangel                                                til forebyggelse af       zinkmangel                                          I
+0000047mod knoglemarvslidelse                                                        mod knoglemarvslidelse                                                        I
+0000068blodfortyndende                                                               blodfortyndende                                                               A
+0000256til forebyggelse af blodprop                                                  til forebyggelse af       blodprop                                            A
+0000053til forebyggelse af hjertekrampe                                              til forebyggelse af       hjertekrampe                                        A
+0000067mod antitrombin-III- mangel                                                   mod antitrombin-III-      mangel                                              A
+0000299mod kraftig bl›dning                                                          mod kraftig bl›dning                                                          I
+0000069mod kraftige bl›dninger                                                       mod kraftige bl›dninger                                                       A
+0000070mod K-vitaminmangel                                                           mod K-vitaminmangel                                                           A
+0000274til forebyggelse af bl›dning                                                  til forebyggelse af       bl›dning                                            A
+0000071til nyf›dte                                                                   til nyf›dte                                                                   I
+0000072ved h‘mofili B                                                                ved h‘mofili B                                                                A
+0000073forebyggende hos bl›der                                                       forebyggende hos bl›der                                                       A
+0000074ved h‘mofili A                                                                ved h‘mofili A                                                                A
+0000257forebyggende ved faktor VIII inhibitor                                        forebyggende ved faktor   VIII inhibitor                                      I
+0000075mod jernmangel                                                                mod jernmangel                                                                I
+0000076jern- og vitamintilskud                                                       jern- og vitamintilskud                                                       A
+0000077jerntilskud                                                                   jerntilskud                                                                   A
+0000267mod B12-vitaminmangel                                                         mod B12-vitaminmangel                                                         A
+0000078folinsyretilskud                                                              folinsyretilskud                                                              A
+0000268mod folinsyremangel                                                           mod folinsyremangel                                                           I
+0000079mod forh›jet kolesterol                                                       mod forh›jet kolesterol                                                       A
+0000080mod hudkl›e ved gulsot                                                        mod hudkl›e ved gulsot                                                        A
+0000081mod forh›jet fedt og kolesterol                                               mod forh›jet fedt og      kolesterol                                          A
+0000214til s†rbehandling                                                             til s†rbehandling                                                             A
+0000048for hjertet                                                                   for hjertet                                                                   A
+0000049mod uregelm‘ssig hjerterytme                                                  mod uregelm‘ssig          hjerterytme                                         A
+0000258mod uregelm‘ssig hjerteaktion                                                 mod uregelm‘ssig          hjerteaktion                                        I
+0000051mod smerter i brystet                                                         mod smerter i brystet                                                         A
+0000052mod hjertekrampe                                                              mod hjertekrampe                                                              A
+0000054for blodtrykket                                                               for blodtrykket                                                               A
+0000057mod forh›jet blodtryk                                                         mod forh›jet blodtryk                                                         A
+0000107mod vandladningsbesv‘r                                                        mod vandladningsbesv‘r                                                        A
+0000310mod nyresygdom                                                                mod nyresygdom                                                                A
+0000055til forebyggelse efter blodprop                                               til forebyggelse efter    blodprop                                            A
+0000059vanddrivende                                                                  vanddrivende                                                                  A
+0000060til forebyggelse af nyresten                                                  til forebyggelse af       nyresten                                            A
+0000061ved nyresvigt                                                                 ved nyresvigt                                                                 A
+0000062for karlidelse                                                                for karlidelse                                                                A
+0000063mod h‘moroider                                                                mod h‘moroider                                                                A
+0000064mod kl›e ved endetarmen                                                       mod kl›e ved endetarmen                                                       A
+0000259mod rifter ved endetarmen                                                     mod rifter ved endetarmen                                                     A
+0000065mod †rebet‘ndelse                                                             mod †rebet‘ndelse                                                             A
+0000260mod h‘vede ben                                                                mod h‘vede ben                                                                A
+0000066mod natlige l‘ggekramper                                                      mod natlige l‘ggekramper                                                      A
+0000056til forebyggelse af migr‘ne                                                   til forebyggelse af       migr‘ne                                             A
+0000058mod hvide fingre                                                              mod hvide fingre                                                              A
+0000292mod karsammentr‘kninger                                                       mod karsammentr‘kninger                                                       A
+0000085mod svamp                                                                     mod svamp                                                                     A
+0000311mod ringorm                                                                   mod ringorm                                                                   A
+0000211mod fodsvamp                                                                  mod fodsvamp                                                                  A
+0000209mod neglesvamp                                                                mod neglesvamp                                                                A
+0000087mod g‘rsvamp                                                                  mod g‘rsvamp                                                                  A
+0000223mod sk‘l i h†ret                                                              mod sk‘l i h†ret                                                              A
+0000244mod pletter p† huden                                                          mod pletter p† huden                                                          A
+0000210mod udbredt svamp                                                             mod udbredt svamp                                                             I
+0000212mod udbredt fodsvamp                                                          mod udbredt fodsvamp                                                          I
+0000213til hudbeskyttelse                                                            til hudbeskyttelse                                                            A
+0000215til huden                                                                     til huden                                                                     I
+0000216mod insektstik                                                                mod insektstik                                                                A
+0000217lokalbed›vende                                                                lokalbed›vende                                                                A
+0000218til lokalbed›velse                                                            til lokalbed›velse                                                            I
+0000219mod kl›e                                                                      mod kl›e                                                                      A
+0000220mod hudkl›e                                                                   mod hudkl›e                                                                   A
+0000221mod psoriasis                                                                 mod psoriasis                                                                 A
+0000222mod eksem                                                                     mod eksem                                                                     A
+0000224mod infektion p† huden                                                        mod infektion p† huden                                                        A
+0000084mod infektion                                                                 mod infektion                                                                 A
+0000227mod hudlidelse                                                                mod hudlidelse                                                                A
+0000225mod k›nsvorter                                                                mod k›nsvorter                                                                A
+0000134mod herpes                                                                    mod herpes                                                                    A
+0000135mod helvedesild                                                               mod helvedesild                                                               A
+0000226mod fork›lelsess†r                                                            mod fork›lelsess†r                                                            A
+0000228til hudlidelse                                                                til hudlidelse                                                                I
+0000229mod svampeinficeret eksem                                                     mod svampeinficeret eksem                                                     A
+0000230mod inficeret eksem                                                           mod inficeret eksem                                                           A
+0000231mod psoriasis med infektion                                                   mod psoriasis med         infektion                                           A
+0000246mod inficeret psoriasis                                                       mod inficeret psoriasis                                                       I
+0000232til omslagsbehandling                                                         til omslagsbehandling                                                         A
+0000261til desinfektion                                                              til desinfektion                                                              A
+0000233til rensning af s†r                                                           til rensning af s†r                                                           A
+0000234mod akne                                                                      mod akne                                                                      A
+0000128mod uren hud                                                                  mod uren hud                                                                  I
+0000235mod sv‘r akne                                                                 mod sv‘r akne                                                                 A
+0000236mod udtalt uren hud                                                           mod udtalt uren hud                                                           I
+0000237P-piller ved uren hud                                                         P-piller ved uren hud                                                         A
+0000238P-piller ved ›get beh†ring                                                    P-piller ved ›get         beh†ring                                            A
+0000239mod h†rtab                                                                    mod h†rtab                                                                    A
+0000240mod skaldethed                                                                mod skaldethed                                                                A
+0000262mod sved                                                                      mod sved                                                                      A
+0000263mod fodsved                                                                   mod fodsved                                                                   A
+0000242mod vorter                                                                    mod vorter                                                                    A
+0000241mod h†rd hud                                                                  mod h†rd hud                                                                  A
+0000243mod psoriasis i h†rbunden                                                     mod psoriasis i h†rbunden                                                     I
+0000245mod sk‘l                                                                      mod sk‘l                                                                      I
+0000290mod bakteriel vaginose                                                        mod bakteriel vaginose                                                        A
+0000083mod skedekatar                                                                mod skedekatar                                                                A
+0000086mod svamp i skeden                                                            mod svamp i skeden                                                            A
+0000300mod brystsp‘nding                                                             mod brystsp‘nding                                                             A
+0000088mod bl›dning                                                                  mod bl›dning                                                                  A
+0000089svangerskabsforebyggende                                                      svangerskabsforebyggende                                                      A
+0000090spiral                                                                        spiral                                                                        A
+0000091til m‘lkeh‘mning                                                              til m‘lkeh‘mning                                                              A
+0000092mod hormonforstyrrelser                                                       mod hormonforstyrrelser                                                       A
+0000093til stop af amning                                                            til stop af amning                                                            A
+0000094P-piller                                                                      P-piller                                                                      A
+0000315forebyggende mod graviditet                                                   forebyggende mod          graviditet                                          I
+0000095minipiller                                                                    minipiller                                                                    I
+0000096hormontilskud                                                                 hormontilskud                                                                 A
+0000097hormonbehandling                                                              hormonbehandling                                                              A
+0000098forebyggende mod kalktab                                                      forebyggende mod kalktab                                                      I
+0000099til udskydelse af menstruation                                                til udskydelse af         menstruation                                        A
+0000100til fremkaldelse af bl›dning                                                  til fremkaldelse af       bl›dning                                            A
+0000101mod uregelm‘ssig menstruation                                                 mod uregelm‘ssig          menstruation                                        A
+0000264mod gener efter overgangsalder                                                mod gener efter           overgangsalder                                      A
+0000102mod endometriose                                                              mod endometriose                                                              A
+0000265til forebyggelse af urinvejsinfektion                                         til forebyggelse af       urinvejsinfektion                                   A
+0000103mod bl‘rebet‘ndelse                                                           mod bl‘rebet‘ndelse                                                           A
+0000104mod urinvejsinfektion                                                         mod urinvejsinfektion                                                         A
+0000105mod smerter ved bl‘ren                                                        mod smerter ved bl‘ren                                                        I
+0000106mod smerter ved vandladning                                                   mod smerter ved           vandladning                                         A
+0000307mod erektil dysfunktion                                                       mod erektil dysfunktion                                                       A
+0000108v‘kstfremmende                                                                v‘kstfremmende                                                                A
+0000109ved Turners syndrom                                                           ved Turners syndrom                                                           A
+0000110ved diabetes insipidus                                                        ved diabetes insipidus                                                        A
+0000111mod ufrivillig natlig vandladning                                             mod ufrivillig natlig     vandladning                                         A
+0000275ved Addisons sygdom                                                           ved Addisons sygdom                                                           A
+0000276ved hormonforstyrrelse                                                        ved hormonforstyrrelse                                                        A
+0000112binyrebarkhormontilskud                                                       binyrebarkhormontilskud                                                       A
+0000113mod h›feber                                                                   mod h›feber                                                                   A
+0000114til injektionsbehandling af led                                               til injektionsbehandling  af led                                              A
+0000115mod nedsat stofskifte                                                         mod nedsat stofskifte                                                         A
+0000116mod struma                                                                    mod struma                                                                    A
+0000117mod forh›jet stofskifte                                                       mod forh›jet stofskifte                                                       A
+0000118f›r operation for struma                                                      f›r operation for struma                                                      I
+0000119mod insulinshock                                                              mod insulinshock                                                              A
+0000120mod for h›jt kalk                                                             mod for h›jt kalk                                                             A
+0000289mod Paget's knoglesygdom                                                      mod Paget's knoglesygdom                                                      A
+0000312mod bet‘ndelse                                                                mod bet‘ndelse                                                                I
+0000123mod lungebet‘ndelse                                                           mod lungebet‘ndelse                                                           A
+0000122mod halsbet‘ndelse                                                            mod halsbet‘ndelse                                                            A
+0000121mod mellem›rebet‘ndelse                                                       mod mellem›rebet‘ndelse                                                       A
+0000124mod sv‘r infektion                                                            mod sv‘r infektion                                                            I
+0000125mod stafylokokker, inkl. udryddelse af b‘rer- tilstand                        mod stafylokokker,        inkl. udryddelse af b‘rer-tilstand                  A
+0000126mod kronisk urinvejsinfektion                                                 mod kronisk               urinvejsinfektion                                   A
+0000127mod bronkitis                                                                 mod bronkitis                                                                 A
+0000296til forebyggelse af meningitis                                                til forebyggelse af       meningitis                                          A
+0000316mod sv‘r diare                                                                mod sv‘r diare                                                                A
+0000317mod tyktarmsbet‘ndelse                                                        mod tyktarmsbet‘ndelse                                                        I
+0000130mod svampeinfektion                                                           mod svampeinfektion                                                           I
+0000280mod svamp p† huden                                                            mod svamp p† huden                                                            A
+0000266mod udbredt svamp p† huden                                                    mod udbredt svamp p†      huden                                               I
+0000131mod tuberkulose                                                               mod tuberkulose                                                               A
+0000132forebyggende mod meningitis                                                   forebyggende mod          meningitis                                          I
+0000133til forebyggelse af tuberkulose                                               til forebyggelse af       tuberkulose                                         A
+0000136til forebyggelse af herpes                                                    til forebyggelse af       herpes                                              A
+0000314mod herpes zoster                                                             mod herpes zoster                                                             I
+0000137mod influenza                                                                 mod influenza                                                                 A
+0000138til forebyggelse af influenza                                                 til forebyggelse af       influenza                                           A
+0000141mod sygdom                                                                    mod sygdom                                                                    A
+0000279vaccine                                                                       vaccine                                                                       A
+0000140mod tyfus                                                                     mod tyfus                                                                     A
+0000319mod prostatalidelse                                                           mod prostatalidelse                                                           A
+0000147mod leddegigt                                                                 mod leddegigt                                                                 A
+0000318mod bindev‘vssygdom                                                           mod bindev‘vssygdom                                                           A
+0000142mod gigt                                                                      mod gigt                                                                      A
+0000143mod muskelsmerter                                                             mod muskelsmerter                                                             A
+0000144smertestillende                                                               smertestillende                                                               I
+0000145mod smerter                                                                   mod smerter                                                                   A
+0000146mod menstruationssmerter                                                      mod menstruationssmerter                                                      A
+0000153mod migr‘ne                                                                   mod migr‘ne                                                                   A
+0000148mod urinsur gigt                                                              mod urinsur gigt                                                              A
+0000149mod muskelkramper                                                             mod muskelkramper                                                             A
+0000313mod osteoporose                                                               mod osteoporose                                                               A
+0000293mod for h›jt kalk i blodet                                                    mod for h›jt kalk i       blodet                                              A
+0000294mod smerter ved myelomatose                                                   mod smerter ved           myelomatose                                         A
+0000295mod knoglebrud ved myelomatose                                                mod knoglebrud ved        myelomatose                                         A
+0000306forebyggende mod knoglebrud                                                   forebyggende mod          knoglebrud                                          I
+0000301mod Paget's sygdom                                                            mod Paget's sygdom                                                            I
+0000302mod knoglesk›rhed                                                             mod knoglesk›rhed                                                             A
+0000303mod knoglesygdom                                                              mod knoglesygdom                                                              I
+0000150til overfladebed›velse af hud                                                 til overfladebed›velse af hud                                                 A
+0000151mod st‘rke smerter                                                            mod st‘rke smerter                                                            A
+0000152som vedligeholdelsesdosis                                                     som vedligeholdelsesdosis                                                     A
+0000269mod Horton's hovedpine                                                        mod Horton's hovedpine                                                        A
+0000154mod hedestigninger                                                            mod hedestigninger                                                            A
+0000155mod epilepsi                                                                  mod epilepsi                                                                  A
+0000156mod rystelammelse                                                             mod rystelammelse                                                             A
+0000157mod bivirkninger                                                              mod bivirkninger                                                              A
+0000158nervemedicin                                                                  nervemedicin                                                                  I
+0000159mod nerv›s lidelse                                                            mod nerv›s lidelse                                                            A
+0000160mod uro                                                                       mod uro                                                                       A
+0000161beroligende                                                                   beroligende                                                                   A
+0000162mod ufrivillige bev‘gelser                                                    mod ufrivillige           bev‘gelser                                          A
+0000163mod angst                                                                     mod angst                                                                     A
+0000164mod feberkramper                                                              mod feberkramper                                                              A
+0000165sovemedicin                                                                   sovemedicin                                                                   I
+0000166mod s›vnl›shed                                                                mod s›vnl›shed                                                                A
+0000167mod alkoholabstinens                                                          mod alkoholabstinens                                                          A
+0000168mod depression                                                                mod depression                                                                A
+0000309mod bulimi                                                                    mod bulimi                                                                    A
+0000169mod stemningssvingninger                                                      mod stemningssvingninger                                                      A
+0000270til forebyggelse af depression                                                til forebyggelse af       depression                                          A
+0000277mod alkoholisme                                                               mod alkoholisme                                                               I
+0000283mod alkoholindtagelse                                                         mod alkoholindtagelse                                                         A
+0000284mod alkoholmisbrug                                                            mod alkoholmisbrug                                                            I
+0000170mod narkolepsi                                                                mod narkolepsi                                                                A
+0000171stimulerende                                                                  stimulerende                                                                  I
+0000172mod myastenia gravis                                                          mod myastenia gravis                                                          A
+0000304mod bl‘reatoni                                                                mod bl‘reatoni                                                                A
+0000305mod tarmatoni                                                                 mod tarmatoni                                                                 A
+0000195til tobaksafv‘nning                                                           til tobaksafv‘nning                                                           A
+0000173mod malaria                                                                   mod malaria                                                                   A
+0000174til forebyggelse af malaria                                                   til forebyggelse af       malaria                                             A
+0000176mod b›rneorm                                                                  mod b›rneorm                                                                  A
+0000175mod spolorm                                                                   mod spolorm                                                                   A
+0000177mod indvoldsorm                                                               mod indvoldsorm                                                               A
+0000178mod b‘ndelorm                                                                 mod b‘ndelorm                                                                 A
+0000179mod fnat                                                                      mod fnat                                                                      A
+0000180mod hovedlus                                                                  mod hovedlus                                                                  A
+0000181mod fladlus                                                                   mod fladlus                                                                   A
+0000197mod bihulebet‘ndelse                                                          mod bihulebet‘ndelse                                                          A
+0000198mod tilstoppet n‘se                                                           mod tilstoppet n‘se                                                           A
+0000199mod l›ben‘se                                                                  mod l›ben‘se                                                                  A
+0000273mod irritation i munden                                                       mod irritation i munden                                                       A
+0000200mod smerter ved tandfrembrud                                                  mod smerter ved           tandfrembrud                                        A
+0000278mod parodontitis                                                              mod parodontitis                                                              A
+0000201mod blister                                                                   mod blister                                                                   A
+0000202mod astma                                                                     mod astma                                                                     A
+0000203til forebyggelse af astma                                                     til forebyggelse af astma                                                     A
+0000287mod allergi                                                                   mod allergi                                                                   A
+0000297over for allergi                                                              over for allergi                                                              I
+0000204til behandling af allergi                                                     til behandling af allergi                                                     I
+0000205sliml›snende                                                                  sliml›snende                                                                  A
+0000285til forbedring af lungefunktionen                                             til forbedring af         lungefunktionen                                     I
+0000206hosted‘mpende                                                                 hosted‘mpende                                                                 A
+0000207mod t›r hoste                                                                 mod t›r hoste                                                                 A
+0000208mod n‘ldefeber                                                                mod n‘ldefeber                                                                A
+0000016mod transportsyge                                                             mod transportsyge                                                             A
+0000184mod allergisk ›jenbet‘ndelse                                                  mod allergisk             ›jenbet‘ndelse                                      A
+0000298mod ›jenbet‘ndelse                                                            mod ›jenbet‘ndelse                                                            A
+0000185mod regnbuehinde- bet‘ndelse                                                  mod regnbuehinde-         bet‘ndelse                                          A
+0000186mod ›jensygdom                                                                mod ›jensygdom                                                                A
+0000182mod ›jenkatar                                                                 mod ›jenkatar                                                                 A
+0000187mod kronisk ›jenbet‘ndelse                                                    mod kronisk               ›jenbet‘ndelse                                      A
+0000188mod st‘r                                                                      mod st‘r                                                                      I
+0000189mod gr›n st‘r                                                                 mod gr›n st‘r                                                                 A
+0000308mod vernal ›jenbet‘ndelse                                                     mod vernal ›jenbet‘ndelse                                                     I
+0000288mod svejse›jne                                                                mod svejse›jne                                                                A
+0000190kunstig t†rev‘ske                                                             kunstig t†rev‘ske                                                             A
+0000191mod ›regangseksem                                                             mod ›regangseksem                                                             A
+0000192mod bet‘ndelse i ›regangen                                                    mod bet‘ndelse i          ›regangen                                           A
+0000193mod overf›lsomhed                                                             mod overf›lsomhed                                                             I
+0000194mod Menieres sygdom                                                           mod Menieres sygdom                                                           A
+0000196potensfremmende                                                               potensfremmende                                                               I
+0000035B-vitamintilskud                                                              B-vitamintilskud                                                              I
+0000139influenzavaccine                                                              influenzavaccine                                                              A
+0000050mod for lavt blodtryk                                                         mod for lavt blodtryk                                                         A
+0000282til bandagering                                                               til bandagering                                                               I
+0000021til tarmdesinfektion                                                          til tarmdesinfektion                                                          A
+0000082mod l‘gkramper                                                                mod l‘gkramper                                                                A
+0000183til ›jendrypning af nyf›dte                                                   til ›jendrypning af       nyf›dte                                             I
+0000252mod D-vitaminmangel                                                           mod D-vitaminmangel                                                           I
+0000271mod bl‘ret›mningsbesv‘r                                                       mod bl‘ret›mningsbesv‘r                                                       I
+0000272mod tarmt›mningsbesv‘r                                                        mod tarmt›mningsbesv‘r                                                        I
+0000281mod svampeinfektion i munden                                                  mod svampeinfektion i     munden                                              I
+0000286ved allergi                                                                   ved allergi                                                                   I
+0000320til overfladebed›velse                                                        til overfladebed›velse                                                        A
+0000321Inflammation efter ›jenoperation                                              Inflammation efter        ›jenoperation                                       A
+0000322profylaktisk                                                                  profylaktisk                                                                  I
+0000323mod misbrug                                                                   mod misbrug                                                                   I
+0000324ved bronkospasme                                                              ved bronkospasme                                                              A
+0000325ved lungesygdom                                                               ved lungesygdom                                                               A
+0000326mod narkotikamisbrug                                                          mod narkotikamisbrug                                                          A
+0000327mod sindslidelse                                                              mod sindslidelse                                                              A
+0000328mod anafylaktisk shock                                                        mod anafylaktisk shock                                                        A
+0000329mod demens                                                                    mod demens                                                                    A
+0000330mod Alzheimers demens                                                         mod Alzheimers demens                                                         A
+0000331mod Alzheimers sygdom                                                         mod Alzheimers sygdom                                                         A
+0000332mod lungeinfektion                                                            mod lungeinfektion                                                            I
+0000333tarmt›mning f›r operation                                                     tarmt›mning f›r operation                                                     A
+0000334ved hyppig vandladning                                                        ved hyppig vandladning                                                        A
+0000335ved inkontinens                                                               ved inkontinens                                                               A
+0000336ved multipel sklerose                                                         ved multipel sklerose                                                         A
+0000337standardprodukt sondekostprodukt                                              standardprodukt           sondekostprodukt                                    A
+0000338standardprodukt ern‘ringssupplement                                           standardprodukt           ern‘ringssupplement                                 A
+0000339specialprodukt sondekostprodukt                                               specialprodukt            sondekostprodukt                                    A
+0000340specialprodukt ern‘ringssupplement                                            specialprodukt            ern‘ringssupplement                                 A
+0000341v‘gtreducerende                                                               v‘gtreducerende                                                               A
+0000342mod ›refl†d                                                                   mod ›refl†d                                                                   A
+0000343mod eksem i hovedbunden                                                       mod eksem i hovedbunden                                                       A
+0000344mod psoriasis i hovedbunden                                                   mod psoriasis i           hovedbunden                                         A
+0000345mod hepatitis C                                                               mod hepatitis C                                                               A
+0000346muskelafslappende                                                             muskelafslappende                                                             A
+0000347mod ›jensmerter                                                               mod ›jensmerter                                                               A
+0000348mod impotens                                                                  mod impotens                                                                  A
+0000349‘gstimulerende                                                                ‘gstimulerende                                                                A
+0000350mod fibroadenomatose                                                          mod fibroadenomatose                                                          A
+0000351mod Parkinsons sygdom                                                         mod Parkinsons sygdom                                                         A
+0000352mod leverbet‘ndelse                                                           mod leverbet‘ndelse                                                           A
+0000353for prostata                                                                  for prostata                                                                  I
+0000354til lokale smerter                                                            til lokale smerter                                                            A
+0000355                                                                                                                                                            I
+0000356mod halssmerter                                                               mod halssmerter                                                               A
+0000357pupildilaterende                                                              pupildilaterende                                                              A
+0000358overfladebed›vende                                                            overfladebed›vende                                                            I
+0000359mod hepatitis B                                                               mod hepatitis B                                                               A
+0000360mod bet‘ndelse p† huden                                                       mod bet‘ndelse p† huden                                                       A
+0000361til behandling af alvorlig virusinfektion                                     til behandling af alvorlig virusinfektion                                     A
+0000362diagnostikum                                                                  diagnostikum                                                                  A
+0000363diagnostikum for Helicobacter pylori- infektion                               diagnostikum for          Helicobacter pylori-      infektion                 A
+0000364mod hyperfosfat‘mi                                                            mod hyperfosfat‘mi                                                            A
+0000365specialprodukt di‘tpr‘parat til sp‘dbarn                                      specialprodukt            di‘tpr‘parat til sp‘dbarn                           A
+0000366mod nedsat tarmbev‘gelse                                                      mod nedsat tarmbev‘gelse                                                      I
+0000367mod tarmsygdom                                                                mod tarmsygdom                                                                I
+0000368mod an‘mi                                                                     mod an‘mi                                                                     A
+0000369ved cystisk fibrose                                                           ved cystisk fibrose                                                           A
+0000370beroligende vanedannende                                                      beroligende               vanedannende                                        A
+0000371mod angst vanedannende                                                        mod angst                 vanedannende                                        A
+0000372sovemedicin vanedannende                                                      sovemedicin               vanedannende                                        I
+0000373mod s›vnl›shed, vanedannende                                                  mod s›vnl›shed,           vanedannende                                        A
+0000374til forebyggelse af apopleksi                                                 til forebyggelse af       apopleksi                                           A
+0000375mod opm‘rksomheds- forstyrrelser                                              mod opm‘rksomheds-        forstyrrelser                                       A
+0000376mod hyperaktivitet                                                            mod hyperaktivitet                                                            A
+0000377ved Gauchers sygdom                                                           ved Gauchers sygdom                                                           A
+0000378ved solskadet hud                                                             ved solskadet hud                                                             A
+0000379ved kronisk obstruktiv lungesygdom (KOL)                                      ved kronisk obstruktiv    lungesygdom (KOL)                                   A
+0000380P-piller ved h†rtab                                                           P-piller ved h†rtab                                                           A
+0000381mod blodsygdom                                                                mod blodsygdom                                                                A
+0000382arvelig tyrosin‘mi type 1                                                     arvelig tyrosin‘mi type 1                                                     A
+0000383                                                                                                                                                            I
+0000384mod pernici›s an‘mi                                                           mod pernici›s an‘mi                                                           A
+0000385Pompes sygdom                                                                 Pompes sygdom                                                                 A
+0000386ved glaukom                                                                   ved glaukom                                                                   A
+0000387for okul‘r hypertension                                                       for okul‘r hypertension                                                       A
+0000388ved specifik enzymmangel                                                      ved specifik enzymmangel                                                      A
+0000389Restless Legs Syndrome (RLS)                                                  Restless Legs Syndrome    (RLS)                                               A
+0000390til behandling af sv‘r overv‘gt                                               til behandling af sv‘r    overv‘gt                                            A
+0000391til behandling af ADHD                                                        til behandling af ADHD                                                        A
+0000392mod nyrecellecancer                                                           mod nyrecellecancer                                                           A
+0000393behandling af pulmonal arteriel hypertension                                  behandling af pulmonal    arteriel hypertension                               A
+0000394parenteral ern‘ring                                                           parenteral ern‘ring                                                           A
+0000395ern‘ringstilskud                                                              ern‘ringstilskud                                                              A
+0000396bronkitis med bronkospasme                                                    bronkitis med bronkospasme                                                    A
+0000397mod thyrotoksikose                                                            mod thyrotoksikose                                                            A
+0000398ekstravasation af antracykliner                                               ekstravasation af         antracykliner                                       A
+0000399behandling af metastatisk colorektalcancer                                    behandling af metastatisk colorektalcancer                                    A
+0000400ved immundefekt                                                               ved immundefekt                                                               A
+0000401mod ›jensmerter efter operation                                               mod ›jensmerter efter     operation                                           A
+0000402reumatoid artrit                                                              reumatoid artrit                                                              A
+0000403juvenil reumatoid artrit                                                      juvenil reumatoid artrit                                                      A
+0000404psoriasisartrit                                                               psoriasisartrit                                                               A
+0000405mod leddegigt hos b›rn og unge                                                mod leddegigt hos b›rn og unge                                                A
+0000406ankyloserende spondylitis                                                     ankyloserende spondylitis                                                     A
+0000407Bekhterews sygdom                                                             Bekhterews sygdom                                                             A
+0000408antikoagulation ved heparininduceret trombo- cytopeni type II                 antikoagulation ved       heparininduceret trombo-  cytopeni type II          A
+0000409hud- og bl›ddelsinfektion for†rsaget af Gram- positive bakterier              hud- og bl›ddelsinfektion for†rsaget af Gram-       positive bakterier        I
+0000410behandling af lungecancer                                                     behandling af lungecancer                                                     A
+0000411behandling af kronisk jernophobning                                           behandling af kronisk     jernophobning                                       A
+0000412behandling af neutropeni ved kemoterapi                                       behandling af neutropeni  ved kemoterapi                                      A
+0000413behandling af Wilson's sygdom                                                 behandling af Wilson's    sygdom                                              A
+0000414behandling af cancer                                                          behandling af cancer                                                          A
+0000415behandling af diabetes type 2                                                 behandling af diabetes    type 2                                              A
+0000416behandling af leuk‘mi                                                         behandling af leuk‘mi                                                         A
+0000417mod hud- og bl›ddels- infektion                                               mod hud- og bl›ddels-     infektion                                           A
+0000418ved osteomyelitis                                                             ved osteomyelitis                                                             A
+0000419mod candidiasis                                                               mod candidiasis                                                               A
+0000420mod kryptokok-meningitis                                                      mod kryptokok-meningitis                                                      A
+0000421behandling af gr‘spollen- allergi                                             behandling af gr‘spollen- allergi                                             A
+0000422mod virkninger af benzodiazepiner                                             mod virkninger af         benzodiazepiner                                     A
+0000423behandling af opioid- afh‘ngighed                                             behandling af opioid-     afh‘ngighed                                         A
+0000424akut svangerskabs- forebyggelse                                               akut svangerskabs-        forebyggelse                                        A
+0000425mod borreliose, stadie II og III                                              mod borreliose,           stadie II og III                                    A
+0000426mod meningitis                                                                mod meningitis                                                                A
+0000427mod bakteriel infektion i knogler og led                                      mod bakteriel infektion i knogler og led                                      A
+0000428mod svamp i hovedbunden                                                       mod svamp i hovedbunden                                                       A
+0000429behandling af skizofreni                                                      behandling af skizofreni                                                      A
+0000430ved hjerteinsufficiens                                                        ved hjerteinsufficiens                                                        A
+0000431til forebyggelse af rhesus-immunisering                                       til forebyggelse af       rhesus-immunisering                                 A
+0000432ved maculadegeneration (AMD)                                                  ved maculadegeneration    (AMD)                                               A
+0000433mod lungeinfektion ved cystisk fibrose                                        mod lungeinfektion ved    cystisk fibrose                                     A
+0000434til forebyggelse af gul feber                                                 til forebyggelse af gul   feber                                               A
+0000435til forebyggelse af tyfus                                                     til forebyggelse af tyfus                                                     A
+0000436antidot til lavmolekyl‘rt heparin                                             antidot til lavmolekyl‘rt heparin                                             A
+0000437behandling af mucopolysaccharidose                                            behandling af             mucopolysaccharidose                                A
+0000438ved Maroteaux-Lamy syndrom                                                    ved Maroteaux-Lamy syndrom                                                    A
+0000439ved Hunter syndrom                                                            ved Hunter syndrom                                                            A
+0000440tromboseprofylakse                                                            tromboseprofylakse                                                            A
+0000441til behandling af trombose                                                    til behandling af         trombose                                            A
+0000442til forebyggelse af diare                                                     til forebyggelse af diare                                                     A
+0000443ved trigeminusneuralgi                                                        ved trigeminusneuralgi                                                        A
+0000444mod bet‘ndelse i bughulen                                                     mod bet‘ndelse i bughulen                                                     A
+0000445mod underlivsbet‘ndelse                                                       mod underlivsbet‘ndelse                                                       A
+0000446mod bet‘ndelse i bitestiklen                                                  mod bet‘ndelse i          bitestiklen                                         A
+0000447mod bet‘ndelse i urinr›ret                                                    mod bet‘ndelse i urinr›ret                                                    A
+0000448mod nyreb‘kkenbet‘ndelse                                                      mod nyreb‘kkenbet‘ndelse                                                      A
+0000449mod bet‘ndelse i bl‘rehals kirtlen                                            mod bet‘ndelse i bl‘rehalskirtlen                                             A
+0000450mod bet‘ndelse i skeden                                                       mod bet‘ndelse i skeden                                                       A
+0000451mod Klamydia/mycoplasma- infektion                                            mod Klamydia/mycoplasma-  infektion                                           A
+0000452mod gonore                                                                    mod gonore                                                                    A
+0000453mod syfilis                                                                   mod syfilis                                                                   A
+0000454mod Borrelia-infektion                                                        mod Borrelia-infektion                                                        A
+0000455mod dyre- eller menneske- bid                                                 mod dyre- eller menneske- bid                                                 A
+0000456mod brystbet‘ndelse                                                           mod brystbet‘ndelse                                                           A
+0000457mod b›rnes†r                                                                  mod b›rnes†r                                                                  A
+0000458mod s†rinfektion                                                              mod s†rinfektion                                                              A
+0000459mod rosen                                                                     mod rosen                                                                     A
+0000460mod hjerteklapbet‘ndelse                                                      mod hjerteklapbet‘ndelse                                                      A
+0000461til forebyggelse af hjerteklapbet‘ndelse                                      til forebyggelse af       hjerteklapbet‘ndelse                                A
+0000462mod kighoste                                                                  mod kighoste                                                                  A
+0000463mod skarlagensfeber                                                           mod skarlagensfeber                                                           A
+0000464mod opblussen i kronisk obstruktiv lungesygdom (KOL)                          mod opblussen i kronisk   obstruktiv lungesygdom    (KOL)                     A
+0000465mod maves†r (Udryddelse af Helicobacter pylori)                               mod maves†r (Udryddelse afHelicobacter pylori)                                A
+0000466til forebyggelse af rotavirus-gastroenteritis                                 til forebyggelse af       rotavirus-gastroenteritis                           A
+0000467til immunsuppression                                                          til immunsuppression                                                          A
+0000468mod afst›dningsreaktioner ved organtransplantation                            mod afst›dningsreaktioner ved organtransplantation                            A
+0000469mod nefrotisk syndrom                                                         mod nefrotisk syndrom                                                         A
+0000470mod uveitis                                                                   mod uveitis                                                                   A
+0000471mod atopisk dermatitis                                                        mod atopisk dermatitis                                                        A
+0000472mod obsessiv-kompulsiv sygdom (OCD)                                           mod obsessiv-kompulsiv    sygdom (OCD)                                        A
+0000473til behandling af forst›rret prostata                                         til behandling af         forst›rret prostata                                 A
+0000474infertilitetsbehandling                                                       infertilitetsbehandling                                                       A
+0000475behandling af hypovol‘mi og chok                                              behandling af hypovol‘mi  og chok                                             A
+0000476forebyggelse af hypovol‘mi og chok                                            forebyggelse af hypovol‘miog chok                                             A
+0000477supplerende h‘mostase ved kirurgi                                             supplerende h‘mostase ved kirurgi                                             A
+0000478til fibrinforsegling                                                          til fibrinforsegling                                                          A
+0000479mod sepsis                                                                    mod sepsis                                                                    A
+0000480mod bughindebet‘ndelse                                                        mod bughindebet‘ndelse                                                        A
+0000481mod epiglottitis                                                              mod epiglottitis                                                              A
+0000482mod cerebral abces                                                            mod cerebral abces                                                            A
+0000483mod intraabdominal infektion                                                  mod intraabdominal        infektion                                           A
+0000484til profylakse ved kirurgi                                                    til profylakse ved kirurgi                                                    A
+0000485mod invasiv svampe- infektion                                                 mod invasiv svampe-       infektion                                           A
+0000486til forebyggelse af alvorlig infektion                                        til forebyggelse af       alvorlig infektion                                  A
+0000487mod slidgigt                                                                  mod slidgigt                                                                  A
+0000488mod fokal spasme                                                              mod fokal spasme                                                              A
+0000489mod st‘rkt for›get svedproduktion                                             mod st‘rkt for›get        svedproduktion                                      A
+0000490til behandling af rynker i ansigtet                                           til behandling af rynker iansigtet                                            A
+0000491ved mani                                                                      ved mani                                                                      A
+0000492ved von Willebrands sygdom                                                    ved von Willebrands sygdom                                                    A
+0000493diagnostikum for bronkial hyperresponsivitet                                  diagnostikum for bronkial hyperresponsivitet                                  A
+0000494diagnostikum for bl‘re- cancer                                                diagnostikum for bl‘re-   cancer                                              A
+0000495til forebyggelse af svamp i mundhulen                                         til forebyggelse af svamp i mundhulen                                         A
+0000496mod herpes-encefalitis                                                        mod herpes-encefalitis                                                        A
+0000497til forebyggelse af virusinfektion                                            til forebyggelse af       virusinfektion                                      A
+0000498til behandling af an‘mi ved nyreinsufficiens                                  til behandling af an‘mi   ved nyreinsufficiens                                A
+0000499behandling af cystinose                                                       behandling af cystinose                                                       A
+0000500til forebyggelse af RSV-infektion                                             til forebyggelse af       RSV-infektion                                       A
+0000501mod hepatitis A                                                               mod hepatitis A                                                               A
+0000502til immunmodulation                                                           til immunmodulation                                                           A
+0000503behandling af brystcancer                                                     behandling af brystcancer                                                     A
+0000504behandling af prostata- cancer                                                behandling af prostata-   cancer                                              A
+0000505behandling af segl-celle an‘mi                                                behandling af segl-celle  an‘mi                                               A
+0000506ved amyotrofisk lateral sklerose (ALS)                                        ved amyotrofisk lateral   sklerose (ALS)                                      A
+0000507ved parodontitis                                                              ved parodontitis                                                              A
+0000508ved famili‘r adenomat›s polypose (FAP)                                        ved famili‘r adenomat›s   polypose (FAP)                                      A
+0000509mod arvelige tarmpolypper                                                     mod arvelige tarmpolypper                                                     A
+0000510ved akut nyresvigt                                                            ved akut nyresvigt                                                            A
+0000511ved kronisk nyresvigt                                                         ved kronisk nyresvigt                                                         A
+0000512ved forgiftninger med dialyserbare substanser                                 ved forgiftninger med     dialyserbare substanser                             A
+0000513behandling af alvorlige elektrolytforstyrrelser                               behandling af alvorlige   elektrolytforstyrrelser                             A
+0000514til v‘sketerapi                                                               til v‘sketerapi                                                               A
+0000515mod stomatitis                                                                mod stomatitis                                                                A
+0000516til behandling af homocystinuri                                               til behandling af         homocystinuri                                       A
+0000517mod n‘sepolypper                                                              mod n‘sepolypper                                                              A
+0000518mod myelomatose                                                               mod myelomatose                                                               A
+0000519mod skoldkopper                                                               mod skoldkopper                                                               A
+0000520behandling af bl›ddels- sarkom                                                behandling af bl›ddels-   sarkom                                              A
+0000521ved tyreotoksikose                                                            ved tyreotoksikose                                                            A
+0000522mod komplementafh‘ngig intravaskul‘r h‘molyse                                 mod komplementafh‘ngig    intravaskul‘r h‘molyse                              A
+0000523mod gener, forbundet med gastroenteropankreatiske tumorer                     mod gener, forbundet med  gastroenteropankreatiske  tumorer                   A
+0000524mod tandsmerter                                                               mod tandsmerter                                                               A
+0000525oph‘velse af CNS- depression                                                  oph‘velse af CNS-         depression                                          A
+0000526diagnosticering af opioid- forgiftning                                        diagnosticering af opioid-forgiftning                                         A
+0000527oph‘velse af respirations- depression                                         oph‘velse af respirations-depression                                          A
+0000528kontrastmiddel                                                                kontrastmiddel                                                                A
+0000529diagnostisk test for nikkel-/parfumeallergi                                   diagnostisk test for      nikkel-/parfumeallergi                              A
+0000530test til p†visning af allergisk kontaktdermatit                               test til p†visning af     allergisk kontaktdermatit                           A
+0000531til an‘stesi                                                                  til an‘stesi                                                                  A
+0000532mod philadelphiakromosom- positiv myeloid leuk‘mi                             mod philadelphiakromosom- positiv myeloid leuk‘mi                             A
+0000533til oxygenbehandling                                                          til oxygenbehandling                                                          A
+0000534til respiratorbehandling                                                      til respiratorbehandling                                                      A
+0000535mod allergisk rhinitis                                                        mod allergisk rhinitis                                                        A
+0000536ved Prader-Willis syndrom                                                     ved Prader-Willis syndrom                                                     A
+0000537mod for›get prolaktinproduktion                                               mod for›get               prolaktinproduktion                                 A
+0000538til skylning                                                                  til skylning                                                                  A
+0000539mod jernmangelan‘mi                                                           mod jernmangelan‘mi                                                           A
+0000540mod hyperaktiv urinbl‘re                                                      mod hyperaktiv urinbl‘re                                                      A
+0000541mod neuropatiske smerter                                                      mod neuropatiske smerter                                                      A
+0000542mod plasmacellekr‘ft                                                          mod plasmacellekr‘ft                                                          A
+0000543mod forh›jet kalium i blodet                                                  mod forh›jet kalium       i blodet                                            A
+0000544mod torticollis                                                               mod torticollis                                                               A
+0000545mod jernmangel                                                                mod jernmangel                                                                A
+0000546oph‘velse af neuromuskul‘r blokade                                            oph‘velse af neuromuskul‘rblokade                                             A
+0000547mod tr‘thed                                                                   mod tr‘thed                                                                   A
+0000548opkvikkende                                                                   opkvikkende                                                                   A
+0000549pr‘medicin                                                                    pr‘medicin                                                                    A
+0000550mod uterin dystoni                                                            mod uterin dystoni                                                            A
+0000551mod reumatisk sygdom                                                          mod reumatisk sygdom                                                          A
+0000552ved dissemineret sklerose                                                     ved dissemineret sklerose                                                     A
+0000553ved bl›dende esofagus- varicer                                                ved bl›dende esofagus-    varicer                                             A
+0000554mod inflammatorisk tarmsygdom                                                 mod inflammatorisk        tarmsygdom                                          A
+0000555behandling af cyanidforgiftning                                               behandling af             cyanidforgiftning                                   A
+0000556behandling af heridit‘rt angio›dem                                            behandling af heridit‘rt  angio›dem                                           A
+0000557vestimulation                                                                 vestimulation                                                                 A
+0000558veh‘mning                                                                     veh‘mning                                                                     A
+0000559igangs‘ttelse af f›dsel                                                       igangs‘ttelse af f›dsel                                                       A
+0000560Bl›dning i efterbyrds- perioden                                               Bl›dning i efterbyrds-    perioden                                            A
+0000561til intraven›s ern‘ringsbehandling                                            til intraven›s            ern‘ringsbehandling                                 A
+0000562binyrebarkinsufficiens                                                        binyrebarkinsufficiens                                                        A
+0000563mod t›r hud                                                                   mod t›r hud                                                                   A
+0000564trombocytopenisk purpura                                                      trombocytopenisk purpura                                                      A
+0000565behandling af sekund‘r hyperparathyroidisme                                   behandling af sekund‘r    hyperparathyroidisme                                A
+0000566mod hyperfenylalanin‘mi                                                       mod hyperfenylalanin‘mi                                                       A
+0000567behandling af forgiftning                                                     behandling af forgiftning                                                     A
+0000568mod hjertestop                                                                mod hjertestop                                                                A
+0000569kredsl›bsstimulerende                                                         kredsl›bsstimulerende                                                         A
+0000570mod schock                                                                    mod schock                                                                    A
+0000571fosfattilskud                                                                 fosfattilskud                                                                 A
+0000572til forebyggelse af bivirkninger                                              til forebyggelse af       bivirkninger                                        A
+0000573plasmaerstatning                                                              plasmaerstatning                                                              A
+0000574til bl‘reskylning                                                             til bl‘reskylning                                                             A
+0000575til fremkaldelse af opkastning                                                til fremkaldelse af       opkastning                                          A
+0000576mod kramper                                                                   mod kramper                                                                   A
+0000577til forebyggelse af kramper                                                   til forebyggelse af       kramper                                             A
+0000578til regulering af hjertefrekvens                                              til regulering af         hjertefrekvens                                      A
+0000579til modning af livmoderhals                                                   til modning af            livmoderhals                                        A
+0000580modgift                                                                       modgift                                                                       A
+0000581til neutralisering af maveindholdet f›r operation                             til neutralisering af     maveindholdet f›r         operation                 A
+0000582mod kulderystelser                                                            mod kulderystelser                                                            A
+0000583mod st‘r                                                                      mod st‘r                                                                      A
+0000584kosttilskud                                                                   kosttilskud                                                                   A
+0000585til fremkaldelse af abort                                                     til fremkaldelse af abort                                                     A
+0000586til forebyggelse af postoperativ kvalme                                       til forebyggelse af       postoperativ kvalme                                 A
+0000587mod bl›dning efter f›dsel                                                     mod bl›dning efter f›dsel                                                     A
+0000588mod affektanfald                                                              mod affektanfald                                                              A
+0000589benign intrakraniel hypertension                                              benign intrakraniel       hypertension                                        A
+0000590mod hikke                                                                     mod hikke                                                                     A
+0000591til h‘modialyse                                                               til h‘modialyse                                                               A
+0000592mod hypergluk‘mi                                                              mod hypergluk‘mi                                                              A
+0000593mod postoperativ kvalme                                                       mod postoperativ kvalme                                                       A
+0000594migr‘neprofylakse                                                             migr‘neprofylakse                                                             A
+0000595mod Parkinsondemens                                                           mod Parkinsondemens                                                           A
+0000596behandling af obsessiv-kompulsiv tilstand                                     behandling af             obsessiv-kompulsiv        tilstand                  A
+0000597behandling af posttraumatisk stresssyndrom                                    behandling af             posttraumatisk            stresssyndrom             A
+0000598behandling af nyrekr‘ft                                                       behandling af nyrekr‘ft                                                       A
+0000599forebyggelse af osteoporose                                                   forebyggelse af           osteoporose                                         A
+0000600mod svangerskabs- forgiftning                                                 mod svangerskabs-         forgiftning                                         A
+0000601mod forstyrrelser i syre-base balancen                                        mod forstyrrelser i       syre-base balancen                                  A
+0000602mod spytfl†d                                                                  mod spytfl†d                                                                  A
+0000603mod h‘velse i mundhulen                                                       mod h‘velse i mundhulen                                                       A
+0000604mod forsn‘vret forhud                                                         mod forsn‘vret forhud                                                         A
+0000605mod abstinens                                                                 mod abstinens                                                                 A
+0000606mod apn›                                                                      mod apn›                                                                      A
+0000607til prostaglandinsyntese- h‘mning                                             til prostaglandinsyntese- h‘mning                                             A
+0000608mod respirationsbesv‘r                                                        mod respirationsbesv‘r                                                        A
+0000609mod magnesiummangel                                                           mod magnesiummangel                                                           A
+0000610mod hypersekretion                                                            mod hypersekretion                                                            A
+0000611mod h‘velse i sv‘lg                                                           mod h‘velse i sv‘lg                                                           A
+0000612mod h‘velse i strube                                                          mod h‘velse i strube                                                          A
+0000613feberneds‘ttende                                                              feberneds‘ttende                                                              A
+0000614mod D-vitaminmangel                                                           mod D-vitaminmangel                                                           A
+0000615mod spasme                                                                    mod spasme                                                                    A
+0000616mod h‘velse i luftveje                                                        mod h‘velse i luftveje                                                        A
+0000617quinkes ›dem                                                                  quinkes ›dem                                                                  A
+0000618mod falsk strubehoste                                                         mod falsk strubehoste                                                         A
+0000619til modning af lunger                                                         til modning af lunger                                                         A
+0000620mod for tidlig f›dsel                                                         mod for tidlig f›dsel                                                         A
+0000621til forebyggelse af urinsur gigt                                              til forebyggelse af       urinsur gigt                                        A
+0000622mod inflammation                                                              mod inflammation                                                              A
+0000623mod lavt natrium i blodet                                                     mod lavt natrium i blodet                                                     A
+0000624til behandling af metabolisk baseose                                          til behandling af         metabolisk baseose                                  A
+0000625til behandling af metabolisk alkalose                                         til behandling af         metabolisk alkalose                                 A
+0000626mod for lavt HDL                                                              mod for lavt HDL                                                              A
+0000627mineraltilskud                                                                mineraltilskud                                                                A
+0000628mod b‘kkenbet‘ndelse                                                          mod b‘kkenbet‘ndelse                                                          A
+0000629mod akut jernforgiftning                                                      mod akut jernforgiftning                                                      A
+0000630mod kryopyrin-associeret periodisk syndrom (CAPS)                             mod kryopyrin-associeret  periodisk syndrom (CAPS)                            A
+0000631mod bipol‘r sindslidelse                                                      mod bipol‘r sindslidelse                                                      A
+0000632B1-vitamintilskud                                                             B1-vitamintilskud                                                             A
+0000633B-vitamintilskud                                                              B-vitamintilskud                                                              A
+0000634mod t›rre ›jne                                                                mod t›rre ›jne                                                                A
+0000635mod overaktiv bl‘re                                                           mod overaktiv bl‘re                                                           A

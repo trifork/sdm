@@ -1,0 +1,23 @@
+{"dosageUnits":[
+   {"releaseNumber":125,"code":8,"textSingular":"brusetablet","textPlural":"brusetabletter"},
+   {"releaseNumber":125,"code":14,"textSingular":"dråbe","textPlural":"dråber"},
+   {"releaseNumber":125,"code":21,"textSingular":"kapsel","textPlural":"kapsler"},
+   {"releaseNumber":125,"code":24,"textSingular":"klysma","textPlural":"klysma"},
+   {"releaseNumber":125,"code":28,"textSingular":"ml","textPlural":"ml"},
+   {"releaseNumber":125,"code":38,"textSingular":"plaster","textPlural":"plastre"},
+   {"releaseNumber":125,"code":40,"textSingular":"pulver","textPlural":"pulvere"},
+   {"releaseNumber":125,"code":41,"textSingular":"pust","textPlural":"pust"},
+   {"releaseNumber":125,"code":42,"textSingular":"resoriblet","textPlural":"resoribletter"},
+   {"releaseNumber":125,"code":50,"textSingular":"sug","textPlural":"sug"},
+   {"releaseNumber":125,"code":51,"textSingular":"sugetablet","textPlural":"sugetabletter"},
+   {"releaseNumber":125,"code":52,"textSingular":"suppositorie","textPlural":"suppositorier"},
+   {"releaseNumber":125,"code":53,"textSingular":"tablet","textPlural":"tabletter"},
+   {"releaseNumber":125,"code":55,"textSingular":"tyggegummi","textPlural":"tyggegummi"},
+   {"releaseNumber":125,"code":56,"textSingular":"tyggetablet","textPlural":"tyggetabletter"},
+   {"releaseNumber":125,"code":60,"textSingular":"vaginalkapsel","textPlural":"vaginalkapsler"},
+   {"releaseNumber":125,"code":61,"textSingular":"vagitorie","textPlural":"vagitorier"},
+   {"releaseNumber":125,"code":81,"textSingular":"smeltetablet","textPlural":"smeltetabletter"},
+   {"releaseNumber":125,"code":1001,"textSingular":"dosis","textPlural":"doser"},
+   {"releaseNumber":125,"code":1002,"textSingular":"anvendelse","textPlural":"anvendelser"},
+   {"releaseNumber":125,"code":1003,"textSingular":"udvortes behandling","textPlural":"udvortes behandlinger"}
+]}

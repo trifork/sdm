@@ -1,0 +1,5 @@
+            Intet tilskud                                      
+A Alment    Alment sygesikringstilskud                         
+S Klausul   Sygdomsklausuleret tilskud                         
+V Pens/sygd.Tilskud kun pensionist eller ved bestemte sygdomme 
+D Alment,delAlment tilskud til del af kombinationspakning      

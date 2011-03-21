@@ -1,0 +1,36 @@
+                                                                 
+AIMENAlmmed.endAlmen/intern medicin, endokrinologi               
+ANESTAn‘stesi  An‘stesi                                          
+DERM Derm.Ven. Dermato-venerologi                                
+DPEALDe.p‘d.allDermatologi, p‘diatri, allergologi                
+ENDOKEndokrin. Endokrinologi                                     
+ENGEREnd.ge.reuEndokrinologi, geriatri, rheumatologi             
+GEPSNger.ps.ne.Geriatri, psykiatri, neurologi                    
+GYNOBGyn.obstr.Gyn‘kologi/obstetrik                              
+INMEDInt. med. Intern medicin                                    
+KARD KardiologiKardiologi                                        
+MEDENMed.endok.Intern medicin, endokrinologi                     
+MEDRHMed.Rheum.Intern medicin, rheumatologi                      
+NEFKANefr.kard.Nefrologi, kardiologi                             
+NEFPENefr.p‘d. Nefrologi, p‘diatri                               
+NEFR Nefrologi Nefrologi                                         
+NEUPENeur.,p‘d.Neurologi, p‘diatri                               
+NEUPSNeur.psyk.Neurologi, psykiatri                              
+OFNEUOftal.neurOftalmologi, neurologi                            
+OFTALOftalmol. Oftalmologi                                       
+ONKO Onkologi  Onkologi                                          
+PAED P‘diatri  P‘diatri                                          
+PSYK Psykiatri Psykiatri                                         
+RHEUMRheumatol.Rheumatologi                                      
+DVNOPDeneuoftplDerm.-venerologi,neurologi,oftalmologi,plastikkir.
+EGRIMEn.ge.r.imEndokrinologi,geriatri,reumatologi,intern medicin 
+DNEPKDe.neu.pl.Dermatologi, neurologi, plastikkirurgi            
+NEUR Neurologi Neurologi                                         
+DERMADermatologDermatologi                                       
+BUPSYbarn/ung.pB›rne- og ungdomspsykiatri                        
+BUPSPPsyk.,p‘d.B›rne- og ungdomspsykiatri, psykiatri, p‘diatri   
+BUNPPPsy,neu.p‘B›rne-/ungdomspsykiatri,neurologi,psykiatri,p‘diat
+LUNGSLungesygd.Lungesygdomme                                     
+PEMEDP‘d. med. P‘diatri, intern medicin                          
+MEDHEMed.hepat.Intern medicin, hepatologi                        
+MEDH’Med.h‘mat.Intern medicin, h‘matologi                        

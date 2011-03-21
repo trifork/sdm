@@ -1,0 +1,24 @@
+                                                                   
+A    AA         Receptpligtigt, en udlevering                      
+AP   AA-P       Udelukkende produktionsdyr, en udlevering          
+AP4  AA-P4      Kopieringspligtigt                                 
+AP4BGAA-P4 BEGR Kopieringspligtigt, kun sygehuse                   
+AP4NBAA-P4 NB-S Kopieringspligtigt, kun sygehuse og speciall‘ger   
+APK  AA-PK      Produktionsdyr og familiedyr, en udlevering        
+B    BB         Receptpligtigt, flere udleveringer                 
+BEGR AA-BEGR    Kun til sygehuse                                   
+BP   BB-P       Udelukkende produktionsdyr, flere udleveringer     
+BPK  BB-PK      Produktionsdyr og familiedyr, flere udleveringer   
+GA   AG-A       Medicinsk gas, en udlevering                       
+GB   BG-B       Medicinsk gas, flere udleveringer                  
+GH   HG-H       Medicinsk gas, h†ndk›b                             
+HA   HH-A       H†ndk›b, apoteksforbeholdt                         
+HF   HH-F       H†ndk›b, ikke apoteksforbeholdt                    
+HP   HH-P       Udelukkende produktionsdyr, h†ndk›b                
+HPK  HH-PK      Produktionsdyr og familiedyr, h†ndk›b              
+HV   HH-V       H†ndk›b, veterin‘r, ikke apoteksforbeholdt         
+HX   HH-X       H†ndk›b, ikke apoteksforbeholdt, begr‘nset         
+NBS  AA-NB-S    Kun til sygehuse og speciall‘ger                   
+PRMIXBB-Premix  Kun til foderm›ller efter veterin‘r ordination     
+SSI  BB-SSI     Kan udleveres fra Statens Seruminstitut            
+SVS  BB-SVS     Kan udleveres fra Statens Vet. Serumlaboratorium   

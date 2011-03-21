@@ -1,0 +1,704 @@
+ADEPGRAafdelte depotgranulater                                                                             I
+AENTGRAafdelte enterogranulater                                                                            I
+AGRAN  afdelte granulater                                                                                  I
+ANVSK  an‘stesiv‘ske                                                                                       I
+APULV  afdelte pulvere                                                                                     I
+BADADD badeadditiv                                                                                         A
+BADOPL badevand, opl›sning                                                                                 A
+BADV   badevand                                                                                            A
+BLAVSK bl‘reskyllev‘ske                                                                                    A
+BOLI   bolus                                                                                               I
+BRUGRA brusegranulat                                                                                       A
+BRUGRAEbrusegranulat, enkeltdosisbeholder                                                                  A
+BRUPULAbrusepulver, enkeltdosisbeholder                                                                    A
+BRUPULVbrusepulver                                                                                         A
+BRUTAB brusetabletter                                                                                      A
+CIGA   cigaretter                                                                                          I
+CREME  creme                                                                                               A
+DENEMULdentalemulsion                                                                                      A
+DENGEL dentalgel                                                                                           A
+DENGEPSpulver og solvens til dentalgel                                                                     A
+DENIND dentalindl‘g                                                                                        I
+DENOPL dentalopl›sning                                                                                     A
+DENPAS dentalpasta                                                                                         A
+DENPULVdentalpulver                                                                                        A
+DENSTFTdentalstift                                                                                         A
+DENSUS dentalsuspension                                                                                    A
+DENVSK dentalv‘ske                                                                                         A
+DEPBOLIdepotbolus                                                                                          I
+DEPGRA depotgranulat                                                                                       A
+DEPINJVdepotinjektionsv‘ske                                                                                A
+DEPIPSSdepotinjektionsv‘ske, pulver og solvens til suspension                                              A
+DEPKAP depotkapsler                                                                                        A
+DEPKAPHdepotkapsler, h†rde                                                                                 A
+DEPMIK depotmikstur                                                                                        I
+DEPOJDRdepot›jendr†ber                                                                                     A
+DEPPLA depotplastre                                                                                        A
+DEPRES depotresoribletter                                                                                  I
+DEPTAB depottabletter                                                                                      A
+DEPTABDdepottabletter (duretter)                                                                           I
+DEPTABFfilmovertrukne depottabletter                                                                       A
+DIVERSEdiverse                                                                                             I
+DPLATABdepotplastre+tabletter                                                                              A
+DRAG   drageer                                                                                             I
+DRB    dr†ber                                                                                              I
+DROGETRt›rret droge                                                                                        I
+ECEGEL endocervikalgel                                                                                     A
+ECEGELEendocervikalgel, enkeltdosisbeholder                                                                A
+EKSBL  ekstrakter, blandede                                                                                I
+EKSUBL ekstrakt, t›r ublandet                                                                              I
+ELEKTU elektuarium                                                                                         I
+ENDEGRAenterodepotgranulat                                                                                 A
+ENDEGRBenterodepotgranulat, breve                                                                          A
+ENTGRA enterogranulat                                                                                      A
+ENTKAP enterokapsler                                                                                       A
+ENTKAPHenterokapsler, h†rde                                                                                A
+ENTTAB enterotabletter                                                                                     A
+FECREM fedtcreme                                                                                           I
+FESALV fedtsalve                                                                                           I
+FORTVSKfortyndingsv‘ske                                                                                    I
+GAZEB  gazebind                                                                                            I
+GAZTAM gazetamponer                                                                                        I
+GEL    gel                                                                                                 A
+GELBRV gel, brev                                                                                           A
+GELPLA resorberbare gelatineplader                                                                         I
+GELTD  gel til desinfektion                                                                                I
+GELTO  gel til overfladeanalgesi                                                                           I
+GENERATradionuklidgenerator                                                                                A
+GIPSB  gipsbind                                                                                            I
+GRA    granulat                                                                                            A
+GRADV  granulat til anvendelse i drikkevand                                                                A
+GRAEN  granulat, enkeltdosisbeholder                                                                       A
+GRAMIK granulat til mikstur                                                                                I
+GRAMOD granulat med modificeret udl›sning                                                                  A
+GRAOPL granulat, opl›seligt                                                                                I
+GSVAMP gelatinesvamp                                                                                       I
+HDIAKONh‘modialysekoncentrat                                                                               A
+HDIASUBh‘modialysesubstans                                                                                 I
+HDIAVSKh‘modialysev‘ske                                                                                    A
+HFDVSKHh‘mofiltreringsv‘ske, h‘modialysev‘ske til kontinuerlig h‘modialyse                                 A
+HFILVSKh‘mofiltreringsv‘ske                                                                                A
+HKOFILTh‘mostatisk kollagenfilt                                                                            I
+IMPGAZEimpr‘gneret gaze                                                                                    A
+IMPLAN implantat                                                                                           A
+IMPLANKk‘de til implantation                                                                               A
+IMPLTABtabletter til implantation                                                                          A
+IMPTR  impr‘gneret tr†d                                                                                    I
+INFKONCinfusionskoncentrat                                                                                 I
+INFPSO pulver og solvens til infusionsv‘ske, opl›sning                                                     A
+INFPUK pulver til koncentrat til infusionsv‘ske                                                            A
+INFPUKOpulver til koncentrat til infusionsv‘ske, opl›sning                                                 A
+INFPUL pulver til infusionsv‘ske                                                                           A
+INFPULOpulver til infusionsv‘ske, opl›sning                                                                A
+INFSUB infusionssubstans                                                                                   I
+INFUS  infus                                                                                               I
+INFVSK infusionsv‘ske                                                                                      A
+INFVSKEinfusionsv‘ske, emulsion                                                                            A
+INFVSKHinfusionsv‘ske, hypertonisk                                                                         A
+INFVSKIinfusionsv‘ske, isotonisk                                                                           A
+INFVSKKinfusionsv‘ske (kombipakning)                                                                       I
+INFVSKOinfusionsv‘ske, opl›sning                                                                           A
+INFVSKVinfusionsv‘ske i viaflexbeholder                                                                    I
+INFVSKXinfusionsv‘ske i excel                                                                              I
+INHAER inhalationsaerosol                                                                                  I
+INHALATinhalator                                                                                           A
+INHDAMPinhalationsdamp                                                                                     A
+INHDOPLopl›sning til inhalationsdamp                                                                       A
+INHDVSKv‘ske til inhalationsdamp                                                                           A
+INHGAS inhalationsgas                                                                                      A
+INHPUL inhalationspulver                                                                                   A
+INHPULAinhalationspulver, afdelt                                                                           A
+INHPULKinhalationspulver i kapsler                                                                         A
+INHSPR inhalationsspray                                                                                    A
+INHSPREinhalationsspray, emulsion                                                                          A
+INHSPROinhalationsspray, opl›sning                                                                         A
+INHSPRSinhalationsspray, suspension                                                                        A
+INHVNEBinhalationsv‘ske til nebulisator                                                                    A
+INHVNEOinhalationsv‘ske til nebulisator, opl›sning                                                         A
+INHVNESinhalationsv‘ske til nebulisator, suspension                                                        A
+INHVNOEinhalationsv‘ske til nebulisator, opl›sning, enkeltdosisbeholder                                    A
+INHVSK inhalationsv‘ske                                                                                    I
+INHVSKEinhalationsv‘ske (endosisbeholder)                                                                  I
+INHVSKNinhalationsv‘ske til narkose                                                                        I
+INJA   injektionsv‘ske, Alutard                                                                            I
+INJASQ injektionsv‘ske, Alutard-sq                                                                         I
+INJCYL injektionsv‘ske, cylinderampul                                                                      A
+INJKOSSkoncentrat og solvens til injektionsv‘ske, suspension                                               A
+INJOCYLinjektionsv‘ske, opl›sning, cylinderampul                                                           A
+INJOOPLinjektionsv‘ske olieopl›sning                                                                       I
+INJPRP injektionspr‘parat                                                                                  I
+INJPSD pulver og solvens til injektionsv‘ske, dispergering                                                 A
+INJPSO pulver og solvens til injektionsv‘ske, opl›sning                                                    A
+INJPSOSpulver og solvens til injektionsv‘ske, opl›sning, fyldt injektionsspr›jte                           A
+INJPSS pulver og solvens til injektionsv‘ske, suspension                                                   A
+INJPUL pulver til injektionsv‘ske                                                                          A
+INJPULOpulver til injektionsv‘ske, opl›sning                                                               A
+INJPULSpulver til injektionsv‘ske, suspension                                                              A
+INJSCYLinjektionsv‘ske, suspension, cylinderampul                                                          A
+INJSET injektionss‘t                                                                                       A
+INJSUB injektionssubstans                                                                                  I
+INJSUBSinjektionssubstans og solvens                                                                       I
+INJSV  injektionssubstans + injektionsv‘ske                                                                I
+INJSVV injektionssubstans + injektionsv‘ske (vaccine)                                                      I
+INJVCORinjektionsv‘ske, intracoronar                                                                       A
+INJVES injektionsv‘ske engangsspr›jte                                                                      I
+INJVIM injektionsv‘ske, i.m.                                                                               A
+INJVIV injektionsv‘ske, i.v.                                                                               A
+INJVOENinjektionsv‘ske, opl›sning, enkeltdosisbeholder                                                     A
+INJVOFPinjektionsv‘ske, opl›sning, flerdosispen                                                            A
+INJVOIMinjektionsv‘ske, opl›sning, i.m.                                                                    A
+INJVOISinjektionsv‘ske, opl›sning, fyldt injektionsspr›jte                                                 A
+INJVOIVinjektionsv‘ske, opl›sning, i.v.                                                                    A
+INJVOP injektionsv‘ske, opl›sning, fyldt pen                                                               A
+INJVPV injektionsv‘ske til prim‘r vaccination                                                              A
+INJVRE injektionsv‘ske til revaccination                                                                   A
+INJVSFPinjektionsv‘ske, suspension, flerdosispen                                                           A
+INJVSIMinjektionsv‘ske, suspension, i.m.                                                                   A
+INJVSISinjektionsv‘ske, suspension, fyldt injektionsspr›jte                                                A
+INJVSK injektionsv‘ske                                                                                     A
+INJVSKEinjektionsv‘ske, emulsion                                                                           A
+INJVSKOinjektionsv‘ske, opl›sning                                                                          A
+INJVSKSinjektionsv‘ske, suspension                                                                         A
+INJVSP injektionsv‘ske, suspension, fyldt pen                                                              A
+INJVVACinjektionsv‘ske (vaccine)                                                                           I
+INJVVSQinjektionsv‘ske, vandig sq                                                                          I
+INKONC injektions- og infusionskoncentrat                                                                  A
+INPULKOpulver til koncentrat til injektions- og infusionsv‘ske, opl›sning                                  A
+INPULSOpulver og solvens til injektions- og infusionsv‘ske, opl›sning                                      A
+INPULVOpulver til injektions- og infusionsv‘ske, opl›sning                                                 A
+INSASQ injektionssubstans (aquagen-sq)                                                                     I
+INSET  infusions-injektionss‘t                                                                             I
+INSTVSKinstillationsv‘ske                                                                                  I
+INSUB  injektions- og infusionssubstans                                                                    I
+INSUBIMinjektionssubstans, intramuskul‘r                                                                   I
+INSUBIVinjektionssubstans, intraven›s                                                                      I
+INSVVS instillationsv‘ske, suspension                                                                      I
+INTMAESintramammarier i engangsspr›jter                                                                    I
+INTMAM intramammarier                                                                                      A
+INTMAMEintramamm‘r emulsion                                                                                A
+INTMAMOintramamm‘r opl›sning                                                                               A
+INTMAMSintramamm‘r suspension                                                                              A
+INTMAOSintramammarier oliesuspension                                                                       I
+INTMASAintramamm‘r salve                                                                                   A
+INVKONOinjektionsv‘ske/konc. til infusionsv‘ske, opl›sning                                                 A
+INVSK  injektions-/infusionsv‘ske                                                                          A
+INVSKE injektions-/infusionsv‘ske, emulsion                                                                A
+INVSKO injektions-/infusionsv‘ske, opl›sning                                                               A
+INVSKOEinjektions-/infusionsv‘ske, opl›sning, enkeltdosisbeholder                                          A
+IRUIND intraruminalt indl‘g                                                                                A
+IRUINDKkontinuert intraruminalt indl‘g                                                                     A
+IRUINDPperiodevis intraruminalt indl‘g                                                                     A
+ISUBALBinjektionssubstans med albumin-diluent                                                              I
+ISUBDEPinjektionssubstans med depot-diluent                                                                I
+ISUBGLYinjektionssubstans med glycerol-diluent                                                             I
+ISUBVACinjektionssubstans (vaccine)                                                                        I
+IUTIND intrauterint indl‘g                                                                                 A
+IUTPES intrauterint pessar                                                                                 I
+KANYL  kanyler                                                                                             I
+KAP    kapsler                                                                                             A
+KAPB   kapsler, bl›de                                                                                      A
+KAPH   kapsler, h†rde                                                                                      A
+KAPMOD kapsler med modificeret udl›sning                                                                   A
+KAPMODBkapsler med modificeret udl›sning, bl›de                                                            A
+KAPMODHkapsler med modificeret udl›sning, h†rde                                                            A
+KATCREMkatetercreme                                                                                        I
+KLY    klysma                                                                                              A
+KNCEM  knoglecement                                                                                        I
+KONC   koncentrat                                                                                          I
+KONCINFkoncentrat til infusionsv‘ske, opl›sning                                                            A
+KONCINJkoncentrat til injektionsv‘ske, opl›sning                                                           A
+KONDOMSkondom med s‘ddr‘bende creme                                                                        I
+KONINFDkoncentrat til infusionsv‘ske, dispersion                                                           A
+KONKUTOkoncentrat til kutanopl›sning                                                                       A
+KONKUTVkoncentrat til kutanv‘ske                                                                           A
+KONLIN koncentrat til liniment                                                                             I
+KONORAOkoncentrat til oral opl›sning                                                                       A
+KONORASkoncentrat til oral suspension                                                                      A
+KONORODkoncentrat til oral opl›sning til brug i drikkevand                                                 A
+KONORSFkoncentrat til oral suspension til anvendelse i foder                                               A
+KONVAC koncentrat til vaccination                                                                          I
+KUG    k‘de med kugler                                                                                     I
+KUTANTEintrakutantest                                                                                      I
+KUTEMULkutanemulsion                                                                                       A
+KUTOPL kutanopl›sning                                                                                      A
+KUTPAS kutanpasta                                                                                          A
+KUTSKUMkutanskum                                                                                           A
+KUTSPR kutanspray                                                                                          A
+KUTSPROkutanspray, opl›sning                                                                               A
+KUTSPRPkutanspray, pulver                                                                                  A
+KUTSPRSkutanspray, suspension                                                                              A
+KUTSUS kutansuspension                                                                                     A
+KUTVSK kutanv‘ske                                                                                          A
+LAKNEG medicinsk neglelak                                                                                  A
+LAKPROTtandproteselak                                                                                      A
+LAKTANDlak til pensling p† t‘nder                                                                          I
+LAN    lancet                                                                                              I
+LIN    liniment                                                                                            I
+LINHB  liniment til h†rbunden                                                                              I
+LINSPRIliniment, spritholdig                                                                               I
+LINVIS liniment, visk›s                                                                                    I
+LOTION lotion                                                                                              I
+MEDGAS medicinsk gas                                                                                       A
+MIK    mikstur                                                                                             I
+MIKEDOSmikstur, enkeltdosisbeholder                                                                        I
+MIKOPL mikstur, opl›sning                                                                                  I
+MIKPSO pulver og solvens til mikstur, opl›sning                                                            I
+MIKPULOpulver til mikstur, opl›sning                                                                       I
+MIKPULSpulver til mikstur, suspension                                                                      I
+MIKPUMPmikstur, doseringspumpe                                                                             I
+MIKSF  mikstur, sukkerfri                                                                                  I
+MIKSUS mikstur, suspension                                                                                 I
+MUHUGELmundhulegel                                                                                         A
+MUHUSPRmundhulespray, opl›sning                                                                            A
+MUSKVSKmundskyllev‘ske                                                                                     A
+NASAER n‘seaerosol                                                                                         I
+NASDPSOpulver og solvens til n‘sedr†ber, opl›sning                                                         A
+NASDPSSpulver og solvens til n‘sedr†ber, suspension                                                        A
+NASDRB n‘sedr†ber                                                                                          A
+NASDRBEn‘sedr†ber, emulsion                                                                                A
+NASDRBOn‘sedr†ber, opl›sning                                                                               A
+NASDRBSn‘sedr†ber, suspension                                                                              A
+NASPUL n‘sepudder                                                                                          A
+NASSALVn‘sesalve                                                                                           A
+NASSPR n‘sespray                                                                                           A
+NASSPRDn‘sespray (dosisspray)                                                                              I
+NASSPREn‘sespray, emulsion                                                                                 A
+NASSPRNn‘sespray, nebulisator                                                                              A
+NASSPROn‘sespray, opl›sning                                                                                A
+NASSPRSn‘sespray, suspension                                                                               A
+NASSTFTn‘sestift                                                                                           A
+OJBADV ›jenbadevand                                                                                        A
+OJDRB  ›jendr†ber                                                                                          A
+OJDRBEB›jendr†ber, enkeltdosisbeholder                                                                     A
+OJDRBO ›jendr†ber, opl›sning                                                                               A
+OJDRBOE›jendr†ber, opl›sning, enkeltdosisbeholder                                                          A
+OJDRBS ›jendr†ber, suspension                                                                              A
+OJDRBSE›jendr†ber, suspension, enkeltdosisbeholder                                                         A
+OJDRPSOpulver og solvens til ›jendr†ber, opl›sning                                                         A
+OJDRPSSpulver og solvens til ›jendr†ber, suspension                                                        A
+OJDRSAL›jendr†ber/›jensalve                                                                                A
+OJGEL  ›jengel                                                                                             A
+OJGELED›jengel, enkeltdosisbeholder                                                                        A
+OJLAM  ›jenlamel                                                                                           A
+OJNSSAL›jen- og n‘sesalve                                                                                  A
+OJSALV ›jensalve                                                                                           A
+OLEMVAColieemulsion (vaccine)                                                                              I
+OLIE   olie                                                                                                I
+OODRB  ›jen- og ›redr†ber                                                                                  A
+OODRBO ›jen- og ›redr†ber, opl›sning                                                                       A
+OODRBS ›jen- og ›redr†ber, suspension                                                                      A
+OOSALV ›jen- og ›resalve                                                                                   A
+OPL    opl›sning                                                                                           I
+OPLBLODopl›sning til blodstabilisering                                                                     A
+OPLDES opl›sning til desinfektion                                                                          I
+OPLFOR opl›sning til fortynding                                                                            I
+OPLFORVopl›snings- og fortyndingsv‘ske                                                                     A
+OPLHH  opl›sning (til h†rbund og hud)                                                                      I
+OPLHUD opl›sning til anvendelse p† huden                                                                   I
+OPLLOKTopl›sning til lokal anvendelse (t›rstof)                                                            I
+OPLMUBEopl›sning til mundbehandling                                                                        I
+OPLNAS opl›sning til nasal og bronkial provokation                                                         I
+OPLOKU opl›sning til intraokul‘r anvendelse                                                                A
+OPLORNAopl›sning til oral og nasal anvendelse                                                              A
+OPLP   opl›sning til priktest                                                                              A
+OPLPE  opl›sning til pensling                                                                              I
+OPLPLASopl›sning til plasmaferese                                                                          I
+OPLPS  opl›sning til priktest (Soluprick)                                                                  A
+OPLPSQ opl›sning til priktest (Soluprick-SQ)                                                               A
+OPLPSQUopl›sning til priktest (Soluprick-SQU)                                                              A
+OPLUDV opl›sning til udvortes brug                                                                         I
+OPLVAC opl›sning til vaccine                                                                               I
+OPLVACNopl›sning til vaccination                                                                           I
+OPLVANDopl›sning, vandig                                                                                   I
+ORAGDROgranulat til orale dr†ber, opl›sning                                                                A
+ORAGRAOgranulat til oral opl›sning                                                                         A
+ORAGRASgranulat til oral suspension                                                                        A
+ORALDRBorale dr†ber                                                                                        A
+ORALDREorale dr†ber, emulsion                                                                              A
+ORALDROorale dr†ber, opl›sning                                                                             A
+ORALDRSorale dr†ber, suspension                                                                            A
+ORALEMUoral emulsion                                                                                       A
+ORALGELoral gel                                                                                            A
+ORALOPEoral opl›sning, enkeltdosisbeholder                                                                 A
+ORALOPLoral opl›sning                                                                                      A
+ORALOPVoral opl›sning til brug i drikkevand                                                                A
+ORALPASoral pasta                                                                                          A
+ORALPUEoralt pulver, enkeltdosisbeholder                                                                   A
+ORALPULoralt pulver                                                                                        A
+ORALSUEoral suspension, enkeltdosisbeholder                                                                A
+ORALSUSoral suspension                                                                                     A
+ORALSUVoral suspension til brug i drikkevand                                                               A
+ORALVSKoral v‘ske                                                                                          A
+ORAPULOpulver til oral opl›sning                                                                           A
+ORAPULSpulver til oral suspension                                                                          A
+ORAPUOBpulver til oral opl›sning, breve                                                                    A
+ORAPUOEpulver til oral opl›sning, enkeltdosisbeholder                                                      A
+ORAPUSBpulver til oral suspension, breve                                                                   A
+ORAPUSEpulver til oral suspension, enkeltdosisbeholder                                                     A
+ORDRB  ›redr†ber                                                                                           A
+ORDRBE ›redr†ber, emulsion                                                                                 A
+ORDRBO ›redr†ber, opl›sning                                                                                A
+ORDRBS ›redr†ber, suspension                                                                               A
+ORGOPVSorganopbevaringsv‘ske                                                                               A
+ORSALV ›resalve                                                                                            A
+PARTIKLpartikler                                                                                           I
+PAS    pasta                                                                                               I
+PASCEM pasta/cement                                                                                        I
+PASRUS pasta til r›ntgenunders›gelse                                                                       I
+PELLET pellets, medicinsk                                                                                  A
+PEROPL perfusionsopl›sning                                                                                 I
+PERVSK peritonealdialysev‘ske                                                                              A
+PERVSKOperitonealdialysev‘ske, opl›sning                                                                   A
+PERVTKSperitonealdialysev‘ske, to-kammer system                                                            A
+PESCREMpessarcreme                                                                                         I
+PILLER piller                                                                                              I
+PILLEROpiller, overtrukne                                                                                  I
+PLASLAPplaster til lappepr›ve                                                                              I
+PLASTERmedicinsk plaster                                                                                   A
+POURON pour-on                                                                                             A
+POURONEpour-on, emulsion                                                                                   A
+POURONOpour-on, opl›sning                                                                                  A
+POURONSpour-on, suspension                                                                                 A
+PRECURSradiofarmaceutisk m‘rkningsopl›sning                                                                A
+PREFOD premix til foderl‘gemiddel                                                                          A
+PREMIX premix                                                                                              A
+PREPSETradiofarmaceutisk pr‘parationss‘t                                                                   A
+PROOPFYproteseopfyldning                                                                                   I
+PSOIVEApulver og solvens til opl›sning til intravesikal anvendelse                                         A
+PSTGELIpulver og solvens til tandk›dsgel, fyldt injektionsspr›jte                                          A
+PUDDER pudder                                                                                              A
+PUDSPASpudsepasta                                                                                          I
+PUIBIVOpulver til opl›sning til intravesikal anvendelse og til injektionsv‘ske, opl›sning                  A
+PULBLAVpulver til bl‘reskyllev‘ske                                                                         A
+PULDRSPpulver til brug i drikkevand eller spray                                                            A
+PULDVACpulver til brug i drikkevand (vaccine)                                                              I
+PULIMPOpulver til implantation, opl›sning                                                                  A
+PULIMPSpulver til implantation, suspension                                                                 A
+PULINHVpulver til inhalationsv‘ske                                                                         I
+PULINSVpulver til instillationsv‘ske                                                                       I
+PULNASKpulver til nasal inhalation (kapsler)                                                               I
+PULOJDRpulver til ›jendr†ber                                                                               I
+PULOPDRpulver til opl›sning i drikkevand                                                                   A
+PULOPLLpulver til opl›sning til lokal anvendelse                                                           I
+PULOPONpulver til opl›sning til ocunasal anvendelse                                                        A
+PULORESpulver til oral suspension/rektalv‘ske, suspension                                                  A
+PULOVACpulver til opl›sning, vaccine                                                                       A
+PULREKOpulver til rektalv‘ske, opl›sning                                                                   A
+PULREKSpulver til rektalv‘ske, suspension                                                                  A
+PULSUSVpulver til suspension ventrikel                                                                     I
+PULTOKKpulver til opl›sning til kutan og intrakavernal anvendelse                                          A
+PULTOPLpulver til opl›sning                                                                                I
+PULV   pulver                                                                                              I
+PULVAOPpulver, vandopl›seligt                                                                              I
+PULVASKpulver til vaskbehandling                                                                           I
+PULVMIKpulver til mikstur                                                                                  I
+PULVOPLpulver, opl›seligt                                                                                  I
+PULVSUSpulver til suspension                                                                               I
+PULVUOPpulver, uopl›seligt                                                                                 I
+REKCREMrektalcreme                                                                                         A
+REKGEL rektalgel                                                                                           A
+REKKAP rektalkapsler                                                                                       A
+REKSALVrektalsalve                                                                                         A
+REKSKUMrektalskum                                                                                          A
+REKTABOtabletter til rektalv‘ske, opl›sning                                                                A
+REKTABStabletter til rektalv‘ske, suspension                                                               A
+REKTAM rektaltampon                                                                                        A
+REKVSEErektalv‘ske, emulsion, enkeltdosisbeholder                                                          A
+REKVSK rektalv‘ske                                                                                         A
+REKVSKErektalv‘ske, emulsion                                                                               A
+REKVSKOrektalv‘ske, opl›sning                                                                              A
+REKVSKSrektalv‘ske, suspension                                                                             A
+REKVSOErektalv‘ske, opl›sning, enkeltdosisbeholder                                                         A
+REKVSSErektalv‘ske, suspension, enkeltdosisbeholder                                                        A
+RESORIBresoribletter                                                                                       I
+RESOSLIresoribletter, slimhindekl‘bende                                                                    A
+RESOSUBresoribletter, sublinguale                                                                          A
+SACHET sachetter                                                                                           I
+SAEBE  s‘be, medicinsk                                                                                     I
+SAFT   saft                                                                                                I
+SALV   salve                                                                                               A
+SALVAERsalve i aerosolbeholder                                                                             I
+SALVKOMsalvekompres                                                                                        I
+SALVNEGsalve til negle                                                                                     I
+SALVOPLsalve og opl›sning                                                                                  I
+SALVST salve, steril                                                                                       I
+SHAM   shampoo                                                                                             A
+SHSALV shuntsalve                                                                                          I
+SINJVSKinjektionsv‘ske (serum)                                                                             I
+SKYLVSKskyllev‘ske                                                                                         A
+SOLUBL solubletter                                                                                         I
+SOLV   solvens                                                                                             I
+SOLVPA solvens til parenteral anvendelse                                                                   A
+SPOTON spot-on                                                                                             A
+SPOTONEspot-on, emulsion                                                                                   A
+SPOTONOspot-on, opl›sning                                                                                  A
+SPOTONSspot-on, suspension                                                                                 A
+SPRAY  spray                                                                                               I
+SPRIT  sprit                                                                                               I
+SPROPL sprayopl›sning                                                                                      I
+SPRPUD spraypudder                                                                                         I
+STAVE  stave                                                                                               I
+STIFT  stift                                                                                               I
+STRIPS strips                                                                                              I
+STTORSTsterilt t›rstof                                                                                     I
+STVAND sterilt vand                                                                                        I
+SUBLSPRsublingualspray                                                                                     A
+SUBST  substans                                                                                            I
+SUGTAB sugetabletter                                                                                       A
+SUP    suppositorier                                                                                       A
+SUS    suspension                                                                                          I
+SYRUP  syrup                                                                                               A
+TAB    tabletter                                                                                           A
+TABDIS dispergible tabletter                                                                               A
+TABFILMfilmovertrukne tabletter                                                                            A
+TABMOD tabletter med modificeret udl›sning                                                                 A
+TABOPL opl›selige tabletter                                                                                A
+TABOPOKopl›selige tabletter og pulver til oral opl›sning, kombinationspakning                              A
+TABOTR overtrukne tabletter                                                                                A
+TABSMELsmeltetabletter                                                                                     A
+TABSOL tabletter og solvens                                                                                I
+TABTOPLtabletter til opl›sning                                                                             I
+TAND   tandpasta                                                                                           A
+TINKTURtinktur                                                                                             A
+TORS   t›rstof                                                                                             I
+TYGGUM medicinsk tyggegummi                                                                                A
+TYGGUMOovertrukne tyggegummi                                                                               A
+TYGTAB tyggetabletter                                                                                      A
+URSTIFTuretralstift                                                                                        A
+URTETE urtete                                                                                              A
+URTETEDurtete, enkeltdosisbeholder                                                                         A
+UTEKAP uteritorier, kapsler                                                                                A
+UTER   uteritorier                                                                                         A
+UTESUS intrauterinsuspension                                                                               A
+UTETAB uteritorier, tabletter                                                                              A
+VAC    vaccine                                                                                             I
+VACPO  vaccine til peroral indgift                                                                         I
+VAEVKL v‘vskl‘ber                                                                                          A
+VAG    vagitorier                                                                                          A
+VAGCREMvaginalcreme                                                                                        A
+VAGGEDSvaginalgel, enkeltdosisbeholder                                                                     A
+VAGGEL vaginalgel                                                                                          A
+VAGIND vaginalindl‘g                                                                                       A
+VAGKAP vaginalkapsler                                                                                      A
+VAGKAPBvaginalkapsler, bl›de                                                                               A
+VAGKAPHvaginalkapsler, h†rde                                                                               A
+VAGOCREvagitorier og creme                                                                                 A
+VAGRINGvaginalring                                                                                         A
+VAGSALVvaginalsalve                                                                                        A
+VAGSKSPvaginalskum, spraybeholder                                                                          A
+VAGSKUMvaginalskum                                                                                         A
+VAGSPIRintra-vaginal spiral                                                                                I
+VAGSVAMvaginalsvamp                                                                                        A
+VAGTAB vaginaltabletter                                                                                    A
+VAGTAM vaginaltampon, medicinsk                                                                            A
+VAGVSK vaginalskyllev‘ske                                                                                  A
+VASEL  vaselin                                                                                             I
+ORAREKSoral suspension og rektalv‘ske, suspension                                                          A
+KSINFKOkoncentrat og solvens til koncentrat til infusionsv‘ske, opl›sning                                  A
+INFVOENinfusionsv‘ske, opl›sning, enkeltdosisbeholder, i.v.                                                A
+DEPKAPBdepotkapsler, bl›de                                                                                 A
+ECGELPSpulver og solvens til endocervikalgel                                                               A
+ENTKAPBenterokapsler, bl›de                                                                                A
+ETPINPOendotracheopulmonal instillationsv‘ske, pulver til opl›sning                                        A
+ETPINPSendotracheopulmonal instillationsv‘ske, pulver og solvens til opl›sning                             A
+ETPINV endotracheopulmonal instillationsv‘ske                                                              A
+ETPINVOendotracheopulmonal instillationsv‘ske, opl›sning                                                   A
+ETPINVSendotracheopulmonal instillationsv‘ske, suspension                                                  A
+GASVSK gastroenteralv‘ske                                                                                  A
+GASVSKEgastroenteralv‘ske, emulsion                                                                        A
+GASVSKOgastroenteralv‘ske, opl›sning                                                                       A
+GASVSKSgastroenteralv‘ske, suspension                                                                      A
+GINGGELtandk›dsgel                                                                                         A
+GINGOPLopl›sning til tandk›d                                                                               A
+GINGPAStandk›dspasta                                                                                       A
+GRANULEgranuler, enkeltdosisbeholder                                                                       A
+GRASYR granulat til syrup                                                                                  A
+GURGL  gurglevand                                                                                          A
+GURGPUOpulver til gurglevand, opl›sning                                                                    A
+GURGTABtabletter til gurglevand, opl›sning                                                                 A
+HDIFVSKh‘modiafiltreringsv‘ske, opl›sning                                                                  A
+IMPTAMPimpr‘gneret tampon                                                                                  A
+INHDAKPinhalationsdamp, kapsler                                                                            A
+INHDAPUinhalationsdamp, pulver                                                                             A
+INHDSALsalve til inhalationsdamp                                                                           A
+INHVNEEinhalationsv‘ske til nebulisator, emulsion                                                          A
+KOLLOD kollodium                                                                                           A
+KONCSTEkoncentrat, sterilt                                                                                 A
+KONGURGkoncentrat til gurglevand                                                                           A
+KUTSTFTkutanstift                                                                                          A
+KUTSVMPkutansvamp, medicinsk                                                                               I
+MAVEVSKmaveskyllev‘ske                                                                                     A
+MUHUDRBmundhuledr†ber                                                                                      A
+MUHUKAPmundhulekapsler                                                                                     A
+MUHUPASmundhulepasta                                                                                       A
+MUHUVSKmundhulev‘ske                                                                                       A
+MUHUVSOmundhulev‘ske, opl›sning                                                                            A
+MUHUVSSmundhulev‘ske, suspension                                                                           A
+MUSKTABtabletter til mundskyllev‘ske, opl›sning                                                            A
+NASCREMn‘secreme                                                                                           A
+NASGEL n‘segel                                                                                             A
+NASSKYLn‘seskyllev‘ske                                                                                     A
+OJBADSRsolvens til rekonstitution af ›jenbadevand                                                          A
+OJCREME›jencreme                                                                                           A
+OJDRBSRsolvens til rekonstitution af ›jendr†ber                                                            A
+OMSLAG omslag                                                                                              A
+OPLIONTopl›sning til iontoforese                                                                           A
+OPLVES opl›sning til intravesikal anvendelse                                                               A
+ORALGUMoral gum                                                                                            A
+ORECREM›recreme                                                                                            A
+OREGEL ›regel                                                                                              A
+OREPUD ›repudder                                                                                           A
+ORESPR ›respray                                                                                            A
+ORESPRE›respray, emulsion                                                                                  A
+ORESPRO›respray, opl›sning                                                                                 A
+ORESPRS›respray, suspension                                                                                A
+ORESTFT›restift                                                                                            A
+ORETAMP›retampon                                                                                           A
+OREVSK ›reskyllev‘ske                                                                                      A
+OREVSKE›reskyllev‘ske, emulsion                                                                            A
+OREVSKO›reskyllev‘ske, opl›sning                                                                           A
+PULOPNEpulver til opl›sning til nebulisator                                                                A
+PULSUNEpulver til suspension til nebulisator                                                               A
+REKVSKKrektalv‘ske koncentrat                                                                              A
+SYRUPULpulver til syrup                                                                                    A
+SAARSTFs†rstift                                                                                            A
+TABORODsmeltetabletter                                                                                     A
+URETGELuretralgel                                                                                          A
+URTEPUOpulver til urtete, opl›sning                                                                        A
+VAEVKPSpulver og solvens til v‘vskl‘ber                                                                    A
+VAGHENFvagitorier, hurtigt henfaldende                                                                     A
+VAGVSKEvaginalskyllev‘ske, emulsion                                                                        A
+VAGVSKOvaginalskyllev‘ske, opl›sning                                                                       A
+VAGVSKSvaginalskyllev‘ske, suspension                                                                      A
+VAGVTABtabletter til vaginalskyllev‘ske, opl›sning                                                         A
+BUKTAB bukkaltabletter                                                                                     A
+OBLATKPoblatkapsler                                                                                        A
+INHDATBtabletter til inhalationsdamp                                                                       A
+IUTVSK intrauterinv‘ske                                                                                    A
+KONINFEkoncentrat til infusionsv‘ske, emulsion                                                             A
+INJOVENinjektionsv‘ske, opl›sning, enkeltdosisbeholder, i.v.                                               A
+INJOVSEinjektionsv‘ske, opl›sning, fyldt injektionsspr›jte, enkeltdosisbeholder, i.v.                      A
+PREPINFradiofarmaceutisk pr‘parationss‘t til infusion                                                      A
+ENTGEL enteralgel                                                                                          A
+MEDSVMPmedicinsk svamp                                                                                     A
+INJOASEinjektionsv‘ske, opl›sning, fyldt injektionsspr›jte, enkeltdosisbeholder, intraartikul‘r anv.       A
+HFILDIAh‘modialyse-/h‘mofiltreringsv‘ske                                                                   A
+INHDBRTbrusetabletter til inhalationsdamp                                                                  A
+DISPERSdispersion                                                                                          A
+ESINSVSendosinusalskyllev‘ske, suspension                                                                  A
+TABFMODfilmovertrukne tabletter med modificeret udl›sning                                                  A
+ORAGRSSgranulat og solvens til oral suspension                                                             A
+INHDAEMinhalationsdamp, emulsion                                                                           A
+INJGEL injektionsgel                                                                                       A
+KONINFSkoncentrat til infusionsv‘ske, suspension                                                           A
+INJKOS koncentrat og solvens til injektionsv‘ske                                                           A
+INJKOSOkoncentrat og solvens til injektionsv‘ske, opl›sning                                                A
+INJLYOSlyofilisat til injektionsv‘ske, suspension                                                          A
+KONVESOkoncentrat til opl›sning til intravesikal anvendelse                                                A
+OPLBLFMopl›sning til modificering af blodfraktioner                                                        A
+PASTIL pastiller                                                                                           A
+PERDGELperiodontalgel                                                                                      A
+PERDINDperiodontalindl‘g                                                                                   A
+PERDPULperiodontalpulver                                                                                   A
+KUTOPPSpulver og solvens til kutanopl›sning                                                                A
+ESINOPSpulver og solvens til opl›sning til anvendelse i bihulerne                                          A
+ORAOPUSpulver og solvens til oral opl›sning                                                                A
+ORASPUSpulver og solvens til oral suspension                                                               A
+ORDRPSSpulver og solvens til ›redr†ber, suspension                                                         A
+HDIAKOPpulver til h‘modialysekoncentrat, opl›sning                                                         A
+INJPUKOpulver til koncentrat til injektionsv‘ske, opl›sning                                                A
+PULVESOpulver til opl›sning til intravesikal anvendelse                                                    A
+PULVESSpulver til suspension til intravesikal anvendelse                                                   A
+REKSTAStabletter og opl›sningsmiddel til rektalv‘ske, suspension                                           A
+ORASUSTtabletter til oral suspension                                                                       A
+LEVAEVKv‘vskultur, levende                                                                                 A
+DEPGROSdepotgranulat til oral suspension                                                                   A
+INJSOSEopl›sning og suspension til injektionsv‘ske, suspension, fyldt injektionsspr›jte                    A
+INJPSSSpulver og solvens til injektionsv‘ske, suspension, fyldt injektionsspr›jte                          A
+IMPLANFimplantat, fyldt injektionsspr›jte                                                                  A
+SUBLOPLsublingualopl›sning                                                                                 A
+SUBLVSKsublingualv‘ske                                                                                     A
+INJLYSSlyofilisat og solvens til injektionsv‘ske, suspension                                               A
+INJPUOSpulver til injektionsv‘ske, opl›sning/suspension                                                    A
+VAGTCREvaginaltabletter og creme                                                                           A
+ORALYSSlyofilisat og solvens til oral suspension                                                           A
+PULOJNSpulver til ›jen- og n‘sedr†ber, suspension                                                          A
+INFVSKSinfusionsv‘ske, suspension                                                                          A
+LYOJNDSlyofilisat til ›jen- og n‘sedr†ber, suspension                                                      A
+BADKONSkoncentrat til badevand, suspension                                                                 A
+BADKONOkoncentrat til badevand, opl›sning                                                                  A
+BADKONEkoncentrat til badevand, emulsion                                                                   A
+INJOHTGinjektionsv‘ske, opl›sning, h‘tteglas                                                               A
+DEPGRAEdepotgranulat, enkeltdosisbeholder                                                                  A
+DEPGOSEdepotgranulat til oral suspension, enkeltdosisbeholder                                              A
+INJVOFBinjektionsv‘ske, opl›sning, flerdosisbeholder                                                       A
+INJOVSBinjektionsv‘ske, opl›sning, fyldt injektionsspr›jte med beskyttelsesh‘tte                           A
+INFPKOVpulver til koncentrat og opl›sningsv‘ske til infusionsv‘ske                                         A
+ORDRKSU›redr†ber, suspension og kutansuspension                                                            A
+MUHUCREmundhulecreme                                                                                       A
+TRADERStransdermalt system                                                                                 A
+MEDGASKmedicinsk gas, komprimeret                                                                          A
+MEDGASCmedicinsk gas, kryogen                                                                              A
+MEDGASFmedicinsk gas, flydende                                                                             A
+SKAROPLopl›sning til skarifikationstest                                                                    A
+PROVPLAplaster til provokationstest                                                                        A
+PROVOPLopl›sning til provokationstest                                                                      A
+ORAGRSEgranulat til oral suspension, enkeltdosisbeholder                                                   A
+DEPINJOdepotinjektionsv‘ske, opl›sning                                                                     A
+DEPINJSdepotinjektionsv‘ske, suspension                                                                    A
+ENDEPTBenterodepottabletter                                                                                A
+INJSHTGinjektionsv‘ske, suspension, h‘tteglas                                                              A
+KONCINOkoncentrat til injektions- og infusionsv‘ske, opl›sning                                             A
+INJLYSOlyofilisat og solvens til injektionsv‘ske, opl›sning                                                A
+INJLYOClyofilisat og solvens til injektionsv‘ske, opl›sning, cylinderampul                                 A
+INHVSKOinhalationsv‘ske, opl›sning                                                                         A
+INFKPSOpulver og solvens til koncentrat til infusionsv‘ske, opl›sning                                      A
+INFKOSOkoncentrat og solvens til infusionsv‘ske, opl›sning                                                 A
+LYOSOSNlyofilisat og solvens, suspension til nasal administration                                          A
+GRANUL granuler                                                                                            A
+GURGMUSgurglevand/mundskyllev‘ske                                                                          A
+INHPULTinhalationspulver, tabletter                                                                        A
+KONSKUTkoncentrat og solvens til kutanopl›sning                                                            A
+KUTSPSAkutanspray, salve                                                                                   A
+MUSKPULpulver til mundskyllev‘ske                                                                          A
+NAMUHUOn‘sespray og mundhulev‘ske, opl›sning                                                               A
+ORAOTPUtabletter og pulver til oral opl›sning                                                              A
+ENTGORSenterogranulat til oral suspension                                                                  A
+GRAMORSgranulat med modificeret udl›sning til oral suspension                                              A
+PERVKONkoncentrat til peritonealdialysev‘ske                                                               A
+TYDITABtyggetabletter/dispergible tabletter                                                                A
+BLODFRMblodfraktions-modifier                                                                              A
+BADEMULbadevand, emulsion                                                                                  A
+BADSUSPbadevand, suspension                                                                                A
+BADKONCbadevand, koncentreret                                                                              A
+BISTRIPbikubestrip                                                                                         A
+HALSBNDhalsb†nd                                                                                            A
+IUTOPL intrauterinopl›sning                                                                                A
+NEBOPL nebulisationsopl›sning                                                                              A
+KONFISKkoncentrat til opl›sning til behandling af fisk                                                     A
+PATBAD pattebadevand                                                                                       A
+PATBADEpattebadevand, emulsion                                                                             A
+PATBADOpattebadevand, opl›sning                                                                            A
+PATBADSpattebadevand, suspension                                                                           A
+PATSPR pattespray                                                                                          A
+PATSPROpattespray, opl›sning                                                                               A
+PATSTFTpattestift                                                                                          A
+BIPAPIRr›gpapir til bier                                                                                   A
+BISTIFTr›gstift til bier                                                                                   A
+SLIKSTNslikkesten                                                                                          A
+OREBRIK›rebrik                                                                                             A
+INVSKOFinjektions-/infusionsv‘ske, opl›sning, flerdosisbeholder                                            A
+INJOSPCinjektionsv‘ske, opl›sning, fyldt injektionssp›jte/cylinderampul                                    A
+ECUTST epicutantest                                                                                        A
+INJVSE injektionsv‘ske, suspension, enkeltdosisbeholder                                                    A
+SPIVO  solvens til parenteral anvendelse/injektionsv‘ske, opl›sning                                        A
+MUHUPPPmundhulepulver, portionspose                                                                        A
+INJSEE suspension og emulsion til injektionsv‘ske, emulsion                                                A
+KOPABAOkoncentrat til pattebadevand, opl›sning                                                             A
+ORAGROEgranulat til oral opl›sning, enkeltdosisbeholder                                                    A
+INVSKOIinjektions-/infusionsv‘ske, opl›sning, fyldt injektionsspr›jte                                      A
+KUTAPLAkutanplaster                                                                                        A
+BADSINSkoncentrat til badevand, suspension og injektionsv‘ske, suspension                                  A
+INFVOOOinfusionsv‘ske, opl›sning og oral opl›sning                                                         A
+LYODV  lyofilisat til anvendelse i drikkevand                                                              A
+PULDV  pulver til anvendelse i drikkevand                                                                  A

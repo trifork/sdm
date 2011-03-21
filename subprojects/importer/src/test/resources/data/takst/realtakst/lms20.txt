@@ -1,0 +1,14 @@
+                                                             
+AIngen     Ingen                                             
+BUnder 25C Ikke over 25 C                                    
+COrig. 25C Original beholder, max. 25 C                      
+FFrossen   Frossen                                           
+HOrig. 8C  Original beholder, 2-8 C                          
+KKoldt     2-8 C                                             
+LOrig.beh. Original beholder                                 
+ROrig. 15C Original beholder, 8-15 C                         
+SSvalt     8-15 C                                            
+TUnder 30C Ikke over 30 C                                    
+VOrig. 30C Original beholder, max. 30 C                      
+XMax.30,L,RMax. 30 C, str†lings- og lysf›lsomt               
+ZFlere     Flere opbevaringsbetingelser                      

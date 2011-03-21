@@ -1,0 +1,88 @@
+                                                               
+AM012       Intraamnional anvendelse                           
+AP          Anvendelse p† patter                               
+AU001       Til anvendelse i ›ret                              
+AV          Anvendelse i vinge                                 
+BD          Badning                                            
+BI          Anvendelse i bikuber                               
+BR          Intrabronkial anvendelse                           
+BS          Intrabursal anvendelse                             
+BU002       Buccal anvendelse                                  
+BV          Behandling via vand                                
+CA017       Intrakavernal anvendelse                           
+CB018       Intracerebral anvendelse                           
+CE019       Intracervikal anvendelse                           
+CO057       Subkonjunktival anvendelse                         
+DE004       Dental anvendelse                                  
+DI024       Intradiskal anvendelse                             
+DM          Anvendelse i drikkevand/m‘lk                       
+EC005       Endocervikal anvendelse                            
+ED008       Epidural anvendelse                                
+EL          epil‘sional anvendelse                             
+EP          Isoleret ekstremitetsperfusion                     
+ES006       Til anvendelse i bihulerne                         
+ET          Endotrakeopulmonar anvendelse                      
+FA          Pharyngeal anvendelse                              
+FO          Anvendelse i foder                                 
+FS          Foot-stab anvendelse                               
+GA          Gastrointestinal anvendelse                        
+GI          Til anvendelse p† tandk›det                        
+HE010       H‘modialyse                                        
+HS          Hud-skarifikation                                  
+IA013       Intraarteriel anvendelse                           
+IB043       Intravesikal anvendelse                            
+IC016       Intrakardial anvendelse                            
+ID023       Intrakutan anvendelse                              
+IE026       Intral‘sional anvendelse                           
+IH055       Til inhalation                                     
+IL034       Intrapleural anvendelse                            
+IM030       Intramuskul‘r anvendelse                           
+IN045       Nasal anvendelse                                   
+IO031       Intraokul‘r anvendelse                             
+IP033       Intraperitoneal anvendelse                         
+IR014       Intraartikul‘r anvendelse                          
+IS          Intrasternal anvendelse                            
+IT037       Intratekal anvendelse                              
+IU015       Intrauterin anvendelse                             
+IV042       Intraven›s anvendelse                              
+KO022       Intrakoronar anvendelse                            
+KU003       Kutan anvendelse                                   
+LF          Laryngofaryngeal anvendelse                        
+LO          Lokal anvendelse                                   
+LY027       Intralymfatisk anvendelse                          
+MA          Intramamm‘r anvendelse                             
+MN          Massebehandling ved nebulisering                   
+MP          Implantat                                          
+NA          Administrationsvej ikke relevant                   
+ND          N‘b-dypning                                        
+OF047       Oftalmisk anvendelse                               
+OG049       Orofaryngeal anvendelse                            
+OK          Okul‘r anvendelse                                  
+OM          Til anvendelse i mundhulen                         
+ON          Okulonasal anvendelse                              
+OR048       Oral anvendelse                                    
+OV          In ovo                                             
+PA051       Parenteral anvendelse                              
+PC032       Intraperikardial anvendelse                        
+PD          Periodontal anvendelse                             
+PE053       Perineural anvendelse                              
+PJ          Posterior juxtascleral injektion                   
+PN          Pour-on                                            
+PR054       Rektal anvendelse                                  
+PT052       Periartikul‘r anvendelse                           
+PV          Paravertebral anvendelse                           
+RE055       Til anvendelse i luftvejene                        
+RU          Intraruminal anvendelse                            
+SC058       Subkutan anvendelse                                
+SF          Til at str› p† foder                               
+SL060       Sublingual anvendelse                              
+SM          Submuk›s anvendelse                                
+SN          Spot-on                                            
+TD062       Transdermal anvendelse                             
+TO061       Topikal anvendelse                                 
+TR039       Intratrakeal anvendelse                            
+TU036       Intratumoral anvendelse                            
+UR066       Uretral anvendelse                                 
+VA067       Vaginal anvendelse                                 
+VI          Intravitreal anvendelse                            
+XA009       Ekstraamnional anvendelse                          
