@@ -109,7 +109,7 @@ public class DosageSuggestionImporter implements FileImporter {
 	/**
 	 * Parses other data files.
 	 */
-	private <T extends StamdataEntity> CompleteDataset<?> parseDataFile(File file, String root, DosageVersion version, Class<T> type) throws FileNotFoundException {
+	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type) throws FileNotFoundException {
 
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 
