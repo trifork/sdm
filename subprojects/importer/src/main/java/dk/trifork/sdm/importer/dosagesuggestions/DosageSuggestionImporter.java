@@ -77,12 +77,24 @@ public class DosageSuggestionImporter implements FileImporter {
 			// the validity period. That means that complete
 			// datasets will be used for persisting, and no existing
 			// records will be valid in the period.
-
-			CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class);
-			CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnit.json"), "dosageUnits", version, DosageUnit.class);
-			CompleteDataset<?> structures = parseDataFile(getFile(files, "Drugs.json"), "drugStructures", version, DosageStructure.class);
-			CompleteDataset<?> relations = parseDataFile(getFile(files, "Drugs.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class);
-
+			//
+			// We have to declare the <T> types explicitly since GSon
+			// (Java is stupid) can't get the runtime types otherwise.
+			
+			Type type;
+			
+			type = new TypeToken<Map<String,Collection<Drug>>>() {}.getType();
+			CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
+			
+			type = new TypeToken<Map<String,Collection<DosageUnit>>>() {}.getType();
+			CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
+			
+			type = new TypeToken<Map<String,Collection<DosageStructure>>>() {}.getType();
+			CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
+			
+			type = new TypeToken<Map<String,Collection<DrugDosageStructureRelation>>>() {}.getType();
+			CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
+			
 			// PERSIST THE DATA
 
 			connection = MySQLConnectionManager.getConnection();
@@ -123,12 +135,11 @@ public class DosageSuggestionImporter implements FileImporter {
 	/**
 	 * Parses other data files.
 	 */
-	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type) throws FileNotFoundException {
+	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException {
 
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 
-		Type containerType = new TypeToken<Map<String, T>>() {}.getType();
-		Map<String, Collection<T>> parsedData = new Gson().fromJson(reader, containerType);
+		Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
 
 		CompleteDataset<T> dataset = new CompleteDataset<T>(type, version.getValidFrom(), version.getValidTo());
 
@@ -178,13 +189,5 @@ public class DosageSuggestionImporter implements FileImporter {
 		}
 
 		return result;
-	}
-	
-	// TODO: The current design is not test friendly. This means
-	// we have to set the dependencies with setters to override
-	// the default behaviour. The design should be updated.
-	
-	void setPersister(Persister persister) {
-		
 	}
 }

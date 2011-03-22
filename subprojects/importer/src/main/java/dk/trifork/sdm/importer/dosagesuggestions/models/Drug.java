@@ -13,14 +13,13 @@ public class Drug extends AbstractStamdataEntity {
 
 	private long drugId;
 	private int releaseNumber;
+	private String drugName;
 	private int dosageUnitCode;
 
 	private Date validFrom;
 
-	@Output
-	public int getReleaseNumber() {
+	protected Drug() {
 
-		return releaseNumber;
 	}
 
 	@Id
@@ -28,6 +27,18 @@ public class Drug extends AbstractStamdataEntity {
 	public long getDrugId() {
 
 		return drugId;
+	}
+
+	@Output
+	public int getReleaseNumber() {
+
+		return releaseNumber;
+	}
+
+	@Output
+	public String getDrugName() {
+
+		return drugName;
 	}
 
 	@Output
