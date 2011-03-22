@@ -7,3 +7,4 @@ bin
 .properties
 .ser
 access.*
+subprojects/importer/sdm_log
