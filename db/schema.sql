@@ -159,6 +159,7 @@ CREATE TABLE DosageDrug (
 	releaseNumber BIGINT(15) NOT NULL,
 	drugId BIGINT(11) NOT NULL,
 	dosageStructureCode BIGINT(11) NOT NULL,
+	drugName VARCHAR(200) NOT NULL,
 	
 	ModifiedBy VARCHAR(200),
 	ModifiedDate DATETIME,
