@@ -104,13 +104,11 @@ public class AtomFeedWriter {
 		// wrong with that, stability is simply an attractive property.
 		// Therefore we have to change 'updated' and 'id' every time a
 		// page is accessed.
+		//
+		// TODO: Add offset=nextOffset count=records.size() to the feed id.
 
 		feed.writeStartElement("id");
-		feed.writeCharacters(TAG_PREFIX + path /*
-												 * TODO: "?offset=" +
-												 * lastRecord.getOffset() +
-												 * "&count=" + records.size()
-												 */);
+		feed.writeCharacters(TAG_PREFIX + path);
 		feed.writeEndElement(); // Id
 
 		feed.writeStartElement("updated");
