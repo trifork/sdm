@@ -20,15 +20,15 @@ public class CompleteDataset<T extends StamdataEntity> extends Dataset<T> {
 	protected CompleteDataset(Class<T> type, List<T> entities, Calendar validFrom, Calendar ValidTo) {
 
 		super(entities, type);
-		
+
 		this.ValidFrom = validFrom;
 		this.ValidTo = ValidTo;
 	}
 
-	public CompleteDataset(Class<? extends T> type, Calendar validFrom, Calendar ValidTo) {
+	public CompleteDataset(Class<T> type, Calendar validFrom, Calendar ValidTo) {
 
 		super(type);
-		
+
 		this.ValidFrom = validFrom;
 		this.ValidTo = ValidTo;
 	}
