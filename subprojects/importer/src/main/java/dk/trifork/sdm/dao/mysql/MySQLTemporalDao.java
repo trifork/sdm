@@ -27,12 +27,11 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		this.con = con;
 	}
 
-	public void persist(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
+	public void persist(CompleteDataset<? extends StamdataEntity> ... datasets) throws FilePersistException {
 
 		persistCompleteDatasets(Arrays.asList(datasets));
 	}
 
-	@Override
 	public void persistCompleteDatasets(List<CompleteDataset<? extends StamdataEntity>> datasets) throws FilePersistException {
 
 		logger.debug("Starting to put entities from datasetgroup");
@@ -44,7 +43,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		logger.debug("Done putting entities from datasetgroup");
 	}
 
-	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity> dataset) throws FilePersistException {
+	public <T extends StamdataEntity> void persistCompleteDataset(CompleteDataset<T> dataset) throws FilePersistException {
 
 		if (!dataset.getType().isAnnotationPresent(Output.class)) return;
 
@@ -62,15 +61,15 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 	 * in this dataset. If an entity is no longer in the dataset, its record
 	 * will be "closed" in mysql by assigning validto.
 	 */
-	public void persistDeltaDataset(Dataset<? extends StamdataEntity> dataset) throws FilePersistException {
+	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException {
 
 		Calendar now = Calendar.getInstance();
-		MySQLTemporalTable table = getTable(dataset.getType());
+		MySQLTemporalTable<T> table = getTable(dataset.getType());
 		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
 
 		int processedEntities = 0;
 
-		for (StamdataEntity sde : dataset.getEntities()) {
+		for (T sde : dataset.getEntities()) {
 			
 			processedEntities++;
 			
@@ -232,7 +231,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
 		Calendar now = Calendar.getInstance();
-		MySQLTemporalTable table = getTable(dataset.getType());
+		MySQLTemporalTable<T> table = getTable(dataset.getType());
 		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
 		int nExisting = 0;
 		for (StamdataEntityVersion ev : evs) {
