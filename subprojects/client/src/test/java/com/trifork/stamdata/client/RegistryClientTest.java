@@ -4,10 +4,12 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.time.StopWatch;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.replication.views.cpr.Person;
 
+@Ignore
 public class RegistryClientTest {
 
 	private RegistryClient client;
