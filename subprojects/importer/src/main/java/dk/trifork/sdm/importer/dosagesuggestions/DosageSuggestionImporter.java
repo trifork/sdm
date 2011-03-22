@@ -163,7 +163,7 @@ public class DosageSuggestionImporter implements FileImporter {
 		present &= getFile(files, "DosageUnits.json") != null;
 		present &= getFile(files, "Drugs.json") != null;
 		present &= getFile(files, "DrugsDosageStructures.json") != null;
-		present &= getFile(files, "Version.json") != null;
+		present &= getFile(files, "DosageVersion.json") != null;
 
 		return present;
 	}
