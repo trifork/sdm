@@ -21,6 +21,7 @@ import dk.trifork.sdm.importer.dosagesuggestions.DosageSuggestionImporter;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageStructure;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageUnit;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageVersion;
+import dk.trifork.sdm.importer.dosagesuggestions.models.Drug;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.Dataset;
@@ -122,18 +123,24 @@ public class DoseringsforslagImporterTest {
 
 		runImporter();
 
-		/*
-		 * assertThat(unit.getReleaseNumber(), equalTo(125L));
-		 * assertThat(unit.getCode(), equalTo(8));
-		 * assertThat(unit.getTextSingular(), equalTo("brusetablet"));
-		 * assertThat(unit.getTextPlural(), equalTo("brusetabletter"));
-		 */
+		DosageUnit unit = getFirst(DosageUnit.class);
+		
+		assertThat(unit.getReleaseNumber(), equalTo(125L));
+		assertThat(unit.getCode(), equalTo(8));
+		assertThat(unit.getTextSingular(), equalTo("brusetablet"));
+		assertThat(unit.getTextPlural(), equalTo("brusetabletter"));
 	}
 
 	@Test
 	public void Should_import_all_drugs() throws Exception {
 
+		drugsFile = getFile("multiple/Drugs.json");
+		
 		runImporter();
+		
+		CompleteDataset<?> records = persister.getDataset(Drug.class);
+		
+		assertThat(records.size(), equalTo(3710));
 	}
 
 	// HELPER METHODS
