@@ -46,11 +46,15 @@ public class RegistryServlet extends HttpServlet {
 
 		// AUTHORIZE THE REQUEST
 		//
+		// The HTTP RFC specifies that if returning a 401 status
+		// the server MUST issue a challenge also.
+		//
 		// TODO: Log any unauthorized attempts.
 
 		if (!securityManager.get().authorize(request)) {
 			
 			response.setStatus(401);
+			response.setHeader("WWW-Authenticate", "STAMDATA");
 			return;
 		}
 
