@@ -22,7 +22,6 @@ public class DatabaseModule extends ConfiguredModule {
 		config.put("hibernate.connection.username", getConfig().getString("db.warehouse.username"));
 		config.put("hibernate.connection.password", getConfig().getString("db.warehouse.password"));
 		config.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-		config.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
 
 		emFactory = Persistence.createEntityManagerFactory("manager1", config);
 
@@ -34,7 +33,7 @@ public class DatabaseModule extends ConfiguredModule {
 		String host = getConfig().getString("db.warehouse.host");
 		int port = getConfig().getInt("db.warehouse.port");
 		String schema = getConfig().getString("db.warehouse.schema");
-		String options = "zeroDateTimeBehavior=convertToNull";
+		String options = "zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8";
 
 		return String.format("jdbc:mysql://%s:%d/%s?%s", host, port, schema, options);
 	}

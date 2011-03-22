@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
 import com.google.inject.Inject;
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
@@ -35,9 +37,9 @@ public class AtomFeedWriter {
 			XMLStreamWriter writer;
 			
 			if (useFastInfoset)
-				writer = StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream);
+				writer = StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
 			else
-				writer = XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream);
+				writer = XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
 			
 			// Start the feed.
 

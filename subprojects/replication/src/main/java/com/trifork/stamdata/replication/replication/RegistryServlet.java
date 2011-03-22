@@ -107,7 +107,10 @@ public class RegistryServlet extends HttpServlet {
 		if (records.size() == count) {
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
 		}
-		response.setContentType(useFastInfoSet ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML);
+
+		String contentType = useFastInfoSet ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
+		contentType += "; charset=utf-8";
+		response.setContentType(contentType);
 		response.flushBuffer();
 
 		// WRITE RESPONSE CONTENT
