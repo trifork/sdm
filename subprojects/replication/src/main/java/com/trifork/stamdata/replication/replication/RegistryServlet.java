@@ -77,6 +77,8 @@ public class RegistryServlet extends HttpServlet {
 		}
 
 		// Determine what content type the client wants.
+		//
+		// TODO: Use javax.activation.MimeType to check these.
 
 		String accept = request.getHeader("Accept");
 		boolean useFastInfoSet = (MIME.ATOM_FASTINFOSET.equalsIgnoreCase(accept));
