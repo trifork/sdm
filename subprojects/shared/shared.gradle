@@ -1,4 +1,3 @@
 dependencies {
-	compile libs.guice
 	testCompile libs.junit
 }
