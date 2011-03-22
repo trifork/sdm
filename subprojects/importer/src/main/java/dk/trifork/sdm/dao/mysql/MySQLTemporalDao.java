@@ -27,7 +27,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		this.con = con;
 	}
 
-	public void persist(CompleteDataset<? extends StamdataEntity> ... datasets) throws FilePersistException {
+	public void persist(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
 
 		persistCompleteDatasets(Arrays.asList(datasets));
 	}
@@ -70,13 +70,13 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 		int processedEntities = 0;
 
 		for (T sde : dataset.getEntities()) {
-			
+
 			processedEntities++;
-			
+
 			Calendar validFrom = sde.getValidFrom();
-			
+
 			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
-			
+
 			if (!exists) {
 				// Entity was not found, so create it
 				table.insertRow(sde, now);
@@ -247,16 +247,6 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 	public Connection getConnection() {
 
-		return this.con;
+		return con;
 	}
-
-	/*
-	 * public StamdataEntity loadStamdataEntities(String querySql, Class<?
-	 * extends StamdataEntity> clazz) throws Exception{ Statement st =
-	 * con.createStatement(); ResultSet rs = st.executeQuery(querySql); while
-	 * (rs.next()){ StamdataEntity instance = clazz.newInstance(); List<Method>
-	 * outputMethods = getOutputMethods(clazz); }
-	 * 
-	 * }
-	 */
 }
