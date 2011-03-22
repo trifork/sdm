@@ -15,7 +15,6 @@ import java.sql.Statement;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -71,7 +70,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset);
 		dao.persistCompleteDataset(dataset);
-		MySQLTemporalTable table = dao.getTable(SDE.class);
+		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), DateUtils.FUTURE);
@@ -90,7 +89,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		MySQLTemporalTable table = dao.getTable(SDE.class);
+		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(DateUtils.FUTURE, table.getCurrentRowValidTo());
@@ -110,7 +109,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		MySQLTemporalTable table = dao.getTable(SDE.class);
+		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(DateUtils.FUTURE, table.getCurrentRowValidTo());
@@ -130,7 +129,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		MySQLTemporalTable table = dao.getTable(SDE.class);
+		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t0)); // Get the old version
 		assertEquals(t0, table.getCurrentRowValidFrom());
 		assertEquals(t1, table.getCurrentRowValidTo());
@@ -163,7 +162,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 		MySQLTemporalDao dao = new MySQLTemporalDao(con);
 		dao.persistCompleteDataset(dataset1);
-		MySQLTemporalTable table = dao.getTable(SDE.class);
+		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, DateUtils.FUTURE));
 		assertEquals(t0, table.getCurrentRowValidFrom());
 		assertEquals(DateUtils.FUTURE, table.getCurrentRowValidTo());
@@ -233,6 +232,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 		@Output
+		@SuppressWarnings("unused")
 		public String getData() {
 
 			return data;
@@ -247,6 +247,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 		@Output
+		@SuppressWarnings("unused")
 		public Date getDate() {
 
 			return date;
