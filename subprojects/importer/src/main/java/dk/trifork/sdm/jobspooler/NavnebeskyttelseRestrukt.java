@@ -9,7 +9,7 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
@@ -84,7 +84,7 @@ public class NavnebeskyttelseRestrukt implements JobExecutor {
 
 			if (nbExpired > 0) {
 	            logger.debug("Persisting " + nbExpired + " expired name and address protection records");
-	            MySQLTemporalDao dao = new MySQLTemporalDao(connection);
+	            AuditingPersister dao = new AuditingPersister(connection);
 	            dao.persistDeltaDataset(cprDS.getNavneoplysninger());
 	            dao.persistDeltaDataset(cprDS.getKlarskriftadresse());
 	            

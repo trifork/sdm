@@ -1,8 +1,8 @@
 package dk.trifork.sdm.importer.sks;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.StamdataVersionedDao;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.Persister;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.sks.model.Organisation;
@@ -46,7 +46,7 @@ public class SksImporter implements FileImporterControlledIntervals {
         Connection con = null;
         try {
             con = MySQLConnectionManager.getConnection();
-            StamdataVersionedDao dao = new MySQLTemporalDao(con);
+            Persister dao = new AuditingPersister(con);
             for (File file : files) {
                 if (file.getName().toUpperCase().endsWith(".TXT")) {
                     Dataset<Organisation> dataset = SksParser.parseOrganisationer(file);

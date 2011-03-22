@@ -1,13 +1,12 @@
 package dk.trifork.sdm.dao.mysql;
 
 import java.sql.Connection;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import dk.trifork.sdm.dao.StamdataVersionedDao;
+import dk.trifork.sdm.dao.Persister;
 import dk.trifork.sdm.dao.mysql.MySQLTemporalTable.StamdataEntityVersion;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.CompleteDataset;
@@ -16,39 +15,35 @@ import dk.trifork.sdm.model.Output;
 import dk.trifork.sdm.model.StamdataEntity;
 
 
-public class MySQLTemporalDao implements StamdataVersionedDao {
+public class AuditingPersister implements Persister {
 
-	private static Logger logger = Logger.getLogger(MySQLTemporalDao.class);
+	private static Logger logger = Logger.getLogger(AuditingPersister.class);
 
-	protected Connection con;
+	protected Connection connection;
 
-	public MySQLTemporalDao(Connection con) {
+	public AuditingPersister(Connection connection) {
 
-		this.con = con;
+		this.connection = connection;
+	}
+	
+	public void persistCompleteDataset(List<CompleteDataset<? extends StamdataEntity>> datasets) throws FilePersistException {
+		// TODO: Remove this method. We should use the version below.
+		
+		@SuppressWarnings("unchecked")
+		CompleteDataset<? extends StamdataEntity>[] array = datasets.toArray(new CompleteDataset[] {});
+		
+		persistCompleteDataset(array);
 	}
 
-	public void persist(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
-
-		persistCompleteDatasets(Arrays.asList(datasets));
-	}
-
-	public void persistCompleteDatasets(List<CompleteDataset<? extends StamdataEntity>> datasets) throws FilePersistException {
-
-		logger.debug("Starting to put entities from datasetgroup");
+	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
 
 		for (CompleteDataset<? extends StamdataEntity> dataset : datasets) {
-			persistCompleteDataset(dataset);
+		
+			if (!dataset.getType().isAnnotationPresent(Output.class)) continue;
+
+			updateValidToOnRecordsNotInDataset(dataset);
+			persistDeltaDataset(dataset);
 		}
-
-		logger.debug("Done putting entities from datasetgroup");
-	}
-
-	public <T extends StamdataEntity> void persistCompleteDataset(CompleteDataset<T> dataset) throws FilePersistException {
-
-		if (!dataset.getType().isAnnotationPresent(Output.class)) return;
-
-		updateValidToOnRecordsNotInDataset(dataset);
-		persistDeltaDataset(dataset);
 	}
 
 	/**
@@ -220,7 +215,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 	public <T extends StamdataEntity> MySQLTemporalTable<T> getTable(Class<T> clazz) throws FilePersistException {
 
-		return new MySQLTemporalTable<T>(con, clazz);
+		return new MySQLTemporalTable<T>(connection, clazz);
 	}
 
 	/**
@@ -247,6 +242,6 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 	public Connection getConnection() {
 
-		return con;
+		return connection;
 	}
 }

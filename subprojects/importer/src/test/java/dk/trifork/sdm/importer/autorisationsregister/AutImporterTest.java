@@ -1,6 +1,6 @@
 package dk.trifork.sdm.importer.autorisationsregister;
 
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.model.CompleteDataset;
 
 import org.apache.commons.io.FileUtils;
@@ -69,7 +69,7 @@ public class AutImporterTest {
 
 		List<File> files = new ArrayList<File>();
 		files.add(valid);
-		MySQLTemporalDao daoMock = mock(MySQLTemporalDao.class);
+		AuditingPersister daoMock = mock(AuditingPersister.class);
 		importer.doImport(files, daoMock);
 		verify(daoMock).persistCompleteDataset(any(CompleteDataset.class));
 	}

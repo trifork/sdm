@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
 
 public class MySQLStamDAOTest {
 
-	Takst takst;
-	Laegemiddel laegemiddel;
-	private MySQLTemporalDao dao;
-	MySQLTemporalTable laegemiddeltableMock;
+	private Takst takst;
+	private Laegemiddel laegemiddel;
+	private AuditingPersister dao;
+	private MySQLTemporalTable laegemiddeltableMock;
 
 	@Before
 	public void setUp() throws Exception {
@@ -57,7 +57,7 @@ public class MySQLStamDAOTest {
 
 		// ------ Setup database mocks -------
 		Connection con = mock(Connection.class);
-		MySQLTemporalDao realDao = new MySQLTemporalDao(con);
+		AuditingPersister realDao = new AuditingPersister(con);
 		dao = spy(realDao);
 		laegemiddeltableMock = mock(MySQLTemporalTable.class);
 		doReturn(laegemiddeltableMock).when(dao).getTable(Laegemiddel.class);
@@ -69,7 +69,7 @@ public class MySQLStamDAOTest {
 		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Calendar.class), any(Calendar.class))).thenReturn(false);
 		// Simulate no existing entities
 
-		dao.persistCompleteDatasets(takst.getDatasets());
+		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the new record is inserted
 		verify(laegemiddeltableMock, times(1)).insertRow(eq(laegemiddel), any(Calendar.class));
@@ -89,7 +89,7 @@ public class MySQLStamDAOTest {
 		// Simulate that the entity has changed.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(false);
 
-		dao.persistCompleteDatasets(takst.getDatasets());
+		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the new record is inserted
 		verify(laegemiddeltableMock, times(1)).insertAndUpdateRow(eq(laegemiddel), any(Calendar.class));
@@ -111,7 +111,7 @@ public class MySQLStamDAOTest {
 		// Simulate that the entity is unchanged.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(true);
 
-		dao.persistCompleteDatasets(takst.getDatasets());
+		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the new record is inserted
 		verify(laegemiddeltableMock, times(0)).insertRow(eq(laegemiddel), any(Calendar.class));
@@ -140,7 +140,7 @@ public class MySQLStamDAOTest {
 
 		when(laegemiddeltableMock.getEntityVersions(any(Calendar.class), any(Calendar.class))).thenReturn(sev);
 
-		dao.persistCompleteDatasets(takst.getDatasets());
+		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the existing record is updated
 		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(eq(DateUtils.toCalendar(2009, 7, 1)), any(StamdataEntityVersion.class), any(Calendar.class));

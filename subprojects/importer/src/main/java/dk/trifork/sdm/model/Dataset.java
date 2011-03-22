@@ -91,11 +91,14 @@ public class Dataset<T extends StamdataEntity> {
 	public void addEntity(T entity) {
 
 		Object id = entity.getKey();
+		
 		List<T> ents = entities.get(id);
+		
 		if (ents == null) {
 			ents = new ArrayList<T>();
 			entities.put(id, ents);
 		}
+		
 		ents.add(entity);
 	}
 

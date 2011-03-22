@@ -51,7 +51,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 		MySQLTemporalTable<SDE> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
@@ -67,7 +67,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 		dao.persistCompleteDataset(dataset);
 		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
@@ -86,7 +86,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
 		dataset2.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "b"));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
 		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
@@ -106,7 +106,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t3.getTime()));
 		dataset2.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t4.getTime()));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
 		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
@@ -126,7 +126,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
 		dataset2.addEntity(new SDE(t1, DateUtils.FUTURE, "1", "b"));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
 		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
@@ -160,7 +160,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		MySQLTemporalTable<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, DateUtils.FUTURE));

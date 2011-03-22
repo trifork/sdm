@@ -15,8 +15,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.StamdataVersionedDao;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.Persister;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.takst.TakstParser;
 import dk.trifork.sdm.importer.takst.model.Takst;
@@ -85,10 +85,10 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
+		AuditingPersister versionedDao = new AuditingPersister(con);
 
 		// Act
-		versionedDao.persistCompleteDatasets(takst.getDatasets());
+		versionedDao.persistCompleteDataset(takst.getDatasets());
 
 		// Assert
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
@@ -111,11 +111,11 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
+		AuditingPersister versionedDao = new AuditingPersister(con);
 
 		// Act
-		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
-		versionedDao.persistCompleteDatasets(takstupd.getDatasets());
+		versionedDao.persistCompleteDataset(takstinit.getDatasets());
+		versionedDao.persistCompleteDataset(takstupd.getDatasets());
 
 		// Assert
 		Assert.assertEquals(new Integer(93), getRecordCount(versionedDao));
@@ -145,11 +145,11 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
+		AuditingPersister versionedDao = new AuditingPersister(con);
 
 		// Act
-		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
-		versionedDao.persistCompleteDatasets(deleteupd.getDatasets());
+		versionedDao.persistCompleteDataset(takstinit.getDatasets());
+		versionedDao.persistCompleteDataset(deleteupd.getDatasets());
 
 		// Assert
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
@@ -171,22 +171,22 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
+		AuditingPersister versionedDao = new AuditingPersister(con);
 
 		// Act
-		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
+		versionedDao.persistCompleteDataset(takstinit.getDatasets());
 
 		// Assert
 		statement.close();
 		con.close();
 	}
 
-	private Statement getStatement(StamdataVersionedDao versionedDao) throws SQLException {
+	private Statement getStatement(Persister versionedDao) throws SQLException {
 
-		return ((MySQLTemporalDao) versionedDao).getConnection().createStatement();
+		return ((AuditingPersister) versionedDao).getConnection().createStatement();
 	}
 
-	private Integer getRecordCount(StamdataVersionedDao versionedDao) throws SQLException {
+	private Integer getRecordCount(Persister versionedDao) throws SQLException {
 
 		Statement statement = getStatement(versionedDao);
 

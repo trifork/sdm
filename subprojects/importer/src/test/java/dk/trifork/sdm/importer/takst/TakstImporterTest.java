@@ -1,7 +1,7 @@
 package dk.trifork.sdm.importer.takst;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.takst.model.Doseringskode;
 import dk.trifork.sdm.importer.takst.model.Takst;
 import dk.trifork.sdm.importer.takst.model.TakstDataset;
@@ -90,7 +90,7 @@ public class TakstImporterTest {
 		takst.addDataset(dataset);
 		assertEquals(1, takst.getEntities().size());
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalDao dao = new MySQLTemporalDao(con);
+		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 
 		ResultSet rs = con.createStatement().executeQuery("select count(*) from LaegemiddelDoseringRef");

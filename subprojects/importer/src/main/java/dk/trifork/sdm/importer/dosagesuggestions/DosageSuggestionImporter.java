@@ -18,7 +18,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.Persister;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporter;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageStructure;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageUnit;
@@ -37,8 +38,18 @@ import dk.trifork.sdm.model.StamdataEntity;
  */
 public class DosageSuggestionImporter implements FileImporter {
 
+	private Persister mockPersister = null;
+	
 	public DosageSuggestionImporter() {
 
+	}
+	
+	public DosageSuggestionImporter(Persister mockPersister) {
+		
+		// HACK: These importers are really not made for
+		// testing. We should refactor. (REMOVE THIS CTOR)
+		
+		this.mockPersister = mockPersister;
 	}
 
 	@Override
@@ -75,7 +86,10 @@ public class DosageSuggestionImporter implements FileImporter {
 			// PERSIST THE DATA
 
 			connection = MySQLConnectionManager.getConnection();
-			new MySQLTemporalDao(connection).persist(versionDataset, drugs, structures, units, relations);
+			
+			Persister persister = (mockPersister != null) ? mockPersister : new AuditingPersister(connection);
+			persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
+			
 			connection.commit();
 		}
 		catch (Exception e) {
@@ -103,7 +117,7 @@ public class DosageSuggestionImporter implements FileImporter {
 
 		Map<String, DosageVersion> versions = gson.fromJson(reader, type);
 
-		return (DosageVersion) versions.get("version");
+		return versions.get("version");
 	}
 
 	/**
@@ -170,7 +184,7 @@ public class DosageSuggestionImporter implements FileImporter {
 	// we have to set the dependencies with setters to override
 	// the default behaviour. The design should be updated.
 	
-	void setPersister() {
+	void setPersister(Persister persister) {
 		
 	}
 }

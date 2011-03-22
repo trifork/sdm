@@ -1,7 +1,7 @@
 package dk.trifork.sdm.importer.sor;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import org.apache.log4j.Logger;
@@ -32,7 +32,7 @@ public class SORImporter implements FileImporterControlledIntervals {
         Connection connection = null;
         try {
             connection = MySQLConnectionManager.getConnection();
-            MySQLTemporalDao dao = new MySQLTemporalDao(connection);
+            AuditingPersister dao = new AuditingPersister(connection);
             for (File file : files) {
             	SORDataSets dataSets = SORParser.parse(file);
                 dao.persistCompleteDataset(dataSets.getPraksisDS());

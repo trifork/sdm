@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
+import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
@@ -29,7 +29,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 		try {
 			connection = MySQLConnectionManager.getConnection();
-			MySQLTemporalDao dao = new MySQLTemporalDao(connection);
+			AuditingPersister dao = new AuditingPersister(connection);
 
 			logger.debug("Starting to parse CPR file ");
 

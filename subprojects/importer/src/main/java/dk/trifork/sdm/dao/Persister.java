@@ -6,7 +6,7 @@ import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.model.StamdataEntity;
 
 
-public interface StamdataVersionedDao {
+public interface Persister {
 
 	/**
 	 * This method is for persisting the complete dataset so it is represented
@@ -26,11 +26,10 @@ public interface StamdataVersionedDao {
 	 * another version exist.
 	 * 
 	 */
-	public <T extends StamdataEntity> void persistCompleteDataset(CompleteDataset<T> dataset) throws FilePersistException;
+	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... dataset) throws FilePersistException;
 
 	/**
-	 * Persist the records in the dataset
-	 * 
+	 * Persist the records in the dataset.
 	 */
 	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException;
 }
