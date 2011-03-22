@@ -17,7 +17,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.StamdataVersionedDao;
 import dk.trifork.sdm.dao.mysql.MySQLTemporalDao;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
@@ -47,7 +46,7 @@ public class TakstImporter implements FileImporterControlledIntervals {
         try {
             logger.debug("Starting to import takst into database");
             con = MySQLConnectionManager.getConnection();
-            StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+            MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
             versionedDao.persistCompleteDatasets(takst.getDatasets());
             logger.debug("Done importing takst into database");
             try {

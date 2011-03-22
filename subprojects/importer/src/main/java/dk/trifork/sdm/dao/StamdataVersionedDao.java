@@ -5,8 +5,6 @@ import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.model.StamdataEntity;
 
-import java.util.List;
-
 
 public interface StamdataVersionedDao {
 
@@ -28,16 +26,11 @@ public interface StamdataVersionedDao {
 	 * another version exist.
 	 * 
 	 */
-	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity> dataset) throws FilePersistException;
-
-	/**
-	 * Like persistCompleteDataset, but with multiple complete datasets.
-	 */
-	public void persistCompleteDatasets(List<CompleteDataset<? extends StamdataEntity>> dataset) throws FilePersistException;
+	public <T extends StamdataEntity> void persistCompleteDataset(CompleteDataset<T> dataset) throws FilePersistException;
 
 	/**
 	 * Persist the records in the dataset
 	 * 
 	 */
-	public void persistDeltaDataset(Dataset<? extends StamdataEntity> dataset) throws FilePersistException;
+	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException;
 }
