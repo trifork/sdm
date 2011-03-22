@@ -46,9 +46,7 @@ public class MySQLTemporalDao implements StamdataVersionedDao {
 
 	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity> dataset) throws FilePersistException {
 
-		Output output = (Output) dataset.getType().getAnnotation(Output.class);
-		if (output == null) return;
-		if (!output.rootMember()) return;
+		if (!dataset.getType().isAnnotationPresent(Output.class)) return;
 
 		updateValidToOnRecordsNotInDataset(dataset);
 		persistDeltaDataset(dataset);
