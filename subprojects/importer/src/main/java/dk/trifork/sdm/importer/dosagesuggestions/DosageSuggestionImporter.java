@@ -54,7 +54,7 @@ public class DosageSuggestionImporter implements FileImporter {
 			// of the data.
 
 			DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
-			CompleteDataset<StamdataEntity> versionDataset = new CompleteDataset<StamdataEntity>(DosageVersion.class, version.getValidFrom(), FUTURE);
+			CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
 			versionDataset.addEntity(version);
 
 			// OTHER FILES

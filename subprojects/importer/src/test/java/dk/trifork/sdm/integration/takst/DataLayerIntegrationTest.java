@@ -85,7 +85,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takst.getDatasets());
@@ -111,7 +111,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
@@ -145,7 +145,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
@@ -171,7 +171,7 @@ public class DataLayerIntegrationTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement statement = con.createStatement();
-		StamdataVersionedDao versionedDao = new MySQLTemporalDao(con);
+		MySQLTemporalDao versionedDao = new MySQLTemporalDao(con);
 
 		// Act
 		versionedDao.persistCompleteDatasets(takstinit.getDatasets());
