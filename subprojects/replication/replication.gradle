@@ -45,6 +45,7 @@ dependencies {
 		exclude group: 'org.slf4j'
 		runtime('org.opensaml:opensaml:2.4.1') {
 			exclude module: 'velocity' // Wrong name in the POM.
+			exclude group: 'org.slf4j'
 			runtime(libs.velocity) {
 				exclude module: 'oro' // Not needed
 			}
