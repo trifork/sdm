@@ -8,3 +8,4 @@ bin
 .ser
 access.*
 subprojects/importer/sdm_log
+.checkstyle
