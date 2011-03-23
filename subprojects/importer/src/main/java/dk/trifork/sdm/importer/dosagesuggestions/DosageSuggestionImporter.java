@@ -117,9 +117,6 @@ public class DosageSuggestionImporter implements FileImporter {
 		}
 		catch (Exception e) {
 
-			// TODO (thb): Should the transaction not be rolled back for all
-			// these situations?
-
 			throw new FileImporterException("Error during import of dosage suggestions.", e);
 		}
 		finally {
