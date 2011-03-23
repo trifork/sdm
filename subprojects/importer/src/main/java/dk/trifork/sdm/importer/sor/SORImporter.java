@@ -1,7 +1,7 @@
 package dk.trifork.sdm.importer.sor;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import org.apache.log4j.Logger;

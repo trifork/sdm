@@ -1,6 +1,6 @@
 package dk.trifork.sdm.importer.autorisationsregister;
 
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.model.CompleteDataset;
 
 import org.apache.commons.io.FileUtils;

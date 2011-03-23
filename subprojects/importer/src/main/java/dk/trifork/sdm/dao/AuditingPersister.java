@@ -1,4 +1,4 @@
-package dk.trifork.sdm.dao.mysql;
+package dk.trifork.sdm.dao;
 
 import java.sql.Connection;
 import java.util.Calendar;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import dk.trifork.sdm.dao.Persister;
+import dk.trifork.sdm.dao.mysql.MySQLTemporalTable;
 import dk.trifork.sdm.dao.mysql.MySQLTemporalTable.StamdataEntityVersion;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.CompleteDataset;

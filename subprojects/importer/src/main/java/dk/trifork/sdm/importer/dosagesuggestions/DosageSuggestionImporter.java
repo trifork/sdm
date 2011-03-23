@@ -19,8 +19,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.dao.Persister;
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporter;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageRecord;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageStructure;

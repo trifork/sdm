@@ -1,6 +1,7 @@
 package dk.trifork.sdm.dao.mysql;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;

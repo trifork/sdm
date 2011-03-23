@@ -1,8 +1,8 @@
 package dk.trifork.sdm.importer.sks;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.dao.Persister;
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.sks.model.Organisation;

@@ -1,7 +1,7 @@
 package dk.trifork.sdm.importer.takst;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.importer.takst.model.Doseringskode;
 import dk.trifork.sdm.importer.takst.model.Takst;
 import dk.trifork.sdm.importer.takst.model.TakstDataset;

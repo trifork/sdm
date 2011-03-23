@@ -1,5 +1,6 @@
 package dk.trifork.sdm.dao.mysql;
 
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.dao.mysql.MySQLTemporalTable.StamdataEntityVersion;
 import dk.trifork.sdm.importer.takst.model.DivEnheder;
 import dk.trifork.sdm.importer.takst.model.Laegemiddel;

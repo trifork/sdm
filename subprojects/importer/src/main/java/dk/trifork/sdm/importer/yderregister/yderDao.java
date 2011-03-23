@@ -1,6 +1,6 @@
 package dk.trifork.sdm.importer.yderregister;
 
-import dk.trifork.sdm.dao.mysql.AuditingPersister;
+import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 
 import java.sql.Connection;
