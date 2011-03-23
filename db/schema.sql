@@ -104,7 +104,7 @@ CREATE TABLE DosageVersion (
 ) ENGINE=InnoDB;
 
 CREATE TABLE DrugDosageStructureRelation (
-	DrugDosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	DrugDosageStructureRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	id VARCHAR(200) NOT NULL,
 	drugId BIGINT(11) NOT NULL,
 	dosageStructureCode BIGINT(11) NOT NULL,
