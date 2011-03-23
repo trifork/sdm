@@ -9,7 +9,7 @@ import java.util.*;
 
 public abstract class AbstractStamdataEntity implements StamdataEntity {
 
-	public static final Calendar FUTURE;
+	public static final Calendar FUTURE; // TODO: Use the FUTURE in DateUtils.
 	private static final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
 	private static final Map<Class<? extends StamdataEntity>, Method> idMethodCache = new HashMap<Class<? extends StamdataEntity>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
@@ -50,6 +50,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity {
 				return method;
 			}
 		}
+		// TODO: This should be an precondition exception.
 		logger.error("Could not find idmethod for class: " + class1 + " A getter must be annotated with @Id!");
 		return null;
 	}
