@@ -35,11 +35,6 @@ public class MySQLConnectionManager {
     public static String getDBName() {
     	return Configuration.getString("db.database");
     }
-    
-    public static String getHousekeepingDBName() {
-    	String confName = Configuration.getString("db.housekeepingdatabase");
-    	return (confName != null) ? confName : getDBName() + "_housekeeping";
-    }
 
     public static void close(Connection connection) {
         try {

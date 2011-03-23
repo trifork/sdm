@@ -172,7 +172,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 	static private String createProtectedNameAndAddressesSQL() {
 
-		String SQL = "REPLACE INTO " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse " + "(CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, " + "SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode) " + "(SELECT CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, " + "Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode " + "FROM Person " + whereNameAndAddressesSQL() + " ORDER BY validTo)";
+		String SQL = "REPLACE INTO AdresseBeskyttelse " + "(CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, " + "SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode) " + "(SELECT CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, " + "Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode " + "FROM Person " + whereNameAndAddressesSQL() + " ORDER BY validTo)";
 
 		return SQL;
 	}

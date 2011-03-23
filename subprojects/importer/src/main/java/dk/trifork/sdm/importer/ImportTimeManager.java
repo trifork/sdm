@@ -18,7 +18,7 @@ public class ImportTimeManager {
         try {
             con = MySQLConnectionManager.getAutoCommitConnection();
             stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select max(importtime) from " + MySQLConnectionManager.getHousekeepingDBName() + ".Import where spoolername = '" + spoolername + "'");
+            ResultSet rs = stmt.executeQuery("select max(importtime) from Import where spoolername = '" + spoolername + "'");
             if (rs.next()) {
                 Calendar cal = DateUtils.toCalendar(rs.getTimestamp(1));
                 return cal;
@@ -40,7 +40,7 @@ public class ImportTimeManager {
         try {
             con = MySQLConnectionManager.getAutoCommitConnection();
             stmt = con.createStatement();
-            stmt.executeUpdate("insert into " + MySQLConnectionManager.getHousekeepingDBName() + ".Import values('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
+            stmt.executeUpdate("insert into Import values('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
         } catch (Exception e) {
             logger.error("getLastImportTime(" + spoolerName + ")", e);
         }

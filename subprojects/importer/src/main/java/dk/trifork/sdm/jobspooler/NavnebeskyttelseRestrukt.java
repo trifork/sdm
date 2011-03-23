@@ -102,15 +102,13 @@ public class NavnebeskyttelseRestrukt implements JobExecutor {
 	}
 	
 	static private String createSelectExpiredNameProtectionSQL() {
-		String SQL = "SELECT * FROM " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse " +
-				"WHERE NavneBeskyttelseSletteDato < now()";
+		String SQL = "SELECT * FROM AdresseBeskyttelse WHERE NavneBeskyttelseSletteDato < now()";
 		
 		return SQL;
 	}
 
 	static private String createDeleteExpiredNameProtectionSQL(String inList) {
-		String SQL = "DELETE FROM " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse " +
-				"WHERE CPR IN (" + inList + ")";
+		String SQL = "DELETE FROM AdresseBeskyttelse WHERE CPR IN (" + inList + ")";
 		
 		return SQL;
 	}

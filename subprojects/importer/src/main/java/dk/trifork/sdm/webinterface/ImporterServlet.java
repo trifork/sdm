@@ -167,7 +167,7 @@ public class ImporterServlet extends HttpServlet {
 		try {
 			con = MySQLConnectionManager.getConnection();
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * from " + MySQLConnectionManager.getHousekeepingDBName() + ".Import");
+			ResultSet rs = stmt.executeQuery("SELECT * from Import");
 
 			writer.print("<table>");
 
