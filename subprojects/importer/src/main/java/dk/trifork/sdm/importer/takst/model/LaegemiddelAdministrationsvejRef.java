@@ -39,10 +39,3 @@ public class LaegemiddelAdministrationsvejRef extends TakstEntity {
     }
 
 }
-
-/*
- * 
- * DrugID BIGINT(12) NOT NULL, AdministrationsvejKode CHAR(2) NOT NULL, ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate
- * DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200) NOT NULL, CreatedDate DATETIME NOT
- * NULL, INDEX (ValidFrom, ValidTo, DrugID, DoseringKode) ) ENGINE=InnoDB
- */
