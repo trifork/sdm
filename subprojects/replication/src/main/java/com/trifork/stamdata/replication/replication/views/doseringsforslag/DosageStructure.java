@@ -1,18 +1,25 @@
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
+import static com.trifork.stamdata.replication.util.Namespace.STAMDATA_3_0;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.math.BigInteger;
 import java.util.Date;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.trifork.stamdata.*;
+import com.trifork.stamdata.Documented;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "doseringsforslag/dosagestructure/v1")
+@XmlRootElement(namespace = STAMDATA_3_0)
 @Documented("Indeholder doseringsstrukturer.")
 public class DosageStructure extends View {
 
@@ -20,11 +27,11 @@ public class DosageStructure extends View {
 	@GeneratedValue
 	@Column(name = "DosageStructurePID")
 	protected BigInteger id;
-	
+
 	// Unik kode for doseringstrukturen. Obligatorisk. Heltal, 11 cifre.
 	@Column(length = 11)
 	protected String code;
-	
+
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	@Column(length = 15)
 	protected long releaseNumber;
@@ -62,7 +69,7 @@ public class DosageStructure extends View {
 
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
-	
+
 	@XmlTransient
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
@@ -81,7 +88,7 @@ public class DosageStructure extends View {
 
 	@Override
 	public Date getUpdated() {
-		
+
 		return modifiedDate;
 	}
 }

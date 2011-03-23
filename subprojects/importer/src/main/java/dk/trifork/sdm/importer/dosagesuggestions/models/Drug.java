@@ -1,22 +1,16 @@
 package dk.trifork.sdm.importer.dosagesuggestions.models;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 
 
 @Output(name = "DosageDrug")
-public class Drug extends AbstractStamdataEntity {
+public class Drug extends DosageRecord {
 
 	private long drugId;
 	private int releaseNumber;
 	private String drugName;
 	private int dosageUnitCode;
-
-	private Date validFrom;
 
 	protected Drug() {
 
@@ -45,13 +39,5 @@ public class Drug extends AbstractStamdataEntity {
 	public int getDosageUnitCode() {
 
 		return dosageUnitCode;
-	}
-
-	@Override
-	public Calendar getValidFrom() {
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(validFrom);
-		return c;
 	}
 }

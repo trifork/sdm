@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
+import static com.trifork.stamdata.replication.util.Namespace.STAMDATA_3_0;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -9,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
@@ -16,6 +19,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "doseringsforslag/dosageunit/v1")
+@XmlRootElement(namespace=STAMDATA_3_0)
 @Documented("Indeholder anvendte doseringsenheder.\n" + "Doseringsenhederne stammer dels fra Lægemiddelstyrelsens takst (her er code <= 1000),\n" + "dels er der tale om nye data (code > 1000).")
 public class DosageUnit extends View {
 

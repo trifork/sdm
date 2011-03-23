@@ -1,15 +1,13 @@
 package dk.trifork.sdm.importer.dosagesuggestions.models;
 
-import java.util.Calendar;
 import java.util.Date;
 
-import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 
 
 @Output
-public class DosageVersion extends AbstractStamdataEntity {
+public class DosageVersion extends DosageRecord {
 
 	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.
@@ -72,13 +70,5 @@ public class DosageVersion extends AbstractStamdataEntity {
 	public void setReleaseNumber(long releaseNumber) {
 
 		this.releaseNumber = releaseNumber;
-	}
-
-	@Override
-	public Calendar getValidFrom() {
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(releaseDate);
-		return c;
 	}
 }

@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -21,12 +22,14 @@ import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.Persister;
 import dk.trifork.sdm.dao.mysql.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporter;
+import dk.trifork.sdm.importer.dosagesuggestions.models.DosageRecord;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageStructure;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageUnit;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DosageVersion;
 import dk.trifork.sdm.importer.dosagesuggestions.models.Drug;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DrugDosageStructureRelation;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
+import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.StamdataEntity;
 
@@ -67,6 +70,10 @@ public class DosageSuggestionImporter implements FileImporter {
 			DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
 			CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
 			versionDataset.addEntity(version);
+			
+			Calendar c = Calendar.getInstance();
+			c.setTime(version.getReleaseDate());
+			version.setVersion(c);
 
 			// OTHER FILES
 			//
@@ -85,15 +92,19 @@ public class DosageSuggestionImporter implements FileImporter {
 			
 			type = new TypeToken<Map<String,Collection<Drug>>>() {}.getType();
 			CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
+			setValidityPeriod(drugs, version);
 			
 			type = new TypeToken<Map<String,Collection<DosageUnit>>>() {}.getType();
 			CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
+			setValidityPeriod(units, version);
 			
 			type = new TypeToken<Map<String,Collection<DosageStructure>>>() {}.getType();
 			CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
+			setValidityPeriod(structures, version);
 			
 			type = new TypeToken<Map<String,Collection<DrugDosageStructureRelation>>>() {}.getType();
 			CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
+			setValidityPeriod(relations, version);
 			
 			// PERSIST THE DATA
 
@@ -148,6 +159,19 @@ public class DosageSuggestionImporter implements FileImporter {
 		}
 
 		return dataset;
+	}
+	
+	/**
+	 * HACK: These dates should be taken from the complete data set.
+	 * There is no reason why we set dates on each record.
+	 */
+	private void setValidityPeriod(CompleteDataset<?> dataset, DosageVersion version) {
+		
+		CompleteDataset<? extends DosageRecord> records = (CompleteDataset<? extends DosageRecord>)dataset;
+		
+		for (DosageRecord record : records.getEntities()) {
+			record.setVersion(version.getValidFrom());
+		}
 	}
 
 	@Override

@@ -75,19 +75,23 @@ CREATE TABLE Authorization (
 );
 	
 	
-CREATE TABLE DrugDosageStructure (
- DrugDosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
- id VARCHAR(22) NOT NULL,
- releaseNumber BIGINT(15) NOT NULL,
- drugId BIGINT(11),
- dosageStructureCode BIGINT(15) NOT NULL,
- ModifiedBy VARCHAR(200) NOT NULL,
- ModifiedDate DATETIME NOT NULL,
- ValidFrom DATETIME ,
- ValidTo DATETIME,
- CreatedBy VARCHAR(200),
- CreatedDate DATETIME,
- INDEX (releaseNumber)
+CREATE TABLE DosageStructure (
+	DosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	releaseNumber BIGINT(15) NOT NULL,
+	code VARCHAR(11) NOT NULL,
+	type VARCHAR(100) NOT NULL,
+	simpleString VARCHAR(100), -- OPTIONAL
+	supplementaryText VARCHAR(200), -- OPTIONAL
+	xml VARCHAR(10000) NOT NULL,
+	shortTranslation VARCHAR(70),
+	longTranslation VARCHAR(10000), -- OPTIONAL (TODO: The specs say it cannot be NULL, but it sometimes is.)
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME ,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
 );
 
 CREATE TABLE DosageUnit (
@@ -122,24 +126,10 @@ CREATE TABLE DosageVersion (
 	INDEX (releaseNumber)
 );
 
-CREATE TABLE DrugDosageUnitRelation (
-	DosageDrugPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	drugId BIGINT(11) NOT NULL,
-	dosageUnitCode BIGINT(11) NOT NULL,
-	releaseNumber BIGINT(15) NOT NULL,
-	
-	ModifiedBy VARCHAR(200),
-	ModifiedDate DATETIME,
-	ValidFrom DATETIME,
-	ValidTo DATETIME,
-	CreatedBy VARCHAR(200),
-	CreatedDate DATETIME,
-	INDEX (releaseNumber)
-);
-
 CREATE TABLE DrugDosageStructureRelation (
 	DrugDosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	
+	id VARCHAR(200) NOT NULL,
 	drugId BIGINT(11) NOT NULL,
 	dosageStructureCode BIGINT(11) NOT NULL,
 	releaseNumber BIGINT(15) NOT NULL,
@@ -158,7 +148,7 @@ CREATE TABLE DosageDrug (
 	
 	releaseNumber BIGINT(15) NOT NULL,
 	drugId BIGINT(11) NOT NULL,
-	dosageStructureCode BIGINT(11) NOT NULL,
+	dosageUnitCode BIGINT(11) NOT NULL,
 	drugName VARCHAR(200) NOT NULL,
 	
 	ModifiedBy VARCHAR(200),

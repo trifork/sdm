@@ -1,15 +1,11 @@
 package dk.trifork.sdm.importer.dosagesuggestions.models;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 
 
 @Output
-public class DosageStructure extends AbstractStamdataEntity {
+public class DosageStructure extends DosageRecord {
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
@@ -41,8 +37,6 @@ public class DosageStructure extends AbstractStamdataEntity {
 	// En lang doseringstekst baggrund af xml og
 	// lægemidlets doseringsenhed. Obligatorisk. Strengm 10000 tegn.
 	private String longTranslation;
-
-	private Date validFrom;
 
 	@Output
 	public long getReleaseNumber() {
@@ -91,13 +85,5 @@ public class DosageStructure extends AbstractStamdataEntity {
 	public String getLongTranslation() {
 
 		return longTranslation;
-	}
-
-	@Override
-	public Calendar getValidFrom() {
-
-		Calendar c = Calendar.getInstance();
-		c.setTime(validFrom);
-		return c;
 	}
 }
