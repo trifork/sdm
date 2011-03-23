@@ -1,5 +1,8 @@
 package com.trifork.stamdata.replication.replication;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -16,10 +19,15 @@ public class RecordDao {
 	@Inject
 	RecordDao(EntityManager em) {
 
-		this.em = em;
+		this.em = checkNotNull(em);
 	}
 
 	public <T extends View> List<T> findPage(Class<T> type, String recordId, Date modifiedDate, int limit) {
+
+		checkNotNull(type);
+		checkNotNull(recordId);
+		checkNotNull(modifiedDate);
+		checkArgument(limit > 0);
 
 		// TODO: This convertion should not take place here.
 		
