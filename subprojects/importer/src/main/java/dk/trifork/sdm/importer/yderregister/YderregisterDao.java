@@ -8,9 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class yderDao extends AuditingPersister {
+public class YderregisterDao extends AuditingPersister {
 
-	public yderDao(Connection con) {
+	public YderregisterDao(Connection con) {
 		super(con);
 	}
 

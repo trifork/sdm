@@ -46,7 +46,7 @@ public class YderregisterImporter implements FileImporterControlledIntervals {
 
 		Connection con = MySQLConnectionManager.getConnection();
 		
-		yderDao dao = new yderDao(con);
+		YderregisterDao dao = new YderregisterDao(con);
 
 		// verify loebenummer
 		int latestInDB = dao.getLastLoebenummer();
