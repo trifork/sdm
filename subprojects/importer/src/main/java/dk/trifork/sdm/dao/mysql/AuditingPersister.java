@@ -67,17 +67,17 @@ public class AuditingPersister implements Persister {
 
 		int processedEntities = 0;
 
-		for (T sde : dataset.getEntities()) {
+		for (T record : dataset.getEntities()) {
 
 			processedEntities++;
 
-			Calendar validFrom = sde.getValidFrom();
+			Calendar validFrom = record.getValidFrom();
 
-			boolean exists = table.fetchEntityVersions(sde.getKey(), validFrom, sde.getValidTo());
+			boolean exists = table.fetchEntityVersions(record.getKey(), validFrom, record.getValidTo());
 
 			if (!exists) {
 				// Entity was not found, so create it
-				table.insertRow(sde, now);
+				table.insertRow(record, now);
 			}
 			else {
 				// At least one version was found in the same validity range.
@@ -87,34 +87,34 @@ public class AuditingPersister implements Persister {
 					Calendar existingValidFrom = table.getCurrentRowValidFrom();
 					Calendar existingValidTo = table.getCurrentRowValidTo();
 					
-					boolean dataEquals = table.dataInCurrentRowEquals(sde);
+					boolean dataEquals = table.dataInCurrentRowEquals(record);
 					
-					if (existingValidFrom.before(sde.getValidFrom())) {
-						if (existingValidTo.equals(sde.getValidFrom())) {
+					if (existingValidFrom.before(record.getValidFrom())) {
+						if (existingValidTo.equals(record.getValidFrom())) {
 							// This existing row is not in the range of our
 							// entity
 							continue;
 						}
 						// our entity is newer.
-						if (existingValidTo.after(sde.getValidTo())) {
+						if (existingValidTo.after(record.getValidTo())) {
 							// Our version is inside the existing version,
 							if (!dataEquals) {
 								// The existing version must be split in two.
 								// Copy existing row. Set validfrom in copy
 								// entity to our validto.
-								table.copyCurrentRowButWithChangedValidFrom(sde.getValidTo(), now);
+								table.copyCurrentRowButWithChangedValidFrom(record.getValidTo(), now);
 								// Set validto in existing entity to our
 								// validfrom.
-								table.updateValidToOnCurrentRow(sde.getValidFrom(), now);
+								table.updateValidToOnCurrentRow(record.getValidFrom(), now);
 							}
 						}
-						else if (existingValidTo.before(sde.getValidTo())) {
+						else if (existingValidTo.before(record.getValidTo())) {
 							// Our version starts after the existing, but ends
 							// later.
 							if (dataEquals) {
 								// If necesary, increase validto on existing
 								// entity to our validTo.
-								if (table.getCurrentRowValidTo().before(sde.getValidTo())) table.updateValidToOnCurrentRow(sde.getValidTo(), now);
+								if (table.getCurrentRowValidTo().before(record.getValidTo())) table.updateValidToOnCurrentRow(record.getValidTo(), now);
 								// No need to insert our version as the range is
 								// covered by existing version
 								insertVersion = false;
@@ -124,7 +124,7 @@ public class AuditingPersister implements Persister {
 								// ends at the same time.
 								// Set validto in existing entity to our
 								// validfrom.
-								table.updateValidToOnCurrentRow(sde.getValidFrom(), now);
+								table.updateValidToOnCurrentRow(record.getValidFrom(), now);
 							}
 
 						}
@@ -136,68 +136,68 @@ public class AuditingPersister implements Persister {
 							}
 							else {
 								// invalidate the existing.
-								table.updateValidToOnCurrentRow(sde.getValidFrom(), now);
+								table.updateValidToOnCurrentRow(record.getValidFrom(), now);
 							}
 
 						}
 					}
-					else if (existingValidFrom.after(sde.getValidFrom())) {
+					else if (existingValidFrom.after(record.getValidFrom())) {
 						// Our version is older as that the existing one
-						if (sde.getValidTo().after((existingValidTo))) {
+						if (record.getValidTo().after((existingValidTo))) {
 							// Our version encompases the entire existing
 							// version,
 							if (dataEquals) {
 								// reuse the existing version
-								table.updateValidFromOnCurrentRow(sde.getValidFrom(), now);
-								table.updateValidToOnCurrentRow(sde.getValidTo(), now);
+								table.updateValidFromOnCurrentRow(record.getValidFrom(), now);
+								table.updateValidToOnCurrentRow(record.getValidTo(), now);
 							}
 							else {
 								// The existing must be deleted
 								// Delete existing row
-								table.updateRow(sde, now, existingValidFrom, existingValidTo);
+								table.updateRow(record, now, existingValidFrom, existingValidTo);
 							}
 							insertVersion = false;
 						}
-						else if (sde.getValidTo().before((existingValidTo))) {
+						else if (record.getValidTo().before((existingValidTo))) {
 							// Our version starts before the existing, but also
 							// ends before.
 							if (dataEquals) {
 								// Set validfrom in existing entity to our
 								// validfrom.
-								table.updateValidFromOnCurrentRow(sde.getValidFrom(), now);
+								table.updateValidFromOnCurrentRow(record.getValidFrom(), now);
 								insertVersion = false;
 							}
 							else {
 								// Set validfrom in existing entity to our
 								// validto.
-								table.updateValidFromOnCurrentRow(sde.getValidTo(), now);
+								table.updateValidFromOnCurrentRow(record.getValidTo(), now);
 							}
 						}
 						else {
 							// Our version starts before the existing, and ends
 							// at the same time
-							table.updateRow(sde, now, existingValidFrom, existingValidTo);
+							table.updateRow(record, now, existingValidFrom, existingValidTo);
 							insertVersion = false;
 						}
 
 					}
 					else {
 						// Our version is as old as the existing one
-						if (sde.getValidTo().after((existingValidTo))) {
+						if (record.getValidTo().after((existingValidTo))) {
 							// Our version has the same validfrom but later
 							// validto as the existing.
-							table.updateValidToOnCurrentRow(sde.getValidTo(), now);
+							table.updateValidToOnCurrentRow(record.getValidTo(), now);
 							insertVersion = false;
 						}
-						else if (sde.getValidTo().before((existingValidTo))) {
+						else if (record.getValidTo().before((existingValidTo))) {
 							// Our version has the same validfrom but earlier
 							// validto as the existing.
 							if (dataEquals) {
-								table.updateValidToOnCurrentRow(sde.getValidTo(), now);
+								table.updateValidToOnCurrentRow(record.getValidTo(), now);
 								insertVersion = false;
 							}
 							else {
-								table.updateValidFromOnCurrentRow(sde.getValidTo(), now);
+								table.updateValidFromOnCurrentRow(record.getValidTo(), now);
 							}
 						}
 						else {
@@ -205,14 +205,14 @@ public class AuditingPersister implements Persister {
 							// the existing.
 							if (!dataEquals) {
 								// replace the existing
-								table.updateRow(sde, now, existingValidFrom, existingValidTo);
+								table.updateRow(record, now, existingValidFrom, existingValidTo);
 							}
 							insertVersion = false;
 						}
 
 					}
 				} while (table.nextRow());
-				if (insertVersion) table.insertAndUpdateRow(sde, now);
+				if (insertVersion) table.insertAndUpdateRow(record, now);
 			}
 		}
 		logger.debug("...persistDeltaDataset complete. " + processedEntities + " processed, " + table.getInsertedRows() + " inserted, " + table.getUpdatedRecords() + " updated, " + table.getDeletedRecords() + " deleted");
