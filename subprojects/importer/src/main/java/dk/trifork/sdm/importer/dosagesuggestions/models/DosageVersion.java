@@ -23,10 +23,6 @@ public class DosageVersion extends DosageRecord {
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
 
-	protected DosageVersion() {
-
-	}
-
 	@Output
 	public Date getDaDate() {
 
@@ -50,25 +46,5 @@ public class DosageVersion extends DosageRecord {
 	public long getReleaseNumber() {
 
 		return releaseNumber;
-	}
-
-	public void setDaDate(Date daDate) {
-
-		this.daDate = daDate;
-	}
-
-	public void setLmsDate(Date lmsDate) {
-
-		this.lmsDate = lmsDate;
-	}
-
-	public void setReleaseDate(Date releaseDate) {
-
-		this.releaseDate = releaseDate;
-	}
-
-	public void setReleaseNumber(long releaseNumber) {
-
-		this.releaseNumber = releaseNumber;
 	}
 }

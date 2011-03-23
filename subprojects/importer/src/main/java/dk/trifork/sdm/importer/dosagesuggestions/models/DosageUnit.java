@@ -19,11 +19,6 @@ public class DosageUnit extends DosageRecord {
 	// Doseringsenhedens tekst i flertal. Obligatorisk. Streng, 100 tegn.
 	private String textPlural;
 
-	public void setReleaseNumber(long releaseNumber) {
-
-		this.releaseNumber = releaseNumber;
-	}
-
 	@Id
 	@Output
 	public int getCode() {
@@ -37,25 +32,10 @@ public class DosageUnit extends DosageRecord {
 		return releaseNumber;
 	}
 
-	public void setCode(int code) {
-
-		this.code = code;
-	}
-
-	public void setTextSingular(String textSingular) {
-
-		this.textSingular = textSingular;
-	}
-
 	@Output
 	public String getTextSingular() {
 
 		return textSingular;
-	}
-
-	public void setTextPlural(String textPlural) {
-
-		this.textPlural = textPlural;
 	}
 
 	@Output
