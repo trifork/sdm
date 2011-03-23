@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -7,17 +9,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "doseringsforslag/drugdosageunitrelation/v1")
+@Entity(name = "doseringsforslag/drug/v1")
 @Documented("Indeholder information om lægemidlers drug-id og doseringsenhed.")
-public class DrugDosageUnitRelation extends View {
+@Table(name = "DosageDrug")
+public class Drug extends View {
 
 	@Id
 	@GeneratedValue
@@ -29,14 +32,19 @@ public class DrugDosageUnitRelation extends View {
 	@Column(length = 11)
 	protected long drugId;
 
+	@Column(length = 200)
+	protected String drugName;
+
 	@Column(length = 4)
 	protected int dosageUnitCode;
 
+	@Column(name = "ModifiedDate")
 	@XmlTransient
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name = "ValidFrom")
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@Override

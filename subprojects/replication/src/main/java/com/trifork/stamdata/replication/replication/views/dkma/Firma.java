@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/firma/v1")
-@Table(name = "Firma")
 public class Firma extends View {
 
 	@Id
@@ -27,7 +26,7 @@ public class Firma extends View {
 	protected String firmamaerkeLangtNavn;
 
 	@Column(name = "ParallelimportoerKode")
-	protected String parallelimportoerId;
+	protected String parallelimportoerKode;
 
 	// Metadata
 

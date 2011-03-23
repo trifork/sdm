@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/specialefornbs/v1")
-@Table(name = "SpecialeForNBS")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SpecialeForNBS extends View {

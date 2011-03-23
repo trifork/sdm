@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/opbevaringsbetingelser/v1")
-@Table(name = "Opbevaringsbetingelser")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Opbevaringsbetingelser extends View {

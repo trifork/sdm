@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/dosisdispensering/v1")
-@Table(name = "OplysningerOmDosisdispensering")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class OplysningerOmDosisdispensering extends View {
@@ -33,10 +32,10 @@ public class OplysningerOmDosisdispensering extends View {
 	protected BigInteger mindsteAIPPrEnhed;
 
 	@Column(name = "MindsteRegisterprisEnh")
-	protected BigInteger mindsteRegisterprisEnh; // TODO: Bad name
+	protected BigInteger mindsteRegisterprisEnhed;
 
 	@Column(name = "TSPPrEnhed")
-	protected BigInteger tspPrEnhed; // TODO: Bad name
+	protected BigInteger tspPrEnhed;
 
 	@Column(name = "BilligsteDrugid")
 	protected BigInteger billigsteDrugid;

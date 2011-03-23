@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/pakningsstoerrelsesenhed/v1")
-@Table(name = "Pakningsstoerrelsesenhed")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Pakningsstoerrelsesenhed extends View {

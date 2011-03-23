@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/laegemiddelnavn/v1")
-@Table(name = "Laegemiddelnavn")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Laegemiddelnavn extends View {
@@ -22,9 +21,6 @@ public class Laegemiddelnavn extends View {
 
 	@Column(name = "DrugID")
 	protected BigInteger id;
-
-	@Column(name = "AdministrationsvejKode")
-	protected String administrationsvejId;
 
 	@Column(name = "LaegemidletsUforkortedeNavn")
 	protected String navn;

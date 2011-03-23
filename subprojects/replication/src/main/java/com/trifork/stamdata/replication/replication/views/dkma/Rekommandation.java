@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.dkma;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -39,11 +41,11 @@ public class Rekommandation extends View {
 	private Date modifiedDate;
 
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override

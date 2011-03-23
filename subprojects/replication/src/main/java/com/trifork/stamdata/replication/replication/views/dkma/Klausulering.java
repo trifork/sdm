@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/klausulering/v1")
-@Table(name = "Klausulering")
 public class Klausulering extends View {
 
 	@Id

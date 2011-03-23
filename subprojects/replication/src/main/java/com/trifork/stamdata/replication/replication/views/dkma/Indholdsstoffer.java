@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/indholdsstoffer/v1")
-@Table(name = "Indikation")
 public class Indholdsstoffer extends View {
 
 	@Id

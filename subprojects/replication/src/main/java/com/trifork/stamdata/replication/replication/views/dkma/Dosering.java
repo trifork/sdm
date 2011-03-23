@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/dosering/v1")
-@Table(name = "Dosering")
 public class Dosering extends View {
 
 	@Id
@@ -18,28 +17,28 @@ public class Dosering extends View {
 	protected BigInteger recordID;
 
 	@Column(name = "DoseringKode")
-	protected BigInteger code; // TODO: BigInt Why?
+	protected BigInteger kode;
 
 	@Column(name = "DoseringsTekst")
-	protected String text;
+	protected String tekst;
 
 	@Column(name = "DoseringKortTekst")
-	protected String shortText;
+	protected String kortTekst;
 
 	@Column(name = "DoseringstekstLinie1")
-	protected String descriptionLine1;
+	protected String beskrivelseLinje1;
 
 	@Column(name = "DoseringstekstLinie2")
-	protected String descriptionLinie2;
+	protected String beskrivelseLinje2;
 
 	@Column(name = "DoseringstekstLinie3")
-	protected String descriptionLinie3;
+	protected String beskrivelseLinje3;
 
 	@Column(name = "AntalEnhederPrDoegn")
-	protected Float numberOfUnitsPerDay;
+	protected Float antalEnhederPrDoegn;
 
 	@Column(name = "Aktiv")
-	protected Boolean active;
+	protected Boolean aktiv;
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
@@ -62,7 +61,7 @@ public class Dosering extends View {
 	@Override
 	public String getId() {
 
-		return code.toString();
+		return kode.toString();
 	}
 
 	@Override

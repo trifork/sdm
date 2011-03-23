@@ -8,8 +8,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "cpr/umyndigoerelsevaergerelation/v1")
-@Table(name = "UmyndiggoerelseVaergeRelation")
-public class UmyndiggoerelseVaergeRelation extends View {
+public class UmyndiggørelseVaergeRelation extends View {
 
 	@Id
 	@GeneratedValue

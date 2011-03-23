@@ -20,7 +20,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 public class DrugDosageStructureRelation extends View {
 
 	@Id
-	@Column(name = "DrugDosageStructurePID")
+	@Column(name = "DrugDosageStructureRelationPID")
 	@GeneratedValue
 	protected BigInteger recordId;
 
@@ -38,9 +38,11 @@ public class DrugDosageStructureRelation extends View {
 	@Column(length = 11)
 	protected long dosageStructureCode;
 
+	@Column(name="ValidFrom")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validFrom;
 
+	@Column(name="ModifiedDate")
 	@XmlTransient
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date modifiedDate;

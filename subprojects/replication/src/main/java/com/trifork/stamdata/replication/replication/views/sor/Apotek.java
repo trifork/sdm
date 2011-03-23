@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.sor;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -8,7 +10,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "sor/apotek/v1")
-@Table(name = "Apotek")
 public class Apotek extends View {
 
 	@Id
@@ -57,17 +58,17 @@ public class Apotek extends View {
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
 	@XmlTransient
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@XmlTransient
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override

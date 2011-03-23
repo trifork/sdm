@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/enhedspriser/v1")
-@Table(name = "Enhedspriser")
 public class Enhedspriser extends View {
 
 	@Id
@@ -17,14 +16,20 @@ public class Enhedspriser extends View {
 	@XmlTransient
 	private BigInteger recordID;
 
-	@Column(name = "Kode")
-	private String id;
-
-	@Column(name = "Tekst")
-	protected String text;
-
-	@Column(name = "KortTekst")
-	protected String shortText;
+	@Column(name = "Varenummer")
+	protected BigInteger varenummer;
+	
+	@Column(name = "DrugID")
+	protected BigInteger drugId;
+	
+	@Column(name = "PrisPrEnhed")
+	protected BigInteger prisPrEnhed;
+	
+	@Column(name = "PrisPrDDD")
+	protected BigInteger prisPrDDD;
+	
+	@Column(name = "BilligstePakning")
+	protected String billigstePakning;
 
 	// Metadata
 
@@ -43,7 +48,7 @@ public class Enhedspriser extends View {
 	@Override
 	public String getId() {
 
-		return id;
+		return varenummer.toString();
 	}
 
 	@Override

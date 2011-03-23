@@ -8,8 +8,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/formbetegnelse/v1")
-@Table(name = "Formbetegnelse")
-public class Formbetegnelser extends View {
+public class Formbetegnelse extends View {
 
 	@Id
 	@GeneratedValue

@@ -16,7 +16,7 @@ public class DosageVersion extends View {
 
 	@Id
 	@GeneratedValue
-	@Column(name = "DosageUnitPID")
+	@Column(name = "DosageVersionPID")
 	protected BigInteger id;
 
 	// Dato for Apotekerforeningens mærkevaretakst, som datasættet er
@@ -33,9 +33,11 @@ public class DosageVersion extends View {
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
 
+	@Column(name="ValidFrom")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validFrom;
 
+	@Column(name="ModifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	@XmlTransient
 	protected Date modifiedDate;

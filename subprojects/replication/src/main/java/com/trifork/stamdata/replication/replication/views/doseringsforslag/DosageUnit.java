@@ -43,9 +43,11 @@ public class DosageUnit extends View {
 	@Column(length = 100)
 	protected String textPlural;
 
+	@Column(name="ValidFrom")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validFrom;
 
+	@Column(name="ModifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	@XmlTransient
 	protected Date modifiedDate;

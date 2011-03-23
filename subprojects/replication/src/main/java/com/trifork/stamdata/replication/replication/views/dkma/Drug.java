@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.dkma;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -7,7 +9,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "dkma/laegemiddel/v1")
+@Entity(name = "dkma/lægemiddel/v1")
 @Table(name = "Laegemiddel")
 public class Drug extends View {
 
@@ -21,42 +23,84 @@ public class Drug extends View {
 	protected Long id;
 
 	@Column(name = "DrugName")
-	protected String name;
+	protected String nave;
 
 	@Column(name = "FormKode")
-	protected String formCode;
+	protected String formKode;
 
 	@Column(name = "FormTekst")
-	protected String formDescription;
+	protected String formTekst;
 
 	@Column(name = "StyrkeTekst")
-	protected String strengthDescription;
+	protected String styrkeTekst;
 
 	@Column(name = "StyrkeNumerisk")
-	protected Double stength;
+	protected Double styrke;
 
 	@Column(name = "StyrkeEnhed")
-	protected String stengthUnit;
+	protected String styrkeenhed;
 
 	@Column(name = "ATCKode")
-	protected String atcID;
+	protected String atc;
 
 	@Column(name = "ATCTekst")
-	protected String atcDescription;
+	protected String atcTekst;
 
 	@Column(name = "Dosisdispenserbar")
-	protected Boolean isDosageDispensable;
-
+	protected Boolean dosisdispenserbar;
+	
+	@Column(name = "Varetype")
+	protected String varetype;
+	
+	@Column(name = "Varedeltype")
+	protected String varedeltype;
+	
+	@Column(name = "AlfabetSekvensplads")
+	protected String alphabetSekvensplads;
+	
+	@Column(name = "SpecNummer")
+	protected String specNummer;
+	
+	@Column(name = "LaegemiddelformTekst")
+	protected String LaegemiddelformTekst; // TODO: What's the difference from formTekst?
+	
+	@Column(name = "KodeForYderligereFormOplysn")
+	protected String kodeForYderligereFormOplysn;
+	
+	@Column(name = "Trafikadvarsel")
+	protected Boolean trafikadvarsel;
+	
+	@Column(name = "Substitution")
+	protected String substitution;
+	
+	@Column(name = "LaegemidletsSubstitutionsgruppe")
+	protected String laegemidletsSubstitutionsgruppe;
+	
+	@Column(name = "DatoForAfregistrAfLaegemiddel")
+	protected String datoForAfregistrAfLaegemiddel;
+	
+	@Column(name = "Karantaenedato")
+	protected String karantaenedato;
+	
+	@Column(name = "AdministrationsvejKode")
+	protected String administrationsvejKode;
+	
+	@Column(name = "MTIndehaverKode")
+	protected BigInteger mtIndehaverKode;
+	
+	@Column(name = "RepraesentantDistributoerKode")
+	protected BigInteger repraesentantDistributoerKode;
+	
 	@XmlTransient
 	@Column(name = "ModifiedDate")
 	protected Date modifiedDate;
 
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override

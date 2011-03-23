@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.dkma;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -27,7 +29,7 @@ public class Indikationskode extends View {
 	protected String atc;
 
 	@Column(name = "DrugID")
-	protected BigInteger drugID; // TODO: BigInt Why?
+	protected BigInteger drugId; // TODO: BigInt Why?
 
 	// Metadata
 
@@ -36,11 +38,11 @@ public class Indikationskode extends View {
 	private Date modifiedDate;
 
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override

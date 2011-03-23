@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.autorisationsregisteret;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -20,13 +22,12 @@ public class Autorisation extends View {
 	@Column(name = "Autorisationsnummer")
 	protected String id;
 
-	@Column(name = "cpr")
 	protected String cpr;
 
-	@Column(name = "fornavn")
+	@Column(name = "Fornavn")
 	protected String fornavn;
 
-	@Column(name = "efternavn")
+	@Column(name = "Efternavn")
 	protected String efternavn;
 
 	@Column(name = "UddannelsesKode")
@@ -39,7 +40,7 @@ public class Autorisation extends View {
 	protected Date validTo;
 
 	@XmlTransient
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	@Column(name = "ModifiedDate")
 	private Date modifiedDate;
 

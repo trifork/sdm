@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/tilskudsprisgrupperpakningsniveau/v1")
-@Table(name = "TilskudsprisgrupperPakningsniveau")
 @XmlType(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TilskudsprisgrupperPakningsniveau extends View {

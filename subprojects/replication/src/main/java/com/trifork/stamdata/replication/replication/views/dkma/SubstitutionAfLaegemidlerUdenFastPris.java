@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/substitutionaflaegemidlerudenfastpris/v1")
-@Table(name = "SubstitutionAfLaegemidlerUdenFastPris")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SubstitutionAfLaegemidlerUdenFastPris extends View {

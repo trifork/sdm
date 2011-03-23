@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.cpr;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -10,7 +12,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "cpr/person/v1")
-@Table(name = "Person")
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 public class Person extends View {
 
@@ -28,21 +29,11 @@ public class Person extends View {
 	@Column(name = "Fornavn")
 	protected String fornavn;
 
-	public String getFornavn() {
-
-		return fornavn;
-	}
-
 	@Column(name = "Mellemnavn")
 	protected String mellemnavn;
 
 	@Column(name = "Efternavn")
 	protected String efternavn;
-
-	public String getEfternavn() {
-
-		return efternavn;
-	}
 
 	@Column(name = "CoNavn")
 	protected String coNavn;
@@ -95,17 +86,17 @@ public class Person extends View {
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
 	@XmlTransient
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@XmlTransient
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override

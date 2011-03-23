@@ -68,10 +68,12 @@ public class DosageStructure extends View {
 	protected String longTranslation;
 
 	@Temporal(TIMESTAMP)
+	@Column(name="ValidFrom")
 	protected Date validFrom;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
+	@Column(name="ModifiedDate")
 	protected Date modifiedDate;
 
 	@Override

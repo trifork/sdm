@@ -37,6 +37,9 @@ public class Pakningskombination extends View {
 
 	@Column(name = "EkspeditionensSamledePris")
 	protected BigInteger ekspeditionensSamledePris;
+	
+	@Column(name = "InformationspligtMarkering")
+	protected String informationspligtMarkering;
 
 	// Metadata
 

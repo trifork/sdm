@@ -8,8 +8,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/atc/v1")
-@Table(name = "ATC")
-public class ATCKoderOgTekst extends View {
+public class ATC extends View {
 
 	@Id
 	@GeneratedValue
@@ -18,10 +17,10 @@ public class ATCKoderOgTekst extends View {
 	private BigInteger recordID;
 
 	@Column(name = "ATC")
-	protected String code;
+	protected String kode;
 
 	@Column(name = "ATCTekst")
-	protected String text;
+	protected String tekst;
 
 	@Column(name = "ATCNiveau1")
 	protected String niveau1;
@@ -55,7 +54,7 @@ public class ATCKoderOgTekst extends View {
 	@Override
 	public String getId() {
 
-		return code;
+		return kode;
 	}
 
 	@Override

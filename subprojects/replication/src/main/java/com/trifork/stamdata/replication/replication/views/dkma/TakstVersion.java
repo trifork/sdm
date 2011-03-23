@@ -9,7 +9,6 @@ import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "dkma/takstversion/v1")
-@Table(name = "TakstVersion")
 @XmlType(namespace = Namespace.STAMDATA_3_0)
 @XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)

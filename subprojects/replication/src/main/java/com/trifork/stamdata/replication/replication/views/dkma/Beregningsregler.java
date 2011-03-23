@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication.views.dkma;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
@@ -8,7 +10,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/beregningsregler/v1")
-@Table(name = "Beregningsregler")
 public class Beregningsregler extends View {
 
 	@Id
@@ -18,10 +19,10 @@ public class Beregningsregler extends View {
 	private BigInteger recordID;
 
 	@Column(name = "Kode")
-	protected String code;
+	protected String kode;
 
 	@Column(name = "Tekst")
-	protected String text;
+	protected String tekst;
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
@@ -29,18 +30,18 @@ public class Beregningsregler extends View {
 
 	@XmlTransient
 	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@XmlTransient
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override
 	public String getId() {
 
-		return code;
+		return kode;
 	}
 
 	@Override

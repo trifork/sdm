@@ -8,7 +8,6 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "dkma/emballagetypekoder/v1")
-@Table(name = "EmballagetypeKoder")
 public class EmballagetypeKoder extends View {
 
 	@Id
@@ -21,10 +20,10 @@ public class EmballagetypeKoder extends View {
 	private String id;
 
 	@Column(name = "Tekst")
-	protected String text;
+	protected String tekst;
 
 	@Column(name = "KortTekst")
-	protected String shortText;
+	protected String kortTekst;
 
 	// Metadata
 
