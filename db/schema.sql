@@ -84,7 +84,7 @@ CREATE TABLE DosageStructure (
 	supplementaryText VARCHAR(200), -- OPTIONAL
 	xml VARCHAR(10000) NOT NULL,
 	shortTranslation VARCHAR(70),
-	longTranslation VARCHAR(10000), -- OPTIONAL (TODO: The specs say it cannot be NULL, but it sometimes is.)
+	longTranslation VARCHAR(10000), -- OPTIONAL (The specs say it cannot be NULL. See comment in DosageStructure.java)
 	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME ,

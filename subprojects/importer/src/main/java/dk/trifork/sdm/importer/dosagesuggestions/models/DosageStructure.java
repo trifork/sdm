@@ -36,6 +36,8 @@ public class DosageStructure extends DosageRecord {
 
 	// En lang doseringstekst baggrund af xml og
 	// lægemidlets doseringsenhed. Obligatorisk. Strengm 10000 tegn.
+	// TODO: While this is marked as (Mandatory) in practice it is 
+	// sometimes null. This will change in future. (Tom K)
 	private String longTranslation;
 
 	@Output
