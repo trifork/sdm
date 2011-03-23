@@ -2,7 +2,6 @@ package dk.trifork.sdm.importer.autorisationsregister;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,15 +38,9 @@ public class AutParserTest {
 		assertEquals("Tage Søgaard", a.getFornavn());
 	}
 
-	@Test
+	@Test(expected = Exception.class)
 	public void testInvalid() throws IOException {
 
-		try {
-			Autorisationsregisterudtraek auts = AutorisationsregisterParser.parse(invalid, Calendar.getInstance());
-			fail();
-		}
-		catch (Exception e) {
-		}
+		AutorisationsregisterParser.parse(invalid, Calendar.getInstance());
 	}
-
 }
