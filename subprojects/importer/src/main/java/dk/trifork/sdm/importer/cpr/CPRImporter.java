@@ -179,7 +179,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 	static private String createHideNameAndAddressesSQL() {
 
-		String SQL = "UPDATE Person SET " + "Fornavn='Navnebeskyttet', " + "Mellemnavn='Navnebeskyttet', " + "Efternavn='Navnebeskyttet', " + "CoNavn='Navnebeskyttet', " + "Lokalitet='Adressebeskyttet', " + "Vejnavn='Adressebeskyttet', " + "Bygningsnummer='99', " + "Husnummer='99', " + "Etage='99', " + "SideDoerNummer='', " + "Bynavn='Adressebeskyttet', " + "Postnummer='9999', " + "PostDistrikt='Adressebeskyttet', " + "VejKode='99', " + "KommuneKode='999', " + "ModifiedBy='SDM2-AddressAndNameProtection' " + whereNameAndAddressesSQL();
+		String SQL = "UPDATE Person SET " + "Fornavn='Navnebeskyttet', " + "Mellemnavn='Navnebeskyttet', " + "Efternavn='Navnebeskyttet', " + "CoNavn='Navnebeskyttet', " + "Lokalitet='Adressebeskyttet', " + "Vejnavn='Adressebeskyttet', " + "Bygningsnummer='99', " + "Husnummer='99', " + "Etage='99', " + "SideDoerNummer='', " + "Bynavn='Adressebeskyttet', " + "Postnummer='9999', " + "PostDistrikt='Adressebeskyttet', " + "VejKode='99', " + "KommuneKode='999' " + whereNameAndAddressesSQL();
 
 		return SQL;
 	}
