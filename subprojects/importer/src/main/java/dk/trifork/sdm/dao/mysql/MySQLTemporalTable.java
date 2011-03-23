@@ -2,6 +2,7 @@ package dk.trifork.sdm.dao.mysql;
 
 import static dk.trifork.sdm.util.DateUtils.toCalendar;
 import static dk.trifork.sdm.util.DateUtils.toMySQLdate;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -14,8 +15,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.log4j.Logger;
-import dk.trifork.sdm.dao.TemporalStamdataEntityStorage;
+
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.Dataset;
@@ -23,7 +25,7 @@ import dk.trifork.sdm.model.StamdataEntity;
 import dk.trifork.sdm.util.DateUtils;
 
 
-public class MySQLTemporalTable<T extends StamdataEntity> implements TemporalStamdataEntityStorage<T> {
+public class MySQLTemporalTable<T extends StamdataEntity> {
 
 	public static final String MODIFIED_BY = "SDM2";
 	private Logger logger = Logger.getLogger(getClass());
@@ -694,7 +696,6 @@ public class MySQLTemporalTable<T extends StamdataEntity> implements TemporalSta
 		}
 	}
 
-	@Override
 	public void truncate() {
 
 		try {
@@ -705,7 +706,6 @@ public class MySQLTemporalTable<T extends StamdataEntity> implements TemporalSta
 		}
 	}
 
-	@Override
 	public void drop() {
 
 		try {
