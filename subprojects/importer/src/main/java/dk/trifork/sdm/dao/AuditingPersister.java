@@ -6,8 +6,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import dk.trifork.sdm.dao.mysql.MySQLTemporalTable;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalTable.StamdataEntityVersion;
+import dk.trifork.sdm.dao.DatabaseTableWrapper.StamdataEntityVersion;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.Dataset;
@@ -61,7 +60,7 @@ public class AuditingPersister implements Persister {
 
 		Calendar now = Calendar.getInstance();
 		
-		MySQLTemporalTable<T> table = getTable(dataset.getType());
+		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 		
 		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
 
@@ -219,9 +218,9 @@ public class AuditingPersister implements Persister {
 
 	}
 
-	public <T extends StamdataEntity> MySQLTemporalTable<T> getTable(Class<T> clazz) throws FilePersistException {
+	public <T extends StamdataEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws FilePersistException {
 
-		return new MySQLTemporalTable<T>(connection, clazz);
+		return new DatabaseTableWrapper<T>(connection, clazz);
 	}
 
 	/**
@@ -233,7 +232,7 @@ public class AuditingPersister implements Persister {
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
 		
 		Calendar now = Calendar.getInstance();
-		MySQLTemporalTable<T> table = getTable(dataset.getType());
+		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 		
 		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
 		

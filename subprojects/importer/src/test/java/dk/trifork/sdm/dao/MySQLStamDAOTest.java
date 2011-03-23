@@ -1,7 +1,8 @@
-package dk.trifork.sdm.dao.mysql;
+package dk.trifork.sdm.dao;
 
 import dk.trifork.sdm.dao.AuditingPersister;
-import dk.trifork.sdm.dao.mysql.MySQLTemporalTable.StamdataEntityVersion;
+import dk.trifork.sdm.dao.DatabaseTableWrapper;
+import dk.trifork.sdm.dao.DatabaseTableWrapper.StamdataEntityVersion;
 import dk.trifork.sdm.importer.takst.model.DivEnheder;
 import dk.trifork.sdm.importer.takst.model.Laegemiddel;
 import dk.trifork.sdm.importer.takst.model.Takst;
@@ -27,7 +28,7 @@ public class MySQLStamDAOTest {
 	private Takst takst;
 	private Laegemiddel laegemiddel;
 	private AuditingPersister dao;
-	private MySQLTemporalTable laegemiddeltableMock;
+	private DatabaseTableWrapper laegemiddeltableMock;
 
 	@Before
 	public void setUp() throws Exception {
@@ -60,7 +61,7 @@ public class MySQLStamDAOTest {
 		Connection con = mock(Connection.class);
 		AuditingPersister realDao = new AuditingPersister(con);
 		dao = spy(realDao);
-		laegemiddeltableMock = mock(MySQLTemporalTable.class);
+		laegemiddeltableMock = mock(DatabaseTableWrapper.class);
 		doReturn(laegemiddeltableMock).when(dao).getTable(Laegemiddel.class);
 	}
 

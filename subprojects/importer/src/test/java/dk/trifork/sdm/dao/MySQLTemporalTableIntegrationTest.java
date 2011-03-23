@@ -1,4 +1,4 @@
-package dk.trifork.sdm.dao.mysql;
+package dk.trifork.sdm.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,6 +10,7 @@ import java.util.Calendar;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
+import dk.trifork.sdm.dao.DatabaseTableWrapper;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 import dk.trifork.sdm.model.StamdataEntity;
@@ -21,7 +22,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAbeforeB() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t2, t3);
@@ -33,7 +34,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBbeforeA() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
@@ -45,7 +46,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBinA() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t2);
@@ -57,7 +58,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAinB() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t3);
@@ -69,7 +70,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAoverlapsB() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t3);
@@ -81,7 +82,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBoverlapsA() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t2);
@@ -93,7 +94,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testGetValidFromAndTo() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, Calendar.getInstance());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
@@ -107,7 +108,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, Calendar.getInstance());
 		table.fetchEntityVersions(a.getKey(), t2, t3); // Find the row we just
@@ -128,7 +129,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidToOnCurrentRow1() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, Calendar.getInstance());
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
@@ -147,7 +148,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidToOnCurrentRow_noSideEffects() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, Calendar.getInstance());
@@ -171,7 +172,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testDeleteCurrentRow() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, Calendar.getInstance());
 		table.fetchEntityVersions(a.getKey(), t0, t1);
@@ -184,7 +185,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidFromOnCurrentRow() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, Calendar.getInstance());
 		table.fetchEntityVersions(a.getKey(), t1, t2); // Find the row we just
@@ -203,7 +204,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testdataInCurrentRowEquals() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, Calendar.getInstance());
@@ -217,7 +218,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testdataInCurrentRowEquals2() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3) {
 
@@ -239,7 +240,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchEntityVersions() throws Exception {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		MySQLTemporalTable<SDE> table = new MySQLTemporalTable<SDE>(con, SDE.class);
+		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, Calendar.getInstance());

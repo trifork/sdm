@@ -1,4 +1,4 @@
-package dk.trifork.sdm.dao.mysql;
+package dk.trifork.sdm.dao;
 
 import static dk.trifork.sdm.util.DateUtils.toCalendar;
 import static dk.trifork.sdm.util.DateUtils.toMySQLdate;
@@ -25,7 +25,7 @@ import dk.trifork.sdm.model.StamdataEntity;
 import dk.trifork.sdm.util.DateUtils;
 
 
-public class MySQLTemporalTable<T extends StamdataEntity> {
+public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	public static final String MODIFIED_BY = "SDM2";
 	private Logger logger = Logger.getLogger(getClass());
@@ -46,12 +46,12 @@ public class MySQLTemporalTable<T extends StamdataEntity> {
 	private List<String> notUpdatedColumns;
 	private int insertedRecords, updatedRecords, deletedRecords = 0;
 
-	public MySQLTemporalTable(Connection con, Class<T> clazz) throws FilePersistException {
+	public DatabaseTableWrapper(Connection con, Class<T> clazz) throws FilePersistException {
 
 		this(con, clazz, Dataset.getEntityTypeDisplayName(clazz));
 	}
 
-	protected MySQLTemporalTable(Connection con, Class<T> clazz, String tableName) throws FilePersistException {
+	protected DatabaseTableWrapper(Connection con, Class<T> clazz, String tableName) throws FilePersistException {
 
 		this.tablename = tableName;
 		this.clazz = clazz;

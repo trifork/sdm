@@ -1,4 +1,4 @@
-package dk.trifork.sdm.dao.mysql;
+package dk.trifork.sdm.dao;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import junit.framework.TestCase;
