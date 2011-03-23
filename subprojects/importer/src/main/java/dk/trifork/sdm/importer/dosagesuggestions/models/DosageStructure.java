@@ -44,20 +44,10 @@ public class DosageStructure extends AbstractStamdataEntity {
 
 	private Date validFrom;
 
-	public void setReleaseNumber(long releaseNumber) {
-
-		this.releaseNumber = releaseNumber;
-	}
-
 	@Output
 	public long getReleaseNumber() {
 
 		return releaseNumber;
-	}
-
-	public void setCode(long code) {
-
-		this.code = code;
 	}
 
 	@Id
@@ -67,20 +57,10 @@ public class DosageStructure extends AbstractStamdataEntity {
 		return code;
 	}
 
-	public void setType(String type) {
-
-		this.type = type;
-	}
-
 	@Output
 	public String getType() {
 
 		return type;
-	}
-
-	public void setSimpleString(String simpleString) {
-
-		this.simpleString = simpleString;
 	}
 
 	@Output
@@ -89,20 +69,10 @@ public class DosageStructure extends AbstractStamdataEntity {
 		return simpleString;
 	}
 
-	public void setSupplementaryText(String supplementaryText) {
-
-		this.supplementaryText = supplementaryText;
-	}
-
 	@Output
 	public String getSupplementaryText() {
 
 		return supplementaryText;
-	}
-
-	public void setXml(String xml) {
-
-		this.xml = xml;
 	}
 
 	@Output
@@ -111,20 +81,10 @@ public class DosageStructure extends AbstractStamdataEntity {
 		return xml;
 	}
 
-	public void setShortTranslation(String shortTranslation) {
-
-		this.shortTranslation = shortTranslation;
-	}
-
 	@Output
 	public String getShortTranslation() {
 
 		return shortTranslation;
-	}
-
-	public void setLongTranslation(String longTranslation) {
-
-		this.longTranslation = longTranslation;
 	}
 
 	@Output
