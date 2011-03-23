@@ -25,20 +25,21 @@ public class AuditingPersister implements Persister {
 
 		this.connection = connection;
 	}
-	
+
 	public void persistCompleteDataset(List<CompleteDataset<? extends StamdataEntity>> datasets) throws FilePersistException {
+
 		// TODO: Remove this method. We should use the version below.
-		
+
 		@SuppressWarnings("unchecked")
 		CompleteDataset<? extends StamdataEntity>[] array = datasets.toArray(new CompleteDataset[] {});
-		
+
 		persistCompleteDataset(array);
 	}
 
 	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
 
 		for (CompleteDataset<? extends StamdataEntity> dataset : datasets) {
-		
+
 			if (!dataset.getType().isAnnotationPresent(Output.class)) continue;
 
 			updateValidToOnRecordsNotInDataset(dataset);
@@ -59,7 +60,9 @@ public class AuditingPersister implements Persister {
 	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException {
 
 		Calendar now = Calendar.getInstance();
+		
 		MySQLTemporalTable<T> table = getTable(dataset.getType());
+		
 		logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
 
 		int processedEntities = 0;
@@ -79,10 +82,13 @@ public class AuditingPersister implements Persister {
 			else {
 				// At least one version was found in the same validity range.
 				boolean insertVersion = true;
+				
 				do {
 					Calendar existingValidFrom = table.getCurrentRowValidFrom();
 					Calendar existingValidTo = table.getCurrentRowValidTo();
+					
 					boolean dataEquals = table.dataInCurrentRowEquals(sde);
+					
 					if (existingValidFrom.before(sde.getValidFrom())) {
 						if (existingValidTo.equals(sde.getValidFrom())) {
 							// This existing row is not in the range of our
@@ -225,18 +231,27 @@ public class AuditingPersister implements Persister {
 	private <T extends StamdataEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws FilePersistException {
 
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
+		
 		Calendar now = Calendar.getInstance();
 		MySQLTemporalTable<T> table = getTable(dataset.getType());
+		
 		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
+		
 		int nExisting = 0;
+		
 		for (StamdataEntityVersion ev : evs) {
+			
 			List<? extends StamdataEntity> entitiesWithId = dataset.getEntitiesById(ev.id);
+			
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
+			
 			if (!recordFoundInCompleteDataset) table.updateValidToOnEntityVersion(dataset.getValidFrom(), ev, now);
+			
 			if (++nExisting % 10000 == 0) {
 				logger.debug("Processed " + nExisting + " existing records of type " + dataset.getEntityTypeDisplayName());
 			}
 		}
+		
 		logger.debug("...updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " complete. Updated: " + table.getUpdatedRecords() + " records");
 	}
 
