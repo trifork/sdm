@@ -29,7 +29,7 @@ public class RecordDao {
 		checkNotNull(modifiedDate);
 		checkArgument(limit > 0);
 
-		// TODO: This convertion should not take place here.
+		// TODO: This conversion should not take place here.
 		
 		BigInteger id = new BigInteger(recordId);
 		
