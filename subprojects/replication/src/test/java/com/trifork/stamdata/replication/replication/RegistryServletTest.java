@@ -120,7 +120,7 @@ public class RegistryServletTest {
 
 		get();
 
-		verify(response).setContentType("application/atom+fastinfoset");
+		verify(response).setContentType("application/atom+fastinfoset; charset=utf-8");
 		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(true));
 	}
 
@@ -131,9 +131,11 @@ public class RegistryServletTest {
 		
 		get();
 		
-		verify(response).setContentType("application/atom+xml");
+		verify(response).setContentType("application/atom+xml; charset=utf-8");
 		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(false));
 	}
+
+	// TODO: Make test for unaccepted content type.
 
 	@Test
 	public void Should_return_records_from_the_correct_offset() throws Exception {
