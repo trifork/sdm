@@ -71,7 +71,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 				addressProtection(connection);
 
 				// Add latest 'ikraft' date to database if we are not importing
-				// a full set
+				// a full set.
 				
 				if (isDeltaFile(personFile)) {
 					insertIkraft(cpr.getValidFrom(), connection);
