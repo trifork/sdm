@@ -1,6 +1,6 @@
 <h2>Revisionslog</h2>
 <p id="info">
-	Revitionsloggen viser alle tilgange til data samt alle oprettelser og nedlæggelser af klienter og administratore. 
+	Revitionsloggen viser alle tilgange til data samt alle oprettelser og nedlæggelser af klienter og administratorer. 
 </p>
 <table id="log">
 	<tr>
