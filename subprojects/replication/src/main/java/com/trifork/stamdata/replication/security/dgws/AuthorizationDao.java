@@ -17,7 +17,7 @@ public class AuthorizationDao {
 
 	public boolean isClientAuthorized(String cvr, String viewName) {
 
-		Query q = em.createQuery("COUNT(a) FROM Authorization a WHERE cvr = :cvr AND viewName = :viewName");
+		Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE cvr = :cvr AND viewName = :viewName");
 		q.setParameter("cvr", cvr);
 		q.setParameter("viewName", viewName);
 		return 1 == (Long) q.getSingleResult();
