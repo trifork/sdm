@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import javax.persistence.Entity;
 
 /**
- * Convinience methods for working with views.
+ * Convenience methods for working with views.
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
