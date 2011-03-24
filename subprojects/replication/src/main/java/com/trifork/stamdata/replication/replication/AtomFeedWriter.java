@@ -72,17 +72,13 @@ public class AtomFeedWriter {
 		feed.writeStartElement("entry");
 
 		feed.writeStartElement("id");
-		feed.writeCharacters(TAG_PREFIX + path + "?" + "offset=" + record.getOffset());
+		feed.writeCharacters(TAG_PREFIX + path + "/" + record.getOffset());
 		feed.writeEndElement(); // Id
 
 		// The title element is required,
 		// we'll just leave it empty.
 
 		feed.writeEmptyElement("title");
-
-		feed.writeStartElement(Namespace.STAMDATA_3_0, "offset");
-		feed.writeCharacters(record.getOffset());
-		feed.writeEndElement();
 
 		feed.writeStartElement("updated");
 		feed.writeCharacters(AtomDate.format(record.getUpdated()));
