@@ -43,7 +43,7 @@ public class AtomFeedWriter {
 			
 			// Start the feed.
 
-			writer.writeStartDocument();
+			writer.writeStartDocument("utf-8", "1.0");
 
 			writer.setDefaultNamespace(ATOM_NS);
 			writer.writeStartElement("feed");
