@@ -12,6 +12,8 @@ import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
 import dk.trifork.sdm.util.DateUtils;
 
+import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
 
 
@@ -30,14 +32,14 @@ public class CPRParserTest {
 		assertEquals("0101965058", record.getCpr());
 		assertEquals("0101965059", record.getGaeldendeCpr());
 		assertEquals("01", record.getStatus());
-		assertEquals(CPRParser.yyyyMMddHHmm.parse("200012240000"), record.getStatusDato());
+		assertEquals(yyyyMMddHHmm.parse("200012240000"), record.getStatusDato());
 		assertEquals("*", record.getStatusMakering());
 		assertEquals("K", record.getKoen());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), record.getFoedselsdato());
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), record.getFoedselsdato());
 		assertEquals("*", record.getFoedselsdatoMarkering());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-09-09"), record.getStartDato());
+		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getStartDato());
 		assertEquals("*", record.getStartDatoMarkering());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2007-09-09"), record.getSlutDato());
+		assertEquals(yyyy_MM_dd.parse("2007-09-09"), record.getSlutDato());
 		assertEquals("*", record.getSlutDatoMarkering());
 		assertEquals("Pensionist", record.getStilling());
 
@@ -76,8 +78,8 @@ public class CPRParserTest {
 		NavneBeskyttelse record = CPRParser.navneBeskyttelse(LINE);
 
 		assertEquals("2802363039", record.getCpr());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
+		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
+		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
 	}
 
 	@Test
@@ -97,7 +99,7 @@ public class CPRParserTest {
 		assertEquals("*", record.getMellemnavnMarkering());
 		assertEquals("Wicker", record.getEfternavn());
 		assertEquals("*", record.getEfternavnMarkering());
-		assertEquals(CPRParser.yyyyMMddHHmm.parse("197902152000"), record.getStartDato());
+		assertEquals(yyyyMMddHHmm.parse("197902152000"), record.getStartDato());
 		assertEquals(" ", record.getStartDatoMarkering());
 		assertEquals("Wicker,Hans-Martin", record.getAdresseringsNavn());
 	}
@@ -129,13 +131,13 @@ public class CPRParserTest {
 		assertEquals("3112970028", record.getCpr());
 		assertEquals("0003", record.getTypeKode());
 		assertEquals("Mor", record.getTypeTekst());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"), record.getForaeldreMyndighedStartDato());
+		assertEquals(yyyy_MM_dd.parse("2008-01-01"), record.getForaeldreMyndighedStartDato());
 		assertEquals("*", record.getForaeldreMyndighedMarkering());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2009-01-01"), record.getForaeldreMyndighedSlettedato());
+		assertEquals(yyyy_MM_dd.parse("2009-01-01"), record.getForaeldreMyndighedSlettedato());
 		assertEquals("0601641276", record.getRelationCpr());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-06-01"), record.getRelationCprStartDato());
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2008-01-01")), record.getValidFrom());
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2009-01-01")), record.getValidTo());
+		assertEquals(yyyy_MM_dd.parse("2008-06-01"), record.getRelationCprStartDato());
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2008-01-01")), record.getValidFrom());
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2009-01-01")), record.getValidTo());
 	}
 
 	@Test
@@ -151,15 +153,15 @@ public class CPRParserTest {
 
 		// Assert
 		assertEquals("0709614126", record.getCpr());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2000-02-28"), record.getUmyndigStartDato());
+		assertEquals(yyyy_MM_dd.parse("2000-02-28"), record.getUmyndigStartDato());
 		assertEquals("*", record.getUmyndigStartDatoMarkering());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-02-28"), record.getUmyndigSletteDato());
+		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getUmyndigSletteDato());
 		assertEquals("0001", record.getTypeKode());
 		assertEquals("Værges CPR findes", record.getTypeTekst());
 		assertEquals("0904414131", record.getRelationCpr());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-06-01"), record.getRelationCprStartDato());
+		assertEquals(yyyy_MM_dd.parse("2008-06-01"), record.getRelationCprStartDato());
 		assertEquals("Roberto Andersen", record.getVaergesNavn());
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2007-01-01"), record.getVaergesNavnStartDato());
+		assertEquals(yyyy_MM_dd.parse("2007-01-01"), record.getVaergesNavnStartDato());
 		assertEquals("99 Tarragon Ln, Edgewater, MD, USA", record.getRelationsTekst1());
 		assertEquals("", record.getRelationsTekst2());
 		assertEquals("", record.getRelationsTekst3());
@@ -167,17 +169,17 @@ public class CPRParserTest {
 		assertEquals("", record.getRelationsTekst5());
 		// Insert a date into the 'DataSet' before 'UmyndigStartDato' and test
 		// that we get the date from the record
-		cpr.setValidFrom(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-02-27")));
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-02-28")), record.getValidFrom());
+		cpr.setValidFrom(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-02-27")));
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-02-28")), record.getValidFrom());
 		// Insert a date into the 'DataSet' after 'UmyndigStartDato' and test
 		// that we get the date from the dataset
-		cpr.setValidFrom(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")));
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")), record.getValidFrom());
+		cpr.setValidFrom(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-03-01")));
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-03-01")), record.getValidFrom());
 		// Clear 'UmyndigStartDato' and check that we get the one from the
 		// dataset
 		record.setUmyndigStartDato(null);
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2000-03-01")), record.getValidFrom());
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-03-01")), record.getValidFrom());
 
-		assertEquals(DateUtils.toCalendar(CPRParser.yyyy_MM_dd.parse("2008-02-28")), record.getValidTo());
+		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2008-02-28")), record.getValidTo());
 	}
 }

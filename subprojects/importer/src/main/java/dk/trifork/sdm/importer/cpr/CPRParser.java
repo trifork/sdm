@@ -1,5 +1,7 @@
 package dk.trifork.sdm.importer.cpr;
 
+import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
 import dk.trifork.sdm.importer.cpr.model.*;
 import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.util.DateUtils;
@@ -13,8 +15,6 @@ import java.util.Date;
 
 public class CPRParser {
 
-	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
-	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
 	static final String EMPTY_DATE_STRING = "000000000000";
 
 

@@ -2,6 +2,7 @@ package dk.trifork.sdm.util;
 
 import org.apache.log4j.Logger;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,6 +11,9 @@ public class DateUtils {
 	public static final Calendar FUTURE = toCalendar(2999,12,31);
 	private static Logger logger = Logger.getLogger(DateUtils.class);
 	
+	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
+	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
+
 
 	/**
 	 * @param long1 representing a date sing the format: yyyyMMdd.

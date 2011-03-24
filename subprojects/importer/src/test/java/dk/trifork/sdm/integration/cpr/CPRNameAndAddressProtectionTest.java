@@ -1,5 +1,6 @@
 package dk.trifork.sdm.integration.cpr;
 
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -18,7 +19,6 @@ import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.importer.cpr.CPRImporter;
-import dk.trifork.sdm.importer.cpr.CPRParser;
 import dk.trifork.sdm.jobspooler.NavnebeskyttelseRestrukt;
 
 
@@ -75,15 +75,15 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("9999", rs.getString("Postnummer"));
 		assertEquals("Adressebeskyttet", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-12-31"), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2110-12-31"), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(yyyy_MM_dd.parse("1997-12-31"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2110-12-31"), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Foedselsdato"));
 		assertEquals("", rs.getString("Stilling"));
 		assertEquals("99", rs.getString("VejKode"));
 		assertEquals("999", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 		rs.close();
 		rs = stmt.executeQuery("Select * from AdresseBeskyttelse where CPR='0709614452'");
@@ -101,8 +101,8 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("Vodskov", rs.getString("Bynavn"));
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-12-31"), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2110-12-31"), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(yyyy_MM_dd.parse("1997-12-31"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2110-12-31"), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
 		assertTrue(rs.last());
@@ -144,12 +144,12 @@ public class CPRNameAndAddressProtectionTest {
 		assertNull(rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 
 		// Set 'NavneBeskyttelseStartDato' and make sure its moved when
@@ -177,15 +177,15 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("9999", rs.getString("Postnummer"));
 		assertEquals("Adressebeskyttet", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("99", rs.getString("VejKode"));
 		assertEquals("999", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 
 		// Check that we have name and address in the 'AdresseBeskyttelse'
@@ -204,7 +204,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("Vodskov", rs.getString("Bynavn"));
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
@@ -233,15 +233,15 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("9999", rs.getString("Postnummer"));
 		assertEquals("Adressebeskyttet", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Bensionist", rs.getString("Stilling"));
 		assertEquals("99", rs.getString("VejKode"));
 		assertEquals("999", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-18"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-18"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 
 		// Check that we have name and address in the 'AdresseBeskyttelse'
@@ -260,7 +260,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("Vodskov", rs.getString("Bynavn"));
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
@@ -309,15 +309,15 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("9999", rs.getString("Postnummer"));
 		assertEquals("Adressebeskyttet", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2010-07-28"), rs.getDate("NavneBeskyttelseStartDato"));
 		assertNull(rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("99", rs.getString("VejKode"));
 		assertEquals("999", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 
 		// Set 'NavneBeskyttelseSletteDato' to past date
@@ -346,11 +346,11 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.next()); // The protected record
 		assertTrue(rs.last());
 

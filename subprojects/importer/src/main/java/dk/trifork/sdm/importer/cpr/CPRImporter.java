@@ -1,5 +1,7 @@
 package dk.trifork.sdm.importer.cpr;
 
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -51,7 +53,9 @@ public class CPRImporter implements FileImporterControlledIntervals {
 					if (latestIKraft == null) {
 						logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
 					}
-					else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft)) throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + CPRParser.yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + CPRParser.yyyy_MM_dd.format(latestIKraft.getTime()));
+					else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft)) {
+						throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(latestIKraft.getTime()));
+					}
 				}
 
 				logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
@@ -145,7 +149,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	void insertIkraft(Calendar calendar, Connection con) throws FilePersistException {
 
 		try {
-			logger.debug("Inserting " + CPRParser.yyyy_MM_dd.format(calendar.getTime()) + " as new 'IkraftDato'");
+			logger.debug("Inserting " + yyyy_MM_dd.format(calendar.getTime()) + " as new 'IkraftDato'");
 			Statement stm = con.createStatement();
 			String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
 			stm.execute(query);

@@ -1,15 +1,10 @@
 package dk.trifork.sdm.integration.cpr;
 
-import static org.junit.Assert.*;
-import dk.trifork.sdm.config.MySQLConnectionManager;
-import dk.trifork.sdm.importer.cpr.CPRImporter;
-import dk.trifork.sdm.importer.cpr.CPRParser;
-import dk.trifork.sdm.importer.exceptions.FileImporterException;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.sql.Connection;
@@ -17,6 +12,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Calendar;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import dk.trifork.sdm.config.MySQLConnectionManager;
+import dk.trifork.sdm.importer.cpr.CPRImporter;
+import dk.trifork.sdm.importer.exceptions.FileImporterException;
 
 
 public class CPRIntegrationTest {
@@ -70,15 +74,15 @@ public class CPRIntegrationTest {
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1997-09-09"), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-02-20"), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(yyyy_MM_dd.parse("1997-09-09"), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2001-02-20"), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
@@ -109,14 +113,14 @@ public class CPRIntegrationTest {
 		assertEquals("0003", rs.getString("TypeKode"));
 		assertEquals("Mor", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		rs.next();
 		assertEquals("0004", rs.getString("TypeKode"));
 		assertEquals("Far", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 
 		assertTrue(rs.last());
 		stmt.close();
@@ -139,7 +143,7 @@ public class CPRIntegrationTest {
 		assertEquals("0001", rs.getString("TypeKode"));
 		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
 		assertEquals("0904414131", rs.getString("RelationCpr"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2000-02-28"), rs.getDate("RelationCprStartDato"));
+		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("RelationCprStartDato"));
 		assertEquals("", rs.getString("VaergesNavn"));
 		assertEquals(null, rs.getDate("VaergesNavnStartDato"));
 		assertEquals("", rs.getString("RelationsTekst1"));
@@ -147,8 +151,8 @@ public class CPRIntegrationTest {
 		assertEquals("", rs.getString("RelationsTekst3"));
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-19"), rs.getDate("ValidFrom"));
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-19"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
@@ -252,13 +256,13 @@ public class CPRIntegrationTest {
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
 		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
 
 		fInitial = getFile("data/cpr/testSequence2/D100314.L431101");
 		new CPRImporter().run(Arrays.asList(fInitial));
 
 		latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(CPRParser.yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
+		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
 
 		fInitial = getFile("data/cpr/testOutOfSequence/D100314.L431101");
 		new CPRImporter().run(Arrays.asList(fInitial));
