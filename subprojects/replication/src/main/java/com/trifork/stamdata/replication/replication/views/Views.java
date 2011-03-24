@@ -1,9 +1,15 @@
 package com.trifork.stamdata.replication.replication.views;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.persistence.Entity;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 
 /**
  * Convenience methods for working with views.
@@ -17,18 +23,17 @@ public final class Views {
 	/**
 	 * Checks that the view has be configured correctly.
 	 * 
-	 * All views must be annotated with {@link Entity}. All views must have a
-	 * name specified by {@link Entity#name()}.
+	 * All views must be annotated with {@link Entity}.
+	 * All views must be annotated with {@link ViewPath}.
+	 * All views must be annotated with {@link XmlRootElement}.
 	 */
 	public static void checkViewIntegrity(Class<? extends View> viewClass) {
 
 		checkNotNull(viewClass);
 
-		Entity annotation = viewClass.getAnnotation(Entity.class);
-		checkNotNull(annotation);
-		checkNotNull(annotation.name());
-
-		// TODO: Check XML annotations.
+		checkArgument(viewClass.isAnnotationPresent(Entity.class));
+		checkArgument(viewClass.isAnnotationPresent(XmlRootElement.class));
+		checkArgument(viewClass.isAnnotationPresent(ViewPath.class));
 	}
 
 	// TODO: Javadoc
