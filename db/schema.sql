@@ -817,7 +817,7 @@ CREATE TABLE Udleveringsbestemmelser (
 ) ENGINE=InnoDB;
 
 CREATE TABLE UmyndiggoerelseVaergeRelation (
-	ForaeldreMyndighedRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	UmyndiggoerelseVaergeRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
 	TypeKode VARCHAR(4) NOT NULL,
