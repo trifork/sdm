@@ -25,9 +25,12 @@ public class UserController extends AbstractController {
 	private final Provider<DatabaseAuditLogger> audit;
 	private final Provider<PageRenderer> renderer;
 
-	@Inject
-	UserController(@Whitelist Map<String, String> whitelist, Provider<UserDao> users, Provider<DatabaseAuditLogger> audit, Provider<PageRenderer> renderer) {
+	private final Provider<User> currentUser;
 
+	@Inject
+	UserController(Provider<User> currentUser, @Whitelist Map<String, String> whitelist, Provider<UserDao> users, Provider<DatabaseAuditLogger> audit, Provider<PageRenderer> renderer) {
+
+		this.currentUser = currentUser;
 		this.whitelist = whitelist;
 		this.users = users;
 		this.audit = audit;
@@ -94,7 +97,7 @@ public class UserController extends AbstractController {
 			User user = users.get().create(newUserName, newUserCPR, newUserCVR);
 
 			if (user != null) {
-				audit.get().write("New administrator created (new_user_cpr=%s, new_user_cvr=%s). Created by user_cpr=%s.", newUserCPR, newUserCVR, getUserCPR(request));
+				audit.get().write("New administrator created (new_user_cpr=%s, new_user_cvr=%s). Created by user_cpr=%s.", newUserCPR, newUserCVR, currentUser.get().getCpr());
 			}
 		}
 
@@ -108,7 +111,7 @@ public class UserController extends AbstractController {
 		User deletedUser = users.get().find(id);
 
 		if (deletedUser != null) {
-			String userCPR = getUserCPR(request);
+			String userCPR = currentUser.get().getCpr();
 			users.get().delete(id);
 			audit.get().write("Administrator '%s (ID=%s)' was deleted by user %s.", deletedUser.getName(), deletedUser.getId(), userCPR);
 		}
