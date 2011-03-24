@@ -23,6 +23,11 @@ import dk.trifork.sdm.spooler.SpoolerManager;
 import dk.trifork.sdm.util.DateUtils;
 
 
+/**
+ * Status servlet for the importer.
+ *
+ * @author Jan Buchholdt (jbu@trifork.com)
+ */
 public class ImporterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
