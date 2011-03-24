@@ -17,6 +17,7 @@ public class Person extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "PersonPID")
 	private BigInteger recordID;
 
@@ -89,12 +90,10 @@ public class Person extends View {
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@XmlTransient
 	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@XmlTransient
 	@Column(name = "ValidTo")
 	@Temporal(TIMESTAMP)
 	protected Date validTo;

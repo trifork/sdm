@@ -2,20 +2,26 @@ package com.trifork.stamdata.replication.replication.views.yderregisteret;
 
 import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.XmlType;
+
 import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.util.Namespace;
 
 
 @Entity(name = "yderegisteret/yder/v1")
 @Table(name = "YderregisterPerson")
-@XmlType(name = "yder", namespace = Namespace.STAMDATA_3_0)
 public class Person extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "YderregisterPersonPID")
 	private BigInteger recordID;
 

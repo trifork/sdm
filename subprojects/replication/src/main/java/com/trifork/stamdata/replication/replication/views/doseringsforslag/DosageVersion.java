@@ -16,6 +16,7 @@ public class DosageVersion extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "DosageVersionPID")
 	protected BigInteger id;
 

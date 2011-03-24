@@ -10,10 +10,12 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity(name = "sor/apotek/v1")
+@Table(name="Apotek")
 public class Apotek extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "ApotekPID")
 	private BigInteger recordID;
 

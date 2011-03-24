@@ -13,6 +13,7 @@ public class ForaeldremyndighedsRelation extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "ForaeldreMyndighedRelationPID")
 	protected BigInteger recordID;
 

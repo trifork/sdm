@@ -25,6 +25,7 @@ public class DosageStructure extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "DosageStructurePID")
 	protected BigInteger id;
 

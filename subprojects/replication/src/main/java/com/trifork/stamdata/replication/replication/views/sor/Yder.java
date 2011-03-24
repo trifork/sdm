@@ -13,6 +13,7 @@ public class Yder extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "YderPID")
 	private BigInteger recordID;
 

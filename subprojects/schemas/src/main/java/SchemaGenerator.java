@@ -2,15 +2,19 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.persistence.Entity;
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.*;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
 
-import com.trifork.stamdata.replication.replication.models.Record;
+import com.trifork.stamdata.replication.replication.views.View;
 
 
 public class SchemaGenerator {
@@ -26,7 +30,7 @@ public class SchemaGenerator {
 			}
 		}
 
-		String MODEL_PACKAGE = Record.class.getPackage().getName();
+		String MODEL_PACKAGE = View.class.getPackage().getName();
 		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForPackagePrefix(MODEL_PACKAGE)).setScanners(new TypeAnnotationsScanner()));
 		Class<?>[] classes = reflector.getTypesAnnotatedWith(Entity.class).toArray(new Class[0]);
 

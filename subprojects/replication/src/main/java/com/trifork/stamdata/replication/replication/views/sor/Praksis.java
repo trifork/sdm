@@ -15,6 +15,7 @@ public class Praksis extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "praksisPID")
 	private BigInteger recordID;
 

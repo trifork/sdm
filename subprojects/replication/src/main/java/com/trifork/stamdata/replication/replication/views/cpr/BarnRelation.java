@@ -14,6 +14,7 @@ public class BarnRelation extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "BarnRelationPID")
 	private BigInteger recordID;
 

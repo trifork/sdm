@@ -13,6 +13,7 @@ public class SygehusAfdeling extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "SygeHusAfdelingPID")
 	private BigInteger recordID;
 

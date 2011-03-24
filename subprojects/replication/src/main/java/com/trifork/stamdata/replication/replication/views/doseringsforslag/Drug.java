@@ -24,6 +24,7 @@ public class Drug extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "DosageDrugPID")
 	protected BigInteger id;
 

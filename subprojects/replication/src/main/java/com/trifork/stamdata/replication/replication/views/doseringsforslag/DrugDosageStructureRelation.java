@@ -21,6 +21,7 @@ public class DrugDosageStructureRelation extends View {
 
 	@Id
 	@Column(name = "DrugDosageStructureRelationPID")
+	@XmlTransient
 	@GeneratedValue
 	protected BigInteger recordId;
 
