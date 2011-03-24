@@ -9,12 +9,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "dkma/tilskudsprisgrupperpakningsniveau/v1")
+@Entity
+@XmlRootElement
+@ViewPath("dkma/tilskudsprisgrupperpakningsniveau/v1")
 public class TilskudsprisgrupperPakningsniveau extends View {
 
 	@Id

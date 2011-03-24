@@ -8,14 +8,12 @@ import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import com.trifork.stamdata.replication.replication.HistoryOffset;
 import com.trifork.stamdata.replication.util.Namespace;
 
 
-@XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
 @XmlType(namespace = Namespace.STAMDATA_3_0)

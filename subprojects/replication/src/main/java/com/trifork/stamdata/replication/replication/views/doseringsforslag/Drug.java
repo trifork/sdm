@@ -9,24 +9,26 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "doseringsforslag/drug/v1")
+@Entity(name="DosageDrug")
+@XmlRootElement
+@ViewPath("doseringsforslag/drug/v1")
 @Documented("Indeholder information om lægemidlers drug-id og doseringsenhed.")
-@Table(name = "DosageDrug")
 public class Drug extends View {
 
 	@Id
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "DosageDrugPID")
-	protected BigInteger id;
+	protected BigInteger recordID;
 
 	protected int releaseNumber;
 
@@ -57,7 +59,7 @@ public class Drug extends View {
 	@Override
 	public BigInteger getRecordID() {
 
-		return id;
+		return recordID;
 	}
 
 	@Override

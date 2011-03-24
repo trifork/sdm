@@ -1,15 +1,24 @@
 package com.trifork.stamdata.replication.replication;
 
-import java.util.*;
-import javax.persistence.Entity;
-import javax.xml.bind.*;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
 import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.*;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
@@ -21,17 +30,17 @@ public class RegistryModule extends ServletModule {
 	@SuppressWarnings("unchecked")
 	protected void configureServlets() {
 
-		// DISCOVER ALL ENTITY CLASSES
+		// DISCOVER ALL VIEW CLASSES
 		//
 		// For speed only the model package will be searched.
 
 		String MODEL_PACKAGE = View.class.getPackage().getName();
 		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForPackagePrefix(MODEL_PACKAGE)).setScanners(new TypeAnnotationsScanner()));
-		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
+		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(ViewPath.class);
 
-		// MAP ENTITIES TO THEIR NAMES
+		// MAP VIEWS TO THEIR PATHS
 		//
-		// Map the entity classes to their respective authority/name/version.
+		// Map the view classes to their respective registry/view/version.
 		// Bind the map to the Map<String, Class> annotated with @Registry.
 		//
 		// A tree map is used so the entries are lexically sorted.
@@ -39,8 +48,8 @@ public class RegistryModule extends ServletModule {
 		Map<String, Class<? extends View>> registry = new TreeMap<String, Class<? extends View>>();
 
 		for (Class<?> entity : classes) {
-			Entity annotation = entity.getAnnotation(Entity.class);
-			registry.put(annotation.name(), (Class<? extends View>) entity);
+			ViewPath annotation = entity.getAnnotation(ViewPath.class);
+			registry.put(annotation.value(), (Class<? extends View>) entity);
 		}
 
 		bind(new TypeLiteral<Map<String, Class<? extends View>>>() {}).annotatedWith(Registry.class).toInstance(registry);

@@ -2,16 +2,25 @@ package com.trifork.stamdata.replication.replication.views.dkma;
 
 import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.*;
-import javax.xml.bind.annotation.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.util.Namespace;
 
 
-@Entity(name = "dkma/pakningskombination/v1")
+@Entity
+@XmlRootElement
 @Table(name = "Pakningskombinationer")
-@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
-@XmlAccessorType(XmlAccessType.FIELD)
+@ViewPath("dkma/pakningskombination/v1")
 public class Pakningskombination extends View {
 
 	@Id

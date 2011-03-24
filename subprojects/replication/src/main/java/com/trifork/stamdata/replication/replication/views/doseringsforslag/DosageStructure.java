@@ -1,6 +1,5 @@
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
-import static com.trifork.stamdata.replication.util.Namespace.STAMDATA_3_0;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.math.BigInteger;
@@ -15,19 +14,21 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "doseringsforslag/dosagestructure/v1")
-@XmlRootElement(namespace = STAMDATA_3_0)
+@Entity
+@XmlRootElement
 @Documented("Indeholder doseringsstrukturer.")
+@ViewPath("doseringsforslag/dosagestructure/v1")
 public class DosageStructure extends View {
 
 	@Id
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "DosageStructurePID")
-	protected BigInteger id;
+	protected BigInteger recordID;
 
 	// Unik kode for doseringstrukturen. Obligatorisk. Heltal, 11 cifre.
 	@Column(length = 11)
@@ -86,7 +87,7 @@ public class DosageStructure extends View {
 	@Override
 	public BigInteger getRecordID() {
 
-		return id;
+		return recordID;
 	}
 
 	@Override

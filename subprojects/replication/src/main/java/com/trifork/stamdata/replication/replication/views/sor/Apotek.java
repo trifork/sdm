@@ -4,13 +4,22 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "sor/apotek/v1")
-@Table(name="Apotek")
+@Entity
+@XmlRootElement
+@ViewPath("sor/apotek/v1")
 public class Apotek extends View {
 
 	@Id

@@ -9,13 +9,17 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "doseringsforslag/drugdosagestructurerelation/v1")
+@Entity
+@XmlRootElement
+@ViewPath("doseringsforslag/drugdosagestructurerelation/v1")
 @Documented("Referencetabel der knytter doseringsstrukturer i dosageStructures til lægemidler.")
 public class DrugDosageStructureRelation extends View {
 
@@ -23,7 +27,7 @@ public class DrugDosageStructureRelation extends View {
 	@Column(name = "DrugDosageStructureRelationPID")
 	@XmlTransient
 	@GeneratedValue
-	protected BigInteger recordId;
+	protected BigInteger recordID;
 
 	@Column(length = 22)
 	protected String id;
@@ -59,7 +63,7 @@ public class DrugDosageStructureRelation extends View {
 	@Override
 	public BigInteger getRecordID() {
 
-		return recordId;
+		return recordID;
 	}
 
 	@Override

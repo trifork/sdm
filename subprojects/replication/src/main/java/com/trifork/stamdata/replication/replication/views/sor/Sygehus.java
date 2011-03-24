@@ -3,11 +3,16 @@ package com.trifork.stamdata.replication.replication.views.sor;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "sor/sygehus/v1")
+@Entity
+@XmlRootElement
+@ViewPath("sor/sygehus/v1")
 public class Sygehus extends View {
 
 	@Id

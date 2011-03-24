@@ -5,12 +5,16 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "sor/praksis/v1")
-@Table(name = "Praksis")
+@Entity
+@XmlRootElement
+@ViewPath("sor/praksis/v1")
 public class Praksis extends View {
 
 	@Id

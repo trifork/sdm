@@ -1,7 +1,5 @@
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
-import static com.trifork.stamdata.replication.util.Namespace.STAMDATA_3_0;
-
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -15,11 +13,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.Documented;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "doseringsforslag/dosageunit/v1")
-@XmlRootElement(namespace=STAMDATA_3_0)
+@Entity
+@XmlRootElement
+@ViewPath("doseringsforslag/dosageunit/v1")
 @Documented("Indeholder anvendte doseringsenheder.\n" + "Doseringsenhederne stammer dels fra Lægemiddelstyrelsens takst (her er code <= 1000),\n" + "dels er der tale om nye data (code > 1000).")
 public class DosageUnit extends View {
 
@@ -27,7 +27,7 @@ public class DosageUnit extends View {
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "DosageUnitPID")
-	protected BigInteger id;
+	protected BigInteger recordID;
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
@@ -56,7 +56,7 @@ public class DosageUnit extends View {
 	@Override
 	public BigInteger getRecordID() {
 
-		return id;
+		return recordID;
 	}
 
 	@Override

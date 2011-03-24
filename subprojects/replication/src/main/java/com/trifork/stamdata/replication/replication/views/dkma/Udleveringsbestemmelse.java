@@ -10,13 +10,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "dkma/udleveringsbestemmelse/v1")
+@Entity
+@XmlRootElement
 @Table(name = "Udleveringsbestemmelser")
+@ViewPath("dkma/udleveringsbestemmelse/v1")
 public class Udleveringsbestemmelse extends View {
 
 	@Id

@@ -5,12 +5,17 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 import java.math.BigInteger;
 import java.util.Date;
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "dkma/lægemiddel/v1")
+@Entity
+@XmlRootElement
 @Table(name = "Laegemiddel")
+@ViewPath("dkma/drug/v1")
 public class Drug extends View {
 
 	@Id

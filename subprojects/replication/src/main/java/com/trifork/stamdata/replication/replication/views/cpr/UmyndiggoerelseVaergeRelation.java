@@ -2,13 +2,24 @@ package com.trifork.stamdata.replication.replication.views.cpr;
 
 import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.*;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
-@Entity(name = "cpr/umyndigoerelsevaergerelation/v1")
-public class UmyndiggørelseVaergeRelation extends View {
+@Entity
+@XmlRootElement
+@ViewPath("cpr/umyndigoerelsevaergerelation/v1")
+public class UmyndiggoerelseVaergeRelation extends View {
 
 	@Id
 	@GeneratedValue
