@@ -1,5 +1,7 @@
 package com.trifork.stamdata.replication.replication;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Date;
@@ -28,11 +30,15 @@ public class AtomFeedWriter {
 	@Inject
 	AtomFeedWriter(@Registry Marshaller marshaller) {
 
-		this.marshaller = marshaller;
+		this.marshaller = checkNotNull(marshaller);
 	}
 
 	public void write(String entityName, List<? extends View> records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
 
+		checkNotNull(entityName);
+		checkNotNull(records);
+		checkNotNull(outputStream);
+		
 		try {
 			XMLStreamWriter writer;
 			
