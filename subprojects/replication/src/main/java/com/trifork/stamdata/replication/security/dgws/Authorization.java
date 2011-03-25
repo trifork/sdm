@@ -8,6 +8,8 @@ import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Lob;
+
 import com.trifork.stamdata.replication.replication.views.View;
 
 
@@ -21,19 +23,24 @@ public class Authorization {
 	protected String cvr;
 	protected String viewName;
 	protected Date expiresAt;
+	
+	@Lob
+	protected byte[] token; 
 
 	protected Authorization() {
 
 	}
 
-	public Authorization(Class<? extends View> viewClass, String cvr, Date expiresAt) {
+	public Authorization(Class<? extends View> viewClass, String cvr, Date expiresAt, byte[] token) {
 
 		checkNotNull(cvr);
 		checkNotNull(expiresAt);
 		checkViewIntegrity(viewClass);
+		checkNotNull(token);
 
 		this.cvr = cvr;
 		this.expiresAt = expiresAt;
 		this.viewName = viewClass.getAnnotation(Entity.class).name();
+		this.token = token;
 	}
 }

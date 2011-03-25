@@ -66,7 +66,7 @@ public class DGWSSecurityManager implements SecurityManager {
 			byte[] token = new byte[512];
 			random.nextBytes(token);
 
-			authorizationDao.save(new Authorization(viewClass, cvr, expiryDate));
+			authorizationDao.save(new Authorization(viewClass, cvr, expiryDate, token));
 
 			authorization = Base64.encode(token);
 		}
