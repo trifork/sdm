@@ -5,17 +5,10 @@ dependencies {
 	
 	testCompile "junit:junit:4.8.2"
 	testCompile "org.mockito:mockito-all:1.8.5"
-	testCompile "org.mockftpserver:MockFtpServer:2.1"
-	
-	// TODO: What for?
-	compile "oro:oro:2.0.8"
 	
 	providedCompile "javax.servlet:servlet-api:2.4"
 	
 	compile "commons-io:commons-io:1.4"
-	compile "commons-fileupload:commons-fileupload:1.2"
-	compile "commons-net:commons-net:2.0"
-	compile "commons-vfs:commons-vfs:1.0"
 	
 	// TODO: Use SLF4J
 	compile "commons-logging:commons-logging:1.1.1"
@@ -40,6 +33,3 @@ war.manifest.mainAttributes(
 	'Implementation-Vendor': 'Trifork Public A/S',
 	'Implementation-Title': 'Stamdata Importer'
 )
-
-// TODO: <exclude org="com.sun.jdmk" module="jmxtools"/>
-// TODO: <exclude org="com.sun.jmx" module="jmxri"/>
