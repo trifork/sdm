@@ -1,9 +1,10 @@
 package dk.trifork.sdm.spooler;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractSpoolerImpl {
-    private static Logger logger = Logger.getLogger(AbstractSpoolerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(AbstractSpoolerImpl.class);
 
     private Status status = Status.INITIATING;
     private Activity activity = Activity.AWAITING;

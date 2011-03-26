@@ -12,9 +12,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.AuditingPersister;
@@ -34,7 +35,7 @@ public class TakstImporter implements FileImporterControlledIntervals {
     
     private static final DateTimeFormatter weekFormatter = DateTimeFormat.forPattern("xxxxww").withLocale(new Locale("da", "DK"));
 
-    private final Logger logger = Logger.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public void run(List<File> files) throws FileImporterException {
         Takst takst;

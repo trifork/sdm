@@ -1,9 +1,10 @@
 package dk.trifork.sdm.importer.takst.model;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractFactory {
-    static Logger logger = Logger.getLogger(AbstractFactory.class);
+	protected static Logger logger = LoggerFactory.getLogger(AbstractFactory.class);
 
     static Double toDouble(String s) {
         if (s == null || s.trim().length() == 0) return null;

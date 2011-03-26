@@ -16,7 +16,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.model.AbstractStamdataEntity;
@@ -27,7 +28,7 @@ import dk.trifork.sdm.util.DateUtils;
 
 public class DatabaseTableWrapper<T extends StamdataEntity> {
 
-	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	private PreparedStatement insertRecordStmt;
 	private PreparedStatement insertAndUpdateRecordStmt;
 	private PreparedStatement updateRecordStmt;

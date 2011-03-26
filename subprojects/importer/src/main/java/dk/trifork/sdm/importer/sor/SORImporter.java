@@ -4,7 +4,6 @@ import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -12,8 +11,11 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SORImporter implements FileImporterControlledIntervals {
-	private static Logger logger = Logger.getLogger(SORImporter.class);
+	private static Logger logger = LoggerFactory.getLogger(SORImporter.class);
 	
     @Override
     public boolean checkRequiredFiles(List<File> files) {

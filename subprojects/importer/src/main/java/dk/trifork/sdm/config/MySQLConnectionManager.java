@@ -1,13 +1,13 @@
 package dk.trifork.sdm.config;
 
-import org.apache.log4j.Logger;
+import org.slf4j.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
 public class MySQLConnectionManager {
-    private static Logger logger = Logger.getLogger(MySQLConnectionManager.class);
+    private static Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
 
     public static Connection getConnection() {
         try {

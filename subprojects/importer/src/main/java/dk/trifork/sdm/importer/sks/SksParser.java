@@ -1,14 +1,17 @@
 package dk.trifork.sdm.importer.sks;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.importer.sks.model.Organisation;
 import dk.trifork.sdm.model.Dataset;
-import org.apache.log4j.Logger;
 
 import java.io.*;
 
 public class SksParser {
-	private static final Logger logger = Logger.getLogger(SksParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(SksParser.class);
     /*
      * NOTE KOPIERET FRA PEM:
      * 

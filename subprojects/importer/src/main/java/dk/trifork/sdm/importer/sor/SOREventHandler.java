@@ -10,7 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -20,7 +21,7 @@ import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.util.DateUtils;
 
 public class SOREventHandler extends DefaultHandler {
-	private static Logger logger = Logger.getLogger(SOREventHandler.class);
+	private static Logger logger = LoggerFactory.getLogger(SOREventHandler.class);
 
     private String elementValue;
 	

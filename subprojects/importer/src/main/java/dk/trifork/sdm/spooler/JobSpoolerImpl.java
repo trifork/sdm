@@ -3,13 +3,14 @@ package dk.trifork.sdm.spooler;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.jobspooler.JobExecutor;
 import dk.trifork.sdm.util.DateUtils;
 
 public class JobSpoolerImpl extends AbstractSpoolerImpl {
-    private static Logger logger = Logger.getLogger(FileSpoolerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(FileSpoolerImpl.class);
     
     final private JobSpoolerSetup setup;
 	private JobExecutor executor;

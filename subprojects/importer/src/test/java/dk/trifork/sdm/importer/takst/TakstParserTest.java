@@ -4,8 +4,8 @@ import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.importer.takst.model.*;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.*;

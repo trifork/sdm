@@ -1,5 +1,8 @@
 package dk.trifork.sdm.importer.sks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.dao.Persister;
@@ -7,7 +10,6 @@ import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.sks.model.Organisation;
 import dk.trifork.sdm.model.Dataset;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -16,7 +18,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class SksImporter implements FileImporterControlledIntervals {
-    private final Logger logger = Logger.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     /*

@@ -2,8 +2,6 @@ package dk.trifork.sdm.spooler;
 
 import dk.trifork.sdm.config.Configuration;
 
-import org.apache.log4j.Logger;
-
 import it.sauronsoftware.cron4j.Scheduler;
 
 import java.net.URI;
@@ -16,6 +14,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * FileSpooler. Initiates and monitor file spoolers.
  *
@@ -26,7 +27,7 @@ public class SpoolerManager {
     Map<String, FileSpoolerImpl> spoolers = new HashMap<String, FileSpoolerImpl>();
     Map<String, JobSpoolerImpl> jobSpoolers = new HashMap<String, JobSpoolerImpl>();
 
-    private static final Logger logger = Logger.getLogger(SpoolerManager.class);
+    private static final Logger logger = LoggerFactory.getLogger(SpoolerManager.class);
     private static final int POLLING_INTERVAL = Configuration.getInt("inputfile.polling.interval");
     private Timer timer = new Timer(true);
     private List<JobSpoolerImpl> jobQueue = Collections.synchronizedList(new LinkedList<JobSpoolerImpl>());

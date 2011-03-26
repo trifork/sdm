@@ -3,12 +3,14 @@ package dk.trifork.sdm.importer.takst.model;
 import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
-import org.apache.log4j.Logger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Output(name = "Laegemiddel")
 public class Laegemiddel extends TakstEntity {
@@ -37,7 +39,7 @@ public class Laegemiddel extends TakstEntity {
     private String datoForAfregistrAfLaegemiddel; // Format: ååååmmdd
     private String karantaenedato; // Format: ååååmmdd
 
-    private final Logger logger = Logger.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Id
     @Output(name = "DrugID")

@@ -2,15 +2,16 @@ package dk.trifork.sdm.importer;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.util.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Calendar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 public class ImportTimeManager {
-    private static Logger logger = Logger.getLogger(ImportTimeManager.class);
+    private static Logger logger = LoggerFactory.getLogger(ImportTimeManager.class);
 
     public static Calendar getLastImportTime(String spoolername) {
         Connection con = null;

@@ -1,12 +1,14 @@
 package dk.trifork.sdm.spooler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.config.Configuration;
 import dk.trifork.sdm.importer.FileImporter;
-import org.apache.log4j.Logger;
 
 
 public class FileSpoolerSetup {
-    private static Logger logger = Logger.getLogger(FileSpoolerSetup.class);
+    private static Logger logger = LoggerFactory.getLogger(FileSpoolerSetup.class);
 
     public static final String INPUT_DIR = "input";
     public static final String REJECT_DIR = "rejected";

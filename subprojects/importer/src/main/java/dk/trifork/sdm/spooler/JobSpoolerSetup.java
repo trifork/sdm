@@ -1,12 +1,13 @@
 package dk.trifork.sdm.spooler;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.config.Configuration;
 import dk.trifork.sdm.jobspooler.JobExecutor;
 
 public class JobSpoolerSetup {
-    private static Logger logger = Logger.getLogger(FileSpoolerSetup.class);
+    private static Logger logger = LoggerFactory.getLogger(FileSpoolerSetup.class);
 	private final String jobName;
 	
     private Class<? extends JobExecutor> executerClass;

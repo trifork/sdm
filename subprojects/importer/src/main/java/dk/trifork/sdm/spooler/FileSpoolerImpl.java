@@ -1,12 +1,14 @@
 package dk.trifork.sdm.spooler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.importer.FileImporter;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.ImportTimeManager;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.util.DateUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.*;
@@ -25,7 +27,7 @@ import static org.apache.commons.io.FileUtils.moveFile;
 
 public class FileSpoolerImpl extends AbstractSpoolerImpl {
 
-	private static Logger logger = Logger.getLogger(FileSpoolerImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(FileSpoolerImpl.class);
 	Calendar stabilizationPeriodEnd;
 	long inputdirSignature;
 	public Collection<String> activeFiles;

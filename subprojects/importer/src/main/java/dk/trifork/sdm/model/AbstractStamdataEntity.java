@@ -1,16 +1,17 @@
 package dk.trifork.sdm.model;
 
 import dk.trifork.sdm.util.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class AbstractStamdataEntity implements StamdataEntity {
 
 	public static final Calendar FUTURE; // TODO: Use the FUTURE in DateUtils.
-	private static final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 	private static final Map<Class<? extends StamdataEntity>, Method> idMethodCache = new HashMap<Class<? extends StamdataEntity>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 

@@ -5,7 +5,8 @@ import dk.trifork.sdm.importer.yderregister.model.Yderregister;
 import dk.trifork.sdm.importer.yderregister.model.YderregisterDatasets;
 import dk.trifork.sdm.importer.yderregister.model.YderregisterPerson;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -21,7 +22,7 @@ import java.util.*;
 
 public class YderregisterParser {
 
-	private static final Logger logger = Logger.getLogger(YderregisterParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(YderregisterParser.class);
 
 	public YderregisterDatasets parseYderregister(List<File> files) throws FileParseException {
 

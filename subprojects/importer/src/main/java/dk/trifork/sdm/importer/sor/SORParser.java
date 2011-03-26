@@ -5,14 +5,15 @@ import java.io.File;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.importer.exceptions.FileParseException;
 
 
 public class SORParser {
 
-	private static Logger logger = Logger.getLogger(SORParser.class);
+	private static Logger logger = LoggerFactory.getLogger(SORParser.class);
 
 	public static SORDataSets parse(File file) throws FileParseException {
 

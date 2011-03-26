@@ -4,7 +4,6 @@ import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.importer.takst.model.*;
 import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.util.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,11 +14,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class TakstParser {
 
 	private static final String SUPPORTED_TAKST_VERSION = "12.0";
-	static Logger logger = Logger.getLogger(TakstParser.class);
+	static Logger logger = LoggerFactory.getLogger(TakstParser.class);
 
 	public Takst parseFiles(List<File> files) throws FileParseException {
 

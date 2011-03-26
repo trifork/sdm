@@ -1,15 +1,17 @@
 package dk.trifork.sdm.importer.sks;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.importer.sks.model.Organisation;
 import dk.trifork.sdm.importer.sks.model.Organisation.Organisationstype;
 import dk.trifork.sdm.util.DateUtils;
-import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
 
 public class OrganisationParser {
-	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 	private String line;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 

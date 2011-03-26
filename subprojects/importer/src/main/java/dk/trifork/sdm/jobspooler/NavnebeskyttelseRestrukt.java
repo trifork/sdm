@@ -6,7 +6,8 @@ import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.AuditingPersister;
@@ -16,7 +17,7 @@ import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.jobspooler.exceptions.JobRunnerException;
 
 public class NavnebeskyttelseRestrukt implements JobExecutor {
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
 	public void run() throws JobRunnerException {

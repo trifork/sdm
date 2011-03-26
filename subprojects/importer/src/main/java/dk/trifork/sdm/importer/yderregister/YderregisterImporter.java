@@ -1,11 +1,14 @@
 package dk.trifork.sdm.importer.yderregister;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
 import dk.trifork.sdm.importer.yderregister.model.YderregisterDatasets;
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -15,7 +18,7 @@ public class YderregisterImporter implements FileImporterControlledIntervals {
 
 	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025" , "K5094"};
 
-	private final Logger logger = Logger.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void run(List<File> files) throws FileImporterException {
 

@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.ProjectInfo;
 import dk.trifork.sdm.config.Configuration;
@@ -31,7 +32,7 @@ import dk.trifork.sdm.util.DateUtils;
 public class ImporterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private final Logger logger = Logger.getLogger(getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private SpoolerManager manager = null;
 	private DbIsAlive isAlive;

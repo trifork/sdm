@@ -10,7 +10,8 @@ import java.sql.Statement;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.dao.AuditingPersister;
@@ -23,7 +24,7 @@ import dk.trifork.sdm.util.DateUtils;
 
 public class CPRImporter implements FileImporterControlledIntervals {
 
-	private Logger logger = Logger.getLogger(getClass());
+	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	public void run(List<File> files) throws FileImporterException {
 

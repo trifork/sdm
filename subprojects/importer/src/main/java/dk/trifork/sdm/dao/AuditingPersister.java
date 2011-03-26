@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.dao.DatabaseTableWrapper.StamdataEntityVersion;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
@@ -16,7 +17,7 @@ import dk.trifork.sdm.model.StamdataEntity;
 
 public class AuditingPersister implements Persister {
 
-	private static Logger logger = Logger.getLogger(AuditingPersister.class);
+	private static Logger logger = LoggerFactory.getLogger(AuditingPersister.class);
 
 	protected Connection connection;
 
