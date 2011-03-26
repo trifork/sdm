@@ -18,6 +18,11 @@ dependencies {
 	runtime "apache-taglibs:jstl:1.1.2"
 	runtime "apache-taglibs:standard:1.1.2"
 	
+	// JODA TIME
+	//
+	// TODO: Used only by the takst importer,
+	// should be removed.
+	
 	compile "joda-time:joda-time:1.6"
 	
 	compile "cron4j:cron4j:2.2.3"
