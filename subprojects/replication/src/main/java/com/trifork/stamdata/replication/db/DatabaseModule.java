@@ -1,5 +1,6 @@
 package com.trifork.stamdata.replication.db;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -12,6 +13,11 @@ import com.trifork.stamdata.replication.util.ConfiguredModule;
 
 public class DatabaseModule extends ConfiguredModule {
 
+	public DatabaseModule() throws IOException {
+
+		super();
+	}
+
 	private EntityManagerFactory emFactory;
 
 	@Override
@@ -19,8 +25,8 @@ public class DatabaseModule extends ConfiguredModule {
 
 		Map<String, Object> config = new HashMap<String, Object>();
 		config.put("hibernate.connection.url", getDatabaseURL());
-		config.put("hibernate.connection.username", getConfig().getString("db.warehouse.username"));
-		config.put("hibernate.connection.password", getConfig().getString("db.warehouse.password"));
+		config.put("hibernate.connection.username", getProperty("db.warehouse.username"));
+		config.put("hibernate.connection.password", getProperty("db.warehouse.password"));
 		config.put("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 
 		emFactory = Persistence.createEntityManagerFactory("manager1", config);
@@ -30,9 +36,9 @@ public class DatabaseModule extends ConfiguredModule {
 
 	protected String getDatabaseURL() {
 
-		String host = getConfig().getString("db.warehouse.host");
-		int port = getConfig().getInt("db.warehouse.port");
-		String schema = getConfig().getString("db.warehouse.schema");
+		String host = getProperty("db.warehouse.host");
+		int port = getIntProperty("db.warehouse.port");
+		String schema = getProperty("db.warehouse.schema");
 		String options = "zeroDateTimeBehavior=convertToNull&characterEncoding=UTF-8";
 
 		return String.format("jdbc:mysql://%s:%d/%s?%s", host, port, schema, options);

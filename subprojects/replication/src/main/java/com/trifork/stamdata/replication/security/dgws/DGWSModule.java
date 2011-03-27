@@ -1,5 +1,6 @@
 package com.trifork.stamdata.replication.security.dgws;
 
+import java.io.IOException;
 import java.util.Properties;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -19,6 +20,10 @@ public class DGWSModule extends ConfiguredModule {
 
 	private Properties encryptionSetting;
 	private JAXBContext jaxbContext;
+	public DGWSModule() throws IOException {
+
+		super();
+	}
 
 	@Override
 	protected void configureServlets() {

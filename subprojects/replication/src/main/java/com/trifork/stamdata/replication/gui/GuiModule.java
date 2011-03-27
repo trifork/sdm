@@ -1,6 +1,7 @@
 package com.trifork.stamdata.replication.gui;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -63,8 +64,8 @@ public class GuiModule extends ConfiguredModule {
 		// These CVR numbers that can be used when creating new administrators.
 		// The list in maintained in the config.properties file.
 
-		String[] cvrNumbers = getConfig().getStringArray("whitelist");
-		String[] orgNames = getConfig().getStringArray("whitelistNames");
+		String[] cvrNumbers = getStringArrayProperty("whitelist");
+		String[] orgNames = getStringArrayProperty("whitelistNames");
 
 		Map<String, String> whitelist = new HashMap<String, String>(cvrNumbers.length);
 
@@ -104,14 +105,14 @@ public class GuiModule extends ConfiguredModule {
 		// from a remote service.
 
 		CachingRID2CPRFacadeImpl ridService = new CachingRID2CPRFacadeImpl();
-		ridService.setEndpoint(getConfig().getString("rid2cpr.endpoint"));
+		ridService.setEndpoint(getProperty("rid2cpr.endpoint"));
 
-		String keystore = getConfig().getString("rid2cpr.keystore");
+		String keystore = getProperty("rid2cpr.keystore");
 		keystore = getClass().getClassLoader().getResource(keystore).toExternalForm();
 
 		ridService.setKeystore(keystore);
-		ridService.setKeystorePassword(getConfig().getString("rid2cpr.keystorePassword"));
-		ridService.setReadTimeout(getConfig().getInt("rid2cpr.callTimeout"));
+		ridService.setKeystorePassword(getProperty("rid2cpr.keystorePassword"));
+		ridService.setReadTimeout(getIntProperty("rid2cpr.callTimeout"));
 
 		// TODO: Setting the default namespaces is deprecated.
 		// We should set our own. (The ones that we actually need.)
