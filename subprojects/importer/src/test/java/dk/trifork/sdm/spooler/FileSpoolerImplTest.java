@@ -32,7 +32,6 @@ import dk.trifork.sdm.importer.exceptions.FileImporterException;
  * 
  * @author Jan Buchholdt (jbu@trifork.com)
  */
-@Ignore
 public class FileSpoolerImplTest {
 
 	private String spoolerDir = System.getProperty("java.io.tmpdir") + "/FileSpoolerImplTest";
