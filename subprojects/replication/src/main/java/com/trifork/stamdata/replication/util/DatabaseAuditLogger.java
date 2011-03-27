@@ -1,10 +1,13 @@
 package com.trifork.stamdata.replication.util;
 
-import static com.google.inject.internal.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
+
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import com.google.inject.Inject;
 
 

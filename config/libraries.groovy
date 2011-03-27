@@ -4,7 +4,7 @@
 // in your projects.
 //////////////////////////////////////////////////////////////////////////////
 
-def guiceVersion = '2.0'
+def guiceVersion = '3.0'
 def slf4jVersion = '1.6.1'
 
 libs = [
@@ -46,7 +46,6 @@ libs = [
 	
 	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
 	
-	aopalliance: 'aopalliance:aopalliance:1.0@jar',
-	guice: 'com.google.code.guice:guice:' + guiceVersion,
-	guice_servlet: 'com.google.code.guice:guice-servlet:' + guiceVersion
+	guice: 'com.google.inject.guice:guice:' + guiceVersion,
+	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion
 ]

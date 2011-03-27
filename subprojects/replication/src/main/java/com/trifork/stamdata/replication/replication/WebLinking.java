@@ -1,6 +1,6 @@
 package com.trifork.stamdata.replication.replication;
 
-import static com.google.inject.internal.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class WebLinking {

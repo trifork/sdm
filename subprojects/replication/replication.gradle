@@ -24,10 +24,7 @@ dependencies {
 	
 	// Guice
 	
-	compile(libs.guice_servlet) {
-		compile libs.guice
-		compile libs.aopalliance
-	}
+	compile libs.guice_servlet
 	
 	// Hibernate
 	
