@@ -7,7 +7,7 @@ import java.io.InputStream;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.Configuration;
-import dk.trifork.sdm.jobspooler.JobExecutor;
+import dk.trifork.sdm.jobspooler.Job;
 
 
 /**
@@ -15,7 +15,7 @@ import dk.trifork.sdm.jobspooler.JobExecutor;
  * 
  * @author Jan Buchholdt
  */
-public class JobSpoolerSetupTest implements JobExecutor {
+public class JobSpoolerSetupTest implements Job {
 
 	@Test
 	public void runSetupTest() throws Exception {

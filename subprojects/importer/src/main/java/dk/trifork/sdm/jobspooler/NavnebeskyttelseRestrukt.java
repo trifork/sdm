@@ -14,13 +14,12 @@ import dk.trifork.sdm.dao.AuditingPersister;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
-import dk.trifork.sdm.jobspooler.exceptions.JobRunnerException;
 
-public class NavnebeskyttelseRestrukt implements JobExecutor {
+public class NavnebeskyttelseRestrukt implements Job {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Override
-	public void run() throws JobRunnerException {
+	public void run() throws JobException {
 		// Check that elements in table 'AdresseBeskyttelse' haven't expired 
         Connection connection = null;
         try {
@@ -95,7 +94,7 @@ public class NavnebeskyttelseRestrukt implements JobExecutor {
 			}
             
         } catch (Exception e)  {
-        	throw new JobRunnerException("Caught an exception during restoring expired nameprotection. Message = " + e.getMessage());
+        	throw new JobException("Caught an exception during restoring expired nameprotection. Message = " + e.getMessage());
         } finally {
             MySQLConnectionManager.close(connection);
         }
