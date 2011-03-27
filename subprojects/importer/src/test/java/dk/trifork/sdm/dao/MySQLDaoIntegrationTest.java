@@ -36,7 +36,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 		try {
-			con.createStatement().executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedDate DATETIME);");
+			con.createStatement().executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200), CreatedDate DATETIME);");
 		}
 		catch (Exception e) {
 			// it probably already existed

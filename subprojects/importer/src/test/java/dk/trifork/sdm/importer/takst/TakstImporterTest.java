@@ -66,7 +66,7 @@ public class TakstImporterTest {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		stmt.execute("INSERT INTO TakstVersion (TakstUge, ModifiedDate, CreatedDate, validFrom, validTo) " + "" + "VALUES (\"201001\", \"2010-01-01 00:00:00\", \"2010-01-01 00:00:00\", \"2010-01-01 00:00:00\", \"2999-12-31 00:00:00\") ");
+		stmt.execute("INSERT INTO TakstVersion (TakstUge, ModifiedBy, ModifiedDate, CreatedBy, CreatedDate, validFrom, validTo) " + "" + "VALUES (\"201001\", \"UnitTest\", \"2010-01-01 00:00:00\", \"UnitTest\", \"2010-01-01 00:00:00\", \"2010-01-01 00:00:00\", \"2999-12-31 00:00:00\") ");
 		stmt.close();
 		con.close();
 

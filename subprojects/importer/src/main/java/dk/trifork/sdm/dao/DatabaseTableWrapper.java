@@ -29,6 +29,8 @@ import dk.trifork.sdm.util.DateUtils;
 public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	public static final String MODIFIED_BY = "SDM2";
+
 	private PreparedStatement insertRecordStmt;
 	private PreparedStatement insertAndUpdateRecordStmt;
 	private PreparedStatement updateRecordStmt;
@@ -75,13 +77,15 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private PreparedStatement prepareInsertStatement() throws SQLException {
 
-		String sql = "insert into " + tablename + " (" + "ModifiedDate, CreatedDate, ValidFrom, ValidTo";
+		String sql = "insert into " + tablename + " (" + "CreatedBy, ModifiedBy, ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 		for (Method method : outputMethods) {
 			sql += ", ";
 			String name = AbstractStamdataEntity.getOutputFieldName(method);
 			sql += name;
 		}
 		sql += ") values (";
+		sql += "'" + MODIFIED_BY + "',"; // createdby
+		sql += "'" + MODIFIED_BY + "',"; // modifiedby
 		sql += "?,"; // modifieddate
 		sql += "?,"; // createddate
 		sql += "?,"; // validfrom
@@ -98,7 +102,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private PreparedStatement prepareInsertAndUpdateStatement() throws SQLException {
 
-		String sql = "insert into " + tablename + " (" + "ModifiedDate, CreatedDate, ValidFrom, ValidTo";
+		String sql = "insert into " + tablename + " (" + "CreatedBy, ModifiedBy, ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 		for (Method method : outputMethods) {
 			sql += ", ";
 			String name = AbstractStamdataEntity.getOutputFieldName(method);
@@ -108,6 +112,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 			sql += ", " + notUpdateName;
 		}
 		sql += ") values (";
+		sql += "'" + MODIFIED_BY + "',"; // createdby
+		sql += "'" + MODIFIED_BY + "',"; // modifiedby
 		sql += "?,"; // modifieddate
 		sql += "?,"; // createddate
 		sql += "?,"; // validfrom
@@ -127,7 +133,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private PreparedStatement prepareUpdateStatement() throws SQLException {
 
-		String sql = "update " + tablename + " set ModifiedDate = ?, ValidFrom = ?, ValidTo = ?";
+		String sql = "update " + tablename + " set ModifiedBy = '" + MODIFIED_BY + "', ModifiedDate = ?, ValidFrom = ?, ValidTo = ?";
 		for (Method method : outputMethods) {
 			sql += ", " + AbstractStamdataEntity.getOutputFieldName(method) + " = ?";
 		}
@@ -222,7 +228,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private PreparedStatement prepareUpdateValidtoStatement() throws FilePersistException {
 
-		String pstmtString = "update " + tablename + " set ValidTo = ?, " + "ModifiedDate = ? where " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ?";
+		String pstmtString = "update " + tablename + " set ValidTo = ?, " + "ModifiedDate = ?, ModifiedBy='" + MODIFIED_BY + "' where " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ?";
 
 		PreparedStatement pstmt;
 		try {
@@ -237,7 +243,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 	private PreparedStatement prepareUpdateValidFromStatement() throws FilePersistException {
 
-		String pstmtString = "update " + tablename + " set ValidFrom = ?, " + "ModifiedDate = ? where " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ?";
+		String pstmtString = "update " + tablename + " set ValidFrom = ?, " + "ModifiedDate = ?, ModifiedBy='" + MODIFIED_BY + "' where " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ?";
 
 		// logger.debug("Preparing update statement: " + pstmtString);
 		PreparedStatement pstmt;
@@ -472,7 +478,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 	public void copyCurrentRowButWithChangedValidFrom(Calendar validFrom, Calendar transactionTime) {
 
 		try {
-			String sql = "insert into " + tablename + " (" + "ModifiedDate, CreatedDate, ValidFrom, ValidTo";
+			String sql = "insert into " + tablename + " (" + "CreatedBy, ModifiedBy, ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 			for (Method method : outputMethods) {
 				sql += ", ";
 				String name = AbstractStamdataEntity.getOutputFieldName(method);
@@ -483,6 +489,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 			}
 
 			sql += ") values (";
+			sql += "'" + MODIFIED_BY + "',"; // createdby
+			sql += "'" + MODIFIED_BY + "',"; // modifiedby
 			sql += "'" + toMySQLdate(transactionTime) + "',"; // modifieddate
 			sql += "'" + toMySQLdate(transactionTime) + "',"; // createddate
 			// sql += currentRS.getInt("VersionID") + ","; // versionid
@@ -747,6 +755,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity> {
 
 				// Ignore all system columns
 				if (colName.toUpperCase().indexOf("PID") > 0) continue;
+				if (colName.equalsIgnoreCase("CreatedBy")) continue;
+				if (colName.equalsIgnoreCase("ModifiedBy")) continue;
 				if (colName.equalsIgnoreCase("ModifiedDate")) continue;
 				if (colName.equalsIgnoreCase("CreatedDate")) continue;
 				if (colName.equalsIgnoreCase("ValidFrom")) continue;

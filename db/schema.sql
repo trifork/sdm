@@ -5,7 +5,7 @@ CREATE TABLE import (
 
 CREATE TABLE adressebeskyttelse ( 
 	cpr VARCHAR(10) NOT NULL, 
-	fornavn VARCHAR(60), 
+	fornavn VARCHAR(60),
 	mellemnavn VARCHAR(60), 
 	efternavn VARCHAR(60), 
 	conavn VARCHAR(50), 
@@ -70,9 +70,11 @@ CREATE TABLE DosageStructure (
 	xml VARCHAR(10000) NOT NULL,
 	shortTranslation VARCHAR(70),
 	longTranslation VARCHAR(10000), -- OPTIONAL (The specs say it cannot be NULL. See comment in DosageStructure.java)
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
 ) ENGINE=InnoDB;
@@ -83,9 +85,11 @@ CREATE TABLE DosageUnit (
 	code INT(4),
 	textSingular VARCHAR(100) NOT NULL,
 	textPlural VARCHAR(100) NOT NULL,
+	ModifiedBy VARCHAR(200),
 	ModifiedDate DATETIME,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
 ) ENGINE=InnoDB;
@@ -96,9 +100,11 @@ CREATE TABLE DosageVersion (
 	lmsDate DATE NOT NULL,
 	releaseDate DATE NOT NULL,
 	releaseNumber BIGINT(15) NOT NULL,
+	ModifiedBy VARCHAR(200),
 	ModifiedDate DATETIME,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
 ) ENGINE=InnoDB;
@@ -109,9 +115,11 @@ CREATE TABLE DrugDosageStructureRelation (
 	drugId BIGINT(11) NOT NULL,
 	dosageStructureCode BIGINT(11) NOT NULL,
 	releaseNumber BIGINT(15) NOT NULL,
+	ModifiedBy VARCHAR(200),
 	ModifiedDate DATETIME,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
 ) ENGINE=InnoDB;
@@ -122,9 +130,11 @@ CREATE TABLE DosageDrug (
 	drugId BIGINT(11) NOT NULL,
 	dosageUnitCode BIGINT(11) NOT NULL,
 	drugName VARCHAR(200) NOT NULL,
+	ModifiedBy VARCHAR(200),
 	ModifiedDate DATETIME,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
 ) ENGINE=InnoDB;
@@ -134,9 +144,11 @@ CREATE TABLE Administrationsvej (
 	AdministrationsvejKode CHAR(2) NOT NULL,
 	AdministrationsvejTekst VARCHAR(50) NOT NULL,
 	AdministrationsvejKortTekst VARCHAR(10),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Administrationsvej_1 UNIQUE (AdministrationsvejKode, ValidTo)
@@ -157,9 +169,11 @@ CREATE TABLE Apotek (
 	Bynavn VARCHAR(30),
 	Email VARCHAR(100),
 	Www VARCHAR(100),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -173,9 +187,11 @@ CREATE TABLE ATC (
 	ATCNiveau3 VARCHAR(1),
 	ATCNiveau4 VARCHAR(1),
 	ATCNiveau5 VARCHAR(2),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -187,9 +203,11 @@ CREATE TABLE Autorisation (
 	Fornavn VARCHAR(100) NOT NULL,
 	Efternavn VARCHAR(100) NOT NULL,
 	UddannelsesKode INT(4),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -199,9 +217,11 @@ CREATE TABLE BarnRelation (
 	Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
 	BarnCPR VARCHAR(10) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
@@ -211,9 +231,11 @@ CREATE TABLE Beregningsregler (
 	BeregningsreglerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Kode VARCHAR(1) NOT NULL,
 	Tekst VARCHAR(50), 
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -228,11 +250,13 @@ CREATE TABLE Dosering (
 	DoseringstekstLinie1 VARCHAR(26),
 	DoseringstekstLinie2 VARCHAR(26),
 	DoseringstekstLinie3 VARCHAR(26),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
- INDEX (ValidFrom, ValidTo)
+	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
 CREATE TABLE EmballagetypeKoder (
@@ -240,9 +264,11 @@ CREATE TABLE EmballagetypeKoder (
 	Kode VARCHAR(4) NOT NULL,
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -254,9 +280,11 @@ CREATE TABLE Enhedspriser (
 	PrisPrEnhed BIGINT(12),
 	PrisPrDDD BIGINT(12),
 	BilligstePakning VARCHAR(1),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -267,9 +295,11 @@ CREATE TABLE Firma (
 	FirmamaerkeKort VARCHAR(20),
 	FirmamaerkeLangtNavn VARCHAR(32),
 	ParallelimportoerKode VARCHAR(2),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -281,9 +311,11 @@ CREATE TABLE ForaeldreMyndighedRelation (
 	TypeKode VARCHAR(4) NOT NULL,
 	TypeTekst VARCHAR(50) NOT NULL,
 	RelationCpr VARCHAR(10),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
@@ -294,9 +326,11 @@ CREATE TABLE Formbetegnelse (
 	Kode VARCHAR(10) NOT NULL,
 	Tekst VARCHAR(150) NOT NULL,
 	Aktiv BOOLEAN,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -309,9 +343,11 @@ CREATE TABLE Indholdsstoffer (
 	Stofklasse VARCHAR(100),
 	Substansgruppe VARCHAR(100),
 	Substans VARCHAR(150),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -324,9 +360,11 @@ CREATE TABLE Indikation (
 	IndikationstekstLinie2 VARCHAR(26),
 	IndikationstekstLinie3 VARCHAR(26),
 	aktiv BOOLEAN,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -337,9 +375,11 @@ CREATE TABLE IndikationATCRef (
 	IndikationKode BIGINT(15) NOT NULL,
 	ATC VARCHAR(10) NOT NULL,
 	DrugID BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo, IndikationKode, ATC)
 ) ENGINE=InnoDB;
@@ -348,9 +388,11 @@ CREATE TABLE Kommune (
 	KommunePID BIGINT(15) NOT NULL PRIMARY KEY,
 	Nummer VARCHAR(12) NOT NULL,
 	Navn VARCHAR(100) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -381,9 +423,11 @@ CREATE TABLE Laegemiddel (
 	AdministrationsvejKode VARCHAR(8),
 	MTIndehaverKode BIGINT(12),
 	RepraesentantDistributoerKode BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -392,9 +436,11 @@ CREATE TABLE Laegemiddelnavn (
 	LaegemiddelnavnPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	DrugID BIGINT(12) NOT NULL,
 	LaegemidletsUforkortedeNavn VARCHAR(60),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -404,9 +450,11 @@ CREATE TABLE LaegemiddelAdministrationsvejRef (
 	CID VARCHAR(22) NOT NULL,
 	DrugID BIGINT(12) NOT NULL,
 	AdministrationsvejKode CHAR(2) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -416,9 +464,11 @@ CREATE TABLE LaegemiddelDoseringRef (
 	CID VARCHAR(22) NOT NULL,
 	DrugID BIGINT(12) NOT NULL,
 	DoseringKode BIGINT(12) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -428,9 +478,11 @@ CREATE TABLE Klausulering (
 	Kode VARCHAR(10) NOT NULL,
 	KortTekst VARCHAR(60),
 	Tekst VARCHAR(600),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -440,9 +492,11 @@ CREATE TABLE Medicintilskud (
 	Kode VARCHAR(10) NOT NULL,
 	KortTekst VARCHAR(20),
 	Tekst VARCHAR(60),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -452,9 +506,11 @@ CREATE TABLE Opbevaringsbetingelser (
 	Kode VARCHAR(1) NOT NULL,
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -469,9 +525,11 @@ CREATE TABLE OplysningerOmDosisdispensering (
 	TSPPrEnhed BIGINT(12),
 	KodeForBilligsteDrugid VARCHAR(1),
 	BilligsteDrugid BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -481,9 +539,11 @@ CREATE TABLE Organisation (
 	Nummer VARCHAR(30) NOT NULL,
 	Navn VARCHAR(256),
 	Organisationstype VARCHAR(30) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -515,9 +575,11 @@ CREATE TABLE Pakning (
 	PakningOptagetITilskudsgruppe BOOLEAN,
 	Faerdigfremstillingsgebyr BOOLEAN,
 	Pakningsdistributoer BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -531,9 +593,11 @@ CREATE TABLE Pakningskombinationer (
 	AntalPakninger BIGINT(12),
 	EkspeditionensSamledePris BIGINT(12),
 	InformationspligtMarkering VARCHAR(1),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -545,9 +609,11 @@ CREATE TABLE PakningskombinationerUdenPriser (
 	VarenummerAlternativt BIGINT(12),
 	AntalPakninger BIGINT(12),
 	InformationspligtMarkering VARCHAR(1),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -557,9 +623,11 @@ CREATE TABLE Pakningsstoerrelsesenhed (
 	PakningsstoerrelsesenhedKode VARCHAR(10) NOT NULL,
 	PakningsstoerrelsesenhedTekst VARCHAR(50) NOT NULL,
 	PakningsstoerrelsesenhedKortTekst VARCHAR(10),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
  INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Pakningsstoerrelsesenhed_1 UNIQUE (PakningsstoerrelsesEnhedKode, ValidTo)
@@ -590,9 +658,11 @@ CREATE TABLE Person (
 	Stilling VARCHAR(50),
 	VejKode BIGINT(12), 
 	KommuneKode BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
@@ -609,9 +679,11 @@ CREATE TABLE Praksis (
 	EanLokationsnummer BIGINT(20),
 	RegionCode BIGINT(12),
 	Navn VARCHAR(256),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -625,9 +697,11 @@ CREATE TABLE Priser (
 	tilskudspris BIGINT(12),
 	LeveranceprisTilHospitaler BIGINT(12),
 	IkkeTilskudsberettigetDel BIGINT(12),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -638,9 +712,11 @@ CREATE TABLE Rekommandationer (
 	Rekommandationsgruppe BIGINT(12),
 	DrugID BIGINT(12),
 	Rekommandationsniveau VARCHAR(25),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -650,9 +726,11 @@ CREATE TABLE SpecialeForNBS (
 	Kode VARCHAR(5) NOT NULL,
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -662,9 +740,11 @@ CREATE TABLE Styrkeenhed (
 	StyrkeenhedKode VARCHAR(10) NOT NULL,
 	StyrkeenhedTekst VARCHAR(50) NOT NULL,
 	StyrkeenhedKortTekst VARCHAR(10),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
  INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Styrkeenhed_1 UNIQUE (StyrkeenhedKode, ValidTo)
@@ -682,6 +762,8 @@ CREATE TABLE Substitution (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -693,8 +775,11 @@ CREATE TABLE SubstitutionAfLaegemidlerUdenFastPris (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
+
 
 CREATE TABLE Sygehus (
 	SygeHusPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -712,6 +797,8 @@ CREATE TABLE Sygehus (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -738,6 +825,8 @@ CREATE TABLE SygehusAfdeling (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -748,6 +837,8 @@ CREATE TABLE TakstVersion (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -761,6 +852,8 @@ CREATE TABLE Tidsenhed (
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
 	INDEX (ValidFrom, ValidTo),
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200),
 	CONSTRAINT UC_Tidsenhed_1 UNIQUE (TidsenhedKode, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -776,6 +869,8 @@ CREATE TABLE Tilskudsintervaller (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -787,6 +882,8 @@ CREATE TABLE TilskudsprisgrupperPakningsniveau (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -800,6 +897,8 @@ CREATE TABLE UdgaaedeNavne (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -813,6 +912,8 @@ CREATE TABLE Udleveringsbestemmelser (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
 
@@ -831,9 +932,11 @@ CREATE TABLE UmyndiggoerelseVaergeRelation (
 	RelationsTekst3 VARCHAR(50),
 	RelationsTekst4 VARCHAR(50),
 	RelationsTekst5 VARCHAR(50),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
@@ -854,9 +957,11 @@ CREATE TABLE Yder (
 	Www VARCHAR(100),
 	HovedSpecialeKode VARCHAR(20),
 	HovedSpecialeTekst VARCHAR(40),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -880,9 +985,11 @@ CREATE TABLE Yderregister (
 	HovedSpecialeKode VARCHAR(100),
 	HovedSpecialeTekst VARCHAR(100),
 	HistID VARCHAR(100),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
@@ -895,9 +1002,11 @@ CREATE TABLE YderregisterPerson (
 	personrolleKode BIGINT(20),
 	personrolleTxt VARCHAR(200),
 	HistIDPerson VARCHAR(100),
+	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB;
