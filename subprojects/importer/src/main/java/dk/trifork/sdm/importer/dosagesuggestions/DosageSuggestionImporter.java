@@ -34,7 +34,6 @@ import dk.trifork.sdm.importer.dosagesuggestions.models.DosageVersion;
 import dk.trifork.sdm.importer.dosagesuggestions.models.Drug;
 import dk.trifork.sdm.importer.dosagesuggestions.models.DrugDosageStructureRelation;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
-import dk.trifork.sdm.model.AbstractStamdataEntity;
 import dk.trifork.sdm.model.CompleteDataset;
 import dk.trifork.sdm.model.StamdataEntity;
 
