@@ -1,6 +1,7 @@
 package dk.trifork.sdm.importer.dosagesuggestions;
 
 import static dk.trifork.sdm.util.DateUtils.FUTURE;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,10 +10,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -40,6 +45,8 @@ import dk.trifork.sdm.model.StamdataEntity;
  * @author Thomas Børlum (thb@trifork.com)
  */
 public class DosageSuggestionImporter implements FileImporter {
+
+	private static final Logger logger = getLogger(DosageSuggestionImporter.class);
 
 	private Persister mockPersister = null;
 	
@@ -71,6 +78,29 @@ public class DosageSuggestionImporter implements FileImporter {
 			CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
 			versionDataset.addEntity(version);
 			
+			// CHECK PREVIOUS VERSION
+			//
+			// Check that the version in imported in
+			// sequence and that we haven't missed one.
+
+			connection = MySQLConnectionManager.getConnection();
+
+			Statement versionStatement = connection.createStatement();
+			ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
+
+			if (!queryResults.next()) {
+				throw new FileImporterException("SQL statement returned no rows, expected NULL or int value.");
+			}
+
+			int maxVersion = queryResults.getInt(1);
+
+			if (queryResults.wasNull()) {
+				logger.warn("No previous version of Dosage Suggestion registry found, assuming initial import.");
+			}
+			else if (version.getReleaseNumber() != maxVersion + 1) {
+				throw new FileImporterException("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
+			}
+
 			Calendar c = Calendar.getInstance();
 			c.setTime(version.getReleaseDate());
 			version.setVersion(c);
@@ -107,13 +137,13 @@ public class DosageSuggestionImporter implements FileImporter {
 			setValidityPeriod(relations, version);
 			
 			// PERSIST THE DATA
-
-			connection = MySQLConnectionManager.getConnection();
 			
 			Persister persister = (mockPersister != null) ? mockPersister : new AuditingPersister(connection);
 			persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
 			
 			connection.commit();
+
+			logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
 		}
 		catch (Exception e) {
 
