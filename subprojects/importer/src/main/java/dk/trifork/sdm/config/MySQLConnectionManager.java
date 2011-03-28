@@ -12,7 +12,7 @@ public class MySQLConnectionManager {
     public static Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            Connection con = DriverManager.getConnection(Configuration.getString("db.url")+getDBName(), Configuration.getString("db.sdm.user"), Configuration.getString("db.sdm.pwd"));
+            Connection con = DriverManager.getConnection(Configuration.getString("db.url")+getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
             con.setAutoCommit(false);
             return con;
         } catch (Exception e) {
@@ -37,8 +37,11 @@ public class MySQLConnectionManager {
     }
     
     public static String getHousekeepingDBName() {
-    	String confName = Configuration.getString("db.housekeepingdatabase");
-    	return (confName != null) ? confName : getDBName() + "_housekeeping";
+
+    	String value = Configuration.getString("db.housekeepingdatabase");
+    	return value != null
+    		? value
+    		: Configuration.getString("db.database");
     }
 
     public static void close(Connection connection) {
