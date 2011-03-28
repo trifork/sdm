@@ -419,7 +419,7 @@ CREATE TABLE Laegemiddel (
 	Substitution VARCHAR(1),
 	LaegemidletsSubstitutionsgruppe VARCHAR(4),
 	DatoForAfregistrAfLaegemiddel VARCHAR(10),
-	Karantaenedato VARCHAR(8),
+	Karantaenedato VARCHAR(10),
 	AdministrationsvejKode VARCHAR(8),
 	MTIndehaverKode BIGINT(12),
 	RepraesentantDistributoerKode BIGINT(12),
