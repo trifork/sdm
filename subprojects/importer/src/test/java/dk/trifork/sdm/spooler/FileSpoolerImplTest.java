@@ -44,6 +44,7 @@ public class FileSpoolerImplTest {
 
 		try {
 			Connection con = MySQLConnectionManager.getAutoCommitConnection();
+			con.setCatalog(MySQLConnectionManager.getHousekeepingDBName());
 			con.createStatement().executeUpdate("truncate table Import");
 		}
 		catch (SQLException e) {

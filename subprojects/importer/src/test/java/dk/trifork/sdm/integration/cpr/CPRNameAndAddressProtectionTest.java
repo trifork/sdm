@@ -41,7 +41,10 @@ public class CPRNameAndAddressProtectionTest {
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
+
+		con.setCatalog(MySQLConnectionManager.getHousekeepingDBName());
 		statement.execute("truncate table AdresseBeskyttelse");
+		con.setCatalog(MySQLConnectionManager.getDBName());
 
 		statement.close();
 		con.close();
@@ -86,7 +89,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 		rs.close();
-		rs = stmt.executeQuery("Select * from AdresseBeskyttelse where CPR='0709614452'");
+		rs = stmt.executeQuery("Select * from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse where CPR='0709614452'");
 		rs.next();
 		assertEquals("Vibeke", rs.getString("Fornavn"));
 		assertEquals("", rs.getString("Mellemnavn"));
@@ -189,7 +192,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertTrue(rs.last());
 
 		// Check that we have name and address in the 'AdresseBeskyttelse'
-		rs = stmt.executeQuery("Select * from AdresseBeskyttelse where CPR='0101965058'");
+		rs = stmt.executeQuery("Select * from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse where CPR='0101965058'");
 		rs.next();
 		assertEquals("Ude Ulrike", rs.getString("Fornavn"));
 		assertEquals("", rs.getString("Mellemnavn"));
@@ -245,7 +248,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertTrue(rs.last());
 
 		// Check that we have name and address in the 'AdresseBeskyttelse'
-		rs = stmt.executeQuery("Select * from AdresseBeskyttelse where CPR='0101965058'");
+		rs = stmt.executeQuery("Select * from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse where CPR='0101965058'");
 		rs.next();
 		assertEquals("Bde Blrike", rs.getString("Fornavn"));
 		assertEquals("", rs.getString("Mellemnavn"));
@@ -321,7 +324,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertTrue(rs.last());
 
 		// Set 'NavneBeskyttelseSletteDato' to past date
-		stmt.execute("UPDATE AdresseBeskyttelse SET NavneBeskyttelseSletteDato='2010-08-02' WHERE CPR='0101965058'");
+		stmt.execute("UPDATE " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse SET NavneBeskyttelseSletteDato='2010-08-02' WHERE CPR='0101965058'");
 
 		// Execute the restore job that will restore the name and addresses
 		NavnebeskyttelseRestrukt job = new NavnebeskyttelseRestrukt();
@@ -355,7 +358,7 @@ public class CPRNameAndAddressProtectionTest {
 		assertTrue(rs.last());
 
 		// Check that the record is removed from 'AdresseBeskyttelse"
-		rs = stmt.executeQuery("Select * from AdresseBeskyttelse where CPR='0101965058'");
+		rs = stmt.executeQuery("Select * from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse where CPR='0101965058'");
 		assertFalse(rs.next());
 
 		stmt.close();

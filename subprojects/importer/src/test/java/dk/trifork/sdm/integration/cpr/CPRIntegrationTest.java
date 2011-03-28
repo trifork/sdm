@@ -36,7 +36,7 @@ public class CPRIntegrationTest {
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
-		statement.execute("truncate table AdresseBeskyttelse");
+		statement.execute("truncate table " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		statement.close();
 		con.close();
 	}
@@ -194,7 +194,7 @@ public class CPRIntegrationTest {
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from AdresseBeskyttelse");
+		rs = stmt.executeQuery("Select count(*) from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 		stmt.close();
@@ -237,7 +237,7 @@ public class CPRIntegrationTest {
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from AdresseBeskyttelse");
+		rs = stmt.executeQuery("Select count(*) from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 		stmt.close();
