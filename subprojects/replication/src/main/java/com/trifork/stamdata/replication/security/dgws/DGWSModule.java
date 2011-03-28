@@ -8,6 +8,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import com.google.inject.Provides;
 import com.trifork.stamdata.replication.security.SecurityManager;
+import com.trifork.stamdata.replication.security.UnrestrictedSecurityManager;
 import com.trifork.stamdata.replication.util.ConfiguredModule;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
@@ -32,7 +33,11 @@ public class DGWSModule extends ConfiguredModule {
 		//
 		// The binding is required by the replication module.
 
-		bind(SecurityManager.class).to(DGWSSecurityManager.class);
+		if (getProperty("security.enabled").equals("false")) {
+			bind(SecurityManager.class).to(UnrestrictedSecurityManager.class);
+		} else {
+			bind(SecurityManager.class).to(DGWSSecurityManager.class);
+		}
 
 		// SETUP THE ENCRYPTION SETTINGS FOR SEAL
 		//
