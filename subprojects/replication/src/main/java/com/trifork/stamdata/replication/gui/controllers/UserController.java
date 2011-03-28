@@ -85,11 +85,6 @@ public class UserController extends AbstractController {
 		String firm = request.getParameter("firm");
 
 		// The CVR must be contained in the white list.
-		// TODO: Discuss with the customer if the CVR white listing is really
-		// relevant
-		// since all the administrators are trusted anyway, why not just be able
-		// to
-		// add any CVR? If that not a feature rather than a bug?
 
 		if (whitelist.containsKey(firm)) {
 			String newUserCVR = whitelist.get(firm);

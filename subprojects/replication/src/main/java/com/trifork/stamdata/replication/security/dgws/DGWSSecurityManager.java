@@ -50,10 +50,8 @@ public class DGWSSecurityManager implements SecurityManager {
 	 *            the time at which the authentication token will expire.
 	 * 
 	 * @return an authentication token, or null if the client is not authorized.
-	 * @throws SQLException
-	 *             TODO: Remove this exception when using JPA.
 	 */
-	public String issueAuthenticationToken(String cvr, Class<? extends View> viewClass, Date expiryDate) throws SQLException {
+	public String issueAuthenticationToken(String cvr, Class<? extends View> viewClass, Date expiryDate) {
 
 		checkNotNull(cvr);
 		checkNotNull(expiryDate);

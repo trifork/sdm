@@ -36,7 +36,6 @@ public final class Views {
 		checkArgument(viewClass.isAnnotationPresent(ViewPath.class));
 	}
 
-	// TODO: Javadoc
 	public static String convertStamdataUriToViewName(String stamdataURI) {
 
 		checkNotNull(stamdataURI);		

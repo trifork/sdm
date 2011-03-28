@@ -13,7 +13,6 @@ public class Indikationskode extends TakstEntity {
     @Id
     @Output
     public String getCID() {
-        // TODO: Get rid of this ugly calculated ID. Should be handled by the DAO
         // A calculated ID. Necessary because the DAO implementation needs a single key
         return aTC + "-" + indikationskode;
     }

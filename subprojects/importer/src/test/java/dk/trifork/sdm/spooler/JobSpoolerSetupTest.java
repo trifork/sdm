@@ -28,7 +28,7 @@ public class JobSpoolerSetupTest implements Job {
 		assertEquals(this.getClass().getName(), setup.getJobExecutorClass().getName());
 		assertEquals("* 1 * * *", setup.getSchedule());
 		
-		Configuration.setDefaultInstance(new Configuration()); // TODO: Why is this needed?
+		Configuration.setDefaultInstance(new Configuration());
 	}
 
 	@Override
