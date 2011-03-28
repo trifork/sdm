@@ -1,3 +1,5 @@
 dependencies {
 	testCompile libs.junit
 }
+
+test.enabled = false
