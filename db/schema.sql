@@ -1,4 +1,4 @@
-CREATE TABLE import ( 
+CREATE TABLE Import ( 
 	importtime DATETIME,
 	spoolername VARCHAR(100) 
 ) ENGINE=InnoDB;
