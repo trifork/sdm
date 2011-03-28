@@ -22,6 +22,11 @@
 		<filter-name>Guice Filter</filter-name>
 		<url-pattern>/admin/*</url-pattern>
 	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>Guice Filter</filter-name>
+		<url-pattern>/status</url-pattern>
+	</filter-mapping>
 
 	<context-param>
 		<description>The name of the configuration directory for OIOSAML.</description>
