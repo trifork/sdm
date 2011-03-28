@@ -3,7 +3,7 @@ CREATE TABLE Import (
 	spoolername VARCHAR(100) 
 ) ENGINE=InnoDB;
 
-CREATE TABLE adressebeskyttelse ( 
+CREATE TABLE AdresseBeskyttelse ( 
 	cpr VARCHAR(10) NOT NULL, 
 	fornavn VARCHAR(60),
 	mellemnavn VARCHAR(60), 
