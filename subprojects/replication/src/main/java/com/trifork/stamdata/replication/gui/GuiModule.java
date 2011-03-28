@@ -26,6 +26,11 @@ import freemarker.template.DefaultObjectWrapper;
 
 public class GuiModule extends ConfiguredModule {
 
+	public GuiModule() throws IOException {
+
+		super();
+	}
+
 	@Override
 	protected void configureServlets() {
 
