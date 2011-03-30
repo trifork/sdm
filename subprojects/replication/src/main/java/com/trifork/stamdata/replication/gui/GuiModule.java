@@ -1,10 +1,11 @@
 package com.trifork.stamdata.replication.gui;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
+
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
@@ -12,23 +13,27 @@ import com.google.inject.servlet.RequestScoped;
 import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.stamdata.replication.gui.annotations.Whitelist;
-import com.trifork.stamdata.replication.gui.controllers.LogController;
 import com.trifork.stamdata.replication.gui.controllers.ClientController;
+import com.trifork.stamdata.replication.gui.controllers.LogController;
 import com.trifork.stamdata.replication.gui.controllers.UserController;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.security.LoginFilter;
 import com.trifork.stamdata.replication.util.ConfiguredModule;
 import com.trifork.xmlquery.Namespaces;
-import dk.itst.oiosaml.sp.service.SPFilter;
+
+import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 
 
 public class GuiModule extends ConfiguredModule {
 
-	public GuiModule() throws IOException {
+	private final ServletContext context;
+
+	public GuiModule(ServletContext context) throws IOException {
 
 		super();
+		this.context = context;
 	}
 
 	@Override
@@ -40,18 +45,13 @@ public class GuiModule extends ConfiguredModule {
 		// The template files can be found in the 'webapp' directory
 		// and all have the extension .ftl.
 
-		Configuration config = new Configuration();
-
-		String TEMPLATE_DIR = "views";
-		URL TEMPLATE_DIR_URL = getClass().getClassLoader().getResource(TEMPLATE_DIR);
-
 		try {
-			File templateDir = new File(TEMPLATE_DIR_URL.toURI());
+			Configuration config = new Configuration();
 
 			// Specify the data source where the template files come from.
 			// Here I set a file directory for it:
 
-			config.setDirectoryForTemplateLoading(templateDir);
+			config.setTemplateLoader(new WebappTemplateLoader(context));
 
 			// Specify how templates will see the data-model.
 			// We just use the default:

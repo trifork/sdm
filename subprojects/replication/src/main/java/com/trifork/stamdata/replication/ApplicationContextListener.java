@@ -3,6 +3,10 @@ package com.trifork.stamdata.replication;
 import static org.slf4j.LoggerFactory.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+
 import org.slf4j.Logger;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -19,7 +23,13 @@ import com.trifork.stamdata.replication.security.dgws.DGWSModule;
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
+	private ServletContext servletContext;
 
+	@Override
+	public void contextInitialized(ServletContextEvent servletContextEvent) {
+		servletContext = servletContextEvent.getServletContext();
+		super.contextInitialized(servletContextEvent);
+	}
 	@Override
 	protected Injector getInjector() {
 
@@ -43,7 +53,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			modules.add(new ProfilingModule());
 			modules.add(new DGWSModule());
 			modules.add(new RegistryModule());
-			modules.add(new GuiModule());
+			modules.add(new GuiModule(servletContext));
 			modules.add(new MonitoringModule());
 
 			injector = Guice.createInjector(modules);
