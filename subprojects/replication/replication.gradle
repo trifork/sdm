@@ -12,15 +12,10 @@ dependencies {
 	
 	compile 'com.google.code.findbugs:jsr305:1.3.9'
 	
+	// REFLECTION
+	
 	compile(libs.reflections) {
 		exclude group: 'ch.qos.logback'
-	}
-	
-	// Configuration
-	
-	compile(libs.commons_configuration) {
-		exclude module: 'commons-logging'
-		runtime libs.jcl_over_slf4j
 	}
 	
 	// Guice
@@ -29,7 +24,7 @@ dependencies {
 	
 	// Hibernate
 	
-	compile libs.hibernate
+	providedCompile libs.hibernate
 	
 	// STS
 	
@@ -41,13 +36,7 @@ dependencies {
 		exclude module: 'commons-logging'
 		exclude module: 'servlet-api'
 		exclude group: 'org.slf4j'
-		runtime('org.opensaml:opensaml:2.4.1') {
-			exclude module: 'velocity' // Wrong name in the POM.
-			exclude group: 'org.slf4j'
-			runtime(libs.velocity) {
-				exclude module: 'oro' // Not needed
-			}
-		}
+		exclude group: 'org.apache.xerces'
 	}
 
 	// RID2CPR Client
@@ -71,14 +60,10 @@ dependencies {
 			exclude group: "org.slf4j"
 		}
 	}
-	
-	// JAXB
-	
-	compile libs.jaxb
 
 	// MySQL
 	
-	compile libs.mysql_driver
+	providedCompile libs.mysql_driver
 	
 	// IO Utils
 	

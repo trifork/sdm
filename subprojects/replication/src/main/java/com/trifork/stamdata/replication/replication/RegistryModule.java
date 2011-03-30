@@ -12,7 +12,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
@@ -34,8 +33,7 @@ public class RegistryModule extends ServletModule {
 		//
 		// For speed only the model package will be searched.
 
-		String MODEL_PACKAGE = View.class.getPackage().getName();
-		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForPackagePrefix(MODEL_PACKAGE)).setScanners(new TypeAnnotationsScanner()));
+		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForCurrentClasspath()).setScanners(new TypeAnnotationsScanner()));
 		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(ViewPath.class);
 
 		// MAP VIEWS TO THEIR PATHS

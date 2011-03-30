@@ -1,6 +1,8 @@
 package com.trifork.stamdata.replication.db;
 
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -9,6 +11,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
+import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+
 import com.google.inject.Provides;
 import com.trifork.stamdata.replication.util.ConfiguredModule;
 
@@ -24,6 +31,18 @@ public class DatabaseModule extends ConfiguredModule {
 
 	@Override
 	public void configureServlets() {
+
+		// TODO: Is this needed in JBOSS?
+
+		try {
+			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+		}
+		catch (SQLException e) {
+			System.out.println("Oops! Got a MySQL error: " + e.getMessage());
+		}
+		
+		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForCurrentClasspath()).setScanners(new TypeAnnotationsScanner()));
+		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
 
 		try {
 			Configuration config = new Configuration();
