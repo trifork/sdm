@@ -125,7 +125,7 @@ public class RegistryServlet extends HttpServlet {
 		response.setContentType(contentType);
 		response.flushBuffer();
 
-		// WRITE RESPONSE CONTENT
+		// WRITE RESPONSE CONTENT IF ANY
 
 		if (status == 200) {
 			writers.get().write(viewName, records, response.getOutputStream(), useFastInfoSet);
