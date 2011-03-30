@@ -44,10 +44,9 @@ public class AtomFeedWriter {
 		try {
 			XMLStreamWriter writer;
 			
-			if (useFastInfoset)
-				writer = StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
-			else
-				writer = XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
+			writer = (useFastInfoset)
+				? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8")
+				: XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
 			
 			// Start the feed.
 
