@@ -3,13 +3,14 @@ package com.trifork.stamdata.replication.replication;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.ScrollableResults;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -88,16 +89,10 @@ public class RegistryServlet extends HttpServlet {
 		boolean useFastInfoSet = (MIME.ATOM_FASTINFOSET.equalsIgnoreCase(accept));
 
 		// FETCH THE RECORDS
-		//
-		// Currently we need the newest record for some meta data.
-		// HACK: This is quite inefficient. Traverse the list in reverse
-		// instead.
 
 		Class<? extends View> entityType = registry.get(viewName);
 
-		List<? extends View> records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), count);
-
-		View newestRecord = (records.isEmpty()) ? null : records.get(records.size() - 1);
+		ScrollableResults records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), count);
 
 		// WRITE STATUS & HEADERS
 		//
@@ -106,12 +101,25 @@ public class RegistryServlet extends HttpServlet {
 		//
 		// If there are no more records, no Link header will be returned.
 		// This is how the client knows when there are no more updates.
+		//
+		// Returns 304 Not modified when there are no more updates.
+		//
+		// TODO: Check if scrolling to the last record is too inefficient,
+		// and maybe an additional query would be faster.
 		
-		response.setStatus(200);		
-		if (records.size() == count) {
+		int status;
+
+		if (records.last()) {
+			status = 200;
+			View newestRecord = (View)records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
+			records.beforeFirst();
+		}
+		else {
+			status = 304;
 		}
 
+		response.setStatus(status);
 		String contentType = useFastInfoSet ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
 		contentType += "; charset=utf-8";
 		response.setContentType(contentType);
@@ -119,7 +127,9 @@ public class RegistryServlet extends HttpServlet {
 
 		// WRITE RESPONSE CONTENT
 
-		writers.get().write(viewName, records, response.getOutputStream(), useFastInfoSet);
+		if (status == 200) {
+			writers.get().write(viewName, records, response.getOutputStream(), useFastInfoSet);
+		}
 	}
 
 	protected String getPath(HttpServletRequest request) {

@@ -5,31 +5,32 @@ import static java.lang.String.format;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import org.hibernate.Query;
+import org.hibernate.Session;
 
 import com.google.inject.Inject;
 
 
 public class DatabaseAuditLogger {
 
-	private final EntityManager em;
+	private final Session em;
 
 	@Inject
-	DatabaseAuditLogger(EntityManager em) {
+	DatabaseAuditLogger(Session em) {
 
 		this.em = em;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<LogEntry> findAll(int offset, int count) {
 
 		checkArgument(offset >= 0);
 		checkArgument(count > 0);
 		
-		TypedQuery<LogEntry> query = em.createQuery("FROM LogEntry ORDER BY createdAt DESC", LogEntry.class);
+		Query query = em.createQuery("FROM LogEntry ORDER BY createdAt DESC");
 		query.setMaxResults(10);
 		query.setFirstResult(offset);
-		return query.getResultList();
+		return query.list();
 	}
 
 	public boolean write(String message, Object... args) {

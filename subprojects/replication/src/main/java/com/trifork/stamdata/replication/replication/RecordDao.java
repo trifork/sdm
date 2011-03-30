@@ -5,24 +5,27 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.*;
-import org.hibernate.ejb.QueryHints;
+
+import org.hibernate.Query;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
+import org.hibernate.StatelessSession;
+
 import com.google.inject.Inject;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
 public class RecordDao {
 
-	private final EntityManager em;
+	private final StatelessSession em;
 
 	@Inject
-	RecordDao(EntityManager em) {
+	RecordDao(StatelessSession em) {
 
 		this.em = checkNotNull(em);
 	}
 
-	public <T extends View> List<T> findPage(Class<T> type, String recordId, Date modifiedDate, int limit) {
+	public <T extends View> ScrollableResults findPage(Class<T> type, String recordId, Date modifiedDate, int limit) {
 
 		checkNotNull(type);
 		checkNotNull(recordId);
@@ -38,15 +41,14 @@ public class RecordDao {
 
 		String SQL = "FROM " + type.getName() + " WHERE (recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID) ORDER BY recordID, modifiedDate";
 
-		TypedQuery<T> query = em.createQuery(SQL, type);
+		Query query = em.createQuery(SQL);
 		query.setParameter("recordID", id);
 		query.setParameter("modifiedDate", modifiedDate);
 		query.setMaxResults(limit);
-		query.setHint(QueryHints.HINT_READONLY, true);
 
 		// FETCH THE RECORDS
 		//
 
-		return query.getResultList();
+		return query.scroll(ScrollMode.SCROLL_SENSITIVE);
 	}
 }

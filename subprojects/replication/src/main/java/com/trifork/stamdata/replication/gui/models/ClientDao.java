@@ -1,37 +1,38 @@
 package com.trifork.stamdata.replication.gui.models;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 import com.google.inject.Inject;
 
 
 public class ClientDao {
 
-	private final EntityManager em;
+	private final Session session;
 
 	@Inject
-	ClientDao(EntityManager em) {
+	ClientDao(Session session) {
 
-		this.em = em;
+		this.session = session;
 	}
 
 	public Client find(String id) {
 
-		return em.find(Client.class, id);
+		return (Client) session.load(Client.class, id);
 	}
 
 	public Client findByCvr(String cvr) {
 
-		TypedQuery<Client> query = em.createQuery("FROM Client WHERE cvr = :cvr", Client.class);
+		Query query = session.createQuery("FROM Client WHERE cvr = :cvr");
 		query.setParameter("cvr", cvr);
-		return query.getSingleResult();
+		return (Client) query.uniqueResult();
 	}
 
 	public boolean delete(String id) {
 
-		Query query = em.createQuery("DELETE Client WHERE id = :id");
+		Query query = session.createQuery("DELETE Client WHERE id = :id");
 		query.setParameter("id", id);
 		return query.executeUpdate() == 1;
 	}
@@ -39,17 +40,18 @@ public class ClientDao {
 	public Client create(String name, String cvr) {
 
 		Client client = new Client(name, cvr);
-		em.persist(client);
+		session.persist(client);
 		return client;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Client> findAll() {
 
-		return em.createQuery("FROM Client ORDER BY name", Client.class).getResultList();
+		return session.createQuery("FROM Client ORDER BY name").list();
 	}
 
 	public void update(Client client) {
 
-		em.persist(client);
+		session.persist(client);
 	}
 }

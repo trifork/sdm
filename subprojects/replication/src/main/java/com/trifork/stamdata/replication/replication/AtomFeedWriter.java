@@ -13,6 +13,8 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.hibernate.ScrollableResults;
+
 import com.google.inject.Inject;
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
@@ -33,7 +35,7 @@ public class AtomFeedWriter {
 		this.marshaller = checkNotNull(marshaller);
 	}
 
-	public void write(String entityName, List<? extends View> records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
+	public void write(String entityName, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
 
 		checkNotNull(entityName);
 		checkNotNull(records);
@@ -56,12 +58,13 @@ public class AtomFeedWriter {
 			writer.writeNamespace(null, ATOM_NS);
 			writer.writeNamespace("sd", Namespace.STAMDATA_3_0);
 
-			writeFeedMetadata(entityName, records, writer);
+			writeFeedMetadata(entityName, writer);
 
 			// Write each record as an ATOM entry.
 
-			for (View record : records) {
-				writeEntry(writer, entityName, record);
+			while (records.next()) {
+				View view = (View)records.get(0);
+				writeEntry(writer, entityName, view);
 			}
 
 			// End the feed.
@@ -100,7 +103,7 @@ public class AtomFeedWriter {
 		feed.writeEndElement(); // Entry
 	}
 
-	protected void writeFeedMetadata(String path, List<? extends View> records, XMLStreamWriter feed) throws XMLStreamException {
+	protected void writeFeedMetadata(String path, XMLStreamWriter feed) throws XMLStreamException {
 
 		// There is currently no stability in the feeds' output,
 		// This means that if you access the same URL two times

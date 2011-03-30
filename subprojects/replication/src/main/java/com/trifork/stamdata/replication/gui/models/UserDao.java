@@ -2,59 +2,62 @@ package com.trifork.stamdata.replication.gui.models;
 
 import java.sql.SQLException;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+
 import com.google.inject.Inject;
+import com.google.inject.servlet.RequestScoped;
 
-
+@RequestScoped
 public class UserDao {
 
-	private final EntityManager em;
+	private final Session session;
 
 	@Inject
-	public UserDao(EntityManager em) {
+	public UserDao(Session session) {
 
-		this.em = em;
+		this.session = session;
 	}
 
 	public User find(String id) {
 
-		return em.find(User.class, id);
+		return (User) session.load(User.class, id);
 	}
 
 	public User find(String cvr, String cpr) throws SQLException {
 
-		TypedQuery<User> query = em.createQuery("FROM User WHERE (cpr = :cpr AND cvr = :cvr)", User.class);
+		Query query = session.createQuery("FROM User WHERE (cpr = :cpr AND cvr = :cvr)");
 		query.setParameter("cpr", cpr);
 		query.setParameter("cvr", cvr);
-		return query.getSingleResult();
+		return (User) query.uniqueResult();
 	}
 
 	public User create(String name, String cpr, String cvr) {
 
 		User user = new User(name, cpr, cvr);
-		em.persist(user);
+		session.save(user);
 		return user;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<User> findAll() {
 
-		return em.createQuery("FROM User ORDER BY name", User.class).getResultList();
+		return session.createQuery("FROM User ORDER BY name").list();
 	}
 
 	public void delete(String id) {
 
-		Query query = em.createQuery("DELETE User WHERE (id = :id)");
+		Query query = session.createQuery("DELETE User WHERE (id = :id)");
 		query.setParameter("id", id);
 		query.executeUpdate();
 	}
 
 	public boolean exists(String userCPR, String userCVR) {
 
-		Query query = em.createQuery("SELECT COUNT(u) FROM User u WHERE (cpr = :cpr, cvr = :cvr)");
+		Query query = session.createQuery("SELECT COUNT(u) FROM User u WHERE (cpr = :cpr, cvr = :cvr)");
 		query.setParameter("cpr", userCPR);
 		query.setParameter("cvr", userCVR);
-		return 1 == (Long) query.getSingleResult();
+		return 1 == (Long) query.uniqueResult();
 	}
 }

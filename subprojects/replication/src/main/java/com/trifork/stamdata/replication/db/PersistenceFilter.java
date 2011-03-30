@@ -1,16 +1,20 @@
 package com.trifork.stamdata.replication.db;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.slf4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -19,12 +23,12 @@ import com.google.inject.Singleton;
 public class PersistenceFilter implements Filter {
 
 	private static final Logger logger = getLogger(PersistenceFilter.class);
-	private final Provider<EntityManager> em;
+	private final Provider<Session> sessions;
 
 	@Inject
-	PersistenceFilter(Provider<EntityManager> em) {
+	PersistenceFilter(Provider<Session> sessions) {
 
-		this.em = em;
+		this.sessions = sessions;
 	}
 
 	@Override
@@ -35,7 +39,7 @@ public class PersistenceFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-		EntityTransaction transaction = em.get().getTransaction();
+		Transaction transaction = sessions.get().getTransaction();
 
 		try {
 			transaction.begin();
@@ -47,7 +51,7 @@ public class PersistenceFilter implements Filter {
 			logger.error("An unexpected error occured.", e);
 		}
 		finally {
-			em.get().close();
+			sessions.get().close();
 		}
 	}
 

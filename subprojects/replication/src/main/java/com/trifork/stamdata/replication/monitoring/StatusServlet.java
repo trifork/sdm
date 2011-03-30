@@ -1,12 +1,15 @@
 package com.trifork.stamdata.replication.monitoring;
 
 import java.io.IOException;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -16,12 +19,12 @@ import com.google.inject.Singleton;
 public class StatusServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1324005200396944825L;
-	private final Provider<EntityManager> em;
+	private final Provider<Session> session;
 
 	@Inject
-	public StatusServlet(Provider<EntityManager> em) {
+	public StatusServlet(Provider<Session> session) {
 
-		this.em = em;
+		this.session = session;
 	}
 
 	@Override
@@ -30,9 +33,9 @@ public class StatusServlet extends HttpServlet {
 		response.setContentType("text/plain");
 
 		try {
-			EntityManager em = this.em.get();
-			Query query = em.createNativeQuery("SELECT 1");
-			query.getSingleResult();
+			Session session = this.session.get();
+			SQLQuery query = session.createSQLQuery("SELECT 1");
+			query.uniqueResult();
 			response.setStatus(200);
 			response.getWriter().println("200 OK");
 		}

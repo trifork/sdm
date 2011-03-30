@@ -8,10 +8,6 @@ dependencies {
 	
 	testCompile libs.commons_lang
 	
-	// Persistence
-	
-	compile libs.jpa_api
-	
 	// STS
 	
 	compile libs.seal
