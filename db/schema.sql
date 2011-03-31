@@ -1,7 +1,7 @@
 CREATE TABLE Import ( 
 	importtime DATETIME,
 	spoolername VARCHAR(100) 
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE AdresseBeskyttelse ( 
 	cpr VARCHAR(10) NOT NULL, 
@@ -23,33 +23,33 @@ CREATE TABLE AdresseBeskyttelse (
 	vejkode BIGINT(12), 
 	kommunekode BIGINT(12), 
 	UNIQUE INDEX (cpr) 
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE User (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(200) NOT NULL,
 	cvr CHAR(8) NOT NULL,
 	cpr CHAR(10) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Client (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(200) NOT NULL,
 	cvr CHAR(200) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Client_Permissions (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	client_id BIGINT NOT NULL,
 	permissions VARCHAR(200) NOT NULL,
 	FOREIGN KEY (client_id) REFERENCES Client(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE LogEntry (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	message VARCHAR(500),
 	createdAt TIMESTAMP NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Authorization (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -58,7 +58,7 @@ CREATE TABLE Authorization (
 	token BLOB(512) NOT NULL,
 	expiresAt TIMESTAMP NOT NULL,
 	createdAt TIMESTAMP NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageStructure (
 	DosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -77,7 +77,7 @@ CREATE TABLE DosageStructure (
 	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageUnit (
 	DosageUnitPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -92,7 +92,7 @@ CREATE TABLE DosageUnit (
 	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageVersion (
 	DosageVersionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -107,7 +107,7 @@ CREATE TABLE DosageVersion (
 	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DrugDosageStructureRelation (
 	DrugDosageStructureRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -122,7 +122,7 @@ CREATE TABLE DrugDosageStructureRelation (
 	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageDrug (
 	DosageDrugPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -137,7 +137,7 @@ CREATE TABLE DosageDrug (
 	CreatedBy VARCHAR(200),
 	CreatedDate DATETIME,
 	INDEX (releaseNumber)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Administrationsvej (
 	AdministrationsvejPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -152,7 +152,7 @@ CREATE TABLE Administrationsvej (
 	CreatedDate DATETIME,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Administrationsvej_1 UNIQUE (AdministrationsvejKode, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Apotek (
 	ApotekPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -176,7 +176,7 @@ CREATE TABLE Apotek (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE ATC (
 	ATCPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -194,7 +194,7 @@ CREATE TABLE ATC (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Autorisation (
 	AutorisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -210,7 +210,7 @@ CREATE TABLE Autorisation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE BarnRelation (
 	BarnRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -225,7 +225,7 @@ CREATE TABLE BarnRelation (
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Beregningsregler (
 	BeregningsreglerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -238,7 +238,7 @@ CREATE TABLE Beregningsregler (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Dosering (
 	DoseringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -257,7 +257,7 @@ CREATE TABLE Dosering (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE EmballagetypeKoder (
 	EmballagetypeKoderPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -271,7 +271,7 @@ CREATE TABLE EmballagetypeKoder (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Enhedspriser (
 	EnhedspriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -287,7 +287,7 @@ CREATE TABLE Enhedspriser (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Firma (
 	FirmaPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -302,7 +302,7 @@ CREATE TABLE Firma (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE ForaeldreMyndighedRelation (
 	ForaeldreMyndighedRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -319,7 +319,7 @@ CREATE TABLE ForaeldreMyndighedRelation (
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Formbetegnelse (
 	FormbetegnelsePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -333,7 +333,7 @@ CREATE TABLE Formbetegnelse (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Indholdsstoffer (
 	IndholdsstofferPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY, 
@@ -350,7 +350,7 @@ CREATE TABLE Indholdsstoffer (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Indikation (
 	IndikationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -367,7 +367,7 @@ CREATE TABLE Indikation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE IndikationATCRef (
 	IndikationATCRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -382,7 +382,7 @@ CREATE TABLE IndikationATCRef (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo, IndikationKode, ATC)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Kommune (
 	KommunePID BIGINT(15) NOT NULL PRIMARY KEY,
@@ -395,7 +395,7 @@ CREATE TABLE Kommune (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Laegemiddel (
 	LaegemiddelPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -430,7 +430,7 @@ CREATE TABLE Laegemiddel (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Laegemiddelnavn (
 	LaegemiddelnavnPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -443,7 +443,7 @@ CREATE TABLE Laegemiddelnavn (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE LaegemiddelAdministrationsvejRef (
 	LaegemiddelAdministrationsvejRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -457,7 +457,7 @@ CREATE TABLE LaegemiddelAdministrationsvejRef (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE LaegemiddelDoseringRef (
 	LaegemiddelDoseringRefPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -471,7 +471,7 @@ CREATE TABLE LaegemiddelDoseringRef (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Klausulering (
 	KlausuleringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -485,7 +485,7 @@ CREATE TABLE Klausulering (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Medicintilskud (
 	MedicintilskudPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -499,7 +499,7 @@ CREATE TABLE Medicintilskud (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Opbevaringsbetingelser (
 	OpbevaringsbetingelserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -513,7 +513,7 @@ CREATE TABLE Opbevaringsbetingelser (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE OplysningerOmDosisdispensering (
 	OplysningerOmDosisdispenseringPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -532,7 +532,7 @@ CREATE TABLE OplysningerOmDosisdispensering (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Organisation (
 	organisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -546,7 +546,7 @@ CREATE TABLE Organisation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakning (
 	PakningPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -582,7 +582,7 @@ CREATE TABLE Pakning (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakningskombinationer (
 	PakningskombinationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -600,7 +600,7 @@ CREATE TABLE Pakningskombinationer (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PakningskombinationerUdenPriser (
 	PakningskombinationerUdenPriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -616,7 +616,7 @@ CREATE TABLE PakningskombinationerUdenPriser (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakningsstoerrelsesenhed (
 	PakningsstoerrelsesenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -631,7 +631,7 @@ CREATE TABLE Pakningsstoerrelsesenhed (
 	CreatedDate DATETIME,
  INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Pakningsstoerrelsesenhed_1 UNIQUE (PakningsstoerrelsesEnhedKode, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Person (
 	PersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -666,12 +666,12 @@ CREATE TABLE Person (
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PersonIkraft (
 	PersonIkraftPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,
 	IkraftDato DATETIME NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Praksis (
 	praksisPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -686,7 +686,7 @@ CREATE TABLE Praksis (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Priser (
 	PriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -704,7 +704,7 @@ CREATE TABLE Priser (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Rekommandationer (
 	RekommandationerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -719,7 +719,7 @@ CREATE TABLE Rekommandationer (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SpecialeForNBS (
 	SpecialeForNBSPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -733,7 +733,7 @@ CREATE TABLE SpecialeForNBS (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Styrkeenhed (
 	StyrkeenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -748,7 +748,7 @@ CREATE TABLE Styrkeenhed (
 	CreatedDate DATETIME,
  INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Styrkeenhed_1 UNIQUE (StyrkeenhedKode, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Substitution (
 	SubstitutionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -765,7 +765,7 @@ CREATE TABLE Substitution (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SubstitutionAfLaegemidlerUdenFastPris (
 	SubstitutionAfLaegemidlerUdenFastPrisPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -778,7 +778,7 @@ CREATE TABLE SubstitutionAfLaegemidlerUdenFastPris (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 
 CREATE TABLE Sygehus (
@@ -800,7 +800,7 @@ CREATE TABLE Sygehus (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SygehusAfdeling (
 	SygeHusAfdelingPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -828,7 +828,7 @@ CREATE TABLE SygehusAfdeling (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE TakstVersion (
 	TakstVersionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -840,7 +840,7 @@ CREATE TABLE TakstVersion (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Tidsenhed (
 	TidsenhedPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -855,7 +855,7 @@ CREATE TABLE Tidsenhed (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200),
 	CONSTRAINT UC_Tidsenhed_1 UNIQUE (TidsenhedKode, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Tilskudsintervaller (
 	TilskudsintervallerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -872,7 +872,7 @@ CREATE TABLE Tilskudsintervaller (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE TilskudsprisgrupperPakningsniveau (
 	TilskudsprisgrupperPakningsniveauPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -885,7 +885,7 @@ CREATE TABLE TilskudsprisgrupperPakningsniveau (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE UdgaaedeNavne (
 	UdgaaedeNavnePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -900,7 +900,7 @@ CREATE TABLE UdgaaedeNavne (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Udleveringsbestemmelser (
 	UdleveringsbestemmelserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -915,7 +915,7 @@ CREATE TABLE Udleveringsbestemmelser (
 	ModifiedBy VARCHAR(200) NOT NULL,
 	CreatedBy VARCHAR(200) NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE UmyndiggoerelseVaergeRelation (
 	UmyndiggoerelseVaergeRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -940,7 +940,7 @@ CREATE TABLE UmyndiggoerelseVaergeRelation (
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Yder (
 	YderPID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -964,12 +964,12 @@ CREATE TABLE Yder (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE YderLoebenummer (
 	YderLoebenummerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,
 	Loebenummer BIGINT(12) NOT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Yderregister (
 	YderregisterPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -992,7 +992,7 @@ CREATE TABLE Yderregister (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE YderregisterPerson (
 	YderregisterPersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -1009,4 +1009,4 @@ CREATE TABLE YderregisterPerson (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
