@@ -10,16 +10,15 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.ScrollableResults;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -44,7 +43,7 @@ public class RegistryServletTest {
 	private AtomFeedWriter writer;
 	private String requestPath;
 	private String countParam;
-	private List<MockEntity> records;
+	private ScrollableResults records;
 	private String acceptHeader;
 	private boolean authorized;
 	private String offsetParam;
@@ -81,15 +80,24 @@ public class RegistryServletTest {
 		verify(response).setStatus(200);
 		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(false));
 	}
+	
+	@Test
+	public void Should_return_304_if_there_are_no_updates() throws Exception {
+
+		when(records.last()).thenReturn(false);
+		
+		get();
+		
+		verify(response).setStatus(304);
+	}
 
 	@Test
-	@SuppressWarnings("unchecked")
 	public void Should_deny_access_if_the_client_is_not_authorized_for_the_requested_view() throws Exception {
 
 		authorized = false;
 		get();
 		verify(response).setStatus(401);
-		verify(writer, never()).write(anyString(), any(List.class), any(OutputStream.class), Mockito.anyBoolean());
+		verify(writer, never()).write(anyString(), any(ScrollableResults.class), any(OutputStream.class), Mockito.anyBoolean());
 	}
 
 	@Test
@@ -105,8 +113,7 @@ public class RegistryServletTest {
 
 		countParam = "2";
 
-		records = new ArrayList<MockEntity>();
-		records.add(mock(MockEntity.class)); // Only one record.
+		records = mock(ScrollableResults.class);
 
 		get();
 
@@ -175,10 +182,13 @@ public class RegistryServletTest {
 		offsetParam = "11111111112222222222";
 		nextOffset = "11111111113333333333";
 
-		records = new ArrayList<MockEntity>();
-		records.add(mock(MockEntity.class));
-		records.add(mock(MockEntity.class));
-		when(records.get(1).getOffset()).thenReturn(nextOffset);
+		records = mock(ScrollableResults.class);
+		when(records.next()).thenReturn(true,false);
+		
+		MockEntity lastRecord = mock(MockEntity.class);
+		when(records.get(0)).thenReturn(lastRecord);
+		when(records.last()).thenReturn(true);
+		when(lastRecord.getOffset()).thenReturn(nextOffset);
 		
 		ServletOutputStream outputStream = mock(ServletOutputStream.class);
 		when(response.getOutputStream()).thenReturn(outputStream);

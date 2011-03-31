@@ -8,9 +8,7 @@ import static org.mockito.Mockito.when;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.bind.Marshaller;
 import javax.xml.stream.XMLStreamWriter;
@@ -21,13 +19,13 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.commons.io.FileUtils;
+import org.hibernate.ScrollableResults;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import com.trifork.stamdata.replication.mocks.MockEntity;
-import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Ignore
@@ -50,11 +48,10 @@ public class XMLEntityWriterTest {
 	@Test
 	public void test_can_generate_valid_atom_feed() throws Exception {
 
-		List<View> records = new ArrayList<View>();
+		ScrollableResults records = mock(ScrollableResults.class);
 
-		records.add(createRecord());
-		records.add(createRecord());
-		records.add(createRecord());
+		when(records.next()).thenReturn(true, true, true, false);
+		when(records.get(0)).thenReturn(createRecord(), createRecord(), createRecord());
 
 		writer.write("foo/bar/v1", records, outputStream, false);
 
