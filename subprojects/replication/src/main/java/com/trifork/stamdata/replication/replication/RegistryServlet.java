@@ -1,3 +1,20 @@
+// Stamdata - Copyright (C) 2011 National Board of e-Health (NSI)
+// 
+// All source code and information supplied as part of Stamdata is
+// copyright to National Board of e-Health.
+// 
+// The source code has been released under a dual license - meaning you can
+// use either licensed version of the library with your code.
+// 
+// It is released under the Common Public License 1.0, a copy of which can
+// be found at the link below.
+// http://www.opensource.org/licenses/cpl1.0.php
+// 
+// It is released under the LGPL (GNU Lesser General Public License), either
+// version 2.1 of the License, or (at your option) any later version. A copy
+// of which can be found at the link below.
+// http://www.gnu.org/copyleft/lesser.html
+
 package com.trifork.stamdata.replication.replication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -53,7 +70,7 @@ public class RegistryServlet extends HttpServlet {
 		// TODO: Log any unauthorized attempts.
 
 		if (!securityManager.get().authorize(request)) {
-			
+
 			response.setStatus(401);
 			response.setHeader("WWW-Authenticate", "STAMDATA");
 			return;
@@ -106,12 +123,12 @@ public class RegistryServlet extends HttpServlet {
 		//
 		// TODO: Check if scrolling to the last record is too inefficient,
 		// and maybe an additional query would be faster.
-		
+
 		int status;
 
 		if (records.last()) {
 			status = 200;
-			View newestRecord = (View)records.get(0);
+			View newestRecord = (View) records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
 			records.beforeFirst();
 		}
