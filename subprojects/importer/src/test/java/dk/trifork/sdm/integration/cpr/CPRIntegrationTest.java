@@ -47,6 +47,85 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
+	public void EtableringTest() throws Exception {
+
+		// Arrange
+		File fInitial = getFile("data/cpr/testEtablering/D100313.L431102");
+
+		// Act and assert
+		new CPRImporter().run(Arrays.asList(fInitial));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+
+		// When running a full load (file doesn't ends on 01) of CPR no
+		// LatestIkraft should be written to the db
+		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
+		assertNull(latestIkraft);
+		con.close();
+	}
+
+	@Test
+	public void UpdateTest() throws Exception {
+
+		// Arrange
+		File fInitial = getFile("data/cpr/D100315.L431101");
+
+		// Act and assert
+		new CPRImporter().run(Arrays.asList(fInitial));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
+		assertTrue(rs.next());
+		assertEquals("Hjalte", rs.getString("Fornavn"));
+		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+		assertFalse(rs.next());
+
+		fInitial = getFile("data/cpr/D100317.L431101");
+		new CPRImporter().run(Arrays.asList(fInitial));
+
+		rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
+		assertTrue(rs.next());
+		assertEquals("Hjalte", rs.getString("Fornavn"));
+		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
+		assertEquals("2010-03-17 00:00:00.0", rs.getString("validTo"));
+		assertTrue(rs.next());
+		assertEquals("Hjalts", rs.getString("Fornavn"));
+		assertEquals("2010-03-17 00:00:00.0", rs.getString("validFrom"));
+		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+		assertFalse(rs.next());
+		stmt.close();
+		con.close();
+	}
+
+	@Test(expected = FileImporterException.class)
+	public void SequenceTest() throws Exception {
+
+		// Arrange
+		File fInitial = getFile("data/cpr/testSequence1/D100314.L431101");
+
+		// Act and assert
+		new CPRImporter().run(Arrays.asList(fInitial));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+
+		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
+		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
+
+		fInitial = getFile("data/cpr/testSequence2/D100314.L431101");
+		new CPRImporter().run(Arrays.asList(fInitial));
+
+		latestIkraft = CPRImporter.getLatestIkraft(con);
+		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
+
+		fInitial = getFile("data/cpr/testOutOfSequence/D100314.L431101");
+		new CPRImporter().run(Arrays.asList(fInitial));
+		con.close();
+	}
+
+	@Test
 	public void ImportPersonNavnebeskyttelsesTest() throws Exception {
 
 		// Arrange
@@ -240,85 +319,6 @@ public class CPRIntegrationTest {
 		rs = stmt.executeQuery("Select count(*) from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
-		stmt.close();
-		con.close();
-	}
-
-	@Test(expected = FileImporterException.class)
-	public void SequenceTest() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testSequence1/D100314.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
-		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
-
-		fInitial = getFile("data/cpr/testSequence2/D100314.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
-
-		latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
-
-		fInitial = getFile("data/cpr/testOutOfSequence/D100314.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
-		con.close();
-	}
-
-	@Test
-	public void EtableringTest() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testEtablering/D100313.L431102");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
-		// When running a full load (file doesn't ends on 01) of CPR no
-		// LatestIkraft should be written to the db
-		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertNull(latestIkraft);
-		con.close();
-	}
-
-	@Test
-	public void UpdateTest() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/D100315.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
-		assertTrue(rs.next());
-		assertEquals("Hjalte", rs.getString("Fornavn"));
-		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-		assertFalse(rs.next());
-
-		fInitial = getFile("data/cpr/D100317.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
-
-		rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
-		assertTrue(rs.next());
-		assertEquals("Hjalte", rs.getString("Fornavn"));
-		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2010-03-17 00:00:00.0", rs.getString("validTo"));
-		assertTrue(rs.next());
-		assertEquals("Hjalts", rs.getString("Fornavn"));
-		assertEquals("2010-03-17 00:00:00.0", rs.getString("validFrom"));
-		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
-		assertFalse(rs.next());
 		stmt.close();
 		con.close();
 	}
