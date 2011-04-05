@@ -13,7 +13,7 @@
 // It is released under the LGPL (GNU Lesser General Public License), either
 // version 2.1 of the License, or (at your option) any later version. A copy
 // of which can be found at the link below.
-// http://www.gnu.org/copyleft/lesser.html
+// http://www.gnu.org/copyleft/lesser.html.trifork.stamdata.replication.replication.views.doseringsforslag;
 
 package com.trifork.stamdata.replication.replication.views.doseringsforslag;
 
@@ -55,11 +55,11 @@ public class DosageVersion extends View {
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
 
-	@Column(name="ValidFrom")
+	@Column(name = "ValidFrom")
 	@Temporal(TemporalType.TIMESTAMP)
 	protected Date validFrom;
 
-	@Column(name="ModifiedDate")
+	@Column(name = "ModifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)
 	@XmlTransient
 	protected Date modifiedDate;
