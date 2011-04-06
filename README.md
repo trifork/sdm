@@ -11,55 +11,55 @@ User Guide
 After cloning the repository you will have to take a few additional steps to
 get everything up and running.
 
-1.  Create a MySQL database with the needed tables:
+*   Create a MySQL database with the needed tables:
 
-    % mysqladmin create sdm_warehouse
-    % mysql -u _USERNAME_ sdm_warehouse < db/schema.sql
+        % mysqladmin create sdm_warehouse
+        % mysql -u _USERNAME_ sdm_warehouse < db/schema.sql
 
 If you want to call your database something else you can configure it in the
 config.properties files found in the subprojects. Just make sure not to push
 personal setting to the shared repository.
 
-2.  Generate an eclipse project:
+*   Generate an eclipse project:
+    
+        % gradle eclipse
+    
+    This will generate 1 eclipse project for each of the sub-projects (found in 
+    the subprojects directory) and an additional project for the root.
 
-    % gradle eclipse
+    You will have to manually import the projects into eclipse using the _Import_
+    dialog. You will only need to do this step once.
+    
+    NB. If you use Idea's IDE you can generate a project for that too, but this
+    is currently not configured. Please contribute if you set it up. ;)
 
-This will generate 1 eclipse project for each of the sub-projects (found in 
-the subprojects directory) and an additional project for the root.
+*   Run the project from eclipse by deploying it to a J2EE application server.
 
-You will have to manually import the projects into eclipse using the _Import_
-dialog. You will only need to do this step once.
-
-NB. If you use Idea's IDE you can generate a project for that too, but this
-is currently not configured. Please contribute if you set it up. ;)
-
-3.  Run the project from eclipse by deploying it to a J2EE application server.
-
-I recommend not using the 'Preview' server in eclipse since you will not get
-any console output.
+    I recommend not using the 'Preview' server in eclipse since you will not
+    get any console output.
 
 There are two projects you can run. The importer, and the replication service.
 
-4.  Configure OIOSAML:
+*   Configure OIOSAML:
+    
+    Currently you can skip this step.
+    
+    FIXME. This is currently disabled because of problems with certificates
+    and the RID2CPR service at TDC.
 
-Currently you can skip this step.
+*   Access the administration GUI:
 
-FIXME. This is currently disabled because of problems with certificates and
-the RID2CPR service at TDC.
+    The administration GUI is a browser based GUI for administering user
+    rights and access restrictions. You can find it on:
 
-5.  Access the administration GUI:
+        http://localhost:8080/replication/admin/users
 
-The administration GUI is a browser based GUI for administering user rights
-and access restrictions. You can find it on:
+    and the importer status page on:
 
-    http://localhost:8080/replication/admin/users
+        http://localhost:8080/importer/importer
 
-and the importer status page on:
-
-    http://localhost:8080/importer/importer
-
-Of course you will have to substitute the host and port in the URL to fit your
-setup.
+    Of course you will have to substitute the host and port in the URL to fit
+    your setup.
 
 Build Customization
 -------------------
