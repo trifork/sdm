@@ -20,6 +20,19 @@ get everything up and running.
     config.properties files found in the subprojects. Just make sure not to push
     personal setting to the shared repository.
 
+*   Check that everything is working:
+
+        % gradle test
+    
+    This will run all the tests in all the sub-projects. The tests include
+    some integration tests and can take some time to complete.
+    
+    You can also run each tests in each sub-project individually, e.g.
+    
+        % gradle importer:test
+    
+    will run all the tests in the importer project. 
+
 *   Generate an eclipse project:
     
         % gradle eclipse
