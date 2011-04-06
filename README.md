@@ -16,9 +16,9 @@ get everything up and running.
         % mysqladmin create sdm_warehouse
         % mysql -u _USERNAME_ sdm_warehouse < db/schema.sql
 
-If you want to call your database something else you can configure it in the
-config.properties files found in the subprojects. Just make sure not to push
-personal setting to the shared repository.
+    If you want to call your database something else you can configure it in the
+    config.properties files found in the subprojects. Just make sure not to push
+    personal setting to the shared repository.
 
 *   Generate an eclipse project:
     
@@ -38,7 +38,8 @@ personal setting to the shared repository.
     I recommend not using the 'Preview' server in eclipse since you will not
     get any console output.
 
-There are two projects you can run. The importer, and the replication service.
+    There are two projects you can run. The importer, and the replication
+    service.
 
 *   Configure OIOSAML:
     
