@@ -18,6 +18,13 @@ dependencies {
 		exclude group: 'ch.qos.logback'
 	}
 	
+	// COMMONS LANG
+	//
+	// This is used in the Profiling Filter (Stop Watch),
+	// and in some tests for random strings.
+	
+	compile libs.commons_lang
+	
 	// Guice
 	
 	compile libs.guice_servlet
