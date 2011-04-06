@@ -46,10 +46,20 @@ get everything up and running.
     NB. If you use Idea's IDE you can generate a project for that too, but this
     is currently not configured. Please contribute if you set it up. ;)
 
-*   Run the project from eclipse by deploying it to a J2EE application server.
+*   Running the application:
 
-    I recommend not using the 'Preview' server in eclipse since you will not
-    get any console output.
+    You can run the application directly from command line:
+    
+        % gradle importer:jettyRun
+    
+    The downside to this is that it will only run one sub-project at a time.
+
+    You can also use the eclipse to deploy the application to J2EE application
+    server. This is recommended because you can control the server directly
+    from the IDE and deploy several WAR (one for each sub-project). 
+
+    If you use eclipse, I recommend not using the 'Preview' server type since
+    you will not get any console output.
 
     There are two projects you can run. The importer, and the replication
     service.
