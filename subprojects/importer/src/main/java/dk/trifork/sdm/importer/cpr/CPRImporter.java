@@ -19,6 +19,8 @@ import dk.trifork.sdm.importer.FileImporterControlledIntervals;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 import dk.trifork.sdm.importer.exceptions.FilePersistException;
+import dk.trifork.sdm.model.Dataset;
+import dk.trifork.sdm.model.StamdataEntity;
 import dk.trifork.sdm.util.DateUtils;
 
 
@@ -61,13 +63,9 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 				logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
 
-				dao.persistDeltaDataset(cpr.getPersonoplysninger());
-				dao.persistDeltaDataset(cpr.getNavneoplysninger());
-				dao.persistDeltaDataset(cpr.getKlarskriftadresse());
-				dao.persistDeltaDataset(cpr.getNavneBeskyttelse());
-				dao.persistDeltaDataset(cpr.getBarnRelation());
-				dao.persistDeltaDataset(cpr.getForaeldreMyndighedRelation());
-				dao.persistDeltaDataset(cpr.getUmyndiggoerelseVaergeRelation());
+				for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets()) {
+					dao.persistDeltaDataset(dataset);
+				}
 
 				addressProtection(connection);
 

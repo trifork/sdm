@@ -54,6 +54,10 @@ public class CPRParser {
 						cpr.addEntity(navneoplysninger(line));
 						break;
 						
+					case 11:
+						cpr.addEntity(folkekirkeoplysninger(line));
+						break;
+						
 					case 14:
 						cpr.addEntity(barnRelation(line));
 						break;
@@ -188,6 +192,16 @@ public class CPRParser {
 		p.setStilling(cut(line,72,106).trim());
 		return p;
 	}
+	
+	public static Folkekirkeoplysninger folkekirkeoplysninger(String line) throws ParseException {
+		Folkekirkeoplysninger f = new Folkekirkeoplysninger();
+		f.setCpr(cut(line,3, 13));
+		f.setForholdskode(cut(line, 13, 14));
+		f.setStartdato(parseDate(yyyy_MM_dd, line, 14, 24));
+		f.setStartdatomarkering(cut(line, 24, 25));
+		return f;
+	}
+
 	private static int getRecordType(String line) throws FileParseException {
 		return readInt(line, 0, 3);
 	}
@@ -268,5 +282,4 @@ public class CPRParser {
 	    }
 	    return (index == 0) ? str : str.substring(index);
 	}
-
 }

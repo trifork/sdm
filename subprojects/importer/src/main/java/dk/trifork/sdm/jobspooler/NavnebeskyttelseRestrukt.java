@@ -85,8 +85,8 @@ public class NavnebeskyttelseRestrukt implements Job {
 			if (nbExpired > 0) {
 	            logger.debug("Persisting " + nbExpired + " expired name and address protection records");
 	            AuditingPersister dao = new AuditingPersister(connection);
-	            dao.persistDeltaDataset(cprDS.getNavneoplysninger());
-	            dao.persistDeltaDataset(cprDS.getKlarskriftadresse());
+	            dao.persistDeltaDataset(cprDS.getDataset(Navneoplysninger.class));
+	            dao.persistDeltaDataset(cprDS.getDataset(Klarskriftadresse.class));
 	            
 	            connection.createStatement().execute(createDeleteExpiredNameProtectionSQL(sqlIN));
 	            

@@ -4,12 +4,14 @@ import org.junit.Test;
 
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.util.DateUtils;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
@@ -181,5 +183,18 @@ public class CPRParserTest {
 		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2000-03-01")), record.getValidFrom());
 
 		assertEquals(DateUtils.toCalendar(yyyy_MM_dd.parse("2008-02-28")), record.getValidTo());
+	}
+	
+	@Test
+	public void canParseRecord11_Folkekirkeoplysninger() throws Exception {
+		String line = "0110709614126F2008-02-28*";
+		
+		Folkekirkeoplysninger record = CPRParser.folkekirkeoplysninger(line);
+		
+		assertEquals("0709614126", record.getCpr());
+		assertEquals(Folkekirkeforhold.medlemAfFolkekirken, record.getForhold());
+		assertEquals("F", record.getForholdskode());
+		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getStartdato());
+		assertEquals("*", record.getStartdatomarkering());
 	}
 }

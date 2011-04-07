@@ -236,6 +236,24 @@ public class CPRIntegrationTest {
 		stmt.close();
 		con.close();
 	}
+	
+	@Test
+	public void kanImportereFolkekirkeoplysninger() throws Exception {
+		File file = getFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
+		
+		new CPRImporter().run(Arrays.asList(file));
+		
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from Folkekirkeoplysninger where CPR='0709614126'");
+		rs.next();
+		assertEquals("0709614126", rs.getString("CPR"));
+		assertEquals("F", rs.getString("Forholdskode"));
+		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Startdato"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
 
 	@Test
 	public void ImportU12160Test() throws Exception {
