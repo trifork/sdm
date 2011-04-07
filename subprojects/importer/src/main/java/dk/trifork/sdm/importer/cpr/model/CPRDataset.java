@@ -1,20 +1,24 @@
 package dk.trifork.sdm.importer.cpr.model;
 
-import dk.trifork.sdm.model.Dataset;
-
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import dk.trifork.sdm.model.Dataset;
+import dk.trifork.sdm.model.StamdataEntity;
 
 public class CPRDataset {
-	
-	private Dataset<Personoplysninger> personoplysninger = new Dataset<Personoplysninger>(Personoplysninger.class);
-	private Dataset<Klarskriftadresse> klarskriftadresse = new Dataset<Klarskriftadresse>(Klarskriftadresse.class);
-	private Dataset<NavneBeskyttelse> navneBeskyttelse = new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class);
-	private Dataset<Navneoplysninger> navneoplysninger = new Dataset<Navneoplysninger>(Navneoplysninger.class);
-	private Dataset<UmyndiggoerelseVaergeRelation> umyndiggoerelseVaergeRelation = new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class);
-	private Dataset<ForaeldreMyndighedRelation> foraeldreMyndighedRelation = new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class);
-	private Dataset<BarnRelation> barnRelation = new Dataset<BarnRelation>(BarnRelation.class);
+	private final List<Dataset<? extends StamdataEntity>> datasets = new ArrayList<Dataset<? extends StamdataEntity>>() {{
+		add(new Dataset<Personoplysninger>(Personoplysninger.class));
+		add(new Dataset<Klarskriftadresse>(Klarskriftadresse.class));
+		add(new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class));
+		add(new Dataset<Navneoplysninger>(Navneoplysninger.class));
+		add(new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class));
+		add(new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class));
+		add(new Dataset<BarnRelation>(BarnRelation.class));
+		add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
+	}};
 
-	
 	private Calendar validFrom, previousFileValidFrom; 
 
 	public Calendar getValidFrom() {
@@ -33,44 +37,28 @@ public class CPRDataset {
 		this.previousFileValidFrom = previousFileValidFrom;
 	}
 
-	public void addEntity(CPREntity entity) {
+	public <T extends CPREntity > void addEntity(T entity) {
 		entity.setDataset(this);
-		if (entity instanceof Personoplysninger) personoplysninger.addEntity((Personoplysninger) entity);
-		else if (entity instanceof Klarskriftadresse) klarskriftadresse.addEntity((Klarskriftadresse) entity);
-		else if (entity instanceof NavneBeskyttelse) navneBeskyttelse.addEntity((NavneBeskyttelse) entity);
-		else if (entity instanceof Navneoplysninger) navneoplysninger.addEntity((Navneoplysninger) entity);
-		else if (entity instanceof UmyndiggoerelseVaergeRelation) umyndiggoerelseVaergeRelation.addEntity((UmyndiggoerelseVaergeRelation) entity);
-		else if (entity instanceof ForaeldreMyndighedRelation) foraeldreMyndighedRelation.addEntity((ForaeldreMyndighedRelation) entity);
-		else if (entity instanceof BarnRelation) barnRelation.addEntity((BarnRelation) entity);
+		for (Dataset<? extends StamdataEntity> dataset : datasets) {
+			if (dataset.getType().equals(entity.getClass())) {
+				@SuppressWarnings("unchecked")
+				Dataset<T> typedDataset = (Dataset<T>) dataset;
+				typedDataset.addEntity(entity);
+			}
+		}
 	}
 
-	public Dataset<Personoplysninger> getPersonoplysninger() {
-		return personoplysninger;
-	}
-
-	public Dataset<Klarskriftadresse> getKlarskriftadresse() {
-		return klarskriftadresse;
-	}
-
-	public Dataset<NavneBeskyttelse> getNavneBeskyttelse() {
-		return navneBeskyttelse;
-	}
-
-	public Dataset<Navneoplysninger> getNavneoplysninger() {
-		return navneoplysninger;
-	}
-
-	public Dataset<UmyndiggoerelseVaergeRelation> getUmyndiggoerelseVaergeRelation() {
-		return umyndiggoerelseVaergeRelation;
-	}
-
-	public Dataset<ForaeldreMyndighedRelation> getForaeldreMyndighedRelation() {
-		return foraeldreMyndighedRelation;
-	}
-
-	public Dataset<BarnRelation> getBarnRelation() {
-		return barnRelation;
+	public List<Dataset<? extends StamdataEntity>> getDatasets() {
+		return datasets;
 	}
 	
-
+	@SuppressWarnings("unchecked")
+	public <T extends StamdataEntity> Dataset<T> getDataset(Class<T> entityClass) {
+		for (Dataset<? extends StamdataEntity> dataset : datasets) {
+			if (dataset.getType().equals(entityClass)) {
+				return (Dataset<T>) dataset;
+			}
+		}
+		throw new IllegalArgumentException("Ukendt entitetsklasse: " + entityClass);
+	}
 }

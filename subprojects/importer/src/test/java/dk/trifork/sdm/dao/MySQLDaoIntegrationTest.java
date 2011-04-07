@@ -27,24 +27,17 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	public void setupTable() throws SQLException {
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-
 		try {
-			stmt.executeUpdate("drop table SDE");
+			Statement stmt = con.createStatement();
+			try {
+				stmt.executeUpdate("drop table if exists SDE");
+				stmt.executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200), CreatedDate DATETIME);");
+			} finally {
+				stmt.close();
+			}
+		} finally {
+			con.close();
 		}
-		catch (Exception e) {
-		}
-
-		try {
-			con.createStatement().executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200), CreatedDate DATETIME);");
-		}
-		catch (Exception e) {
-			// it probably already existed
-			// FIXME: This is ugly. A database should be created on the fly.
-		}
-
-		stmt.close();
-		con.close();
 	}
 
 	@Test
