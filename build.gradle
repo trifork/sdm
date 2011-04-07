@@ -34,7 +34,7 @@ subprojects { subproject ->
 	
 	targetCompatibility = 1.6
 	sourceCompatibility = 1.6
-	
+	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 	// Include references to common dependencies so you can keep
 	// versions consistent accross your sub-projects.
 	apply from: "${rootDir}/config/libraries.groovy"
