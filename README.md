@@ -174,6 +174,11 @@ as an alternative to `git push`. Please note that since you will be running
 tests and other code checks this will usually take considerably longer than
 a normal push.
 
+To prevent git from telling you about config files that you do not want to
+commit, issue the following command:
+
+    git update-index --assume-unchanged subprojects/importer/src/main/resources/config.properties subprojects/replication/src/main/resources/config.properties subprojects/replication/src/main/resources/hibernate.cfg.xml
+
 Requirements
 ------------
 
