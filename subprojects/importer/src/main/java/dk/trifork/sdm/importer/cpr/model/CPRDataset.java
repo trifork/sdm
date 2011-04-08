@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
 import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.model.StamdataEntity;
 
@@ -22,6 +23,7 @@ public class CPRDataset {
 		add(new Dataset<Foedselsregistreringsoplysninger>(Foedselsregistreringsoplysninger.class));
 		add(new Dataset<Statsborgerskab>(Statsborgerskab.class));
 		add(new Dataset<KommunaleForhold>(KommunaleForhold.class));
+		add(new Dataset<AktuelCivilstand>(AktuelCivilstand.class));
 	}};
 
 	private Calendar validFrom, previousFileValidFrom; 

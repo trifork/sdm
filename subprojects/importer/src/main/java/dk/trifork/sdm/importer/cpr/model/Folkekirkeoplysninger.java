@@ -26,7 +26,6 @@ public class Folkekirkeoplysninger extends CPREntity{
 		}
 	}
 
-
 	Folkekirkeforhold forhold;
 	Date startdato;
 	String startdatomarkering;

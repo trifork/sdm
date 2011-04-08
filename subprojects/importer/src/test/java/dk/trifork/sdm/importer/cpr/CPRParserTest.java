@@ -2,13 +2,16 @@ package dk.trifork.sdm.importer.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
+import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand.Civilstand;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
@@ -235,6 +238,25 @@ public class CPRParserTest {
 		assertEquals("F", record.getForholdskode());
 		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getStartdato());
 		assertEquals("*", record.getStartdatomarkering());
+	}
+
+	@Test
+	public void canParseRecord12_AktuelCivilstand() throws Exception {
+		String line = "0120901414025G0912414426                                              196103132000";
+
+		AktuelCivilstand record = CPRParser.aktuelCivilstand(line);
+
+		assertEquals("0901414025", record.getCpr());
+		assertEquals(Civilstand.gift, record.getCivilstand());
+		assertEquals("G", record.getCivilstandskode());
+		assertEquals("0912414426", record.getAegtefaellepersonnummer());
+		assertNull(record.getAegtefaellefoedselsdato());
+		assertEquals(" ", record.getAegtefaellefoedselsdatomarkering());
+		assertEquals("", record.getAegtefaellenavn());
+		assertEquals(" ", record.getAegtefaellenavnmarkering());
+		assertEquals(yyyyMMddHHmm.parse("196103132000"), record.getStartdato());
+		assertEquals("", record.getStartdatomarkering());
+		assertNull(record.getSeparation());
 	}
 
 	@Test

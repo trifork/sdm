@@ -1,6 +1,7 @@
 package dk.trifork.sdm.integration.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
+import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -250,6 +251,28 @@ public class CPRIntegrationTest {
 		assertEquals("0709614126", rs.getString("CPR"));
 		assertEquals("F", rs.getString("Forholdskode"));
 		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Startdato"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
+
+	@Test
+	public void kanImportereCivilstand() throws Exception {
+		File file = getFile("data/cpr/civilstand/D100314.L431101");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from AktuelCivilstand where CPR='0905414143'");
+		rs.next();
+		assertEquals("0905414143", rs.getString("CPR"));
+		assertEquals("E", rs.getString("Civilstandskode"));
+		assertEquals("0901414084", rs.getString("Aegtefaellepersonnummer"));
+		assertNull(rs.getDate("Aegtefaellefoedselsdato"));
+		assertEquals("", rs.getString("Aegtefaellenavn"));
+		assertEquals(yyyy_MM_dd.parse("1961-03-13"), rs.getDate("Startdato"));
+		assertNull(rs.getDate("Separation"));
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
