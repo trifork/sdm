@@ -71,6 +71,10 @@ public class CPRParser {
 						cpr.addEntity(umyndiggoerelseVaergeRelation(line));
 						break;
 						
+					case 20:
+						cpr.addEntity(valgoplysninger(line));
+						break;
+						
 					case 999:
 						break;
 					}
@@ -217,6 +221,16 @@ public class CPRParser {
 		return u;
 	}
 
+	public static Valgoplysninger valgoplysninger(String line) throws ParseException {
+		Valgoplysninger v = new Valgoplysninger();
+		v.setCpr(cut(line, 3, 13));
+		v.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
+		v.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
+		v.setStartdato(parseDate(yyyy_MM_dd, line, 27, 37));
+		v.setSlettedato(parseDate(yyyy_MM_dd, line, 37, 47));
+		return v;
+	}
+
 	private static int getRecordType(String line) throws FileParseException {
 		return readInt(line, 0, 3);
 	}
@@ -288,13 +302,11 @@ public class CPRParser {
 	    if (str == null) {
 	        return null;
 	    }
-	    char[] chars = str.toCharArray();
-	    int index = 0;
-	    for (; index < str.length(); index++) {
-	        if (chars[index] != '0') {
-	            break;
+	    for (int index = 0; index < str.length(); index++) {
+	        if (str.charAt(index) != '0') {
+	        	return str.substring(index);
 	        }
 	    }
-	    return (index == 0) ? str : str.substring(index);
+	    return "";
 	}
 }
