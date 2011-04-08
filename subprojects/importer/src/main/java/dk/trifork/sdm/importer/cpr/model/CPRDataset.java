@@ -17,6 +17,7 @@ public class CPRDataset {
 		add(new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class));
 		add(new Dataset<BarnRelation>(BarnRelation.class));
 		add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
+		add(new Dataset<Valgoplysninger>(Valgoplysninger.class));
 	}};
 
 	private Calendar validFrom, previousFileValidFrom; 
