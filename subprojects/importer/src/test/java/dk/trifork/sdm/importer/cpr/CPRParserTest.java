@@ -17,6 +17,10 @@ import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Udrejseoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
+import dk.trifork.sdm.importer.cpr.model.Valgoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Valgoplysninger.Valgret;
+
 import dk.trifork.sdm.util.DateUtils;
 
 
@@ -212,5 +216,19 @@ public class CPRParserTest {
 		assertEquals("F", record.getForholdskode());
 		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getStartdato());
 		assertEquals("*", record.getStartdatomarkering());
+	}
+
+	@Test
+	public void canParseRecord20_Valgoplysninger() throws Exception {
+		String line = "020070861433500011999-03-101999-02-012001-03-10";
+
+		Valgoplysninger record = CPRParser.valgoplysninger(line);
+
+		assertEquals("0708614335", record.getCpr());
+		assertEquals(Valgret.almindeligValgret, record.getValgret());
+		assertEquals("1", record.getValgkode());
+		assertEquals(yyyy_MM_dd.parse("1999-03-10"), record.getValgretsdato());
+		assertEquals(yyyy_MM_dd.parse("1999-02-01"), record.getStartdato());
+		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getSlettedato()); // TODO: Hvad betyder mon det?
 	}
 }
