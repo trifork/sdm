@@ -12,6 +12,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
@@ -29,6 +30,7 @@ import dk.trifork.sdm.importer.takst.model.Takst;
  * @author Anders Bo Christensen
  * 
  */
+@Ignore("Sloooow test!")
 public class DataLayerIntegrationTest {
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
