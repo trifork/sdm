@@ -46,10 +46,9 @@ public class StatusServletTest {
 	@Mock Connection connection;
 	@Mock Session session;
 	@Mock Statement statement;
-	@Mock Provider sessionProvider;
+	@Mock Provider<Session> sessionProvider;
 	StatusServlet servlet;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Before
 	public void setUp() throws Exception {
 		when(response.getWriter()).thenReturn(writer);
