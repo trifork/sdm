@@ -9,16 +9,16 @@ public class Folkekirkeoplysninger extends CPREntity{
 	public enum Folkekirkeforhold {
 		afventer("A"), medlemAfFolkekirken("F"), medlemAfValgmenighed("M"), medlemAfFolkekirkenMenFritagetForKirkeskat("S"), udenForFolkekirken("U");
 
-		private final String kode;
-		private Folkekirkeforhold(String kode) {
-			this.kode = kode;
+		private final String code;
+		private Folkekirkeforhold(String code) {
+			this.code = code;
 		}
-		public String getKode() {
-			return kode;
+		public String getCode() {
+			return code;
 		}
 		public static Folkekirkeforhold fromCode(String code) {
 			for (Folkekirkeforhold forhold : values()) {
-				if (forhold.getKode().equals(code)) {
+				if (forhold.getCode().equals(code)) {
 					return forhold;
 				}
 			}
@@ -43,7 +43,7 @@ public class Folkekirkeoplysninger extends CPREntity{
 
 	@Output
 	public String getForholdskode() {
-		return forhold.getKode();
+		return forhold.getCode();
 	}
 
 	public void setForholdskode(String forholdskode) {
