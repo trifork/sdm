@@ -10,6 +10,7 @@ import dk.trifork.sdm.importer.cpr.model.BarnRelation;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
+import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
@@ -120,6 +121,15 @@ public class CPRParserTest {
 		assertEquals(yyyyMMddHHmm.parse("197902152000"), record.getStartDato());
 		assertEquals(" ", record.getStartDatoMarkering());
 		assertEquals("Wicker,Hans-Martin", record.getAdresseringsNavn());
+	}
+	
+	@Test
+	public void testRecord09() throws Exception {
+		String LINE = "00901019650585180";
+		Foedselsregistreringsoplysninger record = CPRParser.foedselsregistreringsoplysninger(LINE);
+		assertEquals("0101965058", record.getCpr());
+		assertEquals("5180", record.getFoedselsregistreringsstedkode());
+		assertEquals("", record.getFoedselsregistreringstekst());
 	}
 
 	@Test
