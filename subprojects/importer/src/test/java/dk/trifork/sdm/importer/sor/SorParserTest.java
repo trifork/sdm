@@ -8,13 +8,14 @@ import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.trifork.sdm.importer.sor.model.*;
 import dk.trifork.sdm.importer.sor.xmlmodel.*;
 import dk.trifork.sdm.model.AbstractStamdataEntity;
 
-
+@Ignore("Sloooow test!")
 public class SorParserTest {
 
 	public static File onePraksis;
