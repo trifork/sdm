@@ -81,3 +81,21 @@ CREATE TABLE Valgoplysninger (
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT VO_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE KommunaleForhold (
+	KommunaleForholdPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	CPR VARCHAR(10) NOT NULL,
+	Kommunalforholdstypekode VARCHAR(1) NOT NULL,
+	Kommunalforholdskode VARCHAR(5) NOT NULL,
+	Startdato DATETIME NOT NULL,
+	Bemaerkninger VARCHAR(30) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+

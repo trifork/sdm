@@ -19,6 +19,7 @@ public class CPRDataset {
 		add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
 		add(new Dataset<Udrejseoplysninger>(Udrejseoplysninger.class));
 		add(new Dataset<Valgoplysninger>(Valgoplysninger.class));
+		add(new Dataset<KommunaleForhold>(KommunaleForhold.class));
 		add(new Dataset<Foedselsregistreringsoplysninger>(Foedselsregistreringsoplysninger.class));
 		add(new Dataset<Statsborgerskab>(Statsborgerskab.class));
 	}};

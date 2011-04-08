@@ -13,6 +13,8 @@ import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold
 import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
+import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
+import dk.trifork.sdm.importer.cpr.model.KommunaleForhold.Kommunalforholdstype;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
@@ -49,12 +51,10 @@ public class CPRParserTest {
 		assertEquals(yyyy_MM_dd.parse("2007-09-09"), record.getSlutDato());
 		assertEquals("*", record.getSlutDatoMarkering());
 		assertEquals("Pensionist", record.getStilling());
-
 	}
 
 	@Test
 	public void testRecord03() throws Exception {
-
 		String LINE = "0030712614455Henriksen,Klaus                   Buchholdt                         Solhavehjemmet                    Industrivænget 2,2 mf             Hasseris                          9000Aalborg             08518512002 02  mf12  Industrivænget";
 
 		Klarskriftadresse record = CPRParser.klarskriftadresse(LINE);
@@ -74,12 +74,10 @@ public class CPRParserTest {
 		assertEquals("mf", record.getSideDoerNummer());
 		assertEquals("12", record.getBygningsNummer());
 		assertEquals("Industrivænget", record.getVejNavn());
-
 	}
 
 	@Test
 	public void testRecord04() throws Exception {
-
 		String LINE = "004280236303900011997-09-092001-02-20";
 
 		NavneBeskyttelse record = CPRParser.navneBeskyttelse(LINE);
@@ -238,6 +236,21 @@ public class CPRParserTest {
 	}
 	
 	@Test
+	public void canParseRecord18_KommunaleForhold() throws Exception {
+		String line = "01807016140541A    1991-05-06 KOMFOR-BEMÆRK";
+		
+		KommunaleForhold record = CPRParser.kommunaleForhold(line);
+		
+		assertEquals("0701614054", record.getCpr());
+		assertEquals("1", record.getKommunalforholdstypekode());
+		assertEquals(Kommunalforholdstype.adskilt, record.getKommunalforholdstype());
+		assertEquals("A", record.getKommunalforholdskode());
+		assertEquals(yyyy_MM_dd.parse("1991-05-06"), record.getStartdato());
+		assertEquals(" ", record.getStartdatomarkering());
+		assertEquals("KOMFOR-BEMÆRK", record.getBemaerkninger());
+	}
+	
+	@Test
 	public void canParseRecord20_Valgoplysninger() throws Exception {
 		String line = "020070861433500011999-03-101999-02-012001-03-10";
 		
@@ -248,6 +261,6 @@ public class CPRParserTest {
 		assertEquals("1", record.getValgkode());
 		assertEquals(yyyy_MM_dd.parse("1999-03-10"), record.getValgretsdato());
 		assertEquals(yyyy_MM_dd.parse("1999-02-01"), record.getStartdato());
-		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getSlettedato()); // TODO: Hvad betyder mon det?
+		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getSlettedato());
 	}
 }

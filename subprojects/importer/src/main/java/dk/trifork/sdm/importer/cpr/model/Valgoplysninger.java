@@ -12,8 +12,8 @@ public class Valgoplysninger extends CPREntity {
 	private Date slettedato;
 
 	public enum Valgret {
-		ukendt(""), almindeligValgret("1"), diplomatDerStemmerIKøbenhavn("2"), diplomatOptagetPåValglisteITidligereBopælskommune("3"),
-		euValgJa("4"), euValgNej("5"), euValgKøbenhavn("6");
+		ukendt(""), almindeligValgret("1"), diplomatDerStemmerIKøbenhavn("2"), diplomatOptagetPaaValglisteITidligereBopaelskommune("3"),
+		euValgJa("4"), euValgNej("5"), euValgKoebenhavn("6");
 
 		private final String code;
 		private Valgret(String code) {
