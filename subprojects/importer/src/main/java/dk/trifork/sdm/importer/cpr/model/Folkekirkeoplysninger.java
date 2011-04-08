@@ -25,7 +25,6 @@ public class Folkekirkeoplysninger extends CPREntity{
 			throw new IllegalArgumentException("Ugyldig folkekirkeforhold: '" + code + "'");
 		}
 	}
-		
 	
 	Folkekirkeforhold forhold;
 	Date startdato;

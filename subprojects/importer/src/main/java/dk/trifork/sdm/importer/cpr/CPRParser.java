@@ -37,11 +37,9 @@ public class CPRParser {
 					case 1:
 						cpr.addEntity(personoplysninger(line));
 						break;
-
 					case 3:
 						cpr.addEntity(klarskriftadresse(line));
 						break;
-						
 					case 4:
 						String beskyttelseskode = cut(line,13, 17);
 						if (beskyttelseskode.equals("0001")) {
@@ -60,27 +58,24 @@ public class CPRParser {
 					case 11:
 						cpr.addEntity(folkekirkeoplysninger(line));
 						break;
-						
+					case 12:
+						cpr.addEntity(aktuelCivilstand(line));
+						break;
 					case 14:
 						cpr.addEntity(barnRelation(line));
 						break;
-						
 					case 16:
 						cpr.addEntity(foraeldreMyndighedRelation(line));
 						break;
-						
 					case 17:
 						cpr.addEntity(umyndiggoerelseVaergeRelation(line));
 						break;
-						
 					case 18:
 						cpr.addEntity(kommunaleForhold(line));
 						break;
-						
 					case 20:
 						cpr.addEntity(valgoplysninger(line));
 						break;
-						
 					case 999:
 						break;
 					}
@@ -205,12 +200,27 @@ public class CPRParser {
 	}
 	
 	public static Folkekirkeoplysninger folkekirkeoplysninger(String line) throws ParseException {
-		Folkekirkeoplysninger f = new Folkekirkeoplysninger();
-		f.setCpr(cut(line,3, 13));
-		f.setForholdskode(cut(line, 13, 14));
-		f.setStartdato(parseDate(yyyy_MM_dd, line, 14, 24));
-		f.setStartdatomarkering(cut(line, 24, 25));
-		return f;
+		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
+		result.setCpr(cut(line,3, 13));
+		result.setForholdskode(cut(line, 13, 14));
+		result.setStartdato(parseDate(yyyy_MM_dd, line, 14, 24));
+		result.setStartdatomarkering(cut(line, 24, 25));
+		return result;
+	}
+
+	public static AktuelCivilstand aktuelCivilstand(String line) throws ParseException {
+		AktuelCivilstand result = new AktuelCivilstand();
+		result.setCpr(cut(line,3, 13));
+		result.setCivilstandskode(cut(line, 13, 14));
+		result.setAegtefaellepersonnummer(cut(line, 14, 24).trim());
+		result.setAegtefaellefoedselsdato(parseDate(yyyy_MM_dd, line, 24, 34));
+		result.setAegtefaellefoedselsdatomarkering(cut(line, 34, 35));
+		result.setAegtefaellenavn(cut(line, 35, 69).trim());
+		result.setAegtefaellenavnmarkering(cut(line, 69, 70));
+		result.setStartdato(parseDate(yyyyMMddHHmm, line, 70, 82));
+		result.setStartdatomarkering(cut(line, 82, 83));
+		result.setSeparation(parseDate(yyyyMMddHHmm, line, 83, 95));
+		return result;
 	}
 	
 	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException {
