@@ -51,11 +51,15 @@ public class CPRParser {
 						break;
 					case 5:
 						cpr.addEntity(udrejseoplysninger(line));
+						break;
 					case 8:
 						cpr.addEntity(navneoplysninger(line));
 						break;
 					case 9:
 						cpr.addEntity(foedselsregistreringsoplysninger(line));
+						break;
+					case 10:
+						cpr.addEntity(statsborgerskab(line));
 						break;
 					case 11:
 						cpr.addEntity(folkekirkeoplysninger(line));
@@ -229,6 +233,15 @@ public class CPRParser {
 		r.setFoedselsregistreringsstedkode(cut(line, 13, 17));
 		r.setFoedselsregistreringstekst(cut(line, 17, 37));
 		return r;
+	}
+	
+	public static Statsborgerskab statsborgerskab(String line) throws ParseException {
+		Statsborgerskab s = new Statsborgerskab();
+		s.setCpr(cut(line, 3, 13));
+		s.setLandekode(cut(line, 13, 17));
+		s.setStatsborgerskabstartdato(parseDate(yyyyMMddHHmm, line, 17, 29));
+		s.setStatsborgerskabstartdatousikkerhedsmarkering(cut(line, 29, 30));
+		return s;
 	}
 
 	public static Valgoplysninger valgoplysninger(String line) throws ParseException {
