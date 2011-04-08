@@ -49,7 +49,8 @@ public class CPRParser {
 							cpr.addEntity(navneBeskyttelse(line));
 						}
 						break;
-						
+					case 5:
+						cpr.addEntity(udrejseoplysninger(line));
 					case 8:
 						cpr.addEntity(navneoplysninger(line));
 						break;
@@ -200,6 +201,20 @@ public class CPRParser {
 		f.setStartdato(parseDate(yyyy_MM_dd, line, 14, 24));
 		f.setStartdatomarkering(cut(line, 24, 25));
 		return f;
+	}
+	
+	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException {
+		Udrejseoplysninger u = new Udrejseoplysninger();
+		u.setCpr(cut(line, 3, 13));
+		u.setUdrejseLandekode(cut(line, 13, 17));
+		u.setUdrejsedato(parseDate(yyyyMMddHHmm, line, 17, 29));
+		u.setUdrejsedatoUsikkerhedsmarkering(cut(line, 29, 30));
+		u.setUdlandsadresse1(cut(line, 30, 64).trim());
+		u.setUdlandsadresse2(cut(line, 64, 98).trim());
+		u.setUdlandsadresse3(cut(line, 98, 132).trim());
+		u.setUdlandsadresse4(cut(line, 132, 166).trim());
+		u.setUdlandsadresse5(cut(line, 166, 200).trim());
+		return u;
 	}
 
 	private static int getRecordType(String line) throws FileParseException {

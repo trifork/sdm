@@ -1,22 +1,23 @@
 package dk.trifork.sdm.importer.cpr;
 
+import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
+import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Udrejseoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
-import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.util.DateUtils;
-
-import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
-import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import static org.junit.Assert.assertEquals;
 
 
 public class CPRParserTest {
@@ -82,6 +83,21 @@ public class CPRParserTest {
 		assertEquals("2802363039", record.getCpr());
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
 		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
+	}
+	
+	@Test
+	public void testRecord05() throws Exception {
+		String LINE = "00507086143355180199902011300 Berlinerstrasse 102               Udlandsadresse linje 2 2 2 2 2 2 2Et sted i Tyskland                Udlandsadresse linje 3 3 3 3 3 3 3Udlandsadresse linje 4 4 4 4 4 4 4";
+		Udrejseoplysninger record = CPRParser.udrejseoplysninger(LINE);
+		assertEquals("0708614335", record.getCpr());
+		assertEquals("5180", record.getUdrejseLandekode());
+		assertEquals(yyyyMMddHHmm.parse("199902011300"), record.getUdrejsedato());
+		assertEquals(" ", record.getUdrejsedatoUsikkerhedsmarkering());
+		assertEquals("Berlinerstrasse 102", record.getUdlandsadresse1());
+		assertEquals("Udlandsadresse linje 2 2 2 2 2 2 2", record.getUdlandsadresse2());
+		assertEquals("Et sted i Tyskland", record.getUdlandsadresse3());
+		assertEquals("Udlandsadresse linje 3 3 3 3 3 3 3", record.getUdlandsadresse4());
+		assertEquals("Udlandsadresse linje 4 4 4 4 4 4 4", record.getUdlandsadresse5());
 	}
 
 	@Test
