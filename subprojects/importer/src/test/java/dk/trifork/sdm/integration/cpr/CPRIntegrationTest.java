@@ -239,6 +239,44 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void kanImportereFolkekirkeoplysninger() throws Exception {
+		File file = getFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from Folkekirkeoplysninger where CPR='0709614126'");
+		rs.next();
+		assertEquals("0709614126", rs.getString("CPR"));
+		assertEquals("F", rs.getString("Forholdskode"));
+		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Startdato"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
+
+	@Test
+	public void kanImportereKommunaleForhold() throws Exception {
+		File file = getFile("data/cpr/kommunaleForhold/D100314.L431101");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from KommunaleForhold where CPR='2802363039'");
+		rs.next();
+		assertEquals("2802363039", rs.getString("CPR"));
+		assertEquals("3", rs.getString("Kommunalforholdstypekode"));
+		assertEquals("N", rs.getString("Kommunalforholdskode"));
+		assertEquals(yyyy_MM_dd.parse("2000-06-30"), rs.getDate("Startdato"));
+		assertEquals("Tekst til komforh3/pension", rs.getString("Bemaerkninger"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
+
+	@Test
+	public void kanImportereValgoplysninger() throws Exception {
 		File file = getFile("data/cpr/valgoplysninger/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -255,11 +293,6 @@ public class CPRIntegrationTest {
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
-	}
-
-	@Test
-	public void kanImportereValgoplysninger() throws Exception {
-
 	}
 
 	@Test

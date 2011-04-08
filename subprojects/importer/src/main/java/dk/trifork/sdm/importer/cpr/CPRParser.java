@@ -77,6 +77,10 @@ public class CPRParser {
 						cpr.addEntity(umyndiggoerelseVaergeRelation(line));
 						break;
 						
+					case 18:
+						cpr.addEntity(kommunaleForhold(line));
+						break;
+
 					case 20:
 						cpr.addEntity(valgoplysninger(line));
 						break;
@@ -244,14 +248,25 @@ public class CPRParser {
 		return s;
 	}
 
+	public static KommunaleForhold kommunaleForhold(String line) throws ParseException {
+		KommunaleForhold result = new KommunaleForhold();
+		result.setCpr(cut(line, 3, 13));
+		result.setKommunalforholdstypekode(cut(line, 13, 14));
+		result.setKommunalforholdskode(cut(line, 14, 19).trim());
+		result.setStartdato(parseDate(yyyy_MM_dd, line, 19, 29));
+		result.setStartdatomarkering(cut(line, 29, 30));
+		result.setBemaerkninger(line.substring(30).trim());
+		return result;
+	}
+
 	public static Valgoplysninger valgoplysninger(String line) throws ParseException {
-		Valgoplysninger v = new Valgoplysninger();
-		v.setCpr(cut(line, 3, 13));
-		v.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
-		v.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
-		v.setStartdato(parseDate(yyyy_MM_dd, line, 27, 37));
-		v.setSlettedato(parseDate(yyyy_MM_dd, line, 37, 47));
-		return v;
+		Valgoplysninger result = new Valgoplysninger();
+		result.setCpr(cut(line, 3, 13));
+		result.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
+		result.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
+		result.setStartdato(parseDate(yyyy_MM_dd, line, 27, 37));
+		result.setSlettedato(parseDate(yyyy_MM_dd, line, 37, 47));
+		return result;
 	}
 
 	private static int getRecordType(String line) throws FileParseException {
