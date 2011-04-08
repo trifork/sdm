@@ -16,6 +16,7 @@ import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Statsborgerskab;
 import dk.trifork.sdm.importer.cpr.model.Udrejseoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
@@ -134,6 +135,16 @@ public class CPRParserTest {
 		assertEquals("0101965058", record.getCpr());
 		assertEquals("5180", record.getFoedselsregistreringsstedkode());
 		assertEquals("", record.getFoedselsregistreringstekst());
+	}
+
+	@Test
+	public void testRecord10() throws Exception {
+		String LINE = "01031120000105180190502201043";
+		Statsborgerskab record = CPRParser.statsborgerskab(LINE);
+		assertEquals("3112000010", record.getCpr());
+		assertEquals("5180", record.getLandekode());
+		assertEquals(yyyyMMddHHmm.parse("190502201043"), record.getStatsborgerskabstartdato());
+		assertEquals("", record.getStatsborgerskabstartdatousikkerhedsmarkering());
 	}
 
 	@Test

@@ -49,6 +49,22 @@ CREATE TABLE Foedselsregistreringsoplysninger(
 	CONSTRAINT Foedsel_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
+CREATE TABLE Statsborgerskab(
+	StatsborgerskabPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	CPR VARCHAR(10) NOT NULL,
+	landekode VARCHAR(4) NOT NULL,
+	Statsborgerskabstartdato DATETIME NOT NULL,
+	StatsborgerskabstartdatoUsikkerhedsmarkering VARCHAR(1) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	CONSTRAINT Statsborgerskab_Person_1 UNIQUE (CPR, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
 CREATE TABLE Valgoplysninger (
 	ValgoplysningerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	CPR VARCHAR(10) NOT NULL,
