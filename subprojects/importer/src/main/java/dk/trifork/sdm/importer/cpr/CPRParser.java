@@ -54,7 +54,9 @@ public class CPRParser {
 					case 8:
 						cpr.addEntity(navneoplysninger(line));
 						break;
-						
+					case 9:
+						cpr.addEntity(foedselsregistreringsoplysninger(line));
+						break;
 					case 11:
 						cpr.addEntity(folkekirkeoplysninger(line));
 						break;
@@ -219,6 +221,14 @@ public class CPRParser {
 		u.setUdlandsadresse4(cut(line, 132, 166).trim());
 		u.setUdlandsadresse5(cut(line, 166, 200).trim());
 		return u;
+	}
+	
+	public static Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String line) throws ParseException {
+		Foedselsregistreringsoplysninger r = new Foedselsregistreringsoplysninger();
+		r.setCpr(cut(line, 3, 13));
+		r.setFoedselsregistreringsstedkode(cut(line, 13, 17));
+		r.setFoedselsregistreringstekst(cut(line, 17, 37));
+		return r;
 	}
 
 	public static Valgoplysninger valgoplysninger(String line) throws ParseException {
