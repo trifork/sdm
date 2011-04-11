@@ -20,9 +20,11 @@ package com.trifork.stamdata.replication.gui.controllers;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -121,9 +123,9 @@ public class UserController extends AbstractController {
 		String id = request.getParameter("id");
 
 		User deletedUser = users.get().find(id);
+		User user = currentUser.get();
 
-		if (deletedUser != null) {
-			String userCPR = currentUser.get().getCpr();
+		if (!deletedUser.equals(null) && !deletedUser.equals(user)) {
 			users.get().delete(id);
 			audit.get().log("user=%s, deleted_user=%s", user, deletedUser);
 		}
