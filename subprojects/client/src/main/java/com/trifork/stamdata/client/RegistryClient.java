@@ -94,6 +94,9 @@ public class RegistryClient {
 		request.setIDCard(idCard);
 
 		String entityName = entityType.getAnnotation(Entity.class).name();
+		if(entityName == null || entityName.isEmpty()) {
+			entityName = entityType.getSimpleName();
+		}
 
 		// REQUEST STAMDATA AUTHORIZATION TOKEN
 
