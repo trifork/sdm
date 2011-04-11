@@ -41,7 +41,7 @@ CREATE TABLE Client (
 CREATE TABLE Client_Permissions (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	client_id BIGINT NOT NULL,
-	permissions VARCHAR(200) NOT NULL,
+	permissions TEXT NOT NULL,
 	FOREIGN KEY (client_id) REFERENCES Client(id) ON DELETE CASCADE
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
