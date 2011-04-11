@@ -37,10 +37,20 @@ import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.util.Namespace;
 
-
+/**
+ * Writes a set of records into an output stream as an Atom 1.0 feed.
+ * 
+ * @author Thomas Børlum (thb@trifork.com)
+ */
 public class AtomFeedWriter {
 
 	private static final String ATOM_NS = "http://www.w3.org/2005/Atom";
+	
+	/**
+	 * The tag prefix is used to create unique id's for the entities.
+	 * This is a well defined scheme, and you should not change it,
+	 * not even the year.
+	 */
 	private static final String TAG_PREFIX = "tag:trifork.com,2011:";
 
 	private final Marshaller marshaller;
