@@ -17,25 +17,23 @@
 
 package com.trifork.stamdata.replication.gui;
 
-import java.io.IOException;
-import java.util.HashMap;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.RequestScoped;
+import com.google.inject.servlet.ServletModule;
 import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import com.trifork.rid2cpr.RID2CPRFacade;
+import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.replication.gui.annotations.Whitelist;
 import com.trifork.stamdata.replication.gui.controllers.ClientController;
 import com.trifork.stamdata.replication.gui.controllers.LogController;
 import com.trifork.stamdata.replication.gui.controllers.UserController;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.security.LoginFilter;
-import com.trifork.stamdata.replication.util.ConfiguredModule;
 import com.trifork.xmlquery.Namespaces;
 
 import freemarker.cache.WebappTemplateLoader;
@@ -43,18 +41,28 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 
 
-public class GuiModule extends ConfiguredModule {
+public class GuiModule extends ServletModule {
 
-	private final ServletContext context;
+	private final String rid2cprURL;
+	private final String rid2cprKeystore;
+	private final String rid2cprPassword;
+	private final int rid2cprTimeout;
 
-	public GuiModule(ServletContext context) throws IOException {
+	private Map<String, String> whiteList;
 
-		super();
-		this.context = context;
+	public GuiModule(String rid2cprURL, String rid2cprKeystore, @Nullable String rid2cprPassword, int rid2cprTimeout, Map<String, String> whiteList) {
+
+		this.rid2cprURL = checkNotNull(rid2cprURL);
+		this.rid2cprKeystore = checkNotNull(rid2cprKeystore);
+		this.whiteList = checkNotNull(whiteList);
+		this.rid2cprPassword = rid2cprPassword;
+		
+		checkArgument(rid2cprTimeout > 0);
+		this.rid2cprTimeout = rid2cprTimeout;
 	}
 
 	@Override
-	protected void configureServlets() {
+	protected final void configureServlets() {
 
 		// HTML TEMPLATE ENGINE
 		//
@@ -62,45 +70,19 @@ public class GuiModule extends ConfiguredModule {
 		// The template files can be found in the 'webapp' directory
 		// and all have the extension .ftl.
 
-		try {
-			Configuration config = new Configuration();
+		Configuration config = new Configuration();
 
-			// Specify the data source where the template files come from.
-			// Here I set a file directory for it:
+		// Specify the data source where the template files come from.
+		// Here I set a file directory for it:
 
-			config.setTemplateLoader(new WebappTemplateLoader(context));
+		config.setTemplateLoader(new WebappTemplateLoader(getServletContext()));
 
-			// Specify how templates will see the data-model.
-			// We just use the default:
+		// Specify how templates will see the data-model.
+		// We just use the default:
 
-			config.setObjectWrapper(new DefaultObjectWrapper());
+		config.setObjectWrapper(new DefaultObjectWrapper());
 
-			bind(Configuration.class).toInstance(config);
-		}
-		catch (Exception e) {
-			addError("Invalid template directory.", e);
-		}
-
-		// WHITELIST CVR NUMBERS
-		//
-		// These CVR numbers that can be used when creating new administrators.
-		// The list in maintained in the config.properties file.
-
-		String[] cvrNumbers = getStringArrayProperty("whitelist");
-		String[] orgNames = getStringArrayProperty("whitelistNames");
-
-		Map<String, String> whitelist = new HashMap<String, String>(cvrNumbers.length);
-
-		for (int i = 0; i < cvrNumbers.length; i++) {
-			whitelist.put(orgNames[i], cvrNumbers[i]);
-		}
-
-		if (whitelist.size() > 0) {
-			bind(new TypeLiteral<Map<String, String>>() {}).annotatedWith(Whitelist.class).toInstance(whitelist);
-		}
-		else {
-			addError("No cvr-numbers have been white-listed. Change the configuration file.");
-		}
+		bind(Configuration.class).toInstance(config);
 
 		// FILTER ACCESS THROUGH SAML
 		//
@@ -112,29 +94,14 @@ public class GuiModule extends ConfiguredModule {
 		filter("/admin", "/admin/*").through(LoginFilter.class);
 		bind(User.class).toProvider(LoginFilter.class).in(RequestScoped.class);
 
-		// SERVE THE ADMIN GUI
-
-		serve("/admin/users", "/admin/users/*").with(UserController.class);
-		serve("/admin/log", "/admin/log/*").with(LogController.class);
-		serve("/admin", "/admin/clients", "/admin/clients/*").with(ClientController.class);
-	}
-
-	@Provides
-	@Singleton
-	public RID2CPRFacade provideRIDHelper() {
-
 		// Bind the RID 2 CPR helper to get the users' CPR
 		// from a remote service.
 
 		CachingRID2CPRFacadeImpl ridService = new CachingRID2CPRFacadeImpl();
-		ridService.setEndpoint(getProperty("rid2cpr.endpoint"));
-
-		String keystore = getProperty("rid2cpr.keystore");
-		keystore = getClass().getClassLoader().getResource(keystore).toExternalForm();
-
-		ridService.setKeystore(keystore);
-		ridService.setKeystorePassword(getProperty("rid2cpr.keystorePassword"));
-		ridService.setReadTimeout(getIntProperty("rid2cpr.callTimeout"));
+		ridService.setEndpoint(rid2cprURL);
+		ridService.setKeystore(rid2cprKeystore);
+		ridService.setKeystorePassword(rid2cprPassword);
+		ridService.setReadTimeout(rid2cprTimeout);
 
 		// TODO: Setting the default namespaces is deprecated.
 		// We should set our own. (The ones that we actually need.)
@@ -142,6 +109,23 @@ public class GuiModule extends ConfiguredModule {
 		ridService.setNamespaces(Namespaces.getOIONamespaces());
 		ridService.init();
 
-		return ridService;
+		bind(RID2CPRFacade.class).toInstance(ridService);
+
+		// SERVE THE ADMIN GUI
+
+		serve("/admin/users", "/admin/users/*").with(UserController.class);
+		serve("/admin", "/admin/clients", "/admin/clients/*").with(ClientController.class);
+		serve("/admin/log", "/admin/log/*").with(LogController.class);
+
+		// WHITELIST CVR NUMBERS
+		//
+		// These CVR numbers that can be used when creating new administrators.
+
+		if (whiteList.size() > 0) {
+			bind(new TypeLiteral<Map<String, String>>() {}).annotatedWith(Whitelist.class).toInstance(whiteList);
+		}
+		else {
+			addError("No cvr-numbers have been white-listed. Change the configuration file.");
+		}
 	}
 }

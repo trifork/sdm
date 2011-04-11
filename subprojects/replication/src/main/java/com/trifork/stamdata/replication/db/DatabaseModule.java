@@ -17,9 +17,9 @@
 
 package com.trifork.stamdata.replication.db;
 
-import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import java.net.URL;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -34,41 +34,79 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import com.google.inject.Provides;
-import com.trifork.stamdata.replication.util.ConfiguredModule;
+import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.replication.ApplicationContextListener;
 
 
-public class DatabaseModule extends ConfiguredModule {
-
-	public DatabaseModule() throws IOException {
-
-		super();
-	}
+public class DatabaseModule extends ServletModule {
 
 	private SessionFactory sessionFactory;
+	private final String driverClass;
+	private final String hibernateDialect;
+	private final String jdbcURL;
+	private final String username;
+	private final String password;
+
+	public DatabaseModule(String driverClass, String hibernateDialect, String jdbcURL, String username, @Nullable String password) {
+		
+		this.driverClass = checkNotNull(driverClass);
+		this.hibernateDialect = checkNotNull(hibernateDialect);
+		this.jdbcURL = checkNotNull(jdbcURL);
+		this.username = checkNotNull(username);
+		this.password = password;
+	}
 
 	@Override
-	public void configureServlets() {
-
-		// TODO: Is this needed in JBOSS?
-
-		try {
-			DriverManager.registerDriver(new com.mysql.jdbc.Driver());
-		}
-		catch (SQLException e) {
-			System.out.println("Oops! Got a MySQL error: " + e.getMessage());
-		}
+	protected final void configureServlets() {
 		
-		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForCurrentClasspath()).setScanners(new TypeAnnotationsScanner()));
+		// DISCOVER ALL ENTITY CLASSES
+		//
+		// Because the war can be deployed in many ways we may
+		// have to search in several places.
+		
+		URL searchPath = ClasspathHelper.getUrlForWebInfClasses(getServletContext());
+		Reflections reflector;
+		
+		if (searchPath != null) {
+			reflector = new Reflections(new ConfigurationBuilder()
+				.setUrls(searchPath)
+				.setScanners(new TypeAnnotationsScanner()));
+		}
+		else {
+			reflector = new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.getUrlForName(ApplicationContextListener.class))
+				.setScanners(new TypeAnnotationsScanner()));
+		}
+
 		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
 
 		try {
 			Configuration config = new Configuration();
 
+			config.setProperty("hibernate.connection.driver_class", driverClass);
+			config.setProperty("hibernate.dialect", hibernateDialect);
+			config.setProperty("hibernate.connection.url", jdbcURL);
+
+			config.setProperty("hibernate.connection.username", username);
+			config.setProperty("hibernate.connection.password", password);
+
+			config.setProperty("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
+			config.setProperty("hibernate.connection.characterEncoding", "utf8");
+
+			config.setProperty("hibernate.c3p0.min_size", "5");
+			config.setProperty("hibernate.c3p0.max_size", "20");
+			config.setProperty("hibernate.c3p0.timeout", "300");
+			config.setProperty("hibernate.c3p0.max_statements", "50");
+
+			config.setProperty("hibernate.current_session_context_class", "thread");
+			config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
+
 			for (Class<?> c : classes) {
 				config.addAnnotatedClass(c);
 			}
 
-			sessionFactory = config.configure().buildSessionFactory();
+			sessionFactory = config.buildSessionFactory();
 		}
 		catch (Exception e) {
 			addError(e);
@@ -78,13 +116,13 @@ public class DatabaseModule extends ConfiguredModule {
 	}
 
 	@Provides
-	public Session provideSession() {
+	protected Session provideSession() {
 
 		return sessionFactory.getCurrentSession();
 	}
 
 	@Provides
-	public StatelessSession provideStatelessSession() {
+	protected StatelessSession provideStatelessSession() {
 
 		// Hibernate provides a command-oriented API that can be used for
 		// streaming data to and from the database in the form of detached

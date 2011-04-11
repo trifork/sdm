@@ -17,6 +17,7 @@
 
 package com.trifork.stamdata.replication.replication;
 
+import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -33,6 +34,7 @@ import org.reflections.util.ConfigurationBuilder;
 import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.replication.ApplicationContextListener;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
@@ -42,15 +44,30 @@ public class RegistryModule extends ServletModule {
 
 	private JAXBContext context;
 
-	@Override
 	@SuppressWarnings("unchecked")
-	protected void configureServlets() {
+	@Override
+	protected final void configureServlets() {
 
 		// DISCOVER ALL VIEW CLASSES
 		//
 		// For speed only the model package will be searched.
+		// Because the war can be deployed in many ways we may
+		// have to search in several places.
 
-		Reflections reflector = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.getUrlsForCurrentClasspath()).setScanners(new TypeAnnotationsScanner()));
+		URL searchPath = ClasspathHelper.getUrlForWebInfClasses(getServletContext());
+		Reflections reflector;
+		
+		if (searchPath != null) {
+			reflector = new Reflections(new ConfigurationBuilder()
+				.setUrls(searchPath)
+				.setScanners(new TypeAnnotationsScanner()));
+		}
+		else {
+			reflector = new Reflections(new ConfigurationBuilder()
+				.setUrls(ClasspathHelper.getUrlForName(ApplicationContextListener.class))
+				.setScanners(new TypeAnnotationsScanner()));
+		}
+		
 		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(ViewPath.class);
 
 		// MAP VIEWS TO THEIR PATHS
@@ -68,7 +85,7 @@ public class RegistryModule extends ServletModule {
 		}
 
 		bind(new TypeLiteral<Map<String, Class<? extends View>>>() {}).annotatedWith(Registry.class).toInstance(registry);
-
+		
 		// BIND THE FEED WRITER
 		//
 		// We need a JAXB context that can marshal all

@@ -18,63 +18,107 @@
 package com.trifork.stamdata.replication;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
+
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.google.inject.util.Modules;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
-import com.trifork.stamdata.replication.monitoring.ProfilingModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
+import com.trifork.stamdata.replication.security.SecurityManager;
+import com.trifork.stamdata.replication.security.UnrestrictedSecurityManager;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
-	private ServletContext servletContext;
 
-	@Override
-	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		servletContext = servletContextEvent.getServletContext();
-		super.contextInitialized(servletContextEvent);
-	}
 	@Override
 	protected Injector getInjector() {
 
 		Injector injector = null;
 
 		try {
+			logger.info("Loading configuration.");
+
+			final PropertiesConfiguration config = new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties"));
+
 			logger.info("Configuring Stamdata Service.");
-
-			// TODO: Each of these modules can be left in or out.
-			// When deployed the user should configure which features
-			// should be enabled.
-
-			List<Module> modules = new ArrayList<Module>();
 
 			// The order these modules are added is not unimportant.
 			// Since some of them add filters to the filter chain
 			// they must be placed in the right order, e.i. some of
 			// the filters depend on settings from previous filters.
 
-			modules.add(new DatabaseModule());
-			modules.add(new ProfilingModule());
-			modules.add(new DGWSModule());
-			modules.add(new RegistryModule());
-			modules.add(new GuiModule(servletContext));
+			List<Module> modules = new ArrayList<Module>();
+
+			// CONFIGURE DATA ACCESS
+
+			modules.add(new DatabaseModule(
+				config.getString("db.connection.driverClass"),
+				config.getString("db.connection.sqlDialect"),
+				config.getString("db.connection.jdbcURL"),
+				config.getString("db.connection.username"),
+				config.getString("db.connection.password", null)
+			));
+
+			// CONFIGURE PROFILING & MONITORING
+
 			modules.add(new MonitoringModule());
 
-			injector = Guice.createInjector(modules);
+			// CONFIGURE AUTHENTICATION & AUTHORIZATION
+
+			modules.add(new DGWSModule());
+
+			// CONFIGURE WHERE TO FIND THE VIEW CLASSES
+
+			modules.add(new RegistryModule());
+
+			// CONFIGURE THE ADMIN GUI
+
+			modules.add(new GuiModule(
+				config.getString("rid2cpr.endpoint"),
+				getClass().getClassLoader().getResource(config.getString("rid2cpr.keystore")).toExternalForm(),
+				config.getString("rid2cpr.keystorePassword"),
+				config.getInt("rid2cpr.callTimeout"),
+				getWhiteList(config)
+			));
+
+			// LOGGING
+
+			modules.add(new LoggingModule());
+
+			// CREATE THE INJECTOR
+			//
+			// Disable security if testing by overriding the binding.
+
+			if (config.getBoolean("security.enabled")) {
+				injector = Guice.createInjector(modules);
+			}
+			else {
+				injector = Guice.createInjector(Modules.override(modules).with(new AbstractModule() {
+
+					@Override
+					public void configure() {
+						logger.warn("Security is disabled!");
+						bind(SecurityManager.class).to(UnrestrictedSecurityManager.class);
+					}
+				}));
+			}
 
 			logger.info("Service configured.");
 		}
@@ -83,5 +127,18 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 		}
 
 		return injector;
+	}
+
+	private Map<String, String> getWhiteList(final PropertiesConfiguration config) {
+
+		String[] cvrs = config.getStringArray("whitelist");
+		String[] names = config.getStringArray("whitelistNames");
+
+		Map<String, String> whiteList = new HashMap<String, String>();
+
+		for (int i = 0; i < cvrs.length; i++)
+			whiteList.put(names[i], cvrs[i]);
+
+		return whiteList;
 	}
 }
