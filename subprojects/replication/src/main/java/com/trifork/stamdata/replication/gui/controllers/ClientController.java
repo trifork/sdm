@@ -33,9 +33,9 @@ import com.google.inject.Singleton;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.gui.models.User;
+import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.util.DatabaseAuditLogger;
 
 
 @Singleton
@@ -53,7 +53,7 @@ public class ClientController extends AbstractController {
 	private final Provider<User> user;
 
 	@Inject
-	public ClientController(Provider<User> user, Provider<ClientDao> clients, Provider<PageRenderer> renderer, Provider<DatabaseAuditLogger> audit, @Registry Map<String, Class<? extends View>> registry) {
+	public ClientController(Provider<User> user, Provider<ClientDao> clients, Provider<PageRenderer> renderer, Provider<AuditLogger> audit, @Registry Map<String, Class<? extends View>> registry) {
 
 		this.user = checkNotNull(user);
 		this.clients = checkNotNull(clients);
@@ -112,7 +112,7 @@ public class ClientController extends AbstractController {
 		Client client = clients.get().create(name, cvr);
 		
 		if (client != null) {
-			audit.get().write("New client %s created by %s.", client, user.get());
+			audit.get().log("New client %s created by %s.", client, user.get());
 		}
 
 		redirect(request, response, "/admin/clients");
@@ -140,7 +140,12 @@ public class ClientController extends AbstractController {
 		Client client = clients.get().find(id);
 
 		for (String view : views)
+
+		AuditLogger auditLogger = audit.get();
+
 			client.addPermission(view);
+			auditLogger.log("User=%s granted Client=%s access to View=%s", user.get(), client, view);
+			auditLogger.log("User=%s restricted Client=%s from accessing View=%s", user.get(), client, view);
 
 		clients.get().update(client);
 
@@ -154,7 +159,7 @@ public class ClientController extends AbstractController {
 		Client client = clients.get().find(id);
 
 		if (clients.get().delete(id)) {
-			audit.get().write("Client %s was deleted by %s.", client, user.get());
+			audit.get().log("Client %s was deleted by %s.", client, user.get());
 		}
 
 		redirect(request, response, "/admin/clients");

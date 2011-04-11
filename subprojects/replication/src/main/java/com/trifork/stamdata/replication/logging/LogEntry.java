@@ -15,7 +15,7 @@
 // of which can be found at the link below.
 // http://www.gnu.org/copyleft/lesser.html
 
-package com.trifork.stamdata.replication.util;
+package com.trifork.stamdata.replication.logging;
 
 import static javax.persistence.TemporalType.TIMESTAMP;
 import java.util.Date;

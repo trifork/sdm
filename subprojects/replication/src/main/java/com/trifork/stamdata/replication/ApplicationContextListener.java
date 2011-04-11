@@ -17,7 +17,7 @@
 
 package com.trifork.stamdata.replication;
 
-import static org.slf4j.LoggerFactory.*;
+import static org.slf4j.LoggerFactory.getLogger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +31,7 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
+import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.monitoring.ProfilingModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;

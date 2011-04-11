@@ -29,7 +29,7 @@ import com.google.inject.Singleton;
 import com.trifork.stamdata.replication.gui.annotations.Whitelist;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
-import com.trifork.stamdata.replication.util.DatabaseAuditLogger;
+import com.trifork.stamdata.replication.logging.AuditLogger;
 
 
 @Singleton
@@ -39,13 +39,13 @@ public class UserController extends AbstractController {
 
 	private final Provider<UserDao> users;
 	private final Map<String, String> whitelist;
-	private final Provider<DatabaseAuditLogger> audit;
+	private final Provider<AuditLogger> audit;
 	private final Provider<PageRenderer> renderer;
 
 	private final Provider<User> currentUser;
 
 	@Inject
-	UserController(Provider<User> currentUser, @Whitelist Map<String, String> whitelist, Provider<UserDao> users, Provider<DatabaseAuditLogger> audit, Provider<PageRenderer> renderer) {
+	UserController(Provider<User> currentUser, @Whitelist Map<String, String> whitelist, Provider<UserDao> users, Provider<AuditLogger> audit, Provider<PageRenderer> renderer) {
 
 		this.currentUser = currentUser;
 		this.whitelist = whitelist;
@@ -109,7 +109,7 @@ public class UserController extends AbstractController {
 			User user = users.get().create(newUserName, newUserCPR, newUserCVR);
 
 			if (user != null) {
-				audit.get().write("New administrator created (new_user_cpr=%s, new_user_cvr=%s). Created by user_cpr=%s.", newUserCPR, newUserCVR, currentUser.get().getCpr());
+				audit.get().log("new_user=%s created by user=%s.", user, currentUser.get());
 			}
 		}
 
@@ -125,7 +125,7 @@ public class UserController extends AbstractController {
 		if (deletedUser != null) {
 			String userCPR = currentUser.get().getCpr();
 			users.get().delete(id);
-			audit.get().write("Administrator '%s (ID=%s)' was deleted by user %s.", deletedUser.getName(), deletedUser.getId(), userCPR);
+			audit.get().log("user=%s, deleted_user=%s", user, deletedUser);
 		}
 
 		redirect(request, response, "/admin/users");
