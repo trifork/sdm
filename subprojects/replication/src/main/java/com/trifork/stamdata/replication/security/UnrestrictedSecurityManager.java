@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * This security manager does not restrict access in any way.
  * 
+ * This is meant for testing purposes.
+ * 
  * @author Thomas Børlum (thb@trifork.com)
  */
 public class UnrestrictedSecurityManager implements SecurityManager {
