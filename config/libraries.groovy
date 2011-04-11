@@ -23,7 +23,7 @@ libs = [
 
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 
-	reflections: 'org.reflections:reflections:0.9.5-RC2',
+	reflections: 'org.reflections:reflections:0.9.5-RC3',
 
 	hibernate: 'org.hibernate:hibernate-entitymanager:3.6.2.Final',
 
