@@ -25,6 +25,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.google.common.collect.Sets;
+
 
 @Entity
 public class Client {
@@ -37,7 +39,7 @@ public class Client {
 	private String cvr;
 
 	@ElementCollection
-	private Set<String> permissions;
+	private Set<String> permissions = Sets.newHashSet();
 	
 	protected Client() {
 
