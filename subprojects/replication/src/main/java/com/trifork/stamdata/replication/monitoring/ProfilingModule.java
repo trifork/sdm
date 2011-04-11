@@ -30,7 +30,11 @@ import org.slf4j.Logger;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 
-
+/**
+ * A simple filter that that messures the time it takes to make a request.
+ * 
+ * @author Thomas Børlum (thb@trifork.com)
+ */
 @Singleton
 public class ProfilingModule extends ServletModule implements Filter {
 
