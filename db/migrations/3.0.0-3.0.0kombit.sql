@@ -99,3 +99,22 @@ CREATE TABLE KommunaleForhold (
 	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
+CREATE TABLE AktuelCivilstand (
+	CivilstandPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	CPR VARCHAR(10) NOT NULL,
+	Civilstandskode VARCHAR(1),
+	Aegtefaellepersonnummer VARCHAR(10),
+	Aegtefaellefoedselsdato DATETIME,
+	Aegtefaellenavn VARCHAR(34),
+	Startdato DATETIME,
+	Separation DATETIME,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
