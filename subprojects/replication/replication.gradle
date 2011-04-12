@@ -77,7 +77,6 @@ dependencies {
 			exclude group: "avalon"
 		}
 	}
-	compile 'com.trifork:xmlobject:1.11'
 
 	// MySQL
 	//
