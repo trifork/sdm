@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
 import dk.trifork.sdm.model.Dataset;
 import dk.trifork.sdm.model.StamdataEntity;
 

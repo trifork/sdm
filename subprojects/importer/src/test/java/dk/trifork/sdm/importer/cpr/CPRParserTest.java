@@ -2,18 +2,18 @@ package dk.trifork.sdm.importer.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
 import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
+import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand.Civilstand;
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
 import dk.trifork.sdm.importer.cpr.model.CPRDataset;
-import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
-import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand.Civilstand;
-import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
@@ -24,12 +24,9 @@ import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Statsborgerskab;
 import dk.trifork.sdm.importer.cpr.model.Udrejseoplysninger;
 import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
-import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.Valgoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Valgoplysninger.Valgret;
-
 import dk.trifork.sdm.util.DateUtils;
-
 
 public class CPRParserTest {
 
@@ -91,7 +88,7 @@ public class CPRParserTest {
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
 		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
 	}
-
+	
 	@Test
 	public void testRecord05() throws Exception {
 		String LINE = "00507086143355180199902011300 Berlinerstrasse 102               Udlandsadresse linje 2 2 2 2 2 2 2Et sted i Tyskland                Udlandsadresse linje 3 3 3 3 3 3 3Udlandsadresse linje 4 4 4 4 4 4 4";

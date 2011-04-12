@@ -2,16 +2,35 @@ package dk.trifork.sdm.importer.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import dk.trifork.sdm.importer.cpr.model.*;
-import dk.trifork.sdm.importer.exceptions.FileParseException;
-import dk.trifork.sdm.util.DateUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
+import dk.trifork.sdm.importer.cpr.model.BarnRelation;
+import dk.trifork.sdm.importer.cpr.model.CPRDataset;
+import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
+import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
+import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
+import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
+import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
+import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
+import dk.trifork.sdm.importer.cpr.model.Statsborgerskab;
+import dk.trifork.sdm.importer.cpr.model.Udrejseoplysninger;
+import dk.trifork.sdm.importer.cpr.model.UmyndiggoerelseVaergeRelation;
+import dk.trifork.sdm.importer.cpr.model.Valgoplysninger;
+import dk.trifork.sdm.importer.exceptions.FileParseException;
+import dk.trifork.sdm.util.DateUtils;
 
 public class CPRParser {
 
@@ -225,8 +244,8 @@ public class CPRParser {
 		result.setStartdatomarkering(cut(line, 82, 83));
 		result.setSeparation(parseDate(yyyyMMddHHmm, line, 83, 95));
 		return result;
-	}
-
+	}	
+	
 	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException {
 		Udrejseoplysninger u = new Udrejseoplysninger();
 		u.setCpr(cut(line, 3, 13));
