@@ -37,6 +37,8 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -71,6 +73,8 @@ import dk.sosi.seal.xml.XmlUtil;
 @Singleton
 public class AuthorizationServlet extends HttpServlet {
 
+	private static final Logger logger = LoggerFactory.getLogger(AuthorizationServlet.class);
+
 	private static final long serialVersionUID = 8476350912985820545L;
 
 	private static final int SOAP_OK = 200;
@@ -94,7 +98,6 @@ public class AuthorizationServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		// READ THE REQUEST
 		
 		String content = IOUtils.toString(request.getInputStream(), "UTF-8");
@@ -111,6 +114,7 @@ public class AuthorizationServlet extends HttpServlet {
 			reply = processors.get().process(soap);
 		}
 		catch (RuntimeException e) {
+			logger.error("Processing failed", e);
 			reply = factory.createNewErrorReply(VERSION_1_0_1, null, null, SYNTAX_ERROR, "Unable to parse the request.");
 		}
 		
