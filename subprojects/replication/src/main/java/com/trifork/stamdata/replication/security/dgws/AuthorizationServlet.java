@@ -234,6 +234,10 @@ public class AuthorizationServlet extends HttpServlet {
 				AuthorizationResponseStructure responseBody = new AuthorizationResponseStructure();
 				responseBody.authorization = securityManager.issueAuthenticationToken(cvr, viewClass, card.getExpiryDate());
 
+				if (responseBody.authorization != null) {
+					audit.log("cvr=%s, request_view=%s, expires_at=%s", cvr, viewName, card.getExpiryDate());
+				}
+
 				// RESPOND TO THE REQUEST
 
 				Reply reply = factory.createNewReply(request, FLOW_FINALIZED_SUCCESFULLY);
