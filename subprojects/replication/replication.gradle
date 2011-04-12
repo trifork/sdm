@@ -64,7 +64,7 @@ dependencies {
 	compile('com.trifork:rid2cprclient:1.4@jar') {
 		runtime 'commons-httpclient:commons-httpclient:3.1'
 		exclude group: 'commons-logging'
-		runtime ('com.trifork:xmlobject:1.11') {
+		compile ('com.trifork:xmlobject:1.11') {
 			
 			runtime libs.jodi_time
 			
