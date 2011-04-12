@@ -85,6 +85,17 @@ get everything up and running.
     Of course you will have to substitute the host and port in the URL to fit
     your setup.
 
+DB Schema
+---------
+
+If you alter the database schema there are three things you must do:
+
+1.  Alter schema.sql to reflect the newest version of the schema.
+2.  Alter the diagram.mwb file using MySQL Workbench to reflect the changes,
+    and produce a new version of the diagram.pdf using the tool.
+3.  Create a migration from the previous version of the schema to the new one
+    and place the migration file in the 'db/migrations' directory. 
+
 Build Customization
 -------------------
 

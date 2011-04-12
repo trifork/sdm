@@ -18,6 +18,9 @@
 package com.trifork.stamdata.replication.replication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
 import java.io.IOException;
 import java.util.Map;
@@ -71,7 +74,7 @@ public class RegistryServlet extends HttpServlet {
 
 		if (!securityManager.get().authorize(request)) {
 
-			response.setStatus(401);
+			response.setStatus(HTTP_UNAUTHORIZED);
 			response.setHeader("WWW-Authenticate", "STAMDATA");
 			return;
 		}
@@ -127,13 +130,13 @@ public class RegistryServlet extends HttpServlet {
 		int status;
 
 		if (records.last()) {
-			status = 200;
+			status = HTTP_OK;
 			View newestRecord = (View) records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
 			records.beforeFirst();
 		}
 		else {
-			status = 304;
+			status = HTTP_NOT_MODIFIED;
 		}
 
 		response.setStatus(status);
@@ -144,7 +147,7 @@ public class RegistryServlet extends HttpServlet {
 
 		// WRITE RESPONSE CONTENT IF ANY
 
-		if (status == 200) {
+		if (status == HTTP_OK) {
 			writers.get().write(viewName, records, response.getOutputStream(), useFastInfoSet);
 		}
 	}

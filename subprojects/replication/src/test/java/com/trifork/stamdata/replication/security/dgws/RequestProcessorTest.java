@@ -37,10 +37,11 @@ import javax.xml.bind.Unmarshaller;
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Node;
+
+import com.trifork.stamdata.replication.logging.DatabaseAuditLogger;
 import com.trifork.stamdata.replication.replication.views.MockView;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationServlet.RequestProcessor;
-import com.trifork.stamdata.replication.util.DatabaseAuditLogger;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.CareProvider;
 import dk.sosi.seal.model.IDCard;

@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.trifork.stamdata.replication.replication.RegistryModule;
 
 
 public class ViewTest {
@@ -32,7 +31,7 @@ public class ViewTest {
 	@BeforeClass
 	public static void init() {
 		
-		injector = Guice.createInjector(new RegistryModule());
+		injector = Guice.createInjector();
 	}
 	
 	@Test

@@ -15,7 +15,7 @@
 // of which can be found at the link below.
 // http://www.gnu.org/copyleft/lesser.html
 
-package com.trifork.stamdata.replication.util;
+package com.trifork.stamdata.replication.logging;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static java.lang.String.format;
@@ -27,8 +27,16 @@ import org.hibernate.Session;
 
 import com.google.inject.Inject;
 
-
-public class DatabaseAuditLogger {
+/**
+ * Logs audit messages to the database.
+ * 
+ * This class is also used as a data access class to the log entries.
+ * 
+ * @see LogController
+ * 
+ * @author Thomas Børlum (thb@trifork.com)
+ */
+public class DatabaseAuditLogger implements AuditLogger {
 
 	private final Session em;
 
@@ -50,15 +58,14 @@ public class DatabaseAuditLogger {
 		return query.list();
 	}
 
-	public boolean write(String message, Object... args) {
+	public void log(String message, Object... args) {
 
-		return write(format(message, args));
+		write(format(message, args));
 	}
 
-	public boolean write(String message) {
+	public void write(String message) {
 
 		LogEntry entry = new LogEntry(message);
 		em.persist(entry);
-		return true;
 	}
 }

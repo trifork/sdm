@@ -21,16 +21,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.trifork.stamdata.replication.replication.views.Views.checkViewIntegrity;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.MULTILINE;
+
 import java.security.SecureRandom;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import javax.servlet.http.HttpServletRequest;
+
 import com.google.inject.Inject;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.replication.views.Views;
 import com.trifork.stamdata.replication.security.SecurityManager;
+
 import dk.sosi.seal.xml.Base64;
 
 

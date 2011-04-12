@@ -18,24 +18,28 @@
 package com.trifork.stamdata.replication.gui.controllers;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.gui.models.User;
+import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.util.DatabaseAuditLogger;
 
 
 @Singleton
@@ -48,12 +52,12 @@ public class ClientController extends AbstractController {
 
 	private final Provider<PageRenderer> renderer;
 
-	private final Provider<DatabaseAuditLogger> audit;
+	private final Provider<AuditLogger> audit;
 
 	private final Provider<User> user;
 
 	@Inject
-	public ClientController(Provider<User> user, Provider<ClientDao> clients, Provider<PageRenderer> renderer, Provider<DatabaseAuditLogger> audit, @Registry Map<String, Class<? extends View>> registry) {
+	public ClientController(Provider<User> user, Provider<ClientDao> clients, Provider<PageRenderer> renderer, Provider<AuditLogger> audit, @Registry Map<String, Class<? extends View>> registry) {
 
 		this.user = checkNotNull(user);
 		this.clients = checkNotNull(clients);
@@ -95,10 +99,10 @@ public class ClientController extends AbstractController {
 			create(request, response);
 		}
 		else if ("DELETE".equals(method)) {
-			getDelete(request, response);
+			delete(request, response);
 		}
 		else {
-			getUpdate(request, response);
+			update(request, response);
 		}
 	}
 
@@ -112,20 +116,20 @@ public class ClientController extends AbstractController {
 		Client client = clients.get().create(name, cvr);
 		
 		if (client != null) {
-			audit.get().write("New client %s created by %s.", client, user.get());
+			audit.get().log("New client %s created by %s.", client, user.get());
 		}
 
 		redirect(request, response, "/admin/clients");
 	}
 
-	protected void getUpdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	protected void update(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		// Update an the permissions for a client.
 
 		@SuppressWarnings("unchecked")
 		Enumeration<String> params = request.getParameterNames();
 
-		List<String> views = new ArrayList<String>();
+		Set<String> views = Sets.newHashSet();
 
 		while (params.hasMoreElements()) {
 			String param = params.nextElement();
@@ -135,26 +139,37 @@ public class ClientController extends AbstractController {
 			}
 		}
 
-		String id = request.getParameter("id");
-
-		Client client = clients.get().find(id);
-
-		for (String view : views)
+		Client client = clients.get().find(request.getParameter("id"));
+		
+		AuditLogger auditLogger = audit.get();
+		
+		Set<String> addedPermissions = Sets.difference(views, client.getPermissions());
+		
+		for (String view : addedPermissions) {
 			client.addPermission(view);
+			auditLogger.log("User=%s granted Client=%s access to View=%s", user.get(), client, view);
+		}
+		
+		Set<String> removedPermissions = ImmutableSet.copyOf(Sets.difference(client.getPermissions(), views));
+		
+		for (String view : removedPermissions) {
+			client.removePermission(view);
+			auditLogger.log("User=%s restricted Client=%s from accessing View=%s", user.get(), client, view);
+		}
 
 		clients.get().update(client);
 
 		redirect(request, response, "/admin/clients");
 	}
 
-	protected void getDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void delete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		String id = request.getParameter("id");
 
 		Client client = clients.get().find(id);
 
 		if (clients.get().delete(id)) {
-			audit.get().write("Client %s was deleted by %s.", client, user.get());
+			audit.get().log("Client %s was deleted by %s.", client, user.get());
 		}
 
 		redirect(request, response, "/admin/clients");

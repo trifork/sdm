@@ -1,0 +1,1 @@
+ALTER TABLE Client_Permissions CHANGE permissions permissions permissions TEXT NOT NULL;

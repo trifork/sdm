@@ -41,10 +41,11 @@ import org.w3c.dom.Document;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.replication.views.Views;
-import com.trifork.stamdata.replication.util.DatabaseAuditLogger;
+
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.IDCard;
 import dk.sosi.seal.model.Reply;
@@ -134,13 +135,13 @@ public class AuthorizationServlet extends HttpServlet {
 
 		private final Map<String, Class<? extends View>> registry;
 		private final DGWSSecurityManager securityManager;
-		private final DatabaseAuditLogger audit;
+		private final AuditLogger audit;
 		private final SOSIFactory factory;
 		private final Marshaller marshaller;
 		private final Unmarshaller unmarshaller;
 
 		@Inject
-		RequestProcessor(SOSIFactory factory, DatabaseAuditLogger audit, DGWSSecurityManager securityManager, @Registry Map<String, Class<? extends View>> registry, Marshaller marshaller, Unmarshaller unmarshaller) throws JAXBException {
+		RequestProcessor(SOSIFactory factory, AuditLogger audit, DGWSSecurityManager securityManager, @Registry Map<String, Class<? extends View>> registry, Marshaller marshaller, Unmarshaller unmarshaller) throws JAXBException {
 
 			this.marshaller = checkNotNull(marshaller);
 			this.unmarshaller = checkNotNull(unmarshaller);
@@ -209,7 +210,7 @@ public class AuthorizationServlet extends HttpServlet {
 				// TODO: Somehow we should consolidate the audit log and
 				// the error log.
 
-				audit.write("Access request: clientCvr=%s, entityUri=%s", cvr, requestBody.getViewURI());
+				audit.log("Access request: clientCvr=%s, entityUri=%s", cvr, requestBody.getViewURI());
 
 				// CHECK THAT THE REQUESTED VIEW EXISTS
 				//

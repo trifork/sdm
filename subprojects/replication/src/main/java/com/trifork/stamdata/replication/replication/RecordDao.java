@@ -55,6 +55,14 @@ public class RecordDao {
 		
 		// CREATE A QUERY
 		//
+		// A record that has changed can be identified by looking at its modified date,
+		// in conjunction to its PID.
+		//
+		// This is because the importer imports new records in batches and uses the same
+		// time stamp for each of the records in to batch.
+		//
+		// TODO: Use a scheme based on a 'version' column instead, this will make the
+		// scheme more intuitive.
 
 		String SQL = "FROM " + type.getName() + " WHERE (recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID) ORDER BY recordID, modifiedDate";
 

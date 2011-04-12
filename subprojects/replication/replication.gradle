@@ -5,17 +5,22 @@ dependencies {
 	
 	compile project(':shared')
 	
-	// PRECONDITIONS
-	//
-	// TODO: This should be removed for Java 7
-	// since it is part of the std lib.
+	// SERVLETS
 	
-	compile 'com.google.code.findbugs:jsr305:1.3.9'
+	providedCompile libs.servlet_api
 	
 	// REFLECTION
 	
 	compile(libs.reflections) {
-		exclude group: 'ch.qos.logback'
+		exclude module: 'logback-classic'
+	}
+	
+	// COMMONS CONFIGURATION
+	//
+	// Used in ApplicationContextListener to load properties.
+	
+	compile(libs.commons_configuration) {
+		exclude group: 'commons-logging'
 	}
 	
 	// COMMONS LANG
@@ -31,7 +36,8 @@ dependencies {
 	
 	// Hibernate
 	
-	providedCompile libs.hibernate
+	providedCompile libs.hibernate_entitymanager
+	runtime libs.hibernate_c3p0
 	
 	// STS
 	
@@ -40,11 +46,16 @@ dependencies {
 	// SAML
 
 	compile(libs.oiosaml) {
-		exclude module: 'commons-logging'
-		exclude module: 'servlet-api'
 		exclude group: 'org.slf4j'
 		exclude group: 'org.apache.xerces'
 	}
+	
+	// SLA LOGGING
+	//
+	// The service is required to use NSP Util to
+	// log SLA.
+
+	compile 'dk.sdsd.nsp:nsp-util:1.0.0@jar'
 
 	// RID2CPR Client
 	
@@ -52,7 +63,8 @@ dependencies {
 
 	compile('com.trifork:rid2cprclient:1.4@jar') {
 		runtime 'commons-httpclient:commons-httpclient:3.1'
-		compile ('com.trifork:xmlobject:1.11') {
+		exclude group: 'commons-logging'
+		runtime ('com.trifork:xmlobject:1.11') {
 			
 			runtime libs.jodi_time
 			
@@ -62,15 +74,16 @@ dependencies {
 			
 			runtime libs.commons_io
 			
-			exclude group: "javax.servlet"
 			exclude group: "avalon"
-			exclude group: "org.slf4j"
 		}
 	}
 
 	// MySQL
+	//
+	// For JBoss AS6 you will have to place JDBC
+	// drivers in the configuration's lib directory.
 	
-	compile libs.mysql_driver
+	runtime libs.mysql_driver
 	
 	// IO Utils
 	
@@ -78,7 +91,7 @@ dependencies {
 	
 	// Fast infoset
 	
-	compile 'com.sun.xml.fastinfoset:FastInfoset:1.2.8'
+	providedCompile 'com.sun.xml.fastinfoset:FastInfoset:1.2.2'
 	
 	// HTML Templates
 	

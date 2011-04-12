@@ -64,10 +64,10 @@ public class PersistenceFilter implements Filter {
 			transaction.commit();
 		}
 		catch (Exception e) {
-			transaction.rollback();
 			logger.error("An unexpected error occured.", e);
+			transaction.rollback();
 		}
-		finally {
+		finally {			
 			sessions.get().close();
 		}
 	}

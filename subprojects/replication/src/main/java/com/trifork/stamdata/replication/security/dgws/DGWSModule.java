@@ -17,16 +17,19 @@
 
 package com.trifork.stamdata.replication.security.dgws;
 
-import java.io.IOException;
 import java.util.Properties;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import com.google.inject.Provides;
+import com.google.inject.Scopes;
+import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.security.SecurityManager;
-import com.trifork.stamdata.replication.security.UnrestrictedSecurityManager;
-import com.trifork.stamdata.replication.util.ConfiguredModule;
+
+import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.pki.Federation;
@@ -34,14 +37,10 @@ import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
-public class DGWSModule extends ConfiguredModule {
+public class DGWSModule extends ServletModule {
 
 	private Properties encryptionSetting;
 	private JAXBContext jaxbContext;
-	public DGWSModule() throws IOException {
-
-		super();
-	}
 
 	@Override
 	protected void configureServlets() {
@@ -50,11 +49,7 @@ public class DGWSModule extends ConfiguredModule {
 		//
 		// The binding is required by the replication module.
 
-		if (getProperty("security.enabled").equals("false")) {
-			bind(SecurityManager.class).to(UnrestrictedSecurityManager.class);
-		} else {
-			bind(SecurityManager.class).to(DGWSSecurityManager.class);
-		}
+		bind(SecurityManager.class).to(DGWSSecurityManager.class);
 
 		// SETUP THE ENCRYPTION SETTINGS FOR SEAL
 		//
@@ -70,6 +65,18 @@ public class DGWSModule extends ConfiguredModule {
 		// them, and returns a replication token if authorized.
 
 		serve("/stamdata/authenticate").with(AuthorizationServlet.class);
+		
+		// SLA LOGGING
+		//
+		// Enabled SLA Logging using the NSP Util API.
+		// 
+		// The SLALoggingServletFilter is made for SOAP services.
+		// 
+		// This filter is only used for the authentication service SOAP since,
+		// the other parts of the service is REST.
+		
+		bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
+		filter("/stamdata/authenticate").through(SLALoggingServletFilter.class);
 
 		// XML MARSHALLING
 		//

@@ -23,9 +23,14 @@ libs = [
 
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 
-	reflections: 'org.reflections:reflections:0.9.5-RC2',
+	reflections: 'org.reflections:reflections:0.9.5-RC3',
 
-	hibernate: 'org.hibernate:hibernate-entitymanager:3.6.2.Final',
+	// JBoss is fickle when it comes to class loading and you will
+	// have to override all the hibernate libraries if you want to
+	// upgrade to a newer version.
+
+	hibernate_entitymanager: 'org.hibernate:hibernate-entitymanager:3.6.0.Final',
+	hibernate_c3p0: 'org.hibernate:hibernate-c3p0:3.6.0.Final',
 
 	mysql_driver: 'mysql:mysql-connector-java:5.1.13@jar',
 
