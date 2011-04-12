@@ -49,25 +49,25 @@ public class YderregisterImporter implements FileImporterControlledIntervals {
 
 		Connection con = MySQLConnectionManager.getConnection();
 		
-		YderregisterDao dao = new YderregisterDao(con);
-
-		// verify loebenummer
-		int latestInDB = dao.getLastLoebenummer();
-		
-		if (latestInDB != 0) {
-			if (latestInDB > loebeNummer) {
-				throw new FilePersistException("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer." );
-			}
-		}
-		dao.setLastLoebenummer(loebeNummer);
-
-		
-		logger.debug("Starting to parse yderregister");
-		YderregisterParser tp = new YderregisterParser();
-		YderregisterDatasets yderreg = tp.parseYderregister(files);
-		logger.debug("Yderregister parsed");
-
 		try {
+			YderregisterDao dao = new YderregisterDao(con);
+
+			// verify loebenummer
+			int latestInDB = dao.getLastLoebenummer();
+
+			if (latestInDB != 0) {
+				if (latestInDB > loebeNummer) {
+					throw new FilePersistException("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer." );
+				}
+			}
+			dao.setLastLoebenummer(loebeNummer);
+
+
+			logger.debug("Starting to parse yderregister");
+			YderregisterParser tp = new YderregisterParser();
+			YderregisterDatasets yderreg = tp.parseYderregister(files);
+			logger.debug("Yderregister parsed");
+
 			logger.debug("Starting to import yderregister into database");
 			dao.persistCompleteDataset(yderreg.getYderregisterDS());
 			dao.persistCompleteDataset(yderreg.getYderregisterPersonDS());
