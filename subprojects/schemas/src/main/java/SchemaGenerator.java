@@ -31,7 +31,7 @@ public class SchemaGenerator {
 		}
 
 		String MODEL_PACKAGE = View.class.getPackage().getName();
-		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForPackagePrefix(MODEL_PACKAGE)).setScanners(new TypeAnnotationsScanner()));
+		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForClassloader()).setScanners(new TypeAnnotationsScanner()));
 		Class<?>[] classes = reflector.getTypesAnnotatedWith(Entity.class).toArray(new Class[0]);
 
 		JAXBContext context = JAXBContext.newInstance(classes);
