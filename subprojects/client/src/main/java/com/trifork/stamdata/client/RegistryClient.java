@@ -32,7 +32,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.persistence.Entity;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -41,6 +40,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
+import com.trifork.stamdata.client.impl.ReplicationReaderImpl;
+import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationRequestStructure;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationResponseStructure;
 
@@ -60,47 +61,57 @@ import dk.sosi.seal.vault.CredentialVault;
 
 public class RegistryClient {
 
-	private SOSIFactory factory;
-	private IDCard idCard;
-
 	private final String stamdataURL;
+	private final boolean securityEnabled;
+	private SOSIFactory sosiFactory;
+	private IDCard idCard;
 	private Map<Class<?>, String> authorizationCache;
 
-	public RegistryClient(String endpointURL) {
-
-		// Determine which encryption provider to use.
-
+	public RegistryClient(String endpointURL, boolean sosiSecurityEnabled) {
 		this.stamdataURL = endpointURL;
+		this.securityEnabled = sosiSecurityEnabled;
+
+		if (sosiSecurityEnabled) {
+			createSosiFactory();
+		}
+	}
+
+	private void createSosiFactory() {
 		Properties cryptoProviderSettings = SignatureUtil.setupCryptoProviderForJVM();
 
 		// Open the key store using the path and password.
-
 		CredentialVault vault = new ClasspathCredentialVault(cryptoProviderSettings, "Test1234");
-
 		Federation federation = new SOSITestFederation(cryptoProviderSettings);
-		factory = new SOSIFactory(federation, vault, cryptoProviderSettings);
+		sosiFactory = new SOSIFactory(federation, vault, cryptoProviderSettings);
 	}
 
 	public <T> Iterator<EntityRevision<T>> update(Class<T> entityType, String offset, int count) throws Exception {
+		if (offset == null) {
+			offset = "0";
+		}
 
-		if (offset == null) offset = "0";
+		String authorizationToken = validAuthorizationTokenFor(entityType);
+		URL feedURL = new URL(stamdataURL + createPathFromURI(entityNameFor(entityType)));
+		ReplicationReader reader = new ReplicationReaderImpl(authorizationToken, feedURL, offset, count);
+		return new ReplicationIterator<T>(entityType, reader);
+	}
+
+	private <T> String validAuthorizationTokenFor(Class<T> entityType) throws Exception {
+		if (!securityEnabled) {
+			return "";
+		}
 
 		// REQUEST STS IDCARD
 		//
 		// TODO: Do this whenever it expires.
 
-		Request request = factory.createNewRequest(false, null);
+		Request request = sosiFactory.createNewRequest(false, null);
 		idCard = fetchIDCard();
 		request.setIDCard(idCard);
 
-		String entityName = entityType.getAnnotation(Entity.class).name();
-		if(entityName == null || entityName.isEmpty()) {
-			entityName = entityType.getSimpleName();
-		}
-
 		// REQUEST STAMDATA AUTHORIZATION TOKEN
 
-		String viewURI = createStamdataURI(entityName).toString();
+		String viewURI = createStamdataURI(entityNameFor(entityType)).toString();
 		AuthorizationRequestStructure authorizationRequest = new AuthorizationRequestStructure(viewURI);
 
 		// CONVERT THE AUTHORIZATION TO XML
@@ -122,7 +133,7 @@ public class RegistryClient {
 		// For instance we need to throw an exception if
 		// the client is not authorized.
 
-		Reply response = factory.deserializeReply(responseXML);
+		Reply response = sosiFactory.deserializeReply(responseXML);
 
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		AuthorizationResponseStructure authorizationResponse = unmarshaller.unmarshal(response.getBody(), AuthorizationResponseStructure.class).getValue();
@@ -131,17 +142,21 @@ public class RegistryClient {
 		//
 		// TODO: This cache is not actually used at the moment.
 
+		String result = authorizationResponse.authorization;
 		authorizationCache = new HashMap<Class<?>, String>();
-		authorizationCache.put(entityType, authorizationResponse.authorization);
+		authorizationCache.put(entityType, result);
+		return result;
+	}
 
-		URL feedURL = new URL(stamdataURL + createPathFromURI(authorizationRequest.getViewURI()));
-
-		return new ReplicationIterator<T>(entityType, authorizationResponse.authorization, feedURL, offset, count);
+	private <T> String entityNameFor(Class<T> entityType) {
+		return entityType.getAnnotation(ViewPath.class).value();
 	}
 
 	private String createPathFromURI(String entityURI) {
-
-		return entityURI.substring(11);
+		if (entityURI.contains(".")) {
+			return entityURI.substring(11);
+		}
+		return entityURI;
 	}
 
 	private URI createStamdataURI(String entityName) throws URISyntaxException {
@@ -157,19 +172,19 @@ public class RegistryClient {
 
 		CareProvider cvrCareProvider = new CareProvider(CVR_NUMBER, TEST_CVR, "dk");
 
-		IDCard unsignedCard = factory.createNewSystemIDCard(TEST_IT_SYSTEM_NAME, cvrCareProvider, VOCES_TRUSTED_SYSTEM, null, // Username
+		IDCard unsignedCard = sosiFactory.createNewSystemIDCard(TEST_IT_SYSTEM_NAME, cvrCareProvider, VOCES_TRUSTED_SYSTEM, null, // Username
 				null, // Password
-				factory.getCredentialVault().getSystemCredentialPair().getCertificate(), null // Alternative
+				sosiFactory.getCredentialVault().getSystemCredentialPair().getCertificate(), null // Alternative
 																								// Name
 				);
 
-		SecurityTokenRequest stsRequest = factory.createNewSecurityTokenRequest();
+		SecurityTokenRequest stsRequest = sosiFactory.createNewSecurityTokenRequest();
 		stsRequest.setIDCard(unsignedCard);
 
 		// Send the request.
 
 		String responseXML = SoapHelper.send(TEST_STS_URL, stsRequest.serialize2DOMDocument());
-		SecurityTokenResponse response = factory.deserializeSecurityTokenResponse(responseXML);
+		SecurityTokenResponse response = sosiFactory.deserializeSecurityTokenResponse(responseXML);
 
 		// Check for errors.
 

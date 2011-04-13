@@ -18,42 +18,29 @@
 package com.trifork.stamdata.client;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import javax.xml.bind.*;
-import javax.xml.stream.*;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.stream.EventFilter;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
 
 class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
-
-	private URL pageURL;
-
 	private XMLEventReader reader;
 	private XMLEventReader filteredReader;
-
 	private Unmarshaller unmarshaller;
-
 	private final Class<T> entityType;
+	private final ReplicationReader fetcher;
 
-	private int count;
-	private String nextOffset;
-
-	private final URL entityURL;
-
-	private final String authorization;
-
-	ReplicationIterator(Class<T> entityType, String authorization, URL entityURL, String offset, int count) throws XMLStreamException, IOException, JAXBException {
-
+	ReplicationIterator(Class<T> entityType, ReplicationReader fetcher) throws XMLStreamException, IOException, JAXBException {
 		this.entityType = entityType;
-		this.authorization = authorization;
-		this.entityURL = entityURL;
-		this.nextOffset = offset;
-		this.count = count;
+		this.fetcher = fetcher;
 
 		// XML TO POJO UNMARSHALLING
 
@@ -62,7 +49,6 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	}
 
 	protected boolean hasMoreInCurrentPage() throws XMLStreamException {
-
 		return filteredReader != null && filteredReader.peek() != null;
 	}
 
@@ -86,7 +72,7 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 
 				// CHECK IF WE NEED TO FETCH THE NEXT PAGE
 
-				if (!isUpdateCompleted()) {
+				if (!fetcher.isUpdateCompleted()) {
 					fetchNextPage();
 					moreInPage = hasMoreInCurrentPage();
 				}
@@ -99,14 +85,31 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 		}
 	}
 
-	protected boolean isUpdateCompleted() {
+	private void fetchNextPage() {
+		fetcher.fetchNextPage();
 
-		return nextOffset == null;
+		try {
+			// READ THE RESPONSE
+			//
+			// To optimize the parsing we are only interested in 'start element'
+			// events that start with the prefix 'sd'.
+
+			XMLInputFactory readerFactory = XMLInputFactory.newInstance();
+			reader = readerFactory.createXMLEventReader(fetcher.getInputStream(), "UTF-8");
+			EventFilter filter = new EventFilter() {
+				@Override
+				public boolean accept(XMLEvent event) {
+					return event.isStartElement() && event.asStartElement().getName().getPrefix().equals("sd");
+				}
+			};
+			filteredReader = readerFactory.createFilteredReader(reader, filter);
+		} catch (XMLStreamException e) {
+			throw new IllegalStateException("Could not fetch next page", e);
+		}
 	}
 
 	@Override
 	public EntityRevision<T> next() {
-
 		if (!hasNext()) throw new NoSuchElementException();
 
 		try {
@@ -127,57 +130,6 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 
 	@Override
 	public void remove() {
-
 		throw new UnsupportedOperationException();
-	}
-
-	protected void fetchNextPage() throws Exception {
-
-		// CONNECT TO THE SERVICE
-		//
-		// The service requires three parameters. The accepted content type,
-		// the entity type (specified by the request path), and the
-		// authorization
-		// token from the authorization service.
-
-		this.pageURL = new URL(entityURL + "?offset=" + nextOffset + "&count=" + count);
-
-		URLConnection connection = pageURL.openConnection();
-		connection.setRequestProperty("Accept", "application/atom+xml");
-		connection.setRequestProperty("Authentication", "STAMDATA " + authorization);
-
-		connection.connect();
-
-		// DETERMINE IF THERE ARE ANY MORE PAGES
-
-		String link = connection.getHeaderField("Link");
-
-		nextOffset = (link != null) ? parseWebLink(link) : null;
-
-		// READ THE RESPONSE
-		//
-		// To optimize the parsing we are only interested in 'start element'
-		// events that start with the prefix 'sd'.
-
-		XMLInputFactory readerFactory = XMLInputFactory.newInstance();
-		reader = readerFactory.createXMLEventReader(connection.getInputStream(), "UTF-8");
-
-		EventFilter filter = new EventFilter() {
-
-			@Override
-			public boolean accept(XMLEvent event) {
-
-				return event.isStartElement() && event.asStartElement().getName().getPrefix().equals("sd");
-			}
-		};
-
-		filteredReader = readerFactory.createFilteredReader(reader, filter);
-	}
-
-	protected String parseWebLink(String link) {
-
-		Matcher matcher = Pattern.compile(".*offset=([0-9]+)>.*").matcher(link);
-		matcher.find();
-		return matcher.group(1);
 	}
 }
