@@ -30,22 +30,23 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
-
 class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	private XMLEventReader reader;
 	private XMLEventReader filteredReader;
 	private Unmarshaller unmarshaller;
 	private final Class<T> entityType;
-	private final ReplicationReader fetcher;
+	private final ReplicationReader replicationReader;
 
-	ReplicationIterator(Class<T> entityType, ReplicationReader fetcher) throws XMLStreamException, IOException, JAXBException {
+	ReplicationIterator(Class<T> entityType, ReplicationReader replicationReader) throws XMLStreamException, IOException, JAXBException {
 		this.entityType = entityType;
-		this.fetcher = fetcher;
+		this.replicationReader = replicationReader;
 
 		// XML TO POJO UNMARSHALLING
 
 		JAXBContext ctx = JAXBContext.newInstance(entityType);
+		System.out.println("Entity type: " + entityType);
 		unmarshaller = ctx.createUnmarshaller();
+		System.out.println("Unmarshaller type: " + unmarshaller.getClass());
 	}
 
 	protected boolean hasMoreInCurrentPage() throws XMLStreamException {
@@ -72,7 +73,7 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 
 				// CHECK IF WE NEED TO FETCH THE NEXT PAGE
 
-				if (!fetcher.isUpdateCompleted()) {
+				if (!replicationReader.isUpdateCompleted()) {
 					fetchNextPage();
 					moreInPage = hasMoreInCurrentPage();
 				}
@@ -86,7 +87,7 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	}
 
 	private void fetchNextPage() {
-		fetcher.fetchNextPage();
+		replicationReader.fetchNextPage();
 
 		try {
 			// READ THE RESPONSE
@@ -95,11 +96,11 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 			// events that start with the prefix 'sd'.
 
 			XMLInputFactory readerFactory = XMLInputFactory.newInstance();
-			reader = readerFactory.createXMLEventReader(fetcher.getInputStream(), "UTF-8");
+			reader = readerFactory.createXMLEventReader(replicationReader.getInputStream(), "UTF-8");
 			EventFilter filter = new EventFilter() {
 				@Override
 				public boolean accept(XMLEvent event) {
-					return event.isStartElement() && event.asStartElement().getName().getPrefix().equals("sd");
+					return event.isStartElement() && event.asStartElement().getName().getLocalPart().equals("entry");
 				}
 			};
 			filteredReader = readerFactory.createFilteredReader(reader, filter);
@@ -114,8 +115,12 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 
 		try {
 			filteredReader.next();
+			reader.nextTag();
 			String id = reader.getElementText();
-			filteredReader.peek();
+			skipTag("title");
+			skipTag("updated");
+			skipTo("person");
+			System.out.println("Next tag: " + reader.peek());
 			T entity = unmarshaller.unmarshal(reader, entityType).getValue();
 
 			return new EntityRevision<T>(id, entity);
@@ -125,6 +130,20 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 		}
 		catch (XMLStreamException e) {
 			throw new RecordStreamException(e);
+		}
+	}
+
+	private void skipTag(String tagName) throws XMLStreamException {
+		while ((reader.peek().isStartElement() && reader.peek().asStartElement().getName().getLocalPart().equals(tagName))
+			|| reader.peek().isEndElement()
+			|| reader.peek().isCharacters()) {
+			reader.nextEvent();
+		}
+	}
+
+	private void skipTo(String tagName) throws XMLStreamException {
+		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getLocalPart().equals(tagName)) {
+			reader.nextEvent();
 		}
 	}
 

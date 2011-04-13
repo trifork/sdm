@@ -33,7 +33,7 @@ public class RegistryClientTest {
 
 	@Before
 	public void setUp() {
-		client = new RegistryClient("http://localhost:8080/replication/stamdata/");
+		client = new RegistryClient("http://localhost:8080/replication/stamdata/", false);
 	}
 
 	@Test

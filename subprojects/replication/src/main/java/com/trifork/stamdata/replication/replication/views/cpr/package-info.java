@@ -15,7 +15,7 @@
 // of which can be found at the link below.
 // http://www.gnu.org/copyleft/lesser.html
 
-@XmlSchema(namespace = STAMDATA_3_0 + "/cpr", elementFormDefault = XmlNsForm.UNQUALIFIED)
+@XmlSchema(namespace = STAMDATA_3_0 + "/cpr", elementFormDefault = XmlNsForm.QUALIFIED)
 package com.trifork.stamdata.replication.replication.views.cpr;
 
 import javax.xml.bind.annotation.*;

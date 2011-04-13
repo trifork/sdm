@@ -12,7 +12,6 @@ import com.trifork.stamdata.client.ReplicationReader;
 public class ReplicationReaderImpl implements ReplicationReader {
 	private final URL entityURL;
 	private final String authorization;
-	private URL pageURL;
 	private int count;
 	private String nextOffset;
 	private URLConnection connection;
@@ -27,40 +26,21 @@ public class ReplicationReaderImpl implements ReplicationReader {
 	@Override
 	public void fetchNextPage() {
 		try {
-			// CONNECT TO THE SERVICE
-			//
-			// The service requires three parameters. The accepted content type,
-			// the entity type (specified by the request path), and the
-			// authorization
-			// token from the authorization service.
-
-			this.pageURL = new URL(entityURL + "?offset=" + nextOffset + "&count=" + count);
-
-			connection = pageURL.openConnection();
-			connection.setRequestProperty("Accept", "application/atom+xml");
-			connection.setRequestProperty("Authentication", "STAMDATA " + authorization);
-
-			connection.connect();
-
-			// DETERMINE IF THERE ARE ANY MORE PAGES
-
-			String link = connection.getHeaderField("Link");
-
-			nextOffset = (link != null) ? parseWebLink(link) : null;
+			if (connection != null) {
+				connection.getInputStream().close();
+			}
+			connectTo(entityURL + "?offset=" + nextOffset + "&count=" + count);
+			nextOffset = findNextOffset();
 		} catch (IOException e) {
 			throw new IllegalStateException("Could not fetch next page", e);
 		}
 	}
 
-	@Override
-	public boolean isUpdateCompleted() {
-		return nextOffset == null;
-	}
-
-	private String parseWebLink(String link) {
-		Matcher matcher = Pattern.compile(".*offset=([0-9]+)>.*").matcher(link);
-		matcher.find();
-		return matcher.group(1);
+	private void connectTo(String pageUrl) throws IOException {
+		connection = new URL(pageUrl).openConnection();
+		connection.setRequestProperty("Accept", "application/atom+xml");
+		connection.setRequestProperty("Authentication", "STAMDATA " + authorization);
+		connection.connect();
 	}
 
 	@Override
@@ -70,5 +50,21 @@ public class ReplicationReaderImpl implements ReplicationReader {
 		} catch (IOException e) {
 			throw new IllegalStateException("Could not get input stream from connection", e);
 		}
+	}
+
+	@Override
+	public boolean isUpdateCompleted() {
+		return nextOffset == null;
+	}
+
+	private String findNextOffset() {
+		String link = connection.getHeaderField("Link");
+		return link != null ? parseWebLink(link) : null;
+	}
+
+	private String parseWebLink(String link) {
+		Matcher matcher = Pattern.compile(".*offset=([0-9]+)>.*").matcher(link);
+		matcher.find();
+		return matcher.group(1);
 	}
 }

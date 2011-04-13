@@ -36,7 +36,7 @@ import com.trifork.stamdata.replication.replication.views.View;
 
 
 @Entity
-@XmlRootElement
+@XmlRootElement(name="person")
 @ViewPath("cpr/person/v1")
 public class Person extends View {
 

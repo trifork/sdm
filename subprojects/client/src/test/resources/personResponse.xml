@@ -1,0 +1,2752 @@
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:sd="http://trifork.com/-/stamdata/3.0">
+	<id>tag:trifork.com,2011:cpr/person/v1</id>
+	<updated>2011-04-13T06:50:29.055Z</updated>
+	<title>Stamdata Registry Feed</title>
+	<author>
+		<name>Trifork Public A/S</name>
+		<email>stamdata.support@trifork.com</email>
+	</author>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000001</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0702614155</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Hans-Martin</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Wicker</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-02-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000002</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0912414426</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Lisbeth</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Toregårdsvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>9</ns2:husnummer>
+				<ns2:etage>5</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-12-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Ekspedient</ns2:stilling>
+				<ns2:vejKode>1188</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000003</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>3006980014</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>92</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1998-06-30T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000004</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0909970016</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ulrik Uffe Efraim Udzinski</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Wicker</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1997-09-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000005</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614762</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Birgit</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Rudersdahl</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Husassistent</ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000006</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0710614326</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Jytte</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Langvig</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Brøndgravergården</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>25</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-10-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Civiling.</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000007</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614045</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Asger</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Johansen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>29</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000008</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0712614382</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Karin</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-12-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000009</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614231</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Jørgen</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Folmersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000010</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>3112970079</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Uffe Konrad</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Dahl-Eriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>91</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1997-12-31T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000011</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0905414143</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Kaj</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Roland</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Egemarksvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>3</ns2:husnummer>
+				<ns2:etage>5</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9100</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg, Postboks</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-05-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Bager</ns2:stilling>
+				<ns2:vejKode>1473</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000012</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708614327</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Poul-Erik</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Møller-Madsen</ns2:efternavn>
+				<ns2:status>90</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Blikkensl.</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000013</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614754</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Gunhild</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Selmersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>48</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000014</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614096</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Bettina</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Folmersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>17</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000015</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0707614234</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Bodil</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mikkelsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Pædagog</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000016</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0706614184</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Anne</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mortensen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-06-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Socialrådg.</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000017</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709610015</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Robert</ns2:fornavn>
+				<ns2:mellemnavn>Udtzon</ns2:mellemnavn>
+				<ns2:efternavn>Ullersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Brøndgravergården</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>25</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Forlægger</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000018</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708614866</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Kate</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Nivarson</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000019</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0101005038</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>2000-01-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000020</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614428</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Lisbeth</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Fischer</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000021</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0702614147</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Henrik</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Sejersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Skovvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>77A</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Varde</ns2:bynavn>
+				<ns2:postnummer>6800</ns2:postnummer>
+				<ns2:postdistrikt>Varde</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-02-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>5732</ns2:vejKode>
+				<ns2:kommuneKode>573</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000022</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>2802980011</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Helmer Ulrik</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Selmersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>48</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1998-02-28T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000023</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614673</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Bo</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Dahl-Eriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>92</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Togfører</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000024</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0706614818</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Lise</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Kofoed-Svendsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-06-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000025</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708614335</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Harald</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mikkelsen</ns2:efternavn>
+				<ns2:status>80</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Skibsbygger</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000026</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0701614038</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Asta</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Jakobsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Skovvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>77A</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Varde</ns2:bynavn>
+				<ns2:postnummer>6800</ns2:postnummer>
+				<ns2:postdistrikt>Varde</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-01-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>5732</ns2:vejKode>
+				<ns2:kommuneKode>573</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000027</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0101520013</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Arne Efraim Udtzon</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Jensen</ns2:efternavn>
+				<ns2:status>50</ns2:status>
+				<ns2:gaeldendeCPR>0107529039</ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1952-01-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Translatør</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000028</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>1306814180</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Margrethe</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Eliasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1981-06-13T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000029</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0101980014</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ulrikke Veronika</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Villadsen</ns2:efternavn>
+				<ns2:status>90</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1998-01-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000030</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>2802363039</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Uri</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Ullermann</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1936-02-28T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Tryllekunstner</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000031</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0707614226</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Erna</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Møller-Madsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Studerende</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000032</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0108610069</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Robert</ns2:fornavn>
+				<ns2:mellemnavn>Udtzon</ns2:mellemnavn>
+				<ns2:efternavn>Ullersen</ns2:efternavn>
+				<ns2:status>60</ns2:status>
+				<ns2:gaeldendeCPR>0709610015</ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Forlægger</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000033</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0307610078</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Monika Togliatti</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Eliasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-03T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Designer</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000034</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>1307610015</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Poul</ns2:fornavn>
+				<ns2:mellemnavn>Udt</ns2:mellemnavn>
+				<ns2:efternavn>Junkersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-13T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000035</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708610089</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Kurt</ns2:fornavn>
+				<ns2:mellemnavn>Bang</ns2:mellemnavn>
+				<ns2:efternavn>Christensen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>33</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>vekseler</ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000036</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614568</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Anne-Birgitte</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Wicker</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000037</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614118</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Gitte</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Sander</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>26</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Stewardesse</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000038</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0108610018</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Henriette Helga</ns2:fornavn>
+				<ns2:mellemnavn>Mogren</ns2:mellemnavn>
+				<ns2:efternavn>Udsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Brøndgravergården</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>25</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000039</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708610038</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ulrikke Marie</ns2:fornavn>
+				<ns2:mellemnavn>Borg</ns2:mellemnavn>
+				<ns2:efternavn>Hülpers</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000040</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708614246</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Monika Togliatti</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Eliasen</ns2:efternavn>
+				<ns2:status>60</ns2:status>
+				<ns2:gaeldendeCPR>0307610078</ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Designer</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000041</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614126</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Annette</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Ingdahl</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000042</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0712614455</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Klaus</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-12-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000043</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614215</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Peter Hyldegård</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Madsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>12</ns2:husnummer>
+				<ns2:etage>st</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000044</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614495</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Ivar</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Engquist</ns2:efternavn>
+				<ns2:coNavn>c/o Andersen</ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>39</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000045</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>1312814362</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Janne</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mortensen</ns2:efternavn>
+				<ns2:status>70</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1981-12-13T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000046</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0703614167</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Peter</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Rudersdahl</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-03-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000047</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0707614293</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Lars</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>50</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000048</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0909610036</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Gerda</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Holmstad</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-09T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Sygehjælper</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000049</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0702614082</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Heidi</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Dahl-Eriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>92</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-02-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000050</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0107529039</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Arne Udtzon</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Jensen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>48</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1952-07-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Translatør</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000051</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614738</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Winnie</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Carlson</ns2:efternavn>
+				<ns2:status>80</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000052</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0901414025</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Arne</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Toregårdsvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>9</ns2:husnummer>
+				<ns2:etage>5</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-01-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Lagerchef</ns2:stilling>
+				<ns2:vejKode>1188</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000053</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614169</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Henrik</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mortensen</ns2:efternavn>
+				<ns2:coNavn>c/o Brammer</ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Pr Caroline Amlg</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9210</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg So</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Ejend.mægler</ns2:stilling>
+				<ns2:vejKode>8520</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000054</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0701614011</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Aksel</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Sander</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>26</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-01-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Pilot</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000055</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614592</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Jane Østerholm</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Fichte</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>38</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000056</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614452</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Vibeke</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Sejersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000057</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>3012995007</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Ulrik</ns2:fornavn>
+				<ns2:mellemnavn>Emmerich</ns2:mellemnavn>
+				<ns2:efternavn>Udtzen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1899-12-30T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Pensionist</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000058</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>2906980013</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Ulrik Antonius</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Iversen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1998-06-29T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000059</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614398</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Gerda</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Holmstad</ns2:efternavn>
+				<ns2:status>60</ns2:status>
+				<ns2:gaeldendeCPR>0909610036</ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Sygehjælper</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000060</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0707614218</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Kirsten</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Svanholm-Nielsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Studerende</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000061</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0701614089</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Hans</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Flauenskjold</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-01-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000062</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614258</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Helle</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Gunvorsen</ns2:efternavn>
+				<ns2:status>80</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000063</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>1306814172</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Helene</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Eliasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1981-06-13T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000064</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614304</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Karina</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mogensen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>48</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000065</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0707614285</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Jens</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Mortensen</ns2:efternavn>
+				<ns2:coNavn>c/o Christiansen</ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>95</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-07-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Socialrådg.</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000066</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0909610028</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Hilda</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Sachariasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-09T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Servitrice</ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000067</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614347</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Bent</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Eliasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Snedker</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000068</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614037</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Arne</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Nikolaisen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>29</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Elektriker</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000069</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0702614074</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Tove</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Andreasen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>33</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-02-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000070</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0904414131</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Gunnar</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Holgersen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Pr Caroline Amlg</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9210</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg So</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-04-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8520</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000071</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0711614354</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Bettina</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Christiansen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>95</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-11-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000072</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>3112000010</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ulrike</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Udtzon</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>th</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1900-12-31T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Pensionist</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000073</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0708614319</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Christian</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Svanholm-Nielsen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>6</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-08-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Mekaniker</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000074</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>1303814074</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Dorthea</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Dahl-Eriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>91</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1981-03-13T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000075</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0101965058</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ude Ulrike</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Udtzen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Søgade</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>16</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Vodskov</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1896-01-01T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Pensionist</ns2:stilling>
+				<ns2:vejKode>8511</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000076</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0101429059</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Ulf</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Ulling</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage>1</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1942-01-01T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Cirkusdirektør</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000077</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709610058</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Ulrikke Manuela</ns2:fornavn>
+				<ns2:mellemnavn>Borg</ns2:mellemnavn>
+				<ns2:efternavn>Hülpers</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>4</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000078</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>3112420028</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Alexandra</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Urmani</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet>Solhavehjemmet</ns2:lokalitet>
+				<ns2:vejnavn>Industrivænget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage>2</ns2:etage>
+				<ns2:sideDoerNummer>mf</ns2:sideDoerNummer>
+				<ns2:bynavn>Hasseris</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1942-12-31T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling>Sygehjælper</ns2:stilling>
+				<ns2:vejKode>8512</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000079</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0709614401</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Ove</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Brammer</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Pr Caroline Amlg</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>2</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9210</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg So</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-09-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8520</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000080</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0901414084</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Lise</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Roland</ns2:efternavn>
+				<ns2:status>90</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-01-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Ekspedient</ns2:stilling>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+</feed>

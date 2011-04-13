@@ -18,7 +18,6 @@
 package com.trifork.stamdata.replication.replication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static java.net.HttpURLConnection.HTTP_NOT_MODIFIED;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
 
@@ -55,7 +54,6 @@ public class RegistryServlet extends HttpServlet {
 
 	@Inject
 	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
-
 		this.registry = checkNotNull(registry);
 		this.recordDao = checkNotNull(recordDao);
 		this.writers = checkNotNull(writers);
@@ -127,29 +125,19 @@ public class RegistryServlet extends HttpServlet {
 		// TODO: Check if scrolling to the last record is too inefficient,
 		// and maybe an additional query would be faster.
 
-		int status;
-
 		if (records.last()) {
-			status = HTTP_OK;
 			View newestRecord = (View) records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
-			records.beforeFirst();
 		}
-		else {
-			status = HTTP_NOT_MODIFIED;
-		}
+		records.beforeFirst();
 
-		response.setStatus(status);
+		response.setStatus(HTTP_OK);
 		String contentType = useFastInfoSet ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
 		contentType += "; charset=utf-8";
 		response.setContentType(contentType);
 		response.flushBuffer();
 
-		// WRITE RESPONSE CONTENT IF ANY
-
-		if (status == HTTP_OK) {
-			writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
-		}
+		writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
 	}
 
 	protected String getPath(HttpServletRequest request) {

@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:sd="http://trifork.com/-/stamdata/3.0">
+	<id>tag:trifork.com,2011:cpr/person/v1</id>
+	<updated>2011-04-13T06:50:29.055Z</updated>
+	<title>Stamdata Registry Feed</title>
+	<author>
+		<name>Trifork Public A/S</name>
+		<email>stamdata.support@trifork.com</email>
+	</author>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000001</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0802614155</ns2:cpr>
+				<ns2:koen>M</ns2:koen>
+				<ns2:fornavn>Hans-Martin</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Wicker</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Svinget</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>52</ns2:husnummer>
+				<ns2:etage></ns2:etage>
+				<ns2:sideDoerNummer></ns2:sideDoerNummer>
+				<ns2:bynavn>Lindholm</ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1961-02-07T00:00:00+01:00</ns2:foedselsdato>
+				<ns2:stilling></ns2:stilling>
+				<ns2:vejKode>8513</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+	<entry>
+		<id>tag:trifork.com,2011:cpr/person/v1/13026170860000000002</id>
+		<title />
+		<updated>2011-04-12T14:04:46.000Z</updated>
+		<content type="application/xml">
+			<ns2:person xmlns:ns7="http://trifork.com/-/stamdata/3.0/yderregisteret"
+				xmlns:ns6="http://trifork.com/-/stamdata/3.0/doseringsforslag"
+				xmlns:ns5="http://trifork.com/-/stamdata/3.0/sor"
+				xmlns:ns4="http://trifork.com/-/stamdata/3.0/autorisationsregisteret"
+				xmlns:ns3="http://trifork.com/-/stamdata/3.0/dkma" xmlns:ns2="http://trifork.com/-/stamdata/3.0/cpr">
+				<ns2:cpr>0912414426</ns2:cpr>
+				<ns2:koen>K</ns2:koen>
+				<ns2:fornavn>Lisbeth</ns2:fornavn>
+				<ns2:mellemnavn></ns2:mellemnavn>
+				<ns2:efternavn>Henriksen</ns2:efternavn>
+				<ns2:coNavn></ns2:coNavn>
+				<ns2:lokalitet></ns2:lokalitet>
+				<ns2:vejnavn>Toregårdsvej</ns2:vejnavn>
+				<ns2:bygningsnummer></ns2:bygningsnummer>
+				<ns2:husnummer>9</ns2:husnummer>
+				<ns2:etage>5</ns2:etage>
+				<ns2:sideDoerNummer>tv</ns2:sideDoerNummer>
+				<ns2:bynavn></ns2:bynavn>
+				<ns2:postnummer>9000</ns2:postnummer>
+				<ns2:postdistrikt>Aalborg</ns2:postdistrikt>
+				<ns2:status>01</ns2:status>
+				<ns2:gaeldendeCPR></ns2:gaeldendeCPR>
+				<ns2:foedselsdato>1941-12-09T00:00:00+02:00</ns2:foedselsdato>
+				<ns2:stilling>Ekspedient</ns2:stilling>
+				<ns2:vejKode>1188</ns2:vejKode>
+				<ns2:kommuneKode>851</ns2:kommuneKode>
+				<ns2:validFrom>2001-11-16T00:00:00+01:00</ns2:validFrom>
+				<ns2:validTo>2999-12-31T00:00:00+01:00</ns2:validTo>
+			</ns2:person>
+		</content>
+	</entry>
+</feed>
