@@ -141,7 +141,7 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	}
 	
 	private void skipToEntity() throws XMLStreamException {
-		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getPrefix().equals("ns2")) {
+		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getPrefix().equals("sd")) {
 			reader.nextEvent();
 		}
 	}

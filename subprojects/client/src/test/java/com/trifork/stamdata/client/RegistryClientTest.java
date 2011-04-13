@@ -26,7 +26,7 @@ import org.junit.Test;
 
 import com.trifork.stamdata.replication.replication.views.cpr.Person;
 
-@Ignore
+//@Ignore
 public class RegistryClientTest {
 
 	private RegistryClient client;
