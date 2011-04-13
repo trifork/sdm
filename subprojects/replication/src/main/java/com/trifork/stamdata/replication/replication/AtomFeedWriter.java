@@ -33,9 +33,8 @@ import org.hibernate.ScrollableResults;
 
 import com.google.inject.Inject;
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
-import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.util.Namespace;
+import com.trifork.stamdata.replication.replication.views.Views;
 
 /**
  * Writes a set of records into an output stream as an Atom 1.0 feed.
@@ -53,19 +52,22 @@ public class AtomFeedWriter {
 	 */
 	private static final String TAG_PREFIX = "tag:trifork.com,2011:";
 
-	private final Marshaller marshaller;
+	private final ViewXmlHelper viewXmlHelper;
 
 	@Inject
-	AtomFeedWriter(@Registry Marshaller marshaller) {
+	AtomFeedWriter(ViewXmlHelper viewXmlHelper) {
 
-		this.marshaller = checkNotNull(marshaller);
+		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public void write(String entityName, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
+	public void write(Class<? extends View> viewClass, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
 
-		checkNotNull(entityName);
+		checkNotNull(viewClass);
 		checkNotNull(records);
 		checkNotNull(outputStream);
+		records.beforeFirst();
+		
+		String entityName = Views.getViewPath(viewClass);
 		
 		try {
 			XMLStreamWriter writer;
@@ -81,15 +83,19 @@ public class AtomFeedWriter {
 			writer.setDefaultNamespace(ATOM_NS);
 			writer.writeStartElement("feed");
 			writer.writeNamespace(null, ATOM_NS);
-			writer.writeNamespace("sd", Namespace.STAMDATA_3_0);
+			writer.writeNamespace("sd", viewXmlHelper.getNamespace(viewClass.newInstance()));
 
 			writeFeedMetadata(entityName, writer);
 
 			// Write each record as an ATOM entry.
 
+			Marshaller marshaller = viewXmlHelper.createMarshaller(viewClass);
+			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+			marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+
 			while (records.next()) {
 				View view = (View)records.get(0);
-				writeEntry(writer, entityName, view);
+				writeEntry(writer, entityName, view, marshaller);
 			}
 
 			// End the feed.
@@ -101,7 +107,7 @@ public class AtomFeedWriter {
 		}
 	}
 
-	protected void writeEntry(XMLStreamWriter feed, String path, View record) throws XMLStreamException, JAXBException {
+	protected void writeEntry(XMLStreamWriter feed, String path, View record, Marshaller marshaller) throws XMLStreamException, JAXBException {
 
 		feed.writeStartElement("entry");
 

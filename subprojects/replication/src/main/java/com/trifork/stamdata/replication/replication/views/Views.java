@@ -61,9 +61,9 @@ public final class Views {
 		return matcher.find() ? matcher.group(1) : null;
 	}
 	
-	public static String getViewName(Class<? extends View> viewClass) {
+	public static String getViewPath(Class<? extends View> viewClass) {
 
 		checkViewIntegrity(viewClass);
-		return viewClass.getAnnotation(Entity.class).name();
+		return viewClass.getAnnotation(ViewPath.class).value();
 	}
 }

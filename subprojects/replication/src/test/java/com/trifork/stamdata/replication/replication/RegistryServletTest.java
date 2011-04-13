@@ -95,7 +95,7 @@ public class RegistryServletTest {
 		get();
 
 		verify(response).setStatus(200);
-		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(false));
+		verify(writer).write(eq(MockEntity.class), eq(records), any(OutputStream.class), eq(false));
 	}
 	
 	@Test
@@ -108,13 +108,14 @@ public class RegistryServletTest {
 		verify(response).setStatus(304);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void Should_deny_access_if_the_client_is_not_authorized_for_the_requested_view() throws Exception {
 
 		authorized = false;
 		get();
 		verify(response).setStatus(401);
-		verify(writer, never()).write(anyString(), any(ScrollableResults.class), any(OutputStream.class), Mockito.anyBoolean());
+		verify(writer, never()).write(any(Class.class), any(ScrollableResults.class), any(OutputStream.class), Mockito.anyBoolean());
 	}
 
 	@Test
@@ -145,7 +146,7 @@ public class RegistryServletTest {
 		get();
 
 		verify(response).setContentType("application/atom+fastinfoset; charset=utf-8");
-		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(true));
+		verify(writer).write(eq(MockEntity.class), eq(records), any(OutputStream.class), eq(true));
 	}
 
 	@Test
@@ -156,7 +157,7 @@ public class RegistryServletTest {
 		get();
 		
 		verify(response).setContentType("application/atom+xml; charset=utf-8");
-		verify(writer).write(eq("foo/bar/v1"), eq(records), any(OutputStream.class), eq(false));
+		verify(writer).write(eq(MockEntity.class), eq(records), any(OutputStream.class), eq(false));
 	}
 
 	// TODO: Make test for unaccepted content type.

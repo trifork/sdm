@@ -79,7 +79,7 @@ public class DGWSSecurityManager implements SecurityManager {
 
 		String authorization;
 
-		if (authorizationDao.isClientAuthorized(cvr, Views.getViewName(viewClass))) {
+		if (authorizationDao.isClientAuthorized(cvr, Views.getViewPath(viewClass))) {
 
 			byte[] token = new byte[512];
 			random.nextBytes(token);

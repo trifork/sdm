@@ -148,7 +148,7 @@ public class RegistryServlet extends HttpServlet {
 		// WRITE RESPONSE CONTENT IF ANY
 
 		if (status == HTTP_OK) {
-			writers.get().write(viewName, records, response.getOutputStream(), useFastInfoSet);
+			writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
 		}
 	}
 
