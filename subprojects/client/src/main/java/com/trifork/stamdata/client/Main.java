@@ -1,17 +1,13 @@
 package com.trifork.stamdata.client;
 
-import java.util.Iterator;
-
-import org.apache.commons.lang.time.StopWatch;
-
 import com.trifork.stamdata.replication.replication.views.cpr.Person;
 
 public class Main {
 	public static void main(String... args) throws Exception {
-		String serverAndPort = ask("Server and port", "http://localhost:8080/replication/stamdata/");
+		String serverAndPort = ask("Server and port", "http://localhost:8080");
 		boolean security = ask("Security enabled?", "n").toLowerCase().equals("y");
 
-		RegistryClient client = new RegistryClient(serverAndPort, security);
+		RegistryClient client = new RegistryClient(serverAndPort + "/replication/stamdata/", security);
 		fetch(client);
 	}
 
@@ -21,32 +17,6 @@ public class Main {
 	}
 
 	private static void fetch(RegistryClient client) throws Exception {
-		Iterator<EntityRevision<Person>> revisions = client.update(Person.class, null, 5000);
-
-		int recordCount = 0;
-
-		StopWatch timer = new StopWatch();
-		timer.start();
-
-		while (revisions.hasNext()) {
-			recordCount++;
-			EntityRevision<Person> revision = revisions.next();
-			printRevision(revision);
-		}
-
-		timer.stop();
-
-		printStatistics(recordCount, timer);
+		client.updateAndPrintStatistics(Person.class, null, 5000);
 	}
-
-	private static void printRevision(EntityRevision<?> revision) {
-		System.out.println(revision.getId() + ": " + revision.getEntity());
-	}
-
-	private static void printStatistics(int i, StopWatch timer) {
-		System.out.println();
-		System.out.println("Time used: " + timer.getTime() / 1000. + " sec.");
-		System.out.println("Record count: " + i);
-	}
-
 }

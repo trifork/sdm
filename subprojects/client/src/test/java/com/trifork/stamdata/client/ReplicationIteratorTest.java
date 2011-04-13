@@ -27,7 +27,7 @@ public class ReplicationIteratorTest {
 
 	@Test
 	public void knowsWhenThereIsMoreInResult() throws Exception {
-		when(reader.getInputStream()).thenReturn(new FileInputStream("/Users/olefriisstergaard/projects/kombit/code/sdm/subprojects/client/src/test/resources/personResponse.xml"));
+		when(reader.getInputStream()).thenReturn(getClass().getClassLoader().getResourceAsStream("personResponse.xml"));
 
 		assertTrue(iterator.hasNext());
 
@@ -36,10 +36,10 @@ public class ReplicationIteratorTest {
 
 	@Test
 	public void canGetFirstPersonInResult() throws Exception {
-		when(reader.getInputStream()).thenReturn(new FileInputStream("/Users/olefriisstergaard/projects/kombit/code/sdm/subprojects/client/src/test/resources/personResponse.xml"));
+		when(reader.getInputStream()).thenReturn(getClass().getClassLoader().getResourceAsStream("personResponse.xml"));
 
 		EntityRevision<Person> revision = iterator.next();
-		assertEquals("tag:trifork.com,2011:cpr/person/v1/13026170860000000001", revision.getId());
+		assertEquals("tag:trifork.com,2011:cpr/person/v1/13026992710000000001", revision.getId());
 		Person person = revision.getEntity();
 		assertEquals("0702614155", person.getId());
 
@@ -48,7 +48,7 @@ public class ReplicationIteratorTest {
 
 	@Test
 	public void findsOutWhenEndOfChunkReached() throws Exception {
-		when(reader.getInputStream()).thenReturn(new FileInputStream("/Users/olefriisstergaard/projects/kombit/code/sdm/subprojects/client/src/test/resources/personResponse.xml"));
+		when(reader.getInputStream()).thenReturn(getClass().getClassLoader().getResourceAsStream("personResponse.xml"));
 
 		// Person with CPR 0901414084 is last in output
 		while (!iterator.next().getEntity().getId().equals("0901414084")) {
