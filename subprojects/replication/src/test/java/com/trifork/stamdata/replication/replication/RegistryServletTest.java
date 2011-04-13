@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.ScrollableResults;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import com.google.inject.Provider;
@@ -99,13 +100,14 @@ public class RegistryServletTest {
 	}
 	
 	@Test
-	public void Should_return_304_if_there_are_no_updates() throws Exception {
+	public void Should_give_no_link_if_there_are_no_updates() throws Exception {
 
 		when(records.last()).thenReturn(false);
 		
 		get();
 		
-		verify(response).setStatus(304);
+		verify(response).setStatus(200);
+		verify(response, never()).setHeader(Matchers.eq("Link"), Matchers.anyString());
 	}
 
 	@SuppressWarnings("unchecked")

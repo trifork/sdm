@@ -119,8 +119,7 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 			String id = reader.getElementText();
 			skipTag("title");
 			skipTag("updated");
-			skipTo("person");
-			System.out.println("Next tag: " + reader.peek());
+			skipToEntity();
 			T entity = unmarshaller.unmarshal(reader, entityType).getValue();
 
 			return new EntityRevision<T>(id, entity);
@@ -140,9 +139,9 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 			reader.nextEvent();
 		}
 	}
-
-	private void skipTo(String tagName) throws XMLStreamException {
-		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getLocalPart().equals(tagName)) {
+	
+	private void skipToEntity() throws XMLStreamException {
+		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getPrefix().equals("ns2")) {
 			reader.nextEvent();
 		}
 	}
