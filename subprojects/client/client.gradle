@@ -1,12 +1,24 @@
+buildscript {
+  repositories {
+    mavenRepo urls:'http://repo.smokejumperit.com'
+  }
+  dependencies {
+    classpath 'com.smokejumperit:gradle-plugins:0.7.1'
+	classpath libs.jaxb
+  }
+}
+
 apply plugin: 'java'
+apply plugin:com.smokejumperit.gradle.OneJarPlugin
 
 dependencies {
 	
-	compile project(":replication")
+	compile project(":shared")
 	
 	// Commons
 	
 	testCompile libs.commons_lang
+	compile libs.commons_io
 	
 	// STS
 	
@@ -36,4 +48,10 @@ dependencies {
 	
 	compile libs.slf4j_api
 	runtime libs.log4j_slf4j
+}
+
+jar {
+  manifest {
+    attributes 'Main-Class': 'com.trifork.stamdata.client.Main'
+  }
 }

@@ -17,24 +17,18 @@
 
 package com.trifork.stamdata.replication.replication;
 
-import java.net.URL;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 import javax.xml.bind.JAXBException;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.replication.ApplicationContextListener;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
-import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.replication.replication.views.ViewPath;
+import com.trifork.stamdata.replication.replication.views.Views;
 
 
 public class RegistryModule extends ServletModule {
@@ -49,21 +43,7 @@ public class RegistryModule extends ServletModule {
 		// Because the war can be deployed in many ways we may
 		// have to search in several places.
 
-		URL searchPath = ClasspathHelper.getUrlForWebInfClasses(getServletContext());
-		Reflections reflector;
-		
-		if (searchPath != null) {
-			reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(searchPath)
-				.setScanners(new TypeAnnotationsScanner()));
-		}
-		else {
-			reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.getUrlForName(ApplicationContextListener.class))
-				.setScanners(new TypeAnnotationsScanner()));
-		}
-		
-		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(ViewPath.class);
+		Set<Class<?>> views = Views.findAllViews();
 
 		// MAP VIEWS TO THEIR PATHS
 		//
@@ -74,7 +54,7 @@ public class RegistryModule extends ServletModule {
 
 		Map<String, Class<? extends View>> registry = new TreeMap<String, Class<? extends View>>();
 
-		for (Class<?> entity : classes) {
+		for (Class<?> entity : views) {
 			ViewPath annotation = entity.getAnnotation(ViewPath.class);
 			registry.put(annotation.value(), (Class<? extends View>) entity);
 		}
@@ -89,7 +69,7 @@ public class RegistryModule extends ServletModule {
 		bind(AtomFeedWriter.class);
 		
 		try {
-			bind(ViewXmlHelper.class).toInstance(new ViewXmlHelper(classes));
+			bind(ViewXmlHelper.class).toInstance(new ViewXmlHelper(views));
 		}
 		catch (JAXBException e) {
 			addError(e);

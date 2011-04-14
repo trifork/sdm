@@ -38,12 +38,11 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.time.StopWatch;
 import org.w3c.dom.Document;
 
 import com.trifork.stamdata.client.impl.ReplicationReaderImpl;
-import com.trifork.stamdata.replication.replication.annotations.ViewPath;
-import com.trifork.stamdata.replication.security.dgws.AuthorizationRequestStructure;
-import com.trifork.stamdata.replication.security.dgws.AuthorizationResponseStructure;
+import com.trifork.stamdata.replication.replication.views.ViewPath;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.CareProvider;
@@ -94,6 +93,35 @@ public class RegistryClient {
 		URL feedURL = new URL(stamdataURL + createPathFromURI(entityNameFor(entityType)));
 		ReplicationReader reader = new ReplicationReaderImpl(authorizationToken, feedURL, offset, count);
 		return new ReplicationIterator<T>(entityType, reader);
+	}
+
+	public <T>void updateAndPrintStatistics(Class<T> entityType, String offset, int count) throws Exception {
+		Iterator<EntityRevision<T>> revisions = update(entityType, offset, count);
+
+		int recordCount = 0;
+
+		StopWatch timer = new StopWatch();
+		timer.start();
+
+		while (revisions.hasNext()) {
+			recordCount++;
+			EntityRevision<T> revision = revisions.next();
+			printRevision(revision);
+		}
+
+		timer.stop();
+
+		printStatistics(recordCount, timer);
+	}
+
+	private static void printRevision(EntityRevision<?> revision) {
+		System.out.println(revision.getId() + ": " + revision.getEntity());
+	}
+
+	private static void printStatistics(int i, StopWatch timer) {
+		System.out.println();
+		System.out.println("Time used: " + timer.getTime() / 1000. + " sec.");
+		System.out.println("Record count: " + i);
 	}
 
 	private <T> String validAuthorizationTokenFor(Class<T> entityType) throws Exception {

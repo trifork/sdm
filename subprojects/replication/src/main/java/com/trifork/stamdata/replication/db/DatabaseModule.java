@@ -19,24 +19,21 @@ package com.trifork.stamdata.replication.db;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URL;
 import java.util.Set;
-
-import javax.persistence.Entity;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
+import com.google.common.collect.Sets;
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.replication.ApplicationContextListener;
+import com.trifork.stamdata.replication.gui.models.Client;
+import com.trifork.stamdata.replication.gui.models.User;
+import com.trifork.stamdata.replication.logging.LogEntry;
+import com.trifork.stamdata.replication.replication.views.Views;
 
 
 public class DatabaseModule extends ServletModule {
@@ -59,27 +56,15 @@ public class DatabaseModule extends ServletModule {
 
 	@Override
 	protected final void configureServlets() {
-		
-		// DISCOVER ALL ENTITY CLASSES
-		//
-		// Because the war can be deployed in many ways we may
-		// have to search in several places.
-		
-		URL searchPath = ClasspathHelper.getUrlForWebInfClasses(getServletContext());
-		Reflections reflector;
-		
-		if (searchPath != null) {
-			reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(searchPath)
-				.setScanners(new TypeAnnotationsScanner()));
-		}
-		else {
-			reflector = new Reflections(new ConfigurationBuilder()
-				.setUrls(ClasspathHelper.getUrlForName(ApplicationContextListener.class))
-				.setScanners(new TypeAnnotationsScanner()));
-		}
 
-		Set<Class<?>> classes = reflector.getTypesAnnotatedWith(Entity.class);
+		// DISCOVER ALL ENTITY CLASSES
+
+
+		Set<Class<?>> classes = Sets.newHashSet();
+		classes.addAll(Views.findAllViews());
+		classes.add(User.class);
+		classes.add(LogEntry.class);
+		classes.add(Client.class);
 
 		try {
 			Configuration config = new Configuration();
