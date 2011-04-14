@@ -1,7 +1,9 @@
 dependencies {
 	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final'
 	compile libs.commons_lang
-	compile 'com.google.guava:guava:r09'
+
+	compile libs.reflections
+
 	testCompile libs.junit
 }
 

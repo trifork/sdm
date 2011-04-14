@@ -17,14 +17,20 @@
 
 package com.trifork.stamdata.replication.replication.views;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkArgument;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.persistence.Entity;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.reflections.Reflections;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 
 /**
@@ -64,5 +70,13 @@ public final class Views {
 
 		checkViewIntegrity(viewClass);
 		return viewClass.getAnnotation(ViewPath.class).value();
+	}
+
+	public static Set<Class<?>> findAllViews() {
+		Reflections reflector = new Reflections(new ConfigurationBuilder()
+			.setUrls(ClasspathHelper.getUrlForName(Views.class))
+			.setScanners(new TypeAnnotationsScanner()));
+
+		return reflector.getTypesAnnotatedWith(ViewPath.class);
 	}
 }
