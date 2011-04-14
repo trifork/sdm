@@ -17,39 +17,52 @@
 
 package com.trifork.stamdata.client;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.QName;
 import javax.xml.stream.EventFilter;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.XMLEvent;
 
+
 class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
+
+	private final static String ATOM_NS = "http://www.w3.org/2005/Atom";
+
 	private XMLEventReader reader;
 	private XMLEventReader filteredReader;
 	private Unmarshaller unmarshaller;
 	private final Class<T> entityType;
 	private final ReplicationReader replicationReader;
 
-	ReplicationIterator(Class<T> entityType, ReplicationReader replicationReader) throws XMLStreamException, IOException, JAXBException {
+	private QName viewQName;
+
+	ReplicationIterator(Class<T> entityType, ReplicationReader replicationReader) throws JAXBException {
+
 		this.entityType = entityType;
 		this.replicationReader = replicationReader;
 
 		// XML TO POJO UNMARSHALLING
 
 		JAXBContext ctx = JAXBContext.newInstance(entityType);
-		System.out.println("Entity type: " + entityType);
 		unmarshaller = ctx.createUnmarshaller();
-		System.out.println("Unmarshaller type: " + unmarshaller.getClass());
+
+		try {
+			viewQName = ctx.createJAXBIntrospector().getElementName(entityType.getConstructor().newInstance());
+		}
+		catch (Exception e) {
+			throw new RuntimeException("The view type could not be instantiated for replication.", e);
+		}
 	}
 
 	protected boolean hasMoreInCurrentPage() throws XMLStreamException {
+
 		return filteredReader != null && filteredReader.peek() != null;
 	}
 
@@ -87,67 +100,70 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	}
 
 	private void fetchNextPage() {
+
 		replicationReader.fetchNextPage();
 
 		try {
 			// READ THE RESPONSE
 			//
-			// To optimize the parsing we are only interested in 'start element'
-			// events that start with the prefix 'sd'.
+			// To optimize the parsing we are only interested in 'start
+			// elements'.
 
 			XMLInputFactory readerFactory = XMLInputFactory.newInstance();
 			reader = readerFactory.createXMLEventReader(replicationReader.getInputStream(), "UTF-8");
-			EventFilter filter = new EventFilter() {
+			filteredReader = readerFactory.createFilteredReader(reader, new EventFilter() {
+
 				@Override
 				public boolean accept(XMLEvent event) {
-					return event.isStartElement() && event.asStartElement().getName().getLocalPart().equals("entry");
+
+					return event.isStartElement();
 				}
-			};
-			filteredReader = readerFactory.createFilteredReader(reader, filter);
-		} catch (XMLStreamException e) {
+			});
+		}
+		catch (XMLStreamException e) {
 			throw new IllegalStateException("Could not fetch next page", e);
 		}
 	}
 
 	@Override
 	public EntityRevision<T> next() {
+
 		if (!hasNext()) throw new NoSuchElementException();
 
 		try {
-			filteredReader.next();
-			reader.nextTag();
-			String id = reader.getElementText();
-			skipTag("title");
-			skipTag("updated");
-			skipToEntity();
+			seek(ATOM_NS, "entry", true);
+			seek(ATOM_NS, "id", true);
+			String id = filteredReader.getElementText();
+
+			seek(viewQName.getNamespaceURI(), viewQName.getLocalPart(), false);
+
 			T entity = unmarshaller.unmarshal(reader, entityType).getValue();
 
 			return new EntityRevision<T>(id, entity);
 		}
-		catch (JAXBException e) {
-			throw new RecordStreamException(e);
-		}
-		catch (XMLStreamException e) {
+		catch (Exception e) {
 			throw new RecordStreamException(e);
 		}
 	}
 
-	private void skipTag(String tagName) throws XMLStreamException {
-		while ((reader.peek().isStartElement() && reader.peek().asStartElement().getName().getLocalPart().equals(tagName))
-			|| reader.peek().isEndElement()
-			|| reader.peek().isCharacters()) {
-			reader.nextEvent();
-		}
-	}
-	
-	private void skipToEntity() throws XMLStreamException {
-		while (!reader.peek().isStartElement() || !reader.peek().asStartElement().getName().getPrefix().equals("sd")) {
-			reader.nextEvent();
+	private void seek(String namespace, String name, boolean consumeEvent) throws XMLStreamException {
+
+		while (filteredReader.hasNext()) {
+
+			XMLEvent event = (consumeEvent) ? filteredReader.nextEvent() : filteredReader.peek();
+			QName qName = event.asStartElement().getName();
+
+			if (qName.getNamespaceURI().equals(namespace) && qName.getLocalPart().equals(name)) {
+				break;
+			}
+
+			if (!consumeEvent) filteredReader.nextEvent();
 		}
 	}
 
 	@Override
 	public void remove() {
+
 		throw new UnsupportedOperationException();
 	}
 }
