@@ -16,13 +16,14 @@ import java.util.Calendar;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.importer.cpr.CPRImporter;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 
-
+@Ignore("Incomplete DB Schema")
 public class CPRIntegrationTest {
 
 	@Before
