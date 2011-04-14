@@ -38,7 +38,7 @@ CREATE TABLE Client (
 	cvr CHAR(200) NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
-CREATE TABLE Client_Permissions (
+CREATE TABLE Client_permissions (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	client_id BIGINT NOT NULL,
 	permissions TEXT NOT NULL,
