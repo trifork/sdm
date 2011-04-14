@@ -63,7 +63,7 @@ public class Folkekirkeoplysninger extends View {
 	
 	@Override
 	public String toString() {
-		return "Folkekirkeoplysninger[cpr=" + cpr + ", forholdskode=" + forholdsKode + ", startdato=" + startdato + "]";
+		return "Folkekirkeoplysninger[cpr=" + cpr + ", forholdskode=" + forholdsKode + ", startdato=" + validFrom + "]";
 	}
 
 }
