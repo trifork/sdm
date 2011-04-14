@@ -20,6 +20,7 @@ import dk.trifork.sdm.importer.cpr.model.CPRDataset;
 import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
+import dk.trifork.sdm.importer.cpr.model.Haendelse;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
@@ -295,6 +296,16 @@ public class CPRParser {
 		result.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
 		result.setStartdato(parseDate(yyyy_MM_dd, line, 27, 37));
 		result.setSlettedato(parseDate(yyyy_MM_dd, line, 37, 47));
+		return result;
+	}
+
+	public static Haendelse haendelse(String line) throws Exception {
+		Haendelse result = new Haendelse();
+		result.setCpr(cut(line, 3, 13));
+		result.setAjourfoeringsdato(parseDate(yyyyMMddHHmm, line, 13, 25));
+		result.setHaendelseskode(cut(line, 25, 28));
+		result.setAfledtMarkering(cut(line, 28, 30));
+		result.setNoeglekonstant(cut(line, 30, 45));
 		return result;
 	}
 

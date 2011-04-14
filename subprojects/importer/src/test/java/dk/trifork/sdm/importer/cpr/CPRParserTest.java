@@ -15,6 +15,7 @@ import dk.trifork.sdm.importer.cpr.model.Foedselsregistreringsoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
 import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
+import dk.trifork.sdm.importer.cpr.model.Haendelse;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold.Kommunalforholdstype;
@@ -283,5 +284,18 @@ public class CPRParserTest {
 		assertEquals(yyyy_MM_dd.parse("1999-03-10"), record.getValgretsdato());
 		assertEquals(yyyy_MM_dd.parse("1999-02-01"), record.getStartdato());
 		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getSlettedato());
+	}
+	
+	@Test
+	public void canParseRecord99_Haendelser() throws Exception {
+		String line = "0993012995007200111061637A05";
+		
+		Haendelse record = CPRParser.haendelse(line);
+		
+		assertEquals("3012995007", record.getCpr());
+		assertEquals(yyyyMMddHHmm.parse("200111061637"), record.getAjourfoeringsdato());
+		assertEquals("A05", record.getHaendelseskode());
+		assertEquals("", record.getAfledtMarkering());
+		assertEquals("", record.getNoeglekonstant());
 	}
 }
