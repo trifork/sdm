@@ -17,6 +17,8 @@
 
 package com.trifork.stamdata.replication.replication.views;
 
+import static com.trifork.stamdata.Namespace.STAMDATA_3_0;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -24,10 +26,12 @@ import javax.xml.bind.annotation.XmlAccessOrder;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlType;
 
 import com.trifork.stamdata.HistoryOffset;
 
 
+@XmlType(namespace=STAMDATA_3_0 + "/common")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
 public abstract class View {

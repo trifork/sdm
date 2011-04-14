@@ -1,40 +1,49 @@
 import java.io.File;
 import java.io.IOException;
 
-import javax.persistence.Entity;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
+import com.trifork.stamdata.replication.replication.views.Views;
 
-import com.trifork.stamdata.replication.replication.views.View;
-
-
+/**
+ * App that generates XSD schemas for the views.
+ *
+ * @author Thomas Børlum (thb@trifork.com)
+ */
 public class SchemaGenerator {
 
 	public static void main(String[] args) throws JAXBException, IOException {
 
-		final File baseDir = new File(".");
+		if (args.length != 1) {
+			printUsage();
+			return;
+		}
+
+		final File destinationDir = new File(args[0]);
+		destinationDir.mkdirs();
 
 		class MySchemaOutputResolver extends SchemaOutputResolver {
 
 			public Result createOutput(String namespaceUri, String suggestedFileName) throws IOException {
-				return new StreamResult(new File(baseDir, suggestedFileName));
+
+				String name = namespaceUri.substring(namespaceUri.lastIndexOf("/") + 1) + ".xsd";
+
+				return new StreamResult(new File(destinationDir, name));
 			}
 		}
 
-		String MODEL_PACKAGE = View.class.getPackage().getName();
-		Reflections reflector = new Reflections(new ConfigurationBuilder().filterInputsBy(new FilterBuilder.Include(FilterBuilder.prefix(MODEL_PACKAGE))).setUrls(ClasspathHelper.getUrlsForClassloader()).setScanners(new TypeAnnotationsScanner()));
-		Class<?>[] classes = reflector.getTypesAnnotatedWith(Entity.class).toArray(new Class[0]);
+		Class<?>[] views = Views.findAllViews().toArray(new Class[0]);
 
-		JAXBContext context = JAXBContext.newInstance(classes);
+		JAXBContext context = JAXBContext.newInstance(views);
 		context.generateSchema(new MySchemaOutputResolver());
+	}
+
+	private static void printUsage() {
+		System.out.println("Program usage:");
+		System.out.println("<destination directory>");
 	}
 }

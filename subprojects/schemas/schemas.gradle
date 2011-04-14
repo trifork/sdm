@@ -1,5 +1,5 @@
 dependencies {
-	compile project(':replication')
-	compile libs.reflections
+	compile project(':shared')
 	compile libs.commons_io
+	runtime libs.jaxb
 }
