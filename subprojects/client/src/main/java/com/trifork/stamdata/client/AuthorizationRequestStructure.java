@@ -17,7 +17,8 @@
 
 package com.trifork.stamdata.client;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;

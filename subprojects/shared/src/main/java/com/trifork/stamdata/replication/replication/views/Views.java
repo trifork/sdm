@@ -31,6 +31,8 @@ import org.reflections.Reflections;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
+import org.reflections.vfs.JBoss6UrlType;
+import org.reflections.vfs.Vfs;
 
 
 /**
@@ -73,6 +75,9 @@ public final class Views {
 	}
 
 	public static Set<Class<?>> findAllViews() {
+
+		Vfs.addDefaultURLTypes(new JBoss6UrlType());
+
 		Reflections reflector = new Reflections(new ConfigurationBuilder()
 			.setUrls(ClasspathHelper.getUrlForName(Views.class))
 			.setScanners(new TypeAnnotationsScanner()));
