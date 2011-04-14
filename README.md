@@ -5,6 +5,12 @@ This project uses Gradle as build-system. It is a good idea to become familiar
 with Gradle, and the [Gradle Userguide](http://gradle.org/documentation.html)
 is a very good reference.
 
+There are two ways of using Gradle to build the project. You can either
+install it on your computer, ot you can use the wrapper script 'gradlew' that
+can be found in the root of the source directory.
+
+For the rest of this document we assume you are using the wrapper.
+
 User Guide
 ----------
 
@@ -22,20 +28,20 @@ get everything up and running.
 
 *   Check that everything is working:
 
-        % gradle test
+        % ./gradlew test
     
     This will run all the tests in all the sub-projects. The tests include
     some integration tests and can take some time to complete.
     
     You can also run each tests in each sub-project individually, e.g.
     
-        % gradle importer:test
+        % ./gradlew importer:test
     
     will run all the tests in the importer project. 
 
 *   Generate an eclipse project:
     
-        % gradle eclipse
+        % ./gradlew eclipse
     
     This will generate 1 eclipse project for each of the sub-projects (found in 
     the subprojects directory) and an additional project for the root.
@@ -50,7 +56,7 @@ get everything up and running.
 
     You can run the application directly from command line:
     
-        % gradle importer:jettyRun
+        % ./gradlew importer:jettyRun
     
     The downside to this is that it will only run one sub-project at a time.
 
@@ -190,7 +196,3 @@ commit, issue the following command:
 
     git update-index --assume-unchanged subprojects/importer/src/main/resources/config.properties subprojects/replication/src/main/resources/config.properties subprojects/replication/src/main/resources/hibernate.cfg.xml
 
-Requirements
-------------
-
-This build setup is made for Gradle 1.0-milestone-1+.

@@ -69,3 +69,12 @@ buildscript {
 		classpath 'com.trifork:gradle-plugins:0.1.0'
 	}
 }
+
+// Gradle is a new tool, and as such you can't expect people
+// outside your circle of influence to have it installed.
+// This task is executed (by the build master) to produce
+// an embedded version of gradle to check-in to our SCM.
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.0-milestone-2'
+}
