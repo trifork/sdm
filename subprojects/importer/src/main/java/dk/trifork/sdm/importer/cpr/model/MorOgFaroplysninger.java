@@ -26,6 +26,7 @@ public class MorOgFaroplysninger extends CPREntity {
 	String navnmarkering;
 
 	@Id
+	@Output
 	public String getId() {
 		return cpr + "-" + foraeldertype.getCode();
 	}
