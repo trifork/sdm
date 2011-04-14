@@ -45,6 +45,8 @@ subprojects { subproject ->
 	checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
 	checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
 	
+	[checkstyleMain, checkstyleTest]*.ignoreFailures = true
+
 	// Add some extra memory for testing, this is usually useful.
 	test {
 		maxHeapSize = "1024m"
