@@ -1,6 +1,6 @@
 package dk.trifork.sdm.importer.cpr.model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
@@ -27,7 +27,7 @@ public class Folkekirkeoplysninger extends CPREntity{
 	}
 
 	Folkekirkeforhold forhold;
-	Date startdato;
+	Calendar validFrom;
 	String startdatomarkering;
 
 	@Id
@@ -49,13 +49,12 @@ public class Folkekirkeoplysninger extends CPREntity{
 		forhold = Folkekirkeforhold.fromCode(forholdskode);
 	}
 
-	@Output
-	public Date getStartdato() {
-		return startdato;
+	public Calendar getValidFrom() {
+		return validFrom;
 	}
 
-	public void setStartdato(Date startdato) {
-		this.startdato = startdato;
+	public void setValidFrom(Calendar validFrom) {
+		this.validFrom = validFrom;
 	}
 
 	public String getStartdatomarkering() {

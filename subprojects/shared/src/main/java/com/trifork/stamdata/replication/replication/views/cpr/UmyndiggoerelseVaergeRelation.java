@@ -26,6 +26,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,8 +45,10 @@ public class UmyndiggoerelseVaergeRelation extends View {
 	private BigInteger recordID;
 
 	@Column(name = "Id")
+	@XmlElement(required = true)
 	protected String id;
 
+	@XmlElement(required = true)
 	@Column(name = "CPR")
 	protected String cpr;
 

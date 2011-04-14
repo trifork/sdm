@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -33,9 +33,10 @@ public class Civilstand extends View {
 	@Column(name = "CivilstandPID")
 	private BigInteger recordID;
 
-	@XmlAttribute(required = true)
+	@XmlElement(required = true)
 	protected String cpr;
-	@XmlAttribute(required = true)
+
+	@XmlElement(required = true)
 	protected String civilstandskode;
 
 	protected String aegtefaellePersonnummer;
@@ -43,7 +44,6 @@ public class Civilstand extends View {
 	protected Date aegtefaelleFoedselsdato;
 
 	protected String aegtefaellenavn;
-	protected Date startdato;
 	protected Date separation;
 
 	@XmlTransient

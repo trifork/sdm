@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class DateUtils {
 	public static final Calendar FUTURE = toCalendar(2999,12,31);
+	public static final Calendar PAST = toCalendar(999, 12, 31);
 	private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 	
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");

@@ -28,6 +28,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -47,6 +48,7 @@ public class Person extends View {
 	private BigInteger recordID;
 
 	@Column(name = "CPR")
+	@XmlElement(required = true)
 	protected String cpr;
 
 	@Column(name = "Koen")
@@ -117,6 +119,7 @@ public class Person extends View {
 
 	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
+	@XmlElement(required = true)
 	protected Date validFrom;
 
 	@Column(name = "ValidTo")

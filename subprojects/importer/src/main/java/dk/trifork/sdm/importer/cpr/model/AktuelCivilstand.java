@@ -1,9 +1,11 @@
 package dk.trifork.sdm.importer.cpr.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
+import dk.trifork.sdm.util.DateUtils;
 
 public class AktuelCivilstand extends CPREntity {
 	public enum Civilstand {
@@ -33,7 +35,7 @@ public class AktuelCivilstand extends CPREntity {
 	private String aegtefaellefoedselsdatomarkering;
 	private String aegtefaellenavn;
 	private String aegtefaellenavnmarkering;
-	private Date startdato;
+	private Calendar validFrom;
 	private String startdatomarkering;
 	private Date separation;
 
@@ -103,13 +105,18 @@ public class AktuelCivilstand extends CPREntity {
 		return aegtefaellenavnmarkering;
 	}
 
-	public void setStartdato(Date startdato) {
-		this.startdato = startdato;
+
+	public Calendar getValidFrom() {
+		return validFrom;
 	}
 
-	@Output
-	public Date getStartdato() {
-		return startdato;
+	public void setValidFrom(Calendar validFrom) {
+		if(validFrom == null) {
+			this.validFrom = DateUtils.PAST;
+		}
+		else {
+			this.validFrom = validFrom;
+		}
 	}
 
 	public void setStartdatomarkering(String startdatomarkering) {

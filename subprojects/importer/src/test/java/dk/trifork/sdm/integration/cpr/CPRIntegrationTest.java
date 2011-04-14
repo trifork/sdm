@@ -276,7 +276,7 @@ public class CPRIntegrationTest {
 		assertEquals("0901414084", rs.getString("Aegtefaellepersonnummer"));
 		assertNull(rs.getDate("Aegtefaellefoedselsdato"));
 		assertEquals("", rs.getString("Aegtefaellenavn"));
-		assertEquals(yyyy_MM_dd.parse("1961-03-13"), rs.getDate("Startdato"));
+		assertEquals(yyyy_MM_dd.parse("1961-03-13"), rs.getDate("validFrom"));
 		assertNull(rs.getDate("Separation"));
 		assertTrue(rs.last());
 		stmt.close();
@@ -316,8 +316,8 @@ public class CPRIntegrationTest {
 		assertEquals("0708614335", rs.getString("CPR"));
 		assertEquals("1", rs.getString("Valgkode"));
 		assertEquals(yyyy_MM_dd.parse("1999-03-10"), rs.getDate("Valgretsdato"));
-		assertEquals(yyyy_MM_dd.parse("1999-02-01"), rs.getDate("Startdato"));
-		assertEquals(yyyy_MM_dd.parse("2001-03-10"), rs.getDate("Slettedato"));
+		assertEquals(yyyy_MM_dd.parse("1999-02-01"), rs.getDate("validFrom"));
+		assertEquals(yyyy_MM_dd.parse("2001-03-10"), rs.getDate("validTo"));
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();

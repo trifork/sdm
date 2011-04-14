@@ -243,7 +243,7 @@ public class CPRParser {
 		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
 		result.setCpr(cut(line,3, 13));
 		result.setForholdskode(cut(line, 13, 14));
-		result.setStartdato(parseDate(yyyy_MM_dd, line, 14, 24));
+		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 14, 24));
 		result.setStartdatomarkering(cut(line, 24, 25));
 		return result;
 	}
@@ -257,7 +257,7 @@ public class CPRParser {
 		result.setAegtefaellefoedselsdatomarkering(cut(line, 34, 35));
 		result.setAegtefaellenavn(cut(line, 35, 69).trim());
 		result.setAegtefaellenavnmarkering(cut(line, 69, 70));
-		result.setStartdato(parseDate(yyyyMMddHHmm, line, 70, 82));
+		result.setValidFrom(parseCalendar(yyyyMMddHHmm, line, 70, 82));
 		result.setStartdatomarkering(cut(line, 82, 83));
 		result.setSeparation(parseDate(yyyyMMddHHmm, line, 83, 95));
 		return result;
@@ -310,8 +310,8 @@ public class CPRParser {
 		result.setCpr(cut(line, 3, 13));
 		result.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
 		result.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
-		result.setStartdato(parseDate(yyyy_MM_dd, line, 27, 37));
-		result.setSlettedato(parseDate(yyyy_MM_dd, line, 37, 47));
+		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 27, 37));
+		result.setValidTo(parseCalendar(yyyy_MM_dd, line, 37, 47));
 		return result;
 	}
 
@@ -388,6 +388,16 @@ public class CPRParser {
 			throw new FileParseException("Der opstod en fejl under parsning af heltal i linien: [" + line
 					+ "], på positionen from: " + from + ", to: " + to, se);
 		}
+	}
+
+	private static Calendar parseCalendar(DateFormat format, String line, int from, int to) throws ParseException {
+		Date date = parseDate(format, line, from, to);
+		if(date == null) {
+			return null;
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar;
 	}
 
 	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException {

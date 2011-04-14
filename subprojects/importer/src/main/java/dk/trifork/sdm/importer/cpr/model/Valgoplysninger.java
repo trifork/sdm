@@ -1,15 +1,17 @@
 package dk.trifork.sdm.importer.cpr.model;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
+import dk.trifork.sdm.util.DateUtils;
 
 public class Valgoplysninger extends CPREntity {
 	private Valgret valgret;
 	private Date valgretsdato;
-	private Date startdato;
-	private Date slettedato;
+	private Calendar validFrom;
+	private Calendar validTo;
 
 	public enum Valgret {
 		ukendt(""), almindeligValgret("1"), diplomatDerStemmerIKøbenhavn("2"), diplomatOptagetPaaValglisteITidligereBopaelskommune("3"),
@@ -64,21 +66,28 @@ public class Valgoplysninger extends CPREntity {
 		this.valgretsdato = valgretsdato;
 	}
 
-	@Output
-	public Date getStartdato() {
-		return startdato;
+	@Override
+	public Calendar getValidFrom() {
+		return validFrom;
 	}
 
-	public void setStartdato(Date startdato) {
-		this.startdato = startdato;
+	public void setValidFrom(Calendar validFrom) {
+		this.validFrom = validFrom;
 	}
 
-	@Output
-	public Date getSlettedato() {
-		return slettedato;
+	@Override
+	public Calendar getValidTo() {
+		return validTo;
 	}
 
-	public void setSlettedato(Date slettedato) {
-		this.slettedato = slettedato;
+	public void setValidTo(Calendar validTo) {
+		if(validTo == null) {
+			this.validTo = DateUtils.FUTURE;
+		}
+		else {
+			this.validTo = validTo;
+		}
 	}
+
+
 }

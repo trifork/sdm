@@ -235,7 +235,7 @@ public class CPRParserTest {
 		assertEquals("0709614126", record.getCpr());
 		assertEquals(Folkekirkeforhold.medlemAfFolkekirken, record.getForhold());
 		assertEquals("F", record.getForholdskode());
-		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getStartdato());
+		assertEquals(yyyy_MM_dd.parse("2008-02-28"), record.getValidFrom().getTime());
 		assertEquals("*", record.getStartdatomarkering());
 	}
 
@@ -253,7 +253,7 @@ public class CPRParserTest {
 		assertEquals(" ", record.getAegtefaellefoedselsdatomarkering());
 		assertEquals("", record.getAegtefaellenavn());
 		assertEquals(" ", record.getAegtefaellenavnmarkering());
-		assertEquals(yyyyMMddHHmm.parse("196103132000"), record.getStartdato());
+		assertEquals(yyyyMMddHHmm.parse("196103132000"), record.getValidFrom().getTime());
 		assertEquals("", record.getStartdatomarkering());
 		assertNull(record.getSeparation());
 	}
@@ -315,8 +315,8 @@ public class CPRParserTest {
 		assertEquals(Valgret.almindeligValgret, record.getValgret());
 		assertEquals("1", record.getValgkode());
 		assertEquals(yyyy_MM_dd.parse("1999-03-10"), record.getValgretsdato());
-		assertEquals(yyyy_MM_dd.parse("1999-02-01"), record.getStartdato());
-		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getSlettedato());
+		assertEquals(yyyy_MM_dd.parse("1999-02-01"), record.getValidFrom().getTime());
+		assertEquals(yyyy_MM_dd.parse("2001-03-10"), record.getValidTo().getTime());
 	}
 	
 	@Test

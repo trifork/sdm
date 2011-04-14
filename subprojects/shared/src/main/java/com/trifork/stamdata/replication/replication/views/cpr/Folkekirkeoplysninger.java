@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -30,12 +31,10 @@ public class Folkekirkeoplysninger extends View {
 	@Column(name = "FolkekirkeoplysningerPID")
 	private BigInteger recordID;
 
+	@XmlElement(required = true)
 	protected String cpr;
 
 	protected String forholdsKode;
-	@Temporal(TIMESTAMP)
-	protected Date startdato;
-
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)

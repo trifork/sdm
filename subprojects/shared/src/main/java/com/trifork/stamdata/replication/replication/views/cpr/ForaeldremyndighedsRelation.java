@@ -27,6 +27,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,9 +47,11 @@ public class ForaeldremyndighedsRelation extends View {
 	@Column(name = "ForaeldreMyndighedRelationPID")
 	protected BigInteger recordID;
 
+	@XmlElement(required = true)
 	@Column(name = "Id")
 	protected String id;
 
+	@XmlElement(required = true)
 	@Column(name = "CPR")
 	protected String cpr;
 
