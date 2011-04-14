@@ -29,6 +29,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.slf4j.Logger;
 
@@ -36,16 +37,30 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+/**
+ * Wraps requests in a database transaction.
+ *
+ * Responsibilities:
+ *
+ * <ol>
+ * 	<li>Handle transactions.
+ *  <li>Close hibernate sessions as needed.
+ * </ol>
+ *
+ * @author Thomas Børlum (thb@trifork.com)
+ */
 @Singleton
 public class PersistenceFilter implements Filter {
 
 	private static final Logger logger = getLogger(PersistenceFilter.class);
 	private final Provider<Session> sessions;
+	private final Provider<StatelessSession> statelessSessions;
 
 	@Inject
-	PersistenceFilter(Provider<Session> sessions) {
+	PersistenceFilter(Provider<Session> sessions, Provider<StatelessSession> statelessSessions) {
 
 		this.sessions = sessions;
+		this.statelessSessions = statelessSessions;
 	}
 
 	@Override
@@ -69,6 +84,14 @@ public class PersistenceFilter implements Filter {
 		}
 		finally {			
 			sessions.get().close();
+
+			// TODO: This next call will actually open
+			// a new session if one has not been created.
+			// This does not impact performance much since
+			// state-less sessions are only not opened for
+			// requests to the administration GUI.
+
+			statelessSessions.get().close();
 		}
 	}
 

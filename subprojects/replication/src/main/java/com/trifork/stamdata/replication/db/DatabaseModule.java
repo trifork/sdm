@@ -28,6 +28,7 @@ import org.hibernate.cfg.Configuration;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Provides;
+import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.replication.gui.models.Client;
@@ -59,7 +60,6 @@ public class DatabaseModule extends ServletModule {
 
 		// DISCOVER ALL ENTITY CLASSES
 
-
 		Set<Class<?>> classes = Sets.newHashSet();
 		classes.addAll(Views.findAllViews());
 		classes.add(User.class);
@@ -78,11 +78,20 @@ public class DatabaseModule extends ServletModule {
 
 			config.setProperty("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
 			config.setProperty("hibernate.connection.characterEncoding", "utf8");
+			config.setProperty("hibernate.connection.useCursorFetch", "true");
+			config.setProperty("hibernate.connection.useServerPrepStmts", "true");
+			config.setProperty("hibernate.connection.defaultFetchSize", "1000");
 
 			config.setProperty("hibernate.c3p0.min_size", "5");
-			config.setProperty("hibernate.c3p0.max_size", "20");
+			config.setProperty("hibernate.c3p0.max_size", "200");
 			config.setProperty("hibernate.c3p0.timeout", "300");
 			config.setProperty("hibernate.c3p0.max_statements", "50");
+			
+			// The following two properties can be used to debug c3p0's connections.
+			// They are commented out since they are quite expensive.
+			
+			// config.setProperty("hibernate.c3p0.unreturnedConnectionTimeout", "120");
+			// config.setProperty("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
 
 			config.setProperty("hibernate.current_session_context_class", "thread");
 			config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
@@ -107,6 +116,7 @@ public class DatabaseModule extends ServletModule {
 	}
 
 	@Provides
+	@RequestScoped
 	protected StatelessSession provideStatelessSession() {
 
 		// Hibernate provides a command-oriented API that can be used for

@@ -139,6 +139,8 @@ public class RegistryServlet extends HttpServlet {
 		response.flushBuffer();
 
 		writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
+
+		records.close();
 	}
 
 	protected String getPath(HttpServletRequest request) {
