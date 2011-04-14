@@ -2,8 +2,7 @@ package dk.trifork.sdm.importer.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -292,6 +291,7 @@ public class CPRParserTest {
 		
 		Haendelse record = CPRParser.haendelse(line);
 		
+		assertNotNull(record.getUuid());
 		assertEquals("3012995007", record.getCpr());
 		assertEquals(yyyyMMddHHmm.parse("200111061637"), record.getAjourfoeringsdato());
 		assertEquals("A05", record.getHaendelseskode());

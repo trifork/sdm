@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
@@ -99,6 +100,9 @@ public class CPRParser {
 						break;
 					case 20:
 						cpr.addEntity(valgoplysninger(line));
+						break;
+					case 99:
+						cpr.addEntity(haendelse(line));
 						break;
 					case 999:
 						break;
@@ -299,8 +303,9 @@ public class CPRParser {
 		return result;
 	}
 
-	public static Haendelse haendelse(String line) throws Exception {
+	public static Haendelse haendelse(String line) throws ParseException {
 		Haendelse result = new Haendelse();
+		result.setUuid(UUID.randomUUID().toString());
 		result.setCpr(cut(line, 3, 13));
 		result.setAjourfoeringsdato(parseDate(yyyyMMddHHmm, line, 13, 25));
 		result.setHaendelseskode(cut(line, 25, 28));

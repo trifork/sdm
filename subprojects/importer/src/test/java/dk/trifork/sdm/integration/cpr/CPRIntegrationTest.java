@@ -317,6 +317,26 @@ public class CPRIntegrationTest {
 		stmt.close();
 		con.close();
 	}
+	
+	@Test
+	public void kanImportereHaendelser() throws Exception {
+		File file = getFile("data/cpr/haendelse/D100314.L431101");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from Haendelse where CPR='0905414143'");
+		rs.next();
+		assertEquals("0905414143", rs.getString("CPR"));
+		assertEquals(yyyy_MM_dd.parse("2001-11-15"), rs.getDate("Ajourfoeringsdato"));
+		assertEquals("P10", rs.getString("Haendelseskode"));
+		assertEquals("", rs.getString("AfledtMarkering"));
+		assertEquals("", rs.getString("Noeglekonstant"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
 
 	@Test
 	public void ImportU12160Test() throws Exception {

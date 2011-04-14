@@ -1130,3 +1130,20 @@ CREATE TABLE AktuelCivilstand (
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE Haendelse (
+	HaendelsePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	Uuid VARCHAR(100) NOT NULL,
+	CPR VARCHAR(10) NOT NULL,
+	Ajourfoeringsdato DATETIME,
+	Haendelseskode VARCHAR(3),
+	AfledtMarkering VARCHAR(2),
+	Noeglekonstant VARCHAR(15),
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;

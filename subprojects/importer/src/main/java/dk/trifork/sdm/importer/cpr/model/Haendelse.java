@@ -2,13 +2,30 @@ package dk.trifork.sdm.importer.cpr.model;
 
 import java.util.Date;
 
+import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
 
 public class Haendelse extends CPREntity {
+	String uuid;
 	Date ajourfoeringsdato;
 	String haendelseskode;
 	String afledtMarkering;
 	String noeglekonstant;
+
+	@Id
+	@Output
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	
+	@Output
+	public String getCpr() {
+		return cpr;
+	}
 	
 	@Output
 	public Date getAjourfoeringsdato() {
