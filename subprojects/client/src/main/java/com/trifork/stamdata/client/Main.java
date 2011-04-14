@@ -2,9 +2,7 @@ package com.trifork.stamdata.client;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import com.trifork.stamdata.replication.replication.views.Views;
 import com.trifork.stamdata.replication.replication.views.cpr.BarnRelation;
 import com.trifork.stamdata.replication.replication.views.cpr.Civilstand;
 import com.trifork.stamdata.replication.replication.views.cpr.Foedselsregistreringsoplysninger;
@@ -37,7 +35,7 @@ public class Main {
 	}};
 	
 	public static void main(String... args) throws Exception {
-		String serverAndPort = ask("Server and port", "http://localhost:8080");
+		String serverAndPort = ask("Server and port", "http://localhost:8080/replication");
 		boolean security = ask("Security enabled?", "n").toLowerCase().equals("y");
 
 		for (int i=0; i<views.size(); i++) {
@@ -49,7 +47,7 @@ public class Main {
 		
 		String startTag = ask("Start-tag", "");
 		
-		RegistryClient client = new RegistryClient(serverAndPort + "/replication/stamdata/", security);
+		RegistryClient client = new RegistryClient(serverAndPort + "/stamdata/", security);
 		fetch(client, selectedView, startTag);
 	}
 
