@@ -18,6 +18,8 @@ import dk.trifork.sdm.importer.cpr.model.Haendelse;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold.Kommunalforholdstype;
+import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
+import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
@@ -254,6 +256,38 @@ public class CPRParserTest {
 		assertEquals(yyyyMMddHHmm.parse("196103132000"), record.getStartdato());
 		assertEquals("", record.getStartdatomarkering());
 		assertNull(record.getSeparation());
+	}
+
+	@Test
+	public void canParseRecord15_Moroplysninger() throws Exception {
+		String line = "01509054141431941-05-09*0000000000           Hanne                              1941-05-09*0000000000";
+
+		MorOgFaroplysninger record = CPRParser.moroplysninger(line);
+
+		assertEquals("0905414143", record.getCpr());
+		assertEquals(Foraeldertype.mor, record.getForaeldertype());
+		assertEquals("M", record.getForaelderkode());
+		assertEquals(yyyy_MM_dd.parse("1941-05-09"), record.getDato());
+		assertEquals("*", record.getDatousikkerhedsmarkering());
+		assertEquals("0000000000", record.getForaeldercpr());
+		assertFalse(record.hasCpr());
+		assertEquals("Hanne", record.getNavn());
+	}
+
+	@Test
+	public void canParseRecord15_Faroplysninger() throws Exception {
+		String line = "01509054141431941-05-09*0000000000           Hanne                              1941-05-10*1234567890           Jens";
+
+		MorOgFaroplysninger record = CPRParser.faroplysninger(line);
+
+		assertEquals("0905414143", record.getCpr());
+		assertEquals(Foraeldertype.far, record.getForaeldertype());
+		assertEquals("F", record.getForaelderkode());
+		assertEquals(yyyy_MM_dd.parse("1941-05-10"), record.getDato());
+		assertEquals("*", record.getDatousikkerhedsmarkering());
+		assertEquals("1234567890", record.getForaeldercpr());
+		assertTrue(record.hasCpr());
+		assertEquals("Jens", record.getNavn());
 	}
 
 	@Test

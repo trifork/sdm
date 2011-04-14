@@ -41,6 +41,12 @@ public class CPRNameAndAddressProtectionTest {
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
+		statement.execute("truncate table MorOgFaroplysninger");
+		statement.execute("truncate table Udrejseoplysninger");
+		statement.execute("truncate table Statsborgerskab");
+		statement.execute("truncate table Foedselsregistreringsoplysninger");
+		statement.execute("truncate table KommunaleForhold");
+		statement.execute("truncate table AktuelCivilstand");
 
 		con.setCatalog(MySQLConnectionManager.getHousekeepingDBName());
 		statement.execute("truncate table AdresseBeskyttelse");

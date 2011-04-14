@@ -24,6 +24,8 @@ import dk.trifork.sdm.importer.cpr.model.ForaeldreMyndighedRelation;
 import dk.trifork.sdm.importer.cpr.model.Haendelse;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
+import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger;
+import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;
@@ -88,6 +90,16 @@ public class CPRParser {
 						break;
 					case 14:
 						cpr.addEntity(barnRelation(line));
+						break;
+					case 15:
+						MorOgFaroplysninger moroplysninger = moroplysninger(line);
+						MorOgFaroplysninger faroplysninger = faroplysninger(line);
+						if (!moroplysninger.hasCpr()) {
+							cpr.addEntity(moroplysninger);
+						}
+						if (!faroplysninger.hasCpr()) {
+							cpr.addEntity(faroplysninger);
+						}
 						break;
 					case 16:
 						cpr.addEntity(foraeldreMyndighedRelation(line));
@@ -311,6 +323,34 @@ public class CPRParser {
 		result.setHaendelseskode(cut(line, 25, 28));
 		result.setAfledtMarkering(cut(line, 28, 30));
 		result.setNoeglekonstant(cut(line, 30, 45));
+		return result;
+	}
+
+	public static MorOgFaroplysninger moroplysninger(String line) throws ParseException {
+		MorOgFaroplysninger result = new MorOgFaroplysninger();
+		result.setForaeldertype(Foraeldertype.mor);
+		result.setCpr(cut(line, 3, 13));
+		result.setDato(parseDate(yyyy_MM_dd, line, 13, 23));
+		result.setDatousikkerhedsmarkering(cut(line, 23, 24));
+		result.setForaeldercpr(cut(line, 24, 34));
+		result.setFoedselsdato(parseDate(yyyy_MM_dd, line, 34, 44));
+		result.setFoedselsdatousikkerhedsmarkering(cut(line, 44, 45));
+		result.setNavn(cut(line, 45, 79).trim());
+		result.setNavnmarkering(cut(line, 79, 80));
+		return result;
+	}
+
+	public static MorOgFaroplysninger faroplysninger(String line) throws ParseException {
+		MorOgFaroplysninger result = new MorOgFaroplysninger();
+		result.setForaeldertype(Foraeldertype.far);
+		result.setCpr(cut(line, 3, 13));
+		result.setDato(parseDate(yyyy_MM_dd, line, 80, 90));
+		result.setDatousikkerhedsmarkering(cut(line, 90, 91));
+		result.setForaeldercpr(cut(line, 91, 101));
+		result.setFoedselsdato(parseDate(yyyy_MM_dd, line, 101, 111));
+		result.setFoedselsdatousikkerhedsmarkering(cut(line, 111, 112));
+		result.setNavn(cut(line, 112, 146).trim());
+		result.setNavnmarkering(cut(line, 146, 147));
 		return result;
 	}
 

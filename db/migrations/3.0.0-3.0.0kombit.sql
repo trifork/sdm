@@ -115,7 +115,7 @@ CREATE TABLE AktuelCivilstand (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
+	CONSTRAINT AktuelCivilstand_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Haendelse (
@@ -133,4 +133,21 @@ CREATE TABLE Haendelse (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE MorOgFaroplysninger (
+	MorOgFarPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	CPR VARCHAR(10) NOT NULL,
+	Foraelderkode VARCHAR(1) NOT NULL,
+	Dato DATETIME,
+	Foedselsdato DATETIME,
+	Navn VARCHAR(34) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;

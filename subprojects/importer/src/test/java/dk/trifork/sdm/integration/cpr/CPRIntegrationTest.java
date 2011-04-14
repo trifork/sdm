@@ -1,7 +1,6 @@
 package dk.trifork.sdm.integration.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -37,6 +36,12 @@ public class CPRIntegrationTest {
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
+		statement.execute("truncate table MorOgFaroplysninger");
+		statement.execute("truncate table Udrejseoplysninger");
+		statement.execute("truncate table Statsborgerskab");
+		statement.execute("truncate table Foedselsregistreringsoplysninger");
+		statement.execute("truncate table KommunaleForhold");
+		statement.execute("truncate table AktuelCivilstand");
 		statement.execute("truncate table " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		statement.close();
 		con.close();
@@ -334,6 +339,47 @@ public class CPRIntegrationTest {
 		assertEquals("", rs.getString("AfledtMarkering"));
 		assertEquals("", rs.getString("Noeglekonstant"));
 		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
+
+	@Test
+	public void kanImportereMorOgFaroplysningerNaarForaeldresCprnummerMangler() throws Exception {
+		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from MorOgFaroplysninger where CPR='0905414143' order by Foraelderkode");
+		rs.next();
+		assertEquals("0905414143", rs.getString("CPR"));
+		assertEquals("F", rs.getString("Foraelderkode"));
+		assertEquals(yyyy_MM_dd.parse("1941-05-09"), rs.getDate("Dato"));
+		assertEquals(yyyy_MM_dd.parse("1970-09-05"), rs.getDate("Foedselsdato"));
+		assertEquals("Far Jens", rs.getString("Navn"));
+		rs.next();
+		assertEquals("0905414143", rs.getString("CPR"));
+		assertEquals("M", rs.getString("Foraelderkode"));
+		assertEquals(yyyy_MM_dd.parse("1941-05-09"), rs.getDate("Dato"));
+		assertEquals(yyyy_MM_dd.parse("1972-10-12"), rs.getDate("Foedselsdato"));
+		assertEquals("Mor Hanne", rs.getString("Navn"));
+		assertTrue(rs.last());
+		stmt.close();
+		con.close();
+	}
+
+	@Test
+	public void ignorererMorOgFaroplysningerNaarForaeldresCprErUdfyldt() throws Exception {
+		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
+
+		new CPRImporter().run(Arrays.asList(file));
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select count(*) c from MorOgFaroplysninger where CPR='0905414143'");
+		rs.next();
+		assertEquals(0, rs.getInt("c"));
 		stmt.close();
 		con.close();
 	}
