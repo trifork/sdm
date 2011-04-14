@@ -4,6 +4,7 @@ buildscript {
   }
   dependencies {
     classpath 'com.smokejumperit:gradle-plugins:0.7.1'
+	classpath libs.jaxb
   }
 }
 
@@ -12,11 +13,12 @@ apply plugin:com.smokejumperit.gradle.OneJarPlugin
 
 dependencies {
 	
-	compile project(":replication")
+	compile project(":shared")
 	
 	// Commons
 	
 	testCompile libs.commons_lang
+	compile libs.commons_io
 	
 	// STS
 	

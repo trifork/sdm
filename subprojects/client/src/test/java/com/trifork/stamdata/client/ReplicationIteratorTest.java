@@ -1,9 +1,7 @@
 package com.trifork.stamdata.client;
 
-import java.io.FileInputStream;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -15,7 +13,6 @@ import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-@Ignore("Some weird gradle problem")
 public class ReplicationIteratorTest {
 	@Mock ReplicationReader reader;
 	ReplicationIterator<Person> iterator;

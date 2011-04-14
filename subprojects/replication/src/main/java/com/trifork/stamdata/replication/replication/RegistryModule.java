@@ -33,8 +33,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.ApplicationContextListener;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
-import com.trifork.stamdata.replication.replication.annotations.ViewPath;
 import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.replication.replication.views.ViewPath;
 
 
 public class RegistryModule extends ServletModule {
