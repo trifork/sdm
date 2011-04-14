@@ -74,4 +74,9 @@ public class Civilstand extends View {
 		return modifiedDate;
 	}
 
+	@Override
+	public String toString() {
+		return "Civilstand[cpr=" + cpr + ", tilstandskode=" + civilstandskode + ", ægtefællepersonnummer=" + aegtefaellePersonnummer
+		+ ", ægtefællefødselsdato=" + aegtefaelleFoedselsdato + ", ægtefællenavn=" + aegtefaellenavn + ", separation=" + separation + "]";
+	}
 }

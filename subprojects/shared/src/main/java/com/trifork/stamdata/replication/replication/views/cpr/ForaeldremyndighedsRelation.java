@@ -76,19 +76,21 @@ public class ForaeldremyndighedsRelation extends View {
 
 	@Override
 	public BigInteger getRecordID() {
-
 		return recordID;
 	}
 
 	@Override
 	public String getId() {
-
 		return id;
 	}
 
 	@Override
 	public Date getUpdated() {
-
 		return modifiedDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "Forældremyndighedsrelation[cpr=" + cpr + ", typekode=" + typeKode + ", typetekst=" + typeTekst + ", relations-cpr=" + relationCpr + "]";
 	}
 }

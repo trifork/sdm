@@ -62,5 +62,9 @@ public class KommunaleForhold extends View {
 		return modifiedDate;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Kommunale forhold[cpr=" + cpr + ", typekode=" + kommunalforholdstypekode + ", kode=" + kommunalforholdskode + ", startdato=" + startdato
+			+ ", bemærkninger=" + bemaerkninger + "]";
+	}
 }

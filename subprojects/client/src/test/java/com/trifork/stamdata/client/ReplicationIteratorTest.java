@@ -21,6 +21,15 @@ public class ReplicationIteratorTest {
 	public void before() throws Exception {
 		iterator = new ReplicationIterator<Person>(Person.class, reader);
 	}
+	
+	@Test
+	public void knowsWhenResultIsEmpty() throws Exception {
+		when(reader.getInputStream()).thenReturn(getClass().getClassLoader().getResourceAsStream("personResponseEmpty.xml"));
+
+		assertFalse(iterator.hasNext());
+
+		verify(reader).fetchNextPage();
+	}
 
 	@Test
 	public void knowsWhenThereIsMoreInResult() throws Exception {

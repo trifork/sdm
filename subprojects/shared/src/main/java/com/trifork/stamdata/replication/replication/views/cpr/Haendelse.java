@@ -69,5 +69,8 @@ public class Haendelse extends View {
 		return modifiedDate;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Hændelse[cpr=" + cpr + ", ajourføringsdato=" + ajourfoeringsdato + ", hændelseskode=" + haendelseskode + ", nøglekonstant=" + noeglekonstant + "]";
+	}
 }

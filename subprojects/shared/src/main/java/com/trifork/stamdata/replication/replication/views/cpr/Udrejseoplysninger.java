@@ -73,5 +73,8 @@ public class Udrejseoplysninger extends View {
 		return modifiedDate;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Udrejseoplysninger[cpr=" + cpr + ", landekode=" + udrejseLandekode + ", udrejsedato=" + udrejsedato + "]";
+	}
 }

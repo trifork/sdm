@@ -61,5 +61,10 @@ public class Folkekirkeoplysninger extends View {
 	public Date getUpdated() {
 		return modifiedDate;
 	}
+	
+	@Override
+	public String toString() {
+		return "Folkekirkeoplysninger[cpr=" + cpr + ", forholdskode=" + forholdsKode + ", startdato=" + startdato + "]";
+	}
 
 }

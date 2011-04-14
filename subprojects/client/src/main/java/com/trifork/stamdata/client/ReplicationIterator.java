@@ -62,8 +62,11 @@ class ReplicationIterator<T> implements Iterator<EntityRevision<T>> {
 	}
 
 	protected boolean hasMoreInCurrentPage() throws XMLStreamException {
-
-		return filteredReader != null && filteredReader.peek() != null;
+		if (filteredReader == null) {
+			return false;
+		}
+		seek(ATOM_NS, "entry", false);
+		return filteredReader.peek() != null;
 	}
 
 	@Override

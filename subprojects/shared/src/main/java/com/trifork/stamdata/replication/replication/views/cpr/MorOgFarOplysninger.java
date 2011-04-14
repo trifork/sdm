@@ -70,4 +70,9 @@ public class MorOgFarOplysninger extends View {
 		return modifiedDate;
 	}
 
+	@Override
+	public String toString() {
+		return "Mor og far-oplysninger[cpr=" + cpr + ", forælderkode=" + foraelderkode + ", dato=" + dato + ", fødselsdato=" + foedselsdato
+			+ ", navn=" + navn + "]";
+	}
 }

@@ -99,19 +99,21 @@ public class UmyndiggoerelseVaergeRelation extends View {
 
 	@Override
 	public BigInteger getRecordID() {
-
 		return recordID;
 	}
 
 	@Override
 	public String getId() {
-
 		return id;
 	}
 
 	@Override
 	public Date getUpdated() {
-
 		return modifiedDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "Umynddiggørelse-værge-relation[cpr=" + cpr + ", type=" + typeKode + ", tekst=" + typeTekst + ", relations-cpr=" + relationCpr + "]";
 	}
 }

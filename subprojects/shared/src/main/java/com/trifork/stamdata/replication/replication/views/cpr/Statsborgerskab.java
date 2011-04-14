@@ -59,4 +59,9 @@ public class Statsborgerskab extends View {
 	public Date getUpdated() {
 		return modifiedDate;
 	}
+	
+	@Override
+	public String toString() {
+		return "Statsborgerskab[" + cpr + ", landekode=" + landekode + ", startdato=" + statsborgerskabstartdato + "]";
+	}
 }

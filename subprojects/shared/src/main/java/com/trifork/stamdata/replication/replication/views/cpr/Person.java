@@ -125,25 +125,21 @@ public class Person extends View {
 
 	@Override
 	public BigInteger getRecordID() {
-
 		return recordID;
 	}
 
 	@Override
 	public String getId() {
-
 		return cpr;
 	}
 
 	@Override
 	public Date getUpdated() {
-
 		return modifiedDate;
 	}
 
 	@Override
 	public String toString() {
-
-		return String.format("%s %s %s", fornavn, efternavn, cpr);
+		return "Person[" + cpr + ", fornavn=" + fornavn + ", efternavn=" + efternavn + ", køn=" + koen + "]";
 	}
 }

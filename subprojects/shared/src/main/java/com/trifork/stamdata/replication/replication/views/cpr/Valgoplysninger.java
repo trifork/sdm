@@ -61,5 +61,8 @@ public class Valgoplysninger extends View {
 		return modifiedDate;
 	}
 
-
+	@Override
+	public String toString() {
+		return "Valgoplysninger[cpr=" + cpr + ", kode=" + Valgkode + ", valgretsdato=" + valgretsdato + "]";
+	}
 }

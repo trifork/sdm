@@ -61,4 +61,10 @@ public class Foedselsregistreringsoplysninger extends View {
 	public Date getUpdated() {
 		return modifiedDate;
 	}
+	
+	@Override
+	public String toString() {
+		return "Fødselsregistreringsoplysninger[cpr=" + cpr + ", registreringsstedkode=" + foedselsregistreringsstedkode
+		+ ", fødselsregistreringstekst=" + foedselsregistreringstekst + "]"; 
+	}
 }

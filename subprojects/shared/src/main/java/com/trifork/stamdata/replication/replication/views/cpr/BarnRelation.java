@@ -71,13 +71,11 @@ public class BarnRelation extends View {
 
 	@Override
 	public BigInteger getRecordID() {
-
 		return recordID;
 	}
 
 	@Override
 	public String getId() {
-
 		return id;
 	}
 
@@ -85,5 +83,10 @@ public class BarnRelation extends View {
 	public Date getUpdated() {
 
 		return modifiedDate;
+	}
+	
+	@Override
+	public String toString() {
+		return "Barnrelation[cpr=" + cpr + ", barncpr=" + barnCPR + "]";
 	}
 }
