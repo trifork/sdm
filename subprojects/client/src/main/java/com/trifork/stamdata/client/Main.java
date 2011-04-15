@@ -18,6 +18,7 @@ import com.trifork.stamdata.replication.replication.views.cpr.UmyndiggoerelseVae
 import com.trifork.stamdata.replication.replication.views.cpr.Valgoplysninger;
 
 public class Main {
+	@SuppressWarnings("serial")
 	private static final List<Class<?>> views = new ArrayList<Class<?>>() {{
 		add(Person.class);
 		add(BarnRelation.class);
