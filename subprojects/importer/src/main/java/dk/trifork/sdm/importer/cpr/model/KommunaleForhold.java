@@ -1,6 +1,6 @@
 package dk.trifork.sdm.importer.cpr.model;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import dk.trifork.sdm.model.Id;
 import dk.trifork.sdm.model.Output;
@@ -29,9 +29,9 @@ public class KommunaleForhold extends CPREntity {
 
 	private Kommunalforholdstype kommunalforholdstype;
 	private String kommunalforholdskode;
-	private Date startdato;
 	private String startdatomarkering;
 	private String bemaerkninger;
+	private Calendar validFrom;
 
 	@Id
 	@Output
@@ -65,15 +65,6 @@ public class KommunaleForhold extends CPREntity {
 		return kommunalforholdskode;
 	}
 
-	public void setStartdato(Date startdato) {
-		this.startdato = startdato;
-	}
-
-	@Output
-	public Date getStartdato() {
-		return startdato;
-	}
-
 	public void setStartdatomarkering(String startdatomarkering) {
 		this.startdatomarkering = startdatomarkering;
 	}
@@ -89,5 +80,13 @@ public class KommunaleForhold extends CPREntity {
 	@Output
 	public String getBemaerkninger() {
 		return bemaerkninger;
+	}
+	@Override
+	public Calendar getValidFrom() {
+		return validFrom;
+	}
+
+	public void setValidFrom(Calendar validFrom) {
+		this.validFrom = validFrom;
 	}
 }

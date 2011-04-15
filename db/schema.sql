@@ -1065,7 +1065,6 @@ CREATE TABLE Statsborgerskab(
 	StatsborgerskabPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	CPR VARCHAR(10) NOT NULL,
 	landekode VARCHAR(4) NOT NULL,
-	Statsborgerskabstartdato DATETIME NOT NULL,
 	StatsborgerskabstartdatoUsikkerhedsmarkering VARCHAR(1) NOT NULL,
 	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,

@@ -143,7 +143,7 @@ public class CPRParserTest {
 		Statsborgerskab record = CPRParser.statsborgerskab(LINE);
 		assertEquals("3112000010", record.getCpr());
 		assertEquals("5180", record.getLandekode());
-		assertEquals(yyyyMMddHHmm.parse("190502201043"), record.getStatsborgerskabstartdato());
+		assertEquals(yyyyMMddHHmm.parse("190502201043"), record.getValidFrom().getTime());
 		assertEquals("", record.getStatsborgerskabstartdatousikkerhedsmarkering());
 	}
 
@@ -300,7 +300,7 @@ public class CPRParserTest {
 		assertEquals("1", record.getKommunalforholdstypekode());
 		assertEquals(Kommunalforholdstype.adskilt, record.getKommunalforholdstype());
 		assertEquals("A", record.getKommunalforholdskode());
-		assertEquals(yyyy_MM_dd.parse("1991-05-06"), record.getStartdato());
+		assertEquals(yyyy_MM_dd.parse("1991-05-06"), record.getValidFrom().getTime());
 		assertEquals(" ", record.getStartdatomarkering());
 		assertEquals("KOMFOR-BEMÆRK", record.getBemaerkninger());
 	}

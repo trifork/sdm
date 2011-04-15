@@ -289,7 +289,7 @@ public class CPRParser {
 		Statsborgerskab s = new Statsborgerskab();
 		s.setCpr(cut(line, 3, 13));
 		s.setLandekode(cut(line, 13, 17));
-		s.setStatsborgerskabstartdato(parseDate(yyyyMMddHHmm, line, 17, 29));
+		s.setValidFrom(parseCalendar(yyyyMMddHHmm, line, 17, 29));
 		s.setStatsborgerskabstartdatousikkerhedsmarkering(cut(line, 29, 30));
 		return s;
 	}
@@ -299,7 +299,7 @@ public class CPRParser {
 		result.setCpr(cut(line, 3, 13));
 		result.setKommunalforholdstypekode(cut(line, 13, 14));
 		result.setKommunalforholdskode(cut(line, 14, 19).trim());
-		result.setStartdato(parseDate(yyyy_MM_dd, line, 19, 29));
+		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 19, 29));
 		result.setStartdatomarkering(cut(line, 29, 30));
 		result.setBemaerkninger(line.substring(30).trim());
 		return result;

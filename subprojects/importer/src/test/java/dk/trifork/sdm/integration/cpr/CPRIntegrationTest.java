@@ -16,14 +16,12 @@ import java.util.Calendar;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.trifork.sdm.config.MySQLConnectionManager;
 import dk.trifork.sdm.importer.cpr.CPRImporter;
 import dk.trifork.sdm.importer.exceptions.FileImporterException;
 
-@Ignore("Incomplete DB Schema")
 public class CPRIntegrationTest {
 
 	@Before
@@ -297,7 +295,7 @@ public class CPRIntegrationTest {
 		assertEquals("2802363039", rs.getString("CPR"));
 		assertEquals("3", rs.getString("Kommunalforholdstypekode"));
 		assertEquals("N", rs.getString("Kommunalforholdskode"));
-		assertEquals(yyyy_MM_dd.parse("2000-06-30"), rs.getDate("Startdato"));
+		assertEquals(yyyy_MM_dd.parse("2000-06-30"), rs.getDate("validFrom"));
 		assertEquals("Tekst til komforh3/pension", rs.getString("Bemaerkninger"));
 		assertTrue(rs.last());
 		stmt.close();
