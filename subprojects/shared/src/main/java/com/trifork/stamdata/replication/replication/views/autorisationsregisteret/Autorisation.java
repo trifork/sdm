@@ -45,29 +45,22 @@ public class Autorisation extends View {
 	@Column(name = "AutorisationPID")
 	private BigInteger recordID;
 
-	@Column(name = "Autorisationsnummer")
-	protected String id;
+	protected String autorisationsnummer;
 
 	protected String cpr;
 
-	@Column(name = "Fornavn")
 	protected String fornavn;
 
-	@Column(name = "Efternavn")
 	protected String efternavn;
 
-	@Column(name = "UddannelsesKode")
 	protected String uddannelsesKode;
 
-	@Column(name = "ValidFrom")
 	protected Date validFrom;
 
-	@Column(name = "ValidTo")
 	protected Date validTo;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
-	@Column(name = "ModifiedDate")
 	private Date modifiedDate;
 
 	@Override
