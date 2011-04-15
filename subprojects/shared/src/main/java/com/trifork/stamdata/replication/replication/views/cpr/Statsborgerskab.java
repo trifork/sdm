@@ -34,7 +34,6 @@ public class Statsborgerskab extends View {
 	@XmlElement(required = true)
 	protected String cpr;
 	protected String landekode;
-	protected Date statsborgerskabstartdato;
 	protected String statsborgerskabstartdatoUsikkerhedsmarkering;
 	
 	@XmlTransient
@@ -64,6 +63,6 @@ public class Statsborgerskab extends View {
 	
 	@Override
 	public String toString() {
-		return "Statsborgerskab[" + cpr + ", landekode=" + landekode + ", startdato=" + statsborgerskabstartdato + "]";
+		return "Statsborgerskab[" + cpr + ", landekode=" + landekode + ", validFrom=" + validFrom + "]";
 	}
 }
