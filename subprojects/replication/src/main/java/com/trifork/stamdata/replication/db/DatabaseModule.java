@@ -89,7 +89,10 @@ public class DatabaseModule extends ServletModule {
 			config.setProperty("hibernate.c3p0.min_size", "5");
 			config.setProperty("hibernate.c3p0.max_size", "200");
 			config.setProperty("hibernate.c3p0.timeout", "300");
-			config.setProperty("hibernate.c3p0.max_statements", "50");
+
+			// Do not set "hibernate.c3p0.max_statements" it to anything above 0.
+			// This might cause deadlocks. If you do set it set it to a very high
+			// number, this will cost memory but give better performence.
 			
 			// The following two properties can be used to debug c3p0's connections.
 			// They are commented out since they are quite expensive.
