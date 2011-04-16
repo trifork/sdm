@@ -47,17 +47,53 @@ public class Autorisation extends View {
 
 	protected String autorisationsnummer;
 
+	public String getAutorisationsnummer() {
+
+		return autorisationsnummer;
+	}
+
 	protected String cpr;
 
+	public String getCPR() {
+
+		return cpr;
+	}
+
 	protected String fornavn;
+
+	public String getFornave() {
+
+		return fornavn;
+	}
 
 	protected String efternavn;
 
 	protected String uddannelsesKode;
+	public String getEfternavn() {
 
+		return efternavn;
+	}
+
+	public String getUddannelseskode() {
+
+		return uddannelseskode;
+	}
+
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
+	public Date getValidFrom() {
+
+		return validFrom;
+	}
+
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
+
+	public Date getValidTo() {
+
+		return validTo;
+	}
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
@@ -72,7 +108,7 @@ public class Autorisation extends View {
 	@Override
 	public String getId() {
 
-		return id;
+		return autorisationsnummer;
 	}
 
 	@Override
