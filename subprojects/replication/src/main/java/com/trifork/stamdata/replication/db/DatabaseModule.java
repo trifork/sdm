@@ -78,6 +78,10 @@ public class DatabaseModule extends ServletModule {
 
 			config.setProperty("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
 			config.setProperty("hibernate.connection.characterEncoding", "utf8");
+
+			// TODO: Not sure that the following 3 settings work.
+			// They might have to be added to the JDBC url to have any effect.
+
 			config.setProperty("hibernate.connection.useCursorFetch", "true");
 			config.setProperty("hibernate.connection.useServerPrepStmts", "true");
 			config.setProperty("hibernate.connection.defaultFetchSize", "1000");
