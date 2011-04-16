@@ -68,11 +68,12 @@ public class Autorisation extends View {
 
 	protected String efternavn;
 
-	protected String uddannelsesKode;
 	public String getEfternavn() {
 
 		return efternavn;
 	}
+
+	protected String uddannelseskode;
 
 	public String getUddannelseskode() {
 
