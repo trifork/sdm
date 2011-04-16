@@ -87,8 +87,8 @@ public class DatabaseModule extends ServletModule {
 			config.setProperty("hibernate.connection.defaultFetchSize", "1000");
 
 			config.setProperty("hibernate.c3p0.min_size", "5");
-			config.setProperty("hibernate.c3p0.max_size", "200");
-			config.setProperty("hibernate.c3p0.timeout", "300");
+			config.setProperty("hibernate.c3p0.max_size", "20");
+			config.setProperty("hibernate.c3p0.timeout", "100");
 
 			// Do not set "hibernate.c3p0.max_statements" it to anything above 0.
 			// This might cause deadlocks. If you do set it set it to a very high
