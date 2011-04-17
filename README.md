@@ -181,7 +181,7 @@ every commit you do locally.
 
 You can setup a git command alias to check your code before you push anything.
 
-    git config alias.publish '! gradle check && git push "$@"'
+    git config alias.publish '! ./gradlew check && git push "$@"'
 
 This will allow you to e.g. write:
 
