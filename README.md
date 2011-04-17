@@ -194,5 +194,5 @@ a normal push.
 To prevent git from telling you about config files that you do not want to
 commit, issue the following command:
 
-    git update-index --assume-unchanged subprojects/importer/src/main/resources/config.properties subprojects/replication/src/main/resources/config.properties subprojects/replication/src/main/resources/hibernate.cfg.xml
+    git update-index --assume-unchanged subprojects/importer/src/main/resources/config.properties subprojects/replication/src/main/resources/config.properties
 
