@@ -41,7 +41,7 @@ subprojects { subproject ->
 
 	// Checkstyle source coding standards.
 	apply plugin: 'code-quality'
-	checkstyleConfigDir = "$rootDir/config/checkstyle"
+	checkstyleConfigDir = "$rootDir/config"
 	checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
 	checkstyleProperties.checkstyleConfigDir = checkstyleConfigDir
 	
