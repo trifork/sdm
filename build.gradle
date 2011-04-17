@@ -61,7 +61,7 @@ subprojects { subproject ->
 	}
 	
 	// Test coverage.
-	apply from:'https://github.com/breskeby/gradleplugins/raw/master/emmaPlugin/emmaFull.gradle'
+	apply from: "${rootDir}/config/coverage.groovy"
 }
 
 dependsOnChildren()
