@@ -38,6 +38,14 @@ get everything up and running.
         % ./gradlew importer:test
     
     will run all the tests in the importer project. 
+    
+    Apart from running tests you can also check the health of the project by
+    calling the 'check' task:
+    
+        % ./gradlew check
+    
+    This will do code coverage and check the coding convention defined in the
+    'config/checkstyle.xml' file.
 
 *   Generate an eclipse project:
     
