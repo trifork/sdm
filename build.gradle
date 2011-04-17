@@ -46,6 +46,7 @@ subprojects { subproject ->
 	apply from: "${rootDir}/config/libraries.groovy"
 
 	// Checkstyle source coding standards.
+
 	apply plugin: 'code-quality'
 	checkstyleConfigDir = "$rootDir/config"
 	checkstyleConfigFileName = new File(checkstyleConfigDir, "checkstyle.xml")
