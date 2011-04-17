@@ -34,7 +34,13 @@ subprojects { subproject ->
 	
 	targetCompatibility = 1.6
 	sourceCompatibility = 1.6
+
+	// Handle java files as UTF-8.
+	// Each Compile task has a CompileOptions associated with it which
+	// includes  an 'encoding' property.
+
 	[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
 	// Include references to common dependencies so you can keep
 	// versions consistent accross your sub-projects.
 	apply from: "${rootDir}/config/libraries.groovy"
