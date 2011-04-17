@@ -54,8 +54,10 @@ subprojects { subproject ->
 	[checkstyleMain, checkstyleTest]*.ignoreFailures = true
 
 	// Add some extra memory for testing, this is usually useful.
+	// Also enable code assertions while testing.
+
 	test {
-		maxHeapSize = "1024m"
+		jvmArgs '-ea', '-Xmx512m'
 	}
 	
 	// Test coverage.
