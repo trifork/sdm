@@ -254,7 +254,7 @@ public class CPRIntegrationTest {
 		rs.next();
 		assertEquals("0709614126", rs.getString("CPR"));
 		assertEquals("F", rs.getString("Forholdskode"));
-		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("Startdato"));
+		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("validFrom"));
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
