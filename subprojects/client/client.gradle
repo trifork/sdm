@@ -4,7 +4,6 @@ buildscript {
   }
   dependencies {
     classpath 'com.smokejumperit:gradle-plugins:0.7.1'
-	classpath libs.jaxb
   }
 }
 
