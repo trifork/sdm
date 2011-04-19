@@ -34,6 +34,10 @@ import com.google.inject.Singleton;
 import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
+import com.trifork.wsclient.SoapException;
+
+import dk.itst.oiosaml.sp.UserAssertion;
+import dk.itst.oiosaml.sp.UserAssertionHolder;
 
 
 /**
@@ -75,7 +79,7 @@ public class LoginFilter implements Filter, Provider<User> {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
 		// If a user is not authorized then the user will be null.
-		User currentUser = getCurrentUser();
+		User currentUser = get();
 
 		String remoteIP = request.getRemoteAddr();
 
@@ -88,48 +92,6 @@ public class LoginFilter implements Filter, Provider<User> {
 			}
 			chain.doFilter(request, response);
 		}
-	}
-
-	public User getCurrentUser() {
-
-		User user = null;
-
-		// HACK: Since the RID2CPR client is not working,
-		// we have to hack in a user.
-
-		return get();
-
-		/*
-		 * 
-		 * try { // User assertion has an unfortunate name.
-		 * 
-		 * // TODO: Do logging for these error cases. This is actually // quite
-		 * important since it is a bit foggy which properties // are set on the
-		 * assertions from different IdP's.
-		 * 
-		 * UserAssertion assertion = UserAssertionHolder.get(); if (assertion ==
-		 * null) return null;
-		 * 
-		 * String cvr = assertion.getCVRNumberIdentifier(); if (cvr == null)
-		 * return null;
-		 * 
-		 * String cvrRid = assertion.getSubject(); if (cvrRid == null) return
-		 * null;
-		 * 
-		 * String cpr = ridHelper.getCPR(cvrRid); if (cpr == null) return null;
-		 * 
-		 * user = userDao.get().find(cvr, cpr); } catch (SoapException e) {
-		 * 
-		 * // This is crazy API design, but if the user cannot // looked up, an
-		 * exception if thrown because of the // SOAP fault.
-		 * 
-		 * logger.warn("RID2CPR lookup failed.", e); } catch (Exception e) {
-		 * 
-		 * logger.error("Error while fetching user CPR from the RID2CPR service."
-		 * , e); }
-		 * 
-		 * return user;
-		 */
 	}
 
 	@Override
@@ -147,6 +109,43 @@ public class LoginFilter implements Filter, Provider<User> {
 	@Override
 	public User get() {
 
-		return userDao.get().findAll().get(0);
+		User user = null;
+
+		try {
+			// User assertion has an unfortunate name.
+
+			// TODO: Do logging for these error cases. This is actually // quite
+			// important since it is a bit foggy which properties // are set on
+			// the
+			// assertions from different IdP's.
+
+			UserAssertion assertion = UserAssertionHolder.get();
+
+			if (assertion == null) return null;
+
+			String cvr = assertion.getCVRNumberIdentifier();
+			if (cvr == null) return null;
+
+			String cvrRid = assertion.getSubject();
+			if (cvrRid == null) return null;
+
+			String cpr = ridHelper.getCPR(cvrRid);
+			if (cpr == null) return null;
+
+			user = userDao.get().find(cvr, cpr);
+		}
+		catch (SoapException e) {
+
+			// This is crazy API design, but if the user cannot looked up, an
+			// exception if thrown because of the SOAP fault.
+
+			logger.warn("RID2CPR lookup failed.", e);
+		}
+		catch (Exception e) {
+
+			logger.error("Error while fetching user CPR from the RID2CPR service.", e);
+		}
+
+		return user;
 	}
 }

@@ -47,7 +47,16 @@ dependencies {
 
 	compile(libs.oiosaml) {
 		exclude group: 'org.slf4j'
-		exclude group: 'org.apache.xerces'
+
+		// Why this dependency is excluded in the
+		// POM is beyond me?
+
+		runtime('org.opensaml:opensaml:2.4.1') {
+			exclude group: 'velocity'
+			exclude group: 'org.slf4j'
+		}
+
+		runtime libs.bouncycastle
 	}
 	
 	// SLA LOGGING
@@ -61,20 +70,17 @@ dependencies {
 	
 	// TODO: The POM is completely messed up in this dep. 
 
-	compile('com.trifork:rid2cprclient:1.4@jar') {
-		runtime 'commons-httpclient:commons-httpclient:3.1'
-		exclude group: 'commons-logging'
-		compile ('com.trifork:xmlobject:1.11') {
+	compile('com.trifork:rid2cprclient:1.5@jar') {
+		runtime libs.commons_io
+		runtime "commons-httpclient:commons-httpclient:3.1"
+
+		compile("com.trifork:xmlobject:1.4@jar") {
 			
 			runtime libs.jodi_time
 			
 			runtime 'org.apache.ws.commons.axiom:axiom-api:1.2.6@jar'
 			runtime 'org.apache.ws.commons.axiom:axiom-dom:1.2.6@jar'
 			runtime 'org.apache.ws.commons.axiom:axiom-impl:1.2.6@jar'
-			
-			runtime libs.commons_io
-			
-			exclude group: "avalon"
 		}
 	}
 
