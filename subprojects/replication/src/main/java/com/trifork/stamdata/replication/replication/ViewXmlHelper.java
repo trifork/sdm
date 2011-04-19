@@ -11,9 +11,10 @@ import javax.xml.bind.Marshaller;
 import com.trifork.stamdata.replication.replication.views.View;
 
 /**
- * We create separate JAXB contexts for each class, because we want to avoid unneccessary namespace declarations.
- * @author ahj
- *
+ * Creates separate JAXB contexts for each class,
+ * to avoid unneccessary namespace declarations.
+ * 
+ * @author Anders H. Jensen (ahj@trifork.com)
  */
 public class ViewXmlHelper {
 
