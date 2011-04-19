@@ -77,14 +77,7 @@ get everything up and running.
 
     There are two projects you can run. The importer, and the replication
     service.
-
-*   Configure OIOSAML:
     
-    Currently you can skip this step.
-    
-    FIXME. This is currently disabled because of problems with certificates
-    and the RID2CPR service at TDC.
-
 *   Access the administration GUI:
 
     The administration GUI is a browser based GUI for administering user
@@ -98,6 +91,20 @@ get everything up and running.
 
     Of course you will have to substitute the host and port in the URL to fit
     your setup.
+
+*   Configure SAML authentication:
+
+    If you will be using the admin GUI in the for the replication service you
+    will have to configure the SAML-filter. The SAML-filter will display a
+    configuration screen the first time you try to access the admin GUI. You
+    will have to configure it to fit your particular Identity Provider (IdP).
+
+    Also you might have to configure the CPR-lookup URL, in the
+    'config.properties' file, so it points to the correct endpoint. You will
+    need a special VOCES with to access the service. By default the
+    certificate in 'src/resources/testvoces.p12' will be used and is
+    whitelisted with the test RID2CPR service.
+
 
 DB Schema
 ---------
