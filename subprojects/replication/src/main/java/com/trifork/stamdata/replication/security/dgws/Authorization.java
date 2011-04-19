@@ -18,19 +18,22 @@
 package com.trifork.stamdata.replication.security.dgws;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.replication.replication.views.Views.checkViewIntegrity;
+
 import java.math.BigInteger;
 import java.util.Date;
-import javax.persistence.Embeddable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
 import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.replication.replication.views.ViewPath;
 
 
-@Embeddable
+@Entity
 public class Authorization {
 
 	@Id
@@ -54,10 +57,11 @@ public class Authorization {
 		checkNotNull(expiresAt);
 		checkViewIntegrity(viewClass);
 		checkNotNull(token);
+		checkArgument(token.length == 512);
 
 		this.cvr = cvr;
 		this.expiresAt = expiresAt;
-		this.viewName = viewClass.getAnnotation(Entity.class).name();
+		this.viewName = viewClass.getAnnotation(ViewPath.class).value();
 		this.token = token;
 	}
 }

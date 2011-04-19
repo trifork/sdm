@@ -108,8 +108,12 @@ public class DGWSSecurityManager implements SecurityManager {
 		if (token == null) return false;
 
 		// AUTHORIZE
+		//
+		// Fetch the view name from the URL and check the token validity.
 
-		return authorizationDao.isTokenStillValid(token);
+		String viewName = request.getPathInfo().substring(1);
+		
+		return authorizationDao.isTokenValid(token, viewName);
 	}
 
 	protected byte[] parseAuthenticationToken(String header) {

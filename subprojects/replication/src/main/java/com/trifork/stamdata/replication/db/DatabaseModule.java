@@ -35,6 +35,7 @@ import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.logging.LogEntry;
 import com.trifork.stamdata.replication.replication.views.Views;
+import com.trifork.stamdata.replication.security.dgws.Authorization;
 
 
 public class DatabaseModule extends ServletModule {
@@ -65,6 +66,7 @@ public class DatabaseModule extends ServletModule {
 		classes.add(User.class);
 		classes.add(LogEntry.class);
 		classes.add(Client.class);
+		classes.add(Authorization.class);
 
 		try {
 			Configuration config = new Configuration();

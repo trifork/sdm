@@ -17,6 +17,8 @@
 
 package com.trifork.stamdata.replication.security.dgws;
 
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -41,11 +43,15 @@ public class AuthorizationDao {
 		return 1 == (Long) q.uniqueResult();
 	}
 
-	public boolean isTokenStillValid(byte[] authorizationToken) {
+	public boolean isTokenValid(byte[] authorizationToken, String viewName) {
 
-		Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE token = :token");
+		checkNotNull(authorizationToken);
+		checkNotNull(viewName);
+
+		Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE token = :token AND viewName = :viewName AND expiresAt > NOW()");
 		q.setParameter("token", authorizationToken);
-		return 1 == (Long) q.uniqueResult();
+		q.setParameter("viewName", viewName);
+		return 0 < (Long) q.uniqueResult();
 	}
 
 	public void save(Authorization authorization) {
