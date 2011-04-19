@@ -43,24 +43,27 @@ public class SpoolerManager {
             logger.error("Manager created but no spooler configured. Please configure a spooler");
             return;
         }
-
-        for (String spoolerName : spoolerSetup.split(",")) {
-            spoolers.put(spoolerName, new FileSpoolerImpl(new FileSpoolerSetup(spoolerName, rootDir)));
-        }
         
+		if (spoolerSetup != null && spoolerSetup.length() != 0) {
+			for (String spoolerName : spoolerSetup.split(",")) {
+				spoolers.put(spoolerName, new FileSpoolerImpl(new FileSpoolerSetup(spoolerName, rootDir)));
+			}
+		}
+
         String jobSpoolerSetup = Configuration.getString("jobspooler");
         logger.debug("The following job spoolers are configured: " + jobSpoolerSetup);
 
-        for (String jobSpoolerName : jobSpoolerSetup.split(",")) {
-        	JobSpoolerImpl jobSpooler = new JobSpoolerImpl(new JobSpoolerSetup(jobSpoolerName));
-            jobSpoolers.put(jobSpoolerName, jobSpooler);
-            jobScheduler.schedule(jobSpooler.getSetup().getSchedule(), new GernericJobSpoolerExecutor(jobSpooler));
-        }
+		if (jobSpoolerSetup != null && jobSpoolerSetup.length() != 0) {
+			for (String jobSpoolerName : jobSpoolerSetup.split(",")) {
+				JobSpoolerImpl jobSpooler = new JobSpoolerImpl(new JobSpoolerSetup(jobSpoolerName));
+				jobSpoolers.put(jobSpoolerName, jobSpooler);
+				jobScheduler.schedule(jobSpooler.getSetup().getSchedule(), new GernericJobSpoolerExecutor(jobSpooler));
+			}
 
-        jobScheduler.start();
-        TimerTask pollTask = new PollingTask();
-        timer.schedule(pollTask, 10 * 1000, POLLING_INTERVAL * 1000);
-        
+			jobScheduler.start();
+			TimerTask pollTask = new PollingTask();
+			timer.schedule(pollTask, 10 * 1000, POLLING_INTERVAL * 1000);
+		}
     }
 
     public void destroy() {
