@@ -41,6 +41,7 @@ import com.google.inject.Provider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StatusServletTest {
+
 	@Mock HttpServletResponse response;
 	@Mock PrintWriter writer;
 	@Mock Connection connection;
