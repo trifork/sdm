@@ -9,4 +9,3 @@ bin
 access.*
 subprojects/importer/sdm_log
 .checkstyle
-gradle/
