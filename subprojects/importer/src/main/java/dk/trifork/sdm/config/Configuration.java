@@ -38,10 +38,20 @@ public class Configuration {
 	public Configuration() {
 
 		try {
-			InputStream input = getClass().getClassLoader().getResourceAsStream("config.properties");
-
+			// Loads the build-in configuration file and overrides all properties with
+			// the deployment configuration (stamdata-importer.properties) if it exists.
+			
+			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
+	
 			properties = new Properties();
-			properties.load(input);
+			properties.load(buildInConfig);
+			buildInConfig.close();
+			
+			if (deploymentConfig != null) {
+				properties.load(deploymentConfig);
+				deploymentConfig.close();
+			}
 
 			for (String propertyKey : properties.stringPropertyNames()) {
 				logger.info("Property '" + propertyKey + "' = " + ((propertyKey.indexOf("pwd") >= 0) ? "****" : getProperty(propertyKey)));

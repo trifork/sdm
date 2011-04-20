@@ -19,11 +19,14 @@ package com.trifork.stamdata.replication;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 
@@ -55,7 +58,14 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 		try {
 			logger.info("Loading configuration.");
 
-			final PropertiesConfiguration config = new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties"));
+			CompositeConfiguration config = new CompositeConfiguration();
+			config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties")));
+
+			URL deploymentConfig = getClass().getClassLoader().getResource("stamdata-replication.properties");
+
+			if (deploymentConfig != null) {
+				config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("stamdata-replication.properties")));
+			}
 
 			logger.info("Configuring Stamdata Service.");
 
@@ -129,7 +139,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 		return injector;
 	}
 
-	private Map<String, String> getWhiteList(final PropertiesConfiguration config) {
+	private Map<String, String> getWhiteList(final Configuration config) {
 
 		String[] cvrs = config.getStringArray("whitelist");
 		String[] names = config.getStringArray("whitelistNames");
