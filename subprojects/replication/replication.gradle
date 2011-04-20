@@ -48,6 +48,11 @@ dependencies {
 	compile(libs.oiosaml) {
 		exclude group: 'org.slf4j'
 
+		// The Xerces implementation does not
+		// play well with others when deployed.
+
+		exclude group: 'org.apache.xerces'
+
 		// Why this dependency is excluded in the
 		// POM is beyond me?
 
