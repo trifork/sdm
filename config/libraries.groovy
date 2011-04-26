@@ -23,8 +23,6 @@ libs = [
 
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 
-	reflections: 'org.reflections:reflections:0.9.5-RC3',
-
 	// JBoss is fickle when it comes to class loading and you will
 	// have to override all the hibernate libraries if you want to
 	// upgrade to a newer version.
@@ -43,7 +41,6 @@ libs = [
 
 	jodi_time: 'joda-time:joda-time:1.6',
 
-	seal: 'dk.sosi:seal:1.5.13',
 	oiosaml: 'dk.itst.oiosaml:oiosaml.java:5987',
 	
 	velocity: 'apache-velocity:velocity:1.5',

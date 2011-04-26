@@ -21,7 +21,7 @@ dependencies {
 	
 	// STS
 	
-	compile libs.seal
+	compile files('libs/seal-1.5.13.jar')
 	
 	// JAXB
 	

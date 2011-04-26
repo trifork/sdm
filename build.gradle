@@ -20,8 +20,7 @@ allprojects {
 	// adding explicitly here.
 	repositories {
 		mavenLocal()
-		mavenRepo name: 'trifork-releases', urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
-		mavenRepo name: 'trifork-snapshots', urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
+		mavenRepo name: 'Main Maven repository', urls: 'http://repo1.maven.org/maven2/'
 	}
 }
 
@@ -30,7 +29,6 @@ subprojects { subproject ->
 	// Subproject currently always default to java. This might change in the future.
 	// If you are making WARs take a look at the 'war' plugin.
 	apply plugin: 'java'
-	apply plugin: 'deployment'
 	
 	targetCompatibility = 1.6
 	sourceCompatibility = 1.6
@@ -73,11 +71,7 @@ dependsOnChildren()
 buildscript {
 	repositories {
 		mavenLocal()
-		mavenRepo name: 'trifork-releases', urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
-		mavenRepo name: 'trifork-snapshots', urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
-	}
-	dependencies {
-		classpath 'com.trifork:gradle-plugins:0.1.0'
+		mavenRepo name: 'Main Maven repository', urls: 'http://repo1.maven.org/maven2/'
 	}
 }
 

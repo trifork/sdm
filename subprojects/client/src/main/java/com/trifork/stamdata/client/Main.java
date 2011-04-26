@@ -1,41 +1,21 @@
 package com.trifork.stamdata.client;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-import com.trifork.stamdata.replication.replication.views.cpr.BarnRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Civilstand;
-import com.trifork.stamdata.replication.replication.views.cpr.Foedselsregistreringsoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.Folkekirkeoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.ForaeldremyndighedsRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Haendelse;
-import com.trifork.stamdata.replication.replication.views.cpr.KommunaleForhold;
-import com.trifork.stamdata.replication.replication.views.cpr.MorOgFarOplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.Person;
-import com.trifork.stamdata.replication.replication.views.cpr.Statsborgerskab;
-import com.trifork.stamdata.replication.replication.views.cpr.Udrejseoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.UmyndiggoerelseVaergeRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Valgoplysninger;
+import com.trifork.stamdata.replication.replication.views.Views;
 
 public class Main {
-	@SuppressWarnings("serial")
-	private static final List<Class<?>> views = new ArrayList<Class<?>>() {{
-		add(Person.class);
-		add(BarnRelation.class);
-		add(Civilstand.class);
-		add(Foedselsregistreringsoplysninger.class);
-		add(Folkekirkeoplysninger.class);
-		add(ForaeldremyndighedsRelation.class);
-		add(Haendelse.class);
-		add(KommunaleForhold.class);
-		add(MorOgFarOplysninger.class);
-		add(Statsborgerskab.class);
-		add(Udrejseoplysninger.class);
-		add(UmyndiggoerelseVaergeRelation.class);
-		add(Valgoplysninger.class);
-	}};
-	
 	public static void main(String... args) throws Exception {
+		List<Class<?>> views = new ArrayList<Class<?>>(Views.findAllViews());
+		Collections.sort(views, new Comparator<Class<?>>() {
+			@Override
+			public int compare(Class<?> class1, Class<?> class2) {
+				return class1.getName().compareTo(class2.getName());
+			}});
+
 		String serverAndPort = ask("Server and port", "http://localhost:8080/replication");
 		boolean security = ask("Security enabled?", "n").toLowerCase().equals("y");
 
