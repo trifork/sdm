@@ -2,12 +2,12 @@ package com.trifork.stamdata.replication.security.dgws;
 
 import static com.trifork.stamdata.replication.TimeHelper.tomorrow;
 import static com.trifork.stamdata.replication.TimeHelper.yesterday;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.hibernate.Session;
-import org.hibernate.type.YesNoType;
-import org.junit.Assert;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
-import com.trifork.stamdata.replication.TimeHelper;
 import com.trifork.stamdata.replication.TokenHelper;
 import com.trifork.stamdata.replication.mocks.MockEntity;
 
@@ -29,20 +28,18 @@ public class AuthorizationDaoTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-
 		DatabaseHelper db = new DatabaseHelper(Authorization.class);
 		session = db.openSession();
 	}
 
 	@Before
 	public void setUp() {
-
 		dao = new AuthorizationDao(session);
 		session.beginTransaction();
 	}
 
+	@After
 	public void tearDown() {
-
 		session.getTransaction().rollback();
 	}
 
@@ -80,5 +77,14 @@ public class AuthorizationDaoTest {
 		dao.save(authorization);
 		
 		assertFalse(dao.isTokenValid(token, "bas/baz/v2"));
+	}
+	
+	@Test
+	public void can_find_cvr_from_authentication_token() {
+		Authorization authorization = new Authorization(MockEntity.class, "12345678", tomorrow(), token);
+
+		dao.save(authorization);
+		
+		assertEquals("12345678", dao.findCvr(token));
 	}
 }

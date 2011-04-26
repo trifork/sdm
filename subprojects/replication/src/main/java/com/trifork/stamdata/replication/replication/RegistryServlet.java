@@ -38,6 +38,7 @@ import com.trifork.stamdata.HistoryOffset;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.SecurityManager;
+import com.trifork.stamdata.replication.usagelog.UsageLogger;
 
 
 @Singleton
@@ -52,9 +53,15 @@ public class RegistryServlet extends HttpServlet {
 	private final Provider<RecordDao> recordDao;
 
 	private final Provider<AtomFeedWriter> writers;
+	private final Provider<UsageLogger> usageLogger;
 
 	@Inject
-	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
+	RegistryServlet(@Registry Map<String, Class<? extends View>> registry,
+			Provider<UsageLogger> usageLogger,
+			Provider<SecurityManager> securityManager,
+			Provider<RecordDao> recordDao,
+			Provider<AtomFeedWriter> writers) {
+		this.usageLogger = usageLogger;
 		this.registry = checkNotNull(registry);
 		this.recordDao = checkNotNull(recordDao);
 		this.writers = checkNotNull(writers);
@@ -71,7 +78,7 @@ public class RegistryServlet extends HttpServlet {
 		//
 		// TODO: Log any unauthorized attempts.
 
-		if (!securityManager.get().authorize(request)) {
+		if (!securityManager.get().isAuthorized()) {
 
 			response.setStatus(HTTP_UNAUTHORIZED);
 			response.setHeader("WWW-Authenticate", "STAMDATA");
@@ -138,7 +145,8 @@ public class RegistryServlet extends HttpServlet {
 		response.setContentType(contentType);
 		response.flushBuffer();
 
-		writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
+		int writtenRecords = writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
+		usageLogger.get().log(securityManager.get().getClientId(), viewName, writtenRecords);
 
 		records.close();
 	}

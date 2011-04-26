@@ -58,4 +58,12 @@ public class AuthorizationDao {
 
 		em.persist(authorization);
 	}
+
+	public String findCvr(byte[] authorizationToken) {
+		checkNotNull(authorizationToken);
+
+		Query q = em.createQuery("SELECT cvr FROM Authorization a WHERE token = :token AND expiresAt > NOW()");
+		q.setParameter("token", authorizationToken);
+		return q.uniqueResult().toString();
+	}
 }
