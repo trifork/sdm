@@ -14,14 +14,17 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.ClientSpecific;
+import com.trifork.stamdata.UsageLogged;
+import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.replication.views.ViewPath;
 
 @Entity
 @ClientSpecific
+@UsageLogged(false)
 @XmlRootElement
-@ViewPath("cpr/usage/v1")
+@ViewPath("usage/v1")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UsageLogEntry {
+public class UsageLogEntry extends View {
 	@Id
 	@GeneratedValue
 	@XmlTransient
@@ -31,8 +34,9 @@ public class UsageLogEntry {
 	@XmlElement(required = true)
 	public String clientId;
 	
-	@XmlElement(required = true)
-	public Date date;
+	@XmlElement(required = true, name = "date")
+	@Column(name="date")
+	public Date modifiedDate;
 	
 	@XmlElement(required = true)
 	public String type;
@@ -46,8 +50,29 @@ public class UsageLogEntry {
 	
 	public UsageLogEntry(String clientId, Date date, String type, int amount) {
 		this.clientId = clientId;
-		this.date = date;
+		this.modifiedDate = date;
 		this.type = type;
 		this.amount = amount;
+	}
+
+	@Override
+	public String getId() {
+		return recordID.toString();
+	}
+
+	@Override
+	public BigInteger getRecordID() {
+		return recordID;
+	}
+
+	@Override
+	public Date getUpdated() {
+		return modifiedDate;
+	}
+
+	@Override
+	public String toString() {
+		return "UsageLogEntry [clientId=" + clientId + ", modifiedDate="
+				+ modifiedDate + ", type=" + type + ", amount=" + amount + "]";
 	}
 }

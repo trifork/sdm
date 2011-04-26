@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -22,6 +24,8 @@ public class UsageLoggerTest {
 	public static void init() throws Exception {
 		DatabaseHelper db = new DatabaseHelper(UsageLogEntry.class);
 		session = db.openSession();
+		Query query = session.createQuery("delete from UsageLogEntry");
+		query.executeUpdate();
 	}
 
 	@Before
@@ -43,7 +47,7 @@ public class UsageLoggerTest {
 		assertEquals(1, logs.size());
 		UsageLogEntry entry = (UsageLogEntry) logs.get(0);
 		assertEquals("CVR:12345678", entry.clientId);
-		assertNotNull(entry.date);
+		assertNotNull(entry.modifiedDate);
 		assertEquals("/my/objects/v1", entry.type);
 		assertEquals(30, entry.amount);
 	}

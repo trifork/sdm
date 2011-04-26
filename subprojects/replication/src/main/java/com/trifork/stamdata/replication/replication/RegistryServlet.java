@@ -35,6 +35,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.HistoryOffset;
+import com.trifork.stamdata.UsageLogged;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.SecurityManager;
@@ -122,9 +123,16 @@ public class RegistryServlet extends HttpServlet {
 		response.flushBuffer();
 
 		int writtenRecords = writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
-		usageLogger.get().log(clientId, viewName, writtenRecords);
+		if (shouldBeLogged(entityType)) {
+			usageLogger.get().log(clientId, viewName, writtenRecords);
+		}
 
 		records.close();
+	}
+
+	private boolean shouldBeLogged(Class<? extends View> entityType) {
+		UsageLogged usageLogged = entityType.getAnnotation(UsageLogged.class);
+		return usageLogged == null || usageLogged.value();
 	}
 
 	private boolean isNotAuthorized() {
