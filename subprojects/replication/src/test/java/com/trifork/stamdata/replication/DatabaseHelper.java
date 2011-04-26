@@ -2,6 +2,7 @@ package com.trifork.stamdata.replication;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.classic.Session;
 
@@ -38,7 +39,10 @@ public class DatabaseHelper {
 	}
 
 	public Session openSession() {
-
 		return sessionFactory.openSession();
+	}
+	
+	public StatelessSession openStatelessSession() {
+		return sessionFactory.openStatelessSession();
 	}
 }

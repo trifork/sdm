@@ -32,19 +32,29 @@ public class Folkekirkeoplysninger extends View {
 	private BigInteger recordID;
 
 	@XmlElement(required = true)
-	protected String cpr;
+	public String cpr;
 
-	protected String forholdsKode;
+	public String forholdsKode;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
-	protected Date modifiedDate;
+	public Date modifiedDate;
+	
+	@XmlTransient
+	public String modifiedBy;
+
+	@XmlTransient
+	@Temporal(TIMESTAMP)
+	public Date createdDate;
+
+	@XmlTransient
+	public String createdBy;
 
 	@Temporal(TIMESTAMP)
-	protected Date validFrom;
+	public Date validFrom;
 
 	@Temporal(TIMESTAMP)
-	protected Date validTo;
+	public Date validTo;
 
 	@Override
 	public String getId() {
