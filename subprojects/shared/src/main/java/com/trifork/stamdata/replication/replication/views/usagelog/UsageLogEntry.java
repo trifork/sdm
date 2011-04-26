@@ -13,9 +13,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.trifork.stamdata.ClientSpecific;
 import com.trifork.stamdata.replication.replication.views.ViewPath;
 
 @Entity
+@ClientSpecific
 @XmlRootElement
 @ViewPath("cpr/usage/v1")
 @XmlAccessorType(XmlAccessType.FIELD)

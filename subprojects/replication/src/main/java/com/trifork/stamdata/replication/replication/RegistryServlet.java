@@ -70,42 +70,18 @@ public class RegistryServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// AUTHORIZE THE REQUEST
-		//
-		// The HTTP RFC specifies that if returning a 401 status
-		// the server MUST issue a challenge also.
-		//
-		// TODO: Log any unauthorized attempts.
-
-		if (!securityManager.get().isAuthorized()) {
-
-			response.setStatus(HTTP_UNAUTHORIZED);
-			response.setHeader("WWW-Authenticate", "STAMDATA");
+		if (isNotAuthorized()) {
+			setUnauthorizedHeaders(response);
 			return;
 		}
 
-		// HANDLE REQUEST PARAMETERS
-		//
-		// The URL's path represents the requested view's name,
-		// e.g. dkma/drug/v1 or sor/sygehus/v2.
-
-		String viewName = getPath(request);
+		String viewName = getViewName(request);
+		String clientId = securityManager.get().getClientId();
 
 		// Parse the offset query parameters.
 		HistoryOffset offset = new HistoryOffset(request.getParameter("offset"));
 
-		String countParam = request.getParameter("count");
-		int count = DEFAULT_PAGE_SIZE;
-
-		if (countParam != null) {
-			try {
-				count = Integer.parseInt(countParam);
-			}
-			catch (NumberFormatException e) {
-				// Ignore this. We might decide to log this in the future.
-			}
-		}
+		int count = getCount(request);
 
 		// Determine what content type the client wants.
 		//
@@ -118,7 +94,7 @@ public class RegistryServlet extends HttpServlet {
 
 		Class<? extends View> entityType = registry.get(viewName);
 
-		ScrollableResults records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), count);
+		ScrollableResults records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), clientId, count);
 
 		// WRITE STATUS & HEADERS
 		//
@@ -146,13 +122,45 @@ public class RegistryServlet extends HttpServlet {
 		response.flushBuffer();
 
 		int writtenRecords = writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
-		usageLogger.get().log(securityManager.get().getClientId(), viewName, writtenRecords);
+		usageLogger.get().log(clientId, viewName, writtenRecords);
 
 		records.close();
 	}
 
-	protected String getPath(HttpServletRequest request) {
+	private boolean isNotAuthorized() {
+		// AUTHORIZE THE REQUEST
+		//
+		// The HTTP RFC specifies that if returning a 401 status
+		// the server MUST issue a challenge also.
+		//
+		// TODO: Log any unauthorized attempts.
 
+		return !securityManager.get().isAuthorized();
+	}
+
+	private void setUnauthorizedHeaders(HttpServletResponse response) {
+		response.setStatus(HTTP_UNAUTHORIZED);
+		response.setHeader("WWW-Authenticate", "STAMDATA");
+	}
+
+	private int getCount(HttpServletRequest request) {
+		String countParam = request.getParameter("count");
+		int count = DEFAULT_PAGE_SIZE;
+
+		if (countParam != null) {
+			try {
+				count = Integer.parseInt(countParam);
+			}
+			catch (NumberFormatException e) {
+				// Ignore this. We might decide to log this in the future.
+			}
+		}
+		return count;
+	}
+
+	protected String getViewName(HttpServletRequest request) {
+		// The URL's path represents the requested view's name,
+		// e.g. dkma/drug/v1 or sor/sygehus/v2.
 		return request.getPathInfo().substring(1);
 	}
 }

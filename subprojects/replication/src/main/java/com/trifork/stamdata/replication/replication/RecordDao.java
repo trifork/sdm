@@ -29,6 +29,7 @@ import org.hibernate.ScrollableResults;
 import org.hibernate.StatelessSession;
 
 import com.google.inject.Inject;
+import com.trifork.stamdata.ClientSpecific;
 import com.trifork.stamdata.replication.replication.views.View;
 
 
@@ -42,7 +43,7 @@ public class RecordDao {
 		this.em = checkNotNull(em);
 	}
 
-	public <T extends View> ScrollableResults findPage(Class<T> type, String recordId, Date modifiedDate, int limit) {
+	public <T extends View> ScrollableResults findPage(Class<T> type, String recordId, Date modifiedDate, String clientId, int limit) {
 
 		checkNotNull(type);
 		checkNotNull(recordId);
@@ -64,11 +65,20 @@ public class RecordDao {
 		// TODO: Use a scheme based on a 'version' column instead, this will make the
 		// scheme more intuitive.
 
-		String SQL = "FROM " + type.getName() + " WHERE (recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID) ORDER BY recordID, modifiedDate";
+		boolean isClientSpecific = type.isAnnotationPresent(ClientSpecific.class);
+		String clientSpecificSql = isClientSpecific ? " AND (clientId = :clientId)" : "";
+		
+		String SQL = "FROM " + type.getName()
+			+ " WHERE ((recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID))"
+			+ clientSpecificSql
+			+ " ORDER BY recordID, modifiedDate";
 
 		Query query = em.createQuery(SQL);
 		query.setParameter("recordID", id);
 		query.setParameter("modifiedDate", modifiedDate);
+		if (isClientSpecific) {
+			query.setParameter("clientId", clientId);
+		}
 		query.setMaxResults(limit);
 
 		// FETCH THE RECORDS

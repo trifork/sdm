@@ -185,7 +185,7 @@ public class RegistryServletTest {
 
 		get();
 		
-		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), 2);
+		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, 2);
 	}
 
 	// HELPER METHODS
@@ -194,7 +194,7 @@ public class RegistryServletTest {
 
 		when(securityManager.isAuthorized()).thenReturn(authorized);
 		when(securityManager.getClientId()).thenReturn(clientId);
-		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), parseInt(countParam))).thenReturn(records);
+		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
 		when(request.getPathInfo()).thenReturn(requestPath);
 		when(request.getHeader("Accept")).thenReturn(acceptHeader);
 		when(request.getParameter("offset")).thenReturn(offsetParam);
