@@ -46,6 +46,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.mocks.MockEntity;
+import com.trifork.stamdata.replication.mocks.MockEntityWithoutUsageLogging;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.replication.usagelog.UsageLogger;
@@ -143,6 +144,17 @@ public class RegistryServletTest {
 
 		verify(usageLogger).log(clientId, "foo/bar/v1", 2);
 	}
+	
+	@Test
+	public void Should_not_perform_debug_logging_on_views_with_no_usage_logging() throws Exception {
+		when(writer.write(Matchers.<Class<? extends View>>anyObject(), Matchers.<ScrollableResults>anyObject(), Matchers.<OutputStream>anyObject(), Matchers.anyBoolean()))
+			.thenReturn(2);
+		requestPath = "/foo/barWithoutUsageLogging/v1";
+
+		get();
+	
+		verify(usageLogger, never()).log(clientId, "foo/barWithoutUsageLogging/v1", 2);
+	}
 
 	@Test
 	public void Should_not_return_a_web_link_if_there_are_no_more_records() throws Exception {
@@ -195,6 +207,7 @@ public class RegistryServletTest {
 		when(securityManager.isAuthorized()).thenReturn(authorized);
 		when(securityManager.getClientId()).thenReturn(clientId);
 		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
+		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
 		when(request.getPathInfo()).thenReturn(requestPath);
 		when(request.getHeader("Accept")).thenReturn(acceptHeader);
 		when(request.getParameter("offset")).thenReturn(offsetParam);
@@ -214,6 +227,7 @@ public class RegistryServletTest {
 		
 		mappedClasses = new HashMap<String, Class<? extends View>>();
 		mappedClasses.put("foo/bar/v1", MockEntity.class);
+		mappedClasses.put("foo/barWithoutUsageLogging/v1", MockEntityWithoutUsageLogging.class);
 
 		countParam = "2";
 		offsetParam = "11111111112222222222";
