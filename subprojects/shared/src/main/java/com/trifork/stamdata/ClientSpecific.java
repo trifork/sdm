@@ -15,24 +15,15 @@
 // of which can be found at the link below.
 // http://www.gnu.org/copyleft/lesser.html
 
-package com.trifork.stamdata.replication.security;
+package com.trifork.stamdata;
 
-/**
- * This security manager does not restrict access in any way.
- * 
- * This is meant for testing purposes.
- * 
- * @author Thomas Børlum (thb@trifork.com)
- */
-public class UnrestrictedSecurityManager implements SecurityManager {
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-	@Override
-	public boolean isAuthorized() {
-		return true;
-	}
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-	@Override
-	public String getClientId() {
-		return "Unkown";
-	}
+@Retention(RUNTIME)
+@Target(TYPE)
+public @interface ClientSpecific {
 }

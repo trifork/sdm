@@ -16,6 +16,7 @@ import com.trifork.stamdata.replication.replication.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.replication.replication.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.replication.replication.views.cpr.UmyndiggoerelseVaergeRelation;
 import com.trifork.stamdata.replication.replication.views.cpr.Valgoplysninger;
+import com.trifork.stamdata.replication.replication.views.usagelog.UsageLogEntry;
 
 public class Main {
 	@SuppressWarnings("serial")
@@ -33,6 +34,7 @@ public class Main {
 		add(Udrejseoplysninger.class);
 		add(UmyndiggoerelseVaergeRelation.class);
 		add(Valgoplysninger.class);
+		add(UsageLogEntry.class);
 	}};
 	
 	public static void main(String... args) throws Exception {

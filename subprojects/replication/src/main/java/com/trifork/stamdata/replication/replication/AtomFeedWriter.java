@@ -60,7 +60,7 @@ public class AtomFeedWriter {
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public void write(Class<? extends View> viewClass, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
+	public int write(Class<? extends View> viewClass, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException {
 
 		checkNotNull(viewClass);
 		checkNotNull(records);
@@ -68,6 +68,7 @@ public class AtomFeedWriter {
 		records.beforeFirst();
 		
 		String entityName = Views.getViewPath(viewClass);
+		int writtenRecords = 0;
 		
 		try {
 			XMLStreamWriter writer;
@@ -96,11 +97,13 @@ public class AtomFeedWriter {
 			while (records.next()) {
 				View view = (View)records.get(0);
 				writeEntry(writer, entityName, view, marshaller);
+				writtenRecords++;
 			}
 
 			// End the feed.
 
 			writer.writeEndDocument();
+			return writtenRecords;
 		}
 		catch (Exception e) {
 			throw new IOException(e);

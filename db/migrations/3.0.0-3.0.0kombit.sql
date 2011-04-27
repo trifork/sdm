@@ -146,3 +146,12 @@ CREATE TABLE MorOgFaroplysninger (
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE UsageLogEntry (
+	UsageLogEntryPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	ClientId VARCHAR(100) NOT NULL,
+	Date DATETIME NOT NULL,
+	Type VARCHAR(200) NOT NULL,
+	Amount INTEGER NOT NULL,
+	INDEX (ClientId, UsageLogEntryPID)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;

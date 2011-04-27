@@ -17,9 +17,6 @@
 
 package com.trifork.stamdata.replication.security;
 
-import javax.servlet.http.HttpServletRequest;
-
-
 /**
  * A unit that authorizes client HTTP request access to the system in some way.
  * 
@@ -35,11 +32,12 @@ import javax.servlet.http.HttpServletRequest;
 public interface SecurityManager {
 
 	/**
-	 * Authenticates the request and authorizes access to the requested resource
-	 * if the user has the right access level.
-	 * 
-	 * @param request The HTTP request to authorize.
 	 * @return true if the request is authorized.
 	 */
-	boolean authorize(HttpServletRequest request);
+	boolean isAuthorized();
+	
+	/**
+	 * @return a unique identification of the client.
+	 */
+	String getClientId();
 }

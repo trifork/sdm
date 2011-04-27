@@ -38,15 +38,20 @@ import javax.servlet.http.HttpServletResponse;
 import org.hibernate.ScrollableResults;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.mocks.MockEntity;
+import com.trifork.stamdata.replication.mocks.MockEntityWithoutUsageLogging;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.SecurityManager;
+import com.trifork.stamdata.replication.usagelog.UsageLogger;
 
-
+@RunWith(MockitoJUnitRunner.class)
 public class RegistryServletTest {
 
 	private RegistryServlet servlet;
@@ -54,13 +59,15 @@ public class RegistryServletTest {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
-	private SecurityManager securityManager;
+	private @Mock SecurityManager securityManager;
 	private Map<String, Class<? extends View>> registry;
 	private Map<String, Class<? extends View>> mappedClasses;
-	private RecordDao recordDao;
-	private AtomFeedWriter writer;
+	private @Mock RecordDao recordDao;
+	private @Mock AtomFeedWriter writer;
+	private @Mock UsageLogger usageLogger;
 	private String requestPath;
 	private String countParam;
+	private String clientId = "CVR:12345678";
 	private ScrollableResults records;
 	private String acceptHeader;
 	private boolean authorized;
@@ -74,18 +81,18 @@ public class RegistryServletTest {
 		registry = new HashMap<String, Class<? extends View>>();
 
 		Provider securityManagerProvider = mock(Provider.class);
-		securityManager = mock(SecurityManager.class);
 		when(securityManagerProvider.get()).thenReturn(securityManager);
 
 		Provider recordDaoProvider = mock(Provider.class);
-		recordDao = mock(RecordDao.class);
 		when(recordDaoProvider.get()).thenReturn(recordDao);
 
 		Provider writerProvider = mock(Provider.class);
-		writer = mock(AtomFeedWriter.class);
 		when(writerProvider.get()).thenReturn(writer);
+		
+		Provider usageLoggerProvider = mock(Provider.class);
+		when(usageLoggerProvider.get()).thenReturn(usageLogger);
 
-		servlet = new RegistryServlet(registry, securityManagerProvider, recordDaoProvider, writerProvider);
+		servlet = new RegistryServlet(registry, usageLoggerProvider, securityManagerProvider, recordDaoProvider, writerProvider);
 
 		setUpValidRequest();
 	}
@@ -126,6 +133,27 @@ public class RegistryServletTest {
 		countParam = "2";
 		get();
 		verify(response).addHeader("Link", String.format("<stamdata://foo/bar/v1?offset=%s>; rel=\"next\"", nextOffset));
+	}
+	
+	@Test
+	public void Should_perform_usage_logging() throws Exception {
+		when(writer.write(Matchers.<Class<? extends View>>anyObject(), Matchers.<ScrollableResults>anyObject(), Matchers.<OutputStream>anyObject(), Matchers.anyBoolean()))
+			.thenReturn(2);
+
+		get();
+
+		verify(usageLogger).log(clientId, "foo/bar/v1", 2);
+	}
+	
+	@Test
+	public void Should_not_perform_debug_logging_on_views_with_no_usage_logging() throws Exception {
+		when(writer.write(Matchers.<Class<? extends View>>anyObject(), Matchers.<ScrollableResults>anyObject(), Matchers.<OutputStream>anyObject(), Matchers.anyBoolean()))
+			.thenReturn(2);
+		requestPath = "/foo/barWithoutUsageLogging/v1";
+
+		get();
+	
+		verify(usageLogger, never()).log(clientId, "foo/barWithoutUsageLogging/v1", 2);
 	}
 
 	@Test
@@ -169,15 +197,17 @@ public class RegistryServletTest {
 
 		get();
 		
-		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), 2);
+		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, 2);
 	}
 
 	// HELPER METHODS
 
 	public void get() throws Exception {
 
-		when(securityManager.authorize(request)).thenReturn(authorized);
-		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), parseInt(countParam))).thenReturn(records);
+		when(securityManager.isAuthorized()).thenReturn(authorized);
+		when(securityManager.getClientId()).thenReturn(clientId);
+		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
+		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
 		when(request.getPathInfo()).thenReturn(requestPath);
 		when(request.getHeader("Accept")).thenReturn(acceptHeader);
 		when(request.getParameter("offset")).thenReturn(offsetParam);
@@ -197,6 +227,7 @@ public class RegistryServletTest {
 		
 		mappedClasses = new HashMap<String, Class<? extends View>>();
 		mappedClasses.put("foo/bar/v1", MockEntity.class);
+		mappedClasses.put("foo/barWithoutUsageLogging/v1", MockEntityWithoutUsageLogging.class);
 
 		countParam = "2";
 		offsetParam = "11111111112222222222";

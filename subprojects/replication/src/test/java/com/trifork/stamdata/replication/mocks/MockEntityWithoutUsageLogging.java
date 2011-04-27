@@ -15,24 +15,24 @@
 // of which can be found at the link below.
 // http://www.gnu.org/copyleft/lesser.html
 
-package com.trifork.stamdata.replication.security;
+package com.trifork.stamdata.replication.mocks;
 
-/**
- * This security manager does not restrict access in any way.
- * 
- * This is meant for testing purposes.
- * 
- * @author Thomas Børlum (thb@trifork.com)
- */
-public class UnrestrictedSecurityManager implements SecurityManager {
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlRootElement;
 
-	@Override
-	public boolean isAuthorized() {
-		return true;
-	}
+import com.trifork.stamdata.UsageLogged;
+import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.replication.replication.views.ViewPath;
 
-	@Override
-	public String getClientId() {
-		return "Unkown";
+@Entity
+@XmlRootElement
+@ViewPath("foo/barWithoutUsageLogging/v1")
+@UsageLogged(false)
+public abstract class MockEntityWithoutUsageLogging extends View {
+
+	@Id
+	public String id() {
+		return null;
 	}
 }
