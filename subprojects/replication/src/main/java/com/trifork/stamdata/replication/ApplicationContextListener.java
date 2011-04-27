@@ -30,20 +30,18 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.util.Modules;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
-import com.trifork.stamdata.replication.security.SecurityManager;
-import com.trifork.stamdata.replication.security.UnrestrictedSecurityManager;
+import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
+import com.trifork.stamdata.replication.security.ssl.SslModule;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
@@ -75,7 +73,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			// the filters depend on settings from previous filters.
 
 			List<Module> modules = new ArrayList<Module>();
-
+			
 			// CONFIGURE DATA ACCESS
 
 			modules.add(new DatabaseModule(
@@ -92,7 +90,14 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
-			modules.add(new DGWSModule());
+			String security = config.getString("security");
+			if (security.equals("dgws")) {
+				modules.add(new DGWSModule());
+			} else if (security.equals("ssl")) {
+				modules.add(new SslModule());
+			} else {
+				modules.add(new UnrestrictedSecurityModule());
+			}
 
 			// CONFIGURE WHERE TO FIND THE VIEW CLASSES
 
@@ -112,23 +117,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			modules.add(new LoggingModule());
 
-			// CREATE THE INJECTOR
-			//
-			// Disable security if testing by overriding the binding.
-
-			if (config.getBoolean("security.enabled")) {
-				injector = Guice.createInjector(modules);
-			}
-			else {
-				injector = Guice.createInjector(Modules.override(modules).with(new AbstractModule() {
-
-					@Override
-					public void configure() {
-						logger.warn("Security is disabled!");
-						bind(SecurityManager.class).to(UnrestrictedSecurityManager.class);
-					}
-				}));
-			}
+			injector = Guice.createInjector(modules);
 
 			logger.info("Service configured.");
 		}

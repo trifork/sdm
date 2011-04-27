@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
+import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.replication.views.Views;
 import com.trifork.stamdata.replication.security.SecurityManager;
@@ -42,6 +43,7 @@ import dk.sosi.seal.xml.Base64;
  * 
  * @author Thomas Børlum (thomas@borlum.dk)
  */
+@RequestScoped
 public class DGWSSecurityManager implements SecurityManager {
 
 	private static final Pattern authenticationRegex = Pattern.compile("STAMDATA (.*)", MULTILINE | CASE_INSENSITIVE);
