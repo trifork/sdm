@@ -198,11 +198,11 @@ CREATE TABLE ATC (
 
 CREATE TABLE Autorisation (
 	AutorisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	Autorisationsnummer VARCHAR(10) NOT NULL,
+	Autorisationsnummer VARCHAR(10) NOT NULL, -- TODO: This should be CHAR(5)
 	cpr VARCHAR(10) NOT NULL,
 	Fornavn VARCHAR(100) NOT NULL,
 	Efternavn VARCHAR(100) NOT NULL,
-	UddannelsesKode INT(4),
+	UddannelsesKode INT(4) NOT NULL,
 	ModifiedBy VARCHAR(200) NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
