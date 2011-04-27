@@ -41,6 +41,7 @@ public class UmyndiggoerelseVaergeRelation extends View {
 
 	@Id
 	@GeneratedValue
+	@XmlTransient
 	@Column(name = "UmyndiggoerelseVaergeRelationPID")
 	private BigInteger recordID;
 
