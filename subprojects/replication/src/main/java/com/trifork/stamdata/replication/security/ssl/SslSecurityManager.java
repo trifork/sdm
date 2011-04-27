@@ -7,7 +7,6 @@ import java.security.cert.X509Certificate;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
-import com.google.inject.Provider;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationDao;

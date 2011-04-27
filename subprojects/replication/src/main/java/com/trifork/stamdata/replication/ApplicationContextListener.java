@@ -94,7 +94,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			if (security.equals("dgws")) {
 				modules.add(new DGWSModule());
 			} else if (security.equals("ssl")) {
-				modules.add(new SslModule());
+				modules.add(new SslModule(config.getBoolean("security.ssl.test")));
 			} else {
 				modules.add(new UnrestrictedSecurityModule());
 			}
