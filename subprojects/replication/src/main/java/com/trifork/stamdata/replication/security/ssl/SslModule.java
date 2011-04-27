@@ -17,17 +17,42 @@
 
 package com.trifork.stamdata.replication.security.ssl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 import org.openoces.ooapi.environment.Environments;
 import org.openoces.ooapi.environment.Environments.Environment;
+import org.slf4j.Logger;
 
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.security.SecurityManager;
 
 public class SslModule extends ServletModule {
+	private static final Logger logger = getLogger(SslModule.class);
+	private final boolean test;
+
+	public SslModule(boolean test) {
+		this.test = test;
+	}
+
 	@Override
 	protected void configureServlets() {
-		Environments.setEnvironments(Environment.OCESI_DANID_ENV_DEVELOPMENT, Environment.OCESI_DANID_ENV_SYSTEMTEST);
-		//Environments.setEnvironments(Environment.OCESI_DANID_ENV_PROD);
+		if (test) {
+			logger.warn("Using OCES test environment");
+			Environments.setEnvironments(
+					Environment.OCESI_DANID_ENV_DEVELOPMENT,
+					Environment.OCESI_DANID_ENV_SYSTEMTEST,
+					Environment.OCESII_DANID_ENV_DEVELOPMENT,
+					Environment.OCESII_DANID_ENV_DEVELOPMENTTEST,
+					Environment.OCESII_DANID_ENV_EXTERNALTEST,
+					Environment.OCESII_DANID_ENV_IGTEST,
+					Environment.OCESII_DANID_ENV_INTERNALTEST,
+					Environment.OCESII_DANID_ENV_OPERATIONSTEST,
+					Environment.OCESII_DANID_ENV_PREPROD);
+		} else {
+			Environments.setEnvironments(
+					Environment.OCESI_DANID_ENV_PROD,
+					Environment.OCESII_DANID_ENV_PROD);
+		}
 		bind(SecurityManager.class).to(SslSecurityManager.class);
 	}
 }
