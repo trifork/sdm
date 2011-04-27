@@ -50,11 +50,9 @@ public class DGWSSecurityManager implements SecurityManager {
 	private static final SecureRandom random = new SecureRandom();
 
 	private final AuthorizationDao authorizationDao;
-	private final HttpServletRequest request;
 
 	@Inject
-	DGWSSecurityManager(AuthorizationDao authorizationDao, HttpServletRequest request) {
-		this.request = request;
+	DGWSSecurityManager(AuthorizationDao authorizationDao) {
 		this.authorizationDao = checkNotNull(authorizationDao);
 	}
 
@@ -99,14 +97,14 @@ public class DGWSSecurityManager implements SecurityManager {
 	}
 
 	@Override
-	public boolean isAuthorized() {
+	public boolean isAuthorized(HttpServletRequest request) {
 
 		checkNotNull(request);
 
 		// TODO: Cache the ~20 most recent tokens. We can use a priority queue
 		// for efficiency.
 
-		byte[] token = authenticationToken();
+		byte[] token = authenticationToken(request);
 
 		if (token == null) return false;
 
@@ -120,11 +118,11 @@ public class DGWSSecurityManager implements SecurityManager {
 	}
 
 	@Override
-	public String getClientId() {
-		return "CVR:" + authorizationDao.findCvr(authenticationToken());
+	public String getClientId(HttpServletRequest request) {
+		return "CVR:" + authorizationDao.findCvr(authenticationToken(request));
 	}
 
-	protected byte[] authenticationToken() {
+	protected byte[] authenticationToken(HttpServletRequest request) {
 		String header = request.getHeader("Authentication");
 		if (header == null) return null;
 

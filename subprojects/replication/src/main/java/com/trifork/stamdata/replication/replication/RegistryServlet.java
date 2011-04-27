@@ -71,13 +71,13 @@ public class RegistryServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (isNotAuthorized()) {
+		if (isNotAuthorized(request)) {
 			setUnauthorizedHeaders(response);
 			return;
 		}
 
 		String viewName = getViewName(request);
-		String clientId = securityManager.get().getClientId();
+		String clientId = securityManager.get().getClientId(request);
 
 		// Parse the offset query parameters.
 		HistoryOffset offset = new HistoryOffset(request.getParameter("offset"));
@@ -135,7 +135,7 @@ public class RegistryServlet extends HttpServlet {
 		return usageLogged == null || usageLogged.value();
 	}
 
-	private boolean isNotAuthorized() {
+	private boolean isNotAuthorized(HttpServletRequest request) {
 		// AUTHORIZE THE REQUEST
 		//
 		// The HTTP RFC specifies that if returning a 401 status
@@ -143,7 +143,7 @@ public class RegistryServlet extends HttpServlet {
 		//
 		// TODO: Log any unauthorized attempts.
 
-		return !securityManager.get().isAuthorized();
+		return !securityManager.get().isAuthorized(request);
 	}
 
 	private void setUnauthorizedHeaders(HttpServletResponse response) {

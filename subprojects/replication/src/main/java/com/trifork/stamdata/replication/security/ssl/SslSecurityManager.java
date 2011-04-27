@@ -15,23 +15,21 @@ import com.trifork.stamdata.replication.security.dgws.AuthorizationDao;
 @RequestScoped
 public class SslSecurityManager implements SecurityManager {
 	private final AuthorizationDao authorizationDao;
-	private final Provider<HttpServletRequest> request;
 	private final OcesHelper ocesHelper;
 
 	@Inject
-	SslSecurityManager(AuthorizationDao authorizationDao, OcesHelper ocesHelper, Provider<HttpServletRequest> request) {
-		this.request = request;
+	SslSecurityManager(AuthorizationDao authorizationDao, OcesHelper ocesHelper) {
 		this.ocesHelper = checkNotNull(ocesHelper);
 		this.authorizationDao = checkNotNull(authorizationDao);
 	}
 
 	@Override
-	public boolean isAuthorized() {
-		X509Certificate[] certificateFromHeader = (X509Certificate[]) request.get().getAttribute("javax.servlet.request.X509Certificate");
+	public boolean isAuthorized(HttpServletRequest request) {
+		X509Certificate[] certificateFromHeader = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
 		if (certificateFromHeader != null) {
 			MocesCertificateWrapper certificate = ocesHelper.parseCertificate(certificateFromHeader);
 			if (certificate.isValid()) {
-				String viewName = request.get().getPathInfo().substring(1);
+				String viewName = request.getPathInfo().substring(1);
 				return authorizationDao.isClientAuthorized(certificate.getCvr(), viewName);
 			}
 		}
@@ -39,7 +37,7 @@ public class SslSecurityManager implements SecurityManager {
 	}
 
 	@Override
-	public String getClientId() {
+	public String getClientId(HttpServletRequest request) {
 		// TODO Auto-generated method stub
 		return null;
 	}
