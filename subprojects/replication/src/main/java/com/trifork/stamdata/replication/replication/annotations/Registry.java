@@ -1,19 +1,26 @@
-// Stamdata - Copyright (C) 2011 National Board of e-Health (NSI)
+
+// The contents of this file are subject to the Mozilla Public
+// License Version 1.1 (the "License"); you may not use this file
+// except in compliance with the License. You may obtain a copy of
+// the License at http://www.mozilla.org/MPL/
 // 
-// All source code and information supplied as part of Stamdata is
-// copyright to National Board of e-Health.
+// Software distributed under the License is distributed on an "AS
+// IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+// implied. See the License for the specific language governing
+// rights and limitations under the License.
 // 
-// The source code has been released under a dual license - meaning you can
-// use either licensed version of the library with your code.
+// Contributor(s): Contributors are attributed in the source code
+// where applicable.
 // 
-// It is released under the Common Public License 1.0, a copy of which can
-// be found at the link below.
-// http://www.opensource.org/licenses/cpl1.0.php
+// The Original Code is "Stamdata".
 // 
-// It is released under the LGPL (GNU Lesser General Public License), either
-// version 2.1 of the License, or (at your option) any later version. A copy
-// of which can be found at the link below.
-// http://www.gnu.org/copyleft/lesser.html
+// The Initial Developer of the Original Code is Trifork Public A/S.
+// 
+// Portions created for the Original Code are Copyright 2011,
+// Lægemiddelstyrelsen. All Rights Reserved.
+// 
+// Portions created for the FMKi Project are Copyright 2011,
+// National Board of e-Health (NSI). All Rights Reserved.
 
 package com.trifork.stamdata.replication.replication.annotations;
 
