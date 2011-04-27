@@ -155,4 +155,6 @@ dependencies {
 	runtime libs.log4j_slf4j
 	
 	testRuntime 'xerces:xercesImpl:2.8.0'
+
+	compile libs.ooapi
 }

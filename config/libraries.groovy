@@ -63,6 +63,7 @@ libs = [
 	hamcrest: 'org.hamcrest:hamcrest-library:1.2',
 
 	bouncycastle: 'bouncycastle:bcprov-jdk16:140@jar',
+	ooapi: 'org.openoces:ooapi:1.81.2',
 
 	jodi_time: 'joda-time:joda-time:1.6',
 
