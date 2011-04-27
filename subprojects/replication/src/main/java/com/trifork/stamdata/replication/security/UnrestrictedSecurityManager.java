@@ -24,6 +24,8 @@
 
 package com.trifork.stamdata.replication.security;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * This security manager does not restrict access in any way.
  * 
@@ -34,12 +36,12 @@ package com.trifork.stamdata.replication.security;
 public class UnrestrictedSecurityManager implements SecurityManager {
 
 	@Override
-	public boolean isAuthorized() {
+	public boolean isAuthorized(HttpServletRequest request) {
 		return true;
 	}
 
 	@Override
-	public String getClientId() {
+	public String getClientId(HttpServletRequest request) {
 		return "Unkown";
 	}
 }

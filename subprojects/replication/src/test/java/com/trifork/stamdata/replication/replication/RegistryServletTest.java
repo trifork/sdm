@@ -211,8 +211,8 @@ public class RegistryServletTest {
 
 	public void get() throws Exception {
 
-		when(securityManager.isAuthorized()).thenReturn(authorized);
-		when(securityManager.getClientId()).thenReturn(clientId);
+		when(securityManager.isAuthorized(request)).thenReturn(authorized);
+		when(securityManager.getClientId(request)).thenReturn(clientId);
 		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
 		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
 		when(request.getPathInfo()).thenReturn(requestPath);

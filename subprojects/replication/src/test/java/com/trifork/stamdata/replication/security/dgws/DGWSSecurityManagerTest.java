@@ -56,7 +56,7 @@ public class DGWSSecurityManagerTest {
 	@Before
 	public void setUp() {
 
-		securityManager = new DGWSSecurityManager(authorizationDao, request);
+		securityManager = new DGWSSecurityManager(authorizationDao);
 		
 		when(request.getHeader("Authentication")).thenReturn("STAMDATA " + token);
 		when(request.getPathInfo()).thenReturn(viewPath);
@@ -67,7 +67,7 @@ public class DGWSSecurityManagerTest {
 		
 		when(authorizationDao.isTokenValid(eq(Base64.decode(token)), eq(viewPath.substring(1)))).thenReturn(true);
 		
-		assertTrue(securityManager.isAuthorized());
+		assertTrue(securityManager.isAuthorized(request));
 	}
 
 	@Test
@@ -75,14 +75,14 @@ public class DGWSSecurityManagerTest {
 		
 		when(request.getHeader("Authentication")).thenReturn(null);
 		
-		assertFalse(securityManager.isAuthorized());
+		assertFalse(securityManager.isAuthorized(request));
 	}
 	
 	@Test
 	public void knows_client_id() {
 		when(authorizationDao.findCvr(Base64.decode(token))).thenReturn("12345678");
 
-		assertEquals("CVR:12345678", securityManager.getClientId());
+		assertEquals("CVR:12345678", securityManager.getClientId(request));
 	}
 
 	protected String createRandomToken() {

@@ -29,7 +29,7 @@ public class SslSecurityManagerTest {
 
 	@Before
 	public void before() {
-		securityManager = new SslSecurityManager(dao, ocesHelper, request);
+		securityManager = new SslSecurityManager(dao, ocesHelper);
 		certificateList = new X509Certificate[] {certificate};
 		when(request.getPathInfo()).thenReturn(viewPath);
 	}
@@ -38,7 +38,7 @@ public class SslSecurityManagerTest {
 	public void rejectsClientWhenNoCertificateIsPresent() {
 		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(null);
 
-		assertFalse(securityManager.isAuthorized());
+		assertFalse(securityManager.isAuthorized(request));
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class SslSecurityManagerTest {
 		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(false);
 
-		assertFalse(securityManager.isAuthorized());
+		assertFalse(securityManager.isAuthorized(request));
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class SslSecurityManagerTest {
 		when(certificateWrapper.getCvr()).thenReturn(cvr);
 		when(dao.isClientAuthorized(cvr, "foo/bar/v1")).thenReturn(true);
 
-		assertTrue(securityManager.isAuthorized());
+		assertTrue(securityManager.isAuthorized(request));
 	}
 
 	@Test
@@ -69,6 +69,6 @@ public class SslSecurityManagerTest {
 		when(certificateWrapper.getCvr()).thenReturn("12345678");
 		when(dao.isClientAuthorized(cvr, "foo/bar/v1")).thenReturn(false);
 
-		assertFalse(securityManager.isAuthorized());
+		assertFalse(securityManager.isAuthorized(request));
 	}
 }
