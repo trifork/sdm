@@ -47,7 +47,7 @@ public class Dosering extends View {
 	@Column(name = "DoseringKode")
 	protected BigInteger kode;
 
-	@Column(name = "DoseringsTekst")
+	@Column(name = "DoseringTekst")
 	protected String tekst;
 
 	@Column(name = "DoseringKortTekst")

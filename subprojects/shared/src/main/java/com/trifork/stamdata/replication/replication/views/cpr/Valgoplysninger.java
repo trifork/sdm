@@ -35,6 +35,7 @@ public class Valgoplysninger extends View {
 
 	protected String Valgkode;
 	protected Date valgretsdato;
+	protected String valgkode;
 	
 	@XmlTransient
 	@Temporal(TIMESTAMP)

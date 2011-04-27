@@ -17,26 +17,35 @@
 
 package com.trifork.stamdata.replication.replication.views;
 
-import org.junit.BeforeClass;
+import java.util.Set;
+
+import org.hibernate.Session;
+import org.hibernate.exception.SQLGrammarException;
 import org.junit.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.trifork.stamdata.replication.DatabaseHelper;
 
 
 public class ViewTest {
 	
-	private static Injector injector;
-
-	@BeforeClass
-	public static void init() {
-		
-		injector = Guice.createInjector();
-	}
-	
 	@Test
-	public void Should_be_able_to_marshal_all_views() {
-		
-		// TODO: Marshal all views to XML.		
+	public void Should_be_able_to_query_all_views() throws Exception {
+		Set<Class<?>> views = Views.findAllViews();
+		DatabaseHelper db = new DatabaseHelper(views.toArray(new Class<?>[0]));
+		for(Class<?> viewClass : views) {
+			System.out.println(viewClass.getCanonicalName());
+			Session session = db.openSession();
+			session.beginTransaction();
+			try {
+				session.createCriteria(viewClass).list();
+			}
+			catch(Exception e) {
+				throw new RuntimeException("Could not show view " + viewClass.getCanonicalName(), e);
+			}
+			finally {
+				session.getTransaction().rollback();
+				session.close();
+			}
+		}
 	}
 }

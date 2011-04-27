@@ -118,7 +118,7 @@ public class Person extends View {
 	protected Date modifiedDate;
 
 	protected Date navneBeskyttelsestartdato;
-	protected Date navnebeskyttelseslutdato;
+	protected Date navnebeskyttelseslettedato;
 
 	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)

@@ -50,7 +50,7 @@ public class Tidsenhed extends View {
 	@Column(name = "TidsenhedTekst")
 	protected String tekst;
 
-	@Column(name = "KortTekst")
+	@Column(name = "TidsenhedKortTekst")
 	protected String kortTekst;
 
 	// Metadata
