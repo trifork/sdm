@@ -117,6 +117,9 @@ public class Person extends View {
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
+	protected Date navneBeskyttelsestartdato;
+	protected Date navnebeskyttelseslutdato;
+
 	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	@XmlElement(required = true)
