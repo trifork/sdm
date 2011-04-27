@@ -6,11 +6,11 @@ import dk.trifork.sdm.model.Output;
 @Output
 public class PakningskombinationerUdenPriser extends TakstEntity {
 
-    private Long varenummerOrdineret;        //Vnr. på pakningen anført på recepten
-    private Long varenummerSubstitueret;        //Vnr. på en pakning der evt. kan substitueres til
-    private Long varenummerAlternativt;        //Vnr. for en mindre, billigere pakning
-    private Long antalPakninger;        //Antal af den alternative pakning
-    private String informationspligtMarkering;        //Markering (stjerne *) for informationspligt
+    private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
+    private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan substitueres til
+    private Long varenummerAlternativt; // Vnr. for en mindre, billigere pakning
+    private Long antalPakninger; // Antal af den alternative pakning
+    private String informationspligtMarkering; // Markering (stjerne *) for informationspligt
 
     @Id
     @Output
