@@ -39,7 +39,7 @@ public class Main {
 	
 	public static void main(String... args) throws Exception {
 		String serverAndPort = ask("Server and port", "http://localhost:8080/replication");
-		boolean security = ask("Security enabled?", "n").toLowerCase().equals("y");
+		Security security = toSecurity(ask("Security (none/dgws/ssl)", "none").toLowerCase());;
 
 		for (int i=0; i<views.size(); i++) {
 			Class<?> viewClass = views.get(i);
@@ -52,6 +52,15 @@ public class Main {
 		
 		RegistryClient client = new RegistryClient(serverAndPort + "/stamdata/", security);
 		fetch(client, selectedView, startTag);
+	}
+
+	private static Security toSecurity(String s) {
+		if (s.equals("ssl")) {
+			return Security.ssl;
+		} else if (s.equals("dgws")) {
+			return Security.dgws;
+		}
+		return Security.none;
 	}
 
 	private static String ask(String question, String defaultValue) {
