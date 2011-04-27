@@ -46,7 +46,7 @@ import com.trifork.stamdata.replication.replication.views.ViewPath;
 @XmlRootElement
 @ViewPath("cpr/morogfaroplysninger/v1")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MorOgFarOplysninger extends View {
+public class MorOgFaroplysninger extends View {
 
 	@Id
 	@GeneratedValue

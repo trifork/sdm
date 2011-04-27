@@ -33,7 +33,7 @@ import com.trifork.stamdata.replication.replication.views.cpr.Folkekirkeoplysnin
 import com.trifork.stamdata.replication.replication.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.replication.replication.views.cpr.Haendelse;
 import com.trifork.stamdata.replication.replication.views.cpr.KommunaleForhold;
-import com.trifork.stamdata.replication.replication.views.cpr.MorOgFarOplysninger;
+import com.trifork.stamdata.replication.replication.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.replication.replication.views.cpr.Person;
 import com.trifork.stamdata.replication.replication.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.replication.replication.views.cpr.Udrejseoplysninger;
@@ -52,7 +52,7 @@ public class Main {
 		add(ForaeldremyndighedsRelation.class);
 		add(Haendelse.class);
 		add(KommunaleForhold.class);
-		add(MorOgFarOplysninger.class);
+		add(MorOgFaroplysninger.class);
 		add(Statsborgerskab.class);
 		add(Udrejseoplysninger.class);
 		add(UmyndiggoerelseVaergeRelation.class);
