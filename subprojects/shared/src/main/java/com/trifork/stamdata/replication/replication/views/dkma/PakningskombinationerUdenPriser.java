@@ -26,7 +26,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,10 +43,6 @@ public class PakningskombinationerUdenPriser extends View {
 	@Column(name = "PakningskombinationerUdenPriserPID")
 	@XmlTransient
 	private BigInteger recordID;
-
-	// @Column(name = "CID")
-	@Transient // FIXME column does not exist in database
-	protected String id;
 
 	@Column(name = "VarenummerOrdineret")
 	protected BigInteger varenummerOrdineret;
@@ -81,7 +76,7 @@ public class PakningskombinationerUdenPriser extends View {
 	@Override
 	public String getId() {
 
-		return id.toString();
+		return varenummerOrdineret.toString();
 	}
 
 	@Override

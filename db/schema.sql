@@ -604,7 +604,7 @@ CREATE TABLE Pakningskombinationer (
 
 CREATE TABLE PakningskombinationerUdenPriser (
 	PakningskombinationerUdenPriserPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	VarenummerOrdineret BIGINT(12) NOT NULL,
+	VarenummerOrdineret BIGINT(12) NOT NULL, -- ID Column
 	VarenummerSubstitueret BIGINT(12),
 	VarenummerAlternativt BIGINT(12),
 	AntalPakninger BIGINT(12),
