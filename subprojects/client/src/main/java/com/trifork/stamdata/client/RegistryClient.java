@@ -30,14 +30,28 @@ import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
 import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 import static java.lang.String.format;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -67,17 +81,19 @@ import dk.sosi.seal.vault.CredentialVault;
 public class RegistryClient {
 
 	private final String stamdataURL;
-	private final boolean securityEnabled;
+	private final Security security;
 	private SOSIFactory sosiFactory;
 	private IDCard idCard;
 	private Map<Class<?>, String> authorizationCache;
 
-	public RegistryClient(String endpointURL, boolean sosiSecurityEnabled) {
+	public RegistryClient(String endpointURL, Security security) {
 		this.stamdataURL = endpointURL;
-		this.securityEnabled = sosiSecurityEnabled;
+		this.security = security;
 
-		if (sosiSecurityEnabled) {
+		if (security == Security.dgws) {
 			createSosiFactory();
+		} else if (security == Security.ssl) {
+			setupSslCertificates();
 		}
 	}
 
@@ -88,6 +104,38 @@ public class RegistryClient {
 		CredentialVault vault = new ClasspathCredentialVault(cryptoProviderSettings, "Test1234");
 		Federation federation = new SOSITestFederation(cryptoProviderSettings);
 		sosiFactory = new SOSIFactory(federation, vault, cryptoProviderSettings);
+	}
+
+	private void setupSslCertificates() {
+		try {
+			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			trustManagerFactory.init(createKeyStore("./truststore.jks", "Test1234"));
+			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
+
+			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+			keyManagerFactory.init(createKeyStore("./keystore.jks", "Test1234"), "Test1234".toCharArray());
+			KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
+
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(keyManagers, trustManagers, null);
+			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+			HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+				@Override
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			});
+		} catch (Exception e) {
+			throw new RuntimeException("Could not set up certificates", e);
+		}
+	}
+
+	private KeyStore createKeyStore(String path, String password) throws KeyStoreException, IOException,
+			NoSuchAlgorithmException, CertificateException {
+		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream keystoreStream = ClassLoader.getSystemResourceAsStream(path);
+		keystore.load(keystoreStream, password.toCharArray());
+		return keystore;
 	}
 
 	public <T> Iterator<EntityRevision<T>> update(Class<T> entityType, String offset, int count) throws Exception {
@@ -131,7 +179,7 @@ public class RegistryClient {
 	}
 
 	private <T> String validAuthorizationTokenFor(Class<T> entityType) throws Exception {
-		if (!securityEnabled) {
+		if (security != Security.dgws) {
 			return "";
 		}
 
