@@ -40,7 +40,7 @@ import com.trifork.stamdata.replication.gui.controllers.ClientController;
 import com.trifork.stamdata.replication.gui.controllers.LogController;
 import com.trifork.stamdata.replication.gui.controllers.UserController;
 import com.trifork.stamdata.replication.gui.models.User;
-import com.trifork.stamdata.replication.gui.security.LoginFilter;
+import com.trifork.stamdata.replication.gui.security.saml.LoginFilter;
 import com.trifork.xmlquery.Namespaces;
 
 import dk.itst.oiosaml.sp.service.SPFilter;
@@ -92,16 +92,6 @@ public class GuiModule extends ServletModule {
 		config.setObjectWrapper(new DefaultObjectWrapper());
 
 		bind(Configuration.class).toInstance(config);
-
-		// FILTER ACCESS THROUGH SAML
-		//
-		// The LoginFilter requires that trafic has passed through
-		// the SPFilter first.
-
-		bind(SPFilter.class).in(Singleton.class);
-		filter("/admin", "/admin/*").through(SPFilter.class);
-		filter("/admin", "/admin/*").through(LoginFilter.class);
-		bind(User.class).toProvider(LoginFilter.class).in(RequestScoped.class);
 
 		// Bind the RID 2 CPR helper to get the users' CPR
 		// from a remote service.

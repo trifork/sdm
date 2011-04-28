@@ -49,6 +49,14 @@ public class UserDao {
 		return (User) session.load(User.class, id);
 	}
 
+	public User findByCvrAndRid(String cvr, String rid) {
+		Query query = session.createQuery("FROM User WHERE (rid = :rid AND cvr = :cvr)");
+		query.setParameter("rid", rid);
+		query.setParameter("cvr", cvr);
+		return (User) query.uniqueResult();
+		
+	}
+	
 	public User find(String cvr, String cpr) throws SQLException {
 
 		Query query = session.createQuery("FROM User WHERE (cpr = :cpr AND cvr = :cvr)");
@@ -57,9 +65,9 @@ public class UserDao {
 		return (User) query.uniqueResult();
 	}
 
-	public User create(String name, String cpr, String cvr) {
+	public User create(String name, String cpr, String cvr, String rid) {
 
-		User user = new User(name, cpr, cvr);
+		User user = new User(name, cpr, cvr, rid);
 		session.save(user);
 		return user;
 	}

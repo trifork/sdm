@@ -108,6 +108,7 @@ public class UserController extends AbstractController {
 
 		String newUserName = request.getParameter("name");
 		String newUserCPR = request.getParameter("cpr");
+		String newUserRid = request.getParameter("rid");
 		String firm = request.getParameter("firm");
 
 		// The CVR must be contained in the white list.
@@ -115,7 +116,7 @@ public class UserController extends AbstractController {
 		if (whitelist.containsKey(firm)) {
 			String newUserCVR = whitelist.get(firm);
 
-			User user = users.get().create(newUserName, newUserCPR, newUserCVR);
+			User user = users.get().create(newUserName, newUserCPR, newUserCVR, newUserRid);
 
 			if (user != null) {
 				audit.get().log("new_user=%s created by user=%s.", user, currentUser.get());

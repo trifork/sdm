@@ -24,7 +24,7 @@ public class SslSecurityManager implements SecurityManager {
 
 	@Override
 	public boolean isAuthorized(HttpServletRequest request) {
-		MocesCertificateWrapper certificate = getCertificate(request);
+		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request);
 		if (certificate != null && certificate.isValid()) {
 			String viewName = request.getPathInfo().substring(1);
 			return authorizationDao.isClientAuthorized(certificate.getCvr(), viewName);
@@ -34,15 +34,7 @@ public class SslSecurityManager implements SecurityManager {
 
 	@Override
 	public String getClientId(HttpServletRequest request) {
-		return getCertificate(request).getSubjectSerialNumber();
+		return ocesHelper.extractCertificateFromRequest(request).getSubjectSerialNumber();
 	}
 	
-	private MocesCertificateWrapper getCertificate(HttpServletRequest request) {
-		X509Certificate[] certificateFromHeader = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
-		if (certificateFromHeader != null) {
-			return ocesHelper.parseCertificate(certificateFromHeader);
-		}
-		return null;
-	}
-
 }

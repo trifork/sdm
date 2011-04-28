@@ -7,6 +7,9 @@
 <p>
 	CVR-nummer: ${user.cvr}
 </p>
+<p>
+	RID: ${user.rid}
+</p>
 <hr />
 <p>
 	<input type="hidden" name="method" value="DELETE" />

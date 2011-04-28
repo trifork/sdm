@@ -52,7 +52,7 @@ public class UserRepositoryTest {
 	@Test
 	public void can_find_user_by_id() throws Exception {
 		// Arrange
-		User user = repository.create("name", "cpr", "cvr");
+		User user = repository.create("name", "cpr", "cvr", "rid");
 
 		// Act
 		User foundUser = repository.find(user.getId());
@@ -65,8 +65,8 @@ public class UserRepositoryTest {
 	@Test
 	public void can_find_all_users() throws Exception {
 		// Arrange
-		repository.create("name1", "cpr1", "cvr1");
-		repository.create("name2", "cpr2", "cvr2");
+		repository.create("name1", "cpr1", "cvr1", "rid1");
+		repository.create("name2", "cpr2", "cvr2", null);
 
 		// Act
 		List<User> allUsers = repository.findAll();
@@ -80,7 +80,7 @@ public class UserRepositoryTest {
 	@Test
 	public void can_delete_user() throws Exception {
 		// Arrange
-		User user = repository.create("name", "cpr", "cvr");
+		User user = repository.create("name", "cpr", "cvr", null);
 
 		// Act
 		repository.delete(user.getId());
@@ -95,5 +95,6 @@ public class UserRepositoryTest {
 		assertThat(actual.getName(), is(expected.getName()));
 		assertThat(actual.getCpr(), is(expected.getCpr()));
 		assertThat(actual.getCvr(), is(expected.getCvr()));
+		assertThat(actual.getRid(), is(expected.getRid()));
 	}
 }

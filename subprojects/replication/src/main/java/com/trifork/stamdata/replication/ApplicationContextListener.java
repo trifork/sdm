@@ -42,6 +42,8 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
+import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
+import com.trifork.stamdata.replication.gui.security.twowayssl.TwoWaySslSecurityModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
@@ -118,6 +120,17 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 				config.getInt("rid2cpr.callTimeout"),
 				getWhiteList(config)
 			));
+			
+			String guiSecurity = config.getString("gui.security");
+			if("saml".equals(guiSecurity)) {
+				modules.add(new SamlSecurityModule());
+			}
+			else if ("twowayssl".equals(guiSecurity)) {
+				modules.add(new TwoWaySslSecurityModule());
+			}
+			else if ("none".equals(guiSecurity)) {
+				// TODO
+			}
 
 			// LOGGING
 

@@ -36,24 +36,21 @@ public class SslSecurityManagerTest {
 
 	@Test
 	public void rejectsClientWhenNoCertificateIsPresent() {
-		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(null);
-
+		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(null);
 		assertFalse(securityManager.isAuthorized(request));
 	}
 
 	@Test
 	public void rejectsClientWithInvalidCertificate() {
-		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(certificateList);
-		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
+		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(false);
 
 		assertFalse(securityManager.isAuthorized(request));
 	}
 
 	@Test
-	public void rejectsClientWithUnknownCvr() {
-		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(certificateList);
-		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
+	public void acceptsClientWithKnownCvr() {
+		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
 		when(certificateWrapper.getCvr()).thenReturn(cvr);
 		when(dao.isClientAuthorized(cvr, "foo/bar/v1")).thenReturn(true);
@@ -62,9 +59,8 @@ public class SslSecurityManagerTest {
 	}
 
 	@Test
-	public void acceptsClientWithKnownCvr() {
-		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(certificateList);
-		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
+	public void rejectsClientWithUnknownCvr() {
+		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
 		when(certificateWrapper.getCvr()).thenReturn("12345678");
 		when(dao.isClientAuthorized(cvr, "foo/bar/v1")).thenReturn(false);
@@ -74,8 +70,7 @@ public class SslSecurityManagerTest {
 	
 	@Test
 	public void usesSubjectSerialNumberAsClientId() {
-		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(certificateList);
-		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
+		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:someRid");
 		
 		assertEquals("CVR:12345678-RID:someRid", securityManager.getClientId(request));

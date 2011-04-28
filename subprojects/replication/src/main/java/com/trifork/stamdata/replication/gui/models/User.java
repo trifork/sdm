@@ -39,16 +39,18 @@ public class User {
 	private String name;
 	private String cvr;
 	private String cpr;
+	private String rid;
 
 	protected User() {
 
 	}
 
-	public User(String name, String cpr, String cvr) {
+	public User(String name, String cpr, String cvr, String rid) {
 
 		this.name = name;
 		this.cpr = cpr;
 		this.cvr = cvr;
+		this.rid = rid;
 	}
 
 	public String getId() {
@@ -70,10 +72,14 @@ public class User {
 
 		return cpr;
 	}
+	
+	public String getRid() {
+		return rid;
+	}
 
 	@Override
 	public String toString() {
 
-		return String.format("%s (cpr=%s, cvr=%s)", name, cpr, cvr);
+		return String.format("%s (cpr=%s, cvr=%s, rid=%s)", name, cpr, cvr, rid);
 	}
 }

@@ -24,6 +24,10 @@
 		</#list>
 	</select>
 </p>
+<p>
+	<label for="rid">RID:</label>
+	<input name="rid" type="text" size="60" />
+</p>
 <hr />
 <p>
 	<input type="submit" value="Gem" />
