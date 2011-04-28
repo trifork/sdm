@@ -29,4 +29,8 @@ public class MocesCertificateWrapper {
 		return certificate.validityStatus() == CertificateStatus.VALID;
 	}
 
+	public String getSubjectSerialNumber() {
+		return certificate.getSubjectSerialNumber();
+	}
+
 }

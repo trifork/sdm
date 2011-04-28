@@ -71,4 +71,13 @@ public class SslSecurityManagerTest {
 
 		assertFalse(securityManager.isAuthorized(request));
 	}
+	
+	@Test
+	public void usesSubjectSerialNumberAsClientId() {
+		when(request.getAttribute("javax.servlet.request.X509Certificate")).thenReturn(certificateList);
+		when(ocesHelper.parseCertificate(certificateList)).thenReturn(certificateWrapper);
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:someRid");
+		
+		assertEquals("CVR:12345678-RID:someRid", securityManager.getClientId(request));
+	}
 }
