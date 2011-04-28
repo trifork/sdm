@@ -7,7 +7,7 @@ import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.transform.Result;
 import javax.xml.transform.stream.StreamResult;
 
-import com.trifork.stamdata.replication.replication.views.Views;
+import com.trifork.stamdata.views.Views;
 
 /**
  * App that generates XSD schemas for the views.

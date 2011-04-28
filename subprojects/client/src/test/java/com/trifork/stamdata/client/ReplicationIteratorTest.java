@@ -30,10 +30,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trifork.stamdata.replication.replication.views.cpr.Person;
-
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
+import com.trifork.stamdata.views.cpr.Person;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReplicationIteratorTest {

@@ -62,7 +62,7 @@ import org.apache.commons.lang.time.StopWatch;
 import org.w3c.dom.Document;
 
 import com.trifork.stamdata.client.impl.ReplicationReaderImpl;
-import com.trifork.stamdata.replication.replication.views.ViewPath;
+import com.trifork.stamdata.views.ViewPath;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.CareProvider;

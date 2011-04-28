@@ -26,20 +26,20 @@ package com.trifork.stamdata.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trifork.stamdata.replication.replication.views.cpr.BarnRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Civilstand;
-import com.trifork.stamdata.replication.replication.views.cpr.Foedselsregistreringsoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.Folkekirkeoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.ForaeldremyndighedsRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Haendelse;
-import com.trifork.stamdata.replication.replication.views.cpr.KommunaleForhold;
-import com.trifork.stamdata.replication.replication.views.cpr.MorOgFaroplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.Person;
-import com.trifork.stamdata.replication.replication.views.cpr.Statsborgerskab;
-import com.trifork.stamdata.replication.replication.views.cpr.Udrejseoplysninger;
-import com.trifork.stamdata.replication.replication.views.cpr.UmyndiggoerelseVaergeRelation;
-import com.trifork.stamdata.replication.replication.views.cpr.Valgoplysninger;
-import com.trifork.stamdata.replication.replication.views.usagelog.UsageLogEntry;
+import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Civilstand;
+import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
+import com.trifork.stamdata.views.cpr.Haendelse;
+import com.trifork.stamdata.views.cpr.KommunaleForhold;
+import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
+import com.trifork.stamdata.views.cpr.Person;
+import com.trifork.stamdata.views.cpr.Statsborgerskab;
+import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
+import com.trifork.stamdata.views.cpr.Valgoplysninger;
+import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 public class Main {
 	@SuppressWarnings("serial")

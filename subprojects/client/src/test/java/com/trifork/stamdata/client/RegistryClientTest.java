@@ -28,7 +28,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.trifork.stamdata.replication.replication.views.cpr.Person;
+import com.trifork.stamdata.views.cpr.Person;
 
 @Ignore
 public class RegistryClientTest {
