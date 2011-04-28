@@ -32,9 +32,9 @@ import javax.xml.bind.JAXBException;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
-import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.replication.views.ViewPath;
-import com.trifork.stamdata.replication.replication.views.Views;
+import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.ViewPath;
+import com.trifork.stamdata.views.Views;
 
 
 public class RegistryModule extends ServletModule {

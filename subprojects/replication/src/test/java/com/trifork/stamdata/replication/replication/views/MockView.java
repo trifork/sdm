@@ -27,6 +27,8 @@ package com.trifork.stamdata.replication.replication.views;
 import java.math.BigInteger;
 import java.util.Date;
 
+import com.trifork.stamdata.views.View;
+
 
 public class MockView extends View {
 

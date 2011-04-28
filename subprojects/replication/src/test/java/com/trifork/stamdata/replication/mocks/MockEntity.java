@@ -28,8 +28,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.replication.views.ViewPath;
+import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.ViewPath;
 
 @Entity
 @XmlRootElement

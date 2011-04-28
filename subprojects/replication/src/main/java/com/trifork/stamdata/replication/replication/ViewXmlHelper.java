@@ -31,7 +31,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.views.View;
 
 /**
  * Creates separate JAXB contexts for each class,

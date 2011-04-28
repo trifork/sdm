@@ -38,9 +38,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
-import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.replication.views.cpr.Folkekirkeoplysninger;
-import com.trifork.stamdata.replication.replication.views.usagelog.UsageLogEntry;
+import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 public class RecordDaoTest {
 	private static StatelessSession session;

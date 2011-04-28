@@ -37,7 +37,7 @@ import org.hibernate.StatelessSession;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.ClientSpecific;
-import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.views.View;
 
 
 public class RecordDao {

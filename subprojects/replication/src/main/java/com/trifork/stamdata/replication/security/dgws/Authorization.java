@@ -26,7 +26,7 @@ package com.trifork.stamdata.replication.security.dgws;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.trifork.stamdata.Preconditions.checkArgument;
-import static com.trifork.stamdata.replication.replication.views.Views.checkViewIntegrity;
+import static com.trifork.stamdata.views.Views.checkViewIntegrity;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -36,8 +36,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
-import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.replication.views.ViewPath;
+import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.ViewPath;
 
 
 @Entity

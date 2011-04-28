@@ -40,8 +40,8 @@ import org.hibernate.ScrollableResults;
 
 import com.google.inject.Inject;
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
-import com.trifork.stamdata.replication.replication.views.View;
-import com.trifork.stamdata.replication.replication.views.Views;
+import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.Views;
 
 /**
  * Writes a set of records into an output stream as an Atom 1.0 feed.

@@ -54,9 +54,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.mocks.MockEntity;
 import com.trifork.stamdata.replication.mocks.MockEntityWithoutUsageLogging;
-import com.trifork.stamdata.replication.replication.views.View;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.replication.usagelog.UsageLogger;
+import com.trifork.stamdata.views.View;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RegistryServletTest {

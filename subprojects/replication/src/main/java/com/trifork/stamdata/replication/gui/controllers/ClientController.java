@@ -46,7 +46,7 @@ import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
-import com.trifork.stamdata.replication.replication.views.View;
+import com.trifork.stamdata.views.View;
 
 
 @Singleton

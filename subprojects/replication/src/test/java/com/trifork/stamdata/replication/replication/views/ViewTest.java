@@ -31,6 +31,7 @@ import org.hibernate.exception.SQLGrammarException;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.views.Views;
 
 
 public class ViewTest {

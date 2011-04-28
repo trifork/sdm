@@ -41,8 +41,8 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.logging.LogEntry;
-import com.trifork.stamdata.replication.replication.views.Views;
 import com.trifork.stamdata.replication.security.dgws.Authorization;
+import com.trifork.stamdata.views.Views;
 
 
 public class DatabaseModule extends ServletModule {

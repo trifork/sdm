@@ -29,7 +29,7 @@ import javax.inject.Inject;
 
 import org.hibernate.Session;
 
-import com.trifork.stamdata.replication.replication.views.usagelog.UsageLogEntry;
+import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 public class UsageLogger {
 
