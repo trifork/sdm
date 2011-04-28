@@ -110,5 +110,5 @@ buildscript {
 // an embedded version of gradle to check-in to our SCM.
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '1.0-milestone-2'
+    gradleVersion = '1.0-milestone-3'
 }
