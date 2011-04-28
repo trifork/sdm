@@ -99,9 +99,9 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
 			String security = config.getString("security");
-			if (security.equals("dgws")) {
+			if ("dgws".equals(security)) {
 				modules.add(new DGWSModule());
-			} else if (security.equals("ssl")) {
+			} else if ("twowayssl".equals(security)) {
 				modules.add(new SslModule(config.getBoolean("security.ssl.test")));
 			} else {
 				modules.add(new UnrestrictedSecurityModule());
@@ -128,7 +128,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			else if ("twowayssl".equals(guiSecurity)) {
 				modules.add(new TwoWaySslSecurityModule());
 			}
-			else if ("none".equals(guiSecurity)) {
+			else {
 				// TODO
 			}
 
