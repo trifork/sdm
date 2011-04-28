@@ -48,7 +48,7 @@ import org.reflections.vfs.Vfs;
  */
 public final class Views {
 
-	private static final Pattern uriRegex = Pattern.compile("stamdata://(.+)");
+	private static final Pattern URI_REGEX = Pattern.compile("stamdata://(.+)");
 
 	/**
 	 * Checks that the view has be configured correctly.
@@ -70,7 +70,7 @@ public final class Views {
 
 		checkNotNull(stamdataURI);
 
-		Matcher matcher = uriRegex.matcher(stamdataURI);
+		Matcher matcher = URI_REGEX.matcher(stamdataURI);
 		return matcher.find() ? matcher.group(1) : null;
 	}
 
