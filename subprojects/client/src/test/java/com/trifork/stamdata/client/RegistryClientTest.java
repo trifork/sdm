@@ -37,7 +37,7 @@ public class RegistryClientTest {
 
 	@Before
 	public void setUp() {
-		client = new RegistryClient("http://localhost:8080/replication/stamdata/", Security.ssl);
+		client = new RegistryClient("http://localhost:8080/replication/stamdata/", Security.none);
 	}
 
 	@Test
