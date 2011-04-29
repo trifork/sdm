@@ -152,6 +152,6 @@ public class Person extends View {
 
 	@Override
 	public String toString() {
-		return "Person[" + cpr + ", fornavn=" + fornavn + ", efternavn=" + efternavn + ", køn=" + koen + "]";
+		return "Person[" + cpr + ", fornavn=" + fornavn + ", efternavn=" + efternavn + ", køn=" + koen + "], validFrom=" + validFrom + ", validTo=" + validTo;
 	}
 }
