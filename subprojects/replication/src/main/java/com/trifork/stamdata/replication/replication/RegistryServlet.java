@@ -46,9 +46,9 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.HistoryOffset;
 import com.trifork.stamdata.UsageLogged;
+import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.security.SecurityManager;
-import com.trifork.stamdata.replication.usagelog.UsageLogger;
 import com.trifork.stamdata.views.View;
 
 

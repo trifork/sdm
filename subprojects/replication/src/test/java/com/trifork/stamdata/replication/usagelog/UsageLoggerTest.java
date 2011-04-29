@@ -36,6 +36,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 
