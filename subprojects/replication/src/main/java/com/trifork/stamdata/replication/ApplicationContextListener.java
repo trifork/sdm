@@ -36,6 +36,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 
+import com.google.inject.ConfigurationException;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -44,6 +45,7 @@ import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
 import com.trifork.stamdata.replication.gui.security.twowayssl.TwoWaySslSecurityModule;
+import com.trifork.stamdata.replication.gui.security.unrestricted.GuiUnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
@@ -128,8 +130,11 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			else if ("twowayssl".equals(guiSecurity)) {
 				modules.add(new TwoWaySslSecurityModule());
 			}
+			else if ("none".equals(guiSecurity)){
+				modules.add(new GuiUnrestrictedSecurityModule());
+			}
 			else {
-				// TODO
+				throw new RuntimeException("Valid parameters for gui.security are saml, twowayssl,none");
 			}
 
 			// LOGGING
@@ -141,7 +146,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			logger.info("Service configured.");
 		}
 		catch (Exception e) {
-			logger.error("Initialization failed do to a configuration error.", e);
+			throw new RuntimeException("Initialization failed do to a configuration error.", e);
 		}
 
 		return injector;
