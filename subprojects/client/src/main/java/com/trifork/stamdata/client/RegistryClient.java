@@ -109,11 +109,11 @@ public class RegistryClient {
 	private void setupSslCertificates() {
 		try {
 			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			trustManagerFactory.init(createKeyStore("./truststore.jks", "Test1234"));
+			trustManagerFactory.init(createKeyStore("/truststore.jks", "Test1234"));
 			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
 
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-			keyManagerFactory.init(createKeyStore("./keystore.jks", "Test1234"), "Test1234".toCharArray());
+			keyManagerFactory.init(createKeyStore("/keystore.jks", "Test1234"), "Test1234".toCharArray());
 			KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
 
 			SSLContext sc = SSLContext.getInstance("SSL");
@@ -133,7 +133,7 @@ public class RegistryClient {
 	private KeyStore createKeyStore(String path, String password) throws KeyStoreException, IOException,
 			NoSuchAlgorithmException, CertificateException {
 		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-		InputStream keystoreStream = ClassLoader.getSystemResourceAsStream(path);
+		InputStream keystoreStream = getClass().getResourceAsStream(path);
 		keystore.load(keystoreStream, password.toCharArray());
 		return keystore;
 	}
