@@ -65,13 +65,14 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			logger.info("Loading configuration.");
 
 			CompositeConfiguration config = new CompositeConfiguration();
-			config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties")));
 
 			URL deploymentConfig = getClass().getClassLoader().getResource("stamdata-replication.properties");
-
 			if (deploymentConfig != null) {
+				logger.info("Using stamdata-replication.properties");
 				config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("stamdata-replication.properties")));
 			}
+
+			config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties")));
 
 			logger.info("Configuring Stamdata Service.");
 
@@ -83,7 +84,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			List<Module> modules = new ArrayList<Module>();
 
 			// CONFIGURE DATA ACCESS
-
+			
 			modules.add(new DatabaseModule(
 				config.getString("db.connection.driverClass"),
 				config.getString("db.connection.sqlDialect"),

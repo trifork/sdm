@@ -3,6 +3,9 @@ package com.trifork.stamdata.replication.gui.security.twowayssl;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
@@ -11,6 +14,7 @@ import com.trifork.stamdata.replication.security.ssl.MocesCertificateWrapper.Kin
 import com.trifork.stamdata.replication.security.ssl.OcesHelper;
 
 public class TwoWaySslUserProvider implements Provider<User> {
+	private static final Logger logger = LoggerFactory.getLogger(TwoWaySslUserProvider.class);
 	private final OcesHelper ocesHelper;
 	private final Provider<HttpServletRequest> request;
 	private final UserDao userDao;
@@ -27,13 +31,20 @@ public class TwoWaySslUserProvider implements Provider<User> {
 		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request.get());
 		if(certificate != null) {
 			if(certificate.getKind() != Kind.MOCES) {
+				logger.info("Attempted to access with non-MOCES: " + certificate.getKind());
 				return null;
 			}
-			User user = userDao.findByCvrAndRid(certificate.getCvr(), certificate.getSubjectId());
+			String cvr = certificate.getCvr();
+			String subjectId = certificate.getSubjectId();
+			User user = userDao.findByCvrAndRid(cvr, subjectId);
+			String remoteIP = request.get().getRemoteAddr();
+			String page = request.get().getRequestURI();
 			if(user != null) {
+				logger.info("User (cpr='" + user.getCpr() + "', cvr='" + user.getCvr()
+						+ "', subjectId='" + user.getRid() + "') accessed page='" + page + "'. ip='" + remoteIP + "'");
 				return user;
 			}
-			// TODO use CPR to RID
+			logger.info("No access for user (cvr='" + cvr + "', subjectId='" + subjectId + "') to page='" + page + "'. ip='" + remoteIP + "'");
 		}
 		return null;
 	}

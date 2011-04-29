@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.Views;
@@ -57,9 +58,11 @@ public class DGWSSecurityManager implements SecurityManager {
 	private static final SecureRandom random = new SecureRandom();
 
 	private final AuthorizationDao authorizationDao;
+	private ClientDao clientDao;
 
 	@Inject
-	DGWSSecurityManager(AuthorizationDao authorizationDao) {
+	DGWSSecurityManager(AuthorizationDao authorizationDao, ClientDao clientDao) {
+		this.clientDao = clientDao;
 		this.authorizationDao = checkNotNull(authorizationDao);
 	}
 
@@ -87,7 +90,7 @@ public class DGWSSecurityManager implements SecurityManager {
 
 		String authorization;
 
-		if (authorizationDao.isClientAuthorized(cvr, Views.getViewPath(viewClass))) {
+		if (clientDao.findByCvr(cvr).isAuthorizedFor(Views.getViewPath(viewClass))) {
 
 			byte[] token = new byte[512];
 			random.nextBytes(token);

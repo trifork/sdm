@@ -37,6 +37,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.trifork.stamdata.replication.gui.models.ClientDao;
+
 import dk.sosi.seal.xml.Base64;
 
 
@@ -47,6 +49,8 @@ public class DGWSSecurityManagerTest {
 	HttpServletRequest request;
 	@Mock
 	AuthorizationDao authorizationDao;
+	@Mock
+	ClientDao clientDao;
 
 	DGWSSecurityManager securityManager;
 
@@ -56,7 +60,7 @@ public class DGWSSecurityManagerTest {
 	@Before
 	public void setUp() {
 
-		securityManager = new DGWSSecurityManager(authorizationDao);
+		securityManager = new DGWSSecurityManager(authorizationDao, clientDao);
 		
 		when(request.getHeader("Authentication")).thenReturn("STAMDATA " + token);
 		when(request.getPathInfo()).thenReturn(viewPath);
