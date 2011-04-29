@@ -25,8 +25,10 @@
 package com.trifork.stamdata.replication.replication;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.util.Map;
@@ -37,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.ScrollableResults;
+import org.slf4j.Logger;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -52,6 +55,8 @@ import com.trifork.stamdata.views.View;
 @Singleton
 public class RegistryServlet extends HttpServlet {
 
+	private static final Logger logger = getLogger(RegistryServlet.class);
+
 	private static final long serialVersionUID = -172563300590543180L;
 	private static final int DEFAULT_PAGE_SIZE = 10000;
 
@@ -64,11 +69,8 @@ public class RegistryServlet extends HttpServlet {
 	private final Provider<UsageLogger> usageLogger;
 
 	@Inject
-	RegistryServlet(@Registry Map<String, Class<? extends View>> registry,
-			Provider<UsageLogger> usageLogger,
-			Provider<SecurityManager> securityManager,
-			Provider<RecordDao> recordDao,
-			Provider<AtomFeedWriter> writers) {
+	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<UsageLogger> usageLogger, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
+
 		this.usageLogger = usageLogger;
 		this.registry = checkNotNull(registry);
 		this.recordDao = checkNotNull(recordDao);
@@ -78,6 +80,9 @@ public class RegistryServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+		// Check authorization.
+
 		if (isNotAuthorized(request)) {
 			setUnauthorizedHeaders(response);
 			return;
@@ -86,10 +91,34 @@ public class RegistryServlet extends HttpServlet {
 		String viewName = getViewName(request);
 		String clientId = securityManager.get().getClientId(request);
 
-		// Parse the offset query parameters.
-		HistoryOffset offset = new HistoryOffset(request.getParameter("offset"));
+		// Check the request parameters.
 
-		int count = getCount(request);
+		String offsetParam = request.getParameter("offset");
+
+		if (offsetParam != null && !offsetParam.matches("[0-9]+")) {
+
+			response.sendError(HTTP_BAD_REQUEST, "The 'offset' parameter must be a non-negative integer.");
+			logger.warn("Invalid parameter offset='{}'. ClientId='{}'.", offsetParam, securityManager.get().getClientId(request));
+			return;
+		}
+
+		// Parse the offset query parameters.
+
+		HistoryOffset offset = new HistoryOffset(offsetParam);
+
+		// Get the count parameter.
+
+		String countParam = request.getParameter("count");
+		int count = DEFAULT_PAGE_SIZE;
+
+		if (countParam != null && !countParam.matches("[1-9][0-9]+")) {
+
+			response.sendError(HTTP_BAD_REQUEST, "The 'count' parameter must be a positive integer.");
+			logger.warn("Invalid parameter count='{}'. ClientId='{}'.", countParam, securityManager.get().getClientId(request));
+			return;
+		}
+
+		count = Integer.parseInt(countParam);
 
 		// Determine what content type the client wants.
 		//
@@ -121,6 +150,7 @@ public class RegistryServlet extends HttpServlet {
 			View newestRecord = (View) records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
 		}
+
 		records.beforeFirst();
 
 		response.setStatus(HTTP_OK);
@@ -138,39 +168,23 @@ public class RegistryServlet extends HttpServlet {
 	}
 
 	private boolean shouldBeLogged(Class<? extends View> entityType) {
+
 		UsageLogged usageLogged = entityType.getAnnotation(UsageLogged.class);
 		return usageLogged == null || usageLogged.value();
 	}
 
 	private boolean isNotAuthorized(HttpServletRequest request) {
-		// AUTHORIZE THE REQUEST
-		//
-		// The HTTP RFC specifies that if returning a 401 status
-		// the server MUST issue a challenge also.
-		//
-		// TODO: Log any unauthorized attempts.
 
 		return !securityManager.get().isAuthorized(request);
 	}
 
 	private void setUnauthorizedHeaders(HttpServletResponse response) {
+
+		// The HTTP RFC specifies that if returning a 401 status
+		// the server MUST issue a challenge also.
+
 		response.setStatus(HTTP_UNAUTHORIZED);
 		response.setHeader("WWW-Authenticate", "STAMDATA");
-	}
-
-	private int getCount(HttpServletRequest request) {
-		String countParam = request.getParameter("count");
-		int count = DEFAULT_PAGE_SIZE;
-
-		if (countParam != null) {
-			try {
-				count = Integer.parseInt(countParam);
-			}
-			catch (NumberFormatException e) {
-				// Ignore this. We might decide to log this in the future.
-			}
-		}
-		return count;
 	}
 
 	protected String getViewName(HttpServletRequest request) {
