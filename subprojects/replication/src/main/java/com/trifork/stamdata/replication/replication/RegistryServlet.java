@@ -111,7 +111,7 @@ public class RegistryServlet extends HttpServlet {
 		String countParam = request.getParameter("count");
 		int count = DEFAULT_PAGE_SIZE;
 
-		if (countParam != null && !countParam.matches("[1-9][0-9]+")) {
+		if (countParam != null && !countParam.matches("[1-9][0-9]*")) {
 
 			response.sendError(HTTP_BAD_REQUEST, "The 'count' parameter must be a positive integer.");
 			logger.warn("Invalid parameter count='{}'. ClientId='{}'.", countParam, securityManager.get().getClientId(request));
