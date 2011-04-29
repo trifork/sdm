@@ -234,7 +234,7 @@ public class RegistryServletTest {
 	@Test
 	public void Should_return_error_when_offset_param_is_invalid() throws Exception {
 		
-		offsetParam = "A2312D21";
+		countParam = "A2312D21";
 		
 		get();
 		
@@ -247,8 +247,18 @@ public class RegistryServletTest {
 
 		when(securityManager.isAuthorized(request)).thenReturn(authorized);
 		when(securityManager.getClientId(request)).thenReturn(clientId);
-		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
-		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, parseInt(countParam))).thenReturn(records);
+		
+		int count = 0;
+		
+		try {
+			count = parseInt(countParam);
+		}
+		catch (Exception e) {
+			// Do nothing.
+		}
+		
+		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, count)).thenReturn(records);
+		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, count)).thenReturn(records);
 		when(request.getPathInfo()).thenReturn(requestPath);
 		when(request.getHeader("Accept")).thenReturn(acceptHeader);
 		when(request.getParameter("offset")).thenReturn(offsetParam);
