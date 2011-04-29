@@ -7,7 +7,7 @@
 
 	<servlet>
 		<servlet-name>ImporterServlet</servlet-name>
-		<servlet-class>dk.trifork.sdm.webinterface.ImporterServlet</servlet-class>
+		<servlet-class>com.trifork.stamdata.webinterface.ImporterServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
