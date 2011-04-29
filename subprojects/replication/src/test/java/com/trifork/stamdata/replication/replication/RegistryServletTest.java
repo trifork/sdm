@@ -25,6 +25,7 @@
 package com.trifork.stamdata.replication.replication;
 
 import static java.lang.Integer.parseInt;
+import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -33,7 +34,10 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -205,6 +209,36 @@ public class RegistryServletTest {
 		get();
 		
 		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, 2);
+	}
+	
+	@Test
+	public void Should_return_error_when_count_param_is_invalid() throws Exception {
+		
+		countParam = "12A232P";
+		
+		get();
+		
+		verify(response).sendError(eq(HTTP_BAD_REQUEST), anyString());
+	}
+	
+	@Test
+	public void Should_return_error_when_count_param_is_null() throws Exception {
+		
+		countParam = "0";
+		
+		get();
+		
+		verify(response).sendError(eq(HTTP_BAD_REQUEST), anyString());
+	}
+	
+	@Test
+	public void Should_return_error_when_offset_param_is_invalid() throws Exception {
+		
+		offsetParam = "A2312D21";
+		
+		get();
+		
+		verify(response).sendError(eq(HTTP_BAD_REQUEST), anyString());
 	}
 
 	// HELPER METHODS
