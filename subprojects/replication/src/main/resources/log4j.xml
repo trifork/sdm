@@ -9,20 +9,9 @@
 		</layout>
 	</appender>
 
-	<appender name="rollingFile" class="org.apache.log4j.RollingFileAppender">
-		<param name="file" value="/var/log/stamdata/replication.log" />
-		<param name="MaxFileSize" value="100KB" />
-		<!-- Keep one backup file -->
-		<param name="MaxBackupIndex" value="1" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p %c{1} - %m%n" />
-		</layout>
-	</appender>
-
 	<root>
 		<priority value="info" />
 		<appender-ref ref="console" />
-		<appender-ref ref="rollingFile" />
 	</root>
 
 </log4j:configuration>
