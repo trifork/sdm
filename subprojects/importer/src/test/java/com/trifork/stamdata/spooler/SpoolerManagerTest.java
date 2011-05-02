@@ -38,7 +38,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class SpoolerManagerTest {
-    private static final String TMP_FILE_SPOOLER_MANAGER = "/tmp/FileSpoolerManager";
+    private static final String TMP_FILE_SPOOLER_MANAGER = System.getProperty("java.io.tmpdir") + "/tmp/FileSpoolerManager";
 
     @Test
     public void testInit() {

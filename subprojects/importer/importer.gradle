@@ -43,10 +43,10 @@ dependencies {
 	}
 
 	// LOGGING
-	
-	compile libs.jcl_over_slf4j
+
 	compile libs.slf4j_api
-	runtime libs.logback_classic
+	compile libs.logback_classic
+	runtime libs.jcl_over_slf4j
 	
 	runtime "apache-taglibs:jstl:1.1.2"
 	runtime "apache-taglibs:standard:1.1.2"

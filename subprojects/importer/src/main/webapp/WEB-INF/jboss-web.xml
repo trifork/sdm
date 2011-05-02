@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+ | This file configures the isolation level of the class loaders
+ | that in JBoss, to avoid problems with embedded jars etc.
+ -->
+<jboss-web>
+	<class-loading java2ClassLoadingCompliance="false">
+		<loader-repository>
+			com.trifork:archive=replication.war
+			<loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+		</loader-repository>
+	</class-loading>
+</jboss-web>
