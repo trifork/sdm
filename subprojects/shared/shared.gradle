@@ -28,6 +28,10 @@ dependencies {
 	compile libs.reflections
 
 	testCompile libs.junit
+
+	compile(libs.commons_configuration) {
+		exclude group: 'commons-logging'
+	}
 }
 
 test.enabled = false

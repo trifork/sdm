@@ -25,15 +25,12 @@ package com.trifork.stamdata.replication;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 
 import com.google.inject.ConfigurationException;
@@ -41,6 +38,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
@@ -57,6 +55,8 @@ import com.trifork.stamdata.replication.security.ssl.SslModule;
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
+	private static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
+	private static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
 
 	@Override
 	protected Injector getInjector() {
@@ -65,16 +65,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 		try {
 			logger.info("Loading configuration.");
-
-			CompositeConfiguration config = new CompositeConfiguration();
-
-			URL deploymentConfig = getClass().getClassLoader().getResource("stamdata-replication.properties");
-			if (deploymentConfig != null) {
-				logger.info("Using stamdata-replication.properties");
-				config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("stamdata-replication.properties")));
-			}
-
-			config.addConfiguration(new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties")));
+			Configuration config = new SystemPropertyBasedConfigurationLoader("replication", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
 
 			logger.info("Configuring Stamdata Service.");
 

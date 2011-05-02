@@ -36,7 +36,7 @@ public class DatabaseHelper {
 
 	public DatabaseHelper(Class<?>... entities) throws Exception {
 
-		final PropertiesConfiguration props = new PropertiesConfiguration(getClass().getClassLoader().getResource("config.properties"));
+		org.apache.commons.configuration.Configuration props = ConfigurationHelper.getConfiguration();
 
 		Configuration config = new Configuration();
 
