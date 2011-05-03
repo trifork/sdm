@@ -40,7 +40,7 @@ public class SslSecurityManager implements SecurityManager {
 				logger.info("Client '" + client + "' cannot access view='" + viewName + "'. ip='" + remoteIP + "'");
 				return false;
 			}
-			logger.info("No access for cvr='" + certificate.getCvr() + "' to view='" + viewName + "'. ip='" + remoteIP + "'");
+			logger.info("No access for subjectSerialNumber='" + certificate.getSubjectSerialNumber() + "' to view='" + viewName + "'. ip='" + remoteIP + "'");
 			return false;
 		}
 		logger.info("No or invalid certificate when accessing view='" + viewName + "'. ip='" + remoteIP + "'");
