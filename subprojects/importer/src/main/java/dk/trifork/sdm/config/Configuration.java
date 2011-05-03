@@ -24,15 +24,15 @@
 
 package dk.trifork.sdm.config;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.trifork.configuration.ConfigurationLoader;
+import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 
 
 public class Configuration {
@@ -40,44 +40,32 @@ public class Configuration {
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static Configuration defaultInstance = new Configuration();
 
-	private Properties properties;
+	private static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
+	private static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
+	private org.apache.commons.configuration.Configuration loadedConfiguration;
 
 	public Configuration() {
-
 		try {
-			// Loads the build-in configuration file and overrides all properties with
-			// the deployment configuration (stamdata-importer.properties) if it exists.
-			
-			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
-	
-			properties = new Properties();
-			properties.load(buildInConfig);
-			buildInConfig.close();
-			
-			if (deploymentConfig != null) {
-				properties.load(deploymentConfig);
-				deploymentConfig.close();
-			}
-
-			for (String propertyKey : properties.stringPropertyNames()) {
-				logger.info("Property '" + propertyKey + "' = " + ((propertyKey.indexOf("pwd") >= 0) ? "****" : getProperty(propertyKey)));
-			}
+			loadedConfiguration = new SystemPropertyBasedConfigurationLoader("importer", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
 		}
 		catch (Exception e) {
 			logger.error("Error loading config.properties not found.");
 		}
 	}
-
-	public Configuration(InputStream file) throws IOException {
-
-		properties = new Properties();
-		properties.load(file);
+	
+	public Configuration(String env) {
+		try {
+			loadedConfiguration = new ConfigurationLoader(env,"importer","/").loadConfiguration();
+		}
+		catch (Exception e) {
+			logger.error("Error loading config.properties not found.");
+		}
+		
 	}
 
 	public String getNotNullProperty(String key) {
 
-		String value = properties.getProperty(key);
+		String value = loadedConfiguration.getString(key);
 		if (value == null) {
 			throw new RuntimeException("no value found for property key: " + key);
 		}
@@ -113,7 +101,7 @@ public class Configuration {
 
 	private String getProperty(String key) {
 
-		return properties.getProperty(key);
+		return loadedConfiguration.getString(key);
 	}
 
 	public static void setDefaultInstance(Configuration conf) {

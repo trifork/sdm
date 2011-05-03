@@ -43,9 +43,7 @@ public class JobSpoolerSetupTest implements Job {
 	@Test
 	public void runSetupTest() throws Exception {
 
-		InputStream configuration = getClass().getClassLoader().getResourceAsStream("testJobSpoolerconfig.properties");
-		
-		Configuration.setDefaultInstance(new Configuration(configuration));
+		Configuration.setDefaultInstance(new Configuration("testJobSpoolerconfig"));
 		JobSpoolerSetup setup = new JobSpoolerSetup("testjobspooler");
 		
 		assertEquals(this.getClass().getName(), setup.getJobExecutorClass().getName());

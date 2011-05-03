@@ -25,6 +25,8 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 dependencies {
+	compile project(':shared')
+
 	runtime "mysql:mysql-connector-java:5.1.14"
 	
 	testCompile "junit:junit:4.8.2"
@@ -33,9 +35,16 @@ dependencies {
 	providedCompile "javax.servlet:servlet-api:2.4"
 	
 	compile "commons-io:commons-io:1.4"
+
+	// CONFIGURATION
 	
+	compile(libs.commons_configuration) {
+		exclude group: 'commons-logging'
+	}
+
 	// LOGGING
 	
+	compile libs.jcl_over_slf4j
 	compile libs.slf4j_api
 	runtime libs.logback_classic
 	
