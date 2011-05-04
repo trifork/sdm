@@ -75,7 +75,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void EtableringTest() throws Exception {
+	public void canEstablishData() throws Exception {
 
 		// Arrange
 		File fInitial = getFile("data/cpr/testEtablering/D100313.L431102");
@@ -93,7 +93,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void UpdateTest() throws Exception {
+	public void canImportAnUpdate() throws Exception {
 
 		// Arrange
 		File fInitial = getFile("data/cpr/D100315.L431101");
@@ -129,7 +129,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test(expected = FileImporterException.class)
-	public void SequenceTest() throws Exception {
+	public void failsWhenDatesAreNotInSequence() throws Exception {
 
 		// Arrange
 		File fInitial = getFile("data/cpr/testSequence1/D100314.L431101");
@@ -154,8 +154,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void ImportPersonNavnebeskyttelsesTest() throws Exception {
-
+	public void canImportPersonNavnebeskyttelse() throws Exception {
 		// Arrange
 		File fInitial = getFile("data/cpr/testCPR1/D100314.L431101");
 
@@ -196,7 +195,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void ImportForaeldreMyndighedBarnTest() throws Exception {
+	public void canImportForaeldreMyndighedBarn() throws Exception {
 
 		// Arrange
 		File fInitial = getFile("data/cpr/testForaeldremyndighed/D100314.L431101");
@@ -235,7 +234,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void ImportUmyndighedVaergeTest() throws Exception {
+	public void canImportUmyndighedVaerge() throws Exception {
 
 		// Arrange
 		File fInitial = getFile("data/cpr/testUmyndigVaerge/D100314.L431101");
@@ -266,7 +265,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void kanImportereFolkekirkeoplysninger() throws Exception {
+	public void canImportFolkekirkeoplysninger() throws Exception {
 		File file = getFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -284,7 +283,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void kanImportereCivilstand() throws Exception {
+	public void canImportCivilstand() throws Exception {
 		File file = getFile("data/cpr/civilstand/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -306,7 +305,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void kanImportereKommunaleForhold() throws Exception {
+	public void canImportKommunaleForhold() throws Exception {
 		File file = getFile("data/cpr/kommunaleForhold/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -326,7 +325,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void kanImportereValgoplysninger() throws Exception {
+	public void canImportValgoplysninger() throws Exception {
 		File file = getFile("data/cpr/valgoplysninger/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -346,7 +345,7 @@ public class CPRIntegrationTest {
 	}
 	
 	@Test
-	public void kanImportereHaendelser() throws Exception {
+	public void canImportHaendelser() throws Exception {
 		File file = getFile("data/cpr/haendelse/D100314.L431101");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -366,7 +365,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void kanImportereMorOgFaroplysningerNaarForaeldresCprnummerMangler() throws Exception {
+	public void canImportMorOgFaroplysningerNaarForaeldresCprnummerMangler() throws Exception {
 		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -392,7 +391,7 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void ignorererMorOgFaroplysningerNaarForaeldresCprErUdfyldt() throws Exception {
+	public void ignoresMorOgFaroplysningerWhenParentCprIsSpecified() throws Exception {
 		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
 
 		new CPRImporter().run(Arrays.asList(file));
@@ -405,7 +404,7 @@ public class CPRIntegrationTest {
 		stmt.close();
 		con.close();
 	}
-
+	
 	@Test
 	public void ImportU12160Test() throws Exception {
 
