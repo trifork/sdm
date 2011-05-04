@@ -23,7 +23,6 @@
 
 package com.trifork.stamdata.replication;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;

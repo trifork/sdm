@@ -28,9 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Map;
 
-import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
-import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.rid2cpr.CachingRID2CPRFacadeImpl;
 import com.trifork.rid2cpr.RID2CPRFacade;
@@ -39,11 +37,7 @@ import com.trifork.stamdata.replication.gui.annotations.Whitelist;
 import com.trifork.stamdata.replication.gui.controllers.ClientController;
 import com.trifork.stamdata.replication.gui.controllers.LogController;
 import com.trifork.stamdata.replication.gui.controllers.UserController;
-import com.trifork.stamdata.replication.gui.models.User;
-import com.trifork.stamdata.replication.gui.security.saml.LoginFilter;
 import com.trifork.xmlquery.Namespaces;
-
-import dk.itst.oiosaml.sp.service.SPFilter;
 
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;

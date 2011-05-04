@@ -27,7 +27,6 @@ package com.trifork.stamdata.replication.replication.views;
 import java.util.Set;
 
 import org.hibernate.Session;
-import org.hibernate.exception.SQLGrammarException;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
