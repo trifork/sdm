@@ -50,7 +50,6 @@ public class CPRIntegrationTest {
 	@Before
 	@After
 	public void cleanDatabase() throws Exception {
-
 		Connection con = MySQLConnectionManager.getConnection();
 		Statement statement = con.createStatement();
 		statement.execute("truncate table Person");
@@ -69,19 +68,9 @@ public class CPRIntegrationTest {
 		con.close();
 	}
 
-	public File getFile(String file) {
-
-		return FileUtils.toFile(getClass().getClassLoader().getResource(file));
-	}
-
 	@Test
 	public void canEstablishData() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testEtablering/D100313.L431102");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testEtablering/D100313.L431102");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
@@ -94,12 +83,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportAnUpdate() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/D100315.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/D100315.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
@@ -111,8 +95,7 @@ public class CPRIntegrationTest {
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
 
-		fInitial = getFile("data/cpr/D100317.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/D100317.L431101");
 
 		rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
 		assertTrue(rs.next());
@@ -130,36 +113,35 @@ public class CPRIntegrationTest {
 
 	@Test(expected = FileImporterException.class)
 	public void failsWhenDatesAreNotInSequence() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testSequence1/D100314.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testSequence1/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
 		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
 		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft.getTime());
 
-		fInitial = getFile("data/cpr/testSequence2/D100314.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testSequence2/D100314.L431101");
 
 		latestIkraft = CPRImporter.getLatestIkraft(con);
 		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft.getTime());
 
-		fInitial = getFile("data/cpr/testOutOfSequence/D100314.L431101");
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testOutOfSequence/D100314.L431101");
 		con.close();
+	}
+	
+	@Test(expected = FileImporterException.class)
+	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception {
+		importFile("data/cpr/endRecords/D100314.L431101");
+	}
+	
+	@Test(expected = FileImporterException.class)
+	public void failsWhenNoEndRecordExists() throws Exception {
+		importFile("data/cpr/endRecords/D100315.L431101");
 	}
 
 	@Test
 	public void canImportPersonNavnebeskyttelse() throws Exception {
-		// Arrange
-		File fInitial = getFile("data/cpr/testCPR1/D100314.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testCPR1/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -196,12 +178,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportForaeldreMyndighedBarn() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testForaeldremyndighed/D100314.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -235,12 +212,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportUmyndighedVaerge() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/testUmyndigVaerge/D100314.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -266,9 +238,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportFolkekirkeoplysninger() throws Exception {
-		File file = getFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -284,9 +254,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportCivilstand() throws Exception {
-		File file = getFile("data/cpr/civilstand/D100314.L431101");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/civilstand/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -306,9 +274,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportKommunaleForhold() throws Exception {
-		File file = getFile("data/cpr/kommunaleForhold/D100314.L431101");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/kommunaleForhold/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -326,9 +292,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportValgoplysninger() throws Exception {
-		File file = getFile("data/cpr/valgoplysninger/D100314.L431101");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/valgoplysninger/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -346,9 +310,7 @@ public class CPRIntegrationTest {
 	
 	@Test
 	public void canImportHaendelser() throws Exception {
-		File file = getFile("data/cpr/haendelse/D100314.L431101");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/haendelse/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -366,9 +328,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportMorOgFaroplysningerNaarForaeldresCprnummerMangler() throws Exception {
-		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -392,9 +352,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void ignoresMorOgFaroplysningerWhenParentCprIsSpecified() throws Exception {
-		File file = getFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
-
-		new CPRImporter().run(Arrays.asList(file));
+		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -407,12 +365,7 @@ public class CPRIntegrationTest {
 	
 	@Test
 	public void ImportU12160Test() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/D100312.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/D100312.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -450,12 +403,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void ImportU12170Test() throws Exception {
-
-		// Arrange
-		File fInitial = getFile("data/cpr/D100313.L431101");
-
-		// Act and assert
-		new CPRImporter().run(Arrays.asList(fInitial));
+		importFile("data/cpr/D100313.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -490,5 +438,9 @@ public class CPRIntegrationTest {
 		stmt.close();
 		con.close();
 	}
-
+	
+	private void importFile(String fileName) throws Exception {
+		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
+		new CPRImporter().run(Arrays.asList(file));
+	}
 }

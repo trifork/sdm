@@ -60,106 +60,114 @@ import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.util.DateUtils;
 
 public class CPRParser {
-
-	static final String EMPTY_DATE_STRING = "000000000000";
-
+	private static final int END_RECORD = 999;
+	private static final String EMPTY_DATE_STRING = "000000000000";
 
 	public static CPRDataset parse(File f) throws FileParseException {
-		CPRDataset cpr = new CPRDataset();
-		
-		BufferedReader reader = null;
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "ISO-8859-1"));
-			while (reader.ready()) {
-				String line = reader.readLine();
-				if (line.length() > 0) {
-					switch (getRecordType(line)) {
-					case 0:
-						cpr.setValidFrom(getValidFrom(line));
-						Calendar forrigeIKraftdato = getForrigeIkraftDato(line);
-						if (forrigeIKraftdato != null) 
-							cpr.setPreviousFileValidFrom(forrigeIKraftdato);
-						break;
-					case 1:
-						cpr.addEntity(personoplysninger(line));
-						break;
-					case 3:
-						cpr.addEntity(klarskriftadresse(line));
-						break;
-					case 4:
-						String beskyttelseskode = cut(line,13, 17);
-						if (beskyttelseskode.equals("0001")) {
-							// Vi er kun interesseret i navnebeskyttelse
-							cpr.addEntity(navneBeskyttelse(line));
-						}
-						break;
-					case 5:
-						cpr.addEntity(udrejseoplysninger(line));
-						break;
-					case 8:
-						cpr.addEntity(navneoplysninger(line));
-						break;
-					case 9:
-						cpr.addEntity(foedselsregistreringsoplysninger(line));
-						break;
-					case 10:
-						cpr.addEntity(statsborgerskab(line));
-						break;
-					case 11:
-						cpr.addEntity(folkekirkeoplysninger(line));
-						break;
-					case 12:
-						cpr.addEntity(aktuelCivilstand(line));
-						break;
-					case 14:
-						cpr.addEntity(barnRelation(line));
-						break;
-					case 15:
-						MorOgFaroplysninger moroplysninger = moroplysninger(line);
-						MorOgFaroplysninger faroplysninger = faroplysninger(line);
-						if (!moroplysninger.hasCpr()) {
-							cpr.addEntity(moroplysninger);
-						}
-						if (!faroplysninger.hasCpr()) {
-							cpr.addEntity(faroplysninger);
-						}
-						break;
-					case 16:
-						cpr.addEntity(foraeldreMyndighedRelation(line));
-						break;
-					case 17:
-						cpr.addEntity(umyndiggoerelseVaergeRelation(line));
-						break;
-					case 18:
-						cpr.addEntity(kommunaleForhold(line));
-						break;
-					case 20:
-						cpr.addEntity(valgoplysninger(line));
-						break;
-					case 99:
-						cpr.addEntity(haendelse(line));
-						break;
-					case 999:
-						break;
-					}
-
-				}
+			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "ISO-8859-1"));
+			try {
+				return parseLines(reader);
+			} finally {
+                reader.close();
 			}
 		} catch (IOException ioe) {
-			throw new FileParseException("Der opstod en IO fejl under læsning af CPR Person fil.", ioe);
+			throw new FileParseException("Der opstod en IO-fejl under læsning af cpr-person-fil.", ioe);
 		} catch (ParseException pe) {
-			throw new FileParseException("Der opstod en parsnings fejl under læsning af CPR Person fil.", pe);
+			throw new FileParseException("Der opstod en parsningsfejl under læsning af cpr-person-fil.", pe);
 		}
+	}
 
-		finally {
-			try {
-				if (reader != null)
-                    reader.close();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+	private static CPRDataset parseLines(BufferedReader reader) throws IOException, FileParseException, ParseException {
+		boolean endRecordReached = false;
+		CPRDataset cpr = new CPRDataset();
+		while (reader.ready()) {
+			String line = reader.readLine();
+			if (line.length() > 0) {
+				int recordType = getRecordType(line);
+				if (recordType == END_RECORD) {
+					endRecordReached = true;
+				} else if (endRecordReached) {
+					throw new FileParseException("Slut-record midt i cpr-filen");
+				} else {
+					parseLine(recordType, line, cpr);
+				}
 			}
 		}
+		if (!endRecordReached) {
+			throw new FileParseException("Slut-record mangler i cpr-filen");
+		}
 		return cpr;
+	}
+	
+	static void parseLine(int recordType, String line, CPRDataset cpr) throws FileParseException, ParseException {
+		switch (recordType) {
+		case 0:
+			cpr.setValidFrom(getValidFrom(line));
+			Calendar forrigeIKraftdato = getForrigeIkraftDato(line);
+			if (forrigeIKraftdato != null) 
+				cpr.setPreviousFileValidFrom(forrigeIKraftdato);
+			break;
+		case 1:
+			cpr.addEntity(personoplysninger(line));
+			break;
+		case 3:
+			cpr.addEntity(klarskriftadresse(line));
+			break;
+		case 4:
+			String beskyttelseskode = cut(line,13, 17);
+			if (beskyttelseskode.equals("0001")) {
+				// Vi er kun interesseret i navnebeskyttelse
+				cpr.addEntity(navneBeskyttelse(line));
+			}
+			break;
+		case 5:
+			cpr.addEntity(udrejseoplysninger(line));
+			break;
+		case 8:
+			cpr.addEntity(navneoplysninger(line));
+			break;
+		case 9:
+			cpr.addEntity(foedselsregistreringsoplysninger(line));
+			break;
+		case 10:
+			cpr.addEntity(statsborgerskab(line));
+			break;
+		case 11:
+			cpr.addEntity(folkekirkeoplysninger(line));
+			break;
+		case 12:
+			cpr.addEntity(aktuelCivilstand(line));
+			break;
+		case 14:
+			cpr.addEntity(barnRelation(line));
+			break;
+		case 15:
+			MorOgFaroplysninger moroplysninger = moroplysninger(line);
+			MorOgFaroplysninger faroplysninger = faroplysninger(line);
+			if (!moroplysninger.hasCpr()) {
+				cpr.addEntity(moroplysninger);
+			}
+			if (!faroplysninger.hasCpr()) {
+				cpr.addEntity(faroplysninger);
+			}
+			break;
+		case 16:
+			cpr.addEntity(foraeldreMyndighedRelation(line));
+			break;
+		case 17:
+			cpr.addEntity(umyndiggoerelseVaergeRelation(line));
+			break;
+		case 18:
+			cpr.addEntity(kommunaleForhold(line));
+			break;
+		case 20:
+			cpr.addEntity(valgoplysninger(line));
+			break;
+		case 99:
+			cpr.addEntity(haendelse(line));
+			break;
+		}
 	}
 
 	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(
