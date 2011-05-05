@@ -42,7 +42,7 @@ import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
 @Entity
-@Table(name="usagelogentry")
+@Table(name="UsageLogEntry")
 @UsageLogged(false)
 @XmlRootElement
 @ViewPath("usage/aggregate/v1")
