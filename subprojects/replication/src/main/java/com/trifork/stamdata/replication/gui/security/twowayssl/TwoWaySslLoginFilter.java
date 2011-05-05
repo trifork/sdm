@@ -16,7 +16,6 @@ import com.trifork.stamdata.replication.gui.models.User;
 
 @Singleton
 public class TwoWaySslLoginFilter implements Filter {
-
 	private final Provider<User> user;
 
 	@Inject
@@ -26,8 +25,6 @@ public class TwoWaySslLoginFilter implements Filter {
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -41,8 +38,5 @@ public class TwoWaySslLoginFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		// TODO Auto-generated method stub
-		
 	}
-
 }
