@@ -42,7 +42,7 @@ import com.trifork.stamdata.views.ViewPath;
 
 @Entity
 @XmlRootElement
-@ViewPath("cpr/umyndigoerelsevaergerelation/v1")
+@ViewPath("cpr/umyndiggoerelsevaergerelation/v1")
 public class UmyndiggoerelseVaergeRelation extends View {
 
 	@Id
