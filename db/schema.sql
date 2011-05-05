@@ -22,7 +22,7 @@ CREATE TABLE AdresseBeskyttelse (
 	navnebeskyttelseslettedato DATETIME, 
 	vejkode BIGINT(12), 
 	kommunekode BIGINT(12), 
-	UNIQUE INDEX (cpr) 
+	UNIQUE INDEX (cpr)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE User (
@@ -225,7 +225,8 @@ CREATE TABLE BarnRelation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom),
+	INDEX (modifiedDate, BarnRelationPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Beregningsregler (
@@ -319,7 +320,8 @@ CREATE TABLE ForaeldreMyndighedRelation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom),
+	INDEX (modifiedDate, ForaeldreMyndighedRelationPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Formbetegnelse (
@@ -666,7 +668,8 @@ CREATE TABLE Person (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
+	INDEX(modifiedDate, PersonPID)
+	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PersonIkraft (
@@ -940,6 +943,7 @@ CREATE TABLE UmyndiggoerelseVaergeRelation (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, UmyndiggoerelseVaergeRelationPID),
 	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1023,6 +1027,7 @@ CREATE TABLE Folkekirkeoplysninger (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, FolkekirkeoplysningerPID),
 	CONSTRAINT FKO_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1044,6 +1049,7 @@ CREATE TABLE Udrejseoplysninger (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, UdrejseoplysningerPID),
 	CONSTRAINT Udrejse_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1059,6 +1065,7 @@ CREATE TABLE Foedselsregistreringsoplysninger(
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, FoedselsregistreringsoplysningerPID),
 	CONSTRAINT Foedsel_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1074,6 +1081,7 @@ CREATE TABLE Statsborgerskab(
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, StatsborgerskabPID),
 	CONSTRAINT Statsborgerskab_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1089,6 +1097,7 @@ CREATE TABLE Valgoplysninger (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, ValgoplysningerPID),
 	CONSTRAINT VO_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1105,6 +1114,7 @@ CREATE TABLE KommunaleForhold (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, KommunaleForholdPID),
 	CONSTRAINT KommunaleForhold_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1123,6 +1133,7 @@ CREATE TABLE AktuelCivilstand (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, CivilstandPID),
 	CONSTRAINT AktuelCivilstand_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -1140,7 +1151,8 @@ CREATE TABLE Haendelse (
 	ValidTo DATETIME,
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, HaendelsePID)	
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE MorOgFaroplysninger (
@@ -1158,6 +1170,7 @@ CREATE TABLE MorOgFaroplysninger (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, MorOgFarPID),
 	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
