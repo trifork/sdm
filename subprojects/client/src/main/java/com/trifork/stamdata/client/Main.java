@@ -39,6 +39,7 @@ import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 import com.trifork.stamdata.views.cpr.Valgoplysninger;
+import com.trifork.stamdata.views.usagelog.AggregateUsageLogEntry;
 import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 public class Main {
@@ -58,6 +59,7 @@ public class Main {
 		add(UmyndiggoerelseVaergeRelation.class);
 		add(Valgoplysninger.class);
 		add(UsageLogEntry.class);
+		add(AggregateUsageLogEntry.class);
 	}};
 	
 	public static void main(String... args) throws Exception {

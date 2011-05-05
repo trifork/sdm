@@ -30,24 +30,24 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.trifork.stamdata.ClientSpecific;
 import com.trifork.stamdata.UsageLogged;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
 @Entity
-@ClientSpecific
+@Table(name="usagelogentry")
 @UsageLogged(false)
 @XmlRootElement
-@ViewPath("usage/client/v1")
+@ViewPath("usage/aggregate/v1")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UsageLogEntry extends View {
+public class AggregateUsageLogEntry extends View {
 	@Id
 	@GeneratedValue
 	@XmlTransient
@@ -67,11 +67,11 @@ public class UsageLogEntry extends View {
 	@XmlElement(required = true)
 	public int amount;
 
-	public UsageLogEntry() {
+	public AggregateUsageLogEntry() {
 		// JPA
 	}
 
-	public UsageLogEntry(String clientId, Date date, String type, int amount) {
+	public AggregateUsageLogEntry(String clientId, Date date, String type, int amount) {
 		this.clientId = clientId;
 		this.modifiedDate = date;
 		this.type = type;
