@@ -67,7 +67,7 @@ public class CPRParser {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "ISO-8859-1"));
 			try {
-				return parseLines(reader);
+				return parseFileContents(reader);
 			} finally {
                 reader.close();
 			}
@@ -78,7 +78,7 @@ public class CPRParser {
 		}
 	}
 
-	private static CPRDataset parseLines(BufferedReader reader) throws IOException, FileParseException, ParseException {
+	private static CPRDataset parseFileContents(BufferedReader reader) throws IOException, FileParseException, ParseException {
 		boolean endRecordReached = false;
 		CPRDataset cpr = new CPRDataset();
 		while (reader.ready()) {
