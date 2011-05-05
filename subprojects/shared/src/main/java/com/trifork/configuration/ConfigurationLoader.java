@@ -28,6 +28,9 @@ import org.slf4j.LoggerFactory;
  * or "importer". Then configuration for multiple modules can reside in the same
  * directory.
  * 
+ * Finally, a configuration file named "stamdata-[prefix].properties is loaded
+ * from classpath, if it exists, overriding any other properties.
+ * 
  * Configuration files in the file system overrides configuration files on the
  * classpath if the environment is the same.
  * 
@@ -56,6 +59,7 @@ public class ConfigurationLoader {
 			String environment = st.nextToken().trim();
 			loadPropertiesForEnvironment(props, environment);
 		}
+		loadAdditionalConfigFileSuppliedOnClasspath(props);
 		BaseConfiguration config = new BaseConfiguration();
 		for (Entry<?, ?> entry : props.entrySet()) {
 			config.addProperty(entry.getKey().toString(), entry.getValue());
@@ -63,21 +67,17 @@ public class ConfigurationLoader {
 		return config;
 	}
 
+	private void loadAdditionalConfigFileSuppliedOnClasspath(Properties props) {
+		String filename = "stamdata-" + configurationFilePrefix + ".properties";
+		loadPropertiesFromClasspath(props, filename);
+	}
+	
 	private void loadPropertiesForEnvironment(Properties props,
 			String environment) {
 		try {
 			String filename = configurationFilePrefix + "." + environment
 					+ ".properties";
-			InputStream input = ConfigurationLoader.class
-					.getResourceAsStream("/" + filename);
-			if (input != null) {
-				logger.info("Loading configuration from classpath file {}", filename);
-				props.load(input);
-				input.close();
-			}
-			else {
-				logger.info("Did not load configuration from classpath file {}, file did not exist", filename);
-			}
+			loadPropertiesFromClasspath(props, filename);
 			File fileSystemFile = new File(configurationFileDirectory, filename);
 			if (fileSystemFile.exists()) {
 				logger.info("Loading configuration from {}", fileSystemFile.getAbsolutePath());
@@ -92,6 +92,25 @@ public class ConfigurationLoader {
 			throw new RuntimeException(
 					"Could not load properties for environment " + environment,
 					e);
+		}
+	}
+
+	private void loadPropertiesFromClasspath(Properties props, String filename) {
+		try {
+			InputStream input = ConfigurationLoader.class
+					.getResourceAsStream("/" + filename);
+			if (input != null) {
+				logger.info("Loading configuration from classpath file {}",
+						filename);
+				props.load(input);
+				input.close();
+			} else {
+				logger.info(
+						"Did not load configuration from classpath file {}, file did not exist",
+						filename);
+			}
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }
