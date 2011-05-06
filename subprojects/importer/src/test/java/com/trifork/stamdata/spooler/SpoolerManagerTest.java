@@ -67,6 +67,7 @@ public class SpoolerManagerTest {
     public void testAreAllSpoolersRunning() {
         SpoolerManager fsm = new SpoolerManager(TMP_FILE_SPOOLER_MANAGER);
         fsm.spoolers = new HashMap<String, FileSpoolerImpl>();
+        fsm.jobSpoolers = new HashMap<String, JobSpoolerImpl>();
 
         // Add a mocked running spooler
         FileSpoolerImpl mock1 = mock(FileSpoolerImpl.class);

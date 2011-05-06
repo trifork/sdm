@@ -213,6 +213,19 @@ CREATE TABLE Autorisation (
 	INDEX (ValidFrom, ValidTo)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
+-- This table is used to hold the set of currently valid
+-- autorisations.
+
+CREATE TABLE autreg (
+  cpr CHAR(10) NOT NULL,
+  given_name VARCHAR(50) NOT NULL,
+  surname VARCHAR(100) NOT NULL,
+  aut_id CHAR(5) NOT NULL,
+  edu_id CHAR(4) NOT NULL,
+  PRIMARY KEY cpr (cpr)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE BarnRelation (
 	BarnRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Id VARCHAR(21) NOT NULL,
