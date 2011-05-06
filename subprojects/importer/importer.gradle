@@ -36,12 +36,6 @@ dependencies {
 	
 	compile "commons-io:commons-io:1.4"
 
-	// CONFIGURATION
-	
-	compile(libs.commons_configuration) {
-		exclude group: 'commons-logging'
-	}
-
 	// LOGGING
 
 	compile libs.slf4j_api
