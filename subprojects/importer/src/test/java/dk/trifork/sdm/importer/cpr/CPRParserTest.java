@@ -25,7 +25,11 @@ package dk.trifork.sdm.importer.cpr;
 
 import static dk.trifork.sdm.util.DateUtils.yyyyMMddHHmm;
 import static dk.trifork.sdm.util.DateUtils.yyyy_MM_dd;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -41,8 +45,8 @@ import dk.trifork.sdm.importer.cpr.model.Haendelse;
 import dk.trifork.sdm.importer.cpr.model.Klarskriftadresse;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold;
 import dk.trifork.sdm.importer.cpr.model.KommunaleForhold.Kommunalforholdstype;
-import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger;
+import dk.trifork.sdm.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import dk.trifork.sdm.importer.cpr.model.NavneBeskyttelse;
 import dk.trifork.sdm.importer.cpr.model.Navneoplysninger;
 import dk.trifork.sdm.importer.cpr.model.Personoplysninger;

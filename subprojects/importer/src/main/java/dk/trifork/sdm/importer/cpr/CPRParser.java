@@ -36,7 +36,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import dk.trifork.sdm.importer.cpr.model.AktuelCivilstand;
 import dk.trifork.sdm.importer.cpr.model.BarnRelation;
@@ -60,6 +64,7 @@ import dk.trifork.sdm.importer.exceptions.FileParseException;
 import dk.trifork.sdm.util.DateUtils;
 
 public class CPRParser {
+	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
 
@@ -170,8 +175,7 @@ public class CPRParser {
 		}
 	}
 
-	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(
-			String line) throws ParseException {
+	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws ParseException, FileParseException {
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
 		u.setCpr(cut(line,3, 13));
 		u.setUmyndigStartDato(parseDate(yyyy_MM_dd, line, 13, 23));
@@ -190,7 +194,7 @@ public class CPRParser {
 		return u;
 	}
 
-	static ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line) throws ParseException {
+	static ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line) throws ParseException, FileParseException {
 		ForaeldreMyndighedRelation f = new ForaeldreMyndighedRelation();
 		f.setCpr(cut(line,3, 13));
 		f.setType(cut(line,13,17));
@@ -209,7 +213,7 @@ public class CPRParser {
 		return b;
 	}
 
-	static Navneoplysninger navneoplysninger(String line) throws ParseException {
+	static Navneoplysninger navneoplysninger(String line) throws ParseException, FileParseException {
 		Navneoplysninger n = new Navneoplysninger();
 		n.setCpr(cut(line,3, 13));
 		n.setFornavn(cut(line,13,63).trim());
@@ -224,7 +228,7 @@ public class CPRParser {
 		return n;
 	}
 
-	static NavneBeskyttelse navneBeskyttelse(String line) throws ParseException {
+	static NavneBeskyttelse navneBeskyttelse(String line) throws ParseException, FileParseException {
 		NavneBeskyttelse n = new NavneBeskyttelse();
 		n.setCpr(cut(line,3, 13));
 		n.setNavneBeskyttelseStartDato(parseDate(yyyy_MM_dd, line, 17, 27));
@@ -252,7 +256,7 @@ public class CPRParser {
 		return k;
 	}
 
-	static Personoplysninger personoplysninger(String line) throws ParseException {
+	static Personoplysninger personoplysninger(String line) throws ParseException, FileParseException {
 		Personoplysninger p = new Personoplysninger();
 		p.setCpr(cut(line,3, 13));
 		p.setGaeldendeCpr(cut(line,13,23).trim());
@@ -270,7 +274,7 @@ public class CPRParser {
 		return p;
 	}
 
-	public static Folkekirkeoplysninger folkekirkeoplysninger(String line) throws ParseException {
+	public static Folkekirkeoplysninger folkekirkeoplysninger(String line) throws ParseException, FileParseException {
 		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
 		result.setCpr(cut(line,3, 13));
 		result.setForholdskode(cut(line, 13, 14));
@@ -279,7 +283,7 @@ public class CPRParser {
 		return result;
 	}
 
-	public static AktuelCivilstand aktuelCivilstand(String line) throws ParseException {
+	public static AktuelCivilstand aktuelCivilstand(String line) throws ParseException, FileParseException {
 		AktuelCivilstand result = new AktuelCivilstand();
 		result.setCpr(cut(line,3, 13));
 		result.setCivilstandskode(cut(line, 13, 14));
@@ -294,7 +298,7 @@ public class CPRParser {
 		return result;
 	}	
 	
-	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException {
+	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException, FileParseException {
 		Udrejseoplysninger u = new Udrejseoplysninger();
 		u.setCpr(cut(line, 3, 13));
 		u.setUdrejseLandekode(cut(line, 13, 17));
@@ -308,7 +312,7 @@ public class CPRParser {
 		return u;
 	}
 
-	public static Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String line) throws ParseException {
+	public static Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String line) throws ParseException, FileParseException {
 		Foedselsregistreringsoplysninger r = new Foedselsregistreringsoplysninger();
 		r.setCpr(cut(line, 3, 13));
 		r.setFoedselsregistreringsstedkode(cut(line, 13, 17));
@@ -316,7 +320,7 @@ public class CPRParser {
 		return r;
 	}
 
-	public static Statsborgerskab statsborgerskab(String line) throws ParseException {
+	public static Statsborgerskab statsborgerskab(String line) throws ParseException, FileParseException {
 		Statsborgerskab s = new Statsborgerskab();
 		s.setCpr(cut(line, 3, 13));
 		s.setLandekode(cut(line, 13, 17));
@@ -325,7 +329,7 @@ public class CPRParser {
 		return s;
 	}
 
-	public static KommunaleForhold kommunaleForhold(String line) throws ParseException {
+	public static KommunaleForhold kommunaleForhold(String line) throws ParseException, FileParseException {
 		KommunaleForhold result = new KommunaleForhold();
 		result.setCpr(cut(line, 3, 13));
 		result.setKommunalforholdstypekode(cut(line, 13, 14));
@@ -336,7 +340,7 @@ public class CPRParser {
 		return result;
 	}
 
-	public static Valgoplysninger valgoplysninger(String line) throws ParseException {
+	public static Valgoplysninger valgoplysninger(String line) throws ParseException, FileParseException {
 		Valgoplysninger result = new Valgoplysninger();
 		result.setCpr(cut(line, 3, 13));
 		result.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
@@ -346,7 +350,7 @@ public class CPRParser {
 		return result;
 	}
 
-	public static Haendelse haendelse(String line) throws ParseException {
+	public static Haendelse haendelse(String line) throws ParseException, FileParseException {
 		Haendelse result = new Haendelse();
 		result.setUuid(UUID.randomUUID().toString());
 		result.setCpr(cut(line, 3, 13));
@@ -357,7 +361,7 @@ public class CPRParser {
 		return result;
 	}
 
-	public static MorOgFaroplysninger moroplysninger(String line) throws ParseException {
+	public static MorOgFaroplysninger moroplysninger(String line) throws ParseException, FileParseException {
 		MorOgFaroplysninger result = new MorOgFaroplysninger();
 		result.setForaeldertype(Foraeldertype.mor);
 		result.setCpr(cut(line, 3, 13));
@@ -371,7 +375,7 @@ public class CPRParser {
 		return result;
 	}
 
-	public static MorOgFaroplysninger faroplysninger(String line) throws ParseException {
+	public static MorOgFaroplysninger faroplysninger(String line) throws ParseException, FileParseException {
 		MorOgFaroplysninger result = new MorOgFaroplysninger();
 		result.setForaeldertype(Foraeldertype.far);
 		result.setCpr(cut(line, 3, 13));
@@ -421,7 +425,7 @@ public class CPRParser {
 		}
 	}
 
-	private static Calendar parseCalendar(DateFormat format, String line, int from, int to) throws ParseException {
+	private static Calendar parseCalendar(DateFormat format, String line, int from, int to) throws ParseException, FileParseException {
 		Date date = parseDate(format, line, from, to);
 		if(date == null) {
 			return null;
@@ -431,10 +435,10 @@ public class CPRParser {
 		return calendar;
 	}
 
-	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException {
+	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, FileParseException {
 		String dateString = cut(line,from, to);
 		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING)) {
-			return format.parse(dateString);
+			return parseDateAndCheckValidity(dateString, format, line);
 		}
 		return null;
 	}
@@ -472,5 +476,14 @@ public class CPRParser {
 	        }
 	    }
 	    return "";
+	}
+
+	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException {
+		Date date = format.parse(dateString);
+		String formattedDate = format.format(date);
+		if (!formattedDate.equals(dateString)) {
+			logger.error("Ugyldig dato: " + dateString + " fra linjen [" + line + "]");
+		}
+		return date;
 	}
 }
