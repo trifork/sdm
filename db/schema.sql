@@ -668,8 +668,8 @@ CREATE TABLE Person (
 	CreatedBy VARCHAR(200) NOT NULL,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	INDEX(modifiedDate, PersonPID)
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
+	INDEX(modifiedDate, PersonPID),
+	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PersonIkraft (
