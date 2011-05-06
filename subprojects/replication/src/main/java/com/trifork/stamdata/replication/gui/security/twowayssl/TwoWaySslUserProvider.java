@@ -30,6 +30,10 @@ public class TwoWaySslUserProvider implements Provider<User> {
 	public User get() {
 		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request.get());
 		if(certificate != null) {
+			if(!certificate.isValid()) {
+				logger.info("Attempted to access with INVALID certificate, SubjectSerialNumber=" + certificate.getSubjectSerialNumber());
+				return null;
+			}
 			if(certificate.getKind() != Kind.MOCES) {
 				logger.info("Attempted to access with non-MOCES: " + certificate.getKind());
 				return null;

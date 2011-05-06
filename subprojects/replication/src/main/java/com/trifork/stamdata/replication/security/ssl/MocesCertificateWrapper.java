@@ -9,6 +9,7 @@ import org.openoces.ooapi.certificate.MocesCertificate;
 import org.openoces.ooapi.certificate.OcesCertificate;
 import org.openoces.ooapi.certificate.PocesCertificate;
 import org.openoces.ooapi.certificate.VocesCertificate;
+import org.openoces.serviceprovider.ServiceProviderSetup;
 
 public class MocesCertificateWrapper {
 
@@ -66,6 +67,6 @@ public class MocesCertificateWrapper {
 	}
 
 	public boolean isValid() {
-		return certificate.validityStatus() == CertificateStatus.VALID;
+		return certificate.validityStatus() == CertificateStatus.VALID && !ServiceProviderSetup.getCurrentChecker().isRevoked(certificate);
 	}
 }
