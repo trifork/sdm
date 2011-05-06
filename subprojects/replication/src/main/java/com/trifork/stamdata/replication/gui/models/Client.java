@@ -43,7 +43,7 @@ public class Client {
 	private String id;
 
 	private String name;
-	private String cvr;
+	private String subjectSerialNumber;
 
 	@ElementCollection
 	private Set<String> permissions = Sets.newHashSet();
@@ -52,10 +52,10 @@ public class Client {
 
 	}
 
-	public Client(String name, String cvr) {
+	public Client(String name, String subjectSerialNumber) {
 
 		this.name = name;
-		this.cvr = cvr;
+		this.subjectSerialNumber = subjectSerialNumber;
 		this.permissions = new HashSet<String>();
 	}
 
@@ -69,9 +69,9 @@ public class Client {
 		return name;
 	}
 
-	public String getCvrNumber() {
+	public String getSubjectSerialNumber() {
 
-		return cvr;
+		return subjectSerialNumber;
 	}
 
 	public boolean addPermission(String viewName) {
@@ -97,6 +97,6 @@ public class Client {
 	@Override
 	public String toString() {
 	
-		return String.format("%s (cvr=%s)", name, cvr);
+		return String.format("%s (subjectSerialNumber=%s)", name, subjectSerialNumber);
 	}
 }

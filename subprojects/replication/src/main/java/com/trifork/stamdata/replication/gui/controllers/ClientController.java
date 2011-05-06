@@ -118,9 +118,9 @@ public class ClientController extends AbstractController {
 		// Create a new client.
 
 		String name = request.getParameter("name");
-		String cvr = request.getParameter("certificate_id");
+		String subjectSerialNumber = request.getParameter("certificate_id");
 
-		Client client = clients.get().create(name, cvr);
+		Client client = clients.get().create(name, subjectSerialNumber);
 		
 		if (client != null) {
 			audit.get().log("New client %s created by %s.", client, user.get());

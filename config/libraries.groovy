@@ -62,7 +62,10 @@ libs = [
 
 	hamcrest: 'org.hamcrest:hamcrest-library:1.2',
 
-	bouncycastle: 'bouncycastle:bcprov-jdk16:140@jar',
+	bouncycastle: 'bouncycastle:bcprov-jdk14:136@jar',
+	
+	bouncycastle15: 'bouncycastle:bcprov-jdk15:',
+	
 	ooapi: 'org.openoces:ooapi:1.81.2',
 
 	jodi_time: 'joda-time:joda-time:1.6',

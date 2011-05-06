@@ -36,7 +36,7 @@ CREATE TABLE User (
 CREATE TABLE Client (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(200) NOT NULL,
-	cvr CHAR(200) NOT NULL
+	subjectSerialNumber CHAR(200) NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Client_permissions (

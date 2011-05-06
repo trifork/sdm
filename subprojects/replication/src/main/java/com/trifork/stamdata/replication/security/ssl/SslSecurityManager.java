@@ -31,7 +31,7 @@ public class SslSecurityManager implements SecurityManager {
 		String remoteIP = request.getRemoteAddr();
 		String viewName = request.getPathInfo().substring(1);
 		if (certificate != null && certificate.isValid()) {
-			Client client = clientDao.findByCvr(certificate.getCvr());
+			Client client = clientDao.findBySubjectSerialNumber(certificate.getSubjectSerialNumber());
 			if (client != null) {
 				if (client.isAuthorizedFor(viewName)) {
 					logger.info("Client '" + client + "' accessed view='" + viewName + "'. ip='" + remoteIP + "'");

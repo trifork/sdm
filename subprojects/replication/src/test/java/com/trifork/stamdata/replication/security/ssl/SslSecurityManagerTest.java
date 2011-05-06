@@ -30,7 +30,7 @@ public class SslSecurityManagerTest {
 	X509Certificate[] certificateList;
 	String viewPath = "/foo/bar/v1";
 	String viewName = "foo/bar/v1";
-	String cvr = "12345678";
+	String ssn = "CVR:12345678-RID:1234";
 
 	@Before
 	public void before() {
@@ -57,8 +57,8 @@ public class SslSecurityManagerTest {
 	public void acceptsClientWithKnownCvrWithPermission() {
 		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getCvr()).thenReturn(cvr);
-		when(dao.findByCvr(cvr)).thenReturn(client);
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
+		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(client);
 		when(client.isAuthorizedFor(viewName)).thenReturn(true);
 
 		assertTrue(securityManager.isAuthorized(request));
@@ -68,8 +68,8 @@ public class SslSecurityManagerTest {
 	public void rejectsClientWithKnownCvrWithoutPermission() {
 		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getCvr()).thenReturn(cvr);
-		when(dao.findByCvr(cvr)).thenReturn(client);
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
+		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(client);
 		when(client.isAuthorizedFor(viewName)).thenReturn(false);
 
 		assertFalse(securityManager.isAuthorized(request));
@@ -79,8 +79,8 @@ public class SslSecurityManagerTest {
 	public void rejectsClientWithUnknownCvr() {
 		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getCvr()).thenReturn("12345678");
-		when(dao.findByCvr(cvr)).thenReturn(null);
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:unknown");
+		when(dao.findBySubjectSerialNumber("CVR:12345678-RID:unknown")).thenReturn(null);
 
 		assertFalse(securityManager.isAuthorized(request));
 	}

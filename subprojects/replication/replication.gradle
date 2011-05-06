@@ -75,6 +75,7 @@ dependencies {
 		// play well with others when deployed.
 
 		exclude group: 'org.apache.xerces'
+		exclude module:'bcprov-jdk15'
 
 		// Why this dependency is excluded in the
 		// POM is beyond me?
@@ -82,6 +83,7 @@ dependencies {
 		runtime('org.opensaml:opensaml:2.4.1') {
 			exclude group: 'velocity'
 			exclude group: 'org.slf4j'
+			exclude module:'bcprov-jdk15'
 		}
 
 		runtime libs.bouncycastle

@@ -2,7 +2,7 @@
 <form action="${contextRoot}/admin/clients?id=${client.id}" method="POST">
 <input type="hidden" name="id" value="${client.id}" />
 <p>
-	<b>Cvr-nummer: ${client.cvrNumber}</b>
+	<b>Subject SerialNumber: ${client.subjectSerialNumber}</b>
 </p>
 <p>
 	<h3>Serviceaftager har adgang til:</h3><hr />

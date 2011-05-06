@@ -46,11 +46,20 @@ public class ClientDao {
 
 		return (Client) session.load(Client.class, id);
 	}
-
+	
+	// WARNING: This method will throw a NonUniqueException if there are more than one client with the given CVR.
+	// Therefore: Do not add multiple clients with same CVR when using DGWS
 	public Client findByCvr(String cvr) {
+		String ssnlike = "CVR:" + cvr + "-%";
+		Query query = session.createQuery("From Client WHERE subjectSerialNumber LIKE :ssnlike");
+		query.setParameter("ssnlike", ssnlike);
+		return (Client) query.uniqueResult();
+	}
 
-		Query query = session.createQuery("FROM Client WHERE cvr = :cvr");
-		query.setParameter("cvr", cvr);
+	public Client findBySubjectSerialNumber(String subjectSerialNumber) {
+
+		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber = :subjectSerialNumber");
+		query.setParameter("subjectSerialNumber", subjectSerialNumber);
 		return (Client) query.uniqueResult();
 	}
 
@@ -61,9 +70,9 @@ public class ClientDao {
 		return query.executeUpdate() == 1;
 	}
 
-	public Client create(String name, String cvr) {
+	public Client create(String name, String subjectSerialNumber) {
 
-		Client client = new Client(name, cvr);
+		Client client = new Client(name, subjectSerialNumber);
 		session.persist(client);
 		return client;
 	}
