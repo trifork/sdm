@@ -28,6 +28,7 @@ dependencies {
 	compile libs.reflections
 
 	testCompile libs.junit
+	testCompile libs.mockito
 
 	compile(libs.commons_configuration) {
 		exclude group: 'commons-logging'
