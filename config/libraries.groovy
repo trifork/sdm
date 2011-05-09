@@ -56,7 +56,7 @@ libs = [
 	hibernate_c3p0: 'org.hibernate:hibernate-c3p0:3.6.0.Final',
 
 	mysql_driver: 'mysql:mysql-connector-java:5.1.15@jar',
-
+	
 	junit: 'junit:junit:4.8.2',
 	mockito: 'org.mockito:mockito-core:1.8.5',
 
