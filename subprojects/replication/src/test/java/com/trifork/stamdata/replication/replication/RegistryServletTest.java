@@ -24,7 +24,6 @@
 
 package com.trifork.stamdata.replication.replication;
 
-import static java.lang.Integer.parseInt;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -74,6 +73,7 @@ public class RegistryServletTest {
 	private @Mock AtomFeedWriter writer;
 	private @Mock UsageLogger usageLogger;
 	private String requestPath;
+	private int count;
 	private String countParam;
 	private String clientId = "CVR:12345678";
 	private ScrollableResults records;
@@ -136,9 +136,16 @@ public class RegistryServletTest {
 	}
 
 	@Test
+	public void Should_not_return_a_web_link_if_there_are_no_more_records() throws Exception {
+		records = mock(ScrollableResults.class);
+
+		get();
+
+		verify(response, never()).setHeader(eq("Link"), anyString());
+	}
+
+	@Test
 	public void Should_return_a_web_link_for_the_next_page_if_there_are_more_records() throws Exception {
-		
-		countParam = "2";
 		get();
 		verify(response).addHeader("Link", String.format("<stamdata://foo/bar/v1?offset=%s>; rel=\"next\"", nextOffset));
 	}
@@ -162,18 +169,6 @@ public class RegistryServletTest {
 		get();
 	
 		verify(usageLogger, never()).log(clientId, "foo/barWithoutUsageLogging/v1", 2);
-	}
-
-	@Test
-	public void Should_not_return_a_web_link_if_there_are_no_more_records() throws Exception {
-
-		countParam = "2";
-
-		records = mock(ScrollableResults.class);
-
-		get();
-
-		verify(response, never()).setHeader(eq("Link"), anyString());
 	}
 
 	@Test
@@ -219,13 +214,23 @@ public class RegistryServletTest {
 	}
 	
 	@Test
-	public void Should_return_error_when_count_param_is_null() throws Exception {
+	public void Should_return_error_when_count_param_is_0() throws Exception {
 		
 		countParam = "0";
 		
 		get();
 		
 		verify(response).sendError(eq(HTTP_BAD_REQUEST), anyString());
+	}
+	
+	@Test
+	public void Should_use_default_count_when_count_param_is_unspecified() throws Exception {
+		countParam = null;
+		count = RegistryServlet.DEFAULT_PAGE_SIZE;
+		
+		get();
+		
+		verify(recordDao).findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, RegistryServlet.DEFAULT_PAGE_SIZE);
 	}
 	
 	@Test
@@ -244,15 +249,6 @@ public class RegistryServletTest {
 
 		when(securityManager.isAuthorized(request)).thenReturn(authorized);
 		when(securityManager.getClientId(request)).thenReturn(clientId);
-		
-		int count = 0;
-		
-		try {
-			count = parseInt(countParam);
-		}
-		catch (Exception e) {
-			// Do nothing.
-		}
 		
 		when(recordDao.findPage(MockEntity.class, "2222222222", new Date(1111111111000L), clientId, count)).thenReturn(records);
 		when(recordDao.findPage(MockEntityWithoutUsageLogging.class, "2222222222", new Date(1111111111000L), clientId, count)).thenReturn(records);
@@ -277,6 +273,7 @@ public class RegistryServletTest {
 		mappedClasses.put("foo/bar/v1", MockEntity.class);
 		mappedClasses.put("foo/barWithoutUsageLogging/v1", MockEntityWithoutUsageLogging.class);
 
+		count = 2;
 		countParam = "2";
 		offsetParam = "11111111112222222222";
 		nextOffset = "11111111113333333333";

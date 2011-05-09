@@ -58,19 +58,16 @@ public class RegistryServlet extends HttpServlet {
 	private static final Logger logger = getLogger(RegistryServlet.class);
 
 	private static final long serialVersionUID = -172563300590543180L;
-	private static final int DEFAULT_PAGE_SIZE = 10000;
+	public static final int DEFAULT_PAGE_SIZE = 10000;
 
 	private final Map<String, Class<? extends View>> registry;
-
 	private final Provider<SecurityManager> securityManager;
 	private final Provider<RecordDao> recordDao;
-
 	private final Provider<AtomFeedWriter> writers;
 	private final Provider<UsageLogger> usageLogger;
 
 	@Inject
 	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<UsageLogger> usageLogger, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
-
 		this.usageLogger = usageLogger;
 		this.registry = checkNotNull(registry);
 		this.recordDao = checkNotNull(recordDao);
@@ -80,59 +77,48 @@ public class RegistryServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// Check authorization.
-
 		if (isNotAuthorized(request)) {
 			setUnauthorizedHeaders(response);
 			return;
 		}
+		
+		writeResponse(request, response);
+	}
 
-		String viewName = getViewName(request);
-		String clientId = securityManager.get().getClientId(request);
-
-		// Check the request parameters.
-
-		String offsetParam = request.getParameter("offset");
-
-		if (offsetParam != null && !offsetParam.matches("[0-9]+")) {
-
+	private void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		if (!isLegalOffsetParam(request)) {
 			response.sendError(HTTP_BAD_REQUEST, "The 'offset' parameter must be a non-negative integer.");
-			logger.warn("Invalid parameter offset='{}'. ClientId='{}'.", offsetParam, securityManager.get().getClientId(request));
+			logger.warn("Invalid parameter offset='{}'. ClientId='{}'.", getOffsetParam(request), securityManager.get().getClientId(request));
 			return;
 		}
 
-		// Parse the offset query parameters.
-
-		HistoryOffset offset = new HistoryOffset(offsetParam);
-
-		// Get the count parameter.
-
-		String countParam = request.getParameter("count");
-
-		if (countParam != null && !countParam.matches("[1-9][0-9]*")) {
+		if (!isLegalCountParam(request)) {
 			response.sendError(HTTP_BAD_REQUEST, "The 'count' parameter must be a positive integer.");
-			logger.warn("Invalid parameter count='{}'. ClientId='{}'.", countParam, securityManager.get().getClientId(request));
+			logger.warn("Invalid parameter count='{}'. ClientId='{}'.", getCountParam(request), securityManager.get().getClientId(request));
 			return;
 		}
 
-		int count = countParam != null ? Integer.parseInt(countParam) : DEFAULT_PAGE_SIZE;
+		fetchAndWriteRecords(request, response);
+	}
 
-		// Determine what content type the client wants.
-		//
-		// TODO: Use javax.activation.MimeType to check these.
-
-		String accept = request.getHeader("Accept");
-		boolean useFastInfoSet = (MIME.ATOM_FASTINFOSET.equalsIgnoreCase(accept));
-
-		// FETCH THE RECORDS
-
-		Class<? extends View> entityType = registry.get(viewName);
+	private void fetchAndWriteRecords(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String clientId = securityManager.get().getClientId(request);
+		HistoryOffset offset = createHistoryOffset(request);
+		int count = parseCountParam(request);
+		Class<? extends View> entityType = registry.get(getViewName(request));
 
 		ScrollableResults records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), clientId, count);
 
-		// WRITE STATUS & HEADERS
-		//
+		try {
+			int writtenRecords = writeRecords(request, response, clientId, entityType, records);
+			performUsageLogging(request, clientId, entityType, writtenRecords);
+		} finally {
+			records.close();
+		}
+	}
+
+	private int writeRecords(HttpServletRequest request, HttpServletResponse response, String clientId,
+			Class<? extends View> entityType, ScrollableResults records) throws IOException {
 		// The response contains a content-type header and a Link header that
 		// points to the next page. Web linking is described in RFC 5988.
 		//
@@ -146,38 +132,75 @@ public class RegistryServlet extends HttpServlet {
 
 		if (records.last()) {
 			View newestRecord = (View) records.get(0);
-			response.addHeader("Link", WebLinking.createNextLink(viewName, newestRecord.getOffset()));
+			response.addHeader("Link", WebLinking.createNextLink(getViewName(request), newestRecord.getOffset()));
 		}
 
 		records.beforeFirst();
 
 		response.setStatus(HTTP_OK);
-		String contentType = useFastInfoSet ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
-		contentType += "; charset=utf-8";
-		response.setContentType(contentType);
+		response.setContentType(getContentType(request));
 		response.flushBuffer();
 
-		int writtenRecords = writers.get().write(entityType, records, response.getOutputStream(), useFastInfoSet);
-		if (shouldBeLogged(entityType)) {
-			usageLogger.get().log(clientId, viewName, writtenRecords);
-		}
+		return writers.get().write(entityType, records, response.getOutputStream(), useFastInfoset(request));
+	}
+	
+	private String getContentType(HttpServletRequest request) {
+		String contentType = useFastInfoset(request) ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
+		return contentType + "; charset=utf-8";
+	}
 
-		records.close();
+	private void performUsageLogging(HttpServletRequest request, String clientId, Class<? extends View> entityType, int writtenRecords) {
+		if (shouldBeLogged(entityType)) {
+			usageLogger.get().log(clientId, getViewName(request), writtenRecords);
+		}
+	}
+
+	private boolean useFastInfoset(HttpServletRequest request) {
+		// Determine what content type the client wants.
+		//
+		// TODO: Use javax.activation.MimeType to check these.
+
+		String accept = request.getHeader("Accept");
+		return (MIME.ATOM_FASTINFOSET.equalsIgnoreCase(accept));
+	}
+
+	private String getCountParam(HttpServletRequest request) {
+		return request.getParameter("count");
+	}
+
+	private String getOffsetParam(HttpServletRequest request) {
+		return request.getParameter("offset");
+	}
+
+	private boolean isLegalOffsetParam(HttpServletRequest request) {
+		String offsetParam = getOffsetParam(request);
+		return offsetParam == null || offsetParam.matches("[0-9]+");
+	}
+	
+	private boolean isLegalCountParam(HttpServletRequest request) {
+		String countParam = getCountParam(request);
+		return countParam == null || countParam.matches("[1-9][0-9]*");
+	}
+
+	private HistoryOffset createHistoryOffset(HttpServletRequest request) {
+		return new HistoryOffset(getOffsetParam(request));
+	}
+
+	private int parseCountParam(HttpServletRequest request) {
+		String countParam = getCountParam(request);
+		return countParam != null ? Integer.parseInt(countParam) : DEFAULT_PAGE_SIZE;
 	}
 
 	private boolean shouldBeLogged(Class<? extends View> entityType) {
-
 		UsageLogged usageLogged = entityType.getAnnotation(UsageLogged.class);
 		return usageLogged == null || usageLogged.value();
 	}
 
 	private boolean isNotAuthorized(HttpServletRequest request) {
-
 		return !securityManager.get().isAuthorized(request);
 	}
 
 	private void setUnauthorizedHeaders(HttpServletResponse response) {
-
 		// The HTTP RFC specifies that if returning a 401 status
 		// the server MUST issue a challenge also.
 
