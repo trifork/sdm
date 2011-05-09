@@ -66,11 +66,19 @@ public class SplitCPRFile {
 
 		while (reader.ready()) {
 			line = reader.readLine();
+			if (line.startsWith("999")) {
+				break;
+			}
 			String lastCpr = line.substring(12, 13);
 			int nb = Integer.parseInt(lastCpr);
 			outputs[nb % fileSplit].write(line + "\r\n");
 		}
 
+		// Last line in all files
+		for (int i = 0; i < fileSplit; ++i) {
+			outputs[i].write(line + "\r\n");
+		}
+		
 		for (int i = 0; i < fileSplit; ++i) {
 			outputs[i].close();
 		}
