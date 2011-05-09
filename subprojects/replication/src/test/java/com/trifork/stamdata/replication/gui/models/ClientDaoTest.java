@@ -1,6 +1,7 @@
 package com.trifork.stamdata.replication.gui.models;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -8,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +19,7 @@ import org.junit.Test;
 import com.trifork.stamdata.replication.DatabaseHelper;
 
 public class ClientDaoTest {
-	private static Session session;
+	private Session session;
 	private ClientDao dao;
 	private Client createdClient;
 	private static DatabaseHelper db;
@@ -25,8 +27,10 @@ public class ClientDaoTest {
 	@BeforeClass
 	public static void init() throws Exception {
 		db = new DatabaseHelper(Client.class);
-		session = db.openSession();
+		Session session = db.openSession();
+		session.beginTransaction();
 		session.createQuery("delete from Client").executeUpdate();
+		session.getTransaction().commit();
 		session.close();
 	}
 
@@ -86,7 +90,7 @@ public class ClientDaoTest {
 		List<Client> result = dao.findAll();
 
 		// Assert
-		assertTrue(result.size() >= 3);
+		assertEquals(3, result.size());
 	}
 	
 }
