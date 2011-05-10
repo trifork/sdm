@@ -64,7 +64,7 @@ public class Main {
 	
 	public static void main(String... args) throws Exception {
 		String serverAndPort = ask("Server and port", "http://localhost:8080/replication");
-		Security security = toSecurity(ask("Security (none/dgws/ssl)", "none").toLowerCase());;
+		SecurityMethod security = toSecurity(ask("Security (none/dgws/ssl)", "none").toLowerCase());;
 
 		for (int i=0; i<views.size(); i++) {
 			Class<?> viewClass = views.get(i);
@@ -79,13 +79,13 @@ public class Main {
 		fetch(client, selectedView, startTag);
 	}
 
-	private static Security toSecurity(String s) {
+	private static SecurityMethod toSecurity(String s) {
 		if (s.equals("ssl")) {
-			return Security.ssl;
+			return SecurityMethod.TWO_WAY_SSL;
 		} else if (s.equals("dgws")) {
-			return Security.dgws;
+			return SecurityMethod.DGWS;
 		}
-		return Security.none;
+		return SecurityMethod.NONE;
 	}
 
 	private static String ask(String question, String defaultValue) {

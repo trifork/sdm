@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.client;
+package com.trifork.stamdata.client.security.dgws;
 
 import javax.xml.bind.annotation.*;
 

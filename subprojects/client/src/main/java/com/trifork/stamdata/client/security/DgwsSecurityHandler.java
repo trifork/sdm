@@ -23,15 +23,18 @@
 
 package com.trifork.stamdata.client.security;
 
-import static com.trifork.stamdata.client.SOSITestConstants.TEST_CVR;
-import static com.trifork.stamdata.client.SOSITestConstants.TEST_IT_SYSTEM_NAME;
-import static com.trifork.stamdata.client.SOSITestConstants.TEST_STS_URL;
+import static com.trifork.stamdata.client.security.dgws.SOSITestConstants.TEST_CVR;
+import static com.trifork.stamdata.client.security.dgws.SOSITestConstants.TEST_IT_SYSTEM_NAME;
+import static com.trifork.stamdata.client.security.dgws.SOSITestConstants.TEST_STS_URL;
 import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
 import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 import static java.lang.String.format;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -41,12 +44,17 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
-import com.trifork.stamdata.client.AuthorizationRequestStructure;
-import com.trifork.stamdata.client.AuthorizationResponseStructure;
-import com.trifork.stamdata.client.SoapHelper;
+import com.trifork.stamdata.client.security.dgws.AuthorizationRequestStructure;
+import com.trifork.stamdata.client.security.dgws.AuthorizationResponseStructure;
 import com.trifork.stamdata.views.ViewPath;
 
 import dk.sosi.seal.SOSIFactory;
@@ -99,7 +107,7 @@ public class DgwsSecurityHandler implements SecurityHandler {
 		marshaller.marshal(authorizationRequest, doc);
 		request.setBody(doc.getDocumentElement());
 
-		String responseXML = SoapHelper.send(stamdataUrl + "authenticate", request.serialize2DOMDocument());
+		String responseXML = send(stamdataUrl + "authenticate", request.serialize2DOMDocument());
 
 		// PARSE THE RESPONSE
 		//
@@ -122,7 +130,6 @@ public class DgwsSecurityHandler implements SecurityHandler {
 	}
 
 	private IDCard fetchIDCard() throws Exception {
-
 		// Create a SEAL ID card.
 		//
 		// TODO: Make these settings settable.
@@ -140,7 +147,7 @@ public class DgwsSecurityHandler implements SecurityHandler {
 
 		// Send the request.
 
-		String responseXML = SoapHelper.send(TEST_STS_URL, stsRequest.serialize2DOMDocument());
+		String responseXML = send(TEST_STS_URL, stsRequest.serialize2DOMDocument());
 		SecurityTokenResponse response = sosiFactory.deserializeSecurityTokenResponse(responseXML);
 
 		// Check for errors.
@@ -172,4 +179,36 @@ public class DgwsSecurityHandler implements SecurityHandler {
 		return new SOSIFactory(federation, vault, cryptoProviderSettings);
 	}
 
+	public static String send(String urlString, Node node) throws Exception {
+		URL url = new URL(urlString);
+
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+		// Prepare for SOAP
+
+		connection.setRequestMethod("POST");
+		connection.setRequestProperty("SOAPAction", "\"\"");
+		connection.setRequestProperty("Content-Type", "text/xml; charset=utf-8;");
+
+		// Send the request XML.
+
+		connection.setDoOutput(true);
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.transform(new DOMSource(node), new StreamResult(connection.getOutputStream()));
+
+		// Read the response.
+
+		InputStream inputStream;
+
+		if (connection.getResponseCode() < 400) {
+			inputStream = connection.getInputStream();
+		}
+		else {
+			inputStream = connection.getErrorStream();
+		}
+
+		String response = IOUtils.toString(inputStream);
+
+		return response;
+	}
 }

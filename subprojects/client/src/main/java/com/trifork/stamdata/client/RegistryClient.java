@@ -39,9 +39,9 @@ public class RegistryClient {
 	private final String stamdataURL;
 	private final SecurityHandler securityHandler;
 
-	public RegistryClient(String endpointURL, Security security) {
+	public RegistryClient(String endpointURL, SecurityMethod securityMethod) {
 		this.stamdataURL = endpointURL;
-		this.securityHandler = createSecurityHandler(endpointURL, security);
+		this.securityHandler = createSecurityHandler(endpointURL, securityMethod);
 	}
 
 	public <T> Iterator<EntityRevision<T>> update(Class<T> entityType, String offset, int count) throws Exception {
@@ -83,13 +83,13 @@ public class RegistryClient {
 		System.out.println("Record count: " + i);
 	}
 
-	private SecurityHandler createSecurityHandler(String endpointURL, Security security) {
+	private SecurityHandler createSecurityHandler(String endpointURL, SecurityMethod security) {
 		switch(security) {
-		case dgws:
+		case DGWS:
 			return new DgwsSecurityHandler(endpointURL);
-		case ssl:
+		case TWO_WAY_SSL:
 			return new TwoWaySslSecurityHandler();
-		case none:
+		case NONE:
 			return new NoSecurityHandler();
 		default:
 			throw new IllegalArgumentException("Uknonwn security method: " + security);

@@ -21,11 +21,32 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.client;
+package com.trifork.stamdata.client.security.dgws;
 
-public interface SOSITestConstants {
-	String KEY_STORE_PASSWORD = "Test1234";
-	String TEST_IT_SYSTEM_NAME = "SOSITEST";
-	String TEST_CVR = "30808460";
-	String TEST_STS_URL = "http://pan.certifikat.dk/sts/services/SecurityTokenService";
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class AuthorizationRequestStructure {
+
+	private String viewURI;
+
+	protected AuthorizationRequestStructure() {
+
+	}
+
+	public AuthorizationRequestStructure(String viewURI) {
+
+		this.viewURI = checkNotNull(viewURI);
+	}
+
+	public String getViewURI() {
+
+		return viewURI;
+	}
 }
