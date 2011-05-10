@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
 
 // TODO: This class servers no special purpose. Move the functions.
 
-class SoapHelper {
+public class SoapHelper {
 
 	public static String send(String urlString, Node node) throws Exception {
 
