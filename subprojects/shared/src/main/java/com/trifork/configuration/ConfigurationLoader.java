@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.StringTokenizer;
@@ -63,6 +64,10 @@ public class ConfigurationLoader {
 		BaseConfiguration config = new BaseConfiguration();
 		for (Entry<?, ?> entry : props.entrySet()) {
 			config.addProperty(entry.getKey().toString(), entry.getValue());
+		}
+		for(Iterator<?> it = config.getKeys(); it.hasNext();) {
+			String key = it.next().toString();
+			logger.info("Loaded property {}={}",key,config.getString(key));
 		}
 		return config;
 	}
