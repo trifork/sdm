@@ -2,13 +2,7 @@
 <form action="${contextRoot}/admin/users?id=${user.id}" method="POST">
 <input type="hidden" name="id" value="${user.id}" />
 <p>
-	CPR-nummer: ${user.cpr}
-</p>
-<p>
-	CVR-nummer: ${user.cvr}
-</p>
-<p>
-	RID: ${user.rid}
+	Subject Serial Number: ${user.subjectSerialNumber}
 </p>
 <hr />
 <p>

@@ -28,28 +28,36 @@ public class TwoWaySslUserProvider implements Provider<User> {
 	}
 	@Override
 	public User get() {
+
 		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request.get());
+
+		// TODO (logging): What if the client does not have a certificate.
+
 		if(certificate != null) {
-			if(!certificate.isValid()) {
+
+			if (!certificate.isValid()) {
 				logger.info("Attempted to access with INVALID certificate, SubjectSerialNumber=" + certificate.getSubjectSerialNumber());
 				return null;
 			}
-			if(certificate.getKind() != Kind.MOCES) {
+
+			if (certificate.getKind() != Kind.MOCES) {
 				logger.info("Attempted to access with non-MOCES: " + certificate.getKind());
 				return null;
 			}
-			String cvr = certificate.getCvr();
-			String subjectId = certificate.getSubjectId();
-			User user = userDao.findByCvrAndRid(cvr, subjectId);
+
+			User user = userDao.findBySubjectSerialNumber(certificate.getSubjectSerialNumber());
+
 			String remoteIP = request.get().getRemoteAddr();
 			String page = request.get().getRequestURI();
+
 			if(user != null) {
-				logger.info("User (cpr='" + user.getCpr() + "', cvr='" + user.getCvr()
-						+ "', subjectId='" + user.getRid() + "') accessed page='" + page + "'. ip='" + remoteIP + "'");
+				logger.info("User=" + user.getSubjectSerialNumber() + " accessed page=" + page + ". ip=" + remoteIP);
 				return user;
 			}
-			logger.info("No access for user (cvr='" + cvr + "', subjectId='" + subjectId + "') to page='" + page + "'. ip='" + remoteIP + "'");
+
+			logger.info("No access for certificate=" + certificate.getSubjectSerialNumber() + " to page=" + page + ". ip=" + remoteIP);
 		}
+
 		return null;
 	}
 

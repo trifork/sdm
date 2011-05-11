@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,7 +23,6 @@
 
 package com.trifork.stamdata.replication.gui.models;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -32,6 +30,7 @@ import org.hibernate.Session;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+
 
 @RequestScoped
 public class UserDao {
@@ -49,25 +48,16 @@ public class UserDao {
 		return (User) session.load(User.class, id);
 	}
 
-	public User findByCvrAndRid(String cvr, String rid) {
-		Query query = session.createQuery("FROM User WHERE (rid = :rid AND cvr = :cvr)");
-		query.setParameter("rid", rid);
-		query.setParameter("cvr", cvr);
-		return (User) query.uniqueResult();
-		
-	}
-	
-	public User find(String cvr, String cpr) throws SQLException {
+	public User findBySubjectSerialNumber(String subjectSerialNumber) {
 
-		Query query = session.createQuery("FROM User WHERE (cpr = :cpr AND cvr = :cvr)");
-		query.setParameter("cpr", cpr);
-		query.setParameter("cvr", cvr);
+		Query query = session.createQuery("FROM User WHERE (subjectSerialNumber = :subjectSerialNumber)");
+		query.setParameter("subjectSerialNumber", subjectSerialNumber);
 		return (User) query.uniqueResult();
 	}
 
-	public User create(String name, String cpr, String cvr, String rid) {
+	public User create(String name, String subjectSerialNumber) {
 
-		User user = new User(name, cpr, cvr, rid);
+		User user = new User(name, subjectSerialNumber);
 		session.save(user);
 		return user;
 	}

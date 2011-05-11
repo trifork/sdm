@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,6 +23,8 @@
 
 package com.trifork.stamdata.replication.gui.models;
 
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -37,20 +38,16 @@ public class User {
 	private String id;
 
 	private String name;
-	private String cvr;
-	private String cpr;
-	private String rid;
+	private String subjectSerialNumber;
 
 	protected User() {
 
 	}
 
-	public User(String name, String cpr, String cvr, String rid) {
+	public User(String name, String subjectSerialNumber) {
 
-		this.name = name;
-		this.cpr = cpr;
-		this.cvr = cvr;
-		this.rid = rid;
+		this.name = checkNotNull(name, "name");
+		this.subjectSerialNumber = checkNotNull(subjectSerialNumber, "subjectSerialNumber");
 	}
 
 	public String getId() {
@@ -63,23 +60,14 @@ public class User {
 		return name;
 	}
 
-	public String getCvr() {
+	public String getSubjectSerialNumber() {
 
-		return cvr;
-	}
-
-	public String getCpr() {
-
-		return cpr;
-	}
-	
-	public String getRid() {
-		return rid;
+		return subjectSerialNumber;
 	}
 
 	@Override
 	public String toString() {
 
-		return String.format("%s (cpr=%s, cvr=%s, rid=%s)", name, cpr, cvr, rid);
+		return String.format("%s(%s)", name, subjectSerialNumber);
 	}
 }

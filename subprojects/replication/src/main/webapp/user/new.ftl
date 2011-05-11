@@ -1,32 +1,20 @@
 <h2>Opret Ny Administrator</h2>
 <form action="${contextRoot}/admin/users" method="POST">
-<p id="info">
-	Det er vigtigt at CPR- og CVR-nummer passer sammen og matcher
-	til det medarbejder certifikat som er tilknyttet brugeren.
-</p>
 <p>
 	<label for="name">Navn:</label>
 	<span>
 		Dette felt bruges udelukkende som refernece og behøver ikke matche
-		CPR-nummeret.
+		navnet i certifikatet.
 	</span>
-	<input name="name" type="text" size="60" />
+	<input name="name" type="text" size="81" />
 </p>
 <p>
-	<label for="cpr">CPR-nummer:</label>
-	<input name="cpr" type="text" size="60" />
-</p>
-<p>
-	<label for="firm">Organisation (CVR):</label>
-	<select name="firm">
-		<#list firms as firm>
-		<option value="${firm}">${firm}</option>
-		</#list>
-	</select>
-</p>
-<p>
-	<label for="rid">RID:</label>
-	<input name="rid" type="text" size="60" />
+	<label for="subjectSerialNumber">MOCES Subject Serial Number:</label>
+	<span>
+		Subject Serial Number fra det certifikat brugeren skal<br />
+		bruge for at logge ind, f.eks. <strong>CVR:12345678-RID:12345678</strong>.
+	</span>
+	<input name="subjectSerialNumber" type="text" size="81" />
 </p>
 <hr />
 <p>

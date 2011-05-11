@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,7 +23,6 @@
 
 package com.trifork.stamdata.replication.gui;
 
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -42,17 +40,16 @@ public class UserRepositoryTest {
 
 	private UserDao repository;
 
-
 	@Before
 	public void setUp() {
-		
-	}
 
+	}
 
 	@Test
 	public void can_find_user_by_id() throws Exception {
+
 		// Arrange
-		User user = repository.create("name", "cpr", "cvr", "rid");
+		User user = repository.create("name", "CVR:12345678-PID:1234");
 
 		// Act
 		User foundUser = repository.find(user.getId());
@@ -61,12 +58,12 @@ public class UserRepositoryTest {
 		assertUser(user, foundUser);
 	}
 
-
 	@Test
 	public void can_find_all_users() throws Exception {
+
 		// Arrange
-		repository.create("name1", "cpr1", "cvr1", "rid1");
-		repository.create("name2", "cpr2", "cvr2", null);
+		repository.create("name1", "CVR:22345678-PID:2234");
+		repository.create("name2", "CVR:32345678-PID:3234");
 
 		// Act
 		List<User> allUsers = repository.findAll();
@@ -76,11 +73,11 @@ public class UserRepositoryTest {
 		assertTrue(allUsers.size() > 1);
 	}
 
-
 	@Test
 	public void can_delete_user() throws Exception {
+
 		// Arrange
-		User user = repository.create("name", "cpr", "cvr", null);
+		User user = repository.create("name", "CVR:42345678-PID:3234");
 
 		// Act
 		repository.delete(user.getId());
@@ -89,12 +86,10 @@ public class UserRepositoryTest {
 		assertNull(repository.find(user.getId()));
 	}
 
-
 	private void assertUser(User expected, User actual) {
+
 		assertThat(actual.getId(), is(expected.getId()));
 		assertThat(actual.getName(), is(expected.getName()));
-		assertThat(actual.getCpr(), is(expected.getCpr()));
-		assertThat(actual.getCvr(), is(expected.getCvr()));
-		assertThat(actual.getRid(), is(expected.getRid()));
+		assertThat(actual.getSubjectSerialNumber(), is(expected.getSubjectSerialNumber()));
 	}
 }

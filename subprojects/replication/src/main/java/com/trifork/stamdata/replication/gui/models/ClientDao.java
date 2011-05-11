@@ -47,7 +47,7 @@ public class ClientDao {
 		return (Client) session.load(Client.class, id);
 	}
 	
-	// WARNING: This method will throw a NonUniqueException if there are more than one client with the given CVR.
+	// TODO: This method will throw a NonUniqueException if there are more than one client with the given CVR.
 	// Therefore: Do not add multiple clients with same CVR when using DGWS
 	public Client findByCvr(String cvr) {
 		String ssnlike = "CVR:" + cvr + "-%";

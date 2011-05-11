@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -26,7 +25,9 @@ package com.trifork.stamdata.replication.gui.security.saml;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.slf4j.LoggerFactory.getLogger;
+
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -34,14 +35,14 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.trifork.rid2cpr.RID2CPRFacade;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
-import com.trifork.wsclient.SoapException;
 
 import dk.itst.oiosaml.sp.UserAssertion;
 import dk.itst.oiosaml.sp.UserAssertionHolder;
@@ -70,13 +71,11 @@ import dk.itst.oiosaml.sp.UserAssertionHolder;
 public class LoginFilter implements Filter, Provider<User> {
 
 	private static final Logger logger = getLogger(LoginFilter.class);
-	private final RID2CPRFacade ridHelper;
 	private final Provider<UserDao> userDao;
 
 	@Inject
-	LoginFilter(RID2CPRFacade ridHelper, Provider<UserDao> userDao) {
+	LoginFilter(Provider<UserDao> userDao) {
 
-		this.ridHelper = checkNotNull(ridHelper);
 		this.userDao = checkNotNull(userDao);
 	}
 
@@ -94,9 +93,8 @@ public class LoginFilter implements Filter, Provider<User> {
 			logger.warn("Unauthorized access attempt to page={}. ip={}", httpRequest.getPathInfo(), remoteIP);
 		}
 		else {
-			if (logger.isInfoEnabled()) {
-				logger.info("User (cpr={}, cvr={}) accessed page={}. ip={}", new Object[] { currentUser.getCpr(), currentUser.getCvr(), httpRequest.getPathInfo(), remoteIP });
-			}
+
+			logger.info("User={} accessed page={}. ip={}", new Object[] { currentUser.getSubjectSerialNumber(), httpRequest.getPathInfo(), remoteIP });
 			chain.doFilter(request, response);
 		}
 	}
@@ -116,43 +114,11 @@ public class LoginFilter implements Filter, Provider<User> {
 	@Override
 	public User get() {
 
-		User user = null;
+		// Check the Certificate's Subject Serial Number.
+		// This is a property on the SAML assertion.
 
-		try {
-			// User assertion has an unfortunate name.
-
-			// TODO: Do logging for these error cases. This is actually // quite
-			// important since it is a bit foggy which properties // are set on
-			// the
-			// assertions from different IdP's.
-
-			UserAssertion assertion = UserAssertionHolder.get();
-
-			if (assertion == null) return null;
-
-			String cvr = assertion.getCVRNumberIdentifier();
-			if (cvr == null) return null;
-
-			String cvrRid = assertion.getSubject();
-			if (cvrRid == null) return null;
-
-			String cpr = ridHelper.getCPR(cvrRid);
-			if (cpr == null) return null;
-
-			user = userDao.get().find(cvr, cpr);
-		}
-		catch (SoapException e) {
-
-			// This is crazy API design, but if the user cannot looked up, an
-			// exception if thrown because of the SOAP fault.
-
-			logger.warn("RID2CPR lookup failed.", e);
-		}
-		catch (Exception e) {
-
-			logger.error("Error while fetching user CPR from the RID2CPR service.", e);
-		}
-
-		return user;
+		UserAssertion assertion = UserAssertionHolder.get();
+		if (assertion == null) return null;
+		return userDao.get().findBySubjectSerialNumber(assertion.getSubject());
 	}
 }

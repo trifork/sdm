@@ -35,7 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.trifork.stamdata.replication.gui.annotations.Whitelist;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
 import com.trifork.stamdata.replication.logging.AuditLogger;
@@ -47,17 +46,15 @@ public class UserController extends AbstractController {
 	private static final long serialVersionUID = 6245011626700765816L;
 
 	private final Provider<UserDao> users;
-	private final Map<String, String> whitelist;
 	private final Provider<AuditLogger> audit;
 	private final Provider<PageRenderer> renderer;
 
 	private final Provider<User> currentUser;
 
 	@Inject
-	UserController(Provider<User> currentUser, @Whitelist Map<String, String> whitelist, Provider<UserDao> users, Provider<AuditLogger> audit, Provider<PageRenderer> renderer) {
+	UserController(Provider<User> currentUser, Provider<UserDao> users, Provider<AuditLogger> audit, Provider<PageRenderer> renderer) {
 
 		this.currentUser = currentUser;
-		this.whitelist = whitelist;
 		this.users = users;
 		this.audit = audit;
 		this.renderer = renderer;
@@ -103,24 +100,17 @@ public class UserController extends AbstractController {
 
 	protected void getCreate(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-		// Get the new administrator's info from the
-		// HTML form.
+		// Get the new administrator's info from the HTML form.
 
-		String newUserName = request.getParameter("name");
-		String newUserCPR = request.getParameter("cpr");
-		String newUserRid = request.getParameter("rid");
-		String firm = request.getParameter("firm");
+		String name = request.getParameter("name");
+		String subjectSerialNumber = request.getParameter("subjectSerialNumber");
 
 		// The CVR must be contained in the white list.
 
-		if (whitelist.containsKey(firm)) {
-			String newUserCVR = whitelist.get(firm);
+		User newUser = users.get().create(name, subjectSerialNumber);
 
-			User user = users.get().create(newUserName, newUserCPR, newUserCVR, newUserRid);
-
-			if (user != null) {
-				audit.get().log("new_user=%s created by user=%s.", user, currentUser.get());
-			}
+		if (newUser != null) {
+			audit.get().log("new_user=%s created by user=%s.", newUser, currentUser.get());
 		}
 
 		redirect(request, response, "/admin/users");
@@ -155,8 +145,6 @@ public class UserController extends AbstractController {
 		// List the white listed firms (CVR).
 
 		Map<String, Object> root = new HashMap<String, Object>();
-
-		root.put("firms", whitelist.keySet());
 
 		renderer.get().render("/user/new.ftl", root, request, response);
 	}

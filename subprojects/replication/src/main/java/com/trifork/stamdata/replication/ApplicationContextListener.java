@@ -26,9 +26,7 @@ package com.trifork.stamdata.replication;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -106,14 +104,8 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			// CONFIGURE THE ADMIN GUI
 
-			modules.add(new GuiModule(
-				config.getString("rid2cpr.endpoint"),
-				getClass().getClassLoader().getResource(config.getString("rid2cpr.keystore")).toExternalForm(),
-				config.getString("rid2cpr.keystorePassword"),
-				config.getInt("rid2cpr.callTimeout"),
-				getWhiteList(config)
-			));
-			
+			modules.add(new GuiModule());
+
 			String guiSecurity = config.getString("gui.security");
 			if("saml".equals(guiSecurity)) {
 				modules.add(new SamlSecurityModule());
@@ -141,18 +133,5 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 		}
 
 		return injector;
-	}
-
-	private Map<String, String> getWhiteList(final Configuration config) {
-
-		String[] cvrs = config.getStringArray("whitelist");
-		String[] names = config.getStringArray("whitelistNames");
-
-		Map<String, String> whiteList = new HashMap<String, String>();
-
-		for (int i = 0; i < cvrs.length; i++)
-			whiteList.put(names[i], cvrs[i]);
-
-		return whiteList;
 	}
 }

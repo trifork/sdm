@@ -3,7 +3,9 @@
 </div>
 <h2>Liste over Administratorer</h2>
 <p id="info">
-	Administratorer er personer der har tilladelse til tilgå denne administrationsside. De kan dermed også styre hvem der har adgang til hvilke registre. Alle administratorer har også mulighed for tilføje nye serviceaftagere og nye administratore.
+	Administratorer er personer der har tilladelse til tilgå denne administrationsside.
+	De kan dermed også styre hvem der har adgang til hvilke registre.
+	Alle administratorer har også mulighed for tilføje nye serviceaftagere og nye administratore.
 </p>
 <ul id="users">
 	<#list users as user>
