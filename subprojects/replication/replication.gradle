@@ -130,10 +130,6 @@ dependencies {
 	testCompile libs.hamcrest
 	testCompile libs.mockito
 	
-	// Testing (In-memory DB)
-	
-	testCompile 'com.h2database:h2:1.3.152'
-	
 	// Logging
 	//
 	// Unfortunatly we have to use Log4J since OIOSAML
