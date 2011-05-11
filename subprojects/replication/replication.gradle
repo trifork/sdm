@@ -100,6 +100,7 @@ dependencies {
 	// The service is required to use NSP Util to
 	// log SLA.
 
+	compile libs.nsp_util
 
 	// MySQL
 	//

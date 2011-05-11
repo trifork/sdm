@@ -68,6 +68,8 @@ libs = [
 	
 	ooapi: 'org.openoces:ooapi:1.81.2',
 
+	nsp_util: 'dk.sdsd.nsp:nsp-util:1.0.1',
+
 	jodi_time: 'joda-time:joda-time:1.6',
 
 	seal: 'dk.sosi.seal:seal:2.0.0-RC1',
