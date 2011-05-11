@@ -35,6 +35,7 @@ import com.trifork.stamdata.client.security.SecurityHandler;
 import com.trifork.stamdata.client.security.TwoWaySslSecurityHandler;
 import com.trifork.stamdata.views.ViewPath;
 
+
 public class RegistryClient {
 	private final String stamdataURL;
 	private final SecurityHandler securityHandler;

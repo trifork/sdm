@@ -24,6 +24,10 @@
 apply plugin: 'war'
 apply plugin: 'jetty'
 
+configurations {
+	all*.exclude module: 'xml-apis', version: '2.0.2'
+}
+
 dependencies {
 	
 	compile project(':shared')
@@ -64,7 +68,9 @@ dependencies {
 	
 	// STS
 	
-	compile libs.seal
+	compile(libs.seal) {
+		exclude group: 'commons-logging'
+	}
 
 	// SAML
 

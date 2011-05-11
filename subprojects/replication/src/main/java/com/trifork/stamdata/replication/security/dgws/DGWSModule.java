@@ -33,20 +33,20 @@ import javax.xml.bind.Unmarshaller;
 
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.security.SecurityManager;
 
 import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
-import dk.sosi.seal.pki.Federation;
+import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
 import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
 public class DGWSModule extends ServletModule {
 
-	private Properties encryptionSetting;
 	private JAXBContext jaxbContext;
 
 	@Override
@@ -57,14 +57,6 @@ public class DGWSModule extends ServletModule {
 		// The binding is required by the replication module.
 
 		bind(SecurityManager.class).to(DGWSSecurityManager.class);
-
-		// SETUP THE ENCRYPTION SETTINGS FOR SEAL
-		//
-		// Use SEAL's handy crypto provider selection algorithm
-		// to figure out what crypto provider is best suited for
-		// the current runtime environment.
-
-		encryptionSetting = SignatureUtil.setupCryptoProviderForJVM();
 
 		// SERVE THE SOAP AUTHENTICATION SERVICE
 		//
@@ -102,15 +94,20 @@ public class DGWSModule extends ServletModule {
 	}
 
 	@Provides
-	protected Federation provideSOSIFederation() {
+	@Singleton
+	protected SOSIFactory provideSOSIFactory() {
 
-		return new SOSIFederation(encryptionSetting);
-	}
+		// SETUP THE ENCRYPTION SETTINGS FOR SEAL
+		//
+		// Use SEAL's handy crypto provider selection algorithm
+		// to figure out what crypto provider is best suited for
+		// the current runtime environment.
 
-	@Provides
-	protected SOSIFactory provideSOSIFactory(Federation federation) {
+		Properties encryption = SignatureUtil.setupCryptoProviderForJVM();
 
-		return new SOSIFactory(federation, new EmptyCredentialVault(), encryptionSetting);
+		SOSIFederation federation = new SOSIFederation(encryption, new InMemoryIntermediateCertificateCache());
+
+		return new SOSIFactory(federation, new EmptyCredentialVault(), encryption);
 	}
 
 	@Provides
