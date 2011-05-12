@@ -6,7 +6,7 @@
 <jboss-web>
 	<class-loading java2ClassLoadingCompliance="false">
 		<loader-repository>
-			com.trifork:archive=replication.war
+			com.trifork:archive=importer.war
 			<loader-repository-config>java2ParentDelegation=false</loader-repository-config>
 		</loader-repository>
 	</class-loading>
