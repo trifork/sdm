@@ -79,6 +79,6 @@ libs = [
 	
 	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
 	
-	guice: 'com.google.inject.guice:guice:' + guiceVersion,
+	guice: 'com.google.inject:guice:' + guiceVersion,
 	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion
 ]
