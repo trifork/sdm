@@ -29,9 +29,6 @@ dependencies {
 
 	runtime "mysql:mysql-connector-java:5.1.14"
 	
-	testCompile "junit:junit:4.8.2"
-	testCompile "org.mockito:mockito-all:1.8.5"
-	
 	providedCompile "javax.servlet:servlet-api:2.4"
 	
 	compile "commons-io:commons-io:1.4"
@@ -45,18 +42,30 @@ dependencies {
 	runtime "apache-taglibs:jstl:1.1.2"
 	runtime "apache-taglibs:standard:1.1.2"
 	
-	// JODA TIME
-	//
-	// TODO: Used only by the takst importer,
-	// should be removed.
+	// GUICE
 	
-	compile "joda-time:joda-time:1.6"
+	compile libs.guice
+	compile libs.guice_servlet
+
+	// THE JOB SCHEDUALER
 	
 	compile "cron4j:cron4j:2.2.3"
 	
-	// For JSON in Doseringsforslag Parsers.
+	// TESTING
+
+	testCompile "junit:junit:4.8.2"
+	testCompile "org.mockito:mockito-all:1.8.5"
+
+	// PARSER SPECIFIC DEPENDENCIES
+	//
+
+	// DOSERINGSFORSLAG
 	
 	compile "com.google.code.gson:gson:1.6"
+
+	// DKMA (TAKSTEN)
+
+	compile "joda-time:joda-time:1.6"
 }
 
 war.manifest.mainAttributes(
