@@ -13,6 +13,6 @@
 
 	<servlet-mapping>
 		<servlet-name>ImporterServlet</servlet-name>
-		<url-pattern>/importer</url-pattern>
+		<url-pattern>/status</url-pattern>
 	</servlet-mapping>
 </web-app>
