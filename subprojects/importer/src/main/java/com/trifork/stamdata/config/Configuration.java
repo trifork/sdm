@@ -98,8 +98,12 @@ public class Configuration {
 
 		return Integer.parseInt(defaultInstance.getProperty(key));
 	}
+	
+	public static boolean getBoolean(String key) {
+		return Boolean.parseBoolean(defaultInstance.getProperty(key));
+	}
 
-	private String getProperty(String key) {
+	protected String getProperty(String key) {
 
 		return loadedConfiguration.getString(key);
 	}

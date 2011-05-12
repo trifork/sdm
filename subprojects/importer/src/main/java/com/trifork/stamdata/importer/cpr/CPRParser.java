@@ -36,12 +36,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.config.Configuration;
 import com.trifork.stamdata.importer.cpr.model.AktuelCivilstand;
 import com.trifork.stamdata.importer.cpr.model.BarnRelation;
 import com.trifork.stamdata.importer.cpr.model.CPRDataset;
@@ -52,6 +52,7 @@ import com.trifork.stamdata.importer.cpr.model.Haendelse;
 import com.trifork.stamdata.importer.cpr.model.Klarskriftadresse;
 import com.trifork.stamdata.importer.cpr.model.KommunaleForhold;
 import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger;
+import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import com.trifork.stamdata.importer.cpr.model.NavneBeskyttelse;
 import com.trifork.stamdata.importer.cpr.model.Navneoplysninger;
 import com.trifork.stamdata.importer.cpr.model.Personoplysninger;
@@ -59,7 +60,6 @@ import com.trifork.stamdata.importer.cpr.model.Statsborgerskab;
 import com.trifork.stamdata.importer.cpr.model.Udrejseoplysninger;
 import com.trifork.stamdata.importer.cpr.model.UmyndiggoerelseVaergeRelation;
 import com.trifork.stamdata.importer.cpr.model.Valgoplysninger;
-import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import com.trifork.stamdata.importer.exceptions.FileParseException;
 import com.trifork.stamdata.util.DateUtils;
 
@@ -68,6 +68,7 @@ public class CPRParser {
 	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
+	static boolean haltOnDateErrors = Configuration.getBoolean("spooler.cpr.halt.on.date.errors");
 
 	public static CPRDataset parse(File f) throws FileParseException {
 
@@ -481,11 +482,15 @@ public class CPRParser {
 	    return "";
 	}
 
-	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException {
+	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, FileParseException {
 		Date date = format.parse(dateString);
 		String formattedDate = format.format(date);
 		if (!formattedDate.equals(dateString)) {
-			logger.error("Ugyldig dato: " + dateString + " fra linjen [" + line + "]");
+			String errorMessage = "Ugyldig dato: " + dateString + " fra linjen [" + line + "]";
+			logger.error(errorMessage);
+			if(haltOnDateErrors) {
+				throw new FileParseException(errorMessage);
+			}
 		}
 		return date;
 	}

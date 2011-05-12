@@ -11,6 +11,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Zeus load balancer used by Netic puts the SSL client certificate into a HTTP header.
+ *
+ */
 public class ZeusSslTerminatedCertificateExtractor implements CertificateExtractor {
 	private static final Logger logger = LoggerFactory.getLogger(ZeusSslTerminatedCertificateExtractor.class);
 	@Override

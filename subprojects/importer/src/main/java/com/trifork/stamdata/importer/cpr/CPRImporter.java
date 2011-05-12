@@ -55,10 +55,12 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
-
+	private int overdueHours;
+	
 	public CPRImporter() {
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
+		overdueHours = Configuration.getInt("spooler.cpr.overduehours");
 		
 	}
 	
@@ -149,7 +151,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	}
 
 	/**
-	 * If no cpr in 12 days, fire alarm Maximum gap observed is 7 days without
+	 * If no cpr in ${cpr.spooler.overduehours} days, fire alarm Maximum gap observed is 7 days without
 	 * cpr during christmas 2008.
 	 */
 	@Override
@@ -160,7 +162,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 			cal = Calendar.getInstance();
 		else
 			cal = ((Calendar) lastImport.clone());
-		cal.add(Calendar.DATE, 12);
+		cal.add(Calendar.HOUR, overdueHours);
 		return cal;
 	}
 
