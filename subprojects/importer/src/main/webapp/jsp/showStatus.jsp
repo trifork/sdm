@@ -23,11 +23,15 @@
 	<title>Stamdata Importer Status</title>
 	</head>
 	<body>
-	<div class="centered">
-	Version: <%= build.getVersion() %>
-	Built-Date: <%= build.getBuildInfo() + " - " + build.getDeployType()  %>
-	Vendor: <%= build.getVendor() %>
+	<div id="top_bar">
+	Version: <%= build.getVersion() %> |
+	Built-Date: <%= build.getBuildInfo() + " - " + build.getDeployType()  %> |
+	Vendor: <%= build.getVendor() %> |
 	Title: <%= build.getTitle() %>
+	</div>
+
+	<div class="centered">
+
 	<table class="main">
 	<tr class="header">
 	
