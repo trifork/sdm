@@ -66,6 +66,7 @@ import dk.sosi.seal.model.SecurityTokenRequest;
 import dk.sosi.seal.model.SecurityTokenResponse;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.pki.Federation;
+import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.ClasspathCredentialVault;
 import dk.sosi.seal.vault.CredentialVault;
@@ -175,7 +176,7 @@ public class DgwsSecurityHandler implements SecurityHandler {
 
 		// Open the key store using the path and password.
 		CredentialVault vault = new ClasspathCredentialVault(cryptoProviderSettings, "Test1234");
-		Federation federation = new SOSITestFederation(cryptoProviderSettings);
+		Federation federation = new SOSITestFederation(cryptoProviderSettings, new InMemoryIntermediateCertificateCache());
 		return new SOSIFactory(federation, vault, cryptoProviderSettings);
 	}
 
