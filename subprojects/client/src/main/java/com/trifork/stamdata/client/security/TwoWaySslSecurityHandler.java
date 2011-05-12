@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.client.security;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -52,11 +54,31 @@ public class TwoWaySslSecurityHandler implements SecurityHandler {
 	private void setupSslCertificates() {
 		try {
 			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			trustManagerFactory.init(createKeyStore("/truststore.jks", "Test1234"));
+			KeyStore truststore;
+			String trustStoreFileName = System.getProperty("stamdata.client.truststore");
+			if(trustStoreFileName != null) {
+				String trustStorePassword = System.getProperty("stamdata.client.truststore.password");
+				truststore = createKeyStoreFromFile(trustStoreFileName, trustStorePassword);
+			}
+			else {
+				truststore = createKeyStore("/truststore.jks", "Test1234");
+			}
+			trustManagerFactory.init(truststore);
 			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
 
 			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-			keyManagerFactory.init(createKeyStore("/keystore.jks", "Test1234"), "Test1234".toCharArray());
+			KeyStore keyStore;
+			String keyStoreFileName = System.getProperty("stamdata.client.keystore");
+			if(keyStoreFileName != null) {
+				String keyStorePassword = System.getProperty("stamdata.client.keystore.password");
+				keyStore = createKeyStoreFromFile(keyStoreFileName, keyStorePassword);
+				keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
+			}
+			else {
+				keyStore = createKeyStore("/keystore.jks", "Test1234");
+				keyManagerFactory.init(keyStore, "Test1234".toCharArray());
+			}
+			
 			KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
 
 			SSLContext sc = SSLContext.getInstance("SSL");
@@ -73,11 +95,21 @@ public class TwoWaySslSecurityHandler implements SecurityHandler {
 		}
 	}
 
+	private KeyStore createKeyStoreFromFile(String path, String password) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		InputStream input = new FileInputStream(path);
+		return loadKeyStoreFromStream(input, password);
+	}
+
+	private KeyStore loadKeyStoreFromStream(InputStream stream, String password) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+		keystore.load(stream, password.toCharArray());
+		return keystore;
+		
+	}
+	
 	private KeyStore createKeyStore(String path, String password) throws KeyStoreException, IOException,
 			NoSuchAlgorithmException, CertificateException {
-		KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 		InputStream keystoreStream = getClass().getResourceAsStream(path);
-		keystore.load(keystoreStream, password.toCharArray());
-		return keystore;
+		return loadKeyStoreFromStream(keystoreStream, password);
 	}
 }
