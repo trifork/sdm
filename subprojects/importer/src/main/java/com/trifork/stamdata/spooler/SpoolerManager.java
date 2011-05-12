@@ -38,6 +38,9 @@ import java.util.TimerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import com.trifork.stamdata.config.Configuration;
 
 
@@ -45,8 +48,9 @@ import com.trifork.stamdata.config.Configuration;
  * FileSpooler. Initiates and monitor file spoolers.
  *
  * @author Jan Buchholdt
- *
+ * @author Thomas Børlum
  */
+@Singleton
 public class SpoolerManager {
 
 	private static final int DELAY_BEFORE_START_MILLIS = 10 * 1000;
@@ -62,7 +66,10 @@ public class SpoolerManager {
 	private List<JobSpoolerImpl> jobQueue = Collections.synchronizedList(new LinkedList<JobSpoolerImpl>());
 	private Scheduler jobScheduler = new Scheduler();
 
-	public SpoolerManager(String rootDir) {
+	@Inject
+	SpoolerManager(@Named("RootDir") String rootDir) {
+
+		// TODO: Move this to the application context listener.
 
 		String spoolerSetup = Configuration.getString("spooler");
 
@@ -83,21 +90,24 @@ public class SpoolerManager {
 		String jobSpoolerSetup = Configuration.getString("jobspooler");
 		logger.info("The following job spoolers are configured: " + jobSpoolerSetup);
 
-		TimerTask pollTask = new PollingTask();
-		timer.schedule(pollTask, DELAY_BEFORE_START_MILLIS, POLLING_INTERVAL_SECONDS * 1000);
-
 		if (jobSpoolerSetup != null && jobSpoolerSetup.length() != 0) {
 			for (String jobSpoolerName : jobSpoolerSetup.split(",")) {
 				JobSpoolerImpl jobSpooler = new JobSpoolerImpl(new JobSpoolerSetup(jobSpoolerName));
 				jobSpoolers.put(jobSpoolerName, jobSpooler);
 				jobScheduler.schedule(jobSpooler.getSetup().getSchedule(), new GernericJobSpoolerExecutor(jobSpooler));
 			}
-
-			jobScheduler.start();
 		}
 	}
 
-	public void destroy() {
+	public void start() {
+
+		TimerTask pollTask = new PollingTask();
+		timer.schedule(pollTask, DELAY_BEFORE_START_MILLIS, POLLING_INTERVAL_SECONDS * 1000);
+
+		jobScheduler.start();
+	}
+
+	public void stop() {
 
 		timer.cancel();
 		jobScheduler.stop();

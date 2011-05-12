@@ -1,200 +1,154 @@
+<%@page import="com.trifork.stamdata.ProjectInfo"%>
+<%@ page import="com.trifork.stamdata.webinterface.DatabaseStatus"%>
+<%@ page import="com.trifork.stamdata.spooler.SpoolerManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.google.inject.Injector"%>
+<%@ page import="com.google.inject.Guice"%>
+<%@ page import="java.util.*" %>
+<%@ page import="com.trifork.stamdata.spooler.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
+	boolean dbstatus = injector.getInstance(DatabaseStatus.class).isAlive();
+	SpoolerManager manager = injector.getInstance(SpoolerManager.class);
+	ProjectInfo build = injector.getInstance(ProjectInfo.class);
+%>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<META http-equiv="refresh" content="5">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta http-equiv="refresh" content="5" />
 	<link href="css/spooler.css" rel="stylesheet" media="all" type="text/css" />
-	<title>Stamdata Server Status</title>
+	<title>Stamdata Importer Status</title>
 	</head>
 	<body>
 	<div class="centered">
-	Version: ${build.version}
-	Built-Date: ${build.buildInfo} - ${build.deployType}
-	Vendor: ${build.vendor}
-	Title: ${build.title}
+	Version: <%= build.getVersion() %>
+	Built-Date: <%= build.getBuildInfo() + " - " + build.getDeployType()  %>
+	Vendor: <%= build.getVendor() %>
+	Title: <%= build.getTitle() %>
 	<table class="main">
 	<tr class="header">
 	
-	<c:choose>
-	<c:when test="${dbstatus.dbAlive and manager.allRejectedDirsEmpty and manager.allSpoolersRunning}">
+	<% if (dbstatus && manager.isAllRejectedDirsEmpty() && manager.isAllSpoolersRunning()) { %>
 		<td class="success"><img class="header" src="images/success.png" />
-	</c:when> 
-	<c:otherwise>
-		<c:choose>
-		<c:when test="${dbstatus.dbAlive and not manager.allRejectedDirsEmpty and manager.allSpoolersRunning}">
-			<td class="warning"><img class="header" src="images/alertO.png" />
-		</c:when> 
-		<c:otherwise>
-			<td class="failure"><img class="header" src="images/failed.png" />
-		</c:otherwise>
-		</c:choose>
-	</c:otherwise>
-	</c:choose>
-		Stamdata Server Status
+	<% } else if (dbstatus && !manager.isAllRejectedDirsEmpty() && manager.isAllSpoolersRunning()) { %>
+		<td class="warning"><img class="header" src="images/alertO.png" />
+	<% } else { %>
+		<td class="failure"><img class="header" src="images/failed.png" />
+	<% } %>
+		Importer Status
 	</td>
 	
 	</tr>
-	<tr><td>	
+	<tr>
+	<td>
 	<table width="700" class="element">
 	<tr>
-		<c:choose>
-			<c:when test="${dbstatus.dbAlive}">
+		<% if (dbstatus) { %>
 				<td class="success" align="left">
 				<img class="header" src="images/success.png" /> Database is RUNNING
 				</td>
-			</c:when>
-			<c:otherwise>
+		<% } else { %>
 				<td class="failure" align="left">
 				<img class="header" src="images/failed.png" /> Database is DOWN					
 				</td>
-			</c:otherwise>
-		</c:choose>
+		<% } %>
 	</tr>	
 	<tr>
-		<c:choose>
-			<c:when test="${manager.allSpoolersRunning}">
+		<% if (manager.isAllSpoolersRunning()) { %>
 				<td class="success" align="left">
 				<img class="header" src="images/success.png" /> Spoolers are RUNNING
 				</td>
-			</c:when>
-			<c:otherwise>
+		<% } else { %>
 				<td class="failure" align="left">
 				<img class="header" src="images/failed.png" /> Some spoolers are DOWN					
 				</td>
-			</c:otherwise>
-		</c:choose>
+		<% } %>
 	</tr>	
 	<tr>
-		<c:choose>
-			<c:when test="${manager.allRejectedDirsEmpty}">
+		<% if (manager.isAllRejectedDirsEmpty()) { %>
 				<td class="success" align="left">
 				<img class="header" src="images/success.png" /> No rejected files
 				</td>
-			</c:when>
-			<c:otherwise>
+		<% } else { %>
 				<td class="warning" align="left">
 				<img class="header" src="images/alertO.png" /> Some rejected files. See details below					
 				</td>
-			</c:otherwise>
-		</c:choose>
+		<% } %>
 	</tr>
 	<tr>
-		<c:choose>
-			<c:when test="${manager.noOverdueImports}">
+		<% if (manager.isNoOverdueImports()) { %>
 				<td class="success" align="left">
 				<img class="header" src="images/success.png" /> No imports are overdue
 				</td>
-			</c:when>
-			<c:otherwise>
+		<% } else { %>
 				<td class="warning" align="left">
 				<img class="header" src="images/alertO.png" /> Some imports are overdue. See details below					
 				</td>
-			</c:otherwise>
-		</c:choose>
-	</tr>	
+		<% } %>
+	</tr>
+	<tr>
+		<td>
+			<a href="?isAlive=db">REST DB-Status Check</a> | <a href="?isAlive=spoolers">REST All Jobs Check</a>
+		</td>
+	</tr>
 	</table>	
 	</td></tr>
-	 </table>
-	 </div>
-	<div class="space" />
+	</table>
+	</div>
+	<div class="space"></div>
 	 
 	<table class="main">
 		<tr class="header">
-		<c:choose>
-		<c:when test="${manager.allRejectedDirsEmpty and manager.allSpoolersRunning}">
+		<% if (manager.isAllRejectedDirsEmpty() && manager.isAllSpoolersRunning()) { %>
 			<td class="success"><img class="header" src="images/success.png" />
-		</c:when> 
-		<c:otherwise>
-			<c:choose>
-			<c:when test="${not manager.allRejectedDirsEmpty and manager.allSpoolersRunning}">
-				<td class="warning"><img class="header" src="images/alertO.png" />
-			</c:when> 
-			<c:otherwise>
-				<td class="failure"><img class="header" src="images/failed.png" />
-			</c:otherwise>
-			</c:choose>
-		</c:otherwise>
-		</c:choose>
-			Consolidated Spooler Status
-		</td></tr>
+		<% } else if (!manager.isAllRejectedDirsEmpty() && manager.isAllSpoolersRunning()) { %>
+			<td class="warning"><img class="header" src="images/alertO.png" />
+		<% } else { %>
+			<td class="failure"><img class="header" src="images/failed.png" />
+		<% } %>
+			Jobs
+		</td>
+		</tr>
 		<tr><td>	
 			<table width="700" class="element">
-				<c:forEach var="spooler" items="${manager.spoolers}">
-					<tr>
-						<c:choose>
-							<c:when test="${spooler.value.status eq 'RUNNING'}">
-								<td class="success" align="left">
-								<img class="header" src="images/success.png" />
-								Status for Spooler ${spooler.key} is ${spooler.value.status}.</td> 
-								<tr><td class="activity">
-									&nbsp;&nbsp;&nbsp; Current activity ${spooler.value.activity} files.
-									<c:choose>
-										<c:when test="${spooler.value.activity eq 'IMPORTING' or spooler.value.activity eq 'STABILIZING'}" >
-											<img width="20" height="20" src="images/Files.jpg" />
-										</c:when>
-										<c:otherwise>
-											<br/>&nbsp;&nbsp;&nbsp; Last import: ${spooler.value.lastImportFormatted} 
-											<br/>&nbsp;&nbsp;&nbsp; Next import expected before: ${spooler.value.nextImportExpectedBeforeFormatted}
-										</c:otherwise>
-									</c:choose>
-								</td></tr>
-								<c:if test="${not spooler.value.rejectedDirEmpty}" >
-									<tr><td class="warning">
-										&nbsp;&nbsp;&nbsp;
-										<img class="header" src="images/alertO.png" /> files exist in ${spooler.value.setup.rejectPath}
-									</td></tr>
-								</c:if>
-							</c:when>
-							<c:when test="${spooler.value.status eq 'INITIATING'}">
-								<td class="warning" align="left">
-								<img class="header" src="images/alertO.png" />
-								Status for Spooler ${spooler.key} is ${spooler.value.status}.</td> 
-							</c:when>
-							<c:otherwise>
-								<td class="failure" align="left">
-								<img class="header" src="images/failed.png" /> 					
-								Status for Spooler ${spooler.key} is ${spooler.value.status}.</td> 
-							</c:otherwise>
-						</c:choose>
-					</tr>
-				 </c:forEach>
-				<c:forEach var="job" items="${manager.jobSpoolers}">
-					<tr>
-						<c:choose>
-							<c:when test="${job.value.status eq 'RUNNING'}">
-								<td class="success" align="left">
-								<img class="header" src="images/success.png" />
-								Status for Job ${job.key} is ${job.value.status}.</td> 
-								<tr><td class="activity">
-									&nbsp;&nbsp;&nbsp; Current activity ${job.value.activity}.
-									<br/>&nbsp;&nbsp;&nbsp; Last run: ${job.value.lastRunFormatted} 
-								</td></tr>
-							</c:when>
-							<c:when test="${job.value.status eq 'INITIATING'}">
-								<td class="warning" align="left">
-								<img class="header" src="images/alertO.png" />
-								Status for Job ${job.key} is ${job.value.status}.</td> 
-							</c:when>
-							<c:otherwise>
-								<td class="failure" align="left">
-								<img class="header" src="images/failed.png" /> 					
-								Status for Job ${job.key} is ${job.value.status}.</td> 
-							</c:otherwise>
-						</c:choose>
-					</tr>
-				 </c:forEach>
+				<% for (FileSpoolerImpl spooler : manager.getSpoolers().values()) { %>
+				<tr>
+					<% if (!spooler.getStatus().equals("ERROR")) { %>
+						<td class="success" align="left">
+						<img class="header" src="images/success.png" />
+					<% } else { %>
+						<td class="failure" align="left">
+						<img class="header" src="images/failed.png" />
+					<% } %>
+					<%= spooler.getName() %> (<%= spooler.getStatus() %>, <%= spooler.getActivity() %>)<br />
+					Last import: <%= spooler.getLastImportFormatted() %> <br />
+					Next import expected before: <%= spooler.getNextImportExpectedBeforeFormatted() %><br />
+					<a href="?overdue=<%= spooler.getName() %>">Overdue Check</a> |
+					<a href="?rejectedFiles=<%= spooler.getName() %>">Rejected Check</a><br />
+					<hr />
+				</td>
+				</tr>
+				<% } %>
+
+				<% for (JobSpoolerImpl spooler : manager.getJobSpoolers().values()) { %>
+				<tr>
+					<% if (!spooler.getStatus().equals("ERROR")) { %>
+						<td class="success" align="left">
+							<img class="header" src="images/success.png" />
+					<% } else { %>
+						<td class="failure" align="left">
+							<img class="header" src="images/failed.png" />
+					<% } %>
+					<%= spooler.getName() %> (<%= spooler.getStatus() %>, <%= spooler.getActivity() %>)<br />
+					<hr />
+				</td>
+				</tr>
+				<% } %>
 			 </table>
 		 </td></tr>
 	 </table>
-	<div class="space" />
-	<table>
-		<tr><td>Links to tests</td><td></td></tr>
-		<tr><td></td><td><a href="?isAlive=db">isAlive=db</a></td></tr>
-		<tr><td></td><td><a href="?isAlive=spoolers">isAlive=spoolers</a></td></tr>
-		<c:forEach var="spooler" items="${manager.spoolers}">
-			<tr><td><a href="?overdue=${spooler.key}">overdue=${spooler.key}</a></td><td><a href="?rejectedFiles=${spooler.key}">rejectedFiles=${spooler.key}</a></td></tr>
-		</c:forEach>
-	</table>
 	</body>
 </html>

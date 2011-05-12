@@ -33,6 +33,8 @@ import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
 
+import com.google.inject.Inject;
+
 
 public class ProjectInfo {
 
@@ -44,7 +46,8 @@ public class ProjectInfo {
 	private String title;
 	private String version;
 
-	public ProjectInfo(ServletContext context) {
+	@Inject
+	ProjectInfo(ServletContext context) {
 
 		InputStream inputStream = context.getResourceAsStream("/META-INF/MANIFEST.MF");
 

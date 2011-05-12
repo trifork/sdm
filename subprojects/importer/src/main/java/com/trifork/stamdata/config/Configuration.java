@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,10 +23,6 @@
 
 package com.trifork.stamdata.config;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +40,7 @@ public class Configuration {
 	private org.apache.commons.configuration.Configuration loadedConfiguration;
 
 	public Configuration() {
+
 		try {
 			loadedConfiguration = new SystemPropertyBasedConfigurationLoader("importer", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
 		}
@@ -54,8 +50,9 @@ public class Configuration {
 	}
 
 	public Configuration(String env) {
+
 		try {
-			loadedConfiguration = new ConfigurationLoader(env,"importer","/").loadConfiguration();
+			loadedConfiguration = new ConfigurationLoader(env, "importer", "/").loadConfiguration();
 		}
 		catch (Exception e) {
 			logger.error("Error loading config.properties not found.");
@@ -63,35 +60,9 @@ public class Configuration {
 
 	}
 
-	public String getNotNullProperty(String key) {
-
-		String value = loadedConfiguration.getString(key);
-		if (value == null) {
-			throw new RuntimeException("no value found for property key: " + key);
-		}
-		return value;
-	}
-
-	public int getIntProperty(String key) {
-
-		return Integer.parseInt(getNotNullProperty(key));
-	}
-
-	public Date getDateProperty(String key) {
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			return sdf.parse(getNotNullProperty(key));
-		}
-		catch (ParseException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	public static String getString(String key) {
 
-		String s = defaultInstance.getProperty(key);
-		return s;
+		return defaultInstance.getProperty(key);
 	}
 
 	public static Integer getInt(String key) {
