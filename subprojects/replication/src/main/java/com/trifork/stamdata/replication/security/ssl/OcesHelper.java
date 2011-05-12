@@ -3,6 +3,7 @@ package com.trifork.stamdata.replication.security.ssl;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openoces.ooapi.certificate.OcesCertificate;
@@ -11,8 +12,15 @@ import org.openoces.ooapi.exceptions.TrustCouldNotBeVerifiedException;
 
 public class OcesHelper {
 
+	private final CertificateExtractor certificateExtractor;
+
+	@Inject
+	public OcesHelper(CertificateExtractor certificateExtractor) {
+		this.certificateExtractor = certificateExtractor;
+	}
+	
 	public MocesCertificateWrapper extractCertificateFromRequest(HttpServletRequest request) {
-		X509Certificate[] certificateFromHeader = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+		X509Certificate[] certificateFromHeader = certificateExtractor.extractCertificatesFromHttpRequest(request);
 		if (certificateFromHeader != null) {
 			return parseCertificate(certificateFromHeader);
 		}

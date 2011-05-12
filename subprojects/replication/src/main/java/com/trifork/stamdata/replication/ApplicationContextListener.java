@@ -49,6 +49,7 @@ import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
 import com.trifork.stamdata.replication.security.ssl.SslModule;
+import com.trifork.stamdata.ssl.CommonSslModule;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
@@ -92,10 +93,15 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
 			String security = config.getString("security");
+			String guiSecurity = config.getString("gui.security");
+			if("twowayssl".equals(security) || 
+					"twowayssl".equals(guiSecurity)) {
+				modules.add(new CommonSslModule(config.getBoolean("security.ssl.test"), config.getString("security.ssl.termination.method")));
+			}
 			if ("dgws".equals(security)) {
 				modules.add(new DGWSModule());
 			} else if ("twowayssl".equals(security)) {
-				modules.add(new SslModule(config.getBoolean("security.ssl.test")));
+				modules.add(new SslModule());
 			} else {
 				modules.add(new UnrestrictedSecurityModule());
 			}
@@ -114,7 +120,6 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 				getWhiteList(config)
 			));
 			
-			String guiSecurity = config.getString("gui.security");
 			if("saml".equals(guiSecurity)) {
 				modules.add(new SamlSecurityModule());
 			}
