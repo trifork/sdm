@@ -32,10 +32,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.config.Configuration;
 import com.trifork.stamdata.config.MySQLConnectionManager;
 import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.FileImporterControlledIntervals;
@@ -51,7 +53,15 @@ import com.trifork.stamdata.util.DateUtils;
 public class CPRImporter implements FileImporterControlledIntervals {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
+	private Pattern personFilePattern;
+	private Pattern personFileDeltaPattern;
 
+	public CPRImporter() {
+		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
+		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
+		
+	}
+	
 	public void run(List<File> files) throws FileImporterException {
 
 		Connection connection = null;
@@ -122,13 +132,11 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	}
 
 	private boolean isPersonerFile(File f) {
-
-		return (f.getName().startsWith("D") && f.getName().indexOf(".L4311") == 7);
+		return personFilePattern.matcher(f.getName()).matches();
 	}
 
 	private boolean isDeltaFile(File f) {
-
-		return (f.getName().startsWith("D") && f.getName().endsWith(".L431101"));
+		return personFileDeltaPattern.matcher(f.getName()).matches();
 	}
 
 	@Override
