@@ -72,7 +72,7 @@ libs = [
 
 	jodi_time: 'joda-time:joda-time:1.6',
 
-	seal: 'dk.sosi.seal:seal:2.0.0-RC1',
+	seal: 'dk.sosi.seal:seal:2.0.0',
 	oiosaml: 'dk.itst.oiosaml:oiosaml.java:5987',
 	
 	velocity: 'apache-velocity:velocity:1.5',
