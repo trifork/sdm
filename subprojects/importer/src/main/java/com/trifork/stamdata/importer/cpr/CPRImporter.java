@@ -56,11 +56,13 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
 	private int overdueHours;
+	private boolean performAddressProtection;
 	
 	public CPRImporter() {
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
 		overdueHours = Configuration.getInt("spooler.cpr.overduehours");
+		performAddressProtection = Configuration.getBoolean("spooler.cpr.addressprotection");
 		
 	}
 	
@@ -193,17 +195,20 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	}
 
 	void addressProtection(Connection con) throws FilePersistException {
+		if (performAddressProtection) {
+			try {
+				// Copy name and addresses to the 'AdresseBeskyttelse' table
+				con.createStatement().execute(createProtectedNameAndAddressesSQL());
+				// Hide names and addresses for all citizens with name and
+				// address
+				// protection
+				con.createStatement().execute(createHideNameAndAddressesSQL());
 
-		try {
-			// Copy name and addresses to the 'AdresseBeskyttelse' table
-			con.createStatement().execute(createProtectedNameAndAddressesSQL());
-			// Hide names and addresses for all citizens with name and address
-			// protection
-			con.createStatement().execute(createHideNameAndAddressesSQL());
-
-		}
-		catch (SQLException sqle) {
-			throw new FilePersistException("Der opstod en fejl under indsættelse af ny ikrafttrædelsesdato til databasen.", sqle);
+			} catch (SQLException sqle) {
+				throw new FilePersistException(
+						"Der opstod en fejl under indsættelse af ny ikrafttrædelsesdato til databasen.",
+						sqle);
+			}
 		}
 	}
 
