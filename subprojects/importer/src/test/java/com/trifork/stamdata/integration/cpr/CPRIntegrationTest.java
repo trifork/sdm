@@ -32,9 +32,11 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -44,6 +46,8 @@ import org.junit.Test;
 import com.trifork.stamdata.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.cpr.CPRImporter;
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.exceptions.FilePersistException;
+import com.trifork.stamdata.util.DateUtils;
 
 
 public class CPRIntegrationTest {
@@ -84,10 +88,12 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportAnUpdate() throws Exception {
+		Date ikraft = DateUtils.yyyy_MM_dd.parse("2010-03-12");
+
+		setIkraftDate(ikraft);
 		importFile("data/cpr/D100315.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertTrue(rs.next());
@@ -109,6 +115,15 @@ public class CPRIntegrationTest {
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
 		stmt.close();
+		con.close();
+	}
+
+	public static void setIkraftDate(Date ikraft) throws FilePersistException,
+			SQLException, Exception {
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Calendar ikraftCal = Calendar.getInstance();
+		ikraftCal.setTime(ikraft);
+		CPRImporter.insertIkraft(ikraftCal, con);
 		con.close();
 	}
 
@@ -142,6 +157,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportPersonNavnebeskyttelse() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/testCPR1/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -179,6 +195,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportForaeldreMyndighedBarn() throws Exception {
+		setIkraftDate(new Date(2001 - 1900, 10, 16));
 		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -213,6 +230,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportUmyndighedVaerge() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -239,6 +257,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportFolkekirkeoplysninger() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -255,6 +274,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportCivilstand() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/civilstand/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -275,6 +295,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportKommunaleForhold() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/kommunaleForhold/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -293,6 +314,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportValgoplysninger() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/valgoplysninger/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -311,6 +333,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportHaendelser() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/haendelse/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -329,7 +352,8 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void canImportMorOgFaroplysningerNaarForaeldresCprnummerMangler() throws Exception {
-		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
+		setIkraftDate(new Date(2001-1900, 10, 16));
+		importFile("data/cpr/morOgFaroplysninger/udencpr/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -353,7 +377,8 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void ignoresMorOgFaroplysningerWhenParentCprIsSpecified() throws Exception {
-		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
+		setIkraftDate(new Date(2001-1900, 10, 16));
+		importFile("data/cpr/morOgFaroplysninger/medcpr/D100314.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
@@ -366,6 +391,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void ImportU12160Test() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/D100312.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -404,6 +430,7 @@ public class CPRIntegrationTest {
 
 	@Test
 	public void ImportU12170Test() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/D100313.L431101");
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();

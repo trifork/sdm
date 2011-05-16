@@ -31,6 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -52,7 +53,7 @@ import com.trifork.stamdata.util.DateUtils;
 
 public class CPRImporter implements FileImporterControlledIntervals {
 
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private static Logger logger = LoggerFactory.getLogger(CPRImporter.class);
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
 	private int overdueHours;
@@ -69,7 +70,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	public void run(List<File> files) throws FileImporterException {
 
 		Connection connection = null;
-
+		Collections.sort(files);
 		try {
 			connection = MySQLConnectionManager.getConnection();
 			AuditingPersister dao = new AuditingPersister(connection);
@@ -88,14 +89,24 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 				CPRDataset cpr = CPRParser.parse(personFile);
 
+				Calendar latestIKraft = getLatestIkraft(connection);
+				Calendar previousFileValidFrom = cpr.getPreviousFileValidFrom();
+				Calendar currentFileValidFrom = cpr.getValidFrom();
 				if (isDeltaFile(personFile)) {
 					// Check that the sequence is kept
-					Calendar latestIKraft = getLatestIkraft(connection);
 					if (latestIKraft == null) {
-						logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
+						throw new FilePersistException("The file was a delta file, but there is no latestIKraft date");
 					}
 					else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft)) {
 						throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(latestIKraft.getTime()));
+					}
+				}
+				else {
+					if(!previousFileValidFrom.equals(currentFileValidFrom)) {
+						throw new FilePersistException("Filen er et totaludtræk, men forrige ikraftdato er ikke lig ikraftdato i filen");
+					}
+					if(latestIKraft != null && !latestIKraft.equals(currentFileValidFrom)) {
+						throw new FilePersistException("Filen er et totaludtræk, men filens ikraftdato stemmer ikke med databasen");
 					}
 				}
 
@@ -181,7 +192,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 		}
 	}
 
-	void insertIkraft(Calendar calendar, Connection con) throws FilePersistException {
+	public static void insertIkraft(Calendar calendar, Connection con) throws FilePersistException {
 
 		try {
 			logger.debug("Inserting " + yyyy_MM_dd.format(calendar.getTime()) + " as new 'IkraftDato'");

@@ -34,6 +34,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -81,7 +82,7 @@ public class CPRNameAndAddressProtectionTest {
 
 	@Test
 	public void ImportPersonNavnebeskyttelsesTest() throws Exception {
-
+		CPRIntegrationTest.setIkraftDate(new Date(2001-1900, 10, 16));
 		// Arrange
 		File fInitial = getFile("data/cpr/D100312.L431101");
 
@@ -146,6 +147,7 @@ public class CPRNameAndAddressProtectionTest {
 	public void ImportPersonNavnebeskyttelsesUpdateWhenDayIsHereTest() throws Exception {
 
 		// Arrange
+		CPRIntegrationTest.setIkraftDate(new Date(2001-1900, 10, 16));
 		File fInitial = getFile("data/cpr/NameAndAddressProtection/D100312.L431101");
 		File fEmpty = getFile("data/cpr/NameAndAddressProtection/D100313.L431101");
 		File fNewNameAdress = getFile("data/cpr/NameAndAddressProtection/D100314.L431101");
@@ -304,6 +306,7 @@ public class CPRNameAndAddressProtectionTest {
 
 	@Test
 	public void RestoreNavneBeskyttelseTest() throws Exception {
+		CPRIntegrationTest.setIkraftDate(new Date(2001-1900, 10, 16));
 
 		// Arrange
 		File fInitial = getFile("data/cpr/D100312.L431101");
