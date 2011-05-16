@@ -43,7 +43,9 @@ import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
 import com.trifork.stamdata.replication.gui.security.twowayssl.TwoWaySslSecurityModule;
 import com.trifork.stamdata.replication.gui.security.unrestricted.GuiUnrestrictedSecurityModule;
+import com.trifork.stamdata.replication.logging.DefaultClientIpModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
+import com.trifork.stamdata.replication.logging.ZeusClientIpModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
@@ -76,6 +78,10 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			List<Module> modules = new ArrayList<Module>();
 
+			// LOGGING
+			// must be before other filters, because we want logging in these other filters to have requestId, clientIp etc. in the MDC.
+			modules.add(new LoggingModule());
+
 			// CONFIGURE DATA ACCESS
 			
 			modules.add(new DatabaseModule(
@@ -94,10 +100,25 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			String security = config.getString("security");
 			String guiSecurity = config.getString("gui.security");
-			if("twowayssl".equals(security) || 
-					"twowayssl".equals(guiSecurity)) {
+			boolean twoWaySslInUse = "twowayssl".equals(security) || 
+			"twowayssl".equals(guiSecurity);
+			if(twoWaySslInUse) {
 				modules.add(new CommonSslModule(config.getBoolean("security.ssl.test"), config.getString("security.ssl.termination.method")));
 			}
+			
+			String sslTerminationMethod = config.getString("security.ssl.termination.method");
+			
+			boolean zeusLoadBalancerInUse = twoWaySslInUse && "zeusLoadBalancer".equals(sslTerminationMethod);
+			
+			// The Zeus load balancer sends the actual client ip in a header. We are not really
+			// interested in logging the ip-address of the load-balancer in every request!
+			if(zeusLoadBalancerInUse) {
+				modules.add(new ZeusClientIpModule());
+			}
+			else {
+				modules.add(new DefaultClientIpModule());
+			}
+			
 			if ("dgws".equals(security)) {
 				modules.add(new DGWSModule());
 			} else if ("twowayssl".equals(security)) {
@@ -132,10 +153,6 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			else {
 				throw new RuntimeException("Valid parameters for gui.security are saml, twowayssl,none");
 			}
-
-			// LOGGING
-
-			modules.add(new LoggingModule());
 
 			injector = Guice.createInjector(modules);
 

@@ -41,14 +41,13 @@ public class TwoWaySslUserProvider implements Provider<User> {
 			String cvr = certificate.getCvr();
 			String subjectId = certificate.getSubjectId();
 			User user = userDao.findByCvrAndRid(cvr, subjectId);
-			String remoteIP = request.get().getRemoteAddr();
 			String page = request.get().getRequestURI();
 			if(user != null) {
 				logger.info("User (cpr='" + user.getCpr() + "', cvr='" + user.getCvr()
-						+ "', subjectId='" + user.getRid() + "') accessed page='" + page + "'. ip='" + remoteIP + "'");
+						+ "', subjectId='" + user.getRid() + "') accessed page='" + page);
 				return user;
 			}
-			logger.info("No access for user (cvr='" + cvr + "', subjectId='" + subjectId + "') to page='" + page + "'. ip='" + remoteIP + "'");
+			logger.info("No access for user (cvr='" + cvr + "', subjectId='" + subjectId + "') to page='" + page);
 		}
 		return null;
 	}

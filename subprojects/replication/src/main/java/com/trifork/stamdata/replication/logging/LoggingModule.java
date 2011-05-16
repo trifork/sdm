@@ -23,23 +23,22 @@
 
 package com.trifork.stamdata.replication.logging;
 
+import com.google.inject.Key;
 import com.google.inject.Module;
-import com.google.inject.PrivateModule;
+import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.replication.logging.annotations.ClientIp;
 
 
-public class LoggingModule extends PrivateModule implements Module {
+public class LoggingModule extends ServletModule implements Module {
 
 	@Override
-	protected void configure() {
-
+	protected void configureServlets() {
+		requireBinding(Key.get(String.class, ClientIp.class));
+		filter("*").through(RequestIdLoggingFilter.class);
+		filter("*").through(ClientIpLoggingFilter.class);
 		bind(DatabaseAuditLogger.class);
 		bind(SLF4JAuditLogger.class);
 		bind(AuditLogger.class).to(CompositeAuditLogger.class);
-		expose(AuditLogger.class);
-		
-		// The Database logger is exposed too since it is needed
-		// in the LogController, for historical reasons.
-		
-		expose(DatabaseAuditLogger.class);
 	}
+
 }
