@@ -23,10 +23,12 @@
 
 package com.trifork.stamdata.client;
 
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +38,7 @@ import javax.xml.stream.XMLStreamWriter;
 
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.ViewXmlHelper;
 import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
@@ -55,7 +58,7 @@ import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 public class Main {
 	
 	@SuppressWarnings("serial")
-	private static final List<Class<?>> views = new ArrayList<Class<?>>() {{
+	private static final List<Class<? extends View>> views = new ArrayList<Class<? extends View>>() {{
 		add(Person.class);
 		add(BarnRelation.class);
 		add(Civilstand.class);
@@ -102,7 +105,7 @@ public class Main {
 		put("stamdata.client.url", new ParameterDescriptor("Server URL", "https://stage.kombit.netic.dk/replication", null));
 		put("stamdata.client.starttag", new ParameterDescriptor("Start tag", "", null));
 		put("stamdata.client.pagesize", new ParameterDescriptor("Records pr. side", "5000", null));
-		put("stamdata.client.outputfile", new ParameterDescriptor("Fil til output", "output.xml", null));
+		put("stamdata.client.outputfile", new ParameterDescriptor("Fil til output", null, null));
 	}};
 	
 	public static String getParameter(String key) {
@@ -113,11 +116,11 @@ public class Main {
 				return sysProp;
 			}
 			else {
-				System.out.println("Options are " + Arrays.toString(descriptor.options) + " property are " + sysProp);
 				return Integer.toString(Arrays.asList(descriptor.options).indexOf(sysProp)) + 1;
 			}
 		}
 		if(descriptor.options != null) {
+			System.out.println("Options are " + Arrays.toString(descriptor.options) + " property are " + sysProp);
 			for(int i = 0; i < descriptor.options.length; ++i) {
 				System.out.println((i+1) +". " + descriptor.options[i]);
 			}
@@ -130,15 +133,50 @@ public class Main {
 		String serverAndPort = getParameter("stamdata.client.url");
 		SecurityMethod security = toSecurity(getParameter("stamdata.client.security"));
 		int selectedViewIndex = Integer.parseInt(getParameter("stamdata.client.view")) - 1;
-		Class<?> selectedView = views.get(selectedViewIndex);
+		Class<? extends View> selectedView = views.get(selectedViewIndex);
 		
 		String startTag = getParameter("stamdata.client.starttag");
 		
 		RegistryClient client = new RegistryClient(serverAndPort + "/stamdata/", security);
 		int pageSize = Integer.parseInt(getParameter("stamdata.client.pagesize"));
-		fetch(client, selectedView, startTag, pageSize);
+		String fileName = getParameter("stamdata.client.outputfile");
+		if(fileName == null || fileName.trim().isEmpty()) {
+			fetch(client, selectedView, startTag, pageSize);
+		}
+		else {
+			FileOutputStream fos = new FileOutputStream(fileName);
+			outputEntities(fos, client, selectedView, startTag != null && startTag.trim().isEmpty() ? null : startTag , pageSize, false);
+		}
 	}
-	
+	public static <T extends View> void outputEntities(OutputStream outputStream, RegistryClient client, Class<T> viewClass, String startTag, int pageSize, boolean useFastInfoset) throws Exception {
+		ViewXmlHelper viewXmlHelper = new ViewXmlHelper(viewClass);
+		XMLStreamWriter writer;
+		
+		writer = (useFastInfoset)
+			? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8")
+			: XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
+		
+		Iterator<EntityRevision<T>> iterator = client.update(viewClass, startTag, pageSize);
+			
+		writer.writeStartDocument("utf-8", "1.0");
+		String lastTag = null;
+		int writtenRecords = 0;
+		writer.writeStartElement("records");
+		writer.writeNamespace("sd", viewXmlHelper.getNamespace(viewClass.newInstance()));
+		Marshaller marshaller = viewXmlHelper.createMarshaller(viewClass);
+		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
+		while(iterator.hasNext()) {
+			EntityRevision<T> entityRevision = iterator.next();
+			marshaller.marshal(entityRevision.getEntity(), writer);
+			writtenRecords++;
+			lastTag = entityRevision.getId();
+		}
+
+		System.out.println("last entity tag: " + lastTag);
+
+		writer.writeEndDocument();
+	}
+
 	private static SecurityMethod toSecurity(String s) {
 		int response = Integer.parseInt(s);
 		return SecurityMethod.values()[response - 1];

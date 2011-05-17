@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.replication.replication;
+package com.trifork.stamdata.views;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,7 +31,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.trifork.stamdata.views.View;
 
 /**
  * Creates separate JAXB contexts for each class,

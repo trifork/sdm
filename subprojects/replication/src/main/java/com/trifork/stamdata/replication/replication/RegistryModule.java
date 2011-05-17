@@ -34,6 +34,7 @@ import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
+import com.trifork.stamdata.views.ViewXmlHelper;
 import com.trifork.stamdata.views.Views;
 
 

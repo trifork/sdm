@@ -41,6 +41,7 @@ import org.hibernate.ScrollableResults;
 import com.google.inject.Inject;
 import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.views.View;
+import com.trifork.stamdata.views.ViewXmlHelper;
 import com.trifork.stamdata.views.Views;
 
 /**
