@@ -24,12 +24,12 @@
 package com.trifork.stamdata.client.security;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.HostnameVerifier;
@@ -41,6 +41,8 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import com.trifork.stamdata.client.Main;
+
 public class TwoWaySslSecurityHandler implements SecurityHandler {
 	public TwoWaySslSecurityHandler() {
 		setupSslCertificates();
@@ -50,36 +52,38 @@ public class TwoWaySslSecurityHandler implements SecurityHandler {
 	public <T> String validAuthorizationTokenFor(Class<T> entityType) throws Exception {
 		return "";
 	}
+	
+	private KeyStore createKeyStoreFromParams(String storePath, String password) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		if(storePath.startsWith("classpath:")) {
+			return createKeyStore(storePath.substring("classpath:".length()), password);
+		}
+		return createKeyStoreFromFile(storePath, password);
+	}
+	
+	private TrustManager[] createTrustManagers() throws NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
+		TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+		String trustStorePath = Main.getParameter("stamdata.client.truststore");
+		String trustStorePassword = Main.getParameter("stamdata.client.truststore.password");
+		KeyStore truststore = createKeyStoreFromParams(trustStorePath, trustStorePassword );
+		trustManagerFactory.init(truststore);
+		return trustManagerFactory.getTrustManagers();
+		
+	}
+	
+	private KeyManager[] createKeyManagers() throws NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException, UnrecoverableKeyException {
+		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
+		String keyStorePath = Main.getParameter("stamdata.client.keystore");
+		String keyStorePassword = Main.getParameter("stamdata.client.keystore.password");
+		KeyStore keyStore = createKeyStoreFromParams(keyStorePath, keyStorePassword );
+		keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
+		return keyManagerFactory.getKeyManagers();
+		
+	}
 
 	private void setupSslCertificates() {
 		try {
-			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			KeyStore truststore;
-			String trustStoreFileName = System.getProperty("stamdata.client.truststore");
-			if(trustStoreFileName != null) {
-				String trustStorePassword = System.getProperty("stamdata.client.truststore.password");
-				truststore = createKeyStoreFromFile(trustStoreFileName, trustStorePassword);
-			}
-			else {
-				truststore = createKeyStore("/truststore.jks", "Test1234");
-			}
-			trustManagerFactory.init(truststore);
-			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-
-			KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-			KeyStore keyStore;
-			String keyStoreFileName = System.getProperty("stamdata.client.keystore");
-			if(keyStoreFileName != null) {
-				String keyStorePassword = System.getProperty("stamdata.client.keystore.password");
-				keyStore = createKeyStoreFromFile(keyStoreFileName, keyStorePassword);
-				keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
-			}
-			else {
-				keyStore = createKeyStore("/keystore.jks", "Test1234");
-				keyManagerFactory.init(keyStore, "Test1234".toCharArray());
-			}
-			
-			KeyManager[] keyManagers = keyManagerFactory.getKeyManagers();
+			TrustManager[] trustManagers = createTrustManagers();
+			KeyManager[] keyManagers = createKeyManagers();
 
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(keyManagers, trustManagers, null);

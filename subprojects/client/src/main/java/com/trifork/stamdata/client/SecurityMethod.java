@@ -1,7 +1,7 @@
 package com.trifork.stamdata.client;
 
 public enum SecurityMethod {
-	NONE,
+	TWO_WAY_SSL,
 	DGWS,
-	TWO_WAY_SSL
+	NONE,
 }

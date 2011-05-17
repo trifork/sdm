@@ -54,7 +54,7 @@ public class RegistryClient {
 		ReplicationReader reader = new ReplicationReaderImpl(authorizationToken, feedURL, offset, count);
 		return new ReplicationIterator<T>(entityType, reader);
 	}
-
+	
 	public <T>void updateAndPrintStatistics(Class<T> entityType, String offset, int count) throws Exception {
 		Iterator<EntityRevision<T>> revisions = update(entityType, offset, count);
 

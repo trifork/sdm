@@ -23,9 +23,19 @@
 
 package com.trifork.stamdata.client;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.xml.bind.Marshaller;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamWriter;
+
+import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
+import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
@@ -43,6 +53,7 @@ import com.trifork.stamdata.views.usagelog.AggregateUsageLogEntry;
 import com.trifork.stamdata.views.usagelog.UsageLogEntry;
 
 public class Main {
+	
 	@SuppressWarnings("serial")
 	private static final List<Class<?>> views = new ArrayList<Class<?>>() {{
 		add(Person.class);
@@ -62,38 +73,83 @@ public class Main {
 		add(AggregateUsageLogEntry.class);
 	}};
 	
-	public static void main(String... args) throws Exception {
-		String serverAndPort = ask("Server and port", "http://localhost:8080/replication");
-		SecurityMethod security = toSecurity(ask("Security (none/dgws/ssl)", "none").toLowerCase());;
-
-		for (int i=0; i<views.size(); i++) {
-			Class<?> viewClass = views.get(i);
-			System.out.println((i+1) + ": " + viewClass.getSimpleName());
+	private static List<String> viewNames = new ArrayList<String>() {{
+		for(Class<?> view : views) {
+			add(view.getSimpleName());
 		}
-		int selectedViewIndex = Integer.parseInt(ask("Type", "1")) - 1;
+	}};
+
+	public static class ParameterDescriptor {
+		public ParameterDescriptor(String description,
+				String defaultValue, String[] options) {
+			super();
+			this.description = description;
+			this.defaultValue = defaultValue;
+			this.options = options;
+		}
+		public String description;
+		public String defaultValue;
+		public String[] options;
+	}
+	
+	public static Map<String,ParameterDescriptor> parameterDescriptors = new HashMap<String, ParameterDescriptor>() {{
+		put("stamdata.client.truststore", new ParameterDescriptor("Truststore som anvendes af klienten", "classpath:/truststore.jks", null));
+		put("stamdata.client.truststore.password", new ParameterDescriptor("Kodeord til truststore", "Test1234", null));
+		put("stamdata.client.keystore", new ParameterDescriptor("Keystore som anvendes af klienten", "classpath:/keystore.jks", null));
+		put("stamdata.client.keystore.password", new ParameterDescriptor("Kodeord til keystore", "Test1234", null));
+		put("stamdata.client.security", new ParameterDescriptor("Sikkerhed", "1", new String[] {"ssl", "dgws", "none" }));
+		put("stamdata.client.view", new ParameterDescriptor("View", "1", viewNames.toArray(new String[] {})));
+		put("stamdata.client.url", new ParameterDescriptor("Server URL", "https://stage.kombit.netic.dk/replication", null));
+		put("stamdata.client.starttag", new ParameterDescriptor("Start tag", "", null));
+		put("stamdata.client.pagesize", new ParameterDescriptor("Records pr. side", "5000", null));
+		put("stamdata.client.outputfile", new ParameterDescriptor("Fil til output", "output.xml", null));
+	}};
+	
+	public static String getParameter(String key) {
+		ParameterDescriptor descriptor = parameterDescriptors.get(key);
+		String sysProp = System.getProperty(key);
+		if(sysProp != null) {
+			if(descriptor.options == null) {
+				return sysProp;
+			}
+			else {
+				System.out.println("Options are " + Arrays.toString(descriptor.options) + " property are " + sysProp);
+				return Integer.toString(Arrays.asList(descriptor.options).indexOf(sysProp)) + 1;
+			}
+		}
+		if(descriptor.options != null) {
+			for(int i = 0; i < descriptor.options.length; ++i) {
+				System.out.println((i+1) +". " + descriptor.options[i]);
+			}
+		}
+		String chosen = ask(key, descriptor.description, descriptor.defaultValue);
+		return chosen;
+	}
+	
+	public static void main(String... args) throws Exception {
+		String serverAndPort = getParameter("stamdata.client.url");
+		SecurityMethod security = toSecurity(getParameter("stamdata.client.security"));
+		int selectedViewIndex = Integer.parseInt(getParameter("stamdata.client.view")) - 1;
 		Class<?> selectedView = views.get(selectedViewIndex);
 		
-		String startTag = ask("Start-tag", "");
+		String startTag = getParameter("stamdata.client.starttag");
 		
 		RegistryClient client = new RegistryClient(serverAndPort + "/stamdata/", security);
-		fetch(client, selectedView, startTag);
+		int pageSize = Integer.parseInt(getParameter("stamdata.client.pagesize"));
+		fetch(client, selectedView, startTag, pageSize);
 	}
-
+	
 	private static SecurityMethod toSecurity(String s) {
-		if (s.equals("ssl")) {
-			return SecurityMethod.TWO_WAY_SSL;
-		} else if (s.equals("dgws")) {
-			return SecurityMethod.DGWS;
-		}
-		return SecurityMethod.NONE;
+		int response = Integer.parseInt(s);
+		return SecurityMethod.values()[response - 1];
 	}
 
-	private static String ask(String question, String defaultValue) {
-		String response = System.console().readLine("%s [%s] ", question, defaultValue);
+	private static String ask(String sysProp, String question, String defaultValue) {
+		String response = System.console().readLine("(%s) %s [%s] ", sysProp, question, defaultValue);
 		return response.isEmpty() ? defaultValue : response;
 	}
 
-	private static void fetch(RegistryClient client, Class<?> selectedView, String startTag) throws Exception {
-		client.updateAndPrintStatistics(selectedView, startTag.isEmpty() ? null : startTag, 5000);
+	private static void fetch(RegistryClient client, Class<?> selectedView, String startTag, int pageSize) throws Exception {
+		client.updateAndPrintStatistics(selectedView, startTag.isEmpty() ? null : startTag, pageSize);
 	}
 }
