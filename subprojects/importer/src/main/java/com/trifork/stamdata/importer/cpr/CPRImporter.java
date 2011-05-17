@@ -91,23 +91,18 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 				Calendar latestIKraft = getLatestIkraft(connection);
 				Calendar previousFileValidFrom = cpr.getPreviousFileValidFrom();
-				Calendar currentFileValidFrom = cpr.getValidFrom();
 				if (isDeltaFile(personFile)) {
+					logger.info("Filen " + personFile.getName() + " blev detekteret som et aendringsudtraek");
 					// Check that the sequence is kept
 					if (latestIKraft == null) {
 						throw new FilePersistException("The file was a delta file, but there is no latestIKraft date");
 					}
-					else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft)) {
+					else if (!previousFileValidFrom.equals(latestIKraft)) {
 						throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(latestIKraft.getTime()));
 					}
 				}
 				else {
-					if(!previousFileValidFrom.equals(currentFileValidFrom)) {
-						throw new FilePersistException("Filen er et totaludtræk, men forrige ikraftdato er ikke lig ikraftdato i filen");
-					}
-					if(latestIKraft != null && !latestIKraft.equals(currentFileValidFrom)) {
-						throw new FilePersistException("Filen er et totaludtræk, men filens ikraftdato stemmer ikke med databasen");
-					}
+					logger.info("Filen " + personFile.getName() + " blev detekteret som et totaludtraek");
 				}
 
 				logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
@@ -121,9 +116,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 				// Add latest 'ikraft' date to database if we are not importing
 				// a full set.
 
-				if (isDeltaFile(personFile)) {
-					insertIkraft(cpr.getValidFrom(), connection);
-				}
+				insertIkraft(cpr.getValidFrom(), connection);
 
 				logger.debug("Finish parsing 'CPR person' file " + personFile.getAbsolutePath());
 
