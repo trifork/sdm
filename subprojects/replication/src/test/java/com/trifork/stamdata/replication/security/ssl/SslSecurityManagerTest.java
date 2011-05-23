@@ -17,6 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
+import com.trifork.stamdata.ssl.MocesCertificateWrapper;
+import com.trifork.stamdata.ssl.OcesHelper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SslSecurityManagerTest {

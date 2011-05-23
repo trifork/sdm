@@ -27,6 +27,7 @@ apply plugin: 'jetty'
 dependencies {
 	
 	compile project(':shared')
+	compile project(':oces-ssl')
 	
 	// SERVLETS
 	

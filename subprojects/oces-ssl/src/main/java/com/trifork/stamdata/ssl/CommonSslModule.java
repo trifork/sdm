@@ -6,9 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.replication.security.ssl.CertificateExtractor;
-import com.trifork.stamdata.replication.security.ssl.ContainerSslTerminatedCertificateExtractor;
-import com.trifork.stamdata.replication.security.ssl.ZeusSslTerminatedCertificateExtractor;
 
 public class CommonSslModule extends ServletModule {
 	private final boolean test;

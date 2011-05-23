@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.security.ssl;
+package com.trifork.stamdata.ssl;
 
 import java.security.cert.X509Certificate;
 

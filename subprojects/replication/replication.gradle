@@ -27,6 +27,7 @@ apply plugin: 'jetty'
 dependencies {
 	
 	compile project(':shared')
+	compile project(':oces-ssl')
 	
 	// SERVLETS
 	
@@ -158,5 +159,4 @@ dependencies {
 	
 	testRuntime 'xerces:xercesImpl:2.8.0'
 
-	compile libs.ooapi
 }

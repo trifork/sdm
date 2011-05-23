@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.security.ssl;
+package com.trifork.stamdata.ssl;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

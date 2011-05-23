@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.security.ssl;
+package com.trifork.stamdata.ssl;
 
 import java.io.ByteArrayInputStream;
 import java.security.cert.CertificateException;

@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
-import com.trifork.stamdata.replication.security.ssl.MocesCertificateWrapper;
-import com.trifork.stamdata.replication.security.ssl.MocesCertificateWrapper.Kind;
-import com.trifork.stamdata.replication.security.ssl.OcesHelper;
+import com.trifork.stamdata.ssl.MocesCertificateWrapper;
+import com.trifork.stamdata.ssl.OcesHelper;
+import com.trifork.stamdata.ssl.MocesCertificateWrapper.Kind;
 
 public class TwoWaySslUserProvider implements Provider<User> {
 	private static final Logger logger = LoggerFactory.getLogger(TwoWaySslUserProvider.class);

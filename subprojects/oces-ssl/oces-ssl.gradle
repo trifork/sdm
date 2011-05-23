@@ -1,0 +1,13 @@
+dependencies {
+	compile project(':shared')
+	compile libs.ooapi
+
+		// SERVLETS
+	compile libs.servlet_api
+
+		// Guice
+	compile libs.guice_servlet
+
+		// Encoding - specifically, base64 support
+	compile libs.commons_codec
+}

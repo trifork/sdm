@@ -12,6 +12,8 @@ import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.security.SecurityManager;
+import com.trifork.stamdata.ssl.MocesCertificateWrapper;
+import com.trifork.stamdata.ssl.OcesHelper;
 
 @RequestScoped
 public class SslSecurityManager implements SecurityManager {
