@@ -10,4 +10,5 @@ dependencies {
 
 		// Encoding - specifically, base64 support
 	compile libs.commons_codec
+	runtime libs.bouncycastle
 }
