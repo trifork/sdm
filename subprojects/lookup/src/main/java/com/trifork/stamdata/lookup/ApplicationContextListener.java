@@ -14,6 +14,8 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 import com.trifork.stamdata.lookup.rest.RestModule;
+import com.trifork.stamdata.lookup.security.SecurityModule;
+import com.trifork.stamdata.ssl.CommonSslModule;
 
 public class ApplicationContextListener extends GuiceServletContextListener {
 
@@ -35,6 +37,12 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			logger.info("Configuring Stamdata Service.");
 
 			List<Module> modules = new ArrayList<Module>();
+			boolean useOcesTest = config.getBoolean("security.ssl.test");
+			String sslTerminationMethod = config.getString("security.ssl.termination.method");
+			modules.add(new CommonSslModule(useOcesTest, sslTerminationMethod));
+			@SuppressWarnings("unchecked")
+			List<String> authorizedClients = config.getList("security.authorized.clients");
+			modules.add(new SecurityModule(authorizedClients));
 			modules.add(new RestModule());
 			injector = Guice.createInjector(modules);
 
