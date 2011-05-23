@@ -21,23 +21,58 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-// Declare subprojects in this file.
-// The prefered way is to list them, one per line,
-// as below.
+apply plugin: 'war'
+apply plugin: 'jetty'
 
-include 'shared'
-include 'replication'
-include 'schemas'
-include 'importer'
-include 'client'
-include 'lookup'
+dependencies {
+	
+	compile project(':shared')
+	
+	// SERVLETS
+	
+	providedCompile libs.servlet_api
+	
+	// Guice
+	
+	compile libs.guice_servlet
+	compile libs.jersey_core
+	compile libs.jersey_server
+	compile libs.jersey_guice
+	
+	
+	// Hibernate
+	
+	providedCompile libs.hibernate_entitymanager
+	runtime libs.hibernate_c3p0
+	
+	// STS
+	
+	compile libs.seal
 
-rootProject.name = 'stamdata'
-rootProject.children.each {project ->
-    String fileBaseName = project.name.replaceAll("\\p{Upper}") { "-${it.toLowerCase()}" }
-    String projectDirName = "subprojects/$fileBaseName"
-    project.projectDir = new File(settingsDir, projectDirName)
-    project.buildFileName = "${fileBaseName}.gradle"
-    assert project.projectDir.isDirectory()
-    assert project.buildFile.isFile()
+	// MySQL
+	//
+	// For JBoss AS6 you will have to place JDBC
+	// drivers in the configuration's lib directory.
+	
+	runtime libs.mysql_driver
+	
+	// Testing
+	
+	testCompile libs.junit
+	testCompile libs.hamcrest
+	testCompile libs.mockito
+	
+	// Logging
+	//
+	// Unfortunatly we have to use Log4J since OIOSAML
+	// uses some custom configuration that is log4j specific.
+	// Logback would have less overhead.
+	
+	compile libs.slf4j_api
+	runtime libs.logback_core
+	runtime libs.log4j_slf4j
+	
+	testRuntime 'xerces:xercesImpl:2.8.0'
+
+	compile libs.ooapi
 }

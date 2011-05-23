@@ -29,6 +29,7 @@
 
 def guiceVersion = '3.0'
 def slf4jVersion = '1.6.1'
+def jerseyVersion = '1.7'
 
 libs = [
 	commons_io: 'commons-io:commons-io:2.0',
@@ -78,5 +79,9 @@ libs = [
 	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
 	
 	guice: 'com.google.inject.guice:guice:' + guiceVersion,
-	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion
+	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion,
+	
+	jersey_core: 'com.sun.jersey:jersey-core:' + jerseyVersion,
+	jersey_server: 'com.sun.jersey:jersey-server:' + jerseyVersion,
+	jersey_guice: 'com.sun.jersey.contribs:jersey-guice:' + jerseyVersion,
 ]
