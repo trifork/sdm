@@ -116,7 +116,8 @@ public class Main {
 				return sysProp;
 			}
 			else {
-				return Integer.toString(Arrays.asList(descriptor.options).indexOf(sysProp)) + 1;
+
+				return Integer.toString(Arrays.asList(descriptor.options).indexOf(sysProp) + 1);
 			}
 		}
 		if(descriptor.options != null) {
