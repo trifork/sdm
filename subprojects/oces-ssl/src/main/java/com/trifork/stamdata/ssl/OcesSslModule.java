@@ -6,17 +6,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
-public class CommonSslModule extends ServletModule {
+public class OcesSslModule extends ServletModule {
 	private final boolean test;
-	private static final Logger logger = LoggerFactory.getLogger(CommonSslModule.class);
+	private static final Logger logger = LoggerFactory.getLogger(OcesSslModule.class);
 	private final String sslTerminationMethod;
 
-	public CommonSslModule(boolean test, String sslTerminationMethod) {
+	public OcesSslModule(boolean test, String sslTerminationMethod) {
 		this.test = test;
 		this.sslTerminationMethod = sslTerminationMethod;
 	}
-	
+
 	@Override
 	protected void configureServlets() {
 		if (test) {
@@ -45,5 +46,6 @@ public class CommonSslModule extends ServletModule {
 		else {
 			addError("Illegal configuration parameter for security.ssl.termination.method: {}", sslTerminationMethod);
 		}
+		bind(String.class).annotatedWith(AuthenticatedSSN.class).toProvider(AuthenticatedSsnProvider.class);
 	}
 }

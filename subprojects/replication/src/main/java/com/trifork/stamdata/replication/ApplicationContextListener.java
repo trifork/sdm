@@ -51,7 +51,7 @@ import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
 import com.trifork.stamdata.replication.security.ssl.SslModule;
-import com.trifork.stamdata.ssl.CommonSslModule;
+import com.trifork.stamdata.ssl.OcesSslModule;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
@@ -103,7 +103,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			boolean twoWaySslInUse = "twowayssl".equals(security) || 
 			"twowayssl".equals(guiSecurity);
 			if(twoWaySslInUse) {
-				modules.add(new CommonSslModule(config.getBoolean("security.ssl.test"), config.getString("security.ssl.termination.method")));
+				modules.add(new OcesSslModule(config.getBoolean("security.ssl.test"), config.getString("security.ssl.termination.method")));
 			}
 			
 			String sslTerminationMethod = config.getString("security.ssl.termination.method");

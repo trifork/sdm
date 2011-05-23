@@ -10,7 +10,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,19 +17,18 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.lookup.security.annotations.AuthorizedClients;
-import com.trifork.stamdata.ssl.MocesCertificateWrapper;
-import com.trifork.stamdata.ssl.OcesHelper;
+import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
 @Singleton
 public class SecurityFilter implements Filter {
 	
-	private final Provider<OcesHelper> ocesHelper;
+	private final Provider<String> authenticatedSsnProvider;
 	private final Collection<String> authorizedClients;
 	private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
 	@Inject
-	public SecurityFilter(Provider<OcesHelper> ocesHelper, @AuthorizedClients Collection<String> authorizedClients) {
-		this.ocesHelper = ocesHelper;
+	public SecurityFilter(@AuthenticatedSSN Provider<String> authenticatedSsnProvider, @AuthorizedClients Collection<String> authorizedClients) {
+		this.authenticatedSsnProvider = authenticatedSsnProvider;
 		this.authorizedClients = authorizedClients;
 		logger.info("Initializing security filter, authorized clients: {}", authorizedClients);
 	}
@@ -41,19 +39,14 @@ public class SecurityFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
-		MocesCertificateWrapper certificate = ocesHelper.get().extractCertificateFromRequest((HttpServletRequest) request);
-		if(certificate.isValid()) {
-			String ssn = certificate.getSubjectSerialNumber();
-			if(!authorizedClients.contains(ssn)) {
-				throw new RuntimeException("Client not authorized, client=" + ssn);
-			}
-			else {
-				chain.doFilter(request, response);
-			}
+		String authenticatedSsn = authenticatedSsnProvider.get();
+		if(authenticatedSsn == null) {
+			throw new RuntimeException("No authenticated client");
 		}
-		else {
-			throw new RuntimeException("Client presented invalid certificate, client=" + certificate.getSubjectSerialNumber());
+		if(!authorizedClients.contains(authenticatedSsn)) {
+			throw new RuntimeException("Client not authorized, client=" + authenticatedSsn);
 		}
+		chain.doFilter(request, response);
 	}
 
 	@Override
