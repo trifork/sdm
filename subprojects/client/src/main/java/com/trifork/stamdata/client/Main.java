@@ -116,7 +116,7 @@ public class Main {
 				return sysProp;
 			}
 			else {
-
+				
 				return Integer.toString(Arrays.asList(descriptor.options).indexOf(sysProp) + 1);
 			}
 		}
@@ -162,7 +162,9 @@ public class Main {
 		writer.writeStartDocument("utf-8", "1.0");
 		String lastTag = null;
 		int writtenRecords = 0;
-		writer.writeStartElement("records");
+		
+		writer.writeStartElement("common", "records",  "http://trifork.com/-/stamdata/3.0/common");
+		writer.writeNamespace("common", "http://trifork.com/-/stamdata/3.0/common");
 		writer.writeNamespace("sd", viewXmlHelper.getNamespace(viewClass.newInstance()));
 		Marshaller marshaller = viewXmlHelper.createMarshaller(viewClass);
 		marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
