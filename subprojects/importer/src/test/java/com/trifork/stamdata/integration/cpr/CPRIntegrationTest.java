@@ -81,8 +81,9 @@ public class CPRIntegrationTest {
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db
+		// Actually, it should be written to db - discussed with Jan. So we do it now.
 		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		assertNull(latestIkraft);
+		// assertNull(latestIkraft);
 		con.close();
 	}
 
