@@ -7,7 +7,7 @@ public class RestModule extends JerseyServletModule {
 
 	@Override
 	protected void configureServlets() {
-        bind(HelloWorldResource.class);
+        bind(PersonResource.class);
 
         serve("/*").with(GuiceContainer.class);
 		

@@ -46,7 +46,7 @@ public class UsageLoggerTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		DatabaseHelper db = new DatabaseHelper(UsageLogEntry.class);
+		DatabaseHelper db = new DatabaseHelper("replication", UsageLogEntry.class);
 		session = db.openSession();
 		Query query = session.createQuery("delete from UsageLogEntry");
 		query.executeUpdate();

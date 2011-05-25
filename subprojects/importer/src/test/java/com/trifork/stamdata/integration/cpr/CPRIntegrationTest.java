@@ -26,6 +26,7 @@ package com.trifork.stamdata.integration.cpr;
 import static com.trifork.stamdata.util.DateUtils.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -83,7 +84,7 @@ public class CPRIntegrationTest {
 		// LatestIkraft should be written to the db
 		// Actually, it should be written to db - discussed with Jan. So we do it now.
 		Calendar latestIkraft = CPRImporter.getLatestIkraft(con);
-		// assertNull(latestIkraft);
+		assertNotNull(latestIkraft);
 		con.close();
 	}
 

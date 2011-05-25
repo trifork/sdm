@@ -34,6 +34,7 @@ include 'lookup'
 include 'oces-ssl'
 include 'part-api'
 include 'hibernate-common'
+include 'hibernate-common-test'
 
 rootProject.name = 'stamdata'
 rootProject.children.each {project ->

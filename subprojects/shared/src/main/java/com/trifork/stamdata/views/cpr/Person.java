@@ -51,89 +51,99 @@ public class Person extends View {
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "PersonPID")
-	private BigInteger recordID;
+	public BigInteger recordID;
 
 	@Column(name = "CPR")
 	@XmlElement(required = true)
-	protected String cpr;
+	public String cpr;
 
 	@Column(name = "Koen")
-	protected String koen;
+	public String koen;
 
 	@Column(name = "Fornavn")
-	protected String fornavn;
+	public String fornavn;
 
 	@Column(name = "Mellemnavn")
-	protected String mellemnavn;
+	public String mellemnavn;
 
 	@Column(name = "Efternavn")
-	protected String efternavn;
+	public String efternavn;
 
 	@Column(name = "CoNavn")
-	protected String coNavn;
+	public String coNavn;
 
 	@Column(name = "Lokalitet")
-	protected String lokalitet;
+	public String lokalitet;
 
 	@Column(name = "Vejnavn")
-	protected String vejnavn;
+	public String vejnavn;
 
 	@Column(name = "Bygningsnummer")
-	protected String bygningsnummer;
+	public String bygningsnummer;
 
 	@Column(name = "Husnummer")
-	protected String husnummer;
+	public String husnummer;
 
 	@Column(name = "Etage")
-	protected String etage;
+	public String etage;
 
 	@Column(name = "SideDoerNummer")
-	protected String sideDoerNummer;
+	public String sideDoerNummer;
 
 	@Column(name = "Bynavn")
-	protected String bynavn;
+	public String bynavn;
 
 	@Column(name = "Postnummer")
-	protected BigInteger postnummer;
+	public BigInteger postnummer;
 
 	@Column(name = "PostDistrikt")
-	protected String postdistrikt;
+	public String postdistrikt;
 
 	@Column(name = "Status")
-	protected String status;
+	public String status;
 
 	@Column(name = "GaeldendeCPR")
-	protected String gaeldendeCPR;
+	public String gaeldendeCPR;
 
 	@Column(name = "Foedselsdato")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date foedselsdato;
+	public Date foedselsdato;
 
 	@Column(name = "Stilling")
-	protected String stilling;
+	public String stilling;
 
 	@Column(name = "VejKode")
-	protected BigInteger vejKode;
+	public BigInteger vejKode;
 
 	@Column(name = "KommuneKode")
-	protected BigInteger kommuneKode;
+	public BigInteger kommuneKode;
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
 	@Temporal(TIMESTAMP)
-	protected Date modifiedDate;
+	public Date modifiedDate;
+	
+	@XmlTransient
+	public String modifiedBy;
 
-	protected Date navneBeskyttelsestartdato;
-	protected Date navnebeskyttelseslettedato;
+	public Date navneBeskyttelsestartdato;
+	public Date navnebeskyttelseslettedato;
 
 	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	@XmlElement(required = true)
-	protected Date validFrom;
+	public Date validFrom;
 
 	@Column(name = "ValidTo")
 	@Temporal(TIMESTAMP)
-	protected Date validTo;
+	public Date validTo;
+	
+	@XmlTransient
+	public String createdBy;
+	
+	@XmlTransient
+	@Temporal(TIMESTAMP)
+	public Date createdDate;
 
 	@Override
 	public BigInteger getRecordID() {

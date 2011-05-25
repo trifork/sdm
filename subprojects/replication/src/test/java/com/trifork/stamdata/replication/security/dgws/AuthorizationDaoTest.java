@@ -51,7 +51,7 @@ public class AuthorizationDaoTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		DatabaseHelper db = new DatabaseHelper(Authorization.class);
+		DatabaseHelper db = new DatabaseHelper("replication", Authorization.class);
 		session = db.openSession();
 	}
 

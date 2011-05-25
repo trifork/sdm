@@ -49,7 +49,7 @@ public class RecordDaoTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		DatabaseHelper db = new DatabaseHelper(Folkekirkeoplysninger.class, UsageLogEntry.class);
+		DatabaseHelper db = new DatabaseHelper("replication", Folkekirkeoplysninger.class, UsageLogEntry.class);
 		session = db.openStatelessSession();
 		session.createQuery("delete from Folkekirkeoplysninger").executeUpdate();
 	}

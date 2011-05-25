@@ -33,9 +33,9 @@ public class DatabaseHelper {
 
 	private SessionFactory sessionFactory;
 
-	public DatabaseHelper(Class<?>... entities) throws Exception {
+	public DatabaseHelper(String module, Class<?>... entities) throws Exception {
 
-		org.apache.commons.configuration.Configuration props = ConfigurationHelper.getConfiguration();
+		org.apache.commons.configuration.Configuration props = ConfigurationHelper.getConfiguration(module);
 
 		Configuration config = new Configuration();
 

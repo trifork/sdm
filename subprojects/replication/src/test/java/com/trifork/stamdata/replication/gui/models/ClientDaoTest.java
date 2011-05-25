@@ -26,7 +26,7 @@ public class ClientDaoTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		db = new DatabaseHelper(Client.class);
+		db = new DatabaseHelper("replication", Client.class);
 		Session session = db.openSession();
 		session.beginTransaction();
 		session.createQuery("delete from Client").executeUpdate();
