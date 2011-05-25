@@ -21,39 +21,20 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-apply plugin: 'war'
-apply plugin: 'jetty'
-
 dependencies {
 	
 	compile project(':shared')
-	compile project(':oces-ssl')
-	compile project(':part-api')
-	compile project(':hibernate-common')
-	
 	// SERVLETS
 	
-	providedCompile libs.servlet_api
+	compile libs.servlet_api
 	
 	// Guice
 	
 	compile libs.guice_servlet
-	compile libs.jersey_core
-	compile libs.jersey_server
-	compile libs.jersey_guice
-	
 	
 	// Hibernate
 	
-	providedCompile libs.hibernate_entitymanager
-	runtime libs.hibernate_c3p0
-	
-	// MySQL
-	//
-	// For JBoss AS6 you will have to place JDBC
-	// drivers in the configuration's lib directory.
-	
-	runtime libs.mysql_driver
+	compile libs.hibernate_entitymanager
 	
 	// Testing
 	
@@ -68,8 +49,4 @@ dependencies {
 	// Logback would have less overhead.
 	
 	compile libs.slf4j_api
-	runtime libs.logback_core
-	runtime libs.log4j_slf4j
-	
-	testRuntime 'xerces:xercesImpl:2.8.0'
 }

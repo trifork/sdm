@@ -3,7 +3,10 @@ package com.trifork.stamdata.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
@@ -13,9 +16,11 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
+import com.trifork.stamdata.db.SessionFactoryModule;
 import com.trifork.stamdata.lookup.rest.RestModule;
 import com.trifork.stamdata.lookup.security.SecurityModule;
 import com.trifork.stamdata.ssl.OcesSslModule;
+import com.trifork.stamdata.views.cpr.Person;
 
 public class ApplicationContextListener extends GuiceServletContextListener {
 
@@ -43,7 +48,19 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			@SuppressWarnings("unchecked")
 			List<String> authorizedClients = config.getList("security.authorized.clients");
 			modules.add(new SecurityModule(authorizedClients));
+
+			
 			modules.add(new RestModule());
+			Set<Class<?>> entityClasses = new HashSet<Class<?>>();
+			entityClasses.add(Person.class);
+			modules.add(new SessionFactoryModule (
+				config.getString("db.connection.driverClass"),
+				config.getString("db.connection.sqlDialect"),
+				config.getString("db.connection.jdbcURL"),
+				config.getString("db.connection.username"),
+				config.getString("db.connection.password", null), 
+				entityClasses
+			));
 			injector = Guice.createInjector(modules);
 
 		} catch (Exception e) {
