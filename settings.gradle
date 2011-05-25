@@ -32,6 +32,7 @@ include 'importer'
 include 'client'
 include 'lookup'
 include 'oces-ssl'
+include 'part-api'
 
 rootProject.name = 'stamdata'
 rootProject.children.each {project ->

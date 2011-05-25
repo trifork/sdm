@@ -1,0 +1,17 @@
+configurations {
+	jaxb
+}
+
+dependencies {
+	jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.3-2'
+}
+
+task jaxb {
+	ant.taskdef(name: 'xjc', classname: 'com.sun.tools.xjc.XJCTask', classpath: configurations.jaxb.asPath)
+	actions = [
+	{
+		ant.xjc(destdir: 'build/generated-sources') {
+			schema(dir: 'src/main/xsd', includes: 'ns*.xsd')
+		}
+	} as Action ]
+}

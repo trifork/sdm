@@ -39,7 +39,7 @@ public class Records {
 		@XmlElementRef(type=Statsborgerskab.class),
 		@XmlElementRef(type=Udrejseoplysninger.class),
 		@XmlElementRef(type=UmyndiggoerelseVaergeRelation.class),
-		@XmlElementRef(type=Valgoplysninger.class),
+		@XmlElementRef(type=Valgoplysninger.class)
 	})
 	public List<View> records;
 }
