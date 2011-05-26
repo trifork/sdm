@@ -4,10 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
@@ -55,19 +53,20 @@ public class ConfigurationLoader {
 	public Configuration loadConfiguration() {
 		logger.info("Loading configuration. Prefix: {} environments: {} configuration file directory: {}", new Object[] {configurationFilePrefix, environmentString, configurationFileDirectory});
 		Properties props = new Properties();
-		StringTokenizer st = new StringTokenizer(environmentString, ",");
-		while (st.hasMoreElements()) {
-			String environment = st.nextToken().trim();
-			loadPropertiesForEnvironment(props, environment);
+		for (String environment : environmentString.split(",")) {
+			loadPropertiesForEnvironment(props, environment.trim());
 		}
 		loadAdditionalConfigFileSuppliedOnClasspath(props);
+		return asConfiguration(props);
+	}
+
+	private Configuration asConfiguration(Properties props) {
 		BaseConfiguration config = new BaseConfiguration();
 		for (Entry<?, ?> entry : props.entrySet()) {
-			config.addProperty(entry.getKey().toString(), entry.getValue());
-		}
-		for(Iterator<?> it = config.getKeys(); it.hasNext();) {
-			String key = it.next().toString();
-			logger.info("Loaded property {}={}",key,config.getString(key));
+			String key = entry.getKey().toString();
+			Object value = entry.getValue();
+			config.addProperty(key, value);
+			logger.info("Loaded property {}={}", key, value);
 		}
 		return config;
 	}
@@ -77,11 +76,9 @@ public class ConfigurationLoader {
 		loadPropertiesFromClasspath(props, filename);
 	}
 	
-	private void loadPropertiesForEnvironment(Properties props,
-			String environment) {
+	private void loadPropertiesForEnvironment(Properties props, String environment) {
 		try {
-			String filename = configurationFilePrefix + "." + environment
-					+ ".properties";
+			String filename = configurationFilePrefix + "." + environment + ".properties";
 			loadPropertiesFromClasspath(props, filename);
 			File fileSystemFile = new File(configurationFileDirectory, filename);
 			if (fileSystemFile.exists()) {
@@ -94,25 +91,19 @@ public class ConfigurationLoader {
 				logger.info("Did not load configuration from {}, file did not exist", fileSystemFile.getAbsolutePath());
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(
-					"Could not load properties for environment " + environment,
-					e);
+			throw new RuntimeException("Could not load properties for environment " + environment, e);
 		}
 	}
 
 	private void loadPropertiesFromClasspath(Properties props, String filename) {
 		try {
-			InputStream input = ConfigurationLoader.class
-					.getResourceAsStream("/" + filename);
+			InputStream input = ConfigurationLoader.class.getResourceAsStream("/" + filename);
 			if (input != null) {
-				logger.info("Loading configuration from classpath file {}",
-						filename);
+				logger.info("Loading configuration from classpath file {}", filename);
 				props.load(input);
 				input.close();
 			} else {
-				logger.info(
-						"Did not load configuration from classpath file {}, file did not exist",
-						filename);
+				logger.info("Did not load configuration from classpath file {}, file did not exist", filename);
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);

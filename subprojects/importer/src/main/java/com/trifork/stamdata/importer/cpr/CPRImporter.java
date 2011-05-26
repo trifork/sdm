@@ -49,8 +49,6 @@ import com.trifork.stamdata.model.Dataset;
 import com.trifork.stamdata.model.StamdataEntity;
 import com.trifork.stamdata.util.DateUtils;
 
-
-
 public class CPRImporter implements FileImporterControlledIntervals {
 
 	private static Logger logger = LoggerFactory.getLogger(CPRImporter.class);
@@ -68,7 +66,6 @@ public class CPRImporter implements FileImporterControlledIntervals {
 	}
 	
 	public void run(List<File> files) throws FileImporterException {
-
 		Connection connection = null;
 		Collections.sort(files);
 		try {

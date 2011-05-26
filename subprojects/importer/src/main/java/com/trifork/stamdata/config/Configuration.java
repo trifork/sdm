@@ -27,6 +27,7 @@ package com.trifork.stamdata.config;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,9 +90,11 @@ public class Configuration {
 	}
 
 	public static String getString(String key) {
-
-		String s = defaultInstance.getProperty(key);
-		return s;
+		return defaultInstance.getProperty(key);
+	}
+	
+	public static List<String> getList(String key) {
+		return defaultInstance.getPropertyList(key);
 	}
 
 	public static Integer getInt(String key) {
@@ -104,8 +107,12 @@ public class Configuration {
 	}
 
 	protected String getProperty(String key) {
-
 		return loadedConfiguration.getString(key);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected List<String> getPropertyList(String key) {
+		return loadedConfiguration.getList(key);
 	}
 
 	public static void setDefaultInstance(Configuration conf) {

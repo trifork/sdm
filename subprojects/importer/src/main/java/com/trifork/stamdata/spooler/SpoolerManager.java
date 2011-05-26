@@ -64,20 +64,18 @@ public class SpoolerManager {
 
 	public SpoolerManager(String rootDir) {
 
-		String spoolerSetup = Configuration.getString("spooler");
+		List<String> spoolerSetup = Configuration.getList("spooler");
 
 		logger.info("The following spoolers are configured: " + spoolerSetup);
 		logger.info("The global root dir is set to: " + rootDir);
 
-		if (spoolerSetup.length() == 0) {
+		if (spoolerSetup.isEmpty()) {
 			logger.error("Manager created but no spooler configured. Please configure a spooler");
 			return;
 		}
 
-		if (spoolerSetup != null && spoolerSetup.length() != 0) {
-			for (String spoolerName : spoolerSetup.split(",")) {
-				spoolers.put(spoolerName, new FileSpoolerImpl(new FileSpoolerSetup(spoolerName, rootDir)));
-			}
+		for (String spoolerName : spoolerSetup) {
+			spoolers.put(spoolerName, new FileSpoolerImpl(new FileSpoolerSetup(spoolerName, rootDir)));
 		}
 
 		String jobSpoolerSetup = Configuration.getString("jobspooler");
