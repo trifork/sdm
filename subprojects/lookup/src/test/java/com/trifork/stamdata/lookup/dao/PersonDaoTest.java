@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 
 public class PersonDaoTest {
@@ -21,7 +22,7 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class);
+		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -47,6 +48,13 @@ public class PersonDaoTest {
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1020304050", person.getCprNumber());
 		assertEquals(at(2005, Calendar.JANUARY, 5), person.getValidFrom());
+	}
+
+	@Test
+	public void getsFolkekirkeOplysninger() {
+		session.save(folkekirkeoplysninger("M"));
+		CurrentPersonData person = dao.get("1020304050");
+		assertTrue(person.getMedlemAfFolkekirken());
 	}
 	
 	@Test
@@ -77,6 +85,18 @@ public class PersonDaoTest {
 		result.createdBy = "AHJ";
 		result.validFrom = validFrom;
 		result.modifiedDate = validFrom;
+		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		return result;
+	}
+	
+	private Folkekirkeoplysninger folkekirkeoplysninger(String kode) {
+		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
+		result.cpr = "1020304050";
+		result.forholdsKode = kode;
+		result.modifiedBy = "AHJ";
+		result.createdBy = "AHJ";
+		result.validFrom = at(2005, Calendar.JANUARY, 5);
+		result.modifiedDate = result.validFrom;
 		result.createdDate = at(2005, Calendar.JANUARY, 5);
 		return result;
 	}

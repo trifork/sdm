@@ -32,7 +32,7 @@ public class PersonResourceTest {
 	
 	@Test
 	public void looksUpPersonFromCpr() {
-		CurrentPersonData person = new CurrentPersonData(new Person());
+		CurrentPersonData person = new CurrentPersonData(new Person(), null);
 		PersonType personPart = new PersonType();
 		when(personDao.get("1020304050")).thenReturn(person);
 		when(personPartConverter.convert(person)).thenReturn(personPart);

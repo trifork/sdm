@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 
 public class PersonDao {
@@ -20,13 +21,19 @@ public class PersonDao {
 	}
 	
 	public CurrentPersonData get(String cpr) {
-		Person person = (Person) session
-			.createCriteria(Person.class)
-			.add(Restrictions.eq("cpr", cpr))
-			.add(Restrictions.le("validFrom", new Date()))
-			.addOrder(Order.desc("validFrom"))
-			.setMaxResults(1)
-			.uniqueResult();
-		return new CurrentPersonData(person);
+		Person person = getCurrentRecordByCpr(Person.class, cpr);
+		Folkekirkeoplysninger folkekirkeoplysninger = getCurrentRecordByCpr(Folkekirkeoplysninger.class, cpr);
+		return new CurrentPersonData(person, folkekirkeoplysninger);
+	}
+	
+	private <T> T getCurrentRecordByCpr(Class<T> entityType, String cpr) {
+		return entityType.cast( session
+		.createCriteria(entityType)
+		.add(Restrictions.eq("cpr", cpr))
+		.add(Restrictions.le("validFrom", new Date()))
+		.addOrder(Order.desc("validFrom"))
+		.setMaxResults(1)
+		.uniqueResult());
+		
 	}
 }

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
@@ -32,7 +33,9 @@ public class PersonPartConverterTest {
 	public void fillsOutCprBorgerForPlainValidCprNumber() {
 		Person person = new Person();
 		person.cpr = "1020304050";
-		CurrentPersonData currentPerson = new CurrentPersonData(person);
+		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
+		folkekirkeoplysninger.forholdsKode = "M";
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -51,19 +54,8 @@ public class PersonPartConverterTest {
 	
 	@Test
 	public void fillsOutDanishAddress() {
-		Person person = new Person();
-		person.cpr = "1020304050";
-		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
-		person.lokalitet = "Scandinavian Congress Center";
-		person.vejnavn = "Margrethepladsen";
-		person.husnummer = "4";
-		person.bygningsnummer = "1";
-		person.etage = "3";
-		person.sideDoerNummer = "th.";
-		person.postnummer = BigInteger.valueOf(8000);
-		person.bynavn = "Centrum af Århus";
-		person.postdistrikt = "Århus C";
-		CurrentPersonData currentPerson = new CurrentPersonData(person);
+		Person person = createValidPerson();
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -82,5 +74,39 @@ public class PersonPartConverterTest {
 		assertEquals("Århus C", postalAddress.getDistrictName());
 		assertEquals(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, postalAddress.getCountryIdentificationCode().getScheme());
 		assertEquals("DK", postalAddress.getCountryIdentificationCode().getValue());
+	}
+
+	private Person createValidPerson() {
+		Person person = new Person();
+		person.cpr = "1020304050";
+		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
+		person.lokalitet = "Scandinavian Congress Center";
+		person.vejnavn = "Margrethepladsen";
+		person.husnummer = "4";
+		person.bygningsnummer = "1";
+		person.etage = "3";
+		person.sideDoerNummer = "th.";
+		person.postnummer = BigInteger.valueOf(8000);
+		person.bynavn = "Centrum af Århus";
+		person.postdistrikt = "Århus C";
+		return person;
+	}
+	
+	
+	@Test
+	public void fillsOutMemberOfChurch() {
+		// check not member
+		Folkekirkeoplysninger fo = new Folkekirkeoplysninger();
+		fo.forholdsKode = "U"; // uden for folkekirken
+		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo);
+		PersonType personType = converter.convert(currentPerson);
+		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		assertFalse(cprBorger.isFolkekirkeMedlemIndikator());
+		
+		// check member
+		fo.forholdsKode = "M";
+		personType = converter.convert(currentPerson);
+		cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		assertTrue(cprBorger.isFolkekirkeMedlemIndikator());
 	}
 }

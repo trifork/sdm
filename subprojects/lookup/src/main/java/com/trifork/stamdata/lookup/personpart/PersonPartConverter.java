@@ -47,12 +47,13 @@ public class PersonPartConverter {
 		result.setPersonNationalityCode(createCountryIdentificationCodeType(person));
 		result.setFolkeregisterAdresse(createAdresseType(person));
 		
+		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
+
 		// TODO: Bare de mest gængse værdier p.t. Skal selvfølgelig hentes rigtigt.
 		result.setPersonNummerGyldighedStatusIndikator(true);
 		result.setNavneAdresseBeskyttelseIndikator(false);
 		result.setTelefonNummerBeskyttelseIndikator(false);
 		result.setForskerBeskyttelseIndikator(false);
-		result.setFolkekirkeMedlemIndikator(true);
 		return result;
 	}
 

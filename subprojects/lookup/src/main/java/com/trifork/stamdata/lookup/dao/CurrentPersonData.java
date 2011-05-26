@@ -1,16 +1,20 @@
 package com.trifork.stamdata.lookup.dao;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 
+import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 
 public class CurrentPersonData {
 
 	private final Person person;
+	private final Folkekirkeoplysninger folkekirkeoplysninger;
 
-	public CurrentPersonData(Person person) {
+	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger) {
 		this.person = person;
+		this.folkekirkeoplysninger = folkekirkeoplysninger;
 	}
 	
 	public Date getValidFrom() {
@@ -56,5 +60,8 @@ public class CurrentPersonData {
 	public String getPostdistrikt() {
 		return person.postdistrikt;
 	}
-
+	public boolean getMedlemAfFolkekirken() {
+		return folkekirkeoplysninger != null &&
+		Arrays.asList("F", "M", "S").contains(folkekirkeoplysninger.forholdsKode);
+	}
 }
