@@ -13,7 +13,7 @@ import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
 
-@Path("person/{cpr}")
+@Path("person")
 public class PersonResource {
 	private final PersonDao personDao;
 	private final PersonPartConverter personPartConverter;
@@ -25,6 +25,7 @@ public class PersonResource {
 	}
 	
 	@GET
+	@Path("{cpr}")
 	@Produces("text/xml")
 	public JAXBElement<PersonType> getPerson(@PathParam("cpr") String cpr) {
 		CurrentPersonData person = personDao.get(cpr);
