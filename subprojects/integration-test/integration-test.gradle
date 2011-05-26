@@ -1,0 +1,64 @@
+// The contents of this file are subject to the Mozilla Public
+// License Version 1.1 (the "License"); you may not use this file
+// except in compliance with the License. You may obtain a copy of
+// the License at http://www.mozilla.org/MPL/
+//
+// Software distributed under the License is distributed on an "AS
+// IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+// implied. See the License for the specific language governing
+// rights and limitations under the License.
+//
+// Contributor(s): Contributors are attributed in the source code
+// where applicable.
+//
+// The Original Code is "Stamdata".
+//
+// The Initial Developer of the Original Code is Trifork Public A/S.
+//
+// Portions created for the Original Code are Copyright 2011,
+// Lægemiddelstyrelsen. All Rights Reserved.
+//
+// Portions created for the FMKi Project are Copyright 2011,
+// National Board of e-Health (NSI). All Rights Reserved.
+
+configurations {
+	cargo
+}
+
+dependencies {
+	compile project(':shared')
+	testCompile libs.junit
+	testCompile libs.hamcrest
+	testCompile libs.mockito
+
+	cargo('org.codehaus.cargo:cargo-ant:1.1.0') {
+		exclude module: 'cargo-core-container-resin'
+		exclude module: 'cargo-core-container-geronimo'
+		exclude module: 'cargo-core-container-glassfish'
+		exclude module: 'cargo-core-container-jboss'
+		exclude module: 'cargo-core-container-jetty'
+		exclude module: 'cargo-core-container-jo'
+		exclude module: 'cargo-core-container-jonas'
+		exclude module: 'cargo-core-container-jrun'
+		exclude module: 'cargo-core-container-orion'
+		exclude module: 'cargo-core-container-weblogic'
+	}
+}
+
+ant.taskdef(resource: 'cargo.tasks', classpath: configurations.cargo.asPath)
+
+task startServer {
+	ant.cargo(containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
+		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
+		configuration {
+			property(name: "cargo.servlet.port", value: "8080")
+			property(name: "cargo.logging", value: "high")
+			deployable(type: "war", file: "subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
+				property(name: "context", value: "importer")
+			}
+			deployable(type: "war", file: "subprojects/lookup/build/libs/lookup-3.0.0-SNAPSHOT.war") {
+				property(name: "context", value: "lookup")
+			}
+		}
+	}
+}
