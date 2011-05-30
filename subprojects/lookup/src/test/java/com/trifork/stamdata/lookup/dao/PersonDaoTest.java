@@ -17,6 +17,7 @@ import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
+import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 
 public class PersonDaoTest {
 	private static DatabaseHelper db;
@@ -25,7 +26,7 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class);
+		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class, Udrejseoplysninger.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -75,6 +76,14 @@ public class PersonDaoTest {
 		assertEquals("foedselsTekst", person.getFoedselsregistreringstekst());
 	}
 	
+	@Test
+	public void getsUdrejseoplysninger() {
+		session.save(udrejseoplysninger());
+		CurrentPersonData person = dao.get("1020304050");
+		assertEquals("1234", person.getUdrejseoplysninger().udrejseLandekode);
+		assertEquals("line1", person.getUdrejseoplysninger().udlandsadresse1);
+	}
+
 	@Test
 	public void getsNewestPersonRecordIfNoRecordIsInTheFuture() {
 		session.save(person(at(2005, Calendar.JANUARY, 5)));
@@ -145,6 +154,25 @@ public class PersonDaoTest {
 		return result;
 	}
 	
+	private Udrejseoplysninger udrejseoplysninger() {
+		Udrejseoplysninger result = new Udrejseoplysninger();
+		result.cpr = "1020304050";
+		result.udrejseLandekode = "1234";
+		result.udrejsedatoUsikkerhedsmarkering = "";
+		result.udrejsedato = new Date();
+		result.udlandsadresse1 = "line1";
+		result.udlandsadresse2 = "line2";
+		result.udlandsadresse3 = "line3";
+		result.udlandsadresse4 = "line4";
+		result.udlandsadresse5 = "line5";
+		result.modifiedBy = "AHJ";
+		result.createdBy = "AHJ";
+		result.validFrom = at(2005, Calendar.JANUARY, 5);
+		result.modifiedDate = result.validFrom;
+		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		return result;
+	}
+
 	private Date at(int year, int month, int day) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.clear();

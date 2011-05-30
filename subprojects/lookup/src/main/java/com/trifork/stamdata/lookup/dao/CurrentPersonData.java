@@ -9,6 +9,7 @@ import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
+import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 
 public class CurrentPersonData {
 
@@ -17,13 +18,15 @@ public class CurrentPersonData {
 	private final Statsborgerskab statsborgerskab;
 	private final Foedselsregistreringsoplysninger foedselsregistreringsoplysninger;
 	private final Civilstand civilstand;
+	private final Udrejseoplysninger udrejseoplysninger;
 
-	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab, Foedselsregistreringsoplysninger foedselsregistreringsoplysninger, Civilstand civilstand) {
+	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab, Foedselsregistreringsoplysninger foedselsregistreringsoplysninger, Civilstand civilstand, Udrejseoplysninger udrejseoplysninger) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
 		this.statsborgerskab = statsborgerskab;
 		this.foedselsregistreringsoplysninger = foedselsregistreringsoplysninger;
 		this.civilstand = civilstand;
+		this.udrejseoplysninger = udrejseoplysninger;
 	}
 	
 	public Date getValidFrom() {
@@ -96,5 +99,9 @@ public class CurrentPersonData {
 			return null;
 		}
 		return civilstand.civilstandskode;
+	}
+
+	public Udrejseoplysninger getUdrejseoplysninger() {
+		return udrejseoplysninger;
 	}
 }
