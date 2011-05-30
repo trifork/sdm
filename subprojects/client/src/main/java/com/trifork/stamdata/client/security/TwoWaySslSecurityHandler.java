@@ -52,7 +52,23 @@ public class TwoWaySslSecurityHandler implements SecurityHandler {
 	public <T> String validAuthorizationTokenFor(Class<T> entityType) throws Exception {
 		return "";
 	}
-	
+
+	protected String getTrustStorePassword() {
+		return Main.getParameter("stamdata.client.truststore.password");
+	}
+
+	protected String getTrustStorePath() {
+		return Main.getParameter("stamdata.client.truststore");
+	}
+
+	protected String getKeyStorePassword() {
+		return Main.getParameter("stamdata.client.keystore.password");
+	}
+
+	protected String getKeyStorePath() {
+		return Main.getParameter("stamdata.client.keystore");
+	}
+
 	private KeyStore createKeyStoreFromParams(String storePath, String password) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
 		if(storePath.startsWith("classpath:")) {
 			return createKeyStore(storePath.substring("classpath:".length()), password);
@@ -62,18 +78,17 @@ public class TwoWaySslSecurityHandler implements SecurityHandler {
 	
 	private TrustManager[] createTrustManagers() throws NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException {
 		TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-		String trustStorePath = Main.getParameter("stamdata.client.truststore");
-		String trustStorePassword = Main.getParameter("stamdata.client.truststore.password");
+		String trustStorePath = getTrustStorePath();
+		String trustStorePassword = getTrustStorePassword();
 		KeyStore truststore = createKeyStoreFromParams(trustStorePath, trustStorePassword );
 		trustManagerFactory.init(truststore);
 		return trustManagerFactory.getTrustManagers();
-		
 	}
 	
 	private KeyManager[] createKeyManagers() throws NoSuchAlgorithmException, KeyStoreException, CertificateException, IOException, UnrecoverableKeyException {
 		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-		String keyStorePath = Main.getParameter("stamdata.client.keystore");
-		String keyStorePassword = Main.getParameter("stamdata.client.keystore.password");
+		String keyStorePath = getKeyStorePath();
+		String keyStorePassword = getKeyStorePassword();
 		KeyStore keyStore = createKeyStoreFromParams(keyStorePath, keyStorePassword );
 		keyManagerFactory.init(keyStore, keyStorePassword.toCharArray());
 		return keyManagerFactory.getKeyManagers();

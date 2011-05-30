@@ -22,14 +22,18 @@
 // National Board of e-Health (NSI). All Rights Reserved.
 
 configurations {
+	db
 	cargo
 }
 
 dependencies {
 	compile project(':shared')
+	compile project(':client')
 	testCompile libs.junit
 	testCompile libs.hamcrest
 	testCompile libs.mockito
+	
+	db libs.mysql_driver
 
 	cargo('org.codehaus.cargo:cargo-ant:1.1.0') {
 		exclude module: 'cargo-core-container-resin'
@@ -47,11 +51,26 @@ dependencies {
 
 ant.taskdef(resource: 'cargo.tasks', classpath: configurations.cargo.asPath)
 
-task startServer {
-	ant.cargo(containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
+def runSql(sqlFile, database) {
+	driver = 'com.mysql.jdbc.Driver'
+	userid = 'root'
+	password: ''
+	ant.sql(src: sqlFile, print: true, driver: driver,
+		url: "jdbc:mysql://localhost:3306/$database", userid: userid, password: password,
+		onerror: 'abort', classpath: configurations.db.asPath)
+}
+
+task dbtest << {
+	runSql 'db/bootstrap.sql', 'sdm_warehouse'
+	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
+}
+
+task startServer << {
+	ant.echo(message: 'Starting server')
+	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
 		configuration {
-			property(name: "cargo.servlet.port", value: "8080")
+			property(name: "cargo.servlet.port", value: "8081")
 			property(name: "cargo.logging", value: "high")
 			deployable(type: "war", file: "subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "importer")
@@ -61,4 +80,21 @@ task startServer {
 			}
 		}
 	}
+}
+
+task integrationTest(type: Test) {
+	include '**/*IntegrationTest.*'
+ }
+ 
+test {
+	exclude '**/*IntegrationTest.*'
+}
+
+task hello << {
+	ant.echo(message: 'hello from Ant')
+}
+
+task stopServer << {
+	ant.echo(message: 'Stopping server')
+	ant.cargo(refId: "ig-server", action: "stop")
 }
