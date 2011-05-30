@@ -57,20 +57,19 @@ ant.taskdef(resource: 'cargo.tasks', classpath: configurations.cargo.asPath)
 def runSql(sqlFile, database) {
 	driver = 'com.mysql.jdbc.Driver'
 	userid = 'root'
-	password: ''
+	password = ''
 	ant.sql(src: sqlFile, print: true, driver: driver,
 		url: "jdbc:mysql://localhost:3306/$database", userid: userid, password: password,
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
-task dbtest << {
+task initDb << {
 	runSql 'db/bootstrap.sql', 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }
 
 task startServer << {
-	ant.echo(message: 'Starting server')
-	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "true") {
+	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
 		extraClasspath(path: configurations.tomcat.asPath)
 		configuration {
@@ -90,6 +89,14 @@ task startServer << {
 	}
 }
 
+task loadData << {
+	copy {
+		from "$rootDir/subprojects/importer/src/test/resources/data/cpr/testEtablering/D100313.L431102"
+		into '/pack/stamdata/input/cpr/input/'
+	}
+	sleep 2000
+}
+
 task integrationTest(type: Test) {
 	include '**/*IntegrationTest.*'
 }
@@ -98,11 +105,6 @@ test {
 	exclude '**/*IntegrationTest.*'
 }
 
-task hello << {
-	ant.echo(message: 'hello from Ant')
-}
-
 task stopServer << {
-	ant.echo(message: 'Stopping server')
 	ant.cargo(refId: "ig-server", action: "stop")
 }

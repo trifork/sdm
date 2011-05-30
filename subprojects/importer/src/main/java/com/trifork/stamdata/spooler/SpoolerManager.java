@@ -49,14 +49,14 @@ import com.trifork.stamdata.config.Configuration;
  */
 public class SpoolerManager {
 
-	private static final int DELAY_BEFORE_START_MILLIS = 10 * 1000;
+	private static final int DELAY_BEFORE_START_MILLIS = Configuration.getInt("inputfile.polling.initialDelay") * 1000;
+	private static final int POLLING_INTERVAL_MILLIS = Configuration.getInt("inputfile.polling.interval") * 1000;
 
 	private static final Logger logger = LoggerFactory.getLogger(SpoolerManager.class);
 
 	Map<String, FileSpoolerImpl> spoolers = new HashMap<String, FileSpoolerImpl>();
 	Map<String, JobSpoolerImpl> jobSpoolers = new HashMap<String, JobSpoolerImpl>();
 
-	private static final int POLLING_INTERVAL_SECONDS = Configuration.getInt("inputfile.polling.interval");
 	private Timer timer = new Timer(true);
 
 	private List<JobSpoolerImpl> jobQueue = Collections.synchronizedList(new LinkedList<JobSpoolerImpl>());
@@ -82,7 +82,7 @@ public class SpoolerManager {
 		logger.info("The following job spoolers are configured: " + jobSpoolerSetup);
 
 		TimerTask pollTask = new PollingTask();
-		timer.schedule(pollTask, DELAY_BEFORE_START_MILLIS, POLLING_INTERVAL_SECONDS * 1000);
+		timer.schedule(pollTask, DELAY_BEFORE_START_MILLIS, POLLING_INTERVAL_MILLIS);
 
 		if (jobSpoolerSetup != null && jobSpoolerSetup.length() != 0) {
 			for (String jobSpoolerName : jobSpoolerSetup.split(",")) {
