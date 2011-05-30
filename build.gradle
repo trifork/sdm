@@ -37,6 +37,7 @@ allprojects {
 	// You can use 'gradle -t' to see a list of availible tasks.
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
+    apply plugin: 'idea2'
 
 	defaultTasks 'build'
 
