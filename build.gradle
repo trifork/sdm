@@ -36,6 +36,7 @@ allprojects {
 	// You can use 'gradle eclipse' to generate eclipse project files.
 	// You can use 'gradle -t' to see a list of availible tasks.
 	apply plugin: 'eclipse'
+	apply plugin: 'idea'
 
 	defaultTasks 'build'
 
