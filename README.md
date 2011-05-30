@@ -39,6 +39,13 @@ get everything up and running.
     
     will run all the tests in the importer project. 
     
+	The following will run a "real" integration test, which will create a new
+	database instance ("sdm_warehouse_ig"), start up a Tomcat instance with
+	two of the sub-projects ("importer" and "lookup"), load some data, and
+	check that this data is available through a REST API:
+	
+        % ./gradlew integration-test:doAll
+
     Apart from running tests you can also check the health of the project by
     calling the 'check' task:
     
