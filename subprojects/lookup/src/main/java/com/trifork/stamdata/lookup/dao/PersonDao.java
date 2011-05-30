@@ -13,6 +13,7 @@ import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
+import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 
 public class PersonDao {
 
@@ -29,7 +30,8 @@ public class PersonDao {
 		Statsborgerskab statsborgerskab = getCurrentRecordByCpr(Statsborgerskab.class, cpr);
 		Foedselsregistreringsoplysninger fr = getCurrentRecordByCpr(Foedselsregistreringsoplysninger.class, cpr);
 		Civilstand civilstand = getCurrentRecordByCpr(Civilstand.class, cpr);
-		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand);
+		Udrejseoplysninger udrejseoplysninger = getCurrentRecordByCpr(Udrejseoplysninger.class, cpr);
+		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger);
 	}
 	
 	private <T> T getCurrentRecordByCpr(Class<T> entityType, String cpr) {

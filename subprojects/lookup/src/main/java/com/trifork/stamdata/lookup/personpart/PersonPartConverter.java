@@ -13,12 +13,15 @@ import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.RegisterOplysningType;
 import oio.sagdok.person._1_0.RegistreringType;
 import oio.sagdok.person._1_0.TilstandListeType;
+import oio.sagdok.person._1_0.VerdenAdresseType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
+import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 
+import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
@@ -102,7 +105,26 @@ public class PersonPartConverter {
 
 	private AdresseType createAdresseType(CurrentPersonData person) {
 		AdresseType result = new AdresseType();
-		result.setDanskAdresse(createDanskAdresseType(person));
+		if(person.getUdrejseoplysninger() == null) {
+			result.setDanskAdresse(createDanskAdresseType(person));
+		}
+		else {
+			result.setVerdenAdresse(createVerdenAdresse(person.getUdrejseoplysninger()));
+		}
+		return result;
+	}
+
+	private VerdenAdresseType createVerdenAdresse(
+			Udrejseoplysninger udrejseoplysninger) {
+		VerdenAdresseType result = new VerdenAdresseType();
+		ForeignAddressStructureType address = new ForeignAddressStructureType();
+		result.setForeignAddressStructure(address);
+		address.setCountryIdentificationCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.IMK, udrejseoplysninger.udrejseLandekode));
+		address.setPostalAddressFirstLineText(udrejseoplysninger.udlandsadresse1);
+		address.setPostalAddressSecondLineText(udrejseoplysninger.udlandsadresse2);
+		address.setPostalAddressThirdLineText(udrejseoplysninger.udlandsadresse3);
+		address.setPostalAddressFourthLineText(udrejseoplysninger.udlandsadresse4);
+		address.setPostalAddressFifthLineText(udrejseoplysninger.udlandsadresse5);
 		return result;
 	}
 

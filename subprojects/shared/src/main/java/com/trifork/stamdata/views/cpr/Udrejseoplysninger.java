@@ -55,31 +55,42 @@ public class Udrejseoplysninger extends View {
 	protected BigInteger recordID;
 
 	@XmlElement(required = true)
-	protected String cpr;
+	public String cpr;
 
 	@XmlElement(required = true)
-	protected String udrejseLandekode;
+	public String udrejseLandekode;
 
 	@XmlElement(required = true)
-	protected Date udrejsedato;
+	public Date udrejsedato;
 
-	protected String udrejsedatoUsikkerhedsmarkering;
+	public String udrejsedatoUsikkerhedsmarkering;
 
-	protected String udlandsadresse1;
-	protected String udlandsadresse2;
-	protected String udlandsadresse3;
-	protected String udlandsadresse4;
-	protected String udlandsadresse5;
+	public String udlandsadresse1;
+	public String udlandsadresse2;
+	public String udlandsadresse3;
+	public String udlandsadresse4;
+	public String udlandsadresse5;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
-	protected Date modifiedDate;
+	public Date modifiedDate;
+
+	@XmlTransient
+	public String modifiedBy;
+
+	@XmlTransient
+	@Temporal(TIMESTAMP)
+	public Date createdDate;
+
+	@XmlTransient
+	public String createdBy;
 
 	@Temporal(TIMESTAMP)
-	protected Date validFrom;
+	public Date validFrom;
 
 	@Temporal(TIMESTAMP)
-	protected Date validTo;
+	public Date validTo;
+
 
 	@Override
 	public String getId() {
