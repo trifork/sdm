@@ -6,15 +6,18 @@ import java.util.Date;
 
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
+import com.trifork.stamdata.views.cpr.Statsborgerskab;
 
 public class CurrentPersonData {
 
 	private final Person person;
 	private final Folkekirkeoplysninger folkekirkeoplysninger;
+	private final Statsborgerskab statsborgerskab;
 
-	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger) {
+	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
+		this.statsborgerskab = statsborgerskab;
 	}
 	
 	public Date getValidFrom() {
@@ -63,5 +66,11 @@ public class CurrentPersonData {
 	public boolean getMedlemAfFolkekirken() {
 		return folkekirkeoplysninger != null &&
 		Arrays.asList("F", "M", "S").contains(folkekirkeoplysninger.forholdsKode);
+	}
+	public String getStatsborgerskab() {
+		if(statsborgerskab == null) {
+			return null;
+		}
+		return statsborgerskab.landekode;
 	}
 }

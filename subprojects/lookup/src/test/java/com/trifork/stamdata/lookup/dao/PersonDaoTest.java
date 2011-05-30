@@ -1,6 +1,7 @@
 package com.trifork.stamdata.lookup.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import com.trifork.stamdata.replication.DatabaseHelper;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
+import com.trifork.stamdata.views.cpr.Statsborgerskab;
 
 public class PersonDaoTest {
 	private static DatabaseHelper db;
@@ -22,7 +24,7 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class);
+		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -58,6 +60,13 @@ public class PersonDaoTest {
 	}
 	
 	@Test
+	public void getsStatsborgerskab() {
+		session.save(statsborgerskab("1234"));
+		CurrentPersonData person = dao.get("1020304050");
+		assertEquals("1234", person.getStatsborgerskab());
+	}
+	
+	@Test
 	public void getsNewestPersonRecordIfNoRecordIsInTheFuture() {
 		session.save(person(at(2005, Calendar.JANUARY, 5)));
 		session.save(person(at(2010, Calendar.FEBRUARY, 10)));
@@ -86,6 +95,19 @@ public class PersonDaoTest {
 		result.validFrom = validFrom;
 		result.modifiedDate = validFrom;
 		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		return result;
+	}
+	
+	private Statsborgerskab statsborgerskab(String landekode) {
+		Statsborgerskab result = new Statsborgerskab();
+		result.cpr = "1020304050";
+		result.landekode = landekode;
+		result.modifiedBy = "AHJ";
+		result.createdBy = "AHJ";
+		result.validFrom = at(2005, Calendar.JANUARY, 5);
+		result.modifiedDate = result.validFrom;
+		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.statsborgerskabstartdatoUsikkerhedsmarkering = "";
 		return result;
 	}
 	

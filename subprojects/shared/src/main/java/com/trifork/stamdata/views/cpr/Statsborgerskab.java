@@ -55,20 +55,30 @@ public class Statsborgerskab extends View {
 	@Column(name = "StatsborgerskabPID")
 	protected BigInteger recordID;
 	@XmlElement(required = true)
-	protected String cpr;
-	protected String landekode;
-	protected String statsborgerskabstartdatoUsikkerhedsmarkering;
+	public String cpr;
+	public String landekode;
+	public String statsborgerskabstartdatoUsikkerhedsmarkering;
+
+	@XmlTransient
+	public String modifiedBy;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
-	protected Date modifiedDate;
+	public Date modifiedDate;
 
 	@Temporal(TIMESTAMP)
-	protected Date validFrom;
+	public Date validFrom;
 
 	@Temporal(TIMESTAMP)
-	protected Date validTo;
+	public Date validTo;
 
+	@XmlTransient
+	@Temporal(TIMESTAMP)
+	public Date createdDate;
+
+	@XmlTransient
+	public String createdBy;
+	
 	@Override
 	public String getId() {
 		return cpr;

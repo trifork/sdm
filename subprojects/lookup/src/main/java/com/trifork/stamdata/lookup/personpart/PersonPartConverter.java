@@ -44,7 +44,7 @@ public class PersonPartConverter {
 	private CprBorgerType createCprBorgerType(CurrentPersonData person) {
 		CprBorgerType result = new CprBorgerType();
 		result.setPersonCivilRegistrationIdentifier(person.getCprNumber());
-		result.setPersonNationalityCode(createCountryIdentificationCodeType(person));
+		result.setPersonNationalityCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.IMK, person.getStatsborgerskab()));
 		result.setFolkeregisterAdresse(createAdresseType(person));
 		
 		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
@@ -86,7 +86,8 @@ public class PersonPartConverter {
 		result.setDistrictSubdivisionIdentifier(contentsOrNull(person.getBynavn()));
 		result.setPostCodeIdentifier("" + person.getPostnummer());
 		result.setDistrictName(person.getPostdistrikt());
-		result.setCountryIdentificationCode(createCountryIdentificationCodeType(person));
+		// FIXME udfyld korrekt land
+		result.setCountryIdentificationCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, "DK"));
 		return result;
 	}
 
@@ -97,12 +98,12 @@ public class PersonPartConverter {
 		return person.getHusnummer();
 	}
 
-	private CountryIdentificationCodeType createCountryIdentificationCodeType(CurrentPersonData person) {
+	private CountryIdentificationCodeType createCountryIdentificationCodeType(CountryIdentificationSchemeType scheme, String code) {
 		CountryIdentificationCodeType result = new CountryIdentificationCodeType();
 
 		// TODO: Bare de mest gængse værdier p.t. Skal selvfølgelig hentes rigtigt.
-		result.setScheme(CountryIdentificationSchemeType.ISO_3166_ALPHA_2);
-		result.setValue("DK");
+		result.setScheme(scheme);
+		result.setValue(code);
 		return result;
 	}
 	

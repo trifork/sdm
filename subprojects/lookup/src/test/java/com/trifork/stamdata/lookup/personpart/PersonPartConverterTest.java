@@ -15,6 +15,7 @@ import org.junit.Test;
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
+import com.trifork.stamdata.views.cpr.Statsborgerskab;
 
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
@@ -35,7 +36,9 @@ public class PersonPartConverterTest {
 		person.cpr = "1020304050";
 		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.forholdsKode = "M";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger);
+		Statsborgerskab sb = new Statsborgerskab();
+		sb.landekode = "1234";
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, sb);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -46,16 +49,12 @@ public class PersonPartConverterTest {
 		assertFalse(cprBorger.isTelefonNummerBeskyttelseIndikator());
 		assertFalse(cprBorger.isForskerBeskyttelseIndikator());
 		assertTrue(cprBorger.isFolkekirkeMedlemIndikator());
-		
-		CountryIdentificationCodeType nationalityCode = cprBorger.getPersonNationalityCode();
-		assertEquals(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, nationalityCode.getScheme());
-		assertEquals("DK", nationalityCode.getValue());
 	}
 	
 	@Test
 	public void fillsOutDanishAddress() {
 		Person person = createValidPerson();
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -98,7 +97,7 @@ public class PersonPartConverterTest {
 		// check not member
 		Folkekirkeoplysninger fo = new Folkekirkeoplysninger();
 		fo.forholdsKode = "U"; // uden for folkekirken
-		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo);
+		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null);
 		PersonType personType = converter.convert(currentPerson);
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertFalse(cprBorger.isFolkekirkeMedlemIndikator());
@@ -108,5 +107,18 @@ public class PersonPartConverterTest {
 		personType = converter.convert(currentPerson);
 		cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertTrue(cprBorger.isFolkekirkeMedlemIndikator());
+	}
+	
+	@Test
+	public void fillsOutNationality() {
+		Statsborgerskab sb = new Statsborgerskab();
+		sb.landekode = "1234";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb);
+		PersonType personType = converter.convert(cp);
+		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		CountryIdentificationCodeType personNationalityCode = cprBorger.getPersonNationalityCode();
+		assertEquals("1234", personNationalityCode.getValue());
+		assertEquals(CountryIdentificationSchemeType.IMK, personNationalityCode.getScheme());
+		
 	}
 }
