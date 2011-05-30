@@ -19,7 +19,7 @@ public class DummyIntegrationTest {
 		Set<String> texts = new HashSet<String>();
 		
 		new DummyTwoWaySslSecurityHandler();
-		URLConnection connection = new URL("https://localhost:8443/lookup/person/0708610089").openConnection();
+		URLConnection connection = new URL("https://localhost:8444/lookup/person/0708610089").openConnection();
 		XMLInputFactory readerFactory = XMLInputFactory.newInstance();
 		XMLEventReader reader = readerFactory.createXMLEventReader(connection.getInputStream(), "UTF-8");
 		try {

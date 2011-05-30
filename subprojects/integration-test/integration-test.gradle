@@ -24,6 +24,7 @@
 configurations {
 	db
 	cargo
+	tomcat
 }
 
 dependencies {
@@ -47,6 +48,8 @@ dependencies {
 		exclude module: 'cargo-core-container-orion'
 		exclude module: 'cargo-core-container-weblogic'
 	}
+
+	tomcat libs.hibernate_entitymanager
 }
 
 ant.taskdef(resource: 'cargo.tasks', classpath: configurations.cargo.asPath)
@@ -67,11 +70,15 @@ task dbtest << {
 
 task startServer << {
 	ant.echo(message: 'Starting server')
-	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
+	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "true") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
+		extraClasspath(path: configurations.tomcat.asPath)
 		configuration {
+			property(name: "tomcat-conf-home", value: "$rootDir/subprojects/integration-test/tomcat")
 			property(name: "cargo.servlet.port", value: "8081")
+			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.logging", value: "high")
+			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
 			deployable(type: "war", file: "subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "importer")
 			}
@@ -84,7 +91,7 @@ task startServer << {
 
 task integrationTest(type: Test) {
 	include '**/*IntegrationTest.*'
- }
+}
  
 test {
 	exclude '**/*IntegrationTest.*'
