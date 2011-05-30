@@ -1,8 +1,9 @@
 package com.trifork.stamdata.lookup.personpart;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
@@ -13,7 +14,6 @@ import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
 import oio.sagdok.person._1_0.PersonType;
-import oio.sagdok.person._1_0.UdenlandskBorgerType;
 import oio.sagdok.person._1_0.VerdenAdresseType;
 
 import org.junit.Before;
@@ -48,9 +48,7 @@ public class PersonPartConverterTest {
 		person.cpr = "1020304050";
 		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.forholdsKode = "M";
-		Statsborgerskab sb = new Statsborgerskab();
-		sb.landekode = "1234";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, sb, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -98,7 +96,9 @@ public class PersonPartConverterTest {
 		uo.udlandsadresse4 = "line4";
 		uo.udlandsadresse5 = "line5";
 		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, uo);
+
 		PersonType personType = converter.convert(currentPerson);
+		
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		AdresseType adresseType = cprBorger.getFolkeregisterAdresse();
 		assertNull(adresseType.getDanskAdresse());
@@ -114,23 +114,6 @@ public class PersonPartConverterTest {
 		assertEquals("line4", foreignAddress.getPostalAddressFourthLineText());
 		assertEquals("line5", foreignAddress.getPostalAddressFifthLineText());
 	}
-
-	private Person createValidPerson() {
-		Person person = new Person();
-		person.cpr = "1020304050";
-		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
-		person.lokalitet = "Scandinavian Congress Center";
-		person.vejnavn = "Margrethepladsen";
-		person.husnummer = "4";
-		person.bygningsnummer = "1";
-		person.etage = "3";
-		person.sideDoerNummer = "th.";
-		person.postnummer = BigInteger.valueOf(8000);
-		person.bynavn = "Centrum af Århus";
-		person.postdistrikt = "Århus C";
-		return person;
-	}
-	
 	
 	@Test
 	public void fillsOutMemberOfChurch() {
@@ -154,12 +137,13 @@ public class PersonPartConverterTest {
 		Statsborgerskab sb = new Statsborgerskab();
 		sb.landekode = "1234";
 		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null, null);
+
 		PersonType personType = converter.convert(cp);
+
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		CountryIdentificationCodeType personNationalityCode = cprBorger.getPersonNationalityCode();
 		assertEquals("1234", personNationalityCode.getValue());
 		assertEquals(CountryIdentificationSchemeType.IMK, personNationalityCode.getScheme());
-		
 	}
 	
 	@Test
@@ -180,8 +164,26 @@ public class PersonPartConverterTest {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "U";
 		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null);
+
 		PersonType personType = converter.convert(cp);
+
 		CivilStatusKodeType civilStatusKode = personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
 		assertEquals(CivilStatusKodeType.UGIFT, civilStatusKode);
+	}
+
+	private Person createValidPerson() {
+		Person person = new Person();
+		person.cpr = "1020304050";
+		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
+		person.lokalitet = "Scandinavian Congress Center";
+		person.vejnavn = "Margrethepladsen";
+		person.husnummer = "4";
+		person.bygningsnummer = "1";
+		person.etage = "3";
+		person.sideDoerNummer = "th.";
+		person.postnummer = BigInteger.valueOf(8000);
+		person.bynavn = "Centrum af Århus";
+		person.postdistrikt = "Århus C";
+		return person;
 	}
 }
