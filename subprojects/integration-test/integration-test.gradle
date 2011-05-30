@@ -78,6 +78,7 @@ task startServer << {
 			property(name: "cargo.servlet.port", value: "8081")
 			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.logging", value: "high")
+			property(name: "cargo.jvmargs", value: "-Dsdm.environment=default,integrationtest")
 			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
 			deployable(type: "war", file: "subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "importer")
