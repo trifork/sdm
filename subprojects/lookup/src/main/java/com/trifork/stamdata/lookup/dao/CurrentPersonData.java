@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
@@ -13,11 +14,13 @@ public class CurrentPersonData {
 	private final Person person;
 	private final Folkekirkeoplysninger folkekirkeoplysninger;
 	private final Statsborgerskab statsborgerskab;
+	private final Foedselsregistreringsoplysninger foedselsregistreringsoplysninger;
 
-	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab) {
+	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab, Foedselsregistreringsoplysninger foedselsregistreringsoplysninger) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
 		this.statsborgerskab = statsborgerskab;
+		this.foedselsregistreringsoplysninger = foedselsregistreringsoplysninger;
 	}
 	
 	public Date getValidFrom() {
@@ -72,5 +75,17 @@ public class CurrentPersonData {
 			return null;
 		}
 		return statsborgerskab.landekode;
+	}
+	public String getFoedselsregistreringsstedkode() {
+		if(foedselsregistreringsoplysninger == null) {
+			return null;
+		}
+		return foedselsregistreringsoplysninger.foedselsregistreringsstedkode;
+	}
+	public String getFoedselsregistreringstekst() {
+		if(foedselsregistreringsoplysninger == null) {
+			return null;
+		}
+		return foedselsregistreringsoplysninger.foedselsregistreringstekst;
 	}
 }

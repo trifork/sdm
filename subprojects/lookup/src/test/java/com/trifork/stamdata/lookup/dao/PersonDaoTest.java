@@ -13,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
@@ -24,7 +25,7 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class);
+		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -64,6 +65,14 @@ public class PersonDaoTest {
 		session.save(statsborgerskab("1234"));
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1234", person.getStatsborgerskab());
+	}
+	
+	@Test
+	public void getsFoedselsregistreringsoplysninger() {
+		session.save(foedselsregistreringsoplysninger("1234", "foedselsTekst"));
+		CurrentPersonData person = dao.get("1020304050");
+		assertEquals("1234", person.getFoedselsregistreringsstedkode());
+		assertEquals("foedselsTekst", person.getFoedselsregistreringstekst());
 	}
 	
 	@Test
@@ -115,6 +124,19 @@ public class PersonDaoTest {
 		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
 		result.cpr = "1020304050";
 		result.forholdsKode = kode;
+		result.modifiedBy = "AHJ";
+		result.createdBy = "AHJ";
+		result.validFrom = at(2005, Calendar.JANUARY, 5);
+		result.modifiedDate = result.validFrom;
+		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		return result;
+	}
+	
+	private Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String kode, String tekst) {
+		Foedselsregistreringsoplysninger result = new Foedselsregistreringsoplysninger();
+		result.cpr = "1020304050";
+		result.foedselsregistreringsstedkode = kode;
+		result.foedselsregistreringstekst = tekst;
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
 		result.validFrom = at(2005, Calendar.JANUARY, 5);
