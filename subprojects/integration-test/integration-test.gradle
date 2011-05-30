@@ -63,6 +63,14 @@ def runSql(sqlFile, database) {
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
+task doAll << {
+	initDb.execute()
+	startServer.execute()
+	loadData.execute()
+	integrationTest.execute()
+	stopServer.execute()
+}
+
 task initDb << {
 	runSql 'db/bootstrap.sql', 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
