@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 import oio.sagdok.person._1_0.AdresseType;
 import oio.sagdok.person._1_0.CivilStatusKodeType;
@@ -166,8 +167,7 @@ public class PersonPartConverterTest {
 		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null);
 
 		PersonType personType = converter.convert(cp);
-
-		CivilStatusKodeType civilStatusKode = personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
+		CivilStatusKodeType civilStatusKode = getCivilStatusKode(personType);
 		assertEquals(CivilStatusKodeType.UGIFT, civilStatusKode);
 	}
 
@@ -185,5 +185,30 @@ public class PersonPartConverterTest {
 		person.bynavn = "Centrum af Århus";
 		person.postdistrikt = "Århus C";
 		return person;
+	}
+
+	private CivilStatusKodeType getCivilStatusKode(PersonType personType) {
+		return personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
+	}
+
+	@Test
+	public void createsCorrectCivilstatusWhenSeparated() {
+		Civilstand cs = new Civilstand();
+		cs.civilstandskode = "G";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.GIFT, getCivilStatusKode(personType));
+
+		cs.separation = new Date();
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
+
+		cs.civilstandskode = "P";
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
+
+		cs.civilstandskode = "U";
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.UGIFT, getCivilStatusKode(personType));
 	}
 }

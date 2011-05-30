@@ -67,7 +67,7 @@ public class Civilstand extends View {
 	protected Date aegtefaelleFoedselsdato;
 
 	protected String aegtefaellenavn;
-	protected Date separation;
+	public Date separation;
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")

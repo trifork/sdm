@@ -101,6 +101,10 @@ public class CurrentPersonData {
 		return civilstand.civilstandskode;
 	}
 
+	public Date getSeparationsdato() {
+		return civilstand.separation;
+	}
+
 	public Udrejseoplysninger getUdrejseoplysninger() {
 		return udrejseoplysninger;
 	}

@@ -59,7 +59,7 @@ public class PersonPartConverter {
 		put("L", CivilStatusKodeType.LAENGSTLEVENDE);
 	}};
 
-	private CivilStatusType createCivilStatusType(CurrentPersonData person) {
+	/*package*/ CivilStatusType createCivilStatusType(CurrentPersonData person) {
 		String civilstandskode = person.getCivilstandskode();
 		if(civilstandskode == null || civilstandskode.isEmpty()) {
 			return null;
@@ -69,7 +69,15 @@ public class PersonPartConverter {
 			logger.error("Ukendt civilstandskode: {}", civilstandskode);
 			return null;
 		}
-		
+		// Der er ikke nogen civilstatuskode for separerede i CPR
+		// vi udfylder feltet hvis der er en separationsdato i civilstandsrecorden og personen enten er gift eller separeret
+		// Spørgsmålet er om dette er korrekt i alle tilfælde, eksempelvis hvis en separation annuleres?
+		if(person.getSeparationsdato() != null && (civilstandskode.equals("G")|| civilstandskode.equals("P"))) {
+			kode = CivilStatusKodeType.SEPARERET;
+		}
+		else {
+			logger.warn("Separationsdato angivet, men personen er ikke gift eller registreret partner. cpr={}", person.getCprNumber());
+		}
 		CivilStatusType result = new CivilStatusType();
 		result.setCivilStatusKode(kode);
 		return result;
