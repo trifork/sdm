@@ -10,3 +10,6 @@ access.*
 subprojects/importer/sdm_log
 .checkstyle
 subprojects/integration-test/logs/*
+*.iml
+*.ipr
+*.iws
