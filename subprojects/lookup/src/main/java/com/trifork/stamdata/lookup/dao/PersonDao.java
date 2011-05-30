@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
+import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
@@ -27,7 +28,8 @@ public class PersonDao {
 		Folkekirkeoplysninger folkekirkeoplysninger = getCurrentRecordByCpr(Folkekirkeoplysninger.class, cpr);
 		Statsborgerskab statsborgerskab = getCurrentRecordByCpr(Statsborgerskab.class, cpr);
 		Foedselsregistreringsoplysninger fr = getCurrentRecordByCpr(Foedselsregistreringsoplysninger.class, cpr);
-		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr);
+		Civilstand civilstand = getCurrentRecordByCpr(Civilstand.class, cpr);
+		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand);
 	}
 	
 	private <T> T getCurrentRecordByCpr(Class<T> entityType, String cpr) {

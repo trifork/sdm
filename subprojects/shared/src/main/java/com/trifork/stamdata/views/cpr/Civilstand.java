@@ -60,9 +60,9 @@ public class Civilstand extends View {
 	protected String cpr;
 
 	@XmlElement(required = true)
-	protected String civilstandskode;
+	public String civilstandskode;
 
-	protected String aegtefaellePersonnummer;
+	public String aegtefaellePersonnummer;
 
 	protected Date aegtefaelleFoedselsdato;
 

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 import java.math.BigInteger;
 
 import oio.sagdok.person._1_0.AdresseType;
+import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
@@ -17,6 +18,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
+import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
@@ -43,7 +45,7 @@ public class PersonPartConverterTest {
 		folkekirkeoplysninger.forholdsKode = "M";
 		Statsborgerskab sb = new Statsborgerskab();
 		sb.landekode = "1234";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, sb, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, sb, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -59,7 +61,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutDanishAddress() {
 		Person person = createValidPerson();
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -102,7 +104,7 @@ public class PersonPartConverterTest {
 		// check not member
 		Folkekirkeoplysninger fo = new Folkekirkeoplysninger();
 		fo.forholdsKode = "U"; // uden for folkekirken
-		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null, null);
 		PersonType personType = converter.convert(currentPerson);
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertFalse(cprBorger.isFolkekirkeMedlemIndikator());
@@ -118,7 +120,7 @@ public class PersonPartConverterTest {
 	public void fillsOutNationality() {
 		Statsborgerskab sb = new Statsborgerskab();
 		sb.landekode = "1234";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null);
 		PersonType personType = converter.convert(cp);
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		CountryIdentificationCodeType personNationalityCode = cprBorger.getPersonNationalityCode();
@@ -135,8 +137,18 @@ public class PersonPartConverterTest {
 		Foedselsregistreringsoplysninger fr = new Foedselsregistreringsoplysninger();
 		fr.foedselsregistreringsstedkode = "foedselsKode";
 		fr.foedselsregistreringstekst = "foedselsTekst";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr, null);
 		PersonType personType = converter.convert(cp);
 		EgenskabType egenskabType = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0);
+	}
+	
+	@Test
+	public void fillsOutCivilstand() {
+		Civilstand cs = new Civilstand();
+		cs.civilstandskode = "U";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs);
+		PersonType personType = converter.convert(cp);
+		CivilStatusKodeType civilStatusKode = personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
+		assertEquals(CivilStatusKodeType.UGIFT, civilStatusKode);
 	}
 }
