@@ -44,7 +44,7 @@ get everything up and running.
 	two of the sub-projects ("importer" and "lookup"), load some data, and
 	check that this data is available through a REST API:
 	
-        % ./gradlew integration-test:doAll
+        % ./gradlew integrationTest
 
     Apart from running tests you can also check the health of the project by
     calling the 'check' task:

@@ -63,11 +63,11 @@ def runSql(sqlFile, database) {
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
-task doAll << {
+task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:clean', ':integration-test:build']) << {
 	initDb.execute()
 	startServer.execute()
 	loadData.execute()
-	integrationTest.execute()
+	runIntegrationTest.execute()
 	stopServer.execute()
 }
 
@@ -105,7 +105,7 @@ task loadData << {
 	sleep 2000
 }
 
-task integrationTest(type: Test) {
+task runIntegrationTest(type: Test) {
 	include '**/*IntegrationTest.*'
 }
  
