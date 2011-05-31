@@ -275,6 +275,12 @@ public class PersonPartConverterTest {
 		personType = converter.convert(cp);
 		assertEquals(CivilStatusKodeType.UGIFT, getCivilStatusKode(personType));
 	}
+	
+	@Test
+	public void removesWhitespaceFromStreetBuildingIdentifier() {
+		String husnummer = "12 C";
+		assertEquals("12C", converter.createStreetBuildingIdentifier(husnummer));
+	}
 
 	private Person createValidPerson() {
 		Person person = new Person();

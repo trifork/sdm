@@ -230,7 +230,7 @@ public class PersonPartConverter {
 		result.setMailDeliverySublocationIdentifier(contentsOrNull(person.getLokalitet()));
 		result.setStreetName(person.getVejnavn());
 		result.setStreetNameForAddressingName(contentsOrNull(person.getVejnavn()));
-		result.setStreetBuildingIdentifier(createStreetBuildingIdentifier(person));
+		result.setStreetBuildingIdentifier(createStreetBuildingIdentifier(person.getHusnummer()));
 		result.setFloorIdentifier(contentsOrNull(person.getEtage()));
 		result.setSuiteIdentifier(contentsOrNull(person.getSidedoernummer()));
 		result.setDistrictSubdivisionIdentifier(contentsOrNull(person.getBynavn()));
@@ -281,7 +281,7 @@ public class PersonPartConverter {
 		result.setMailDeliverySublocationIdentifier(contentsOrNull(person.getLokalitet()));
 		result.setStreetName(person.getVejnavn());
 		result.setStreetNameForAddressingName(contentsOrNull(person.getVejnavn()));
-		result.setStreetBuildingIdentifier(createStreetBuildingIdentifier(person));
+		result.setStreetBuildingIdentifier(createStreetBuildingIdentifier(person.getHusnummer()));
 		result.setFloorIdentifier(contentsOrNull(person.getEtage()));
 		result.setSuiteIdentifier(contentsOrNull(person.getSidedoernummer()));
 		result.setDistrictSubdivisionIdentifier(contentsOrNull(person.getBynavn()));
@@ -291,8 +291,13 @@ public class PersonPartConverter {
 		return result;
 	}
 
-	private String createStreetBuildingIdentifier(CurrentPersonData person) {
-		return person.getHusnummer();
+	String createStreetBuildingIdentifier(String cprHusnummer) {
+		if(cprHusnummer == null) {
+			return null;
+		}
+		// CPR delivers this record with whitespace padded between building number and eventual letter.
+		// The OIO standard mandates that this whitespace is removed.
+		return cprHusnummer.replaceAll(" ", "");
 	}
 
 	private CountryIdentificationCodeType createCountryIdentificationCodeType(CountryIdentificationSchemeType scheme, String code) {
