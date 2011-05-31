@@ -1,4 +1,4 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,35 +9,51 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.events.XMLEvent;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.client.security.TwoWaySslSecurityHandler;
 
 public class LookupIntegrationTest {
+	@BeforeClass
+	public static void beforeClass() {
+		new IntegrationTestTwoWaySslSecurityHandler();
+	}
+	
 	@Test
-	public void dummy() throws Exception {
-		Set<String> texts = new HashSet<String>();
+	public void worksForSimplePerson() throws Exception {
+		Set<String> texts = readStringsForPerson("0708610089");
 
-		new DummyTwoWaySslSecurityHandler();
-		URLConnection connection = new URL("https://localhost:8444/lookup/person/0708610089").openConnection();
+		assertTrue("No CPR number in output: " + texts, texts.contains("0708610089"));
+	}
+	
+	@Test
+	public void worksForUmyndiggoerelse() throws Exception {
+		Set<String> texts = readStringsForPerson("0709614126");
+
+		assertTrue("No CPR number in output: " + texts, texts.contains("URN:CPR:0904414131"));
+	}
+
+	private Set<String> readStringsForPerson(String cpr) throws Exception {
+		URLConnection connection = new URL("https://localhost:8444/lookup/person/" + cpr).openConnection();
 		XMLInputFactory readerFactory = XMLInputFactory.newInstance();
 		XMLEventReader reader = readerFactory.createXMLEventReader(connection.getInputStream(), "UTF-8");
+		Set<String> result = new HashSet<String>();
 		try {
 			while (reader.hasNext()) {
 				XMLEvent event = reader.nextEvent();
 				if (event.isCharacters()) {
-					texts.add(event.asCharacters().getData());
+					result.add(event.asCharacters().getData());
 				}
 			}
 		} finally {
 			reader.close();
 		}
-
-		assertTrue("No CPR number in output: " + texts, texts.contains("0708610089"));
+		return result;
 	}
 
 
-	static class DummyTwoWaySslSecurityHandler extends TwoWaySslSecurityHandler {
+	static class IntegrationTestTwoWaySslSecurityHandler extends TwoWaySslSecurityHandler {
 		@Override
 		protected String getTrustStorePassword() {
 			return "Test1234";

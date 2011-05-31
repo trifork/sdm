@@ -7,13 +7,19 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
+import oio.sagdok._2_0.PersonFlerRelationType;
+import oio.sagdok._2_0.TidspunktType;
 import oio.sagdok.person._1_0.AdresseType;
 import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
+import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.VerdenAdresseType;
 
@@ -22,12 +28,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
+import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
@@ -49,7 +57,7 @@ public class PersonPartConverterTest {
 		person.setCpr("1020304050");
 		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.forholdsKode = "M";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -65,7 +73,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutDanishAddress() {
 		Person person = createValidPerson();
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -96,7 +104,7 @@ public class PersonPartConverterTest {
 		uo.udlandsadresse3 = "line3";
 		uo.udlandsadresse4 = "line4";
 		uo.udlandsadresse5 = "line5";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, uo);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, uo, null, null);
 
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -121,7 +129,7 @@ public class PersonPartConverterTest {
 		// check not member
 		Folkekirkeoplysninger fo = new Folkekirkeoplysninger();
 		fo.forholdsKode = "U"; // uden for folkekirken
-		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null, null, null, null, null);
 		PersonType personType = converter.convert(currentPerson);
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertFalse(cprBorger.isFolkekirkeMedlemIndikator());
@@ -137,7 +145,7 @@ public class PersonPartConverterTest {
 	public void fillsOutNationality() {
 		Statsborgerskab sb = new Statsborgerskab();
 		sb.landekode = "1234";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 
@@ -155,7 +163,7 @@ public class PersonPartConverterTest {
 		Foedselsregistreringsoplysninger fr = new Foedselsregistreringsoplysninger();
 		fr.foedselsregistreringsstedkode = "foedselsKode";
 		fr.foedselsregistreringstekst = "foedselsTekst";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		EgenskabType egenskabType = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0);
 	}
@@ -164,11 +172,78 @@ public class PersonPartConverterTest {
 	public void fillsOutCivilstand() {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "U";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 		CivilStatusKodeType civilStatusKode = getCivilStatusKode(personType);
 		assertEquals(CivilStatusKodeType.UGIFT, civilStatusKode);
+	}
+	
+	@Test
+	public void fillsOutRetligHandleevneVaergeForPerson() {
+		UmyndiggoerelseVaergeRelation umyndiggoerelse = createUmyndiggoerelseVaergeRelation(null, "1020304050", at(2005, Calendar.JANUARY, 25), at(2020, Calendar.MARCH, 17));
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null);
+
+		PersonType personType = converter.convert(cp);
+		
+		PersonRelationType personRelationType = personType.getRegistrering().get(0).getRelationListe().getRetligHandleevneVaergeForPersonen().get(0);
+		assertEquals("URN:CPR:1020304050", personRelationType.getReferenceID().getURNIdentifikator());
+		assertTidspunktTypeEquals(at(2005, Calendar.JANUARY, 25), personRelationType.getVirkning().getFraTidspunkt());
+		assertTidspunktTypeEquals(at(2020, Calendar.MARCH, 17), personRelationType.getVirkning().getTilTidspunkt());
+		assertNotNull(personRelationType.getVirkning().getAktoerRef()); // Field is required
+		assertEquals("Linje 1\n\n\nLinje 4\n", personRelationType.getCommentText());
+	}
+	
+	@Test
+	public void leavesOutTimestampsIfUndefined() {
+		UmyndiggoerelseVaergeRelation umyndiggoerelse = createUmyndiggoerelseVaergeRelation(null, "1020304050", DateUtils.PAST.getTime(), DateUtils.FUTURE.getTime());
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null);
+
+		PersonType personType = converter.convert(cp);
+		
+		PersonRelationType personRelationType = personType.getRegistrering().get(0).getRelationListe().getRetligHandleevneVaergeForPersonen().get(0);
+		assertNull(personRelationType.getVirkning().getFraTidspunkt());
+		assertNull(personRelationType.getVirkning().getTilTidspunkt());
+	}
+
+	@Test
+	public void fillsOutRetligHandleevneVaergeForVaerge() {
+		List<UmyndiggoerelseVaergeRelation> vaergemaal = new ArrayList<UmyndiggoerelseVaergeRelation>();
+		vaergemaal.add(createUmyndiggoerelseVaergeRelation("0102030405", null, at(2005, Calendar.AUGUST, 21), at(2011, Calendar.DECEMBER, 24))); 
+		vaergemaal.add(createUmyndiggoerelseVaergeRelation("0102030407", null, at(2005, Calendar.AUGUST, 21), at(2011, Calendar.DECEMBER, 24)));
+		
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, vaergemaal);
+		PersonType personType = converter.convert(cp);
+		
+		List<PersonFlerRelationType> retligHandleevneVaergemaalsindehaver = personType.getRegistrering().get(0).getRelationListe().getRetligHandleevneVaergemaalsindehaver();
+		assertEquals(2, retligHandleevneVaergemaalsindehaver.size());
+		PersonFlerRelationType personFlerRelationType = retligHandleevneVaergemaalsindehaver.get(0);
+		assertEquals("URN:CPR:0102030405", personFlerRelationType.getReferenceID().getURNIdentifikator());
+		assertTidspunktTypeEquals(at(2005, Calendar.AUGUST, 21), personFlerRelationType.getVirkning().getFraTidspunkt());
+		assertTidspunktTypeEquals(at(2011, Calendar.DECEMBER, 24), personFlerRelationType.getVirkning().getTilTidspunkt());
+		assertEquals("URN:Aktoer:Importer", personFlerRelationType.getVirkning().getAktoerRef().getURNIdentifikator());
+		assertEquals("Linje 1\n\n\nLinje 4\n", personFlerRelationType.getCommentText());
+	}
+
+	@Test
+	public void createsCorrectCivilstatusWhenSeparated() {
+		Civilstand cs = new Civilstand();
+		cs.civilstandskode = "G";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.GIFT, getCivilStatusKode(personType));
+
+		cs.separation = new Date();
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
+
+		cs.civilstandskode = "P";
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
+
+		cs.civilstandskode = "U";
+		personType = converter.convert(cp);
+		assertEquals(CivilStatusKodeType.UGIFT, getCivilStatusKode(personType));
 	}
 
 	private Person createValidPerson() {
@@ -187,28 +262,32 @@ public class PersonPartConverterTest {
 		return person;
 	}
 
+	private UmyndiggoerelseVaergeRelation createUmyndiggoerelseVaergeRelation(String umyndiggjortCpr, String vaergeCpr, Date from, Date to) {
+		UmyndiggoerelseVaergeRelation umyndiggoerelse = new UmyndiggoerelseVaergeRelation();
+		umyndiggoerelse.setValidFrom(from);
+		umyndiggoerelse.setValidTo(to);
+		umyndiggoerelse.setCpr(umyndiggjortCpr);
+		umyndiggoerelse.relationCpr = vaergeCpr;
+		umyndiggoerelse.RelationsTekst1 = "Linje 1";
+		umyndiggoerelse.RelationsTekst2 = "";
+		umyndiggoerelse.RelationsTekst4 = "Linje 4";
+		return umyndiggoerelse;
+	}
+
 	private CivilStatusKodeType getCivilStatusKode(PersonType personType) {
 		return personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
 	}
-
-	@Test
-	public void createsCorrectCivilstatusWhenSeparated() {
-		Civilstand cs = new Civilstand();
-		cs.civilstandskode = "G";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null);
-		PersonType personType = converter.convert(cp);
-		assertEquals(CivilStatusKodeType.GIFT, getCivilStatusKode(personType));
-
-		cs.separation = new Date();
-		personType = converter.convert(cp);
-		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
-
-		cs.civilstandskode = "P";
-		personType = converter.convert(cp);
-		assertEquals(CivilStatusKodeType.SEPARERET, getCivilStatusKode(personType));
-
-		cs.civilstandskode = "U";
-		personType = converter.convert(cp);
-		assertEquals(CivilStatusKodeType.UGIFT, getCivilStatusKode(personType));
+	
+	private Date at(int year, int month, int day) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.clear();
+		calendar.set(Calendar.YEAR, year);
+		calendar.set(Calendar.MONTH, month);
+		calendar.set(Calendar.DAY_OF_MONTH, day);
+		return calendar.getTime();
+	}
+	
+	private void assertTidspunktTypeEquals(Date date, TidspunktType tidspunkt) {
+		assertEquals(date, tidspunkt.getTidsstempelDatoTid().toGregorianCalendar().getTime());
 	}
 }

@@ -1,11 +1,13 @@
 package com.trifork.stamdata.lookup.dao;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.hibernate.classic.Session;
 import org.junit.After;
@@ -20,6 +22,7 @@ import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
 public class PersonDaoTest {
 	private static DatabaseHelper db;
@@ -28,7 +31,8 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class,Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class, Udrejseoplysninger.class);
+		db = new DatabaseHelper("lookup", Person.class, Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class,
+				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -106,6 +110,34 @@ public class PersonDaoTest {
 	}
 	
 	@Test
+	public void getsCurrentUmyndiggoerelseVaergeRelation() {
+		session.save(umyndiggoerelseVaergeRelation("1020304050", "5040302010", DateUtils.PAST.getTime(), at(2005, Calendar.JUNE, 15)));
+		session.save(umyndiggoerelseVaergeRelation("1020304050", "6050403020", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
+		
+		CurrentPersonData person = dao.get("1020304050");
+		assertEquals("6050403020", person.getVaerge().relationCpr);
+	}
+	
+	@Test
+	public void getsCurrentVaergemaal() {
+		session.save(umyndiggoerelseVaergeRelation("7060504030", "1020304050", DateUtils.PAST.getTime(), at(2005, Calendar.JUNE, 15)));
+		session.save(umyndiggoerelseVaergeRelation("9080706050", "1020304050", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
+		session.save(umyndiggoerelseVaergeRelation("7060504030", "1020304050", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
+		session.save(umyndiggoerelseVaergeRelation("8070605040", "1020304050", at(2100, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
+		
+		CurrentPersonData person = dao.get("1020304050");
+		assertEquals(2, person.getVaergemaal().size());
+		Set<String> vaergemaalscpr = new TreeSet<String>();
+		for (UmyndiggoerelseVaergeRelation relation : person.getVaergemaal()) {
+			vaergemaalscpr.add(relation.getCpr());
+		}
+		Set<String> expectedVaergemaalscpr = new TreeSet<String>();
+		expectedVaergemaalscpr.add("9080706050");
+		expectedVaergemaalscpr.add("7060504030");
+		assertEquals(expectedVaergemaalscpr, vaergemaalscpr);
+	}
+	
+	@Test
 	public void pastAndFutureNotModified() {
 		Folkekirkeoplysninger fo = folkekirkeoplysninger("M");
 		fo.setValidFrom(DateUtils.PAST.getTime());
@@ -119,6 +151,22 @@ public class PersonDaoTest {
 		assertNull(retrieved.getValidTo());
 	}
 	
+	private UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String cpr, String vaergeCpr, Date validFrom, Date validTo) {
+		UmyndiggoerelseVaergeRelation result = new UmyndiggoerelseVaergeRelation();
+		result.typeKode = "001";
+		result.typeTekst = "Hello world";
+		result.id = cpr + "-" + result.typeKode;
+		result.setCpr(cpr);
+		result.relationCpr = vaergeCpr;
+		result.setValidFrom(validFrom);
+		result.setValidTo(validTo);
+		result.setCreatedBy("AHJ");
+		result.setModifiedBy("AHJ");
+		result.setCreatedDate(new Date());
+		result.setModifiedDate(new Date());
+		return result;
+	}
+
 	private Person person(Date validFrom) {
 		Person result = new Person();
 		result.setCpr("1020304050");

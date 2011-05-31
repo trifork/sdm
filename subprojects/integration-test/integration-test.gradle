@@ -63,10 +63,11 @@ def runSql(sqlFile, database) {
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
-task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:clean', ':integration-test:build']) << {
+task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:build']) << {
 	initDb.execute()
-	startServer.execute()
 	loadData.execute()
+	startServer.execute()
+	sleep 2000 // For test data to be read
 	runIntegrationTest.execute()
 	stopServer.execute()
 }
@@ -80,6 +81,11 @@ task initDb << {
 task startServer << {
     logsDir = new File("$rootDir/subprojects/integration-test/logs")
     logsDir.mkdirs()
+	jvmArgs = "-Dsdm.environment=default,integrationtest"
+	debug = hasProperty('debug') ? debug : false
+	if (debug) {
+		jvmArgs = jvmArgs + " -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=3997,suspend=n,server=y"
+	}
 	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "$logsDir/output.log", log: "$logsDir/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
 		extraClasspath(path: configurations.tomcat.asPath)
@@ -88,7 +94,7 @@ task startServer << {
 			property(name: "cargo.servlet.port", value: "8081")
 			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.logging", value: "high")
-			property(name: "cargo.jvmargs", value: "-Dsdm.environment=default,integrationtest")
+			property(name: "cargo.jvmargs", value: jvmArgs)
 			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
 			deployable(type: "war", file: "$rootDir/subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "importer")
@@ -105,7 +111,6 @@ task loadData << {
 		from "$rootDir/subprojects/importer/src/test/resources/data/cpr/testEtablering/D100313.L431102"
 		into '/pack/stamdata/input/cpr/input/'
 	}
-	sleep 2000
 }
 
 task runIntegrationTest(type: Test) {

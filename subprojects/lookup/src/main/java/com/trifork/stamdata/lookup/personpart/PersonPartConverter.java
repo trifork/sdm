@@ -1,25 +1,39 @@
 package com.trifork.stamdata.lookup.personpart;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import oio.sagdok._2_0.PersonFlerRelationType;
+import oio.sagdok._2_0.TidspunktType;
+import oio.sagdok._2_0.UnikIdType;
+import oio.sagdok._2_0.VirkningType;
 import oio.sagdok.person._1_0.AdresseType;
 import oio.sagdok.person._1_0.AttributListeType;
 import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CivilStatusType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
+import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.RegisterOplysningType;
 import oio.sagdok.person._1_0.RegistreringType;
+import oio.sagdok.person._1_0.RelationListeType;
 import oio.sagdok.person._1_0.TilstandListeType;
 import oio.sagdok.person._1_0.VerdenAdresseType;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
@@ -28,7 +42,9 @@ import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
 
 public class PersonPartConverter {
-	Logger logger = LoggerFactory.getLogger(PersonPartConverter.class);
+	private static final String URN_NAMESPACE_CPR = "CPR";
+	private static final Logger logger = LoggerFactory.getLogger(PersonPartConverter.class);
+
 	public PersonType convert(CurrentPersonData person) {
 		PersonType result = new PersonType();
 		result.getRegistrering().add(createRegistreringType(person));
@@ -39,6 +55,13 @@ public class PersonPartConverter {
 		RegistreringType result = new RegistreringType();
 		result.setAttributListe(createAttributListeType(person));
 		result.setTilstandListe(createTilstandListe(person));
+		result.setRelationListe(createRelationListeType(person));
+		return result;
+	}
+
+	private AttributListeType createAttributListeType(CurrentPersonData person) {
+		AttributListeType result = new AttributListeType();
+		result.getRegisterOplysning().add(createRegisterOplysningType(person));
 		return result;
 	}
 
@@ -47,7 +70,71 @@ public class PersonPartConverter {
 		result.setCivilStatus(createCivilStatusType(person));
 		return result;
 	}
+
+	private RelationListeType createRelationListeType(CurrentPersonData person) {
+		RelationListeType result = new RelationListeType();
+		if (person.getVaerge() != null) {
+			result.getRetligHandleevneVaergeForPersonen().add(createPersonRelationTypeForVaerge(person.getVaerge()));
+		}
+		for (UmyndiggoerelseVaergeRelation vaergemaal : person.getVaergemaal()) {
+			result.getRetligHandleevneVaergemaalsindehaver().add(createPersonFlerRelationTypeForVaergemaal(vaergemaal));
+		}
+		return result;
+	}
+
+	private PersonRelationType createPersonRelationTypeForVaerge(UmyndiggoerelseVaergeRelation vaerge) {
+		PersonRelationType result = new PersonRelationType();
+		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, vaerge.relationCpr));
+		result.setVirkning(createVirkningType(vaerge.getValidFrom(), vaerge.getValidTo()));
+		result.setCommentText(joinLines(vaerge.RelationsTekst1, vaerge.RelationsTekst2, vaerge.RelationsTekst3, vaerge.RelationsTekst4, vaerge.RelationsTekst5));
+		return result;
+	}
 	
+	private PersonFlerRelationType createPersonFlerRelationTypeForVaergemaal(UmyndiggoerelseVaergeRelation vaergemaal) {
+		PersonFlerRelationType result = new PersonFlerRelationType();
+		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, vaergemaal.getCpr()));
+		result.setVirkning(createVirkningType(vaergemaal.getValidFrom(), vaergemaal.getValidTo()));
+		result.setCommentText(joinLines(vaergemaal.RelationsTekst1, vaergemaal.RelationsTekst2, vaergemaal.RelationsTekst3, vaergemaal.RelationsTekst4, vaergemaal.RelationsTekst5));
+		return result;
+	}
+
+	private String joinLines(String... lines) {
+		return StringUtils.join(lines, "\n");
+	}
+
+	private VirkningType createVirkningType(Date from, Date to) {
+		VirkningType result = new VirkningType();
+		if (from != null) {
+			result.setFraTidspunkt(createTidspunktType(from));
+		}
+		if (to != null) {
+			result.setTilTidspunkt(createTidspunktType(to));
+		}
+		result.setAktoerRef(createUnikIdType("Aktoer", "Importer")); // Field is required
+		return result;
+	}
+
+	private UnikIdType createUnikIdType(String nameSpace, String cpr) {
+		UnikIdType result = new UnikIdType();
+		result.setURNIdentifikator("URN:" + nameSpace + ":" + cpr);
+		return result;
+	}
+
+	private TidspunktType createTidspunktType(Date time) {
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTime(time);
+		XMLGregorianCalendar xmlGregorianCalendar;
+		try {
+			xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+		} catch (DatatypeConfigurationException e) {
+			throw new IllegalStateException("Could not create XMLGregorianCalendar from " + time, e);
+		}
+
+		TidspunktType result = new TidspunktType();
+		result.setTidsstempelDatoTid(xmlGregorianCalendar);
+		return result;
+	}
+
 	@SuppressWarnings("serial")
 	private static final Map<String, CivilStatusKodeType> civilStandMap = new HashMap<String, CivilStatusKodeType>() {{
 		put("U", CivilStatusKodeType.UGIFT);
@@ -80,12 +167,6 @@ public class PersonPartConverter {
 		}
 		CivilStatusType result = new CivilStatusType();
 		result.setCivilStatusKode(kode);
-		return result;
-	}
-
-	private AttributListeType createAttributListeType(CurrentPersonData person) {
-		AttributListeType result = new AttributListeType();
-		result.getRegisterOplysning().add(createRegisterOplysningType(person));
 		return result;
 	}
 

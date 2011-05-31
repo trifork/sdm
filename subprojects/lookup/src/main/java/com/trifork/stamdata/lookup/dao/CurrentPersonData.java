@@ -2,7 +2,9 @@ package com.trifork.stamdata.lookup.dao;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
@@ -10,6 +12,7 @@ import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
 public class CurrentPersonData {
 
@@ -19,14 +22,25 @@ public class CurrentPersonData {
 	private final Foedselsregistreringsoplysninger foedselsregistreringsoplysninger;
 	private final Civilstand civilstand;
 	private final Udrejseoplysninger udrejseoplysninger;
+	private final UmyndiggoerelseVaergeRelation vaerge;
+	private final List<UmyndiggoerelseVaergeRelation> vaergemaal;
 
-	public CurrentPersonData(Person person, Folkekirkeoplysninger folkekirkeoplysninger, Statsborgerskab statsborgerskab, Foedselsregistreringsoplysninger foedselsregistreringsoplysninger, Civilstand civilstand, Udrejseoplysninger udrejseoplysninger) {
+	public CurrentPersonData(Person person,
+			Folkekirkeoplysninger folkekirkeoplysninger,
+			Statsborgerskab statsborgerskab,
+			Foedselsregistreringsoplysninger foedselsregistreringsoplysninger,
+			Civilstand civilstand,
+			Udrejseoplysninger udrejseoplysninger,
+			UmyndiggoerelseVaergeRelation vaerge,
+			List<UmyndiggoerelseVaergeRelation> vaergemaal) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
 		this.statsborgerskab = statsborgerskab;
 		this.foedselsregistreringsoplysninger = foedselsregistreringsoplysninger;
 		this.civilstand = civilstand;
 		this.udrejseoplysninger = udrejseoplysninger;
+		this.vaerge = vaerge;
+		this.vaergemaal = vaergemaal;
 	}
 	
 	public Date getValidFrom() {
@@ -107,5 +121,14 @@ public class CurrentPersonData {
 
 	public Udrejseoplysninger getUdrejseoplysninger() {
 		return udrejseoplysninger;
+	}
+	
+	public UmyndiggoerelseVaergeRelation getVaerge() {
+		return vaerge;
+	}
+	
+	public List<UmyndiggoerelseVaergeRelation> getVaergemaal() {
+		List<UmyndiggoerelseVaergeRelation> empty = Collections.emptyList();
+		return vaergemaal == null ? empty : vaergemaal;
 	}
 }

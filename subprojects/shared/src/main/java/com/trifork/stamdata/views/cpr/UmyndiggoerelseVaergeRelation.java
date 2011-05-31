@@ -44,42 +44,42 @@ public class UmyndiggoerelseVaergeRelation extends CprView {
 
 	@Column(name = "Id")
 	@XmlTransient
-	protected String id;
+	public String id;
 
 	@Column(name = "TypeKode")
-	protected String typeKode;
+	public String typeKode;
 
 	@Column(name = "TypeTekst")
-	protected String typeTekst;
+	public String typeTekst;
 
 	@Column(name = "RelationCpr")
-	protected String relationCpr;
+	public String relationCpr;
 
 	@Column(name = "RelationCprStartDato")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date relationCprStartDato;
+	public Date relationCprStartDato;
 
 	@Column(name = "VaergesNavn")
-	protected String vaergesNavn;
+	public String vaergesNavn;
 
 	@Column(name = "VaergesNavnStartDato")
 	@Temporal(TemporalType.TIMESTAMP)
-	protected Date vaergesNavnStartDato;
+	public Date vaergesNavnStartDato;
 
 	@Column(name = "relationsTekst1")
-	protected String RelationsTekst1;
+	public String RelationsTekst1;
 
 	@Column(name = "relationsTekst2")
-	protected String RelationsTekst2;
+	public String RelationsTekst2;
 
 	@Column(name = "relationsTekst3")
-	protected String RelationsTekst3;
+	public String RelationsTekst3;
 
 	@Column(name = "relationsTekst4")
-	protected String RelationsTekst4;
+	public String RelationsTekst4;
 
 	@Column(name = "relationsTekst5")
-	protected String RelationsTekst5;
+	public String RelationsTekst5;
 
 	@Override
 	public String getId() {

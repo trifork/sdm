@@ -1,6 +1,7 @@
 package com.trifork.stamdata.lookup.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -14,6 +15,7 @@ import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
+import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
 public class PersonDao {
 
@@ -31,17 +33,28 @@ public class PersonDao {
 		Foedselsregistreringsoplysninger fr = getCurrentRecordByCpr(Foedselsregistreringsoplysninger.class, cpr);
 		Civilstand civilstand = getCurrentRecordByCpr(Civilstand.class, cpr);
 		Udrejseoplysninger udrejseoplysninger = getCurrentRecordByCpr(Udrejseoplysninger.class, cpr);
-		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger);
+		UmyndiggoerelseVaergeRelation vaerge = getCurrentRecordByCpr(UmyndiggoerelseVaergeRelation.class, cpr);
+		List<UmyndiggoerelseVaergeRelation> vaergemaal = getVaergemaal(cpr);
+		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger, vaerge, vaergemaal);
+	}
+
+	private <T> T getCurrentRecordByCpr(Class<T> entityType, String cpr) {
+		return entityType.cast(session.createCriteria(entityType)
+				.add(Restrictions.eq("cpr", cpr))
+				.add(Restrictions.le("validFrom", new Date()))
+				.addOrder(Order.desc("validFrom"))
+				.setMaxResults(1)
+				.uniqueResult());
 	}
 	
-	private <T> T getCurrentRecordByCpr(Class<T> entityType, String cpr) {
-		return entityType.cast( session
-		.createCriteria(entityType)
-		.add(Restrictions.eq("cpr", cpr))
-		.add(Restrictions.le("validFrom", new Date()))
-		.addOrder(Order.desc("validFrom"))
-		.setMaxResults(1)
-		.uniqueResult());
-		
+	@SuppressWarnings("unchecked")
+	private List<UmyndiggoerelseVaergeRelation> getVaergemaal(String cpr) {
+		Date now = new Date();
+		return (List<UmyndiggoerelseVaergeRelation>) session.createCriteria(UmyndiggoerelseVaergeRelation.class)
+				.add(Restrictions.eq("relationCpr", cpr))
+				.add(Restrictions.le("validFrom", now))
+				.add(Restrictions.ge("validTo", now))
+				.addOrder(Order.desc("validFrom"))
+				.list();
 	}
 }
