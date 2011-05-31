@@ -22,8 +22,6 @@ public class LogbackPropertyLoader extends PropertyDefinerBase {
 
 	public LogbackPropertyLoader() throws IOException {
 
-		// TODO: Use the new property loader.
-
 		InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
 		InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
 

@@ -25,35 +25,28 @@ package com.trifork.stamdata.replication;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
-import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 import com.trifork.stamdata.replication.db.DatabaseModule;
-import com.trifork.stamdata.replication.gui.GuiModule;
-import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
-import com.trifork.stamdata.replication.gui.security.twowayssl.TwoWaySslSecurityModule;
-import com.trifork.stamdata.replication.gui.security.unrestricted.GuiUnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
-import com.trifork.stamdata.replication.security.ssl.SslModule;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
-	private static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
-	private static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
 
 	@Override
 	protected Injector getInjector() {
@@ -62,8 +55,19 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 		try {
 			logger.info("Loading configuration.");
-			Configuration config = new SystemPropertyBasedConfigurationLoader("replication", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
+			
+			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-replication.properties");
 
+			Properties config = new Properties();
+			config.load(buildInConfig);
+			buildInConfig.close();
+
+			if (deploymentConfig != null) {
+				config.load(deploymentConfig);
+				deploymentConfig.close();
+			}
+			
 			logger.info("Configuring Stamdata Service.");
 
 			// The order these modules are added is not unimportant.
@@ -76,11 +80,11 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			// CONFIGURE DATA ACCESS
 			
 			modules.add(new DatabaseModule(
-				config.getString("db.connection.driverClass"),
-				config.getString("db.connection.sqlDialect"),
-				config.getString("db.connection.jdbcURL"),
-				config.getString("db.connection.username"),
-				config.getString("db.connection.password", null)
+				config.getProperty("db.connection.driverClass"),
+				config.getProperty("db.connection.sqlDialect"),
+				config.getProperty("db.connection.jdbcURL"),
+				config.getProperty("db.connection.username"),
+				config.getProperty("db.connection.password", null)
 			));
 
 			// CONFIGURE PROFILING & MONITORING
@@ -89,12 +93,14 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
-			String security = config.getString("security");
-			if ("dgws".equals(security)) {
+			String security = config.getProperty("security");
+			
+			if ("dgws".equals(security))
+			{
 				modules.add(new DGWSModule());
-			} else if ("twowayssl".equals(security)) {
-				modules.add(new SslModule(config.getBoolean("security.ssl.test")));
-			} else {
+			}
+			else
+			{
 				modules.add(new UnrestrictedSecurityModule());
 			}
 
@@ -102,33 +108,18 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			modules.add(new RegistryModule());
 
-			// CONFIGURE THE ADMIN GUI
-
-			modules.add(new GuiModule());
-
-			String guiSecurity = config.getString("gui.security");
-			if("saml".equals(guiSecurity)) {
-				modules.add(new SamlSecurityModule());
-			}
-			else if ("twowayssl".equals(guiSecurity)) {
-				modules.add(new TwoWaySslSecurityModule());
-			}
-			else if ("none".equals(guiSecurity)){
-				modules.add(new GuiUnrestrictedSecurityModule());
-			}
-			else {
-				throw new RuntimeException("Valid parameters for gui.security are saml, twowayssl,none");
-			}
-
 			// LOGGING
 
 			modules.add(new LoggingModule());
+			
+			// CREATE THE INJECTOR
 
 			injector = Guice.createInjector(modules);
 
 			logger.info("Service configured.");
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			throw new RuntimeException("Initialization failed do to a configuration error.", e);
 		}
 

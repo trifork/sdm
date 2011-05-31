@@ -60,7 +60,8 @@ public class RegistryModule extends ServletModule {
 
 		Map<String, Class<? extends View>> registry = new TreeMap<String, Class<? extends View>>();
 
-		for (Class<?> entity : views) {
+		for (Class<?> entity : views)
+		{
 			ViewPath annotation = entity.getAnnotation(ViewPath.class);
 			registry.put(annotation.value(), (Class<? extends View>) entity);
 		}

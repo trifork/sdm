@@ -52,7 +52,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.inject.Provider;
-import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.replication.mocks.MockEntity;
 import com.trifork.stamdata.replication.mocks.MockEntityWithoutUsageLogging;
 import com.trifork.stamdata.replication.security.SecurityManager;
@@ -71,7 +70,6 @@ public class RegistryServletTest {
 	private Map<String, Class<? extends View>> mappedClasses;
 	private @Mock RecordDao recordDao;
 	private @Mock AtomFeedWriter writer;
-	private @Mock UsageLogger usageLogger;
 	private String requestPath;
 	private int count;
 	private String countParam;
@@ -96,11 +94,8 @@ public class RegistryServletTest {
 
 		Provider writerProvider = mock(Provider.class);
 		when(writerProvider.get()).thenReturn(writer);
-		
-		Provider usageLoggerProvider = mock(Provider.class);
-		when(usageLoggerProvider.get()).thenReturn(usageLogger);
 
-		servlet = new RegistryServlet(registry, usageLoggerProvider, securityManagerProvider, recordDaoProvider, writerProvider);
+		servlet = new RegistryServlet(registry, securityManagerProvider, recordDaoProvider, writerProvider);
 
 		setUpValidRequest();
 	}
@@ -142,33 +137,6 @@ public class RegistryServletTest {
 		get();
 
 		verify(response, never()).setHeader(eq("Link"), anyString());
-	}
-
-	@Test
-	public void Should_return_a_web_link_for_the_next_page_if_there_are_more_records() throws Exception {
-		get();
-		verify(response).addHeader("Link", String.format("<stamdata://foo/bar/v1?offset=%s>; rel=\"next\"", nextOffset));
-	}
-	
-	@Test
-	public void Should_perform_usage_logging() throws Exception {
-		when(writer.write(Matchers.<Class<? extends View>>anyObject(), Matchers.<ScrollableResults>anyObject(), Matchers.<OutputStream>anyObject(), Matchers.anyBoolean()))
-			.thenReturn(2);
-
-		get();
-
-		verify(usageLogger).log(clientId, "foo/bar/v1", 2);
-	}
-	
-	@Test
-	public void Should_not_perform_debug_logging_on_views_with_no_usage_logging() throws Exception {
-		when(writer.write(Matchers.<Class<? extends View>>anyObject(), Matchers.<ScrollableResults>anyObject(), Matchers.<OutputStream>anyObject(), Matchers.anyBoolean()))
-			.thenReturn(2);
-		requestPath = "/foo/barWithoutUsageLogging/v1";
-
-		get();
-	
-		verify(usageLogger, never()).log(clientId, "foo/barWithoutUsageLogging/v1", 2);
 	}
 
 	@Test

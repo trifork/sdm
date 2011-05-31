@@ -37,7 +37,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.trifork.stamdata.replication.gui.models.ClientDao;
+import com.trifork.stamdata.replication.models.ClientDao;
 
 import dk.sosi.seal.xml.Base64;
 

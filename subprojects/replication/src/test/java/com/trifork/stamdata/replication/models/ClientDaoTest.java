@@ -1,15 +1,13 @@
-package com.trifork.stamdata.replication.gui.models;
+package com.trifork.stamdata.replication.models;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
-import org.hibernate.Transaction;
 import org.hibernate.classic.Session;
 import org.junit.After;
 import org.junit.Before;

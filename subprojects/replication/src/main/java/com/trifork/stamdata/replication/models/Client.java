@@ -1,3 +1,4 @@
+
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -21,17 +22,21 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.replication.gui.models;
+package com.trifork.stamdata.replication.models;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.google.common.collect.Sets;
+
 
 @Entity
-public class User {
+public class Client {
 
 	@Id
 	@GeneratedValue
@@ -40,14 +45,18 @@ public class User {
 	private String name;
 	private String subjectSerialNumber;
 
-	protected User() {
+	@ElementCollection
+	private Set<String> permissions = Sets.newHashSet();
+	
+	protected Client() {
 
 	}
 
-	public User(String name, String subjectSerialNumber) {
+	public Client(String name, String subjectSerialNumber) {
 
-		this.name = checkNotNull(name, "name");
-		this.subjectSerialNumber = checkNotNull(subjectSerialNumber, "subjectSerialNumber");
+		this.name = name;
+		this.subjectSerialNumber = subjectSerialNumber;
+		this.permissions = new HashSet<String>();
 	}
 
 	public String getId() {
@@ -65,9 +74,29 @@ public class User {
 		return subjectSerialNumber;
 	}
 
+	public boolean addPermission(String viewName) {
+
+		return permissions.add(viewName);
+	}
+
+	public boolean removePermission(String viewName) {
+
+		return permissions.remove(viewName);
+	}
+
+	public boolean isAuthorizedFor(String viewName) {
+
+		return permissions.contains(viewName);
+	}
+
+	public Set<String> getPermissions() {
+
+		return Collections.unmodifiableSet(permissions);
+	}
+	
 	@Override
 	public String toString() {
-
-		return String.format("%s(%s)", name, subjectSerialNumber);
+	
+		return String.format("%s (subjectSerialNumber=%s)", name, subjectSerialNumber);
 	}
 }

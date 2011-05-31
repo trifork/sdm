@@ -45,8 +45,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.HistoryOffset;
-import com.trifork.stamdata.UsageLogged;
-import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.views.View;
@@ -58,17 +56,16 @@ public class RegistryServlet extends HttpServlet {
 	private static final Logger logger = getLogger(RegistryServlet.class);
 
 	private static final long serialVersionUID = -172563300590543180L;
-	public static final int DEFAULT_PAGE_SIZE = 10000;
+	public static final int DEFAULT_PAGE_SIZE = 5000;
 
 	private final Map<String, Class<? extends View>> registry;
 	private final Provider<SecurityManager> securityManager;
 	private final Provider<RecordDao> recordDao;
 	private final Provider<AtomFeedWriter> writers;
-	private final Provider<UsageLogger> usageLogger;
 
 	@Inject
-	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<UsageLogger> usageLogger, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
-		this.usageLogger = usageLogger;
+	RegistryServlet(@Registry Map<String, Class<? extends View>> registry, Provider<SecurityManager> securityManager, Provider<RecordDao> recordDao, Provider<AtomFeedWriter> writers) {
+
 		this.registry = checkNotNull(registry);
 		this.recordDao = checkNotNull(recordDao);
 		this.writers = checkNotNull(writers);
@@ -76,7 +73,8 @@ public class RegistryServlet extends HttpServlet {
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+	{
 		if (isNotAuthorized(request)) {
 			setUnauthorizedHeaders(response);
 			return;
@@ -87,13 +85,15 @@ public class RegistryServlet extends HttpServlet {
 
 	private void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
-		if (!isLegalOffsetParam(request)) {
+		if (!isLegalOffsetParam(request))
+		{
 			response.sendError(HTTP_BAD_REQUEST, "The 'offset' parameter must be a non-negative integer.");
 			logger.warn("Invalid parameter offset='{}'. ClientId='{}'.", getOffsetParam(request), securityManager.get().getClientId(request));
 			return;
 		}
 
-		if (!isLegalCountParam(request)) {
+		if (!isLegalCountParam(request))
+		{
 			response.sendError(HTTP_BAD_REQUEST, "The 'count' parameter must be a positive integer.");
 			logger.warn("Invalid parameter count='{}'. ClientId='{}'.", getCountParam(request), securityManager.get().getClientId(request));
 			return;
@@ -111,35 +111,18 @@ public class RegistryServlet extends HttpServlet {
 
 		ScrollableResults records = recordDao.get().findPage(entityType, offset.getRecordID(), offset.getModifiedDate(), clientId, count);
 
-		try {
-			int writtenRecords = writeRecords(request, response, clientId, entityType, records);
-			performUsageLogging(request, clientId, entityType, writtenRecords);
-		} finally {
+		try
+		{
+			writeRecords(request, response, clientId, entityType, records);
+		}
+		finally
+		{
 			records.close();
 		}
 	}
 
-	private int writeRecords(HttpServletRequest request, HttpServletResponse response, String clientId,
-			Class<? extends View> entityType, ScrollableResults records) throws IOException {
-		
-		// The response contains a content-type header and a Link header that
-		// points to the next page. Web linking is described in RFC 5988.
-		//
-		// If there are no more records, no Link header will be returned.
-		// This is how the client knows when there are no more updates.
-		//
-		// Returns 304 Not modified when there are no more updates.
-		//
-		// TODO: Check if scrolling to the last record is too inefficient,
-		// and maybe an additional query would be faster.
-		
-		if (records.last()) {
-			View newestRecord = (View) records.get(0);
-			response.addHeader("Link", WebLinking.createNextLink(getViewName(request), newestRecord.getOffset()));
-		}
-
-		records.beforeFirst();
-
+	private int writeRecords(HttpServletRequest request, HttpServletResponse response, String clientId, Class<? extends View> entityType, ScrollableResults records) throws IOException
+	{	
 		response.setStatus(HTTP_OK);
 		response.setContentType(getContentType(request));
 		response.flushBuffer();
@@ -147,18 +130,14 @@ public class RegistryServlet extends HttpServlet {
 		return writers.get().write(entityType, records, response.getOutputStream(), useFastInfoset(request));
 	}
 	
-	private String getContentType(HttpServletRequest request) {
+	private String getContentType(HttpServletRequest request)
+	{
 		String contentType = useFastInfoset(request) ? MIME.ATOM_FASTINFOSET : MIME.ATOM_XML;
 		return contentType + "; charset=utf-8";
 	}
 
-	private void performUsageLogging(HttpServletRequest request, String clientId, Class<? extends View> entityType, int writtenRecords) {
-		if (shouldBeLogged(entityType)) {
-			usageLogger.get().log(clientId, getViewName(request), writtenRecords);
-		}
-	}
-
-	private boolean useFastInfoset(HttpServletRequest request) {
+	private boolean useFastInfoset(HttpServletRequest request)
+	{
 		// Determine what content type the client wants.
 		//
 		// TODO: Use javax.activation.MimeType to check these.
@@ -167,20 +146,24 @@ public class RegistryServlet extends HttpServlet {
 		return (MIME.ATOM_FASTINFOSET.equalsIgnoreCase(accept));
 	}
 
-	private String getCountParam(HttpServletRequest request) {
+	private String getCountParam(HttpServletRequest request)
+	{
 		return request.getParameter("count");
 	}
 
-	private String getOffsetParam(HttpServletRequest request) {
+	private String getOffsetParam(HttpServletRequest request)
+	{
 		return request.getParameter("offset");
 	}
 
-	private boolean isLegalOffsetParam(HttpServletRequest request) {
+	private boolean isLegalOffsetParam(HttpServletRequest request)
+	{
 		String offsetParam = getOffsetParam(request);
 		return offsetParam == null || offsetParam.matches("[0-9]+");
 	}
 	
-	private boolean isLegalCountParam(HttpServletRequest request) {
+	private boolean isLegalCountParam(HttpServletRequest request)
+	{
 		String countParam = getCountParam(request);
 		return countParam == null || countParam.matches("[1-9][0-9]*");
 	}
@@ -194,16 +177,12 @@ public class RegistryServlet extends HttpServlet {
 		return countParam != null ? Integer.parseInt(countParam) : DEFAULT_PAGE_SIZE;
 	}
 
-	private boolean shouldBeLogged(Class<? extends View> entityType) {
-		UsageLogged usageLogged = entityType.getAnnotation(UsageLogged.class);
-		return usageLogged == null || usageLogged.value();
-	}
-
 	private boolean isNotAuthorized(HttpServletRequest request) {
 		return !securityManager.get().isAuthorized(request);
 	}
 
-	private void setUnauthorizedHeaders(HttpServletResponse response) {
+	private void setUnauthorizedHeaders(HttpServletResponse response)
+	{
 		// The HTTP RFC specifies that if returning a 401 status
 		// the server MUST issue a challenge also.
 
@@ -211,7 +190,8 @@ public class RegistryServlet extends HttpServlet {
 		response.setHeader("WWW-Authenticate", "STAMDATA");
 	}
 
-	protected String getViewName(HttpServletRequest request) {
+	protected String getViewName(HttpServletRequest request)
+	{
 		// The URL's path represents the requested view's name,
 		// e.g. dkma/drug/v1 or sor/sygehus/v2.
 		return request.getPathInfo().substring(1);

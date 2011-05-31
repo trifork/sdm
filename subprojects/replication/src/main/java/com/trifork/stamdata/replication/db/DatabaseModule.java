@@ -38,8 +38,6 @@ import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.replication.gui.models.Client;
-import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.logging.LogEntry;
 import com.trifork.stamdata.replication.security.dgws.Authorization;
 import com.trifork.stamdata.views.Views;
@@ -70,9 +68,7 @@ public class DatabaseModule extends ServletModule {
 
 		Set<Class<?>> classes = Sets.newHashSet();
 		classes.addAll(Views.findAllViews());
-		classes.add(User.class);
 		classes.add(LogEntry.class);
-		classes.add(Client.class);
 		classes.add(Authorization.class);
 
 		try {
