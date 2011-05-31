@@ -23,75 +23,27 @@
 
 package com.trifork.stamdata.views.cpr;
 
-import static javax.persistence.TemporalType.TIMESTAMP;
-
-import java.math.BigInteger;
-import java.util.Date;
-
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
-import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
 @Entity
 @XmlRootElement
 @ViewPath("cpr/folkekirkeoplysninger/v1")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class Folkekirkeoplysninger extends View {
-
-	@Id
-	@GeneratedValue
-	@XmlTransient
-	@Column(name = "FolkekirkeoplysningerPID")
-	private BigInteger recordID;
-
-	@XmlElement(required = true)
-	public String cpr;
+@AttributeOverride(name = "recordID",column = @Column(name = "FolkekirkeoplysningerPID"))
+public class Folkekirkeoplysninger extends CprView {
 
 	public String forholdsKode;
-
-	@XmlTransient
-	@Temporal(TIMESTAMP)
-	public Date modifiedDate;
-
-	@XmlTransient
-	public String modifiedBy;
-
-	@XmlTransient
-	@Temporal(TIMESTAMP)
-	public Date createdDate;
-
-	@XmlTransient
-	public String createdBy;
-
-	@Temporal(TIMESTAMP)
-	public Date validFrom;
-
-	@Temporal(TIMESTAMP)
-	public Date validTo;
 
 	@Override
 	public String getId() {
 		return cpr;
-	}
-
-	@Override
-	public BigInteger getRecordID() {
-		return recordID;
-	}
-
-	@Override
-	public Date getUpdated() {
-		return modifiedDate;
 	}
 
 	@Override

@@ -23,41 +23,28 @@
 
 package com.trifork.stamdata.views.cpr;
 
-import java.math.BigInteger;
 import java.util.Date;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
 
 @Entity
 @XmlRootElement
 @ViewPath("cpr/umyndiggoerelsevaergerelation/v1")
-public class UmyndiggoerelseVaergeRelation extends View {
-
-	@Id
-	@GeneratedValue
-	@XmlTransient
-	@Column(name = "UmyndiggoerelseVaergeRelationPID")
-	private BigInteger recordID;
+@AttributeOverride(name = "recordID",column = @Column(name = "UmyndiggoerelseVaergeRelationPID"))
+public class UmyndiggoerelseVaergeRelation extends CprView {
 
 	@Column(name = "Id")
-	@XmlElement(required = true)
+	@XmlTransient
 	protected String id;
-
-	@XmlElement(required = true)
-	@Column(name = "CPR")
-	protected String cpr;
 
 	@Column(name = "TypeKode")
 	protected String typeKode;
@@ -94,32 +81,9 @@ public class UmyndiggoerelseVaergeRelation extends View {
 	@Column(name = "relationsTekst5")
 	protected String RelationsTekst5;
 
-	@XmlTransient
-	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date modifiedDate;
-
-	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date validFrom;
-
-	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
-	protected Date validTo;
-
-	@Override
-	public BigInteger getRecordID() {
-		return recordID;
-	}
-
 	@Override
 	public String getId() {
 		return id;
-	}
-
-	@Override
-	public Date getUpdated() {
-		return modifiedDate;
 	}
 
 	@Override

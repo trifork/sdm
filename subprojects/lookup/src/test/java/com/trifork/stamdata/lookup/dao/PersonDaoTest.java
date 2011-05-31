@@ -105,58 +105,58 @@ public class PersonDaoTest {
 	
 	private Person person(Date validFrom) {
 		Person result = new Person();
-		result.cpr = "1020304050";
+		result.setCpr("1020304050");
 		result.koen = "M";
 		result.foedselsdato = at(1975, Calendar.MAY, 12);
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
-		result.validFrom = validFrom;
-		result.modifiedDate = validFrom;
-		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.setValidFrom(validFrom);
+		result.setModifiedDate(validFrom);
+		result.setCreatedDate(at(2005, Calendar.JANUARY, 5));
 		return result;
 	}
 	
 	private Statsborgerskab statsborgerskab(String landekode) {
 		Statsborgerskab result = new Statsborgerskab();
-		result.cpr = "1020304050";
+		result.setCpr("1020304050");
 		result.landekode = landekode;
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
-		result.validFrom = at(2005, Calendar.JANUARY, 5);
-		result.modifiedDate = result.validFrom;
-		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.setValidFrom(at(2005, Calendar.JANUARY, 5));
+		result.setModifiedDate(result.getValidFrom());
+		result.setCreatedDate(result.getValidFrom());
 		result.statsborgerskabstartdatoUsikkerhedsmarkering = "";
 		return result;
 	}
 	
 	private Folkekirkeoplysninger folkekirkeoplysninger(String kode) {
 		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
-		result.cpr = "1020304050";
+		result.setCpr( "1020304050");
 		result.forholdsKode = kode;
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
-		result.validFrom = at(2005, Calendar.JANUARY, 5);
-		result.modifiedDate = result.validFrom;
-		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.setValidFrom(at(2005, Calendar.JANUARY, 5));
+		result.setModifiedDate(result.getValidFrom());
+		result.setCreatedDate(at(2005, Calendar.JANUARY, 5));
 		return result;
 	}
 	
 	private Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String kode, String tekst) {
 		Foedselsregistreringsoplysninger result = new Foedselsregistreringsoplysninger();
-		result.cpr = "1020304050";
+		result.setCpr("1020304050");
 		result.foedselsregistreringsstedkode = kode;
 		result.foedselsregistreringstekst = tekst;
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
-		result.validFrom = at(2005, Calendar.JANUARY, 5);
-		result.modifiedDate = result.validFrom;
-		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.setValidFrom(at(2005, Calendar.JANUARY, 5));
+		result.setModifiedDate(result.getValidFrom());
+		result.setCreatedDate(at(2005, Calendar.JANUARY, 5));
 		return result;
 	}
 	
 	private Udrejseoplysninger udrejseoplysninger() {
 		Udrejseoplysninger result = new Udrejseoplysninger();
-		result.cpr = "1020304050";
+		result.setCpr("1020304050");
 		result.udrejseLandekode = "1234";
 		result.udrejsedatoUsikkerhedsmarkering = "";
 		result.udrejsedato = new Date();
@@ -167,9 +167,9 @@ public class PersonDaoTest {
 		result.udlandsadresse5 = "line5";
 		result.modifiedBy = "AHJ";
 		result.createdBy = "AHJ";
-		result.validFrom = at(2005, Calendar.JANUARY, 5);
-		result.modifiedDate = result.validFrom;
-		result.createdDate = at(2005, Calendar.JANUARY, 5);
+		result.setValidFrom(at(2005, Calendar.JANUARY, 5));
+		result.setModifiedDate(result.getValidFrom());
+		result.setCreatedDate(result.getValidFrom());
 		return result;
 	}
 

@@ -115,12 +115,12 @@ public class RecordDaoTest {
 
 	private void createFolkekirkeoplysninger() {
 		Folkekirkeoplysninger folkekirkeoplysninger = new Folkekirkeoplysninger();
-		folkekirkeoplysninger.cpr = "1234567890";
-		folkekirkeoplysninger.modifiedDate = nextDate();
+		folkekirkeoplysninger.setCpr("1234567890");
+		folkekirkeoplysninger.setModifiedDate(nextDate());
 		folkekirkeoplysninger.modifiedBy = "";
-		folkekirkeoplysninger.createdDate = nextDate();
+		folkekirkeoplysninger.setCreatedDate(nextDate());
 		folkekirkeoplysninger.createdBy = "";
-		folkekirkeoplysninger.validFrom = nextDate();
+		folkekirkeoplysninger.setValidFrom(nextDate());
 		folkekirkeoplysninger.forholdsKode = "A";
 		session.insert(folkekirkeoplysninger);
 	}

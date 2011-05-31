@@ -46,7 +46,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutCprBorgerForPlainValidCprNumber() {
 		Person person = new Person();
-		person.cpr = "1020304050";
+		person.setCpr("1020304050");
 		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.forholdsKode = "M";
 		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null);
@@ -173,7 +173,7 @@ public class PersonPartConverterTest {
 
 	private Person createValidPerson() {
 		Person person = new Person();
-		person.cpr = "1020304050";
+		person.setCpr("1020304050");
 		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
 		person.lokalitet = "Scandinavian Congress Center";
 		person.vejnavn = "Margrethepladsen";

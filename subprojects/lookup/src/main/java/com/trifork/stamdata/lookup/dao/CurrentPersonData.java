@@ -30,11 +30,11 @@ public class CurrentPersonData {
 	}
 	
 	public Date getValidFrom() {
-		return person.validFrom;
+		return person.getValidFrom();
 	}
 
 	public String getCprNumber() {
-		return person.cpr;
+		return person.getCpr();
 	}
 	
 	public String getLokalitet() {
