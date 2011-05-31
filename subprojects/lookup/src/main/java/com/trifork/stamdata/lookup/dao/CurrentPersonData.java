@@ -83,6 +83,20 @@ public class CurrentPersonData {
 		return person.postnummer;
 	}
 
+	public String getKommuneKode() {
+		if(person == null || person.kommuneKode == null) {
+			return null;
+		}
+		return person.kommuneKode.toString();
+	}
+
+	public String getVejKode() {
+		if(person == null || person.vejKode == null) {
+			return null;
+		}
+		return person.vejKode.toString();
+	}
+
 	public String getPostdistrikt() {
 		return person.postdistrikt;
 	}

@@ -20,6 +20,7 @@ import oio.sagdok.person._1_0.CivilStatusType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.PersonRelationType;
+import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.RegisterOplysningType;
 import oio.sagdok.person._1_0.RegistreringType;
@@ -35,9 +36,11 @@ import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
+import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.AddressCompleteGreenlandType;
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
+import dk.oio.rep.xkom_dk.xml.schemas._2005._03._15.AddressAccessType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
 
@@ -195,11 +198,46 @@ public class PersonPartConverter {
 	private AdresseType createAdresseType(CurrentPersonData person) {
 		AdresseType result = new AdresseType();
 		if(person.getUdrejseoplysninger() == null) {
-			result.setDanskAdresse(createDanskAdresseType(person));
+			if(person.getPostnummer() == null) {
+				return null;
+			}
+			int postnummer = person.getPostnummer().intValue();
+			// check om postnummeret er groenlandsk og lav en groendlandsk adresse hvis det er tilfaeldet
+			// postnummer 2412 er julemandens postdistrikt, hvis han skulle gå hen og få et CPR-nummer :)
+			if((postnummer >= 3000 && postnummer < 4000) || postnummer == 2412) {
+				result.setGroenlandAdresse(createGroendlandAdresseType(person));
+			}
+			else {
+				result.setDanskAdresse(createDanskAdresseType(person));
+			}
 		}
 		else {
 			result.setVerdenAdresse(createVerdenAdresse(person.getUdrejseoplysninger()));
 		}
+		return result;
+	}
+
+	private GroenlandAdresseType createGroendlandAdresseType(
+			CurrentPersonData person) {
+		GroenlandAdresseType result = new GroenlandAdresseType();
+		result.setAddressCompleteGreenland(createAddressCompleteGreendlandType(person));
+		return result;
+	}
+
+	private AddressCompleteGreenlandType createAddressCompleteGreendlandType(
+			CurrentPersonData person) {
+		AddressCompleteGreenlandType result = new AddressCompleteGreenlandType();
+		result.setMailDeliverySublocationIdentifier(contentsOrNull(person.getLokalitet()));
+		result.setStreetName(person.getVejnavn());
+		result.setStreetNameForAddressingName(contentsOrNull(person.getVejnavn()));
+		result.setStreetBuildingIdentifier(createStreetBuildingIdentifier(person));
+		result.setFloorIdentifier(contentsOrNull(person.getEtage()));
+		result.setSuiteIdentifier(contentsOrNull(person.getSidedoernummer()));
+		result.setDistrictSubdivisionIdentifier(contentsOrNull(person.getBynavn()));
+		result.setPostCodeIdentifier("" + person.getPostnummer());
+		result.setDistrictName(person.getPostdistrikt());
+		result.setGreenlandBuildingIdentifier(person.getBygningsnummer());
+		result.setCountryIdentificationCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, "GL"));
 		return result;
 	}
 
@@ -225,7 +263,16 @@ public class PersonPartConverter {
 
 	private AddressCompleteType createAddressCompleteType(CurrentPersonData person) {
 		AddressCompleteType result = new AddressCompleteType();
+		result.setAddressAccess(createAddressAccessType(person));
 		result.setAddressPostal(createAddressPostalType(person));
+		return result;
+	}
+
+	private AddressAccessType createAddressAccessType(CurrentPersonData person) {
+		AddressAccessType result = new AddressAccessType();
+		result.setMunicipalityCode(person.getKommuneKode());
+		result.setStreetCode(person.getVejKode());
+		result.setStreetBuildingIdentifier(person.getHusnummer());
 		return result;
 	}
 
@@ -240,22 +287,16 @@ public class PersonPartConverter {
 		result.setDistrictSubdivisionIdentifier(contentsOrNull(person.getBynavn()));
 		result.setPostCodeIdentifier("" + person.getPostnummer());
 		result.setDistrictName(person.getPostdistrikt());
-		// FIXME udfyld korrekt land
 		result.setCountryIdentificationCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, "DK"));
 		return result;
 	}
 
 	private String createStreetBuildingIdentifier(CurrentPersonData person) {
-		if (person.getBygningsnummer() != null && !person.getBygningsnummer().isEmpty()) {
-			return person.getHusnummer() + ", " + person.getBygningsnummer();
-		}
 		return person.getHusnummer();
 	}
 
 	private CountryIdentificationCodeType createCountryIdentificationCodeType(CountryIdentificationSchemeType scheme, String code) {
 		CountryIdentificationCodeType result = new CountryIdentificationCodeType();
-
-		// TODO: Bare de mest gængse værdier p.t. Skal selvfølgelig hentes rigtigt.
 		result.setScheme(scheme);
 		result.setValue(code);
 		return result;

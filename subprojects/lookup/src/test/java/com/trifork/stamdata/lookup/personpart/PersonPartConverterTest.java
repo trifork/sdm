@@ -20,6 +20,7 @@ import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
 import oio.sagdok.person._1_0.PersonRelationType;
+import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.VerdenAdresseType;
 
@@ -37,6 +38,7 @@ import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
+import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.AddressCompleteGreenlandType;
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
@@ -84,7 +86,7 @@ public class PersonPartConverterTest {
 		assertEquals("Scandinavian Congress Center", postalAddress.getMailDeliverySublocationIdentifier());
 		assertEquals("Margrethepladsen", postalAddress.getStreetName()); // The best we can do
 		assertEquals("Margrethepladsen", postalAddress.getStreetNameForAddressingName());
-		assertEquals("4, 1", postalAddress.getStreetBuildingIdentifier());
+		assertEquals("4", postalAddress.getStreetBuildingIdentifier());
 		assertEquals("3", postalAddress.getFloorIdentifier());
 		assertEquals("th.", postalAddress.getSuiteIdentifier());
 		assertEquals("Centrum af Århus", postalAddress.getDistrictSubdivisionIdentifier());
@@ -92,6 +94,34 @@ public class PersonPartConverterTest {
 		assertEquals("Århus C", postalAddress.getDistrictName());
 		assertEquals(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, postalAddress.getCountryIdentificationCode().getScheme());
 		assertEquals("DK", postalAddress.getCountryIdentificationCode().getValue());
+	}
+
+	@Test
+	public void fillsOutGreenlandAddress() {
+		Person person = createValidPerson();
+		person.postnummer = BigInteger.valueOf(3000);
+		person.bygningsnummer = "123";
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null);
+
+		PersonType personType = converter.convert(currentPerson);
+
+		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		AdresseType adresseType = cprBorger.getFolkeregisterAdresse();
+		GroenlandAdresseType groenlandAdresse = adresseType.getGroenlandAdresse();
+		assertNotNull(groenlandAdresse);
+		AddressCompleteGreenlandType postalAddress = groenlandAdresse.getAddressCompleteGreenland();
+		assertEquals("Scandinavian Congress Center", postalAddress.getMailDeliverySublocationIdentifier());
+		assertEquals("Margrethepladsen", postalAddress.getStreetName()); // The best we can do
+		assertEquals("Margrethepladsen", postalAddress.getStreetNameForAddressingName());
+		assertEquals("4", postalAddress.getStreetBuildingIdentifier());
+		assertEquals("3", postalAddress.getFloorIdentifier());
+		assertEquals("th.", postalAddress.getSuiteIdentifier());
+		assertEquals("Centrum af Århus", postalAddress.getDistrictSubdivisionIdentifier());
+		assertEquals("3000", postalAddress.getPostCodeIdentifier());
+		assertEquals("Århus C", postalAddress.getDistrictName());
+		assertEquals(CountryIdentificationSchemeType.ISO_3166_ALPHA_2, postalAddress.getCountryIdentificationCode().getScheme());
+		assertEquals("GL", postalAddress.getCountryIdentificationCode().getValue());
+		assertEquals("123", postalAddress.getGreenlandBuildingIdentifier());
 	}
 
 	@Test
@@ -253,7 +283,6 @@ public class PersonPartConverterTest {
 		person.lokalitet = "Scandinavian Congress Center";
 		person.vejnavn = "Margrethepladsen";
 		person.husnummer = "4";
-		person.bygningsnummer = "1";
 		person.etage = "3";
 		person.sideDoerNummer = "th.";
 		person.postnummer = BigInteger.valueOf(8000);
