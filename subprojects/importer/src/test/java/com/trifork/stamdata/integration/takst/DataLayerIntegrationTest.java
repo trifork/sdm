@@ -54,7 +54,6 @@ import com.trifork.stamdata.importer.takst.model.Takst;
  * @author Anders Bo Christensen
  *
  */
-@Ignore("Sloooow test!")
 public class DataLayerIntegrationTest {
 
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

@@ -23,7 +23,9 @@
 
 package com.trifork.stamdata.importer.sor;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.Collection;
@@ -31,18 +33,17 @@ import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.sor.SORDataSets;
-import com.trifork.stamdata.importer.sor.SOREventHandler;
-import com.trifork.stamdata.importer.sor.SORParser;
-import com.trifork.stamdata.importer.sor.model.*;
-import com.trifork.stamdata.importer.sor.xmlmodel.*;
+import com.trifork.stamdata.importer.sor.model.Apotek;
+import com.trifork.stamdata.importer.sor.model.Praksis;
+import com.trifork.stamdata.importer.sor.model.Sygehus;
+import com.trifork.stamdata.importer.sor.model.SygehusAfdeling;
+import com.trifork.stamdata.importer.sor.model.Yder;
+import com.trifork.stamdata.importer.sor.xmlmodel.SpecialityMapper;
+import com.trifork.stamdata.importer.sor.xmlmodel.UnitTypeMapper;
 import com.trifork.stamdata.model.AbstractStamdataEntity;
 
-
-@Ignore("Sloooow test!")
 public class SorParserTest {
 
 	public static File onePraksis;

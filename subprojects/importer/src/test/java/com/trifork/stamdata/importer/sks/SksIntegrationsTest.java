@@ -34,14 +34,11 @@ import java.util.ArrayList;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.sks.SksImporter;
 
 
-@Ignore("Sloooow test!")
 public class SksIntegrationsTest {
 
 	public File SHAKCompleate;
