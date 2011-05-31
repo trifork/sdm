@@ -40,8 +40,9 @@ import com.trifork.stamdata.replication.security.SecurityManager;
 import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
+import dk.sosi.seal.pki.Federation;
 import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.SOSIFederation;
+import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
@@ -105,7 +106,7 @@ public class DGWSModule extends ServletModule {
 
 		Properties encryption = SignatureUtil.setupCryptoProviderForJVM();
 
-		SOSIFederation federation = new SOSIFederation(encryption, new InMemoryIntermediateCertificateCache());
+		Federation federation = new SOSITestFederation(encryption, new InMemoryIntermediateCertificateCache());
 
 		return new SOSIFactory(federation, new EmptyCredentialVault(), encryption);
 	}

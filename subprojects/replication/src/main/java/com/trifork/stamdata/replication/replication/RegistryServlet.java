@@ -86,6 +86,7 @@ public class RegistryServlet extends HttpServlet {
 	}
 
 	private void writeResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
 		if (!isLegalOffsetParam(request)) {
 			response.sendError(HTTP_BAD_REQUEST, "The 'offset' parameter must be a non-negative integer.");
 			logger.warn("Invalid parameter offset='{}'. ClientId='{}'.", getOffsetParam(request), securityManager.get().getClientId(request));
@@ -102,6 +103,7 @@ public class RegistryServlet extends HttpServlet {
 	}
 
 	private void fetchAndWriteRecords(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
 		String clientId = securityManager.get().getClientId(request);
 		HistoryOffset offset = createHistoryOffset(request);
 		int count = parseCountParam(request);
@@ -119,6 +121,7 @@ public class RegistryServlet extends HttpServlet {
 
 	private int writeRecords(HttpServletRequest request, HttpServletResponse response, String clientId,
 			Class<? extends View> entityType, ScrollableResults records) throws IOException {
+		
 		// The response contains a content-type header and a Link header that
 		// points to the next page. Web linking is described in RFC 5988.
 		//
@@ -129,7 +132,7 @@ public class RegistryServlet extends HttpServlet {
 		//
 		// TODO: Check if scrolling to the last record is too inefficient,
 		// and maybe an additional query would be faster.
-
+		
 		if (records.last()) {
 			View newestRecord = (View) records.get(0);
 			response.addHeader("Link", WebLinking.createNextLink(getViewName(request), newestRecord.getOffset()));

@@ -19,7 +19,7 @@
 			</element>
 			<complexType name="AuthorizationRequestType">
 				<sequence>
-					<element name="entity" type="anyURI"/>
+					<element name="view" type="anyURI"/>
 				</sequence>
 			</complexType>
 			<element name="AuthorizationResponseStructure" type="sd:AuthorizationResponseType">

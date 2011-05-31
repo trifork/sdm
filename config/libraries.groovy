@@ -41,8 +41,8 @@ libs = [
 	jcl_over_slf4j: 'org.slf4j:jcl-over-slf4j:' + slf4jVersion,
 	log4j_slf4j: 'org.slf4j:slf4j-log4j12:' + slf4jVersion,
 
-	logback_core: 'ch.qos.logback:logback-core:0.9.27',
-	logback_classic: 'ch.qos.logback:logback-classic:0.9.27',
+	logback_core: 'ch.qos.logback:logback-core:0.9.28',
+	logback_classic: 'ch.qos.logback:logback-classic:0.9.28',
 
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 

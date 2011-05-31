@@ -211,7 +211,7 @@ public class AuthorizationServlet extends HttpServlet {
 
 				AuthorizationRequestStructure requestBody = unmarshaller.unmarshal(request.getBody(), AuthorizationRequestStructure.class).getValue();
 
-				if (requestBody == null || requestBody.getViewURI() == null) {
+				if (requestBody == null || requestBody.getView() == null) {
 
 					return factory.createNewErrorReply(request, FaultCodeValues.PROCESSING_PROBLEM, "A request must contain a valid 'entity' parameter.");
 				}
@@ -221,14 +221,14 @@ public class AuthorizationServlet extends HttpServlet {
 				// TODO: Somehow we should consolidate the audit log and
 				// the error log.
 
-				audit.log("Access request: clientCvr=%s, entityUri=%s", cvr, requestBody.getViewURI());
+				audit.log("Access request: clientCvr=%s, entityUri=%s", cvr, requestBody.getView());
 
 				// CHECK THAT THE REQUESTED VIEW EXISTS
 				//
 				// This is strictly not needed since any subsequent replication
 				// requests will fail. But we might as well fail early.
 
-				String viewName = Views.convertStamdataUriToViewName(requestBody.getViewURI());
+				String viewName = Views.convertStamdataUriToViewName(requestBody.getView());
 				Class<? extends View> viewClass = registry.get(viewName);
 
 				if (viewClass == null) {
@@ -260,6 +260,7 @@ public class AuthorizationServlet extends HttpServlet {
 
 			}
 			catch (Exception e) {
+				logger.warn("Could not process request.", e);
 				return factory.createNewErrorReply(request, SERVER_SIDE_ERROR, "An unexpected error occured on the server. Please contact support.");
 			}
 		}

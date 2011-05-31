@@ -30,6 +30,8 @@ include 'replication'
 include 'schemas'
 include 'importer'
 include 'client'
+include 'performance'
+include 'authorization-ws'
 
 rootProject.name = 'stamdata'
 rootProject.children.each {project ->

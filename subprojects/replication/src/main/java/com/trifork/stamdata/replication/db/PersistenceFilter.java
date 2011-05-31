@@ -78,27 +78,25 @@ public class PersistenceFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-		Transaction transaction = sessions.get().getTransaction();
+		Transaction transaction1 = sessions.get().getTransaction();
+		Transaction transaction2 = statelessSessions.get().beginTransaction();
 
 		try {
-			transaction.begin();
+			transaction1.begin();
+			transaction2.begin();
 			chain.doFilter(request, response);
-			transaction.commit();
+			transaction2.commit();
+			transaction1.commit();
 		}
 		catch (Exception e) {
 			logger.error("An unexpected error occured.", e);
-			transaction.rollback();
+			
+			try { transaction1.rollback(); } catch (Exception ex) {}
+			try { transaction2.rollback(); } catch (Exception ex) {}
 		}
 		finally {			
-			sessions.get().close();
-
-			// TODO: This next call will actually open
-			// a new session if one has not been created.
-			// This does not impact performance much since
-			// state-less sessions are only not opened for
-			// requests to the administration GUI.
-
-			statelessSessions.get().close();
+			try { sessions.get().close(); } catch (Exception ex) {}
+			try { statelessSessions.get().close(); } catch (Exception ex) {}
 		}
 	}
 

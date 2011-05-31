@@ -26,9 +26,12 @@ package com.trifork.stamdata.replication.security.dgws;
 
 import javax.xml.bind.annotation.*;
 
+import com.trifork.stamdata.Namespace;
 
-@XmlRootElement
+
+@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(namespace = Namespace.STAMDATA_3_0)
 public class AuthorizationResponseStructure {
 	
 	public String authorization;

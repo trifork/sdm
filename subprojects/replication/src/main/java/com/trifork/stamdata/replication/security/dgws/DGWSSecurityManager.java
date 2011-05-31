@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.views.View;
@@ -89,8 +90,10 @@ public class DGWSSecurityManager implements SecurityManager {
 		checkViewIntegrity(viewClass);
 
 		String authorization;
+		
+		Client client = clientDao.findByCvr(cvr);
 
-		if (clientDao.findByCvr(cvr).isAuthorizedFor(Views.getViewPath(viewClass))) {
+		if (client != null && client.isAuthorizedFor(Views.getViewPath(viewClass))) {
 
 			byte[] token = new byte[512];
 			random.nextBytes(token);

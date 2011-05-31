@@ -111,7 +111,7 @@ public class RequestProcessorTest {
 		when(registry.get(TEST_VIEW_NAME)).thenReturn(testView);
 
 		authorizationRequest = mock(AuthorizationRequestStructure.class);
-		when(authorizationRequest.getViewURI()).thenReturn(TEST_VIEW_URI);
+		when(authorizationRequest.getView()).thenReturn(TEST_VIEW_URI);
 
 		unmarshallingResult = mock(JAXBElement.class);
 		when(unmarshallingResult.getValue()).thenReturn(authorizationRequest);

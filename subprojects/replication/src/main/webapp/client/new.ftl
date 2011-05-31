@@ -6,11 +6,11 @@
 	<input name="name" type="text" size="60" />
 </p>
 <p>
-	<label for="certificate_id">VOCES Subject Serial Number:</label>
+	<label for="certificate_id">OCES Subject Serial Number:</label>
 	<div>
-		NB. Dette felt skal matche Subject SerialNumber i clientens virksomhedscertifikat.<br />
+		NB. Dette felt skal matche Subject SerialNumber i clientens certifikat.<br />
 		ADVARSEL: Hvis der anvendes DGWS som sikkerhed må der ikke registreres flere klienter med samme CVR-nummer.<br />
-		<b>F.eks. CVR:1234568-UID:1234</b>
+		<b>Eksempel på input: CVR:1234568-UID:1234</b>
 	</div>
 	<input name="certificate_id" type="text" size="80" />
 </p>

@@ -28,13 +28,17 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+import com.trifork.stamdata.Namespace;
 
 
-@XmlRootElement
+@XmlRootElement(namespace = Namespace.STAMDATA_3_0)
 @XmlAccessorType(XmlAccessType.FIELD)
+@XmlType(namespace = Namespace.STAMDATA_3_0)
 public class AuthorizationRequestStructure {
 
-	private String viewURI;
+	private String view;
 
 	protected AuthorizationRequestStructure() {
 
@@ -42,11 +46,11 @@ public class AuthorizationRequestStructure {
 
 	public AuthorizationRequestStructure(String viewURI) {
 
-		this.viewURI = checkNotNull(viewURI);
+		this.view = checkNotNull(viewURI);
 	}
 
-	public String getViewURI() {
+	public String getView() {
 
-		return viewURI;
+		return view;
 	}
 }

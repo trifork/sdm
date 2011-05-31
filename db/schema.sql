@@ -21,7 +21,7 @@ CREATE TABLE AdresseBeskyttelse (
 	navnebeskyttelsestartdato DATETIME, 
 	navnebeskyttelseslettedato DATETIME, 
 	vejkode BIGINT(12), 
-	kommunekode BIGINT(12), 
+	kommunekode BIGINT(12),
 	UNIQUE INDEX (cpr)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
@@ -215,12 +215,13 @@ CREATE TABLE Autorisation (
 -- autorisations.
 
 CREATE TABLE autreg (
+  id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   cpr CHAR(10) NOT NULL,
   given_name VARCHAR(50) NOT NULL,
   surname VARCHAR(100) NOT NULL,
   aut_id CHAR(5) NOT NULL,
   edu_id CHAR(4) NOT NULL,
-  PRIMARY KEY cpr (cpr)
+  KEY cpr_aut_id (cpr, aut_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

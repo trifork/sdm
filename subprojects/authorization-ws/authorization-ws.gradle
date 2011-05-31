@@ -1,0 +1,28 @@
+apply plugin: 'war'
+
+dependencies {
+	compile project(':shared')
+	
+	providedCompile libs.servlet_api
+	
+	compile(libs.seal) {
+		runtime 'commons-httpclient:commons-httpclient:3.1'
+		exclude group: 'xerces' // Conflicts with JBoss
+		exclude group: 'commons-logging'
+	}
+	
+	// LOGGING
+
+	compile libs.slf4j_api
+	compile libs.logback_classic
+	runtime libs.jcl_over_slf4j
+	
+	runtime libs.mysql_driver
+	runtime libs.hibernate_c3p0
+	providedCompile libs.hibernate_entitymanager
+	
+	compile libs.guice_servlet
+	
+	testCompile libs.junit
+	testCompile libs.mockito
+}

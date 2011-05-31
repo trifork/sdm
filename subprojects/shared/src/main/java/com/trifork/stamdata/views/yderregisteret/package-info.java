@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-@XmlSchema(namespace = STAMDATA_3_0 + "/yderregisteret", elementFormDefault = XmlNsForm.UNQUALIFIED)
+@XmlSchema(namespace = STAMDATA_3_0 + "/yderregisteret", elementFormDefault = XmlNsForm.QUALIFIED)
 package com.trifork.stamdata.views.yderregisteret;
 
 import static com.trifork.stamdata.Namespace.STAMDATA_3_0;
