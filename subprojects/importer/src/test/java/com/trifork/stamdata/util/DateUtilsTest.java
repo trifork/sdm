@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.util;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Calendar;
@@ -78,4 +79,16 @@ public class DateUtilsTest {
 		assertEquals(cal.getTime().getTime(), DateUtils.toCalendar(date).getTime().getTime());
 	}
 
+	@Test
+	public void testNullIfPast() {
+		java.util.Date date = DateUtils.PAST.getTime();
+		assertNull(DateUtils.nullIfPast(date));
+		assertNotNull(DateUtils.nullIfPast(new java.util.Date()));
+	}
+	@Test
+	public void testNullIfFuture() {
+		java.util.Date date = DateUtils.FUTURE.getTime();
+		assertNull(DateUtils.nullIfFuture(date));
+		assertNotNull(DateUtils.nullIfFuture(new java.util.Date()));
+	}
 }

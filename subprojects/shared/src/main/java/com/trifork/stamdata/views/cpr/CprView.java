@@ -79,7 +79,7 @@ public abstract class CprView extends View {
 
 	@XmlElement(required = false)
 	public Date getValidTo() {
-		return DateUtils.nullIfPast(validTo);
+		return DateUtils.nullIfFuture(validTo);
 	}
 
 	public void setValidTo(Date validTo) {

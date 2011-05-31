@@ -1,5 +1,6 @@
 package com.trifork.stamdata.lookup.dao;
 
+import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -13,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
@@ -101,6 +103,20 @@ public class PersonDaoTest {
 		
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals(at(2010, Calendar.FEBRUARY, 10), person.getValidFrom());
+	}
+	
+	@Test
+	public void pastAndFutureNotModified() {
+		Folkekirkeoplysninger fo = folkekirkeoplysninger("M");
+		fo.setValidFrom(DateUtils.PAST.getTime());
+		fo.setValidTo(DateUtils.FUTURE.getTime());
+		session.save(fo);
+		session.flush();
+		session.clear();
+		Folkekirkeoplysninger retrieved = (Folkekirkeoplysninger) session.get(Folkekirkeoplysninger.class, fo.getRecordID());
+		assertNull(retrieved.getValidFrom());
+		
+		assertNull(retrieved.getValidTo());
 	}
 	
 	private Person person(Date validFrom) {

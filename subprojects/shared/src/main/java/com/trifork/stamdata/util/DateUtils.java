@@ -114,13 +114,13 @@ public class DateUtils {
 	}
 	
 	public static java.util.Date nullIfPast(java.util.Date date) {
-		if(PAST.equals(date)) {
+		if(PAST.getTime().equals(date)) {
 			return null;
 		}
 		return date;
 	}
 	public static java.util.Date nullIfFuture(java.util.Date date) {
-		if(FUTURE.equals(date)) {
+		if(FUTURE.getTime().equals(date)) {
 			return null;
 		}
 		return date;
