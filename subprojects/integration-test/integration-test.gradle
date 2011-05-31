@@ -96,10 +96,10 @@ task startServer << {
 			property(name: "cargo.logging", value: "high")
 			property(name: "cargo.jvmargs", value: jvmArgs)
 			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
-			deployable(type: "war", file: "$rootDir/subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
+			deployable(type: "war", file: project(':importer').war.archivePath) {
 				property(name: "context", value: "importer")
 			}
-			deployable(type: "war", file: "$rootDir/subprojects/lookup/build/libs/lookup-3.0.0-SNAPSHOT.war") {
+			deployable(type: "war", file: project(':lookup').war.archivePath) {
 				property(name: "context", value: "lookup")
 			}
 		}
