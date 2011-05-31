@@ -72,12 +72,15 @@ task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-t
 }
 
 task initDb << {
-	runSql 'db/bootstrap.sql', 'sdm_warehouse'
+	runSql 'db/bootstrap.sql', 'test'
+	runSql "$rootDir/db/schema.sql", 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }
 
 task startServer << {
-	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "subprojects/integration-test/logs/output.log", log: "logs/cargo.log", action: "start", wait: "false") {
+    logsDir = new File("$rootDir/subprojects/integration-test/logs")
+    logsDir.mkdirs()
+	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "$logsDir/output.log", log: "$logsDir/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
 		extraClasspath(path: configurations.tomcat.asPath)
 		configuration {
@@ -87,10 +90,10 @@ task startServer << {
 			property(name: "cargo.logging", value: "high")
 			property(name: "cargo.jvmargs", value: "-Dsdm.environment=default,integrationtest")
 			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
-			deployable(type: "war", file: "subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
+			deployable(type: "war", file: "$rootDir/subprojects/importer/build/libs/importer-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "importer")
 			}
-			deployable(type: "war", file: "subprojects/lookup/build/libs/lookup-3.0.0-SNAPSHOT.war") {
+			deployable(type: "war", file: "$rootDir/subprojects/lookup/build/libs/lookup-3.0.0-SNAPSHOT.war") {
 				property(name: "context", value: "lookup")
 			}
 		}
