@@ -21,6 +21,8 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
+import org.apache.tools.ant.filters.*
+
 configurations {
 	db
 	cargo
@@ -64,6 +66,11 @@ def runSql(sqlFile, database) {
 }
 
 task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:build']) << {
+	copy {
+		from 'tomcat/config'
+		into 'build/config'
+		filter(ReplaceTokens, tokens: [buildDir: "$buildDir".toString()])
+	}
 	initDb.execute()
 	loadData.execute()
 	startServer.execute()
@@ -79,7 +86,7 @@ task initDb << {
 }
 
 task startServer << {
-    logsDir = new File("$rootDir/subprojects/integration-test/logs")
+    logsDir = new File("$projectDir/logs")
     logsDir.mkdirs()
 	jvmArgs = "-Dsdm.environment=default,integrationtest"
 	debug = hasProperty('debug') ? debug : false
@@ -88,14 +95,14 @@ task startServer << {
 	}
 	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "$logsDir/output.log", log: "$logsDir/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
-		extraClasspath(path: configurations.tomcat.asPath)
+		extraClasspath(path: configurations.tomcat.asPath + ":$buildDir/config/")
 		configuration {
 			property(name: "tomcat-conf-home", value: "$rootDir/subprojects/integration-test/tomcat")
 			property(name: "cargo.servlet.port", value: "8081")
 			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.logging", value: "high")
 			property(name: "cargo.jvmargs", value: jvmArgs)
-			configfile(file: "$rootDir/subprojects/integration-test/tomcat/server.xml", toFile: "conf/server.xml")
+			configfile(file: "$projectDir/tomcat/server.xml", toFile: "conf/server.xml")
 			deployable(type: "war", file: project(':importer').war.archivePath) {
 				property(name: "context", value: "importer")
 			}
@@ -109,7 +116,7 @@ task startServer << {
 task loadData << {
 	copy {
 		from "$rootDir/subprojects/importer/src/test/resources/data/cpr/testEtablering/D100313.L431102"
-		into '/pack/stamdata/input/cpr/input/'
+		into "$buildDir/pack/stamdata/input/cpr/input/"
 	}
 }
 
