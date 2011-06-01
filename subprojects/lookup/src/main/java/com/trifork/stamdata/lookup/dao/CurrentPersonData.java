@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -43,6 +45,18 @@ public class CurrentPersonData {
 		this.vaergemaal = vaergemaal;
 	}
 	
+	public String getFornavn() {
+		return person.fornavn;
+	}
+
+	public String getMellemnavn() {
+		return person.mellemnavn;
+	}
+
+	public String getEfternavn() {
+		return person.efternavn;
+	}
+
 	public Date getValidFrom() {
 		return person.getValidFrom();
 	}
@@ -51,6 +65,10 @@ public class CurrentPersonData {
 		return person.getCpr();
 	}
 	
+	public String getKoen() {
+		return person.koen;
+	}
+
 	public String getLokalitet() {
 		return person.lokalitet;
 	}
@@ -144,5 +162,9 @@ public class CurrentPersonData {
 	public List<UmyndiggoerelseVaergeRelation> getVaergemaal() {
 		List<UmyndiggoerelseVaergeRelation> empty = Collections.emptyList();
 		return vaergemaal == null ? empty : vaergemaal;
+	}
+
+	public Date getFoedselsdato() {
+		return person.foedselsdato;
 	}
 }

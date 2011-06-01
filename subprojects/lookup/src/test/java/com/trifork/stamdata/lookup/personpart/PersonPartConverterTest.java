@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,6 +20,7 @@ import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
+import oio.sagdok.person._1_0.NavnStrukturType;
 import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.PersonType;
@@ -42,6 +44,8 @@ import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.AddressCompleteGreenlandType;
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2006._01._23.PersonGenderCodeType;
+import dk.oio.rep.itst_dk.xml.schemas._2006._01._17.PersonNameStructureType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
 
 
@@ -72,6 +76,22 @@ public class PersonPartConverterTest {
 		assertTrue(cprBorger.isFolkekirkeMedlemIndikator());
 	}
 	
+	@Test
+	public void fillsOutNameGenderAndBirthDate() throws ParseException {
+		Person person = createValidPerson();
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null);
+		PersonType personType = converter.convert(currentPerson);
+
+		EgenskabType egenskabType = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0);
+		NavnStrukturType navnStruktur = egenskabType.getNavnStruktur();
+		PersonNameStructureType personNameStructure = navnStruktur.getPersonNameStructure();
+		assertEquals("Ole", personNameStructure.getPersonGivenName());
+		assertEquals("Friis", personNameStructure.getPersonMiddleName());
+		assertEquals("Olesen", personNameStructure.getPersonSurnameName());
+		assertEquals(PersonGenderCodeType.FEMALE, egenskabType.getPersonGenderCode());
+		assertEquals(DateUtils.yyyy_MM_dd.parse("1981-06-16"), egenskabType.getBirthDate().toGregorianCalendar().getTime());
+	}
+
 	@Test
 	public void fillsOutDanishAddress() {
 		Person person = createValidPerson();
@@ -286,6 +306,15 @@ public class PersonPartConverterTest {
 		Person person = new Person();
 		person.setCpr("1020304050");
 		// C/O-navn ikke i OIO-adresser?!? person.coNavn = "Trifork A/S";
+		person.fornavn = "Ole";
+		person.mellemnavn = "Friis";
+		person.efternavn = "Olesen";
+		person.koen = "K";
+		try {
+			person.foedselsdato = DateUtils.yyyy_MM_dd.parse("1981-06-16");
+		} catch (ParseException e) {
+			throw new RuntimeException();
+		}
 		person.lokalitet = "Scandinavian Congress Center";
 		person.vejnavn = "Margrethepladsen";
 		person.husnummer = "4";

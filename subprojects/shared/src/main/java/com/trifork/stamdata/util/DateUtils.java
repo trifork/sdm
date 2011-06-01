@@ -27,6 +27,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,5 +133,20 @@ public class DateUtils {
 
 	private static boolean isFuture(java.util.Date date) {
 		return FUTURE.getTime().equals(date);
+	}
+
+	public static XMLGregorianCalendar toXmlGregorianCalendar(Date time) {
+		if(time == null) {
+			return null;
+		}
+		GregorianCalendar c = new GregorianCalendar();
+		c.setTime(time);
+		XMLGregorianCalendar xmlGregorianCalendar;
+		try {
+			xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
+		} catch (DatatypeConfigurationException e) {
+			throw new IllegalStateException("Could not create XMLGregorianCalendar from " + time, e);
+		}
+		return xmlGregorianCalendar;
 	}
 }

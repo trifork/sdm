@@ -1,12 +1,9 @@
 package com.trifork.stamdata.lookup.personpart;
 
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import oio.sagdok._2_0.PersonFlerRelationType;
@@ -19,6 +16,8 @@ import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CivilStatusType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
+import oio.sagdok.person._1_0.EgenskabType;
+import oio.sagdok.person._1_0.NavnStrukturType;
 import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.PersonType;
@@ -33,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
+import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
@@ -40,6 +40,8 @@ import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.AddressCompleteGreenlandType;
 import dk.oio.rep.cpr_dk.xml.schemas._2008._05._01.ForeignAddressStructureType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2006._01._23.PersonGenderCodeType;
+import dk.oio.rep.itst_dk.xml.schemas._2006._01._17.PersonNameStructureType;
 import dk.oio.rep.xkom_dk.xml.schemas._2005._03._15.AddressAccessType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
@@ -65,7 +67,42 @@ public class PersonPartConverter {
 	private AttributListeType createAttributListeType(CurrentPersonData person) {
 		AttributListeType result = new AttributListeType();
 		result.getRegisterOplysning().add(createRegisterOplysningType(person));
+		result.getEgenskab().add(createEgenskabType(person));
 		return result;
+	}
+
+	private EgenskabType createEgenskabType(CurrentPersonData person) {
+		EgenskabType result = new EgenskabType();
+		result.setPersonGenderCode(createPersonGenderCodeType(person.getKoen()));
+		result.setBirthDate(DateUtils.toXmlGregorianCalendar(person.getFoedselsdato()));
+		result.setNavnStruktur(createNavnStrukturType(person));
+		return result;
+	}
+
+	private NavnStrukturType createNavnStrukturType(CurrentPersonData person) {
+		NavnStrukturType navnStrukturType = new NavnStrukturType();
+		navnStrukturType.setPersonNameStructure(createPersonNameStructure(person));
+		return navnStrukturType;
+	}
+
+	private PersonNameStructureType createPersonNameStructure(CurrentPersonData person) {
+		PersonNameStructureType result = new PersonNameStructureType();
+		result.setPersonGivenName(person.getFornavn());
+		result.setPersonMiddleName(person.getMellemnavn());
+		result.setPersonSurnameName(person.getEfternavn());
+		return result;
+	}
+
+	private PersonGenderCodeType createPersonGenderCodeType(String koen) {
+		if("M".equals(koen)) {
+			return PersonGenderCodeType.MALE;
+		}
+		else if ("K".equals(koen)) {
+			return PersonGenderCodeType.FEMALE;
+		}
+		else {
+			return PersonGenderCodeType.UNSPECIFIED;
+		}
 	}
 
 	private TilstandListeType createTilstandListe(CurrentPersonData person) {
@@ -124,14 +161,7 @@ public class PersonPartConverter {
 	}
 
 	private TidspunktType createTidspunktType(Date time) {
-		GregorianCalendar c = new GregorianCalendar();
-		c.setTime(time);
-		XMLGregorianCalendar xmlGregorianCalendar;
-		try {
-			xmlGregorianCalendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(c);
-		} catch (DatatypeConfigurationException e) {
-			throw new IllegalStateException("Could not create XMLGregorianCalendar from " + time, e);
-		}
+		XMLGregorianCalendar xmlGregorianCalendar = DateUtils.toXmlGregorianCalendar(time);
 
 		TidspunktType result = new TidspunktType();
 		result.setTidsstempelDatoTid(xmlGregorianCalendar);
