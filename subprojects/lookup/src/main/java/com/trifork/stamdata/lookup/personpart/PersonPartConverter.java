@@ -1,8 +1,12 @@
 package com.trifork.stamdata.lookup.personpart;
 
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -52,6 +56,7 @@ public class PersonPartConverter {
 
 	public PersonType convert(CurrentPersonData person) {
 		PersonType result = new PersonType();
+		result.setUUID(cprToUuid(person.getCprNumber()).toString());
 		result.getRegistrering().add(createRegistreringType(person));
 		return result;
 	}
@@ -342,5 +347,9 @@ public class PersonPartConverter {
 	
 	private String contentsOrNull(String s) {
 		return s == null || s.isEmpty() ? null : s;
+	}
+	
+	private UUID cprToUuid(String cpr) {
+		return UUID.nameUUIDFromBytes(cpr.getBytes(Charset.forName("ISO-8859-1")));
 	}
 }

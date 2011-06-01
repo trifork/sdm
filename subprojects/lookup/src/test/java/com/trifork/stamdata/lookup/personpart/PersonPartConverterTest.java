@@ -66,6 +66,7 @@ public class PersonPartConverterTest {
 		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
+		assertNotNull(personType.getUUID());
 		
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertEquals("1020304050", cprBorger.getPersonCivilRegistrationIdentifier());
