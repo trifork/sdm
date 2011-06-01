@@ -77,6 +77,40 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
+	public void fillsOutAddressProtection() {
+		Person person = createValidPerson();
+		Date now = new Date();
+		Date past = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+		Date future = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+		
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null);
+		PersonType personType = converter.convert(currentPerson);
+		assertFalse(getAddressProtection(personType));
+		
+		person.navneBeskyttelsestartdato = past;
+		personType = converter.convert(currentPerson);
+		assertTrue(getAddressProtection(personType));
+
+		person.navneBeskyttelsestartdato = future;
+		personType = converter.convert(currentPerson);
+		assertFalse(getAddressProtection(personType));
+		
+		person.navneBeskyttelsestartdato = past;
+		person.navnebeskyttelseslettedato = past;
+		personType = converter.convert(currentPerson);
+		assertFalse(getAddressProtection(personType));
+		
+		person.navneBeskyttelsestartdato = past;
+		person.navnebeskyttelseslettedato = future;
+		personType = converter.convert(currentPerson);
+		assertTrue(getAddressProtection(personType));
+	}
+
+	private boolean getAddressProtection(PersonType personType) {
+		return personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger().isNavneAdresseBeskyttelseIndikator();
+	}
+	
+	@Test
 	public void fillsOutNameGenderAndBirthDate() throws ParseException {
 		Person person = createValidPerson();
 		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null);

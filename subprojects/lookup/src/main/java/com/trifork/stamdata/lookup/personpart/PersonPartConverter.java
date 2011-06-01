@@ -216,10 +216,13 @@ public class PersonPartConverter {
 		result.setFolkeregisterAdresse(createAdresseType(person));
 		
 		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
+		Date now = new Date();
+		result.setNavneAdresseBeskyttelseIndikator(
+				(person.getNavnebeskyttelsesstartdato() != null && person.getNavnebeskyttelsesstartdato().before(now)) &&
+				(person.getNavnebeskyttelsesslettedato() == null || person.getNavnebeskyttelsesslettedato().after(now)));
 
 		// TODO: Bare de mest gængse værdier p.t. Skal selvfølgelig hentes rigtigt.
 		result.setPersonNummerGyldighedStatusIndikator(true);
-		result.setNavneAdresseBeskyttelseIndikator(false);
 		result.setTelefonNummerBeskyttelseIndikator(false);
 		result.setForskerBeskyttelseIndikator(false);
 		return result;

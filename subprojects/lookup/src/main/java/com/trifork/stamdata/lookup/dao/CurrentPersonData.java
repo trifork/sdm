@@ -167,4 +167,11 @@ public class CurrentPersonData {
 	public Date getFoedselsdato() {
 		return person.foedselsdato;
 	}
+	
+	public Date getNavnebeskyttelsesstartdato() {
+		return person.navneBeskyttelsestartdato;
+	}
+	public Date getNavnebeskyttelsesslettedato() {
+		return person.navnebeskyttelseslettedato;
+	}
 }
