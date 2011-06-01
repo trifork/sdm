@@ -362,4 +362,13 @@ public class CPRParserTest {
 		assertEquals("", record.getAfledtMarkering());
 		assertEquals("", record.getNoeglekonstant());
 	}
+	
+	@Test
+	public void canFixWeirdDates() {
+		String weird = "1900-00-00";
+		assertEquals("1900-01-01", CPRParser.fixWeirdDate(weird));
+		
+		weird = "190001019999";
+		assertEquals("190001010000", CPRParser.fixWeirdDate(weird));
+	}
 }

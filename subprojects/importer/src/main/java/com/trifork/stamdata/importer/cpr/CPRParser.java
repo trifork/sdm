@@ -36,7 +36,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -481,8 +484,76 @@ public class CPRParser {
 	    }
 	    return "";
 	}
+	
+	private static Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
+	private static Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
+	
+	static String fixWeirdDate(String date) {
+		Matcher dateMatcher = datePattern.matcher(date);
+		String fixedDate;
+		if(dateMatcher.matches()) {
+			fixedDate = fixDate(dateMatcher);
+		}
+		else {
+			Matcher timeMatcher = timestampPattern.matcher(date);
+			if(timeMatcher.matches()) {
+				fixedDate = fixTime(timeMatcher);				
+			}
+			else {
+				logger.error("Unexpected date format: {}", date);
+				return date;
+			}
+		}
+		if(!fixedDate.equals(date)) {
+			logger.info("Fixing CPR date {} to {}", date, fixedDate);
+		}
+		return fixedDate;
+	}
 
+	private static String fixTime(Matcher timeMatcher) {
+		int year, month, day, hours, minutes;
+		year = Integer.parseInt(timeMatcher.group(1));
+		month = Integer.parseInt(timeMatcher.group(2));
+		day = Integer.parseInt(timeMatcher.group(3));
+		hours = Integer.parseInt(timeMatcher.group(4));
+		minutes = Integer.parseInt(timeMatcher.group(5));
+		if(month == 0) {
+			month = 1;
+		}
+		if(day == 0) {
+			day = 1;
+		}
+		if(hours >= 24) {
+			hours = 0;
+		}
+		if(minutes >= 60) {
+			minutes = 0;
+		}
+		StringBuilder result = new StringBuilder();
+		Formatter formatter = new Formatter(result);
+		formatter.format("%04d%02d%02d%02d%02d", year, month, day, hours, minutes);
+		return result.toString();
+	}
+
+	private static String fixDate(Matcher dateMatcher) {
+		int year, month, day;
+		year = Integer.parseInt(dateMatcher.group(1));
+		month = Integer.parseInt(dateMatcher.group(2));
+		day = Integer.parseInt(dateMatcher.group(3));
+		if(month == 0) {
+			month = 1;
+		}
+		if(day == 0) {
+			day = 1;
+		}
+		StringBuilder result = new StringBuilder();
+		Formatter formatter = new Formatter(result);
+		formatter.format("%04d-%02d-%02d", year, month, day);
+		return result.toString();
+	}
+	
 	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, FileParseException {
+		dateString = fixWeirdDate(dateString);
 		Date date = format.parse(dateString);
 		String formattedDate = format.format(date);
 		if (!formattedDate.equals(dateString)) {
