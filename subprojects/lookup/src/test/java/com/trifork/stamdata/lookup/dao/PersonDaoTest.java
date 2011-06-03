@@ -4,8 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -17,6 +20,7 @@ import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
 import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.Person;
@@ -32,7 +36,7 @@ public class PersonDaoTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		db = new DatabaseHelper("lookup", Person.class, Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class,
-				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class);
+				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -137,6 +141,45 @@ public class PersonDaoTest {
 		assertEquals(expectedVaergemaalscpr, vaergemaalscpr);
 	}
 	
+	@Test
+	public void getsBoern() {
+		session.save(barnRelation("7060504030", "1020304050"));
+		session.save(barnRelation("7060504030", "1020304051"));
+		session.save(barnRelation("7060504030", "1020304052"));
+		CurrentPersonData person = dao.get("7060504030");
+		List<String> expected = Arrays.asList("1020304050", "1020304051", "1020304052");
+		List<String> result = person.getBoernCpr();
+		Collections.sort(result);
+		assertEquals(expected, result);
+	}
+	
+	@Test
+	public void getsParents() {
+		session.save(barnRelation("7060504030", "1020304050"));
+		session.save(barnRelation("7060504030", "1020304051"));
+		session.save(barnRelation("7060504030", "1020304052"));
+		session.save(barnRelation("7060504031", "1020304050"));
+		CurrentPersonData person = dao.get("1020304050");
+		List<String> expected = Arrays.asList("7060504030", "7060504031");
+		List<String> result = person.getForaeldreCpr();
+		Collections.sort(result);
+		assertEquals(expected, result);
+		
+	}
+	
+	private BarnRelation barnRelation(String cpr, String barnCpr) {
+		BarnRelation barnRelation = new BarnRelation();
+		barnRelation.id = cpr + "-" + barnCpr;
+		barnRelation.setCpr(cpr);
+		barnRelation.barnCPR = barnCpr;
+		barnRelation.setValidFrom(at(2005, Calendar.JUNE, 15));
+		barnRelation.setCreatedBy("AHJ");
+		barnRelation.setModifiedBy("AHJ");
+		barnRelation.setCreatedDate(new Date());
+		barnRelation.setModifiedDate(new Date());
+		return barnRelation;
+	}
+
 	@Test
 	public void pastAndFutureNotModified() {
 		Folkekirkeoplysninger fo = folkekirkeoplysninger("M");

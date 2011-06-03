@@ -40,10 +40,10 @@ public class BarnRelation extends CprView {
 
 	@XmlTransient
 	@Column(name = "Id")
-	protected String id;
+	public String id;
 
 	@Column(name = "BarnCPR")
-	protected String barnCPR;
+	public String barnCPR;
 
 	@Override
 	public String getId() {

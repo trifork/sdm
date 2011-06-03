@@ -1,13 +1,13 @@
 package com.trifork.stamdata.lookup.dao;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.datatype.XMLGregorianCalendar;
-
+import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -26,6 +26,8 @@ public class CurrentPersonData {
 	private final Udrejseoplysninger udrejseoplysninger;
 	private final UmyndiggoerelseVaergeRelation vaerge;
 	private final List<UmyndiggoerelseVaergeRelation> vaergemaal;
+	private final List<BarnRelation> boern;
+	private final List<BarnRelation> foraeldre;
 
 	public CurrentPersonData(Person person,
 			Folkekirkeoplysninger folkekirkeoplysninger,
@@ -34,7 +36,9 @@ public class CurrentPersonData {
 			Civilstand civilstand,
 			Udrejseoplysninger udrejseoplysninger,
 			UmyndiggoerelseVaergeRelation vaerge,
-			List<UmyndiggoerelseVaergeRelation> vaergemaal) {
+			List<UmyndiggoerelseVaergeRelation> vaergemaal,
+			List<BarnRelation> boern,
+			List<BarnRelation> foraeldre) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
 		this.statsborgerskab = statsborgerskab;
@@ -43,6 +47,8 @@ public class CurrentPersonData {
 		this.udrejseoplysninger = udrejseoplysninger;
 		this.vaerge = vaerge;
 		this.vaergemaal = vaergemaal;
+		this.boern = boern;
+		this.foraeldre = foraeldre;
 	}
 	
 	public String getFornavn() {
@@ -173,5 +179,27 @@ public class CurrentPersonData {
 	}
 	public Date getNavnebeskyttelsesslettedato() {
 		return person.navnebeskyttelseslettedato;
+	}
+	
+	public List<String> getBoernCpr() {
+		List<String> result = new ArrayList<String>();
+		if(boern == null) {
+			return result;
+		}
+		for(BarnRelation barnRelation : boern) {
+			result.add(barnRelation.barnCPR);
+		}
+		return result;
+	}
+	
+	public List<String> getForaeldreCpr() {
+		List<String> result = new ArrayList<String>();
+		if(boern == null) {
+			return result;
+		}
+		for(BarnRelation barnRelation : foraeldre) {
+			result.add(barnRelation.getCpr());
+		}
+		return result;
 	}
 }

@@ -124,6 +124,17 @@ public class PersonPartConverter {
 		for (UmyndiggoerelseVaergeRelation vaergemaal : person.getVaergemaal()) {
 			result.getRetligHandleevneVaergemaalsindehaver().add(createPersonFlerRelationTypeForVaergemaal(vaergemaal));
 		}
+		for(String boernCpr : person.getBoernCpr()) {
+			result.getBoern().add(createPersonFlerRelationTypeForCpr(boernCpr));
+		}
+		// TODO: Find løsning mht. forældre (check google docs-dokumentet)
+		return result;
+	}
+
+	private PersonFlerRelationType createPersonFlerRelationTypeForCpr(
+			String cpr) {
+		PersonFlerRelationType result = new PersonFlerRelationType();
+		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, cpr));
 		return result;
 	}
 
