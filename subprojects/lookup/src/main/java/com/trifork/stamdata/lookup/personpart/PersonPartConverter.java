@@ -3,6 +3,7 @@ package com.trifork.stamdata.lookup.personpart;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -127,7 +128,33 @@ public class PersonPartConverter {
 		for(String boernCpr : person.getBoernCpr()) {
 			result.getBoern().add(createPersonFlerRelationTypeForCpr(boernCpr));
 		}
+		
 		// TODO: Find løsning mht. forældre (check google docs-dokumentet)
+		addPartnerRelation(result, person);
+		return result;
+	}
+	
+	private void addPartnerRelation(RelationListeType result, CurrentPersonData person) {
+		if(person.getCivilstandskode() == null) {
+			return;
+		}
+		if(!person.getCivilstandskode().equals("G") && !person.getCivilstandskode().equals("P")) {
+			return;
+		}
+		PersonRelationType partnerRelation = createPersonRelationTypeForCpr(person.getAegtefaelleCpr(), person.getCivilstand().getValidFrom(), person.getCivilstand().getValidTo());
+		if(person.getCivilstandskode().equals("G")) {
+			result.getAegtefaelle().add(partnerRelation);
+		}
+		else {
+			result.getRegistreretPartner().add(partnerRelation);
+		}
+	}
+
+	private PersonRelationType createPersonRelationTypeForCpr(
+			String cpr, Date validFrom, Date validTo) {
+		PersonRelationType result = new PersonRelationType();
+		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, cpr));
+		result.setVirkning(createVirkningType(validFrom, validTo));
 		return result;
 	}
 

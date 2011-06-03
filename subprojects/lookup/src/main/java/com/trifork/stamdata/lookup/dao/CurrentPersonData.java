@@ -146,11 +146,22 @@ public class CurrentPersonData {
 		}
 		return foedselsregistreringsoplysninger.foedselsregistreringstekst;
 	}
+	
+	public Civilstand getCivilstand() {
+		return civilstand;
+	}
 	public String getCivilstandskode() {
 		if(civilstand == null) {
 			return null;
 		}
 		return civilstand.civilstandskode;
+	}
+	
+	public String getAegtefaelleCpr() {
+		if(civilstand == null) {
+			return null;
+		}
+		return civilstand.aegtefaellePersonnummer;
 	}
 
 	public Date getSeparationsdato() {

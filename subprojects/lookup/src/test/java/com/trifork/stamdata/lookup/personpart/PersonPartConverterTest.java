@@ -266,6 +266,25 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
+	public void fillsOutAegtefaelle() {
+		Civilstand cs = new Civilstand();
+		cs.civilstandskode = "G";
+		cs.aegtefaellePersonnummer = "1234567890";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals("URN:CPR:1234567890", personType.getRegistrering().get(0).getRelationListe().getAegtefaelle().get(0).getReferenceID().getURNIdentifikator());
+	}
+	
+	@Test
+	public void fillsOutRegistreretPartner() {
+		Civilstand cs = new Civilstand();
+		cs.civilstandskode = "P";
+		cs.aegtefaellePersonnummer = "1234567890";
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals("URN:CPR:1234567890", personType.getRegistrering().get(0).getRelationListe().getRegistreretPartner().get(0).getReferenceID().getURNIdentifikator());
+	}
+	@Test
 	public void fillsOutRetligHandleevneVaergeForPerson() {
 		UmyndiggoerelseVaergeRelation umyndiggoerelse = createUmyndiggoerelseVaergeRelation(null, "1020304050", at(2005, Calendar.JANUARY, 25), at(2020, Calendar.MARCH, 17));
 		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null, null, null);
