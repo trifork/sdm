@@ -51,6 +51,10 @@ public class CurrentPersonData {
 		this.foraeldre = foraeldre;
 	}
 	
+	public String getStatus() {
+		return person.status;
+	}
+	
 	public String getFornavn() {
 		return person.fornavn;
 	}

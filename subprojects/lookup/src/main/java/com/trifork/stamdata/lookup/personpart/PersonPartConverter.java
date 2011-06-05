@@ -13,6 +13,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import oio.sagdok._2_0.PersonFlerRelationType;
 import oio.sagdok._2_0.TidspunktType;
+import oio.sagdok._2_0.TilstandVirkningType;
 import oio.sagdok._2_0.UnikIdType;
 import oio.sagdok._2_0.VirkningType;
 import oio.sagdok.person._1_0.AdresseType;
@@ -22,6 +23,8 @@ import oio.sagdok.person._1_0.CivilStatusType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
+import oio.sagdok.person._1_0.LivStatusKodeType;
+import oio.sagdok.person._1_0.LivStatusType;
 import oio.sagdok.person._1_0.NavnStrukturType;
 import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.GroenlandAdresseType;
@@ -114,6 +117,7 @@ public class PersonPartConverter {
 	private TilstandListeType createTilstandListe(CurrentPersonData person) {
 		TilstandListeType result = new TilstandListeType();
 		result.setCivilStatus(createCivilStatusType(person));
+		result.setLivStatus(createLivStatusType(person));
 		return result;
 	}
 
@@ -185,6 +189,14 @@ public class PersonPartConverter {
 		return StringUtils.join(lines, "\n");
 	}
 
+	private TilstandVirkningType createTilstandVirkningType(Date from) {
+		TilstandVirkningType result = new TilstandVirkningType();
+		result.setFraTidspunkt(createTidspunktType(from));
+		result.setAktoerRef(createAktoerRefId());
+		return result;
+		
+	}
+	
 	private VirkningType createVirkningType(Date from, Date to) {
 		VirkningType result = new VirkningType();
 		if (from != null) {
@@ -193,8 +205,12 @@ public class PersonPartConverter {
 		if (to != null) {
 			result.setTilTidspunkt(createTidspunktType(to));
 		}
-		result.setAktoerRef(createUnikIdType("Aktoer", "Importer")); // Field is required
+		result.setAktoerRef(createAktoerRefId()); // Field is required
 		return result;
+	}
+
+	private UnikIdType createAktoerRefId() {
+		return createUnikIdType("Aktoer", "Importer");
 	}
 
 	private UnikIdType createUnikIdType(String nameSpace, String cpr) {
@@ -221,6 +237,30 @@ public class PersonPartConverter {
 		put("O", CivilStatusKodeType.OPHAEVET_PARTNERSKAB);
 		put("L", CivilStatusKodeType.LAENGSTLEVENDE);
 	}};
+
+	private LivStatusType createLivStatusType(CurrentPersonData person) {
+		LivStatusKodeType livStatus;
+		if("70".equals(person.getStatus())) {
+			livStatus = LivStatusKodeType.FORSVUNDET;
+		}
+		else if ("90".equals(person.getStatus())) {
+			livStatus = LivStatusKodeType.DOED;
+		}
+		else if ("80".equals(person.getStatus())) {
+			// udrejst - så er det jo ikke til at vide med sikkerhed.
+			// men levende er vist bedste bud
+			livStatus = LivStatusKodeType.FOEDT;
+		}
+		else {
+			// alle andre mapper til FOEDT - herunder ændrede/annullerede/slettede numre
+			livStatus = LivStatusKodeType.FOEDT;
+		}
+		LivStatusType livStatusType = new LivStatusType();
+		livStatusType.setLivStatusKode(livStatus);
+		// TODO we probably need to import this.
+		//livStatusType.setTilstandVirkning(createTilstandVirkningType(person.getStatusDato()));
+		return livStatusType;
+	}
 
 	/*package*/ CivilStatusType createCivilStatusType(CurrentPersonData person) {
 		String civilstandskode = person.getCivilstandskode();

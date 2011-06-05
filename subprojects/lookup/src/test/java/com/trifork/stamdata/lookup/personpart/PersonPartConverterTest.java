@@ -21,6 +21,7 @@ import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
 import oio.sagdok.person._1_0.GroenlandAdresseType;
+import oio.sagdok.person._1_0.LivStatusKodeType;
 import oio.sagdok.person._1_0.NavnStrukturType;
 import oio.sagdok.person._1_0.PersonRelationType;
 import oio.sagdok.person._1_0.PersonType;
@@ -266,6 +267,14 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
+	public void fillsOutLivsStatus() {
+		Person person = createValidPerson();
+		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals(LivStatusKodeType.FOEDT,personType.getRegistrering().get(0).getTilstandListe().getLivStatus().getLivStatusKode());
+	}
+	
+	@Test
 	public void fillsOutAegtefaelle() {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "G";
@@ -391,6 +400,7 @@ public class PersonPartConverterTest {
 		person.postnummer = BigInteger.valueOf(8000);
 		person.bynavn = "Centrum af Århus";
 		person.postdistrikt = "Århus C";
+		person.status = "01";
 		return person;
 	}
 
