@@ -184,6 +184,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutForeignAddress() {
 		Person person = createValidPerson();
+		person.status = "80"; // udrejst
 		Udrejseoplysninger uo = new Udrejseoplysninger();
 		uo.udrejseLandekode = "1234";
 		uo.udlandsadresse1 = "line1";
@@ -271,7 +272,20 @@ public class PersonPartConverterTest {
 		Person person = createValidPerson();
 		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
-		assertEquals(LivStatusKodeType.FOEDT,personType.getRegistrering().get(0).getTilstandListe().getLivStatus().getLivStatusKode());
+		assertEquals(LivStatusKodeType.FOEDT,getLivStatus(personType));
+		person.status = "90"; // doed
+		personType = converter.convert(cp);
+		assertEquals(LivStatusKodeType.DOED,getLivStatus(personType));
+		person.status = "80"; // udrejst
+		personType = converter.convert(cp);
+		assertEquals(LivStatusKodeType.FOEDT,getLivStatus(personType));
+		person.status = "70"; // udrejst
+		personType = converter.convert(cp);
+		assertEquals(LivStatusKodeType.FORSVUNDET,getLivStatus(personType));
+	}
+
+	private LivStatusKodeType getLivStatus(PersonType personType) {
+		return personType.getRegistrering().get(0).getTilstandListe().getLivStatus().getLivStatusKode();
 	}
 	
 	@Test

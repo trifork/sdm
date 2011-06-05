@@ -313,7 +313,8 @@ public class PersonPartConverter {
 
 	private AdresseType createAdresseType(CurrentPersonData person) {
 		AdresseType result = new AdresseType();
-		if(person.getUdrejseoplysninger() == null) {
+		// check om personen har status 80, udrejst.
+		if(!"80".equals(person.getStatus())) {
 			if(person.getPostnummer() == null) {
 				return null;
 			}
@@ -359,6 +360,9 @@ public class PersonPartConverter {
 
 	private VerdenAdresseType createVerdenAdresse(
 			Udrejseoplysninger udrejseoplysninger) {
+		if(udrejseoplysninger == null) {
+			return null;
+		}
 		VerdenAdresseType result = new VerdenAdresseType();
 		ForeignAddressStructureType address = new ForeignAddressStructureType();
 		result.setForeignAddressStructure(address);
