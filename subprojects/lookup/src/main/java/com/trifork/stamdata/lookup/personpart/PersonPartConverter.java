@@ -257,8 +257,6 @@ public class PersonPartConverter {
 		}
 		LivStatusType livStatusType = new LivStatusType();
 		livStatusType.setLivStatusKode(livStatus);
-		// TODO we probably need to import this.
-		//livStatusType.setTilstandVirkning(createTilstandVirkningType(person.getStatusDato()));
 		return livStatusType;
 	}
 
