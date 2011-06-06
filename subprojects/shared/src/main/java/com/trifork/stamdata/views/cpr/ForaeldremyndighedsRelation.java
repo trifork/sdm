@@ -42,16 +42,16 @@ public class ForaeldremyndighedsRelation extends CprView {
 
 	@XmlTransient
 	@Column(name = "Id")
-	protected String id;
+	public String id;
 
 	@Column(name = "TypeKode")
-	protected String typeKode;
+	public String typeKode;
 
 	@Column(name = "TypeTekst")
-	protected String typeTekst;
+	public String typeTekst;
 
 	@Column(name = "RelationCpr")
-	protected String relationCpr;
+	public String relationCpr;
 
 	@Override
 	public String getId() {

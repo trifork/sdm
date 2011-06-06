@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
@@ -132,9 +133,65 @@ public class PersonPartConverter {
 		}
 		addParentRelations(result, person);
 		addPartnerRelation(result, person);
+		addForaeldremyndighedsIndehavere(result, person);
+		addforaeldremyndighedBoern(result, person);
 		return result;
 	}
 	
+	private void addforaeldremyndighedBoern(RelationListeType result,
+			CurrentPersonData person) {
+		if(person.getForaeldreMyndighedBoern() == null) {
+			return;
+		}
+		for(ForaeldremyndighedsRelation relation : person.getForaeldreMyndighedBoern()) {
+			result.getForaeldremyndighedsboern().add(createPersonFlerRelationTypeForCpr(relation.getCpr()));
+		}
+	}
+
+	private void addForaeldremyndighedsIndehavere(RelationListeType result,
+			CurrentPersonData person) {
+		if(person.getForaeldreMyndighedsIndehavere() == null) {
+			return;
+		}
+		for(ForaeldremyndighedsRelation relation : person.getForaeldreMyndighedsIndehavere()) {
+			if(relation.typeKode.equals("0003")) { 
+				// mor
+				if(person.getMorOplysninger() == null) {
+					logger.error("There was a ForaeldremyndighedsRelation with type 0003 (mother), but there is no MorOgFaroplysninger, cpr={}", person.getCprNumber());
+					continue;
+				}
+				if(person.getMorOplysninger().foraeldercpr == null) {
+					logger.error("There was a ForaeldremyndighedsRelation with type 0003 (mother), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
+					continue;
+				}
+				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(person.getMorOplysninger().foraeldercpr, null, null));
+			}
+			else if(relation.typeKode.equals("0004")) {
+				// far
+				if(person.getFarOplysninger() == null) {
+					logger.error("There was a ForaeldremyndighedsRelation with type 0004 (father), but there is no MorOgFaroplysninger, cpr={}", person.getCprNumber());
+					continue;
+				}
+				if(person.getFarOplysninger().foraeldercpr == null) {
+					logger.error("There was a ForaeldremyndighedsRelation with type 0004 (father), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
+					continue;
+				}
+				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(person.getFarOplysninger().foraeldercpr, null, null));
+			}
+			else if(relation.typeKode.equals("0005") || relation.typeKode.equals("0006")) {
+				// andre foraeldremyndighedsindehavere
+				if(relation.relationCpr == null) {
+					logger.error("ForaeldremyndighedsRelation had type {} but did not have relationCpr, cpr={}", relation.typeKode, person.getCprNumber());
+					continue;
+				}
+				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(relation.relationCpr, null, null));
+			}
+			else {
+				logger.error("Ukendt foraeldremyndigheds-typekode {}, cpr={}", relation.typeKode, person.getCprNumber());
+			}
+		}
+	}
+
 	private void addParentRelations(RelationListeType result,
 			CurrentPersonData person) {
 		addFatherRelation(result, person.getFarOplysninger());

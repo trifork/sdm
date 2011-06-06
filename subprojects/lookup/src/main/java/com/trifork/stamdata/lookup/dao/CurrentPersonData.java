@@ -11,6 +11,7 @@ import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
@@ -30,6 +31,8 @@ public class CurrentPersonData {
 	private final List<BarnRelation> boern;
 	private final MorOgFaroplysninger morOplysninger;
 	private final MorOgFaroplysninger farOplysninger;
+	private final List<ForaeldremyndighedsRelation> foraeldreMyndighedsIndehavere;
+	private final List<ForaeldremyndighedsRelation> foraeldreMyndighedBoern;
 	
 	public CurrentPersonData(Person person,
 			Folkekirkeoplysninger folkekirkeoplysninger,
@@ -41,7 +44,9 @@ public class CurrentPersonData {
 			List<UmyndiggoerelseVaergeRelation> vaergemaal,
 			List<BarnRelation> boern,
 			MorOgFaroplysninger morOplysninger,
-			MorOgFaroplysninger farOplysninger
+			MorOgFaroplysninger farOplysninger, 
+			List<ForaeldremyndighedsRelation> foraeldreMyndighedsIndehavere, 
+			List<ForaeldremyndighedsRelation> foraeldreMyndighedBoern
 			) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
@@ -54,6 +59,8 @@ public class CurrentPersonData {
 		this.boern = boern;
 		this.morOplysninger = morOplysninger;
 		this.farOplysninger = farOplysninger;
+		this.foraeldreMyndighedsIndehavere = foraeldreMyndighedsIndehavere;
+		this.foraeldreMyndighedBoern = foraeldreMyndighedBoern;
 	}
 	
 	public String getStatus() {
@@ -218,5 +225,13 @@ public class CurrentPersonData {
 
 	public MorOgFaroplysninger getFarOplysninger() {
 		return farOplysninger;
+	}
+
+	public List<ForaeldremyndighedsRelation> getForaeldreMyndighedsIndehavere() {
+		return foraeldreMyndighedsIndehavere;
+	}
+
+	public List<ForaeldremyndighedsRelation> getForaeldreMyndighedBoern() {
+		return foraeldreMyndighedBoern;
 	}
 }

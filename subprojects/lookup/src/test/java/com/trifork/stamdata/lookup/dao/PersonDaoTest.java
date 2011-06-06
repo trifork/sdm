@@ -24,6 +24,7 @@ import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
@@ -38,7 +39,7 @@ public class PersonDaoTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		db = new DatabaseHelper("lookup", Person.class, Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class,
-				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class, MorOgFaroplysninger.class);
+				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class, MorOgFaroplysninger.class, ForaeldremyndighedsRelation.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -166,6 +167,38 @@ public class PersonDaoTest {
 		MorOgFaroplysninger farOplysninger = person.getFarOplysninger();
 		assertNotNull(farOplysninger);
 		assertEquals("1020304051", farOplysninger.foraeldercpr);
+	}
+	
+	@Test
+	public void getsForaeldremyndighedsIndehavere() {
+		session.save(foraeldremyndighedsRelation("12345678", "0003", null)); // mor
+		session.save(foraeldremyndighedsRelation("12345678", "0005", "11111111")); // anden indehaver 1
+		CurrentPersonData person = dao.get("12345678");
+		assertEquals(2, person.getForaeldreMyndighedsIndehavere().size());
+	}
+	
+	@Test
+	public void getsForaeldremyndighedsBoern() {
+		session.save(foraeldremyndighedsRelation("12345678", "0003", null)); // cpr for foraelder er null hvis foraelder er registreret i CPR.
+		session.save(foraeldremyndighedsRelation("12345679", "0005", "11111111"));
+		session.save(barnRelation("11111111", "12345678"));
+		CurrentPersonData person = dao.get("11111111");
+		assertEquals(2, person.getForaeldreMyndighedBoern().size());
+	}
+
+	private ForaeldremyndighedsRelation foraeldremyndighedsRelation(String cpr, String kode, String indehaverCpr) {
+		ForaeldremyndighedsRelation foraeldremyndighedsRelation = new ForaeldremyndighedsRelation();
+		foraeldremyndighedsRelation.id = cpr + "-" + kode;
+		foraeldremyndighedsRelation.setCpr(cpr);
+		foraeldremyndighedsRelation.typeKode = kode;
+		foraeldremyndighedsRelation.typeTekst = kode;
+		foraeldremyndighedsRelation.relationCpr = indehaverCpr;
+		foraeldremyndighedsRelation.setValidFrom(at(2005, Calendar.JUNE, 15));
+		foraeldremyndighedsRelation.setCreatedBy("AHJ");
+		foraeldremyndighedsRelation.setModifiedBy("AHJ");
+		foraeldremyndighedsRelation.setCreatedDate(new Date());
+		foraeldremyndighedsRelation.setModifiedDate(new Date());
+		return foraeldremyndighedsRelation;
 	}
 	
 	private BarnRelation barnRelation(String cpr, String barnCpr) {
