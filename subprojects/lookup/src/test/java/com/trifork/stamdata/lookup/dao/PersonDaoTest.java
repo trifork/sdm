@@ -1,6 +1,7 @@
 package com.trifork.stamdata.lookup.dao;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -23,6 +24,7 @@ import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
@@ -36,7 +38,7 @@ public class PersonDaoTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		db = new DatabaseHelper("lookup", Person.class, Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class,
-				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class);
+				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class, MorOgFaroplysninger.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -155,16 +157,15 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsParents() {
-		session.save(barnRelation("7060504030", "1020304050"));
-		session.save(barnRelation("7060504030", "1020304051"));
-		session.save(barnRelation("7060504030", "1020304052"));
-		session.save(barnRelation("7060504031", "1020304050"));
-		CurrentPersonData person = dao.get("1020304050");
-		List<String> expected = Arrays.asList("7060504030", "7060504031");
-		List<String> result = person.getForaeldreCpr();
-		Collections.sort(result);
-		assertEquals(expected, result);
-		
+		session.save(morOgFaroplysninger("7060504030", "1020304050", "M"));
+		session.save(morOgFaroplysninger("7060504030", "1020304051", "F"));
+		CurrentPersonData person = dao.get("7060504030");
+		MorOgFaroplysninger morOplysninger = person.getMorOplysninger();
+		assertNotNull(morOplysninger);
+		assertEquals("1020304050", morOplysninger.foraeldercpr);
+		MorOgFaroplysninger farOplysninger = person.getFarOplysninger();
+		assertNotNull(farOplysninger);
+		assertEquals("1020304051", farOplysninger.foraeldercpr);
 	}
 	
 	private BarnRelation barnRelation(String cpr, String barnCpr) {
@@ -178,6 +179,21 @@ public class PersonDaoTest {
 		barnRelation.setCreatedDate(new Date());
 		barnRelation.setModifiedDate(new Date());
 		return barnRelation;
+	}
+	
+	private MorOgFaroplysninger morOgFaroplysninger(String cpr, String foraelderCpr, String foraelderkode) {
+		MorOgFaroplysninger morOgFarOplysninger = new MorOgFaroplysninger();
+		morOgFarOplysninger.setCpr(cpr);
+		morOgFarOplysninger.foraeldercpr = foraelderCpr;
+		morOgFarOplysninger.id = cpr + "-"  + foraelderkode;
+		morOgFarOplysninger.foraelderkode = foraelderkode;
+		morOgFarOplysninger.setValidFrom(at(2005, Calendar.JUNE, 15));
+		morOgFarOplysninger.setCreatedBy("AHJ");
+		morOgFarOplysninger.setModifiedBy("AHJ");
+		morOgFarOplysninger.setCreatedDate(new Date());
+		morOgFarOplysninger.setModifiedDate(new Date());
+		return morOgFarOplysninger;
+		
 	}
 
 	@Test

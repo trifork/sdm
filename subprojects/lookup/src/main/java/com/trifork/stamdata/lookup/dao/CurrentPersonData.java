@@ -11,6 +11,7 @@ import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
@@ -27,8 +28,9 @@ public class CurrentPersonData {
 	private final UmyndiggoerelseVaergeRelation vaerge;
 	private final List<UmyndiggoerelseVaergeRelation> vaergemaal;
 	private final List<BarnRelation> boern;
-	private final List<BarnRelation> foraeldre;
-
+	private final MorOgFaroplysninger morOplysninger;
+	private final MorOgFaroplysninger farOplysninger;
+	
 	public CurrentPersonData(Person person,
 			Folkekirkeoplysninger folkekirkeoplysninger,
 			Statsborgerskab statsborgerskab,
@@ -38,7 +40,9 @@ public class CurrentPersonData {
 			UmyndiggoerelseVaergeRelation vaerge,
 			List<UmyndiggoerelseVaergeRelation> vaergemaal,
 			List<BarnRelation> boern,
-			List<BarnRelation> foraeldre) {
+			MorOgFaroplysninger morOplysninger,
+			MorOgFaroplysninger farOplysninger
+			) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
 		this.statsborgerskab = statsborgerskab;
@@ -48,7 +52,8 @@ public class CurrentPersonData {
 		this.vaerge = vaerge;
 		this.vaergemaal = vaergemaal;
 		this.boern = boern;
-		this.foraeldre = foraeldre;
+		this.morOplysninger = morOplysninger;
+		this.farOplysninger = farOplysninger;
 	}
 	
 	public String getStatus() {
@@ -206,15 +211,12 @@ public class CurrentPersonData {
 		}
 		return result;
 	}
-	
-	public List<String> getForaeldreCpr() {
-		List<String> result = new ArrayList<String>();
-		if(boern == null) {
-			return result;
-		}
-		for(BarnRelation barnRelation : foraeldre) {
-			result.add(barnRelation.getCpr());
-		}
-		return result;
+
+	public MorOgFaroplysninger getMorOplysninger() {
+		return morOplysninger;
+	}
+
+	public MorOgFaroplysninger getFarOplysninger() {
+		return farOplysninger;
 	}
 }

@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.views.ViewPath;
 
@@ -46,7 +47,9 @@ import com.trifork.stamdata.views.ViewPath;
 public class MorOgFaroplysninger extends CprView {
 
 	@XmlElement(required = true)
-	protected String foraelderkode;
+	public String foraelderkode;
+	
+	public String foraeldercpr;
 
 	@Temporal(TIMESTAMP)
 	protected Date dato;
@@ -56,9 +59,13 @@ public class MorOgFaroplysninger extends CprView {
 
 	protected String navn;
 
+	@XmlTransient
+	@Column(name = "Id")
+	public String id;
+	
 	@Override
 	public String getId() {
-		return getCpr();
+		return id;
 	}
 
 	@Override

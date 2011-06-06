@@ -378,20 +378,6 @@ public class CPRIntegrationTest {
 	}
 
 	@Test
-	public void ignoresMorOgFaroplysningerWhenParentCprIsSpecified() throws Exception {
-		setIkraftDate(new Date(2001-1900, 10, 16));
-		importFile("data/cpr/morOgFaroplysninger/medcpr/D100314.L431101");
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select count(*) c from MorOgFaroplysninger where CPR='0905414143'");
-		rs.next();
-		assertEquals(0, rs.getInt("c"));
-		stmt.close();
-		con.close();
-	}
-
-	@Test
 	public void ImportU12160Test() throws Exception {
 		setIkraftDate(new Date(2001-1900, 10, 16));
 		importFile("data/cpr/D100312.L431101");

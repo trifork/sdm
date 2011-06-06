@@ -94,6 +94,7 @@ public class MorOgFaroplysninger extends CPREntity {
 		this.foraeldercpr = foraeldercpr;
 	}
 
+	@Output
 	public String getForaeldercpr() {
 		return foraeldercpr;
 	}

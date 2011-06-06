@@ -156,12 +156,8 @@ public class CPRParser {
 		case 15:
 			MorOgFaroplysninger moroplysninger = moroplysninger(line);
 			MorOgFaroplysninger faroplysninger = faroplysninger(line);
-			if (!moroplysninger.hasCpr()) {
-				cpr.addEntity(moroplysninger);
-			}
-			if (!faroplysninger.hasCpr()) {
-				cpr.addEntity(faroplysninger);
-			}
+			cpr.addEntity(moroplysninger);
+			cpr.addEntity(faroplysninger);
 			break;
 		case 16:
 			cpr.addEntity(foraeldreMyndighedRelation(line));

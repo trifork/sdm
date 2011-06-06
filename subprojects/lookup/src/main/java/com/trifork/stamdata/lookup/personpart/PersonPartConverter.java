@@ -1,9 +1,6 @@
 package com.trifork.stamdata.lookup.personpart;
 
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,11 +20,11 @@ import oio.sagdok.person._1_0.CivilStatusType;
 import oio.sagdok.person._1_0.CprBorgerType;
 import oio.sagdok.person._1_0.DanskAdresseType;
 import oio.sagdok.person._1_0.EgenskabType;
+import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.LivStatusKodeType;
 import oio.sagdok.person._1_0.LivStatusType;
 import oio.sagdok.person._1_0.NavnStrukturType;
 import oio.sagdok.person._1_0.PersonRelationType;
-import oio.sagdok.person._1_0.GroenlandAdresseType;
 import oio.sagdok.person._1_0.PersonType;
 import oio.sagdok.person._1_0.RegisterOplysningType;
 import oio.sagdok.person._1_0.RegistreringType;
@@ -41,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
 import com.trifork.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
 
@@ -132,12 +130,39 @@ public class PersonPartConverter {
 		for(String boernCpr : person.getBoernCpr()) {
 			result.getBoern().add(createPersonFlerRelationTypeForCpr(boernCpr));
 		}
-		
-		// TODO: Find løsning mht. forældre (check google docs-dokumentet)
+		addParentRelations(result, person);
 		addPartnerRelation(result, person);
 		return result;
 	}
 	
+	private void addParentRelations(RelationListeType result,
+			CurrentPersonData person) {
+		addFatherRelation(result, person.getFarOplysninger());
+		addMotherRelation(result, person.getMorOplysninger());
+	}
+
+	private void addMotherRelation(RelationListeType result,
+			MorOgFaroplysninger morOplysninger) {
+		if(morOplysninger == null) {
+			return;
+		}
+		if(morOplysninger.foraeldercpr == null) {
+			return;
+		}
+		result.getModer().add(createPersonRelationTypeForCpr(morOplysninger.foraeldercpr, morOplysninger.getValidFrom(), null));
+	}
+
+	private void addFatherRelation(RelationListeType result,
+			MorOgFaroplysninger farOplysninger) {
+		if(farOplysninger == null) {
+			return;
+		}
+		if(farOplysninger.foraeldercpr == null) {
+			return;
+		}
+		result.getFader().add(createPersonRelationTypeForCpr(farOplysninger.foraeldercpr, farOplysninger.getValidFrom(), null));
+	}
+
 	private void addPartnerRelation(RelationListeType result, CurrentPersonData person) {
 		if(person.getCivilstandskode() == null) {
 			return;

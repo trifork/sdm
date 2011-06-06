@@ -14,6 +14,7 @@ import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
+import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Person;
 import com.trifork.stamdata.views.cpr.Statsborgerskab;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
@@ -38,8 +39,17 @@ public class PersonDao {
 		UmyndiggoerelseVaergeRelation vaerge = getCurrentRecordByCpr(UmyndiggoerelseVaergeRelation.class, cpr);
 		List<UmyndiggoerelseVaergeRelation> vaergemaal = getVaergemaal(cpr);
 		List<BarnRelation> boern = getBoern(cpr);
-		List<BarnRelation> foraeldre = getForaeldre(cpr);
-		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger, vaerge, vaergemaal, boern, foraeldre);
+		List<MorOgFaroplysninger> morOgFarOplysninger = getCurrentRecordsByCpr(MorOgFaroplysninger.class, cpr);
+		MorOgFaroplysninger morOplysinger = null, farOplysinger = null;
+		for(MorOgFaroplysninger oplysninger : morOgFarOplysninger) {
+			if("M".equals(oplysninger.foraelderkode)) {
+				morOplysinger = oplysninger;
+			}
+			else if ("F".equals(oplysninger.foraelderkode)) {
+				farOplysinger = oplysninger;
+			}
+		}
+		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger, vaerge, vaergemaal, boern, morOplysinger, farOplysinger);
 	}
 
 	private List<UmyndiggoerelseVaergeRelation> getVaergemaal(String cpr) {
