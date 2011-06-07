@@ -81,11 +81,11 @@ subprojects { subproject ->
 	// Add some extra memory for testing, this is usually useful.
 	// Also enable code assertions while testing.
 
-	test {
-		jvmArgs '-ea', '-Xmx512m'
+
+    test {
+		jvmArgs '-ea', '-Xmx512m', '-Dsdm.environment=default,unittest'
 	}
-	
-	// Test coverage.
+    // Test coverage.
 	apply from: "${rootDir}/config/coverage.groovy"
 }
 
