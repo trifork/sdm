@@ -48,7 +48,8 @@ dependencies {
 	
 	// JAXB
 	
-	compile libs.jaxb
+	compile libs.jaxb_api
+	runtime libs.jaxb_impl
 	
 	// Fast infoset
 	
@@ -69,7 +70,7 @@ dependencies {
 	// Logging
 	
 	compile libs.slf4j_api
-	runtime libs.log4j_slf4j
+	runtime libs.slf4j_log4j
 }
 
 jar {

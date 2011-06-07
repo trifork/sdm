@@ -24,6 +24,15 @@
 apply plugin: 'war'
 apply plugin: 'jetty'
 
+configurations {
+	// this dependency is deprecated in favor of javax.xml.bind
+	all*.exclude group: 'xml-apis'
+	// deprecated in favor of javax.xml.stream
+	all*.exclude group: 'stax'
+	// we're using logback
+	all*.exclude group: 'log4j'
+}
+
 dependencies {
 	
 	compile project(':shared')
@@ -71,7 +80,13 @@ dependencies {
 	
 	compile libs.slf4j_api
 	runtime libs.logback_core
-	runtime libs.log4j_slf4j
+	runtime libs.log4j_over_slf4j
+
+	providedCompile libs.jaxb_api
+	providedCompile libs.stax_api
+	providedCompile libs.javax_activation
+
+	providedRuntime libs.jaxb_impl
 	
 	testRuntime 'xerces:xercesImpl:2.8.0'
 }
