@@ -381,7 +381,8 @@ public class PersonPartConverter {
 		result.setFolkeregisterAdresse(createAdresseType(person));
 		
 		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
-		result.setPersonNummerGyldighedStatusIndikator(true);
+		boolean invalidCpr = "30".equals(person.getStatus()) || "50".equals(person.getStatus()) || "60".equals(person.getStatus());
+		result.setPersonNummerGyldighedStatusIndikator(!invalidCpr);
 		setBeskyttelser(result, person);
 		return result;
 	}
