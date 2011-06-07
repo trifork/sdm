@@ -137,9 +137,17 @@ public class PersonPartConverter {
 		addPartnerRelation(result, person);
 		addForaeldremyndighedsIndehavere(result, person);
 		addforaeldremyndighedBoern(result, person);
+		addErstatningAf(result, person);
 		return result;
 	}
 	
+	private void addErstatningAf(RelationListeType result,
+			CurrentPersonData person) {
+		if(person.getGaeldendeCpr() != null && !person.getGaeldendeCpr().trim().isEmpty()) {
+			result.getErstatningAf().add(createPersonRelationTypeForCpr(person.getGaeldendeCpr(), null, null));
+		}
+	}
+
 	private void addforaeldremyndighedBoern(RelationListeType result,
 			CurrentPersonData person) {
 		if(person.getForaeldreMyndighedBoern() == null) {

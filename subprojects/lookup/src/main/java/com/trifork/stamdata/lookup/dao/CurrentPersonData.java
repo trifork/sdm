@@ -95,6 +95,10 @@ public class CurrentPersonData {
 		return person.getCpr();
 	}
 	
+	public String getGaeldendeCpr() {
+		return person.gaeldendeCPR;
+	}
+	
 	public String getKoen() {
 		return person.koen;
 	}

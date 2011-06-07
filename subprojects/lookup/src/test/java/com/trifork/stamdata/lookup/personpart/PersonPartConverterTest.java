@@ -451,6 +451,15 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
+	public void fillsOutErstatningFor() {
+		Person person = createValidPerson();
+		person.gaeldendeCPR = "0987654321";
+		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		PersonType personType = converter.convert(cp);
+		assertEquals("URN:CPR:0987654321", personType.getRegistrering().get(0).getRelationListe().getErstatningAf().get(0).getReferenceID().getURNIdentifikator());
+	}
+	
+	@Test
 	public void removesWhitespaceFromStreetBuildingIdentifier() {
 		String husnummer = "12 C";
 		assertEquals("12C", converter.createStreetBuildingIdentifier(husnummer));
