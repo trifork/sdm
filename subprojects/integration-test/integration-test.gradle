@@ -65,7 +65,7 @@ def runSql(sqlFile, database) {
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
-task copyConfig {
+task copyConfig << {
     copy {
 		from 'tomcat/config'
 		into 'build/config'
@@ -76,25 +76,26 @@ task copyConfig {
 task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:build']) << {
 	initDb.execute()
 	loadData.execute()
-	startServer.execute()
+    copyConfig.execute()
+	startServer()
 	sleep 2000 // For test data to be read
 	runIntegrationTest.execute()
-	stopServer.execute()
+	stopServer()
 }
 
 task initDb << {
 	runSql 'db/bootstrap.sql', 'test'
-	//runSql "$rootDir/db/schema.sql", 'sdm_warehouse'
+	runSql "$rootDir/db/schema.sql", 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }
 
-task startServer(dependsOn: [':integration-test:copyConfig']) << {
+def startServer() {
     logsDir = new File("$projectDir/logs")
     logsDir.mkdirs()
 	jvmArgs = "-Dsdm.environment=default,integrationtest"
 	debug = hasProperty('debug') ? debug : false
     println "Debug: " + debug
-	if (true) {
+	if (debug) {
         println "Debug enabled, listening on port 3997"
 		jvmArgs = jvmArgs + " -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=3997,suspend=n,server=y"
 	}
@@ -133,6 +134,6 @@ test {
 	exclude '**/*IntegrationTest.*'
 }
 
-task stopServer << {
+def stopServer() {
 	ant.cargo(refId: "ig-server", action: "stop")
 }
