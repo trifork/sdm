@@ -81,6 +81,11 @@ public class CurrentPersonData {
 	public String getEfternavn() {
 		return person.efternavn;
 	}
+	
+	public String getAdresseringsNavn() {
+		return person.adresseringsNavn;
+		
+	}
 
 	public Date getValidFrom() {
 		return person.getValidFrom();

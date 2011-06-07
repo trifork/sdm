@@ -83,6 +83,19 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
+	public void fillsOutName() {
+		Person person = createValidPerson();
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
+		
+		PersonType personType = converter.convert(currentPerson);
+		NavnStrukturType navnStruktur = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0).getNavnStruktur();
+		assertEquals(navnStruktur.getPersonNameForAddressingName(), person.adresseringsNavn);
+		assertEquals(person.fornavn, navnStruktur.getPersonNameStructure().getPersonGivenName());
+		assertEquals(person.mellemnavn, navnStruktur.getPersonNameStructure().getPersonMiddleName());
+		assertEquals(person.efternavn, navnStruktur.getPersonNameStructure().getPersonSurnameName());
+	}
+	
+	@Test
 	public void fillsOutNameGenderAndBirthDate() throws ParseException {
 		Person person = createValidPerson();
 		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
@@ -450,6 +463,7 @@ public class PersonPartConverterTest {
 		person.fornavn = "Ole";
 		person.mellemnavn = "Friis";
 		person.efternavn = "Olesen";
+		person.adresseringsNavn = "Ole F. Olesen";
 		person.koen = "K";
 		try {
 			person.foedselsdato = DateUtils.yyyy_MM_dd.parse("1981-06-16");

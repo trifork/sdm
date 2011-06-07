@@ -55,6 +55,7 @@ public class Klarskriftadresse extends CPREntity {
 		this.cpr = cpr;
 	}
 
+	@Output
 	public String getAdresseringsNavn() {
 		return adresseringsNavn;
 	}

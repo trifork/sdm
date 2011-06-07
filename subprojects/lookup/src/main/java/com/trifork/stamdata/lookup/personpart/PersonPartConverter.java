@@ -91,6 +91,7 @@ public class PersonPartConverter {
 	private NavnStrukturType createNavnStrukturType(CurrentPersonData person) {
 		NavnStrukturType navnStrukturType = new NavnStrukturType();
 		navnStrukturType.setPersonNameStructure(createPersonNameStructure(person));
+		navnStrukturType.setPersonNameForAddressingName(person.getAdresseringsNavn());
 		return navnStrukturType;
 	}
 

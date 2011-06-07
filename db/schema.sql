@@ -657,6 +657,7 @@ CREATE TABLE Person (
 	Mellemnavn VARCHAR(60),
 	Efternavn VARCHAR(60),
 	CoNavn VARCHAR(50),
+	adresseringsNavn VARCHAR(60),
 	Lokalitet VARCHAR(50),
 	Vejnavn VARCHAR(30),
 	Bygningsnummer VARCHAR(10),
