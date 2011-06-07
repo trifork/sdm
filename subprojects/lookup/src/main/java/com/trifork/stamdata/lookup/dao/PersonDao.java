@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -60,7 +61,8 @@ public class PersonDao {
 		List<ForaeldremyndighedsRelation> foraeldreMyndighedIndehavere = getCurrentRecordsByCpr(ForaeldremyndighedsRelation.class, cpr);
 		List<ForaeldremyndighedsRelation> foraeldremyndighedBoern = getForaeldremyndighedBoern(
 				cpr, boern);
-		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger, vaerge, vaergemaal, boern, morOplysinger, farOplysinger, foraeldreMyndighedIndehavere, foraeldremyndighedBoern);
+		List<Beskyttelse> beskyttelser = getCurrentRecordsByCpr(Beskyttelse.class, cpr);
+		return new CurrentPersonData(person, folkekirkeoplysninger, statsborgerskab, fr, civilstand, udrejseoplysninger, vaerge, vaergemaal, boern, morOplysinger, farOplysinger, foraeldreMyndighedIndehavere, foraeldremyndighedBoern, beskyttelser);
 	}
 
 	private List<ForaeldremyndighedsRelation> getForaeldremyndighedBoern(

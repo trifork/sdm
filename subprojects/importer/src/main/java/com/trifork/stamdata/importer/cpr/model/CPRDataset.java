@@ -49,6 +49,7 @@ public class CPRDataset {
 		add(new Dataset<AktuelCivilstand>(AktuelCivilstand.class));
 		add(new Dataset<Haendelse>(Haendelse.class));
 		add(new Dataset<MorOgFaroplysninger>(MorOgFaroplysninger.class));
+		add(new Dataset<Beskyttelse>(Beskyttelse.class));
 	}};
 
 	private Calendar validFrom, previousFileValidFrom;

@@ -1188,6 +1188,21 @@ CREATE TABLE MorOgFaroplysninger (
 	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
+CREATE TABLE Beskyttelse (
+	BeskyttelsePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	Id VARCHAR(15) NOT NULL,
+	CPR VARCHAR(10) NOT NULL,
+	beskyttelsestype VARCHAR(4) NOT NULL,
+	ModifiedBy VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
+	CreatedBy VARCHAR(200) NOT NULL,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	INDEX(modifiedDate, BeskyttelsePID)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
 CREATE TABLE UsageLogEntry (
 	UsageLogEntryPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	ClientId VARCHAR(100) NOT NULL,

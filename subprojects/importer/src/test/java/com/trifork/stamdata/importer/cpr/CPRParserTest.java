@@ -38,6 +38,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.cpr.CPRParser;
 import com.trifork.stamdata.importer.cpr.model.AktuelCivilstand;
 import com.trifork.stamdata.importer.cpr.model.BarnRelation;
+import com.trifork.stamdata.importer.cpr.model.Beskyttelse;
 import com.trifork.stamdata.importer.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.cpr.model.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.importer.cpr.model.Folkekirkeoplysninger;
@@ -111,7 +112,7 @@ public class CPRParserTest {
 	}
 
 	@Test
-	public void testRecord04() throws Exception {
+	public void legacy_testRecord04() throws Exception {
 		String LINE = "004280236303900011997-09-092001-02-20";
 
 		NavneBeskyttelse record = CPRParser.navneBeskyttelse(LINE);
@@ -119,6 +120,18 @@ public class CPRParserTest {
 		assertEquals("2802363039", record.getCpr());
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
 		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
+	}
+	
+	@Test
+	public void testRecord04() throws Exception {
+		String LINE = "004280236303900011997-09-092001-02-20";
+
+		Beskyttelse record = CPRParser.beskyttelse(LINE);
+
+		assertEquals("2802363039", record.getCpr());
+		assertEquals("0001", record.getBeskyttelsestype());
+		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getValidFrom().getTime());
+		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getValidTo().getTime());
 	}
 
 	@Test

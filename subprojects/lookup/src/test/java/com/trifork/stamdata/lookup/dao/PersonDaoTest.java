@@ -22,6 +22,7 @@ import org.junit.Test;
 import com.trifork.stamdata.replication.DatabaseHelper;
 import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
 import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
@@ -38,8 +39,12 @@ public class PersonDaoTest {
 	
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		db = new DatabaseHelper("lookup", Person.class, Folkekirkeoplysninger.class, Statsborgerskab.class, Foedselsregistreringsoplysninger.class,
-				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class, BarnRelation.class, MorOgFaroplysninger.class, ForaeldremyndighedsRelation.class);
+		db = new DatabaseHelper("lookup", Person.class,
+				Folkekirkeoplysninger.class, Statsborgerskab.class,
+				Foedselsregistreringsoplysninger.class,
+				Udrejseoplysninger.class, UmyndiggoerelseVaergeRelation.class,
+				BarnRelation.class, MorOgFaroplysninger.class,
+				ForaeldremyndighedsRelation.class, Beskyttelse.class);
 		Session session = db.openSession();
 		session.createQuery("delete from Person").executeUpdate();
 		session.close();
@@ -185,7 +190,29 @@ public class PersonDaoTest {
 		CurrentPersonData person = dao.get("11111111");
 		assertEquals(2, person.getForaeldreMyndighedBoern().size());
 	}
+	
+	@Test
+	public void getsBeskyttelser() {
+		session.save(beskyttelse("1234567890", "0001"));
+		session.save(beskyttelse("1234567890", "0002"));
+		session.save(beskyttelse("1234567890", "0003"));
+		CurrentPersonData person = dao.get("1234567890");
+		assertEquals(3, person.getBeskyttelser().size());
+	}
 
+	private Beskyttelse beskyttelse(String cpr, String beskyttelsestype) {
+		Beskyttelse beskyttelse = new Beskyttelse();
+		beskyttelse.id = cpr + "-" + beskyttelsestype;
+		beskyttelse.beskyttelsestype = beskyttelsestype;
+		beskyttelse.setCpr(cpr);
+		beskyttelse.setValidFrom(at(2005, Calendar.JUNE, 15));
+		beskyttelse.setCreatedBy("AHJ");
+		beskyttelse.setModifiedBy("AHJ");
+		beskyttelse.setCreatedDate(new Date());
+		beskyttelse.setModifiedDate(new Date());
+		return beskyttelse;
+	}
+	
 	private ForaeldremyndighedsRelation foraeldremyndighedsRelation(String cpr, String kode, String indehaverCpr) {
 		ForaeldremyndighedsRelation foraeldremyndighedsRelation = new ForaeldremyndighedsRelation();
 		foraeldremyndighedsRelation.id = cpr + "-" + kode;

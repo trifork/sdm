@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -33,6 +34,7 @@ public class CurrentPersonData {
 	private final MorOgFaroplysninger farOplysninger;
 	private final List<ForaeldremyndighedsRelation> foraeldreMyndighedsIndehavere;
 	private final List<ForaeldremyndighedsRelation> foraeldreMyndighedBoern;
+	private final List<Beskyttelse> beskyttelser;
 	
 	public CurrentPersonData(Person person,
 			Folkekirkeoplysninger folkekirkeoplysninger,
@@ -46,7 +48,7 @@ public class CurrentPersonData {
 			MorOgFaroplysninger morOplysninger,
 			MorOgFaroplysninger farOplysninger, 
 			List<ForaeldremyndighedsRelation> foraeldreMyndighedsIndehavere, 
-			List<ForaeldremyndighedsRelation> foraeldreMyndighedBoern
+			List<ForaeldremyndighedsRelation> foraeldreMyndighedBoern, List<Beskyttelse> beskyttelser
 			) {
 		this.person = person;
 		this.folkekirkeoplysninger = folkekirkeoplysninger;
@@ -61,6 +63,7 @@ public class CurrentPersonData {
 		this.farOplysninger = farOplysninger;
 		this.foraeldreMyndighedsIndehavere = foraeldreMyndighedsIndehavere;
 		this.foraeldreMyndighedBoern = foraeldreMyndighedBoern;
+		this.beskyttelser = beskyttelser;
 	}
 	
 	public String getStatus() {
@@ -233,5 +236,9 @@ public class CurrentPersonData {
 
 	public List<ForaeldremyndighedsRelation> getForaeldreMyndighedBoern() {
 		return foraeldreMyndighedBoern;
+	}
+
+	public List<Beskyttelse> getBeskyttelser() {
+		return beskyttelser;
 	}
 }

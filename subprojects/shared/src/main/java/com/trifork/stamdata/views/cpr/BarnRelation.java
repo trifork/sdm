@@ -39,7 +39,6 @@ import com.trifork.stamdata.views.ViewPath;
 public class BarnRelation extends CprView {
 
 	@XmlTransient
-	@Column(name = "Id")
 	public String id;
 
 	@Column(name = "BarnCPR")

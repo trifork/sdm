@@ -34,6 +34,7 @@ import org.junit.Test;
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.util.DateUtils;
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -67,7 +68,7 @@ public class PersonPartConverterTest {
 		person.setCpr("1020304050");
 		Folkekirkeoplysninger folkekirkeoplysninger  = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.forholdsKode = "M";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null, null, null, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		assertNotNull(personType.getUUID());
@@ -82,43 +83,9 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
-	public void fillsOutAddressProtection() {
-		Person person = createValidPerson();
-		Date now = new Date();
-		Date past = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-		Date future = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-		
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null);
-		PersonType personType = converter.convert(currentPerson);
-		assertFalse(getAddressProtection(personType));
-		
-		person.navneBeskyttelsestartdato = past;
-		personType = converter.convert(currentPerson);
-		assertTrue(getAddressProtection(personType));
-
-		person.navneBeskyttelsestartdato = future;
-		personType = converter.convert(currentPerson);
-		assertFalse(getAddressProtection(personType));
-		
-		person.navneBeskyttelsestartdato = past;
-		person.navnebeskyttelseslettedato = past;
-		personType = converter.convert(currentPerson);
-		assertFalse(getAddressProtection(personType));
-		
-		person.navneBeskyttelsestartdato = past;
-		person.navnebeskyttelseslettedato = future;
-		personType = converter.convert(currentPerson);
-		assertTrue(getAddressProtection(personType));
-	}
-
-	private boolean getAddressProtection(PersonType personType) {
-		return personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger().isNavneAdresseBeskyttelseIndikator();
-	}
-	
-	@Test
 	public void fillsOutNameGenderAndBirthDate() throws ParseException {
 		Person person = createValidPerson();
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(currentPerson);
 
 		EgenskabType egenskabType = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0);
@@ -134,7 +101,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutDanishAddress() {
 		Person person = createValidPerson();
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -160,7 +127,7 @@ public class PersonPartConverterTest {
 		Person person = createValidPerson();
 		person.postnummer = BigInteger.valueOf(3000);
 		person.bygningsnummer = "123";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(currentPerson);
 
@@ -194,7 +161,7 @@ public class PersonPartConverterTest {
 		uo.udlandsadresse3 = "line3";
 		uo.udlandsadresse4 = "line4";
 		uo.udlandsadresse5 = "line5";
-		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, uo, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(person, null, null, null, null, uo, null, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(currentPerson);
 		
@@ -219,7 +186,7 @@ public class PersonPartConverterTest {
 		// check not member
 		Folkekirkeoplysninger fo = new Folkekirkeoplysninger();
 		fo.forholdsKode = "U"; // uden for folkekirken
-		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData currentPerson = new CurrentPersonData(createValidPerson(), fo, null, null, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(currentPerson);
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertFalse(cprBorger.isFolkekirkeMedlemIndikator());
@@ -235,7 +202,7 @@ public class PersonPartConverterTest {
 	public void fillsOutNationality() {
 		Statsborgerskab sb = new Statsborgerskab();
 		sb.landekode = "1234";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, sb, null, null, null, null, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 
@@ -254,7 +221,7 @@ public class PersonPartConverterTest {
 		Foedselsregistreringsoplysninger fr = new Foedselsregistreringsoplysninger();
 		fr.foedselsregistreringsstedkode = "foedselsKode";
 		fr.foedselsregistreringstekst = "foedselsTekst";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, fr, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		EgenskabType egenskabType = personType.getRegistrering().get(0).getAttributListe().getEgenskab().get(0);
 	}
@@ -263,7 +230,7 @@ public class PersonPartConverterTest {
 	public void fillsOutCivilstand() {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "U";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 		CivilStatusKodeType civilStatusKode = getCivilStatusKode(personType);
@@ -273,7 +240,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void fillsOutLivsStatus() {
 		Person person = createValidPerson();
-		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		assertEquals(LivStatusKodeType.FOEDT,getLivStatus(personType));
 		person.status = "90"; // doed
@@ -296,7 +263,7 @@ public class PersonPartConverterTest {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "G";
 		cs.aegtefaellePersonnummer = "1234567890";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		assertEquals("URN:CPR:1234567890", personType.getRegistrering().get(0).getRelationListe().getAegtefaelle().get(0).getReferenceID().getURNIdentifikator());
 	}
@@ -307,7 +274,7 @@ public class PersonPartConverterTest {
 		morOplysninger.foraeldercpr = "12345678";
 		MorOgFaroplysninger farOplysninger = new MorOgFaroplysninger();
 		farOplysninger.foraeldercpr = "12345679";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, morOplysninger, farOplysninger, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, morOplysninger, farOplysninger, null, null, null);
 		PersonType personType = converter.convert(cp);
 		assertEquals("URN:CPR:12345678", personType.getRegistrering().get(0).getRelationListe().getModer().get(0).getReferenceID().getURNIdentifikator());
 		assertEquals("URN:CPR:12345679", personType.getRegistrering().get(0).getRelationListe().getFader().get(0).getReferenceID().getURNIdentifikator());
@@ -322,7 +289,7 @@ public class PersonPartConverterTest {
 		farOplysninger.foraeldercpr = "12345679";
 		List<ForaeldremyndighedsRelation> foraeldremyndighedsindehavere = new ArrayList<ForaeldremyndighedsRelation>();
 		foraeldremyndighedsindehavere.add(createForaeldremyndighedsRelation("1020304050", "12345678", "0003"));
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, morOplysninger, farOplysninger, foraeldremyndighedsindehavere, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, morOplysninger, farOplysninger, foraeldremyndighedsindehavere, null, null);
 		PersonType personType = converter.convert(cp);
 		List<PersonRelationType> foraeldremyndighedsindehaverResult = personType.getRegistrering().get(0).getRelationListe().getForaeldremyndighedsindehaver();
 		assertEquals(1, foraeldremyndighedsindehaverResult.size());
@@ -343,7 +310,7 @@ public class PersonPartConverterTest {
 		foraeldremyndighedsboern.add(createForaeldremyndighedsRelation("12345670", "1020304050", "0005"));
 		
 		
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, boern, null, null, null, foraeldremyndighedsboern);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, boern, null, null, null, foraeldremyndighedsboern, null);
 		PersonType personType = converter.convert(cp);
 		List<PersonFlerRelationType> foraeldremyndighedsboernResult = personType.getRegistrering().get(0).getRelationListe().getForaeldremyndighedsboern();
 		assertEquals(2, foraeldremyndighedsboernResult.size());
@@ -356,14 +323,14 @@ public class PersonPartConverterTest {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "P";
 		cs.aegtefaellePersonnummer = "1234567890";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		assertEquals("URN:CPR:1234567890", personType.getRegistrering().get(0).getRelationListe().getRegistreretPartner().get(0).getReferenceID().getURNIdentifikator());
 	}
 	@Test
 	public void fillsOutRetligHandleevneVaergeForPerson() {
 		UmyndiggoerelseVaergeRelation umyndiggoerelse = createUmyndiggoerelseVaergeRelation(null, "1020304050", at(2005, Calendar.JANUARY, 25), at(2020, Calendar.MARCH, 17));
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 		
@@ -378,7 +345,7 @@ public class PersonPartConverterTest {
 	@Test
 	public void leavesOutTimestampsIfUndefined() {
 		UmyndiggoerelseVaergeRelation umyndiggoerelse = createUmyndiggoerelseVaergeRelation(null, "1020304050", DateUtils.PAST.getTime(), DateUtils.FUTURE.getTime());
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, umyndiggoerelse, null, null, null, null, null, null, null);
 
 		PersonType personType = converter.convert(cp);
 		
@@ -393,7 +360,7 @@ public class PersonPartConverterTest {
 		vaergemaal.add(createUmyndiggoerelseVaergeRelation("0102030405", null, at(2005, Calendar.AUGUST, 21), at(2011, Calendar.DECEMBER, 24))); 
 		vaergemaal.add(createUmyndiggoerelseVaergeRelation("0102030407", null, at(2005, Calendar.AUGUST, 21), at(2011, Calendar.DECEMBER, 24)));
 		
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, vaergemaal, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, vaergemaal, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		
 		List<PersonFlerRelationType> retligHandleevneVaergemaalsindehaver = personType.getRegistrering().get(0).getRelationListe().getRetligHandleevneVaergemaalsindehaver();
@@ -411,19 +378,49 @@ public class PersonPartConverterTest {
 		List<BarnRelation> barnRelationer = new ArrayList<BarnRelation>();
 		barnRelationer.add(createBarnRelation("1020304050", "1020304051"));
 		barnRelationer.add(createBarnRelation("1020304050", "1020304052"));
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, barnRelationer, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, barnRelationer, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		List<PersonFlerRelationType> boern = personType.getRegistrering().get(0).getRelationListe().getBoern();
 		assertEquals(2, boern.size());
 		assertEquals("URN:CPR:1020304051", boern.get(0).getReferenceID().getURNIdentifikator());
 		assertEquals("URN:CPR:1020304052", boern.get(1).getReferenceID().getURNIdentifikator());
 	}
+	
+	@Test
+	public void fillsOutBeskyttelser() {
+		List<Beskyttelse> beskyttelser = new ArrayList<Beskyttelse>();
+		beskyttelser.add(createBeskyttelse("1020304050", "0001"));
+		beskyttelser.add(createBeskyttelse("1020304050", "0002"));
+		beskyttelser.add(createBeskyttelse("1020304050", "0003")); // ingen effekt
+		beskyttelser.add(createBeskyttelse("1020304050", "0004"));
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, null, null, null, null, beskyttelser);
+		PersonType personType = converter.convert(cp);
+		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		assertTrue(cprBorger.isForskerBeskyttelseIndikator());
+		assertTrue(cprBorger.isNavneAdresseBeskyttelseIndikator());
+		assertTrue(cprBorger.isTelefonNummerBeskyttelseIndikator());
+		
+		// test med ingen beskyttelser
+		beskyttelser.clear();
+		personType = converter.convert(cp);
+		cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
+		assertFalse(cprBorger.isForskerBeskyttelseIndikator());
+		assertFalse(cprBorger.isNavneAdresseBeskyttelseIndikator());
+		assertFalse(cprBorger.isTelefonNummerBeskyttelseIndikator());
+	}
+
+	private Beskyttelse createBeskyttelse(String cpr, String beskyttelsestype) {
+		Beskyttelse beskyttelse = new Beskyttelse();
+		beskyttelse.setCpr(cpr);
+		beskyttelse.beskyttelsestype = beskyttelsestype;
+		return beskyttelse;
+	}
 
 	@Test
 	public void createsCorrectCivilstatusWhenSeparated() {
 		Civilstand cs = new Civilstand();
 		cs.civilstandskode = "G";
-		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null);
+		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, cs, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
 		assertEquals(CivilStatusKodeType.GIFT, getCivilStatusKode(personType));
 

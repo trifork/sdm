@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import com.trifork.stamdata.config.Configuration;
 import com.trifork.stamdata.importer.cpr.model.AktuelCivilstand;
 import com.trifork.stamdata.importer.cpr.model.BarnRelation;
+import com.trifork.stamdata.importer.cpr.model.Beskyttelse;
 import com.trifork.stamdata.importer.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.cpr.model.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.importer.cpr.model.Folkekirkeoplysninger;
@@ -126,11 +127,13 @@ public class CPRParser {
 			cpr.addEntity(klarskriftadresse(line));
 			break;
 		case 4:
+			// legacy navnebeskyttelse i person-tabellen
 			String beskyttelseskode = cut(line,13, 17);
 			if (beskyttelseskode.equals("0001")) {
-				// Vi er kun interesseret i navnebeskyttelse
 				cpr.addEntity(navneBeskyttelse(line));
 			}
+			// beskyttelse i separat tabel
+			cpr.addEntity(beskyttelse(line));
 			break;
 		case 5:
 			cpr.addEntity(udrejseoplysninger(line));
@@ -236,6 +239,15 @@ public class CPRParser {
 		n.setNavneBeskyttelseStartDato(parseDate(yyyy_MM_dd, line, 17, 27));
 		n.setNavneBeskyttelseSletteDato(parseDate(yyyy_MM_dd, line, 27, 37));
 		return n;
+	}
+	
+	static Beskyttelse beskyttelse(String line) throws ParseException, FileParseException {
+		Beskyttelse b = new Beskyttelse();
+		b.setCpr(cut(line, 3, 13));
+		b.setBeskyttelsestype(cut(line, 13, 17));
+		b.setValidFrom(parseCalendar(yyyy_MM_dd, line, 17, 27));
+		b.setValidTo(parseCalendar(yyyy_MM_dd, line, 27, 37));
+		return b;
 	}
 
 	static Klarskriftadresse klarskriftadresse(String line) throws FileParseException {

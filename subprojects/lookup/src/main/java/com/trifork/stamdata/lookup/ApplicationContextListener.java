@@ -20,6 +20,7 @@ import com.trifork.stamdata.lookup.rest.RestModule;
 import com.trifork.stamdata.lookup.security.SecurityModule;
 import com.trifork.stamdata.ssl.OcesSslModule;
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -72,6 +73,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			entityClasses.add(Udrejseoplysninger.class);
 			entityClasses.add(UmyndiggoerelseVaergeRelation.class);
 			entityClasses.add(Valgoplysninger.class);
+			entityClasses.add(Beskyttelse.class);
 			modules.add(new SessionFactoryModule (
 				config.getString("db.connection.driverClass"),
 				config.getString("db.connection.sqlDialect"),

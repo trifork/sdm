@@ -69,6 +69,7 @@ public class CPRIntegrationTest {
 		statement.execute("truncate table Foedselsregistreringsoplysninger");
 		statement.execute("truncate table KommunaleForhold");
 		statement.execute("truncate table AktuelCivilstand");
+		statement.execute("truncate table Beskyttelse");
 		statement.execute("truncate table " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
 		statement.close();
 		con.close();
@@ -193,6 +194,23 @@ public class CPRIntegrationTest {
 		assertTrue(rs.last());
 		stmt.close();
 		con.close();
+	}
+	
+	@Test
+	public void canImportBeskyttelse() throws Exception {
+		setIkraftDate(new Date(2001-1900, 10, 16));
+		importFile("data/cpr/testCPR1/D100314.L431101");
+
+		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Statement stmt = con.createStatement();
+		ResultSet rs = stmt.executeQuery("Select * from Beskyttelse where CPR='0101965058'");
+		assertTrue(rs.next());
+		while(!rs.getString("beskyttelsestype").equals("0001")) {
+			rs.next();
+		}
+		assertEquals(yyyy_MM_dd.parse("1997-09-09"), rs.getDate("validFrom"));
+		assertEquals(yyyy_MM_dd.parse("2001-02-20"), rs.getDate("validTo"));
+		
 	}
 
 	@Test

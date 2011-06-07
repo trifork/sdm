@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
 import com.trifork.stamdata.views.cpr.Udrejseoplysninger;
@@ -379,16 +380,32 @@ public class PersonPartConverter {
 		result.setFolkeregisterAdresse(createAdresseType(person));
 		
 		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
-		Date now = new Date();
-		result.setNavneAdresseBeskyttelseIndikator(
-				(person.getNavnebeskyttelsesstartdato() != null && person.getNavnebeskyttelsesstartdato().before(now)) &&
-				(person.getNavnebeskyttelsesslettedato() == null || person.getNavnebeskyttelsesslettedato().after(now)));
-
-		// TODO: Bare de mest gængse værdier p.t. Skal selvfølgelig hentes rigtigt.
 		result.setPersonNummerGyldighedStatusIndikator(true);
-		result.setTelefonNummerBeskyttelseIndikator(false);
-		result.setForskerBeskyttelseIndikator(false);
+		setBeskyttelser(result, person);
 		return result;
+	}
+
+	private void setBeskyttelser(CprBorgerType result, CurrentPersonData person) {
+		if(person.getBeskyttelser() == null) {
+			return;
+		}
+		for(Beskyttelse beskyttelse : person.getBeskyttelser()) {
+			if("0001".equals(beskyttelse.beskyttelsestype)) {
+				result.setNavneAdresseBeskyttelseIndikator(true);
+			}
+			else if ("0002".equals(beskyttelse.beskyttelsestype)) {
+				result.setTelefonNummerBeskyttelseIndikator(true);
+			}
+			else if ("0003".equals(beskyttelse.beskyttelsestype)) {
+				// Markedsfoeringsbeskyttelse kan ikke representeres i person part
+			}
+			else if ("0004".equals(beskyttelse.beskyttelsestype)) {
+				result.setForskerBeskyttelseIndikator(true);
+			}
+			else {
+				logger.warn("Ukendt beskyttelsestype {}, cpr={}", beskyttelse.beskyttelsestype, person.getCprNumber());
+			}
+		}
 	}
 
 	private AdresseType createAdresseType(CurrentPersonData person) {
