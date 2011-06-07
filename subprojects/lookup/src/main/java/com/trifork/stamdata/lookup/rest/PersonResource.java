@@ -1,10 +1,8 @@
 package com.trifork.stamdata.lookup.rest;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 
 import oio.sagdok.person._1_0.PersonType;
@@ -27,9 +25,13 @@ public class PersonResource {
 	@GET
 	@Path("{cpr}")
 	@Produces("text/xml")
-	public JAXBElement<PersonType> getPerson(@PathParam("cpr") String cpr) {
-		CurrentPersonData person = personDao.get(cpr);
+	public Response getPerson(@PathParam("cpr") String cpr) {
+        CurrentPersonData person = personDao.get(cpr);
+        if (person == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
 		PersonType personPart = personPartConverter.convert(person);
-		return new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart);
+		return Response.ok(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart)).build() ;
 	}
+
 }

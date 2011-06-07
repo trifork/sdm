@@ -37,6 +37,9 @@ public class PersonDao {
 	
 	public CurrentPersonData get(String cpr) {
 		Person person = getCurrentRecordByCpr(Person.class, cpr);
+        if (person == null) {
+            return null;
+        }
 		Folkekirkeoplysninger folkekirkeoplysninger = getCurrentRecordByCpr(Folkekirkeoplysninger.class, cpr);
 		Statsborgerskab statsborgerskab = getCurrentRecordByCpr(Statsborgerskab.class, cpr);
 		Foedselsregistreringsoplysninger fr = getCurrentRecordByCpr(Foedselsregistreringsoplysninger.class, cpr);

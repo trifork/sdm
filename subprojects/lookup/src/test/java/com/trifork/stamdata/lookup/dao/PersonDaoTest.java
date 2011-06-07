@@ -65,7 +65,7 @@ public class PersonDaoTest {
 	
 	@Test
 	public void givesCurrentPersonDataWithContentsFromUnderlyingView() {
-		session.save(person(at(2005, Calendar.JANUARY, 5)));
+		session.save(person(at(2005, Calendar.JANUARY, 5), "1020304050"));
 		
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1020304050", person.getCprNumber());
@@ -74,13 +74,15 @@ public class PersonDaoTest {
 
 	@Test
 	public void getsFolkekirkeOplysninger() {
+        session.save(person("1020304050"));
 		session.save(folkekirkeoplysninger("M"));
 		CurrentPersonData person = dao.get("1020304050");
 		assertTrue(person.getMedlemAfFolkekirken());
 	}
-	
-	@Test
+
+    @Test
 	public void getsStatsborgerskab() {
+        session.save(person("1020304050"));
 		session.save(statsborgerskab("1234"));
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1234", person.getStatsborgerskab());
@@ -88,6 +90,7 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsFoedselsregistreringsoplysninger() {
+        session.save(person("1020304050"));
 		session.save(foedselsregistreringsoplysninger("1234", "foedselsTekst"));
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1234", person.getFoedselsregistreringsstedkode());
@@ -96,6 +99,7 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsUdrejseoplysninger() {
+        session.save(person("1020304050"));
 		session.save(udrejseoplysninger());
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals("1234", person.getUdrejseoplysninger().udrejseLandekode);
@@ -104,8 +108,8 @@ public class PersonDaoTest {
 
 	@Test
 	public void getsNewestPersonRecordIfNoRecordIsInTheFuture() {
-		session.save(person(at(2005, Calendar.JANUARY, 5)));
-		session.save(person(at(2010, Calendar.FEBRUARY, 10)));
+		session.save(person(at(2005, Calendar.JANUARY, 5), "1020304050"));
+		session.save(person(at(2010, Calendar.FEBRUARY, 10), "1020304050"));
 		
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals(at(2010, Calendar.FEBRUARY, 10), person.getValidFrom());
@@ -113,9 +117,9 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsCurrentPersonRecordIfRecordsInTheFuture() {
-		session.save(person(at(2005, Calendar.JANUARY, 5)));
-		session.save(person(at(2010, Calendar.FEBRUARY, 10)));
-		session.save(person(at(2110, Calendar.FEBRUARY, 10)));
+		session.save(person(at(2005, Calendar.JANUARY, 5), "1020304050"));
+		session.save(person(at(2010, Calendar.FEBRUARY, 10), "1020304050"));
+		session.save(person(at(2110, Calendar.FEBRUARY, 10), "1020304050"));
 		
 		CurrentPersonData person = dao.get("1020304050");
 		assertEquals(at(2010, Calendar.FEBRUARY, 10), person.getValidFrom());
@@ -124,14 +128,16 @@ public class PersonDaoTest {
 	@Test
 	public void getsCurrentUmyndiggoerelseVaergeRelation() {
 		session.save(umyndiggoerelseVaergeRelation("1020304050", "5040302010", DateUtils.PAST.getTime(), at(2005, Calendar.JUNE, 15)));
-		session.save(umyndiggoerelseVaergeRelation("1020304050", "6050403020", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
-		
-		CurrentPersonData person = dao.get("1020304050");
+        session.save(umyndiggoerelseVaergeRelation("1020304050", "6050403020", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
+
+        session.save(person("1020304050"));
+        CurrentPersonData person = dao.get("1020304050");
 		assertEquals("6050403020", person.getVaerge().relationCpr);
 	}
 	
 	@Test
 	public void getsCurrentVaergemaal() {
+        session.save(person("1020304050"));
 		session.save(umyndiggoerelseVaergeRelation("7060504030", "1020304050", DateUtils.PAST.getTime(), at(2005, Calendar.JUNE, 15)));
 		session.save(umyndiggoerelseVaergeRelation("9080706050", "1020304050", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
 		session.save(umyndiggoerelseVaergeRelation("7060504030", "1020304050", at(2005, Calendar.JUNE, 15), DateUtils.FUTURE.getTime()));
@@ -151,10 +157,14 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsBoern() {
-		session.save(barnRelation("7060504030", "1020304050"));
-		session.save(barnRelation("7060504030", "1020304051"));
-		session.save(barnRelation("7060504030", "1020304052"));
-		CurrentPersonData person = dao.get("7060504030");
+        String cpr = "7060504030";
+        session.save(barnRelation(cpr, "1020304050"));
+		session.save(barnRelation(cpr, "1020304051"));
+		session.save(barnRelation(cpr, "1020304052"));
+        session.save(person("1020304050"));
+
+        session.save(person(cpr));
+		CurrentPersonData person = dao.get(cpr);
 		List<String> expected = Arrays.asList("1020304050", "1020304051", "1020304052");
 		List<String> result = person.getBoernCpr();
 		Collections.sort(result);
@@ -163,9 +173,11 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsParents() {
-		session.save(morOgFaroplysninger("7060504030", "1020304050", "M"));
-		session.save(morOgFaroplysninger("7060504030", "1020304051", "F"));
-		CurrentPersonData person = dao.get("7060504030");
+        String cpr = "7060504030";
+        session.save(morOgFaroplysninger(cpr, "1020304050", "M"));
+		session.save(morOgFaroplysninger(cpr, "1020304051", "F"));
+        session.save(person(cpr));
+		CurrentPersonData person = dao.get(cpr);
 		MorOgFaroplysninger morOplysninger = person.getMorOplysninger();
 		assertNotNull(morOplysninger);
 		assertEquals("1020304050", morOplysninger.foraeldercpr);
@@ -176,27 +188,33 @@ public class PersonDaoTest {
 	
 	@Test
 	public void getsForaeldremyndighedsIndehavere() {
-		session.save(foraeldremyndighedsRelation("12345678", "0003", null)); // mor
-		session.save(foraeldremyndighedsRelation("12345678", "0005", "11111111")); // anden indehaver 1
-		CurrentPersonData person = dao.get("12345678");
+        String cpr = "12345678";
+        session.save(foraeldremyndighedsRelation(cpr, "0003", null)); // mor
+		session.save(foraeldremyndighedsRelation(cpr, "0005", "11111111")); // anden indehaver 1
+        session.save(person(cpr));
+		CurrentPersonData person = dao.get(cpr);
 		assertEquals(2, person.getForaeldreMyndighedsIndehavere().size());
 	}
 	
 	@Test
 	public void getsForaeldremyndighedsBoern() {
 		session.save(foraeldremyndighedsRelation("12345678", "0003", null)); // cpr for foraelder er null hvis foraelder er registreret i CPR.
-		session.save(foraeldremyndighedsRelation("12345679", "0005", "11111111"));
-		session.save(barnRelation("11111111", "12345678"));
-		CurrentPersonData person = dao.get("11111111");
+        String cpr = "11111111";
+        session.save(foraeldremyndighedsRelation("12345679", "0005", cpr));
+		session.save(barnRelation(cpr, "12345678"));
+        session.save(person(cpr));
+		CurrentPersonData person = dao.get(cpr);
 		assertEquals(2, person.getForaeldreMyndighedBoern().size());
 	}
 	
 	@Test
 	public void getsBeskyttelser() {
-		session.save(beskyttelse("1234567890", "0001"));
-		session.save(beskyttelse("1234567890", "0002"));
-		session.save(beskyttelse("1234567890", "0003"));
-		CurrentPersonData person = dao.get("1234567890");
+        String cpr = "1234567890";
+        session.save(beskyttelse(cpr, "0001"));
+		session.save(beskyttelse(cpr, "0002"));
+		session.save(beskyttelse(cpr, "0003"));
+        session.save(person(cpr));
+		CurrentPersonData person = dao.get(cpr);
 		assertEquals(3, person.getBeskyttelser().size());
 	}
 
@@ -286,9 +304,13 @@ public class PersonDaoTest {
 		return result;
 	}
 
-	private Person person(Date validFrom) {
+    private Person person (String cpr) {
+        return person(at(2000,1,1), cpr);
+    }
+
+    private Person person(Date validFrom, String cpr) {
 		Person result = new Person();
-		result.setCpr("1020304050");
+		result.setCpr(cpr);
 		result.koen = "M";
 		result.foedselsdato = at(1975, Calendar.MAY, 12);
 		result.modifiedBy = "AHJ";

@@ -65,12 +65,15 @@ def runSql(sqlFile, database) {
 		onerror: 'abort', classpath: configurations.db.asPath)
 }
 
-task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:build']) << {
-	copy {
+task copyConfig {
+    copy {
 		from 'tomcat/config'
 		into 'build/config'
 		filter(ReplaceTokens, tokens: [buildDir: "$buildDir".toString()])
 	}
+}
+
+task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-test:build']) << {
 	initDb.execute()
 	loadData.execute()
 	startServer.execute()
@@ -85,17 +88,19 @@ task initDb << {
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }
 
-task startServer << {
+task startServer(dependsOn: [':integration-test:copyConfig']) << {
     logsDir = new File("$projectDir/logs")
     logsDir.mkdirs()
 	jvmArgs = "-Dsdm.environment=default,integrationtest"
 	debug = hasProperty('debug') ? debug : false
-	if (debug) {
+    println "Debug: " + debug
+	if (true) {
+        println "Debug enabled, listening on port 3997"
 		jvmArgs = jvmArgs + " -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=3997,suspend=n,server=y"
 	}
 	ant.cargo(id: 'ig-server', containerId: "tomcat7x", output: "$logsDir/output.log", log: "$logsDir/cargo.log", action: "start", wait: "false") {
 		zipUrlInstaller(installUrl: 'http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.12/bin/apache-tomcat-7.0.12.zip')
-		extraClasspath(path: configurations.tomcat.asPath + ":$buildDir/config/")
+		extraClasspath(path: configurations.tomcat.asPath + ":$buildDir/config")
 		configuration {
 			property(name: "tomcat-conf-home", value: "$rootDir/subprojects/integration-test/tomcat")
 			property(name: "cargo.servlet.port", value: "8081")

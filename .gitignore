@@ -13,3 +13,4 @@ subprojects/integration-test/logs/*
 *.iml
 *.ipr
 *.iws
+subprojects/client/out/*

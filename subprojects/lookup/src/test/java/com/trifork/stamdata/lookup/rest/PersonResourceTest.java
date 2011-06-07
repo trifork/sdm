@@ -37,7 +37,7 @@ public class PersonResourceTest {
 		when(personDao.get("1020304050")).thenReturn(person);
 		when(personPartConverter.convert(person)).thenReturn(personPart);
 		
-		JAXBElement<PersonType> result = resource.getPerson("1020304050");
+		JAXBElement<PersonType> result = (JAXBElement<PersonType>)resource.getPerson("1020304050").getEntity();
 		assertEquals(personPart, result.getValue());
 	}
 }
