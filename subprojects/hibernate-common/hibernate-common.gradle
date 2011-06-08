@@ -42,11 +42,5 @@ dependencies {
 	testCompile libs.hamcrest
 	testCompile libs.mockito
 	
-	// Logging
-	//
-	// Unfortunatly we have to use Log4J since OIOSAML
-	// uses some custom configuration that is log4j specific.
-	// Logback would have less overhead.
-	
 	compile libs.slf4j_api
 }

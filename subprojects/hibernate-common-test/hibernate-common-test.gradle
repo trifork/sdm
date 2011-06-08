@@ -25,6 +25,8 @@ dependencies {
 
 	compile project(':shared')
 
+	compile libs.slf4j_api
+
 	// Guice
 	
 	compile libs.guice_servlet

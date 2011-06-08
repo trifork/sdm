@@ -32,6 +32,7 @@ dependencies {
 	compile(libs.commons_configuration) {
 		exclude group: 'commons-logging'
 	}
+	compile libs.slf4j_api
 	runtime libs.jcl_over_slf4j
 }
 

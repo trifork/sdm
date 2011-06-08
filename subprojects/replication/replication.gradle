@@ -156,8 +156,15 @@ dependencies {
 	// uses some custom configuration that is log4j specific.
 	// Logback would have less overhead.
 	
-	compile libs.slf4j_api
-	runtime libs.slf4j_log4j
+	compile(libs.slf4j_api) {
+		 force = true
+	}
+	runtime(libs.slf4j_log4j) {
+		force = true
+	}
+	runtime(libs.jcl_over_slf4j) {
+		force = true
+	}
 	
 	testRuntime 'xerces:xercesImpl:2.8.0'
 
