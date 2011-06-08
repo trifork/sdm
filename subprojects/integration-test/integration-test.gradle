@@ -88,6 +88,10 @@ task initDb << {
 	//runSql "$rootDir/db/schema.sql", 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }
+task runServer << {
+    copyConfig.execute()
+    startServer()
+}
 
 def startServer() {
     logsDir = new File("$projectDir/logs")

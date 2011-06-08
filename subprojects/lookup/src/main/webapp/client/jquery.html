@@ -1053,10 +1053,15 @@ h.rotate(null)}:function(){t=j.selected;l()});if(i){this.element.bind("tabsshow"
         }
 
         function parseXml(xml) {
-            console.log(getXmlAsString(xml));
             $('code').text(getXmlAsString(xml));
-            $(xml).find('[nodeName="ns6:PersonNameStructure"]').each(function() {
-                $("#outputName").text($(this).find('[nodeName="ns5:PersonGivenName"]').text() + " " + $(this).find('[nodeName="ns5:PersonMiddleName"]').text() + " " + $(this).find('[nodeName="ns5:PersonSurnameName"]').text());
+
+            if (!$.browser.webkit) {
+                xml = $.parseXML(getXmlAsString(xml).replace(/<(\/?)([^:>]*:)?([^>]+)>/g, "<$1$3>"));
+            }
+            console.log(xml);
+
+            $(xml).find('PersonNameStructure').each(function() {
+                $("#outputName").text($(this).find('PersonGivenName').text() + " " + $(this).find('PersonMiddleName').text() + " " + $(this).find('PersonSurnameName').text());
             });
             $("#outputSpouse").html($(xml).find("CivilStatusKode").text());
             $(xml).find("AddressPostal").each(function() {
