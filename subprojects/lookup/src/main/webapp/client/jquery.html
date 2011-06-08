@@ -1058,19 +1058,33 @@ h.rotate(null)}:function(){t=j.selected;l()});if(i){this.element.bind("tabsshow"
             $(xml).find('PersonNameStructure').each(function() {
                 $("#outputName").text($(this).find("PersonGivenName").text() + " " + $(this).find("PersonMiddleName").text() + " " + $(this).find("PersonSurnameName").text());
             });
+            $("#outputSpouse").html($(xml).find("CivilStatusKode").text());
             $(xml).find("AddressPostal").each(function() {
                 $("#outputAddress").append($(this).find("StreetName").text() + " " + $(this).find("StreetBuildingIdentifier").text() + " " + $(this).find("FloorIdentifier").text() + $(this).find("SuiteIdentifier").text() + "<br />");
                 $("#outputAddress").append($(this).find("PostCodeIdentifier").text() + " " + $(this).find("DistrictName").text() + "<br />");
             });
             $(xml).find("RelationListe").each(function() {
+                $(this).find("Moder").each(function() {
+                    $(this).find('ReferenceID').each(function() {
+                        $("#outputMother").html("<div class='urnCpr'>" + $(this).find("URNIdentifikator").text().substring(8, 18) + "</div><br />");
+                    });
+                });
+                $(this).find("Fader").each(function() {
+                    $(this).find('ReferenceID').each(function() {
+                        $("#outputFather").html("<div class='urnCpr'>" + $(this).find("URNIdentifikator").text().substring(8, 18) + "</div><br />");
+                    });
+                });
+                $(this).find("Aegtefaelle").each(function() {
+                    $(this).find('ReferenceID').each(function() {
+                        $("#outputSpouse").html("Gift med <div class='urnCpr'>" + $(this).find("URNIdentifikator").text().substring(8, 18) + "</div><br />");
+                    });
+                });
                 $(this).find("Boern").each(function() {
                     $("#outputChildren").append("<div class='urnCpr'>" + $(this).find("URNIdentifikator").text().substring(8, 18) + "</div><br />");
-                    console.log("Barn: " + $(this).find("URNIdentifikator").text().substring(8, 18));
                 });
                 $(this).find("RetligHandleevneVaergeForPersonen").each(function() {
                     $(this).find('ReferenceID').each(function() {
                         $("#outputGuardian").append("<div class='urnCpr'>" + $(this).find("URNIdentifikator").text().substring(8, 18) + "</div><br />");
-                        console.log("Vaerge: " + $(this).find("URNIdentifikator").text().substring(8, 18));
                     });
                 });
             });
@@ -1100,8 +1114,12 @@ h.rotate(null)}:function(){t=j.selected;l()});if(i){this.element.bind("tabsshow"
         function clearOutput() {
             $("#outputName").text("Searching...");
             $("#outputAddress").text("");
+            $("#outputSpouse").text("");
+            $("#outputMother").text("");
+            $("#outputFather").text("");
             $("#outputChildren").text("");
             $("#outputGuardian").text("");
+
             $('code').text("");
         }
 
@@ -1143,6 +1161,18 @@ h.rotate(null)}:function(){t=j.selected;l()});if(i){this.element.bind("tabsshow"
                         <tr id="rowAddress">
                             <td>Adresse</td>
                             <td id="outputAddress"></td>
+                        </tr>
+                        <tr id="rowMother">
+                            <td>Moder</td>
+                            <td id="outputMother"></td>
+                        </tr>
+                        <tr id="rowFather">
+                            <td>Fader</td>
+                            <td id="outputFather"></td>
+                        </tr>
+                        <tr id="rowCivilStatus">
+                            <td>Civilstatus</td>
+                            <td id="outputSpouse"></td>
                         </tr>
                         <tr id="rowChildren">
                             <td>B&oslash;rn</td>
