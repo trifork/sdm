@@ -28,7 +28,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 def guiceVersion = '3.0'
-def slf4jVersion = '1.6.1'
+def slf4jVersion = '1.5.8'
 def jerseyVersion = '1.7'
 
 libs = [
@@ -40,7 +40,7 @@ libs = [
 	slf4j_api: 'org.slf4j:slf4j-api:' + slf4jVersion,
 	log4j_over_slf4j: 'org.slf4j:log4j-over-slf4j:' + slf4jVersion,
 	jcl_over_slf4j: 'org.slf4j:jcl-over-slf4j:' + slf4jVersion,
-	log4j_slf4j: 'org.slf4j:slf4j-log4j12:' + slf4jVersion,
+	slf4j_log4j: 'org.slf4j:slf4j-log4j12:' + slf4jVersion,
 
 	logback_core: 'ch.qos.logback:logback-core:0.9.27',
 	logback_classic: 'ch.qos.logback:logback-classic:0.9.27',
@@ -76,7 +76,12 @@ libs = [
 	
 	velocity: 'apache-velocity:velocity:1.5',
 	
-	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
+	jaxb_api: 'javax.xml.bind:jaxb-api:2.2.2',
+	jaxb_impl: 'com.sun.xml.bind:jaxb-impl:2.2.2',
+
+	stax_api: 'javax.xml.stream:stax-api:1.0-2',
+
+	javax_activation: 'javax.activation:activation:1.1',
 	
 	guice: 'com.google.inject.guice:guice:' + guiceVersion,
 	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion,

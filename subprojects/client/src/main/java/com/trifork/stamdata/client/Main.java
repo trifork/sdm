@@ -40,6 +40,7 @@ import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewXmlHelper;
 import com.trifork.stamdata.views.cpr.BarnRelation;
+import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.Civilstand;
 import com.trifork.stamdata.views.cpr.Foedselsregistreringsoplysninger;
 import com.trifork.stamdata.views.cpr.Folkekirkeoplysninger;
@@ -74,6 +75,7 @@ public class Main {
 		add(Valgoplysninger.class);
 		add(UsageLogEntry.class);
 		add(AggregateUsageLogEntry.class);
+		add(Beskyttelse.class);
 	}};
 	
 	private static List<String> viewNames = new ArrayList<String>() {{
