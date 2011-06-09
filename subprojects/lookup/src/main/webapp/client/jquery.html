@@ -70,7 +70,7 @@
             var startTime;
             $.ajax({
                        type: "GET",
-                       url: "https://"+window.location.host+"/lookup/person/" + cpr,
+                       url: "https://"+window.location.host+"${context.path}/person/" + cpr,
                        dataType: "xml",
                        beforeSend: function() {
                            clearOutput();
