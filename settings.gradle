@@ -25,7 +25,7 @@
 // The prefered way is to list them, one per line,
 // as below.
 
-include 'shared'
+include 'common'
 include 'replication'
 include 'schemas'
 include 'importer'
@@ -33,8 +33,8 @@ include 'client'
 include 'lookup'
 include 'oces-ssl'
 include 'part-api'
-include 'hibernate-common'
-include 'hibernate-common-test'
+include 'common-hibernate'
+include 'common-hibernate-test'
 include 'integration-test'
 include 'common-model'
 

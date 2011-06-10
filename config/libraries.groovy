@@ -87,6 +87,8 @@ libs = [
 	guice: 'com.google.inject.guice:guice:' + guiceVersion,
 	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion,
 	
+	google_collections: 'com.google.collections:google-collections:1.0',
+	
 	jersey_core: 'com.sun.jersey:jersey-core:' + jerseyVersion,
 	jersey_server: 'com.sun.jersey:jersey-server:' + jerseyVersion,
 	jersey_guice: 'com.sun.jersey.contribs:jersey-guice:' + jerseyVersion,

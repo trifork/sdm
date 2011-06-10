@@ -1,5 +1,5 @@
 dependencies {
-	compile project(':shared')
+	compile project(':common')
 	compile libs.slf4j_api
 	compile libs.ooapi
 

@@ -35,12 +35,12 @@ configurations {
 
 dependencies {
 	
-	compile project(':shared')
+	compile project(':common')
 	compile project(':oces-ssl')
 	compile project(':part-api')
-	compile project(':hibernate-common')
+	compile project(':common-hibernate')
 	compile project(':common-model')
-	testCompile project(':hibernate-common-test')
+	testCompile project(':common-hibernate-test')
 	
 	// SERVLETS
 	

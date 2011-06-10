@@ -30,7 +30,7 @@ configurations {
 }
 
 dependencies {
-	compile project(':shared')
+	compile project(':common')
 	compile project(':client')
 	testCompile libs.junit
 	testCompile libs.hamcrest

@@ -23,7 +23,7 @@
 
 dependencies {
 
-	compile project(':shared')
+	compile project(':common')
 	// SERVLETS
 
 	compile libs.servlet_api
@@ -34,7 +34,10 @@ dependencies {
 
 	// Hibernate
 
+	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final'
 	compile libs.hibernate_entitymanager
+
+	compile libs.reflections
 
 	// Testing
 

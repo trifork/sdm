@@ -22,25 +22,15 @@
 // National Board of e-Health (NSI). All Rights Reserved.
 
 dependencies {
-	
-	compile project(':shared')
-	// SERVLETS
-	
-	compile libs.servlet_api
-	
-	// Guice
-	
-	compile libs.guice_servlet
-	
-	// Hibernate
-	
-	compile libs.hibernate_entitymanager
-	
-	// Testing
-	
+	compile libs.commons_lang
+
 	testCompile libs.junit
-	testCompile libs.hamcrest
-	testCompile libs.mockito
-	
+
+	compile(libs.commons_configuration) {
+		exclude group: 'commons-logging'
+	}
 	compile libs.slf4j_api
+	runtime libs.jcl_over_slf4j
 }
+
+test.enabled = false

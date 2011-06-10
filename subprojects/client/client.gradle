@@ -35,7 +35,7 @@ apply plugin:com.smokejumperit.gradle.OneJarPlugin
 
 dependencies {
 	
-	compile project(":shared")
+	compile project(":common")
 	compile project(":common-model")
 	
 	// Commons

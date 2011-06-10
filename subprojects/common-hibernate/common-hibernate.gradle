@@ -22,18 +22,27 @@
 // National Board of e-Health (NSI). All Rights Reserved.
 
 dependencies {
-	compile 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final'
-	compile libs.commons_lang
-
-	compile libs.reflections
-
+	
+	compile project(':common')
+	// SERVLETS
+	
+	compile libs.servlet_api
+	
+	compile libs.google_collections
+	
+	// Guice
+	
+	compile libs.guice_servlet
+	
+	// Hibernate
+	
+	compile libs.hibernate_entitymanager
+	
+	// Testing
+	
 	testCompile libs.junit
-
-	compile(libs.commons_configuration) {
-		exclude group: 'commons-logging'
-	}
+	testCompile libs.hamcrest
+	testCompile libs.mockito
+	
 	compile libs.slf4j_api
-	runtime libs.jcl_over_slf4j
 }
-
-test.enabled = false

@@ -22,7 +22,7 @@
 // National Board of e-Health (NSI). All Rights Reserved.
 
 dependencies {
-	compile project(':shared')
+	compile project(':common')
 	compile project(':common-model')
 	compile libs.commons_io
 	runtime libs.jaxb_impl

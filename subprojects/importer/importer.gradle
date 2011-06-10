@@ -25,7 +25,7 @@ apply plugin: 'war'
 apply plugin: 'jetty'
 
 dependencies {
-	compile project(':shared')
+	compile project(':common')
 
 	runtime "mysql:mysql-connector-java:5.1.14"
 	
