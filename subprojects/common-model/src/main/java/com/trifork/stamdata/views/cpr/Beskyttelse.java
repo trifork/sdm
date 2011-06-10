@@ -22,8 +22,8 @@ public class Beskyttelse extends CprView {
 
 	@XmlTransient
 	public String id;
-	
-	
+
+
 	@XmlElement(required = true)
 	public String beskyttelsestype;
 

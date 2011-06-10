@@ -28,11 +28,11 @@ public abstract class CprView extends View {
 
 	@XmlElement(required = true)
 	protected String cpr;
-	
+
 	@Temporal(TIMESTAMP)
 	@XmlElement(required = true)
 	protected Date createdDate;
-	
+
 	@Temporal(TIMESTAMP)
 	@XmlElement(required = true)
 	protected Date modifiedDate;
@@ -44,7 +44,7 @@ public abstract class CprView extends View {
 	@Temporal(TIMESTAMP)
 	@XmlTransient // uses property-based access type
 	protected Date validTo;
-	
+
 	@XmlTransient // not of interest to clients
 	public String createdBy;
 	@XmlTransient // not of interest to clients

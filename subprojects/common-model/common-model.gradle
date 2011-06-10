@@ -21,36 +21,26 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.views.cpr;
+dependencies {
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+	compile project(':shared')
+	// SERVLETS
 
-import com.trifork.stamdata.views.ViewPath;
+	compile libs.servlet_api
 
+	// Guice
 
-@Entity
-@XmlRootElement
-@ViewPath("cpr/statsborgerskab/v1")
-@XmlAccessorType(XmlAccessType.FIELD)
-@AttributeOverride(name = "recordID",column = @Column(name = "StatsborgerskabPID"))
-public class Statsborgerskab extends CprView {
+	compile libs.guice_servlet
 
-	public String landekode;
-	public String statsborgerskabstartdatoUsikkerhedsmarkering;
+	// Hibernate
 
-	
-	@Override
-	public String getId() {
-		return cpr;
-	}
+	compile libs.hibernate_entitymanager
 
-	@Override
-	public String toString() {
-		return "Statsborgerskab[" + cpr + ", landekode=" + landekode + ", validFrom=" + validFrom + "]";
-	}
+	// Testing
+
+	testCompile libs.junit
+	testCompile libs.hamcrest
+	testCompile libs.mockito
+
+	compile libs.slf4j_api
 }

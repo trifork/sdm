@@ -36,6 +36,7 @@ include 'part-api'
 include 'hibernate-common'
 include 'hibernate-common-test'
 include 'integration-test'
+include 'common-model'
 
 rootProject.name = 'stamdata'
 rootProject.children.each {project ->

@@ -29,6 +29,7 @@ dependencies {
 	compile project(':shared')
 	compile project(':oces-ssl')
 	compile project(':hibernate-common')
+	compile project(':common-model')
 	testCompile project(':hibernate-common-test')
 	
 	// SERVLETS

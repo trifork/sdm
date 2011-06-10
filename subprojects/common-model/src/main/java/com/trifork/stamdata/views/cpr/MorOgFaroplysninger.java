@@ -48,7 +48,7 @@ public class MorOgFaroplysninger extends CprView {
 
 	@XmlElement(required = true)
 	public String foraelderkode;
-	
+
 	public String foraeldercpr;
 
 	@Temporal(TIMESTAMP)
@@ -62,7 +62,7 @@ public class MorOgFaroplysninger extends CprView {
 	@XmlTransient
 	@Column(name = "Id")
 	public String id;
-	
+
 	@Override
 	public String getId() {
 		return id;

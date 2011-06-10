@@ -53,7 +53,7 @@ public class Person extends CprView {
 
 	@Column(name = "Efternavn")
 	public String efternavn;
-	
+
 	@Column
 	public String adresseringsNavn;
 
