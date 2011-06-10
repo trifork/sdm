@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.trifork.stamdata.views.cpr.*;
+import com.trifork.stamdata.views.usagelog.UsageLogEntry;
+
 import org.apache.commons.configuration.Configuration;
 import org.slf4j.Logger;
 
@@ -64,6 +66,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
             entityClasses.add(Udrejseoplysninger.class);
             entityClasses.add(UmyndiggoerelseVaergeRelation.class);
             entityClasses.add(Valgoplysninger.class);
+            entityClasses.add(UsageLogEntry.class);
 
 			modules.add(new SessionFactoryModule (
 				config.getString("db.connection.driverClass"),
