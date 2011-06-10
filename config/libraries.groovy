@@ -36,6 +36,7 @@ libs = [
 	commons_codec: 'commons-codec:commons-codec:1.4',
 	commons_lang: 'commons-lang:commons-lang:2.5',
 	commons_configuration: 'commons-configuration:commons-configuration:1.6',
+	commons_cli: 'commons-cli:commons-cli:1.2',
 
 	slf4j_api: 'org.slf4j:slf4j-api:' + slf4jVersion,
 	log4j_over_slf4j: 'org.slf4j:log4j-over-slf4j:' + slf4jVersion,

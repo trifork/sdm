@@ -1,5 +1,6 @@
 package com.trifork.oioxml;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -22,6 +23,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.PosixParser;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -39,6 +44,8 @@ public class OioXmlProduction {
 	private Map<String, Document> productionSchemas = new HashMap<String, Document>();
 	// maps namespaces to the namespace prefix used for that namespace in production schemas
 	private Map<String, String> productionNamespacePrefixMap = new HashMap<String, String>();
+	
+	private String outputDirectory;
 	
 	private void fixElementAttribute(Element elm, String attributeName, Map<String, String> fileNsPrefixMap) {
 		if(elm.getAttribute(attributeName) != null) {
@@ -241,11 +248,17 @@ public class OioXmlProduction {
 	}
 
 	private void printSchemasToFiles() throws Exception {
+		File outputDirectoryFile = new File(outputDirectory);
+		if(!outputDirectoryFile.isDirectory()) {
+			throw new RuntimeException("Cannot output schemas to " + outputDirectory + ": not a directory");
+		}
+		
 		for(Map.Entry<String, Document> entry : productionSchemas.entrySet()) {
 			Document schema = entry.getValue();
 			String namespace = entry.getKey();
 			String filename = productionNamespacePrefixMap.get(namespace) + ".xsd";
-			FileOutputStream output = new FileOutputStream(filename);
+			File outputFile = new File(outputDirectoryFile, filename);
+			FileOutputStream output = new FileOutputStream(outputFile);
 			printSchema(schema, output);
 			output.close();
 		}
@@ -267,11 +280,18 @@ public class OioXmlProduction {
 		printSchemasToFiles();
 	}
 	
-	public OioXmlProduction(Collection<String> initialSchemaUrls){
+	public OioXmlProduction(Collection<String> initialSchemaUrls, String outputDirectory){
+		this.outputDirectory = outputDirectory;
 		this.initialSchemaLocations.addAll(initialSchemaUrls);
 	}
 	
 	public static void main(String[] args) throws Exception{
-		new OioXmlProduction(Arrays.asList(args)).buildProductionSchemas();
+		CommandLineParser parser = new PosixParser();
+		Options options = new Options();
+		options.addOption("o", "output", true, "The directory where the program will output production schemas");
+		CommandLine line = parser.parse( options, args );
+		String outputDirectory = line.getOptionValue("o");
+		String[] schemaUrls = line.getArgs();
+		new OioXmlProduction(Arrays.asList(schemaUrls), outputDirectory).buildProductionSchemas();
 	}
 }
