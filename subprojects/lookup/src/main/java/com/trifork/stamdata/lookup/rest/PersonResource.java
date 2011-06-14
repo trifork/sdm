@@ -5,6 +5,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.slf4j.Logger;
@@ -44,7 +45,10 @@ public class PersonResource {
 		if (person == null) {
 			usageLogger.log(clientSsn, "lookup.cpr.person.notfound", 1);
 			logger.info("Opslag på ikke-eksisterende cpr-nummer. cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
-			return Response.status(Response.Status.NOT_FOUND).build();
+            Response.ResponseBuilder builder = Response.status(Response.Status.NOT_FOUND);
+            builder.type(MediaType.TEXT_HTML);
+            builder.entity("<h3>Person med CPR " + cpr + " findes ikke i systemet</h3>");
+            return builder.build();
 		}
 		PersonType personPart = personPartConverter.convert(person);
 		usageLogger.log(clientSsn, "lookup.cpr.person.ok", 1);

@@ -13,4 +13,6 @@ subprojects/integration-test/logs/*
 *.iml
 *.ipr
 *.iws
+*.class
 subprojects/client/out/*
+subprojects/part-api/out/production/part-api/dk/oio/rep/bbr_dk/xml/schemas/_2006/_09/_30/AddressCoordinateQualityClassCodeType.class
