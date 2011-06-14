@@ -38,14 +38,12 @@ import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
+import com.trifork.stamdata.logging.LogConfigurer;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.gui.GuiModule;
 import com.trifork.stamdata.replication.gui.security.saml.SamlSecurityModule;
 import com.trifork.stamdata.replication.gui.security.twowayssl.TwoWaySslSecurityModule;
 import com.trifork.stamdata.replication.gui.security.unrestricted.GuiUnrestrictedSecurityModule;
-import com.trifork.stamdata.replication.logging.DefaultClientIpModule;
-import com.trifork.stamdata.replication.logging.LoggingModule;
-import com.trifork.stamdata.replication.logging.ZeusClientIpModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
@@ -68,6 +66,10 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 		try {
 			logger.info("Loading configuration.");
 			Configuration config = new SystemPropertyBasedConfigurationLoader("replication", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
+			String security = config.getString("security");
+			String guiSecurity = config.getString("gui.security");
+			boolean twoWaySslInUse = "twowayssl".equals(security) || "twowayssl".equals(guiSecurity);
+			String sslTerminationMethod = config.getString("security.ssl.termination.method");
 
 			logger.info("Configuring Stamdata Service.");
 
@@ -80,7 +82,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			// LOGGING
 			// must be before other filters, because we want logging in these other filters to have requestId, clientIp etc. in the MDC.
-			modules.add(new LoggingModule());
+			LogConfigurer.configureLogging(twoWaySslInUse, sslTerminationMethod, modules);
 
 			// CONFIGURE DATA ACCESS
 			
@@ -98,26 +100,10 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
-			String security = config.getString("security");
-			String guiSecurity = config.getString("gui.security");
-			boolean twoWaySslInUse = "twowayssl".equals(security) || 
-			"twowayssl".equals(guiSecurity);
 			if(twoWaySslInUse) {
 				modules.add(new OcesSslModule(config.getBoolean("security.ssl.test"), config.getString("security.ssl.termination.method")));
 			}
 			
-			String sslTerminationMethod = config.getString("security.ssl.termination.method");
-			
-			boolean zeusLoadBalancerInUse = twoWaySslInUse && "zeusLoadBalancer".equals(sslTerminationMethod);
-			
-			// The Zeus load balancer sends the actual client ip in a header. We are not really
-			// interested in logging the ip-address of the load-balancer in every request!
-			if(zeusLoadBalancerInUse) {
-				modules.add(new ZeusClientIpModule());
-			}
-			else {
-				modules.add(new DefaultClientIpModule());
-			}
 			
 			if ("dgws".equals(security)) {
 				modules.add(new DGWSModule());

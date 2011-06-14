@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.logging;
+package com.trifork.stamdata.logging;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ public class DefaultClientIpProvider implements Provider<String> {
 	public DefaultClientIpProvider(HttpServletRequest request) {
 		this.request = request;
 	}
-	
+
 	@Override
 	public String get() {
 		return request.getRemoteAddr();

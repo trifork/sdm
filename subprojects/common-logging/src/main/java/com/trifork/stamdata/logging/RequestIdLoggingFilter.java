@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.logging;
+package com.trifork.stamdata.logging;
 
 import java.io.IOException;
 import java.util.Random;
@@ -15,7 +15,7 @@ import org.slf4j.MDC;
 import com.google.inject.Singleton;
 
 /**
- * This filter adds a randomly generated requestId to the slf4j MDC 
+ * This filter adds a randomly generated requestId to the slf4j MDC
  * @author ahj
  *
  */
@@ -23,11 +23,11 @@ import com.google.inject.Singleton;
 public class RequestIdLoggingFilter implements Filter {
 
 	private Random random = new Random();
-	
+
 	private long randomLong()  {
 		return Math.abs(random.nextLong());
 	}
-	
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -47,5 +47,5 @@ public class RequestIdLoggingFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-	
+
 }

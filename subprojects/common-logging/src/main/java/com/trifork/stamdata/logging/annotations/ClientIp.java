@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.logging.annotations;
+package com.trifork.stamdata.logging.annotations;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

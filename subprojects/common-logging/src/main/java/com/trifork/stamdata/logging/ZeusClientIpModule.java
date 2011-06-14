@@ -1,11 +1,11 @@
-package com.trifork.stamdata.replication.logging;
+package com.trifork.stamdata.logging;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
-import com.trifork.stamdata.replication.logging.annotations.ClientIp;
+import com.trifork.stamdata.logging.annotations.ClientIp;
 
 public class ZeusClientIpModule extends AbstractModule {
 

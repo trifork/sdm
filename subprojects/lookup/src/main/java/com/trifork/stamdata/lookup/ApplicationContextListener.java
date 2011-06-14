@@ -19,6 +19,7 @@ import com.google.inject.Module;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 import com.trifork.stamdata.db.SessionFactoryModule;
+import com.trifork.stamdata.logging.LogConfigurer;
 import com.trifork.stamdata.lookup.rest.RestModule;
 import com.trifork.stamdata.lookup.security.SecurityModule;
 import com.trifork.stamdata.ssl.OcesSslModule;
@@ -39,12 +40,17 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			Configuration config = new SystemPropertyBasedConfigurationLoader(
 					"lookup", STAMDATA_ENVIRONMENT_STRING_SYSPROP,
 					STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
+			String sslTerminationMethod = config.getString("security.ssl.termination.method");
 
 			logger.info("Configuring Stamdata Lookup Service.");
 
 			List<Module> modules = new ArrayList<Module>();
+
+			// LOGGING
+			// must be before other filters, because we want logging in these other filters to have requestId, clientIp etc. in the MDC.
+			LogConfigurer.configureLogging(true, sslTerminationMethod, modules);
+
 			boolean useOcesTest = config.getBoolean("security.ssl.test");
-			String sslTerminationMethod = config.getString("security.ssl.termination.method");
 			modules.add(new OcesSslModule(useOcesTest, sslTerminationMethod));
 			@SuppressWarnings("unchecked")
 			List<String> authorizedClients = config.getList("security.authorized.clients");

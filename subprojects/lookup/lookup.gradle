@@ -37,6 +37,7 @@ dependencies {
 	compile project(':oces-ssl')
 	compile project(':part-api')
 	compile project(':common-hibernate')
+	compile project(':common-logging')
 	compile project(':common-model')
 	testCompile project(':common-hibernate-test')
 	

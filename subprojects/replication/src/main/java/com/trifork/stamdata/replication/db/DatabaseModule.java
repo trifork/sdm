@@ -32,9 +32,9 @@ import com.google.common.collect.Sets;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.db.SessionFactoryModule;
+import com.trifork.stamdata.logging.LogEntry;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.User;
-import com.trifork.stamdata.replication.logging.LogEntry;
 import com.trifork.stamdata.replication.security.dgws.Authorization;
 import com.trifork.stamdata.views.Views;
 

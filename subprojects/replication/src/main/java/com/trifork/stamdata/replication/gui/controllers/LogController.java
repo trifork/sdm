@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.trifork.stamdata.replication.logging.DatabaseAuditLogger;
+import com.trifork.stamdata.logging.DatabaseAuditLogger;
 
 
 @Singleton

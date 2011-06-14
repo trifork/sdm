@@ -45,7 +45,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Node;
 
-import com.trifork.stamdata.replication.logging.DatabaseAuditLogger;
+import com.trifork.stamdata.logging.DatabaseAuditLogger;
 import com.trifork.stamdata.replication.replication.views.MockView;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationServlet.RequestProcessor;
 import com.trifork.stamdata.views.View;

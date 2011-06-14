@@ -35,10 +35,10 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.trifork.stamdata.logging.AuditLogger;
 import com.trifork.stamdata.replication.gui.annotations.Whitelist;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
-import com.trifork.stamdata.replication.logging.AuditLogger;
 
 
 @Singleton

@@ -41,10 +41,10 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.trifork.stamdata.logging.AuditLogger;
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.gui.models.User;
-import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
 import com.trifork.stamdata.views.View;
 

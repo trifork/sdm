@@ -2,50 +2,43 @@
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
 // the License at http://www.mozilla.org/MPL/
-// 
+//
 // Software distributed under the License is distributed on an "AS
 // IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
 // implied. See the License for the specific language governing
 // rights and limitations under the License.
-// 
+//
 // Contributor(s): Contributors are attributed in the source code
 // where applicable.
-// 
+//
 // The Original Code is "Stamdata".
-// 
+//
 // The Initial Developer of the Original Code is Trifork Public A/S.
-// 
+//
 // Portions created for the Original Code are Copyright 2011,
 // Lægemiddelstyrelsen. All Rights Reserved.
-// 
+//
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-// Declare subprojects in this file.
-// The prefered way is to list them, one per line,
-// as below.
+package com.trifork.stamdata.logging;
 
-include 'common'
-include 'replication'
-include 'schemas'
-include 'importer'
-include 'client'
-include 'lookup'
-include 'oces-ssl'
-include 'part-api'
-include 'common-logging'
-include 'common-hibernate'
-include 'common-hibernate-test'
-include 'integration-test'
-include 'common-model'
-include 'oio-production-schemas'
+import com.google.inject.Key;
+import com.google.inject.Module;
+import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.logging.annotations.ClientIp;
 
-rootProject.name = 'stamdata'
-rootProject.children.each {project ->
-    String fileBaseName = project.name.replaceAll("\\p{Upper}") { "-${it.toLowerCase()}" }
-    String projectDirName = "subprojects/$fileBaseName"
-    project.projectDir = new File(settingsDir, projectDirName)
-    project.buildFileName = "${fileBaseName}.gradle"
-    assert project.projectDir.isDirectory()
-    assert project.buildFile.isFile()
+
+public class LoggingModule extends ServletModule implements Module {
+
+	@Override
+	protected void configureServlets() {
+		requireBinding(Key.get(String.class, ClientIp.class));
+		filter("*").through(RequestIdLoggingFilter.class);
+		filter("*").through(ClientIpLoggingFilter.class);
+		bind(DatabaseAuditLogger.class);
+		bind(SLF4JAuditLogger.class);
+		bind(AuditLogger.class).to(CompositeAuditLogger.class);
+	}
+
 }

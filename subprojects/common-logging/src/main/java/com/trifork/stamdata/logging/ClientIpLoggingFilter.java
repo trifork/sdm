@@ -1,4 +1,4 @@
-package com.trifork.stamdata.replication.logging;
+package com.trifork.stamdata.logging;
 
 import java.io.IOException;
 
@@ -14,7 +14,7 @@ import org.slf4j.MDC;
 
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.trifork.stamdata.replication.logging.annotations.ClientIp;
+import com.trifork.stamdata.logging.annotations.ClientIp;
 
 /**
  * This filter adds a clientIp entry to the slf4j MDC
@@ -30,7 +30,7 @@ public class ClientIpLoggingFilter implements Filter {
 	public ClientIpLoggingFilter(@ClientIp Provider<String> ipProvider) {
 		this.ipProvider = ipProvider;
 	}
-	
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
