@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:organisation:organisation:2.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:org="urn:oio:sagdok:organisation:organisation:2.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        xmlns:orgfaelles="urn:oio:sagdok:organisation:2.0.0"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+    <include schemaLocation="Organisation.xsd"/>
+    <import namespace = "urn:oio:sagdok:organisation:2.0.0" schemaLocation="OrganisationFaelles.xsd"/>
+
+    <element name="ImportInput" type="org:ImportInputType" oio:definition="urn:oio:sagdok:organisationimportinput:ADD:2.0.0"/>
+    <complexType name="ImportInputType" oio:definition="urn:oio:sagdok:organisationimportinput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:ImportInputType">
+                <sequence>
+                    <element ref="org:Organisation" oio:content="organisation"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="ImportOutput" type="org:RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationimportoutput:ASDD:2.0.0"/>
+
+    <element name="PassiverInput" type="sd:UuidNoteInputType" oio:definition="urn:oio:sagdok:organisationpassiverinput:ASDD:1.0.0"/>
+
+    <element name="PassiverOutput" type="org:RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationpassiveroutput:ASDD:1.0.0"/>
+
+    <element name="SletInput" type="sd:UuidNoteInputType" oio:definition="urn:oio:sagdok:organisationsletinput:ASDD:1.0.0"/>
+
+    <element name="SletOutput" type="org:RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationsletoutput:ASDD:1.0.0"/>
+
+    <element name="OpretInput" type="org:OpretInputType" oio:definition="urn:oio:sagdok:organisationopretinput:ADD:2.0.0"/>
+    <complexType name="OpretInputType" oio:definition="urn:oio:sagdok:organisationopretinput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:OpretInputType">
+                <sequence>
+                    <element ref="org:AttributListe" oio:content="attributter"/>
+                    <element ref="org:TilstandListe" oio:content="tilstande"/>
+                    <element ref="org:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="OpretOutput" type="org:OpretOutputType" oio:definition="urn:oio:sagdok:organisationopretoutput:ADD:2.0.0"/>
+    <complexType name="OpretOutputType" oio:definition="urn:oio:sagdok:organisationopretoutput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="org:Organisation" minOccurs="0" oio:content="organisation"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="RetInput" type="org:RetInputType" oio:definition="urn:oio:sagdok:organisationretinput:ADD:2.0.0"/>
+    <complexType name="RetInputType" oio:definition="urn:oio:sagdok:organisationretinput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:RetInputType">
+                <sequence>
+                    <element ref="org:AttributListe" minOccurs="0" oio:content="attributter"/>
+                    <element ref="org:TilstandListe" minOccurs="0" oio:content="tilstande"/>
+                    <element ref="org:RelationListe" minOccurs="0" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="RetOutput" type="org:RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationretoutput:ASDD:1.0.0"/>
+
+    <element name="LaesInput" type="sd:LaesInputType" oio:definition="urn:oio:sagdok:organisationlaesinput:ASDD:1.0.0"/>
+
+    <element name="LaesOutput" type="org:LaesOutputType" oio:definition="urn:oio:sagdok:organisationlaesoutput:ADD:2.0.0"/>
+    <complexType name="LaesOutputType" oio:definition="urn:oio:sagdok:organisationlaesoutput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="org:LaesResultat" minOccurs="0" oio:content="laesresultat"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="ListInput" type="sd:ListInputType" oio:definition="urn:oio:sagdok:organisationlistinput:ASDD:1.0.0"/>
+
+    <element name="ListOutput" type="org:ListOutputType" oio:definition="urn:oio:sagdok:organisationlistoutput:ADD:2.0.0"/>
+    <complexType name="ListOutputType" oio:definition="urn:oio:sagdok:organisationlistoutput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:ListOutputType">
+                <sequence>
+                    <element ref="org:LaesResultat" minOccurs="0" maxOccurs="unbounded" oio:content="laesresultat"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegInput" type="org:SoegInputType" oio:definition="urn:oio:sagdok:organisationsoeginput:ADD:2.0.0"/>
+    <complexType name="SoegInputType" oio:definition="urn:oio:sagdok:organisationsoeginput:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:SoegInputType">
+                <sequence>
+                    <element ref="org:SoegObjekt" minOccurs="0" oio:content="soeg"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegOutput" type="sd:SoegOutputType" oio:definition="urn:oio:sagdok:organisationsoegoutput:ASDD:1.0.0"/>
+
+    <element name="RegistreringOutput" type="org:RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationregistreringoutput:ADD:1.0.0"/>
+    <complexType name="RegistreringOutputType" oio:definition="urn:oio:sagdok:organisationregistreringoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="org:Registrering" minOccurs="0" oio:content="registrering"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="LaesResultat" type="org:LaesResultatType" oio:definition="urn:oio:sagdok:organisationlaesresultat:ADD:2.0.0"/>
+    <complexType name="LaesResultatType" oio:definition="urn:oio:sagdok:organisationlaesresultat:ADD:2.0.0">
+        <choice>
+            <element ref="org:Registrering" oio:content="registrering"/>
+            <element ref="org:FiltreretOejebliksbillede" oio:content="filtreretoejebliksbillede"/>
+        </choice>
+    </complexType>
+
+    <element name="SoegObjekt" type="org:SoegObjektType" oio:definition="urn:oio:sagdok:organisationsoegobjekt:ADD:1.0.0"/>
+    <complexType name="SoegObjektType" oio:definition="urn:oio:sagdok:organisationsoegobjekt:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:SoegSagDokObjektType">
+                <sequence>
+                    <element ref="org:SoegAttributListe" minOccurs="0" oio:content="attributter"/>
+                    <element ref="org:SoegRelationListe" minOccurs="0" oio:content="relationer"/>
+                    <element ref="org:SoegTilstandListe" minOccurs="0" oio:content="tilstande"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="FiltreretOejebliksbillede" type="org:FiltreretOejebliksbilledeType" oio:definition="urn:oio:sagdok:organisationfiltreretoejebliksbillede:ADD:1.0.0"/>
+    <complexType name="FiltreretOejebliksbilledeType" oio:definition="urn:oio:sagdok:organisationfiltreretoejebliksbillede:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:LaesFiltreretOutputType">
+                <sequence>
+                    <element ref="org:AttributListe" oio:content="attributter"/>
+                    <element ref="org:TilstandListe" oio:content="tilstande"/>
+                    <element ref="org:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegAttributListe" type="org:SoegAttributListeType" oio:definition="urn:oio:sagdok:organisationsoegattributliste:ADD:2.0.0"/>
+    <complexType name="SoegAttributListeType" oio:definition="urn:oio:sagdok:organisationsoegattributliste:ADD:2.0.0">
+        <sequence>
+            <element ref="org:SoegEgenskab" minOccurs="0" maxOccurs="unbounded" oio:content="egenskaber"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegRelationListe" type="org:SoegRelationListeType" oio:definition="urn:oio:sagdok:organisationsoegrelationliste:ADD:2.0.0"/>
+    <complexType name="SoegRelationListeType" oio:definition="urn:oio:sagdok:organisationsoegrelationliste:ADD:2.0.0">
+        <sequence>
+            <element ref="sd:SoegAdresser" minOccurs="0" maxOccurs="unbounded" oio:content="adresser"/>
+            <element ref="sd:SoegAnsatte" minOccurs="0" maxOccurs="unbounded" oio:content="ansatte"/>
+            <element ref="sd:SoegBranche" minOccurs="0" maxOccurs="unbounded" oio:content="branche"/>
+            <element ref="sd:SoegMyndighed" minOccurs="0" maxOccurs="unbounded" oio:content="myndighed"/>
+            <element ref="sd:SoegMyndighedstype" minOccurs="0" maxOccurs="unbounded" oio:content="myndighedstype"/>
+            <element ref="sd:SoegOpgaver" minOccurs="0" maxOccurs="unbounded" oio:content="opgaver"/>
+            <element ref="sd:SoegOverordnet" minOccurs="0" maxOccurs="unbounded" oio:content="overordnet"/>
+            <element ref="sd:SoegProduktionsenhed" minOccurs="0" maxOccurs="unbounded" oio:content="produktionsenhed"/>
+            <element ref="sd:SoegSkatteenhed" minOccurs="0" maxOccurs="unbounded" oio:content="skatteenhed"/>
+            <element ref="sd:SoegTilhoerer" minOccurs="0" maxOccurs="unbounded" oio:content="tilhoerer"/>
+            <element ref="sd:SoegTilknyttedeBrugere" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedebrugere"/>
+            <element ref="sd:SoegTilknyttedeEnheder" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeenheder"/>
+            <element ref="sd:SoegTilknyttedeFunktioner" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedefunktioner"/>
+            <element ref="sd:SoegTilknyttedeInteressefaellesskaber" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeinteressefaellesskaber"/>
+            <element ref="sd:SoegTilknyttedeOrganisationer" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeorganisationer"/>
+            <element ref="sd:SoegTilknyttedePersoner" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedepersoner"/>
+            <element ref="sd:SoegTilknyttedeItSystemer" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeitsystemer"/>
+            <element ref="sd:SoegVirksomhed" minOccurs="0" maxOccurs="unbounded" oio:content="virksomhed"/>
+            <element ref="sd:SoegVirksomhedstype" minOccurs="0" maxOccurs="unbounded" oio:content="virksomhedstype"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegTilstandListe" type="org:SoegTilstandListeType" oio:definition="urn:oio:sagdok:organisationsoegtilstandliste:ADD:2.0.0"/>
+    <complexType name="SoegTilstandListeType" oio:definition="urn:oio:sagdok:organisationsoegtilstandliste:ADD:2.0.0">
+        <sequence>
+            <element ref="orgfaelles:SoegGyldighed" minOccurs="0" maxOccurs="unbounded" oio:content="gyldighed"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegEgenskab" type="org:SoegEgenskabType" oio:definition="urn:oio:sagdok:organisationsoegegenskab:ADD:1.0.0"/>
+    <complexType name="SoegEgenskabType" oio:definition="urn:oio:sagdok:organisationsoegegenskab:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:OrganisationNavn" minOccurs="0" oio:content="organisationsnavn"/>
+            <element ref="sd:BrugervendtNoegleTekst" minOccurs="0" oio:content="brugervendtnoegle"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+</schema>

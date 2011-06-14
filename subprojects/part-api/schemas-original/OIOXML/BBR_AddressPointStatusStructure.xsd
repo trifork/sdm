@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bbr="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<include schemaLocation="BBR_AddressCoordinateQualityClassCode.xsd"/>
+	<include schemaLocation="BBR_AddressPointRevisionDateTime.xsd"/>
+	<include schemaLocation="BBR_AddressPointValidStartDateTime.xsd"/>
+	<include schemaLocation="BBR_AddressPointValidEndDateTime.xsd"/>
+	<element name="AddressPointStatusStructure" type="bbr:AddressPointStatusStructureType"/>
+	<complexType name="AddressPointStatusStructureType">
+		<sequence>
+			<element ref="bbr:AddressPointRevisionDateTime"/>
+			<element minOccurs="0" ref="bbr:AddressPointValidStartDateTime"/>
+			<element minOccurs="0" ref="bbr:AddressPointValidEndDateTime"/>
+			<element minOccurs="0" ref="bbr:AddressCoordinateQualityClassCode"/>
+		</sequence>
+	</complexType>
+</schema>

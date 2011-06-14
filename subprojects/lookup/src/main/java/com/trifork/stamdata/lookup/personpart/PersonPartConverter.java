@@ -8,11 +8,10 @@ import java.util.UUID;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import oio.sagdok._2_0.PersonFlerRelationType;
-import oio.sagdok._2_0.TidspunktType;
-import oio.sagdok._2_0.TilstandVirkningType;
-import oio.sagdok._2_0.UnikIdType;
-import oio.sagdok._2_0.VirkningType;
+import oio.sagdok._3_0.PersonFlerRelationType;
+import oio.sagdok._3_0.TidspunktType;
+import oio.sagdok._3_0.UnikIdType;
+import oio.sagdok._3_0.VirkningType;
 import oio.sagdok.person._1_0.AdresseType;
 import oio.sagdok.person._1_0.AttributListeType;
 import oio.sagdok.person._1_0.CivilStatusKodeType;
@@ -60,7 +59,7 @@ public class PersonPartConverter {
 
 	public PersonType convert(CurrentPersonData person) {
 		PersonType result = new PersonType();
-		result.setUUID(cprToUuid(person.getCprNumber()).toString());
+		result.setUUIDIdentifikator(cprToUuid(person.getCprNumber()).toString());
 		result.getRegistrering().add(createRegistreringType(person));
 		return result;
 	}
@@ -117,8 +116,8 @@ public class PersonPartConverter {
 
 	private TilstandListeType createTilstandListe(CurrentPersonData person) {
 		TilstandListeType result = new TilstandListeType();
-		result.setCivilStatus(createCivilStatusType(person));
-		result.setLivStatus(createLivStatusType(person));
+		result.getCivilStatus().add(createCivilStatusType(person));
+		result.getLivStatus().add(createLivStatusType(person));
 		return result;
 	}
 
@@ -137,14 +136,14 @@ public class PersonPartConverter {
 		addPartnerRelation(result, person);
 		addForaeldremyndighedsIndehavere(result, person);
 		addforaeldremyndighedBoern(result, person);
-		addErstatningAf(result, person);
+		addErstattetAf(result, person);
 		return result;
 	}
 	
-	private void addErstatningAf(RelationListeType result,
+	private void addErstattetAf(RelationListeType result,
 			CurrentPersonData person) {
 		if(person.getGaeldendeCpr() != null && !person.getGaeldendeCpr().trim().isEmpty()) {
-			result.getErstatningAf().add(createPersonRelationTypeForCpr(person.getGaeldendeCpr(), null, null));
+			result.getErstatttetAf().add(createPersonRelationTypeForCpr(person.getGaeldendeCpr(), null, null));
 		}
 	}
 
@@ -174,7 +173,7 @@ public class PersonPartConverter {
 					logger.error("There was a ForaeldremyndighedsRelation with type 0003 (mother), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(person.getMorOplysninger().foraeldercpr, null, null));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getMorOplysninger().foraeldercpr));
 			}
 			else if(relation.typeKode.equals("0004")) {
 				// far
@@ -186,7 +185,7 @@ public class PersonPartConverter {
 					logger.error("There was a ForaeldremyndighedsRelation with type 0004 (father), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(person.getFarOplysninger().foraeldercpr, null, null));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getFarOplysninger().foraeldercpr));
 			}
 			else if(relation.typeKode.equals("0005") || relation.typeKode.equals("0006")) {
 				// andre foraeldremyndighedsindehavere
@@ -194,7 +193,7 @@ public class PersonPartConverter {
 					logger.error("ForaeldremyndighedsRelation had type {} but did not have relationCpr, cpr={}", relation.typeKode, person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonRelationTypeForCpr(relation.relationCpr, null, null));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(relation.relationCpr));
 			}
 			else {
 				logger.error("Ukendt foraeldremyndigheds-typekode {}, cpr={}", relation.typeKode, person.getCprNumber());
@@ -265,7 +264,8 @@ public class PersonPartConverter {
 		PersonRelationType result = new PersonRelationType();
 		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, vaerge.relationCpr));
 		result.setVirkning(createVirkningType(vaerge.getValidFrom(), vaerge.getValidTo()));
-		result.setCommentText(joinLines(vaerge.RelationsTekst1, vaerge.RelationsTekst2, vaerge.RelationsTekst3, vaerge.RelationsTekst4, vaerge.RelationsTekst5));
+		// commentText in person part or not?
+		//result.setCommentText(joinLines(vaerge.RelationsTekst1, vaerge.RelationsTekst2, vaerge.RelationsTekst3, vaerge.RelationsTekst4, vaerge.RelationsTekst5));
 		return result;
 	}
 	
@@ -273,20 +273,13 @@ public class PersonPartConverter {
 		PersonFlerRelationType result = new PersonFlerRelationType();
 		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, vaergemaal.getCpr()));
 		result.setVirkning(createVirkningType(vaergemaal.getValidFrom(), vaergemaal.getValidTo()));
-		result.setCommentText(joinLines(vaergemaal.RelationsTekst1, vaergemaal.RelationsTekst2, vaergemaal.RelationsTekst3, vaergemaal.RelationsTekst4, vaergemaal.RelationsTekst5));
+		// commentText in person part or not?
+		//result.setCommentText(joinLines(vaergemaal.RelationsTekst1, vaergemaal.RelationsTekst2, vaergemaal.RelationsTekst3, vaergemaal.RelationsTekst4, vaergemaal.RelationsTekst5));
 		return result;
 	}
 
 	private String joinLines(String... lines) {
 		return StringUtils.join(lines, "\n");
-	}
-
-	private TilstandVirkningType createTilstandVirkningType(Date from) {
-		TilstandVirkningType result = new TilstandVirkningType();
-		result.setFraTidspunkt(createTidspunktType(from));
-		result.setAktoerRef(createAktoerRefId());
-		return result;
-		
 	}
 	
 	private VirkningType createVirkningType(Date from, Date to) {

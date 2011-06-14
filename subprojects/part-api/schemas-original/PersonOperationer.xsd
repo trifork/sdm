@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:person:1.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:person="urn:oio:sagdok:person:1.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        xmlns:oio1="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/"
+        xmlns:oio2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+        xmlns:oio6="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/"
+        xmlns:oio7="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/"
+        xmlns:oio8="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+    <include schemaLocation="Person.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" schemaLocation="OIOXML/DKCC_PersonGenderCode.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="OIOXML/DKCC_BirthDate.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" schemaLocation="OIOXML/DKCC_PersonNationalityCode.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" schemaLocation="OIOXML/CPR_PersonCivilRegistrationReplacementIdentifier.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="OIOXML/CPR_PersonCivilRegistrationIdentifier.xsd"/>
+
+    <element name="ImportInput" type="person:ImportInputType" oio:definition="urn:oio:sagdok:personimportinput:ADD:1.0.0"/>
+    <complexType name="ImportInputType" oio:definition="urn:oio:sagdok:personimportinput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:ImportInputType">
+                <sequence>
+                    <element ref="person:Person" oio:content="person"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="ImportOutput" type="person:RegistreringOutputType" oio:definition="urn:oio:sagdok:personimportoutput:ASDD:1.0.0"/>
+
+    <element name="PassiverInput" type="sd:UuidNoteInputType" oio:definition="urn:oio:sagdok:personpassiverinput:ASDD:1.0.0"/>
+
+    <element name="PassiverOutput" type="person:RegistreringOutputType" oio:definition="urn:oio:sagdok:personpassiveroutput:ASDD:1.0.0"/>
+
+    <element name="SletInput" type="sd:UuidNoteInputType" oio:definition="urn:oio:sagdok:personsletinput:ASDD:1.0.0"/>
+
+    <element name="SletOutput" type="person:RegistreringOutputType" oio:definition="urn:oio:sagdok:personsletoutput:ASDD:1.0.0"/>
+
+    <element name="OpretInput" type="person:OpretInputType" oio:definition="urn:oio:sagdok:personopretinput:ADD:1.0.0"/>
+    <complexType name="OpretInputType" oio:definition="urn:oio:sagdok:personopretinput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:OpretInputType">
+                <sequence>
+                    <element ref="person:AttributListe" oio:content="attributter"/>
+                    <element ref="person:TilstandListe" oio:content="tilstande"/>
+                    <element ref="person:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="OpretOutput" type="person:OpretOutputType" oio:definition="urn:oio:sagdok:personopretoutput:ADD:1.0.0"/>
+    <complexType name="OpretOutputType" oio:definition="urn:oio:sagdok:personopretoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="person:Person" minOccurs="0" oio:content="person"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="RetInput" type="person:RetInputType" oio:definition="urn:oio:sagdok:personretinput:ADD:1.0.0"/>
+    <complexType name="RetInputType" oio:definition="urn:oio:sagdok:personretinput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:RetInputType">
+                <sequence>
+                    <element ref="person:AttributListe" minOccurs="0" oio:content="attributter"/>
+                    <element ref="person:TilstandListe" minOccurs="0" oio:content="tilstande"/>
+                    <element ref="person:RelationListe" minOccurs="0" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="RetOutput" type="person:RegistreringOutputType" oio:definition="urn:oio:sagdok:personretoutput:ASDD:1.0.0"/>
+
+    <element name="LaesInput" type="sd:LaesInputType" oio:definition="urn:oio:sagdok:personlaesinput:ASDD:1.0.0"/>
+
+    <element name="LaesOutput" type="person:LaesOutputType" oio:definition="urn:oio:sagdok:personlaesoutput:ADD:1.0.0"/>
+    <complexType name="LaesOutputType" oio:definition="urn:oio:sagdok:personlaesoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="person:LaesResultat" minOccurs="0" oio:content="laesresultat"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="ListInput" type="sd:ListInputType" oio:definition="urn:oio:sagdok:personlistinput:ASDD:1.0.0"/>
+
+    <element name="ListOutput" type="person:ListOutputType" oio:definition="urn:oio:sagdok:personlistoutput:ADD:1.0.0"/>
+    <complexType name="ListOutputType" oio:definition="urn:oio:sagdok:personlistoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:ListOutputType">
+                <sequence>
+                    <element ref="person:LaesResultat" minOccurs="0" maxOccurs="unbounded" oio:content="laesresultat"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegInput" type="person:SoegInputType" oio:definition="urn:oio:sagdok:personsoeginput:ADD:1.0.0"/>
+    <complexType name="SoegInputType" oio:definition="urn:oio:sagdok:personsoeginput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:SoegInputType">
+                <sequence>
+                    <element ref="person:SoegObjekt" minOccurs="0" oio:content="soeg"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegOutput" type="sd:SoegOutputType" oio:definition="urn:oio:sagdok:personsoegoutput:ASDD:1.0.0"/>
+
+    <element name="RegistreringOutput" type="person:RegistreringOutputType" oio:definition="urn:oio:sagdok:personregistreringoutput:ADD:1.0.0"/>
+    <complexType name="RegistreringOutputType" oio:definition="urn:oio:sagdok:personregistreringoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:BasicOutputType">
+                <sequence>
+                    <element ref="person:Registrering" minOccurs="0" oio:content="registrering"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="LaesResultat" type="person:LaesResultatType" oio:definition="urn:oio:sagdok:personlaesresultat:ADD:1.0.0"/>
+    <complexType name="LaesResultatType" oio:definition="urn:oio:sagdok:personlaesresultat:ADD:1.0.0">
+        <choice>
+            <element ref="person:Registrering" oio:content="registrering"/>
+            <element ref="person:FiltreretOejebliksbillede" oio:content="filtreretoejebliksbillede"/>
+        </choice>
+    </complexType>
+
+    <element name="SoegObjekt" type="person:SoegObjektType" oio:definition="urn:oio:sagdok:personsoegobjekt:ADD:1.0.0"/>
+    <complexType name="SoegObjektType" oio:definition="urn:oio:sagdok:personsoegobjekt:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:SoegSagDokObjektType">
+                <sequence>
+                    <element ref="person:SoegAttributListe" minOccurs="0" oio:content="attributter"/>
+                    <element ref="person:SoegTilstandListe" minOccurs="0" oio:content="tilstande"/>
+                    <element ref="person:SoegRelationListe" minOccurs="0" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="FiltreretOejebliksbillede" type="person:FiltreretOejebliksbilledeType" oio:definition="urn:oio:sagdok:personfiltreretoejebliksbillede:ADD:1.0.0"/>
+    <complexType name="FiltreretOejebliksbilledeType" oio:definition="urn:oio:sagdok:personfiltreretoejebliksbillede:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:LaesFiltreretOutputType">
+                <sequence>
+                    <element ref="person:AttributListe" oio:content="attributter"/>
+                    <element ref="person:TilstandListe" oio:content="tilstande"/>
+                    <element ref="person:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegAttributListe" type="person:SoegAttributListeType" oio:definition="urn:oio:sagdok:personsoegattributliste:ADD:1.0.0"/>
+    <complexType name="SoegAttributListeType" oio:definition="urn:oio:sagdok:personsoegattributliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:SoegEgenskab" minOccurs="0" oio:content="egenskaber"/>
+            <element ref="person:SoegSundhedOplysning" minOccurs="0" oio:content="sundhedsoplysninger"/>
+            <element ref="person:SoegRegisterOplysning" minOccurs="0" oio:content="registeroplysninger"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegTilstandListe" type="person:SoegTilstandListeType" oio:definition="urn:oio:sagdok:personsoegtilstandliste:ADD:1.0.0"/>
+    <complexType name="SoegTilstandListeType" oio:definition="urn:oio:sagdok:personsoegtilstandliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:LivStatus" minOccurs="0" maxOccurs="unbounded" oio:content="livstatus"/>
+            <element ref="person:CivilStatus" minOccurs="0" maxOccurs="unbounded" oio:content="civilstatus"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegRelationListe" type="person:SoegRelationListeType" oio:definition="urn:oio:sagdok:personsoegrelationliste:ADD:1.0.0"/>
+    <complexType name="SoegRelationListeType" oio:definition="urn:oio:sagdok:personsoegrelationliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:SoegModer" minOccurs="0" maxOccurs="unbounded" oio:content="moder"/>
+            <element ref="person:SoegFader" minOccurs="0" maxOccurs="unbounded" oio:content="fader"/>
+            <element ref="person:SoegBoern" minOccurs="0" maxOccurs="unbounded" oio:content="boern"/>
+            <element ref="person:SoegAegtefaelle" minOccurs="0" maxOccurs="unbounded" oio:content="aegtefaelle"/>
+            <element ref="person:SoegRegistreretPartner" minOccurs="0" maxOccurs="unbounded" oio:content="registreretpartner"/>
+            <element ref="person:SoegBopaelsamling" minOccurs="0" maxOccurs="unbounded" oio:content="bopaelsamling"/>
+            <element ref="person:SoegForaeldremyndighedsindehaver" minOccurs="0" maxOccurs="unbounded" oio:content="foraeldremyndighedsindehaver"/>
+            <element ref="person:SoegForaeldremyndighedsboern" minOccurs="0" maxOccurs="unbounded" oio:content="foraeldremyndighedsboern"/>
+            <element ref="person:SoegRetligHandleevneVaergeForPersonen" minOccurs="0" maxOccurs="unbounded" oio:content="retlighandleevnevaergeforpersonen"/>
+            <element ref="person:SoegRetligHandleevneVaergemaalsindehaver" minOccurs="0" maxOccurs="unbounded" oio:content="retlighandleevnevaergemaalsindehaver"/>
+            <element ref="person:SoegErstatningFor" minOccurs="0" maxOccurs="unbounded" oio:content="erstatningfor"/>
+            <element ref="person:SoegErstattesAf" minOccurs="0" maxOccurs="unbounded" oio:content="erstattesaf"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegEgenskab" type="person:SoegEgenskabType" oio:definition="urn:oio:sagdok:personsoegegenskab:ADD:1.0.0"/>
+    <complexType name="SoegEgenskabType" oio:definition="urn:oio:sagdok:personsoegegenskab:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:BrugervendtNoegleTekst" minOccurs="0" oio:content="brugervendtnoegle"/>
+            <element ref="person:NavnStruktur" minOccurs="0" oio:content="navn"/>
+            <element ref="oio1:PersonGenderCode" minOccurs="0" oio:content="personkoen"/>
+            <element ref="oio2:BirthDate" minOccurs="0" oio:content="foedselsdato"/>
+            <element ref="person:FoedselsregistreringMyndighedNavn" minOccurs="0" oio:content="foedselsregistreringsmyndighed"/>
+            <element ref="person:FoedestedNavn" minOccurs="0" oio:content="foedested"/>
+            <element ref="person:AndenAdresse" minOccurs="0" oio:content="andreadresser"/>
+            <element ref="person:KontaktKanal" minOccurs="0" oio:content="kontaktkanal"/>
+            <element ref="person:NaermestePaaroerende" minOccurs="0" oio:content="naermestepaaroerende"/>
+            <element ref="sd:SoegVirkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegSundhedOplysning" type="person:SoegSundhedOplysningType" oio:definition="urn:oio:sagdok:personsoegsundhedsoplysninger:ADD:1.0.0"/>
+    <complexType name="SoegSundhedOplysningType" oio:definition="urn:oio:sagdok:personsoegsundhedsoplysninger:ADD:1.0.0">
+        <sequence>
+            <element ref="person:PraktiserendeLaegeNavn" minOccurs="0" oio:content="praktiserendelaegenavn"/>
+            <element ref="person:PraktiserendeLaegeYderNummerIdentifikator" minOccurs="0" oio:content="praktiserendelaegeydernummer"/>
+            <element ref="person:SygesikringsgruppeKode" minOccurs="0" oio:content="sygesikringsgruppe"/>
+            <element ref="sd:SoegVirkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegRegisterOplysning" type="person:SoegRegisterOplysningType" oio:definition="urn:oio:sagdok:personsoegregisteroplysninger:ADD:1.0.0"/>
+    <complexType name="SoegRegisterOplysningType" oio:definition="urn:oio:sagdok:personsoegregisteroplysninger:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:SoegRegisterOplysningBaseType">
+                <sequence>
+                    <element ref="sd:SoegVirkning" minOccurs="0" oio:content="virkning"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SoegModer" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegmoder:relation:ASDD:1.0.0"/>
+
+    <element name="SoegFader" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegfader:relation:ASDD:1.0.0"/>
+
+    <element name="SoegBoern" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegboern:relation:ASDD:1.0.0"/>
+
+    <element name="SoegAegtefaelle" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegaegtefaelle:relation:ASDD:1.0.0"/>
+
+    <element name="SoegRegistreretPartner" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegregistreretpartner:relation:ASDD:1.0.0"/>
+
+    <element name="SoegBopaelsamling" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegbopaelsamling:relation:ASDD:1.0.0"/>
+
+    <element name="SoegForaeldremyndighedsindehaver" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegforaeldremyndighedsindehaver:relation:ASDD:1.0.0"/>
+
+    <element name="SoegForaeldremyndighedsboern" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegforaeldremyndighedsboern:relation:ASDD:1.0.0"/>
+
+    <element name="SoegRetligHandleevneVaergeForPersonen" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegretlighandleevnevaergeforpersonen:relation:ASDD:1.0.0"/>
+
+    <element name="SoegRetligHandleevneVaergemaalsindehaver" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegretlighandleevnevaergemaalsindehaver:relation:ASDD:1.0.0"/>
+
+    <element name="SoegErstatningFor" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegerstatningfor:relation:ASDD:1.0.0"/>
+
+    <element name="SoegErstattesAf" type="sd:SoegRelationType" oio:definition="urn:oio:sagdok:soegerstattesaf:relation:ASDD:1.0.0"/>
+
+    <element name="SoegRegisterOplysningBase" type="person:SoegRegisterOplysningBaseType" oio:definition="urn:oio:sagdok:personsoegregisteroplysningerbase:ADD:1.0.0"/>
+    <complexType name="SoegRegisterOplysningBaseType" oio:definition="urn:oio:sagdok:personsoegregisteroplysningerbase:ADD:1.0.0">
+        <choice>
+            <element ref="person:SoegUdenlandskBorger" minOccurs="0" oio:content="udenlandskborger"/>
+            <element ref="person:SoegCprBorger" minOccurs="0" oio:content="cprborger"/>
+            <element ref="person:SoegUkendtBorger" minOccurs="0" oio:content="ukendtborger"/>
+        </choice>
+    </complexType>
+
+    <element name="SoegUdenlandskBorger" type="person:SoegUdenlandskBorgerType" oio:definition="urn:oio:sagdok:soegudenlandskborger:ADD:1.0.0"/>
+    <complexType name="SoegUdenlandskBorgerType" oio:definition="urn:oio:sagdok:soegudenlandskborger:ADD:1.0.0">
+        <sequence>
+            <element ref="person:UdenlandskPersonIdentifikator" minOccurs="0" oio:content="udenlandskpersonid"/>
+            <element ref="oio6:PersonCivilRegistrationReplacementIdentifier" minOccurs="0" oio:content="erstatningscpr"/>
+            <element ref="oio7:PersonNationalityCode" minOccurs="0" oio:content="statsborgerskaber"/>
+            <element ref="person:SprogKode" minOccurs="0" oio:content="sprog"/>
+            <element ref="person:FoedselslandKode" minOccurs="0" oio:content="foedselsland"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegCprBorger" type="person:SoegCprBorgerType" oio:definition="urn:oio:sagdok:soegcprborger:ADD:1.0.0"/>
+    <complexType name="SoegCprBorgerType" oio:definition="urn:oio:sagdok:soegcprborger:ADD:1.0.0">
+        <sequence>
+            <element ref="oio8:PersonCivilRegistrationIdentifier" minOccurs="0" oio:content="cprnummer"/>
+            <element ref="person:PersonNummerGyldighedStatusIndikator" minOccurs="0" oio:content="personnummergyldigstatus"/>
+            <element ref="oio7:PersonNationalityCode" minOccurs="0" oio:content="statsborgerskab"/>
+            <element ref="person:FolkeregisterAdresse" minOccurs="0" oio:content="folkeregisteradresse"/>
+            <element ref="person:NavneAdresseBeskyttelseIndikator" minOccurs="0" oio:content="navneadressebeskyttelse"/>
+            <element ref="person:TelefonNummerBeskyttelseIndikator" minOccurs="0" oio:content="telefonnummerbeskyttelse"/>
+            <element ref="person:ForskerBeskyttelseIndikator" minOccurs="0" oio:content="forskerbeskyttelse"/>
+            <element ref="person:AdresseNoteTekst" minOccurs="0" oio:content="adressenote"/>
+            <element ref="person:FolkekirkeMedlemIndikator" minOccurs="0" oio:content="folkekirkemedlem"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegUkendtBorger" type="person:SoegUkendtBorgerType" oio:definition="urn:oio:sagdok:soegukendtborger:ADD:1.0.0"/>
+    <complexType name="SoegUkendtBorgerType" oio:definition="urn:oio:sagdok:soegukendtborger:ADD:1.0.0">
+        <sequence>
+            <element ref="oio6:PersonCivilRegistrationReplacementIdentifier" minOccurs="0" oio:content="erstatningscpr"/>
+        </sequence>
+    </complexType>
+
+</schema>

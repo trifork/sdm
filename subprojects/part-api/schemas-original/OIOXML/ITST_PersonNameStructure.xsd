@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/">
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_PersonGivenName.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_PersonMiddleName.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_PersonSurnameName.xsd"/>
+	<element name="PersonNameStructure" type="itst:PersonNameStructureType"/>
+	<complexType name="PersonNameStructureType">
+		<sequence>
+			<element ref="dkcc:PersonGivenName"/>
+			<element maxOccurs="1" minOccurs="0" ref="dkcc:PersonMiddleName"/>
+			<element ref="dkcc:PersonSurnameName"/>
+		</sequence>
+	</complexType>
+</schema>

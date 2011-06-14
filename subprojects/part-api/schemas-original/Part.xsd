@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:part:1.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:part="urn:oio:sagdok:part:1.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+
+    <element name="Part" type="part:PartType" oio:definition="urn:oio:sagdok:part:ADD:1.0.0"/>
+    <complexType name="PartType" oio:definition="urn:oio:sagdok:part:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:SagDokObjektType"/>
+        </complexContent>
+    </complexType>
+
+</schema>

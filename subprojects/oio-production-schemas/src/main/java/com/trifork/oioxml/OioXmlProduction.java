@@ -3,6 +3,10 @@ package com.trifork.oioxml;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,9 +41,9 @@ import org.w3c.dom.NodeList;
 public class OioXmlProduction {
 	private static final String XML_SCHEMA_NS = "http://www.w3.org/2001/XMLSchema";
 	// the initial set of schemas we want to build production schemas for
-	private Set<String> initialSchemaLocations = new HashSet<String>();
+	private Set<URI> initialSchemaLocations = new HashSet<URI>();
 	// maps schemaLocation URLs to Documents
-	private Map<String, Document> oioXmlSchemas = new HashMap<String, Document>();
+	private Map<URI, Document> oioXmlSchemas = new HashMap<URI, Document>();
 	// maps namespaces to Documents (the resulting production schema for the namespace)
 	private Map<String, Document> productionSchemas = new HashMap<String, Document>();
 	// maps namespaces to the namespace prefix used for that namespace in production schemas
@@ -133,7 +137,7 @@ public class OioXmlProduction {
 	}
 
 	private void downloadAndParseAllSchemas() throws Exception {
-		Set<String> unprocessedSchemaLocations = new HashSet<String>();
+		Set<URI> unprocessedSchemaLocations = new HashSet<URI>();
 		unprocessedSchemaLocations.addAll(initialSchemaLocations);
 		while(!unprocessedSchemaLocations.isEmpty()) {
 			processAnotherSchema(unprocessedSchemaLocations);
@@ -155,21 +159,23 @@ public class OioXmlProduction {
 		return result;
 	}
 	
-	private void processAnotherSchema(Set<String> unprocessedSchemaLocations) throws Exception {
-		Iterator<String> iterator = unprocessedSchemaLocations.iterator();
-		String schemaLocation = iterator.next();
+	private void processAnotherSchema(Set<URI> unprocessedSchemaLocations) throws Exception {
+		Iterator<URI> iterator = unprocessedSchemaLocations.iterator();
+		URI schemaLocation = iterator.next();
 		iterator.remove();
 		System.out.println("Getting schema " + schemaLocation);
 		Document schema = getSchema(schemaLocation);
 		oioXmlSchemas.put(schemaLocation, schema);
 		Set<String> referencedSchemaLocations = getReferencedSchemaLocations(schema);
 		referencedSchemaLocations.removeAll(oioXmlSchemas.keySet());
-		unprocessedSchemaLocations.addAll(referencedSchemaLocations);
+		for(String loc : referencedSchemaLocations) {
+			unprocessedSchemaLocations.add(createAbsoluteUri(schemaLocation, loc));
+		}
 	}
 	
-	private Document getSchema(String schemaLocation) throws Exception {
+	private Document getSchema(URI schemaLocation) throws Exception {
 	    DocumentBuilder dBuilder = getDocumentBuilder();
-	    return dBuilder.parse(schemaLocation);
+	    return dBuilder.parse(schemaLocation.toURL().toExternalForm());
 	}
 
 	private DocumentBuilder getDocumentBuilder()
@@ -266,7 +272,7 @@ public class OioXmlProduction {
 
 	public void buildProductionSchemas() throws Exception {
 		downloadAndParseAllSchemas();
-		for(String schemaLocation : oioXmlSchemas.keySet()) {
+		for(URI schemaLocation : oioXmlSchemas.keySet()) {
 			System.out.println(schemaLocation);
 		}
 		decideNamespacePrefixes();
@@ -280,9 +286,25 @@ public class OioXmlProduction {
 		printSchemasToFiles();
 	}
 	
-	public OioXmlProduction(Collection<String> initialSchemaUrls, String outputDirectory){
+	public OioXmlProduction(Collection<String> initialSchemaUrls, String outputDirectory) throws MalformedURLException, URISyntaxException{
 		this.outputDirectory = outputDirectory;
-		this.initialSchemaLocations.addAll(initialSchemaUrls);
+		for(String schemaUrl : initialSchemaUrls) {
+			initialSchemaLocations.add(createAbsoluteUri(null, schemaUrl));
+		}
+	}
+
+	private URI createAbsoluteUri(URI locUri, String path) throws URISyntaxException {
+		URI pathUri = new URI(path);
+		pathUri = pathUri.normalize();
+		if(pathUri.isAbsolute()) {
+			return pathUri;
+		}
+		if(locUri == null) {
+			// local file system
+			File file = new File(path);
+			return file.getAbsoluteFile().toURI().normalize();
+		}
+		return locUri.resolve(path).normalize();
 	}
 	
 	public static void main(String[] args) throws Exception{

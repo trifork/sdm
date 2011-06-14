@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/">
+	<element name="PersonGenderCode" type="dkcc:PersonGenderCodeType"/>
+	<simpleType name="PersonGenderCodeType">
+		<restriction base="string">
+			<enumeration value="male"/>
+			<enumeration value="female"/>
+			<enumeration value="unspecified"/>
+		</restriction>
+	</simpleType>
+</schema>

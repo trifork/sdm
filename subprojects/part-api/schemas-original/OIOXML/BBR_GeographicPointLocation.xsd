@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bbr="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<include schemaLocation="BBR_GeographicCoordinateTuple.xsd"/>
+	<element name="GeographicPointLocation" type="bbr:GeographicPointLocationType"/>
+	<complexType name="GeographicPointLocationType">
+		<sequence>
+			<element ref="bbr:GeographicCoordinateTuple"/>
+		</sequence>
+		<attribute name="crsIdentifier" type="string"/>
+	</complexType>
+</schema>

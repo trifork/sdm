@@ -13,8 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import oio.sagdok._2_0.PersonFlerRelationType;
-import oio.sagdok._2_0.TidspunktType;
+import oio.sagdok._3_0.PersonFlerRelationType;
+import oio.sagdok._3_0.TidspunktType;
 import oio.sagdok.person._1_0.AdresseType;
 import oio.sagdok.person._1_0.CivilStatusKodeType;
 import oio.sagdok.person._1_0.CprBorgerType;
@@ -71,7 +71,7 @@ public class PersonPartConverterTest {
 		CurrentPersonData currentPerson = new CurrentPersonData(person, folkekirkeoplysninger, null, null, null, null, null, null, null, null, null, null, null, null);
 		
 		PersonType personType = converter.convert(currentPerson);
-		assertNotNull(personType.getUUID());
+		assertNotNull(personType.getUUIDIdentifikator());
 		
 		CprBorgerType cprBorger = personType.getRegistrering().get(0).getAttributListe().getRegisterOplysning().get(0).getCprBorger();
 		assertEquals("1020304050", cprBorger.getPersonCivilRegistrationIdentifier());
@@ -268,7 +268,7 @@ public class PersonPartConverterTest {
 	}
 
 	private LivStatusKodeType getLivStatus(PersonType personType) {
-		return personType.getRegistrering().get(0).getTilstandListe().getLivStatus().getLivStatusKode();
+		return personType.getRegistrering().get(0).getTilstandListe().getLivStatus().get(0).getLivStatusKode();
 	}
 	
 	@Test
@@ -304,7 +304,7 @@ public class PersonPartConverterTest {
 		foraeldremyndighedsindehavere.add(createForaeldremyndighedsRelation("1020304050", "12345678", "0003"));
 		CurrentPersonData cp = new CurrentPersonData(createValidPerson(), null, null, null, null, null, null, null, null, morOplysninger, farOplysninger, foraeldremyndighedsindehavere, null, null);
 		PersonType personType = converter.convert(cp);
-		List<PersonRelationType> foraeldremyndighedsindehaverResult = personType.getRegistrering().get(0).getRelationListe().getForaeldremyndighedsindehaver();
+		List<PersonFlerRelationType> foraeldremyndighedsindehaverResult = personType.getRegistrering().get(0).getRelationListe().getForaeldremyndighedsindehaver();
 		assertEquals(1, foraeldremyndighedsindehaverResult.size());
 		assertEquals("URN:CPR:12345678", foraeldremyndighedsindehaverResult.get(0).getReferenceID().getURNIdentifikator());
 	}
@@ -352,7 +352,6 @@ public class PersonPartConverterTest {
 		assertTidspunktTypeEquals(at(2005, Calendar.JANUARY, 25), personRelationType.getVirkning().getFraTidspunkt());
 		assertTidspunktTypeEquals(at(2020, Calendar.MARCH, 17), personRelationType.getVirkning().getTilTidspunkt());
 		assertNotNull(personRelationType.getVirkning().getAktoerRef()); // Field is required
-		assertEquals("Linje 1\n\n\nLinje 4\n", personRelationType.getCommentText());
 	}
 	
 	@Test
@@ -383,7 +382,6 @@ public class PersonPartConverterTest {
 		assertTidspunktTypeEquals(at(2005, Calendar.AUGUST, 21), personFlerRelationType.getVirkning().getFraTidspunkt());
 		assertTidspunktTypeEquals(at(2011, Calendar.DECEMBER, 24), personFlerRelationType.getVirkning().getTilTidspunkt());
 		assertEquals("URN:Aktoer:Importer", personFlerRelationType.getVirkning().getAktoerRef().getURNIdentifikator());
-		assertEquals("Linje 1\n\n\nLinje 4\n", personFlerRelationType.getCommentText());
 	}
 	
 	@Test
@@ -456,7 +454,7 @@ public class PersonPartConverterTest {
 		person.gaeldendeCPR = "0987654321";
 		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
-		assertEquals("URN:CPR:0987654321", personType.getRegistrering().get(0).getRelationListe().getErstatningAf().get(0).getReferenceID().getURNIdentifikator());
+		assertEquals("URN:CPR:0987654321", personType.getRegistrering().get(0).getRelationListe().getErstatningFor().get(0).getReferenceID().getURNIdentifikator());
 	}
 	
 	@Test
@@ -519,7 +517,7 @@ public class PersonPartConverterTest {
 	}
 
 	private CivilStatusKodeType getCivilStatusKode(PersonType personType) {
-		return personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().getCivilStatusKode();
+		return personType.getRegistrering().get(0).getTilstandListe().getCivilStatus().get(0).getCivilStatusKode();
 	}
 	
 	private Date at(int year, int month, int day) {

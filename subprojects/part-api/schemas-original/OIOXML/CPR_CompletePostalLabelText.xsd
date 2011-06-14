@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/">
+	<element name="CompletePostalLabelText" type="cpr:CompletePostalLabelTextType"/>
+	<simpleType name="CompletePostalLabelTextType">
+		<restriction base="string">
+			<maxLength value="34"/>
+		</restriction>
+	</simpleType>
+</schema>

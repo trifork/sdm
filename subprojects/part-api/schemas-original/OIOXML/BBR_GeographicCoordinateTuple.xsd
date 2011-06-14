@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bbr="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<include schemaLocation="BBR_GeographicEastingMeasure.xsd"/>
+	<include schemaLocation="BBR_GeographicNorthingMeasure.xsd"/>
+	<include schemaLocation="BBR_GeographicHeightMeasure.xsd"/>
+	<element name="GeographicCoordinateTuple" type="bbr:GeographicCoordinateTupleType"/>
+	<complexType name="GeographicCoordinateTupleType">
+		<sequence>
+			<element ref="bbr:GeographicEastingMeasure"/>
+			<element ref="bbr:GeographicNorthingMeasure"/>
+			<element minOccurs="0" ref="bbr:GeographicHeightMeasure"/>
+		</sequence>
+	</complexType>
+</schema>

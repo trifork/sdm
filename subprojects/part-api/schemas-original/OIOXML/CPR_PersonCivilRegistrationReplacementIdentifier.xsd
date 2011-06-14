@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/">
+	<xsd:element name="PersonCivilRegistrationReplacementIdentifier" type="cpr:PersonCivilRegistrationReplacementIdentifierType"/>
+	<xsd:simpleType name="PersonCivilRegistrationReplacementIdentifierType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="[4-9][0-9]{8}[A-Z]"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

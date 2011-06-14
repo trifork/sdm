@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:cpr-3="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:dkcc-2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/">
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="DKCC_PostCodeIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="DKCC_StreetName.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="DKCC_DistrictName.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="DKCC_DistrictSubdivisionIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_FloorIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_MailDeliverySublocationIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_CountryIdentificationCode.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_SuiteIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="DKCC_StreetBuildingIdentifier.xsd"/>
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="CPR_MunicipalityCode.xsd"/>
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="CPR_StreetCode.xsd"/>
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="CPR_StreetNameForAddressingName.xsd"/>
+	<include schemaLocation="CPR_GreenlandBuildingIdentifier.xsd"/>
+	<element name="AddressCompleteGreenland" type="cpr:AddressCompleteGreenlandType"/>
+	<complexType name="AddressCompleteGreenlandType">
+		<sequence>
+			<element ref="cpr-3:MunicipalityCode"/>
+			<element ref="cpr-3:StreetCode"/>
+			<element minOccurs="0" ref="dkcc-2:MailDeliverySublocationIdentifier"/>
+			<element ref="dkcc:StreetName"/>
+			<element minOccurs="0" ref="cpr-3:StreetNameForAddressingName"/>
+			<element minOccurs="0" ref="dkcc-2:StreetBuildingIdentifier"/>
+			<element minOccurs="0" ref="cpr:GreenlandBuildingIdentifier"/>
+			<element minOccurs="0" ref="dkcc-2:SuiteIdentifier"/>
+			<element minOccurs="0" ref="dkcc-2:FloorIdentifier"/>
+			<element minOccurs="0" ref="dkcc:DistrictSubdivisionIdentifier"/>
+			<element ref="dkcc:PostCodeIdentifier"/>
+			<element ref="dkcc:DistrictName"/>
+			<element minOccurs="0" ref="dkcc-2:CountryIdentificationCode"/>
+		</sequence>
+	</complexType>
+</schema>

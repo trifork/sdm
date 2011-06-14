@@ -3,7 +3,7 @@ configurations {
 }
 
 dependencies {
-	jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.3-2'
+	jaxb 'com.sun.xml.bind:jaxb-xjc:2.2.4-1'
 }
 
 task jaxb {
@@ -11,7 +11,7 @@ task jaxb {
 	actions = [
 	{
 		ant.xjc(destdir: 'build/generated-sources') {
-			schema(dir: 'src/main/xsd', includes: 'ns*.xsd')
+			schema(dir: 'schemas-production', includes: '*.xsd')
 		}
 	} as Action ]
 }

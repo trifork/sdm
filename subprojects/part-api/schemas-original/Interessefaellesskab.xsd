@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:organisation:interessefaellesskab:2.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:intfs="urn:oio:sagdok:organisation:interessefaellesskab:2.0.0"
+        xmlns:orgfaelles="urn:oio:sagdok:organisation:2.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:organisation:2.0.0" schemaLocation="OrganisationFaelles.xsd"/>
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+
+    <element name="Interessefaellesskab" type="intfs:InteressefaellesskabType" oio:definition="urn:oio:sagdok:interessefaellesskab:ADD:2.0.0"/>
+    <complexType name="InteressefaellesskabType" oio:definition="urn:oio:sagdok:interessefaellesskab:ADD:2.0.0">
+        <complexContent>
+            <extension base="orgfaelles:AktoerType">
+                <sequence>
+                    <element ref="intfs:Registrering" maxOccurs="unbounded" oio:content="registreringer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="AttributListe" type="intfs:AttributListeType" oio:definition="urn:oio:sagdok:interessefaellesskabattributliste:ADD:2.0.0"/>
+    <complexType name="AttributListeType" oio:definition="urn:oio:sagdok:interessefaellesskabattributliste:ADD:2.0.0">
+        <sequence>
+            <element ref="intfs:Egenskab" maxOccurs="unbounded" oio:content="egenskaber"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="TilstandListe" type="intfs:TilstandListeType" oio:definition="urn:oio:sagdok:interessefaellesskabtilstandliste:ADD:2.0.0"/>
+    <complexType name="TilstandListeType" oio:definition="urn:oio:sagdok:interessefaellesskabtilstandliste:ADD:2.0.0">
+        <sequence>
+            <element ref="orgfaelles:Gyldighed" maxOccurs="unbounded" oio:content="gyldighed"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="RelationListe" type="intfs:RelationListeType" oio:definition="urn:oio:sagdok:interessefaellesskabrelationliste:ADD:2.0.0"/>
+    <complexType name="RelationListeType" oio:definition="urn:oio:sagdok:interessefaellesskabrelationliste:ADD:2.0.0">
+        <sequence>
+            <element ref="sd:Adresser" minOccurs="0" maxOccurs="unbounded" oio:content="adresser"/>
+            <element ref="sd:Branche" minOccurs="0" maxOccurs="unbounded" oio:content="branche"/>
+            <element ref="sd:Opgaver" minOccurs="0" maxOccurs="unbounded" oio:content="opgaver"/>
+            <element ref="sd:Overordnet" minOccurs="0" maxOccurs="unbounded" oio:content="overordnet"/>
+            <element ref="sd:Tilhoerer" minOccurs="0" maxOccurs="unbounded" oio:content="tilhoerer"/>
+            <element ref="sd:TilknyttedeBrugere" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedebrugere"/>
+            <element ref="sd:TilknyttedeEnheder" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeenheder"/>
+            <element ref="sd:TilknyttedeFunktioner" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedefunktioner"/>
+            <element ref="sd:TilknyttedeInteressefaellesskaber" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeinteressefaellesskaber"/>
+            <element ref="sd:TilknyttedeOrganisationer" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeorganisationer"/>
+            <element ref="sd:TilknyttedePersoner" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedepersoner"/>
+            <element ref="sd:TilknyttedeItSystemer" minOccurs="0" maxOccurs="unbounded" oio:content="tilknyttedeitsystemer"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="Registrering" type="intfs:RegistreringType" oio:definition="urn:oio:sagdok:interessefaellesskabregistrering:ADD:2.0.0"/>
+    <complexType name="RegistreringType" oio:definition="urn:oio:sagdok:interessefaellesskabregistrering:ADD:2.0.0">
+        <complexContent>
+            <extension base="sd:RegistreringType">
+                <sequence>
+                    <element ref="intfs:AttributListe" oio:content="attributter"/>
+                    <element ref="intfs:TilstandListe" oio:content="tilstande"/>
+                    <element ref="intfs:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="Egenskab" type="intfs:EgenskabType" oio:definition="urn:oio:sagdok:interessefaellesskabegenskaber:ADD:1.0.0"/>
+    <complexType name="EgenskabType" oio:definition="urn:oio:sagdok:interessefaellesskabegenskaber:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:InteressefaellesskabNavn" minOccurs="0" oio:content="interessefaellesskabsnavn"/>
+            <element ref="sd:InteressefaellesskabTypeTekst" minOccurs="0" oio:content="interessefaellesskabstype"/>
+            <element ref="sd:BrugervendtNoegleTekst" oio:content="brugervendtnoegle"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+</schema>

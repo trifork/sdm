@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/">
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" schemaLocation="CPR_CompletePostalLabelText.xsd"/>
+	<element name="PostalAddressFifthLineText" type="cpr:CompletePostalLabelTextType"/>
+</schema>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bbr="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<element name="AddressCoordinateQualityClassCode" type="bbr:AddressCoordinateQualityClassCodeType"/>
+	<simpleType name="AddressCoordinateQualityClassCodeType">
+		<restriction base="string">
+			<enumeration value="A"/>
+			<enumeration value="B"/>
+			<enumeration value="U"/>
+		</restriction>
+	</simpleType>
+</schema>

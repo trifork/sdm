@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/">
+	<element name="EmailAddressIdentifier" type="xkom:EmailAddressIdentifierType"/>
+	<simpleType name="EmailAddressIdentifierType">
+		<restriction base="string">
+			<pattern value="([^&gt;\(\)\[\]\\,;:@\s]{0,191}@[^&gt;\(\)\[\]\\,;:@\s]{1,64})"/>
+		</restriction>
+	</simpleType>
+</schema>

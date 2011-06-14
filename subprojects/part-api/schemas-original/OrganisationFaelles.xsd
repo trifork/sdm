@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:organisation:2.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:orgfaelles="urn:oio:sagdok:organisation:2.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+
+    <element name="Aktoer" type="orgfaelles:AktoerType" oio:definition="urn:oio:sagdok:aktoer:ADD:1.0.0"/>
+    <complexType name="AktoerType" oio:definition="urn:oio:sagdok:aktoer:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:SagDokObjektType"/>
+        </complexContent>
+    </complexType>
+
+    <element name="Gyldighed" type="orgfaelles:GyldighedType" oio:definition="urn:oio:sagdok:organisationgyldighed:ADD:2.0.0"/>
+    <complexType name="GyldighedType" oio:definition="urn:oio:sagdok:organisationgyldighed:ADD:2.0.0">
+        <sequence>
+            <element ref="sd:Virkning" oio:content="virkning"/>
+            <element ref="orgfaelles:GyldighedStatusKode" oio:content="status"/>
+        </sequence>
+    </complexType>
+
+    <element name="SoegGyldighed" type="orgfaelles:SoegGyldighedType" oio:definition="urn:oio:sagdok:organisationsoeggyldighed:ADD:1.0.0"/>
+    <complexType name="SoegGyldighedType" oio:definition="urn:oio:sagdok:organisationsoeggyldighed:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+            <element ref="orgfaelles:GyldighedStatusKode" minOccurs="0" oio:content="status"/>
+        </sequence>
+    </complexType>
+
+    <element name="GyldighedStatusKode" type="orgfaelles:GyldighedStatusKodeType" oio:definition="urn:oio:sagdok:organisationgyldighedstatus:DT:2.0.0"/>
+    <simpleType name="GyldighedStatusKodeType" oio:definition="urn:oio:sagdok:organisationgyldighedstatus:DT:2.0.0">
+        <restriction base="string">
+            <enumeration value="Aktiv"/>
+            <enumeration value="Inaktiv"/>
+        </restriction>
+    </simpleType>
+
+</schema>

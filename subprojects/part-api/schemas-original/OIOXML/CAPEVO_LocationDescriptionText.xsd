@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:capevo="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/">
+	<element name="LocationDescriptionText" type="string"/>
+</schema>

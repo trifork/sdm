@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:bbr="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<include schemaLocation="BBR_AddressPointIdentifier.xsd"/>
+	<include schemaLocation="BBR_GeographicPointLocation.xsd"/>
+	<include schemaLocation="BBR_AddressPointStatusStructure.xsd"/>
+	<element name="AddressPoint" type="bbr:AddressPointType"/>
+	<complexType name="AddressPointType">
+		<sequence>
+			<element minOccurs="0" ref="bbr:AddressPointIdentifier"/>
+			<element ref="bbr:GeographicPointLocation"/>
+			<element minOccurs="0" ref="bbr:AddressPointStatusStructure"/>
+		</sequence>
+	</complexType>
+</schema>

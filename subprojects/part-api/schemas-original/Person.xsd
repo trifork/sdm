@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        targetNamespace="urn:oio:sagdok:person:1.0.0"
+        xmlns:oio="urn:oio:definitions:1.0.0"
+        xmlns:person="urn:oio:sagdok:person:1.0.0"
+        xmlns:part="urn:oio:sagdok:part:1.0.0"
+        xmlns:sd="urn:oio:sagdok:3.0.0"
+        xmlns:oio1="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/"
+        xmlns:oio2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+        xmlns:oio3="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+        xmlns:oio4="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+        xmlns:oio5="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+        xmlns:oio6="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/"
+        xmlns:oio7="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/"
+        xmlns:oio8="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        xmlns:oio9="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+        xmlns:oio10="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/"
+        xmlns:oio11="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/"
+        xmlns:oio12="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/"
+        xmlns:oio13="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+        oio:mapping="urn:oio:sagdok:MPD:3.0.0">
+
+    <import namespace = "urn:oio:sagdok:part:1.0.0" schemaLocation="Part.xsd"/>
+    <import namespace = "urn:oio:sagdok:3.0.0" schemaLocation="SagDokObjekt.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" schemaLocation="OIOXML/DKCC_PersonGenderCode.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="OIOXML/DKCC_BirthDate.xsd"/>
+    <import namespace = "http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" schemaLocation="OIOXML/ITST_PersonNameStructure.xsd"/>
+    <import namespace = "http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" schemaLocation="OIOXML/ITST_PersonNameForAddressingName.xsd"/>
+    <import namespace = "http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" schemaLocation="OIOXML/XKOM_EmailAddressIdentifier.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" schemaLocation="OIOXML/DKCC_PersonNationalityCode.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" schemaLocation="OIOXML/CPR_PersonCivilRegistrationReplacementIdentifier.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="OIOXML/CPR_PersonCivilRegistrationIdentifier.xsd"/>
+    <import namespace = "http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" schemaLocation="OIOXML/XKOM_AddressComplete.xsd"/>
+    <import namespace = "http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" schemaLocation="OIOXML/BBR_AddressPoint.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" schemaLocation="OIOXML/CPR_AddressCompleteGreenland.xsd"/>
+    <import namespace = "http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" schemaLocation="OIOXML/CPR_ForeignAddressStructure.xsd"/>
+    <import namespace = "http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" schemaLocation="OIOXML/ITST_TelephoneNumberIdentifier.xsd"/>
+    <import namespace = "http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="OIOXML/DKCC_CountryIdentificationCode.xsd"/>
+
+    <element name="Person" type="person:PersonType" oio:definition="urn:oio:sagdok:person:ADD:1.0.0"/>
+    <complexType name="PersonType" oio:definition="urn:oio:sagdok:person:ADD:1.0.0">
+        <complexContent>
+            <extension base="part:PartType">
+                <sequence>
+                    <element ref="person:Registrering" maxOccurs="unbounded" oio:content="registreringer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="AttributListe" type="person:AttributListeType" oio:definition="urn:oio:sagdok:personattributliste:ADD:1.0.0"/>
+    <complexType name="AttributListeType" oio:definition="urn:oio:sagdok:personattributliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:Egenskab" maxOccurs="unbounded" oio:content="egenskaber"/>
+            <element ref="person:SundhedOplysning" minOccurs="0" maxOccurs="unbounded" oio:content="sundhedsoplysninger"/>
+            <element ref="person:RegisterOplysning" maxOccurs="unbounded" oio:content="registeroplysninger"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="TilstandListe" type="person:TilstandListeType" oio:definition="urn:oio:sagdok:persontilstandliste:ADD:1.0.0"/>
+    <complexType name="TilstandListeType" oio:definition="urn:oio:sagdok:persontilstandliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:LivStatus" maxOccurs="unbounded" oio:content="livstatus"/>
+            <element ref="person:CivilStatus" maxOccurs="unbounded" oio:content="civilstatus"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="RelationListe" type="person:RelationListeType" oio:definition="urn:oio:sagdok:personrelationliste:ADD:1.0.0"/>
+    <complexType name="RelationListeType" oio:definition="urn:oio:sagdok:personrelationliste:ADD:1.0.0">
+        <sequence>
+            <element ref="person:Moder" minOccurs="0" maxOccurs="unbounded" oio:content="moder"/>
+            <element ref="person:Fader" minOccurs="0" maxOccurs="unbounded" oio:content="fader"/>
+            <element ref="person:Boern" minOccurs="0" maxOccurs="unbounded" oio:content="boern"/>
+            <element ref="person:Aegtefaelle" minOccurs="0" maxOccurs="unbounded" oio:content="aegtefaelle"/>
+            <element ref="person:RegistreretPartner" minOccurs="0" maxOccurs="unbounded" oio:content="registreretpartner"/>
+            <element ref="person:Bopaelssamling" minOccurs="0" maxOccurs="unbounded" oio:content="bopaelssamling"/>
+            <element ref="person:Foraeldremyndighedsindehaver" minOccurs="0" maxOccurs="unbounded" oio:content="foraeldremyndighedsindehaver"/>
+            <element ref="person:Foraeldremyndighedsboern" minOccurs="0" maxOccurs="unbounded" oio:content="foraeldremyndighedsboern"/>
+            <element ref="person:RetligHandleevneVaergeForPersonen" minOccurs="0" maxOccurs="unbounded" oio:content="retlighandleevnevaergeforpersonen"/>
+            <element ref="person:RetligHandleevneVaergemaalsindehaver" minOccurs="0" maxOccurs="unbounded" oio:content="retlighandleevnevaergemaalsindehaver"/>
+            <element ref="person:ErstatningFor" minOccurs="0" maxOccurs="unbounded" oio:content="erstatningfor"/>
+            <element ref="person:ErstatttetAf" minOccurs="0" maxOccurs="unbounded" oio:content="erstattetaf"/>
+            <element ref="sd:LokalUdvidelse" minOccurs="0" oio:content="lokaludvidelse"/>
+        </sequence>
+    </complexType>
+
+    <element name="Registrering" type="person:RegistreringType" oio:definition="urn:oio:sagdok:personregistrering:ADD:1.0.0"/>
+    <complexType name="RegistreringType" oio:definition="urn:oio:sagdok:personregistrering:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:RegistreringType">
+                <sequence>
+                    <element ref="person:AttributListe" oio:content="attributter"/>
+                    <element ref="person:TilstandListe" oio:content="tilstande"/>
+                    <element ref="person:RelationListe" oio:content="relationer"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="Egenskab" type="person:EgenskabType" oio:definition="urn:oio:sagdok:personegenskaber:ADD:1.0.0"/>
+    <complexType name="EgenskabType" oio:definition="urn:oio:sagdok:personegenskaber:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:BrugervendtNoegleTekst" minOccurs="0" oio:content="brugervendtnoegle"/>
+            <element ref="person:NavnStruktur" minOccurs="0" oio:content="navn"/>
+            <element ref="oio1:PersonGenderCode" minOccurs="0" oio:content="personkoen"/>
+            <element ref="oio2:BirthDate" minOccurs="0" oio:content="foedselsdato"/>
+            <element ref="person:FoedselsregistreringMyndighedNavn" minOccurs="0" oio:content="foedselsregistreringsmyndighed"/>
+            <element ref="person:FoedestedNavn" minOccurs="0" oio:content="foedested"/>
+            <element ref="person:AndenAdresse" minOccurs="0" maxOccurs="unbounded" oio:content="andreadresser"/>
+            <element ref="person:KontaktKanal" minOccurs="0" maxOccurs="unbounded" oio:content="kontaktkanaler"/>
+            <element ref="person:NaermestePaaroerende" minOccurs="0" maxOccurs="unbounded" oio:content="naermestepaaroerende"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="SundhedOplysning" type="person:SundhedOplysningType" oio:definition="urn:oio:sagdok:personsundhedsoplysninger:ADD:1.0.0"/>
+    <complexType name="SundhedOplysningType" oio:definition="urn:oio:sagdok:personsundhedsoplysninger:ADD:1.0.0">
+        <sequence>
+            <element ref="person:PraktiserendeLaegeNavn" oio:content="praktiserendelaegenavn"/>
+            <element ref="person:PraktiserendeLaegeYderNummerIdentifikator" oio:content="praktiserendelaegeydernummer"/>
+            <element ref="person:SygesikringsgruppeKode" oio:content="sygesikringsgruppe"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="RegisterOplysning" type="person:RegisterOplysningType" oio:definition="urn:oio:sagdok:personregisteroplysninger:ADD:1.0.0"/>
+    <complexType name="RegisterOplysningType" oio:definition="urn:oio:sagdok:personregisteroplysninger:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:RegisterOplysningBaseType">
+                <sequence>
+                    <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="LivStatus" type="person:LivStatusType" oio:definition="urn:oio:sagdok:livstatus:ADD:1.0.0"/>
+    <complexType name="LivStatusType" oio:definition="urn:oio:sagdok:livstatus:ADD:1.0.0">
+        <sequence>
+            <element ref="person:LivStatusKode" oio:content="livstatus"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="CivilStatus" type="person:CivilStatusType" oio:definition="urn:oio:sagdok:civilstatus:ADD:1.0.0"/>
+    <complexType name="CivilStatusType" oio:definition="urn:oio:sagdok:civilstatus:ADD:1.0.0">
+        <sequence>
+            <element ref="person:CivilStatusKode" oio:content="civilstatus"/>
+            <element ref="sd:Virkning" minOccurs="0" oio:content="virkning"/>
+        </sequence>
+    </complexType>
+
+    <element name="Moder" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:moder:relation:ASDD:1.0.0"/>
+
+    <element name="Fader" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:fader:relation:ASDD:1.0.0"/>
+
+    <element name="Boern" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:boern:relation:ASDD:1.0.0"/>
+
+    <element name="Aegtefaelle" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:aegtefaelle:relation:ASDD:1.0.0"/>
+
+    <element name="RegistreretPartner" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:registreretpartner:relation:ASDD:1.0.0"/>
+
+    <element name="Bopaelssamling" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:bopaelssamling:relation:ASDD:1.0.0"/>
+
+    <element name="Foraeldremyndighedsindehaver" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:foraeldremyndighedsindehaver:relation:ASDD:1.0.0"/>
+
+    <element name="Foraeldremyndighedsboern" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:foraeldremyndighedsboern:relation:ASDD:1.0.0"/>
+
+    <element name="RetligHandleevneVaergeForPersonen" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:retlighandleevnevaergeforpersonen:relation:ASDD:1.0.0"/>
+
+    <element name="RetligHandleevneVaergemaalsindehaver" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:retlighandleevnevaergemaalsindehaver:relation:ASDD:1.0.0"/>
+
+    <element name="ErstatningFor" type="sd:PersonFlerRelationType" oio:definition="urn:oio:sagdok:erstatningfor:relation:ASDD:1.0.0"/>
+
+    <element name="ErstatttetAf" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:erstattetaf:relation:ASDD:1.0.0"/>
+
+    <element name="NavnStruktur" type="person:NavnStrukturType" oio:definition="urn:oio:sagdok:navn:ADD:1.0.0"/>
+    <complexType name="NavnStrukturType" oio:definition="urn:oio:sagdok:navn:ADD:1.0.0">
+        <sequence>
+            <element ref="oio3:PersonNameStructure" oio:content="personnavn"/>
+            <element ref="sd:KaldenavnTekst" minOccurs="0" oio:content="kaldenavn"/>
+            <element ref="oio4:PersonNameForAddressingName" oio:content="adresseringsnavn"/>
+            <element ref="sd:NoteTekst" minOccurs="0" oio:content="note"/>
+        </sequence>
+    </complexType>
+
+    <element name="FoedselsregistreringMyndighedNavn" type="string" oio:definition="urn:oio:sagdok:foedselsregistreringsmyndighed:BDD:1.0.0"/>
+
+    <element name="FoedestedNavn" type="string" oio:definition="urn:oio:sagdok:foedested:BDD:1.0.0"/>
+
+    <element name="AndenAdresse" type="person:AdresseType" oio:definition="urn:oio:sagdok:andenadresse:ASDD:1.0.0"/>
+
+    <element name="NaermestePaaroerende" type="person:KontaktKanalType" oio:definition="urn:oio:sagdok:naermestepaaroerende:ASDD:1.0.0"/>
+
+    <element name="PraktiserendeLaegeNavn" type="string" oio:definition="urn:oio:sagdok:praktiserendelaegenavn:BDD:1.0.0"/>
+
+    <element name="PraktiserendeLaegeYderNummerIdentifikator" type="integer" oio:definition="urn:oio:sagdok:praktiserendelaegeydernummer:BDD:1.0.0"/>
+
+    <element name="SygesikringsgruppeKode" type="integer" oio:definition="urn:oio:sagdok:sygesikringsgruppe:BDD:1.0.0"/>
+
+    <element name="RegisterOplysningBase" type="person:RegisterOplysningBaseType" oio:definition="urn:oio:sagdok:personregisteroplysningerbase:ADD:1.0.0"/>
+    <complexType name="RegisterOplysningBaseType" oio:definition="urn:oio:sagdok:personregisteroplysningerbase:ADD:1.0.0">
+        <choice>
+            <element ref="person:UdenlandskBorger" oio:content="udenlandskborger"/>
+            <element ref="person:CprBorger" oio:content="cprborger"/>
+            <element ref="person:UkendtBorger" oio:content="ukendtborger"/>
+        </choice>
+    </complexType>
+
+    <element name="PersonRelation" type="person:PersonRelationType" oio:definition="urn:oio:sagdok:personrelation:ADD:1.0.0"/>
+    <complexType name="PersonRelationType" oio:definition="urn:oio:sagdok:personrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="sd:RelationType"/>
+        </complexContent>
+    </complexType>
+
+    <element name="Adresse" type="person:AdresseType" oio:definition="urn:oio:sagdok:adresse:ADD:1.0.0"/>
+    <complexType name="AdresseType" oio:definition="urn:oio:sagdok:adresse:ADD:1.0.0">
+        <choice>
+            <element ref="person:DanskAdresse" oio:content="danskadresse"/>
+            <element ref="person:GroenlandAdresse" oio:content="groenlandskadresse"/>
+            <element ref="person:VerdenAdresse" oio:content="verdensadresse"/>
+        </choice>
+    </complexType>
+
+    <element name="KontaktKanal" type="person:KontaktKanalType" oio:definition="urn:oio:sagdok:kontaktkanal:ADD:1.0.0"/>
+    <complexType name="KontaktKanalType" oio:definition="urn:oio:sagdok:kontaktkanal:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:KontaktKanalBaseType">
+                <choice>
+                    <element ref="oio5:EmailAddressIdentifier" oio:content="emailadresse"/>
+                    <element ref="person:Telefon" oio:content="telefon"/>
+                    <element ref="person:AndenKontaktKanal" oio:content="andenkontaktkanal"/>
+                </choice>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="UdenlandskBorger" type="person:UdenlandskBorgerType" oio:definition="urn:oio:sagdok:udenlandskborger:ADD:1.0.0"/>
+    <complexType name="UdenlandskBorgerType" oio:definition="urn:oio:sagdok:udenlandskborger:ADD:1.0.0">
+        <sequence>
+            <element ref="person:UdenlandskPersonIdentifikator" minOccurs="0" oio:content="udenlandskpersonid"/>
+            <element ref="oio6:PersonCivilRegistrationReplacementIdentifier" minOccurs="0" oio:content="erstatningscpr"/>
+            <element ref="oio7:PersonNationalityCode" minOccurs="0" maxOccurs="unbounded" oio:content="statsborgerskaber"/>
+            <element ref="person:SprogKode" minOccurs="0" maxOccurs="unbounded" oio:content="sprog"/>
+            <element ref="person:FoedselslandKode" minOccurs="0" oio:content="foedselsland"/>
+        </sequence>
+    </complexType>
+
+    <element name="CprBorger" type="person:CprBorgerType" oio:definition="urn:oio:sagdok:cprborger:ADD:1.0.0"/>
+    <complexType name="CprBorgerType" oio:definition="urn:oio:sagdok:cprborger:ADD:1.0.0">
+        <sequence>
+            <element ref="oio8:PersonCivilRegistrationIdentifier" oio:content="cprnummer"/>
+            <element ref="person:PersonNummerGyldighedStatusIndikator" oio:content="personnummergyldigstatus"/>
+            <element ref="oio7:PersonNationalityCode" oio:content="statsborgerskab"/>
+            <element ref="person:FolkeregisterAdresse" minOccurs="0" oio:content="folkeregisteradresse"/>
+            <element ref="person:NavneAdresseBeskyttelseIndikator" oio:content="navneadressebeskyttelse"/>
+            <element ref="person:TelefonNummerBeskyttelseIndikator" oio:content="telefonnummerbeskyttelse"/>
+            <element ref="person:ForskerBeskyttelseIndikator" oio:content="forskerbeskyttelse"/>
+            <element ref="person:AdresseNoteTekst" minOccurs="0" oio:content="adressenote"/>
+            <element ref="person:FolkekirkeMedlemIndikator" minOccurs="0" oio:content="folkekirkemedlem"/>
+        </sequence>
+    </complexType>
+
+    <element name="UkendtBorger" type="person:UkendtBorgerType" oio:definition="urn:oio:sagdok:ukendtborger:ADD:1.0.0"/>
+    <complexType name="UkendtBorgerType" oio:definition="urn:oio:sagdok:ukendtborger:ADD:1.0.0">
+        <sequence>
+            <element ref="oio6:PersonCivilRegistrationReplacementIdentifier" oio:content="erstatningscpr"/>
+        </sequence>
+    </complexType>
+
+    <element name="LivStatusKode" type="person:LivStatusKodeType" oio:definition="urn:oio:sagdok:livstatuskode:DT:1.0.0"/>
+    <simpleType name="LivStatusKodeType" oio:definition="urn:oio:sagdok:livstatuskode:DT:1.0.0">
+        <restriction base="string">
+            <enumeration value="Prenatal"/>
+            <enumeration value="Foedt"/>
+            <enumeration value="Forsvundet"/>
+            <enumeration value="Doed"/>
+        </restriction>
+    </simpleType>
+
+    <element name="CivilStatusKode" type="person:CivilStatusKodeType" oio:definition="urn:oio:sagdok:civilstatuskode:DT:1.0.0"/>
+    <simpleType name="CivilStatusKodeType" oio:definition="urn:oio:sagdok:civilstatuskode:DT:1.0.0">
+        <restriction base="string">
+            <enumeration value="Ugift"/>
+            <enumeration value="Gift"/>
+            <enumeration value="RegistreretPartner"/>
+            <enumeration value="Separeret"/>
+            <enumeration value="Skilt"/>
+            <enumeration value="OphaevetPartnerskab"/>
+            <enumeration value="Enke"/>
+            <enumeration value="Laengstlevende"/>
+        </restriction>
+    </simpleType>
+
+    <element name="DanskAdresse" type="person:DanskAdresseType" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0"/>
+    <complexType name="DanskAdresseType" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:AdresseBaseType">
+                <sequence>
+                    <element ref="oio9:AddressComplete" oio:content="fuldadresse"/>
+                    <element ref="oio10:AddressPoint" minOccurs="0" oio:content="adressepunkt"/>
+                    <element ref="person:SpecielVejkodeIndikator" minOccurs="0" oio:content="specielvejkodeindikator"/>
+                    <element ref="person:SocialDistriktTekst" minOccurs="0" oio:content="socialdistrikt"/>
+                    <element ref="person:SkoleDistriktTekst" minOccurs="0" oio:content="skoledistrikt"/>
+                    <element ref="person:PostDistriktTekst" minOccurs="0" oio:content="postdistrikt"/>
+                    <element ref="person:SogneDistriktTekst" minOccurs="0" oio:content="sognedistrikt"/>
+                    <element ref="person:ValgkredsDistriktTekst" minOccurs="0" oio:content="valgkredsdistrikt"/>
+                    <element ref="person:PolitiDistriktTekst" minOccurs="0" oio:content="politidistrikt"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="SocialDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#socialdistrikt"/>
+
+    <element name="SkoleDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#skoledistrikt"/>
+
+    <element name="PostDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#postdistrikt"/>
+
+    <element name="SogneDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#sognedistrikt"/>
+
+    <element name="ValgkredsDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#valgkredsdistrikt"/>
+
+    <element name="PolitiDistriktTekst" type="string" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#politidistrikt"/>
+
+    <element name="GroenlandAdresse" type="person:GroenlandAdresseType" oio:definition="urn:oio:sagdok:groenlandadresse:ADD:1.0.0"/>
+    <complexType name="GroenlandAdresseType" oio:definition="urn:oio:sagdok:groenlandadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:AdresseBaseType">
+                <sequence>
+                    <element ref="oio11:AddressCompleteGreenland" oio:content="fuldadressegroenland"/>
+                    <element ref="person:SpecielVejkodeIndikator" minOccurs="0" oio:content="specielvejkodeindikator"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="VerdenAdresse" type="person:VerdenAdresseType" oio:definition="urn:oio:sagdok:verdenadresse:ADD:1.0.0"/>
+    <complexType name="VerdenAdresseType" oio:definition="urn:oio:sagdok:verdenadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="person:AdresseBaseType">
+                <sequence>
+                    <element ref="oio11:ForeignAddressStructure" oio:content="udenlandskadresse"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <element name="KontaktKanalBase" type="person:KontaktKanalBaseType" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0"/>
+    <complexType name="KontaktKanalBaseType" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0">
+        <sequence>
+            <element ref="person:BegraensetAnvendelseTekst" minOccurs="0" oio:content="begraensetanvendelse"/>
+            <element ref="sd:NoteTekst" minOccurs="0" oio:content="note"/>
+        </sequence>
+    </complexType>
+
+    <element name="BegraensetAnvendelseTekst" type="string" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0#begraensetanvendelse"/>
+
+    <element name="Telefon" type="person:TelefonType" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0"/>
+    <complexType name="TelefonType" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0">
+        <sequence>
+            <element ref="oio12:TelephoneNumberIdentifier" oio:content="telefonnummer"/>
+            <element ref="person:KanBrugesTilSmsIndikator" oio:content="kanbrugestilsms"/>
+        </sequence>
+    </complexType>
+
+    <element name="KanBrugesTilSmsIndikator" type="boolean" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0#kanbrugestilsms"/>
+
+    <element name="AndenKontaktKanal" type="person:AndenKontaktKanalType" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0"/>
+    <complexType name="AndenKontaktKanalType" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:NoteTekst" oio:content="note"/>
+            <element ref="person:KontaktKanalTekst" oio:content="kontaktkanal"/>
+        </sequence>
+    </complexType>
+
+    <element name="KontaktKanalTekst" type="string" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0#kontaktkanal"/>
+
+    <element name="UdenlandskPersonIdentifikator" type="string" oio:definition="urn:oio:sagdok:udenlandskpersonid:BDD:1.0.0"/>
+
+    <element name="SprogKode" type="oio13:CountryIdentificationCodeType" oio:definition="urn:oio:sagdok:sprog:BDD:1.0.0"/>
+
+    <element name="FoedselslandKode" type="oio13:CountryIdentificationCodeType" oio:definition="urn:oio:sagdok:foedselsland:BDD:1.0.0"/>
+
+    <element name="PersonNummerGyldighedStatusIndikator" type="boolean" oio:definition="urn:oio:sagdok:personnummergyldigstatus:BDD:1.0.0"/>
+
+    <element name="FolkeregisterAdresse" type="person:AdresseType" oio:definition="urn:oio:sagdok:folkeregisteradresse:ASDD:1.0.0"/>
+
+    <element name="NavneAdresseBeskyttelseIndikator" type="boolean" oio:definition="urn:oio:sagdok:navneadressebeskyttelse:BDD:1.0.0"/>
+
+    <element name="TelefonNummerBeskyttelseIndikator" type="boolean" oio:definition="urn:oio:sagdok:telefonnummerbeskyttelse:BDD:1.0.0"/>
+
+    <element name="ForskerBeskyttelseIndikator" type="boolean" oio:definition="urn:oio:sagdok:forskerbeskyttelse:BDD:1.0.0"/>
+
+    <element name="AdresseNoteTekst" type="string" oio:definition="urn:oio:sagdok:adressenote:BDD:1.0.0"/>
+
+    <element name="FolkekirkeMedlemIndikator" type="boolean" oio:definition="urn:oio:sagdok:folkekirkemedlem:BDD:1.0.0"/>
+
+    <element name="AdresseBase" type="person:AdresseBaseType" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0"/>
+    <complexType name="AdresseBaseType" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0">
+        <sequence>
+            <element ref="sd:NoteTekst" minOccurs="0" oio:content="note"/>
+            <element ref="person:UkendtAdresseIndikator" oio:content="ukendtadresse"/>
+        </sequence>
+    </complexType>
+
+    <element name="UkendtAdresseIndikator" type="boolean" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0#ukendtadresse"/>
+
+    <element name="SpecielVejkodeIndikator" type="boolean" oio:definition="urn:oio:sagdok:specielvejkodeindikator:BDD:1.0.0"/>
+
+</schema>
