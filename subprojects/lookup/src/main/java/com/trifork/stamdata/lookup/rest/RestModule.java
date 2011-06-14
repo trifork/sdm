@@ -5,15 +5,11 @@ import com.sun.jersey.core.util.FeaturesAndProperties;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
-import java.util.Collections;
-
 public class RestModule extends JerseyServletModule {
-
 	@Override
 	protected void configureServlets() {
         bind(PersonResource.class);
         bind(PersonClientResource.class);
         serve("/*").with(GuiceContainer.class, ImmutableMap.of(FeaturesAndProperties.FEATURE_FORMATTED, Boolean.TRUE.toString()));
 	}
-
 }

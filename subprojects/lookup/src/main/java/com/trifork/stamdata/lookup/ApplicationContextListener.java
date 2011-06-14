@@ -26,8 +26,8 @@ import com.trifork.stamdata.ssl.OcesSslModule;
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
-	private static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
-	private static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
+	public static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
+	public static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
 
 	@Override
 	protected Injector getInjector() {

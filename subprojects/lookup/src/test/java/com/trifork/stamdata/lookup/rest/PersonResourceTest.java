@@ -3,6 +3,7 @@ package com.trifork.stamdata.lookup.rest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBElement;
 
 import oio.sagdok.person._1_0.PersonType;
@@ -44,6 +45,7 @@ public class PersonResourceTest {
 	public void usageLogsNotfound() {
 		resource.getPerson("1020304050");
 		verify(usageLogger).log(authenticatedSsn, "lookup.cpr.person.notfound", 1);
+		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn);
 	}
 	
 	@Test
@@ -62,5 +64,12 @@ public class PersonResourceTest {
 		return personPart;
 	}
 
+	@Test
+	public void givesCorrectReturnCodeWhenPersonDoesNotExist() {
+		when(personDao.get("1020304050")).thenReturn(null);
 
+		Response response = resource.getPerson("1020304050");
+
+		assertEquals(404, response.getStatus());
+	}
 }

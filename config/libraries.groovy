@@ -43,6 +43,7 @@ libs = [
 	jcl_over_slf4j: 'org.slf4j:jcl-over-slf4j:' + slf4jVersion,
 	slf4j_log4j: 'org.slf4j:slf4j-log4j12:' + slf4jVersion,
 	jul_to_slf4j: 'org.slfj:jul-to-slf4j:' + slf4jVersion,
+	log4j: 'log4j:log4j:1.2.16',
 
 	logback_core: 'ch.qos.logback:logback-core:0.9.27',
 	logback_classic: 'ch.qos.logback:logback-classic:0.9.27',

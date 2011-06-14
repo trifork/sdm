@@ -29,8 +29,6 @@ configurations {
 	all*.exclude group: 'xml-apis'
 	// deprecated in favor of javax.xml.stream
 	all*.exclude group: 'stax'
-	// we're using logback
-	all*.exclude group: 'log4j'
 }
 
 dependencies {
@@ -74,14 +72,14 @@ dependencies {
 	testCompile libs.mockito
 	
 	// Logging
-	//
-	// Unfortunatly we have to use Log4J since OIOSAML
-	// uses some custom configuration that is log4j specific.
-	// Logback would have less overhead.
 	
-	compile libs.slf4j_api
-	runtime libs.logback_core
-	runtime libs.log4j_over_slf4j
+	compile(libs.slf4j_api) {
+		force = true
+	}
+	runtime(libs.slf4j_log4j) {
+		force = true
+	}
+	runtime libs.log4j
 
 	providedCompile libs.jaxb_api
 	providedCompile libs.stax_api
@@ -91,3 +89,11 @@ dependencies {
 	
 	testRuntime 'xerces:xercesImpl:2.8.0'
 }
+
+war.manifest.mainAttributes(
+	'Built-Date': new Date().toString(),
+	'Implementation-Version': version,
+	'Built-Version': version,
+	'Implementation-Vendor': 'Trifork Public A/S',
+	'Implementation-Title': 'Stamdata Lookup'
+)
