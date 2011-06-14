@@ -2,12 +2,15 @@ package com.trifork.stamdata.lookup.personpart;
 
 import java.nio.charset.Charset;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import oio.sagdok._3_0.AktoerTypeKodeType;
+import oio.sagdok._3_0.LivscyklusKodeType;
 import oio.sagdok._3_0.PersonFlerRelationType;
 import oio.sagdok._3_0.TidspunktType;
 import oio.sagdok._3_0.UnikIdType;
@@ -66,6 +69,8 @@ public class PersonPartConverter {
 
 	private RegistreringType createRegistreringType(CurrentPersonData person) {
 		RegistreringType result = new RegistreringType();
+		result.setLivscyklusKode(LivscyklusKodeType.IMPORTERET);
+		result.setFraTidspunkt(createTidspunktType(new Date()));
 		result.setAttributListe(createAttributListeType(person));
 		result.setTilstandListe(createTilstandListe(person));
 		result.setRelationListe(createRelationListeType(person));
@@ -97,7 +102,9 @@ public class PersonPartConverter {
 	private PersonNameStructureType createPersonNameStructure(CurrentPersonData person) {
 		PersonNameStructureType result = new PersonNameStructureType();
 		result.setPersonGivenName(person.getFornavn());
-		result.setPersonMiddleName(person.getMellemnavn());
+		if(person.getMellemnavn() != null && !person.getMellemnavn().trim().isEmpty()) {
+			result.setPersonMiddleName(person.getMellemnavn());
+		}
 		result.setPersonSurnameName(person.getEfternavn());
 		return result;
 	}
@@ -291,6 +298,7 @@ public class PersonPartConverter {
 			result.setTilTidspunkt(createTidspunktType(to));
 		}
 		result.setAktoerRef(createAktoerRefId()); // Field is required
+		result.setAktoerTypeKode(AktoerTypeKodeType.IT_SYSTEM);
 		return result;
 	}
 
@@ -490,10 +498,17 @@ public class PersonPartConverter {
 
 	private AddressAccessType createAddressAccessType(CurrentPersonData person) {
 		AddressAccessType result = new AddressAccessType();
-		result.setMunicipalityCode(person.getKommuneKode());
+		result.setMunicipalityCode(createAuthorityCode(person.getKommuneKode()));
 		result.setStreetCode(person.getVejKode());
 		result.setStreetBuildingIdentifier(person.getHusnummer());
 		return result;
+	}
+
+	private String createAuthorityCode(String code) {
+		if(code == null) {
+			return null;
+		}
+		return new Formatter().format("%04d", Integer.parseInt(code)).toString();
 	}
 
 	private AddressPostalType createAddressPostalType(CurrentPersonData person) {

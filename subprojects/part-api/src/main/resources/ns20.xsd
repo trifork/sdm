@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" xmlns:ns10="urn:oio:sagdok:part:1.0.0" xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" xmlns:ns14="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" xmlns:ns15="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns16="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns19="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns20="urn:oio:sagdok:person:1.0.0" xmlns:ns3="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns5="urn:oio:sagdok:3.0.0" xmlns:ns6="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns8="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:oio:sagdok:person:1.0.0"><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" /><import namespace="urn:oio:sagdok:3.0.0" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" /><import namespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" /><import namespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" /><import namespace="urn:oio:sagdok:part:1.0.0" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" /><element name="Person" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:person:ADD:1.0.0" type="ns20:PersonType"/><element name="AttributListe" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personattributliste:ADD:1.0.0" type="ns20:AttributListeType"/><element name="TilstandListe" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:persontilstandliste:ADD:1.0.0" type="ns20:TilstandListeType"/><element name="RelationListe" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personrelationliste:ADD:1.0.0" type="ns20:RelationListeType"/><element name="Registrering" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregistrering:ADD:1.0.0" type="ns20:RegistreringType"/><element name="Egenskab" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personegenskaber:ADD:1.0.0" type="ns20:EgenskabType"/><element name="SundhedOplysning" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personsundhedsoplysninger:ADD:1.0.0" type="ns20:SundhedOplysningType"/><element name="RegisterOplysning" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregisteroplysninger:ADD:1.0.0" type="ns20:RegisterOplysningType"/><element name="LivStatus" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livstatus:ADD:1.0.0" type="ns20:LivStatusType"/><element name="CivilStatus" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:civilstatus:ADD:1.0.0" type="ns20:CivilStatusType"/><element name="Moder" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:moder:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="Fader" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:fader:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="Boern" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:boern:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="Aegtefaelle" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:aegtefaelle:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="RegistreretPartner" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:registreretpartner:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="Bopaelssamling" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:bopaelssamling:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="Foraeldremyndighedsindehaver" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:foraeldremyndighedsindehaver:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="Foraeldremyndighedsboern" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:foraeldremyndighedsboern:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="RetligHandleevneVaergeForPersonen" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:retlighandleevnevaergeforpersonen:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="RetligHandleevneVaergemaalsindehaver" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:retlighandleevnevaergemaalsindehaver:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="ErstatningFor" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:erstatningfor:relation:ASDD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="ErstatttetAf" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:erstattetaf:relation:ASDD:1.0.0" type="ns20:PersonRelationType"/><element name="NavnStruktur" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:navn:ADD:1.0.0" type="ns20:NavnStrukturType"/><element name="FoedselsregistreringMyndighedNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:foedselsregistreringsmyndighed:BDD:1.0.0" type="string"/><element name="FoedestedNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:foedested:BDD:1.0.0" type="string"/><element name="AndenAdresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:andenadresse:ASDD:1.0.0" type="ns20:AdresseType"/><element name="NaermestePaaroerende" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:naermestepaaroerende:ASDD:1.0.0" type="ns20:KontaktKanalType"/><element name="PraktiserendeLaegeNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:praktiserendelaegenavn:BDD:1.0.0" type="string"/><element name="PraktiserendeLaegeYderNummerIdentifikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:praktiserendelaegeydernummer:BDD:1.0.0" type="integer"/><element name="SygesikringsgruppeKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:sygesikringsgruppe:BDD:1.0.0" type="integer"/><element name="RegisterOplysningBase" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregisteroplysningerbase:ADD:1.0.0" type="ns20:RegisterOplysningBaseType"/><element name="PersonRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personrelation:ADD:1.0.0" type="ns20:PersonRelationType"/><element name="Adresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adresse:ADD:1.0.0" type="ns20:AdresseType"/><element name="KontaktKanal" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kontaktkanal:ADD:1.0.0" type="ns20:KontaktKanalType"/><element name="UdenlandskBorger" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:udenlandskborger:ADD:1.0.0" type="ns20:UdenlandskBorgerType"/><element name="CprBorger" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:cprborger:ADD:1.0.0" type="ns20:CprBorgerType"/><element name="UkendtBorger" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:ukendtborger:ADD:1.0.0" type="ns20:UkendtBorgerType"/><element name="LivStatusKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livstatuskode:DT:1.0.0" type="ns20:LivStatusKodeType"/><element name="CivilStatusKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:civilstatuskode:DT:1.0.0" type="ns20:CivilStatusKodeType"/><element name="DanskAdresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0" type="ns20:DanskAdresseType"/><element name="SocialDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#socialdistrikt" type="string"/><element name="SkoleDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#skoledistrikt" type="string"/><element name="PostDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#postdistrikt" type="string"/><element name="SogneDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#sognedistrikt" type="string"/><element name="ValgkredsDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#valgkredsdistrikt" type="string"/><element name="PolitiDistriktTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0#politidistrikt" type="string"/><element name="GroenlandAdresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:groenlandadresse:ADD:1.0.0" type="ns20:GroenlandAdresseType"/><element name="VerdenAdresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:verdenadresse:ADD:1.0.0" type="ns20:VerdenAdresseType"/><element name="KontaktKanalBase" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0" type="ns20:KontaktKanalBaseType"/><element name="BegraensetAnvendelseTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0#begraensetanvendelse" type="string"/><element name="Telefon" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0" type="ns20:TelefonType"/><element name="KanBrugesTilSmsIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0#kanbrugestilsms" type="boolean"/><element name="AndenKontaktKanal" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0" type="ns20:AndenKontaktKanalType"/><element name="KontaktKanalTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0#kontaktkanal" type="string"/><element name="UdenlandskPersonIdentifikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:udenlandskpersonid:BDD:1.0.0" type="string"/><element name="SprogKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:sprog:BDD:1.0.0" type="ns2:CountryIdentificationCodeType"/><element name="FoedselslandKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:foedselsland:BDD:1.0.0" type="ns2:CountryIdentificationCodeType"/><element name="PersonNummerGyldighedStatusIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personnummergyldigstatus:BDD:1.0.0" type="boolean"/><element name="FolkeregisterAdresse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:folkeregisteradresse:ASDD:1.0.0" type="ns20:AdresseType"/><element name="NavneAdresseBeskyttelseIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:navneadressebeskyttelse:BDD:1.0.0" type="boolean"/><element name="TelefonNummerBeskyttelseIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:telefonnummerbeskyttelse:BDD:1.0.0" type="boolean"/><element name="ForskerBeskyttelseIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:forskerbeskyttelse:BDD:1.0.0" type="boolean"/><element name="AdresseNoteTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adressenote:BDD:1.0.0" type="string"/><element name="FolkekirkeMedlemIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:folkekirkemedlem:BDD:1.0.0" type="boolean"/><element name="AdresseBase" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0" type="ns20:AdresseBaseType"/><element name="UkendtAdresseIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0#ukendtadresse" type="boolean"/><element name="SpecielVejkodeIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:specielvejkodeindikator:BDD:1.0.0" type="boolean"/><complexType name="PersonType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:person:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns10:PartType">
+                <sequence>
+                    <element maxOccurs="unbounded" oio:content="registreringer" ref="ns20:Registrering"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="AttributListeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personattributliste:ADD:1.0.0">
+        <sequence>
+            <element maxOccurs="unbounded" oio:content="egenskaber" ref="ns20:Egenskab"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="sundhedsoplysninger" ref="ns20:SundhedOplysning"/>
+            <element maxOccurs="unbounded" oio:content="registeroplysninger" ref="ns20:RegisterOplysning"/>
+            <element minOccurs="0" oio:content="lokaludvidelse" ref="ns5:LokalUdvidelse"/>
+        </sequence>
+    </complexType><complexType name="TilstandListeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:persontilstandliste:ADD:1.0.0">
+        <sequence>
+            <element maxOccurs="unbounded" oio:content="livstatus" ref="ns20:LivStatus"/>
+            <element maxOccurs="unbounded" oio:content="civilstatus" ref="ns20:CivilStatus"/>
+            <element minOccurs="0" oio:content="lokaludvidelse" ref="ns5:LokalUdvidelse"/>
+        </sequence>
+    </complexType><complexType name="RelationListeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personrelationliste:ADD:1.0.0">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="moder" ref="ns20:Moder"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="fader" ref="ns20:Fader"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="boern" ref="ns20:Boern"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="aegtefaelle" ref="ns20:Aegtefaelle"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="registreretpartner" ref="ns20:RegistreretPartner"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="bopaelssamling" ref="ns20:Bopaelssamling"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="foraeldremyndighedsindehaver" ref="ns20:Foraeldremyndighedsindehaver"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="foraeldremyndighedsboern" ref="ns20:Foraeldremyndighedsboern"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="retlighandleevnevaergeforpersonen" ref="ns20:RetligHandleevneVaergeForPersonen"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="retlighandleevnevaergemaalsindehaver" ref="ns20:RetligHandleevneVaergemaalsindehaver"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="erstatningfor" ref="ns20:ErstatningFor"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="erstattetaf" ref="ns20:ErstatttetAf"/>
+            <element minOccurs="0" oio:content="lokaludvidelse" ref="ns5:LokalUdvidelse"/>
+        </sequence>
+    </complexType><complexType name="RegistreringType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregistrering:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RegistreringType">
+                <sequence>
+                    <element oio:content="attributter" ref="ns20:AttributListe"/>
+                    <element oio:content="tilstande" ref="ns20:TilstandListe"/>
+                    <element oio:content="relationer" ref="ns20:RelationListe"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="EgenskabType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personegenskaber:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="brugervendtnoegle" ref="ns5:BrugervendtNoegleTekst"/>
+            <element minOccurs="0" oio:content="navn" ref="ns20:NavnStruktur"/>
+            <element minOccurs="0" oio:content="personkoen" ref="ns17:PersonGenderCode"/>
+            <element minOccurs="0" oio:content="foedselsdato" ref="ns4:BirthDate"/>
+            <element minOccurs="0" oio:content="foedselsregistreringsmyndighed" ref="ns20:FoedselsregistreringMyndighedNavn"/>
+            <element minOccurs="0" oio:content="foedested" ref="ns20:FoedestedNavn"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="andreadresser" ref="ns20:AndenAdresse"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="kontaktkanaler" ref="ns20:KontaktKanal"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="naermestepaaroerende" ref="ns20:NaermestePaaroerende"/>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:Virkning"/>
+        </sequence>
+    </complexType><complexType name="SundhedOplysningType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personsundhedsoplysninger:ADD:1.0.0">
+        <sequence>
+            <element oio:content="praktiserendelaegenavn" ref="ns20:PraktiserendeLaegeNavn"/>
+            <element oio:content="praktiserendelaegeydernummer" ref="ns20:PraktiserendeLaegeYderNummerIdentifikator"/>
+            <element oio:content="sygesikringsgruppe" ref="ns20:SygesikringsgruppeKode"/>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:Virkning"/>
+        </sequence>
+    </complexType><complexType name="RegisterOplysningType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregisteroplysninger:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns20:RegisterOplysningBaseType">
+                <sequence>
+                    <element minOccurs="0" oio:content="virkning" ref="ns5:Virkning"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="LivStatusType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livstatus:ADD:1.0.0">
+        <sequence>
+            <element oio:content="livstatus" ref="ns20:LivStatusKode"/>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:Virkning"/>
+        </sequence>
+    </complexType><complexType name="CivilStatusType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:civilstatus:ADD:1.0.0">
+        <sequence>
+            <element oio:content="civilstatus" ref="ns20:CivilStatusKode"/>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:Virkning"/>
+        </sequence>
+    </complexType><complexType name="NavnStrukturType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:navn:ADD:1.0.0">
+        <sequence>
+            <element oio:content="personnavn" ref="ns6:PersonNameStructure"/>
+            <element minOccurs="0" oio:content="kaldenavn" ref="ns5:KaldenavnTekst"/>
+            <element oio:content="adresseringsnavn" ref="ns11:PersonNameForAddressingName"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="RegisterOplysningBaseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personregisteroplysningerbase:ADD:1.0.0">
+        <choice>
+            <element oio:content="udenlandskborger" ref="ns20:UdenlandskBorger"/>
+            <element oio:content="cprborger" ref="ns20:CprBorger"/>
+            <element oio:content="ukendtborger" ref="ns20:UkendtBorger"/>
+        </choice>
+    </complexType><complexType name="PersonRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="AdresseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adresse:ADD:1.0.0">
+        <choice>
+            <element oio:content="danskadresse" ref="ns20:DanskAdresse"/>
+            <element oio:content="groenlandskadresse" ref="ns20:GroenlandAdresse"/>
+            <element oio:content="verdensadresse" ref="ns20:VerdenAdresse"/>
+        </choice>
+    </complexType><complexType name="KontaktKanalType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kontaktkanal:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns20:KontaktKanalBaseType">
+                <choice>
+                    <element oio:content="emailadresse" ref="ns18:EmailAddressIdentifier"/>
+                    <element oio:content="telefon" ref="ns20:Telefon"/>
+                    <element oio:content="andenkontaktkanal" ref="ns20:AndenKontaktKanal"/>
+                </choice>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="UdenlandskBorgerType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:udenlandskborger:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="udenlandskpersonid" ref="ns20:UdenlandskPersonIdentifikator"/>
+            <element minOccurs="0" oio:content="erstatningscpr" ref="ns13:PersonCivilRegistrationReplacementIdentifier"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="statsborgerskaber" ref="ns19:PersonNationalityCode"/>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="sprog" ref="ns20:SprogKode"/>
+            <element minOccurs="0" oio:content="foedselsland" ref="ns20:FoedselslandKode"/>
+        </sequence>
+    </complexType><complexType name="CprBorgerType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:cprborger:ADD:1.0.0">
+        <sequence>
+            <element oio:content="cprnummer" ref="ns7:PersonCivilRegistrationIdentifier"/>
+            <element oio:content="personnummergyldigstatus" ref="ns20:PersonNummerGyldighedStatusIndikator"/>
+            <element oio:content="statsborgerskab" ref="ns19:PersonNationalityCode"/>
+            <element minOccurs="0" oio:content="folkeregisteradresse" ref="ns20:FolkeregisterAdresse"/>
+            <element oio:content="navneadressebeskyttelse" ref="ns20:NavneAdresseBeskyttelseIndikator"/>
+            <element oio:content="telefonnummerbeskyttelse" ref="ns20:TelefonNummerBeskyttelseIndikator"/>
+            <element oio:content="forskerbeskyttelse" ref="ns20:ForskerBeskyttelseIndikator"/>
+            <element minOccurs="0" oio:content="adressenote" ref="ns20:AdresseNoteTekst"/>
+            <element minOccurs="0" oio:content="folkekirkemedlem" ref="ns20:FolkekirkeMedlemIndikator"/>
+        </sequence>
+    </complexType><complexType name="UkendtBorgerType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:ukendtborger:ADD:1.0.0">
+        <sequence>
+            <element oio:content="erstatningscpr" ref="ns13:PersonCivilRegistrationReplacementIdentifier"/>
+        </sequence>
+    </complexType><complexType name="DanskAdresseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:danskadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns20:AdresseBaseType">
+                <sequence>
+                    <element oio:content="fuldadresse" ref="ns15:AddressComplete"/>
+                    <element minOccurs="0" oio:content="adressepunkt" ref="ns1:AddressPoint"/>
+                    <element minOccurs="0" oio:content="specielvejkodeindikator" ref="ns20:SpecielVejkodeIndikator"/>
+                    <element minOccurs="0" oio:content="socialdistrikt" ref="ns20:SocialDistriktTekst"/>
+                    <element minOccurs="0" oio:content="skoledistrikt" ref="ns20:SkoleDistriktTekst"/>
+                    <element minOccurs="0" oio:content="postdistrikt" ref="ns20:PostDistriktTekst"/>
+                    <element minOccurs="0" oio:content="sognedistrikt" ref="ns20:SogneDistriktTekst"/>
+                    <element minOccurs="0" oio:content="valgkredsdistrikt" ref="ns20:ValgkredsDistriktTekst"/>
+                    <element minOccurs="0" oio:content="politidistrikt" ref="ns20:PolitiDistriktTekst"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="GroenlandAdresseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:groenlandadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns20:AdresseBaseType">
+                <sequence>
+                    <element oio:content="fuldadressegroenland" ref="ns8:AddressCompleteGreenland"/>
+                    <element minOccurs="0" oio:content="specielvejkodeindikator" ref="ns20:SpecielVejkodeIndikator"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="VerdenAdresseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:verdenadresse:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns20:AdresseBaseType">
+                <sequence>
+                    <element oio:content="udenlandskadresse" ref="ns8:ForeignAddressStructure"/>
+                </sequence>
+            </extension>
+        </complexContent>
+    </complexType><complexType name="KontaktKanalBaseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kontaktkanalbase:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="begraensetanvendelse" ref="ns20:BegraensetAnvendelseTekst"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="TelefonType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:telefon:ADD:1.0.0">
+        <sequence>
+            <element oio:content="telefonnummer" ref="ns14:TelephoneNumberIdentifier"/>
+            <element oio:content="kanbrugestilsms" ref="ns20:KanBrugesTilSmsIndikator"/>
+        </sequence>
+    </complexType><complexType name="AndenKontaktKanalType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:andenkontaktkanal:ADD:1.0.0">
+        <sequence>
+            <element oio:content="note" ref="ns5:NoteTekst"/>
+            <element oio:content="kontaktkanal" ref="ns20:KontaktKanalTekst"/>
+        </sequence>
+    </complexType><complexType name="AdresseBaseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adressebase:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+            <element oio:content="ukendtadresse" ref="ns20:UkendtAdresseIndikator"/>
+        </sequence>
+    </complexType><simpleType name="LivStatusKodeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livstatuskode:DT:1.0.0">
+        <restriction base="string">
+            <enumeration value="Prenatal"/>
+            <enumeration value="Foedt"/>
+            <enumeration value="Forsvundet"/>
+            <enumeration value="Doed"/>
+        </restriction>
+    </simpleType><simpleType name="CivilStatusKodeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:civilstatuskode:DT:1.0.0">
+        <restriction base="string">
+            <enumeration value="Ugift"/>
+            <enumeration value="Gift"/>
+            <enumeration value="RegistreretPartner"/>
+            <enumeration value="Separeret"/>
+            <enumeration value="Skilt"/>
+            <enumeration value="OphaevetPartnerskab"/>
+            <enumeration value="Enke"/>
+            <enumeration value="Laengstlevende"/>
+        </restriction>
+    </simpleType></schema>

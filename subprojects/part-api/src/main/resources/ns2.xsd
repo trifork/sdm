@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" xmlns:ns10="urn:oio:sagdok:part:1.0.0" xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" xmlns:ns14="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" xmlns:ns15="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns16="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns19="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns20="urn:oio:sagdok:person:1.0.0" xmlns:ns3="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns5="urn:oio:sagdok:3.0.0" xmlns:ns6="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns8="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" /><import namespace="urn:oio:sagdok:person:1.0.0" /><import namespace="urn:oio:sagdok:3.0.0" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" /><import namespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" /><import namespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" /><import namespace="urn:oio:sagdok:part:1.0.0" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" /><element name="StreetBuildingIdentifier" type="ns2:StreetBuildingIdentifierType">
+		<annotation>
+			<documentation>
+			Numeric identification (da: house number ~ 'husnummer') including an optional letter, which identifies a certain access to a building, a plot/piece of land or a plant etc. based on the named road or street which gives access hereto. The identifier is determined in increasing numerical and letter order along the road, normally with even numbers on the right side and odd numbers on the left side of the road.
+			</documentation>
+		</annotation>
+	</element><simpleType name="StreetBuildingIdentifierType">
+		<restriction base="string">
+			<pattern value="([1-9]|[1-9][0-9]|[1-9][0-9]{2})|([1-9][A-Z]|[1-9][0-9][A-Z]|[1-9][0-9]{2}[A-Z])"/>
+		</restriction>
+	</simpleType><element name="PersonSurnameName" type="ns2:PersonSurnameNameType"/><simpleType name="PersonSurnameNameType">
+		<annotation>
+			<documentation>Declaration of an individuals surname.</documentation>
+		</annotation>
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="40"/>
+		</restriction>
+	</simpleType><element name="CountryIdentificationCode" type="ns2:CountryIdentificationCodeType"/><complexType name="CountryIdentificationCodeType">
+		<annotation>
+			<documentation xml:lang="en-uk">The country code based on the 4 diffent schemes.</documentation>
+			<documentation xml:lang="da-dk">Landeidentifikations kode baseret på de 4 forskellige formater.</documentation>
+		</annotation>
+		<simpleContent>
+			<extension base="ns2:_CountryIdentificationCodeType">
+				<attribute name="scheme" type="ns2:_CountryIdentificationSchemeType" use="required"/>
+			</extension>
+		</simpleContent>
+	</complexType><simpleType name="_CountryIdentificationCodeType">
+		<annotation>
+			<documentation xml:lang="en-uk">This is a support type for CountryIdentificationCodeType. The pattern is a choice of 4 different patterns for different schems. ISO 3166 standard, alpha 2: [a-z,A-Z]{2}. Eksample "DK" for Danmark. ISO 3166 standard, alpha 3: [a-z,A-Z]{3}. Eksample "DKN" for Danmark. UN Statistics Divisions country codes: [0-9]{3}. Eksample "208" for Danmark AuthorityCode from the Central Office of Civil Registration: [0-9]{4}. Eksample "5100" for Danmark.</documentation>
+			<documentation xml:lang="da-dk">Dette er en støttetype til CountryIdentificationCodeType. Det regulære udtryk er et valg for de 4 forskellige regulære udtryk for de forskellige formater. ISO 3166 standard, alpha 2: [a-z,A-Z]{2}. Eksempel "DK" for Danmark. ISO 3166 standard, alpha 3:  [a-z,A-Z]{3}. Eksempel "DKN" for Danmark. UN Statistics Divisions country codes: [0-9]{3}. Eksempel "208" for Danmark AuthorityCode from the Central Office of Civil Registration: [0-9]{4}. Eksempel "5100" for Danmark.</documentation>
+		</annotation>
+		<restriction base="string">
+			<pattern value="[a-z,A-Z]{2}|[a-z,A-Z]{3}|[0-9]{3}|[0-9]{4}"/>
+		</restriction>
+	</simpleType><simpleType name="_CountryIdentificationSchemeType">
+		<annotation>
+			<documentation xml:lang="en-uk">This is a support type for CountryIdentificationCodeType.</documentation>
+			<documentation xml:lang="da-dk">Dette er en støttetype til CountryIdentificationCodeType.</documentation>
+		</annotation>
+		<restriction base="string">
+			<enumeration value="iso3166-alpha2">
+				<annotation>
+					<documentation xml:lang="en-uk">This scheme follows the ISO 3166 standard, alpha 2.</documentation>
+					<documentation xml:lang="da-dk">Dette format følge ISO 3166 standarden, alpha 2.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="iso3166-alpha3">
+				<annotation>
+					<documentation xml:lang="en-uk">This scheme follows the ISO 3166 standard, alpha 3.</documentation>
+					<documentation xml:lang="da-dk">Dette format følge ISO 3166 standarden, alpha 3.</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="un-numeric3">
+				<annotation>
+					<documentation xml:lang="en-uk">This scheme follows the UN Statistics Divisions country codes.</documentation>
+					<documentation xml:lang="da-dk">Dette format følger FNs Statistik Kontor landekoder</documentation>
+				</annotation>
+			</enumeration>
+			<enumeration value="imk">
+				<annotation>
+					<documentation xml:lang="en-uk">This scheme follows the AuthorityCode from the Central Office of Civil Registration.</documentation>
+					<documentation xml:lang="da-dk">Dette format følger MyndighedsKoden fra Det Centrale Personregister</documentation>
+				</annotation>
+			</enumeration>
+		</restriction>
+	</simpleType><element name="MailDeliverySublocationIdentifier" type="ns2:MailDeliverySublocationIdentifierType">
+		<annotation>
+			<documentation>
+The given name of a farm, estate, building or dwelling, which is used as a additional postal address identifier.
+      </documentation>
+		</annotation>
+	</element><simpleType name="MailDeliverySublocationIdentifierType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="34"/>
+		</restriction>
+	</simpleType><element name="PersonMiddleName" type="ns2:PersonMiddleNameType"/><simpleType name="PersonMiddleNameType">
+		<annotation>
+			<documentation>Declaration of an individual’s middle name(s).</documentation>
+		</annotation>
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="40"/>
+		</restriction>
+	</simpleType><element name="FloorIdentifier" type="ns2:FloorIdentifierType">
+		<annotation>
+			<documentation>
+			Identification which describes the floor or level on which a specific entrance door, appartment or suite is placed, in the staircase refered to.
+			</documentation>
+		</annotation>
+	</element><simpleType name="FloorIdentifierType">
+		<restriction base="string">
+			<pattern value="[1-9]|[1-9][0-9]|KL|ST|kl|st|k[2-9]|K[2-9]"/>
+		</restriction>
+	</simpleType><element name="SuiteIdentifier" type="ns2:SuiteIdentifierType">
+		<annotation>
+			<documentation>
+			Identification which describes the location of a specific entrance door on a floor or level (repos) in the staircase referred to.
+			</documentation>
+		</annotation>
+	</element><simpleType name="SuiteIdentifierType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="4"/>
+		</restriction>
+	</simpleType><element name="PersonGivenName" type="ns2:PersonGivenNameType">
+		<annotation>
+			<documentation>Declaration of an individual’s first name(s).</documentation>
+		</annotation>
+	</element><simpleType name="PersonGivenNameType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="50"/>
+		</restriction>
+	</simpleType></schema>

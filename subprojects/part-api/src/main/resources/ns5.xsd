@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" xmlns:ns10="urn:oio:sagdok:part:1.0.0" xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" xmlns:ns14="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" xmlns:ns15="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns16="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns19="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns20="urn:oio:sagdok:person:1.0.0" xmlns:ns3="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns5="urn:oio:sagdok:3.0.0" xmlns:ns6="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns8="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn:oio:sagdok:3.0.0"><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" /><import namespace="urn:oio:sagdok:person:1.0.0" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" /><import namespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" /><import namespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" /><import namespace="urn:oio:sagdok:part:1.0.0" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" /><element name="ImportInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:importinput:ADD:1.0.0" type="ns5:ImportInputType"/><element name="UuidNoteInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:uuidnote:ADD:1.0.0" type="ns5:UuidNoteInputType"/><element name="OpretInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:opretinput:ADD:1.0.0" type="ns5:OpretInputType"/><element name="BasicOutput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:basaloutput:ADD:1.0.0" type="ns5:BasicOutputType"/><element name="RetInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:retinput:ADD:1.0.0" type="ns5:RetInputType"/><element name="LaesInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:laesinput:ADD:1.0.0" type="ns5:LaesInputType"/><element name="ListInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:listinput:ADD:1.0.0" type="ns5:ListInputType"/><element name="ListOutput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:listoutput:ADD:1.0.0" type="ns5:ListOutputType"/><element name="SoegInput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soeginput:ADD:1.0.0" type="ns5:SoegInputType"/><element name="FoersteResultatReference" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soeginput:ADD:1.0.0#foersteresultat" type="integer"/><element name="MaksimalAntalKvantitet" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soeginput:ADD:1.0.0#maksimalantalresultater" type="integer"/><element name="SoegOutput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegoutput:ADD:1.0.0" type="ns5:SoegOutputType"/><element name="NoteTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:note:BDD:1.0.0" type="string"/><element name="UUIDIdentifikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:uuid:BDD:1.0.0" type="string"/><element name="VirkningFraFilter" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virkningfrafilter:ASDD:1.0.0" type="ns5:TidspunktType"/><element name="VirkningTilFilter" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virkningtilfilter:ASDD:1.0.0" type="ns5:TidspunktType"/><element name="RegistreringFraFilter" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:registreringfrafilter:ASDD:1.0.0" type="ns5:TidspunktType"/><element name="RegistreringTilFilter" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:registreringtilfilter:ASDD:1.0.0" type="ns5:TidspunktType"/><element name="SoegSagDokObjekt" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegsagdokobjekt:ADD:1.0.0" type="ns5:SoegSagDokObjektType"/><element name="IdListe" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:idliste:ADD:1.0.0" type="ns5:IdListeType"/><element name="Adresser" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adresser:relation:ASDD:2.0.0" type="ns5:AdresseFlerRelationType"/><element name="Ansatte" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:ansatte:relation:ASDD:2.0.0" type="ns5:PersonFlerRelationType"/><element name="Branche" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:branche:relation:ASDD:2.0.0" type="ns5:KlasseRelationType"/><element name="Myndighed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:myndighed:relation:ASDD:1.0.0" type="ns5:MyndighedRelationType"/><element name="Myndighedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:myndighedstype:relation:ASDD:1.0.0" type="ns5:KlasseRelationType"/><element name="Opgaver" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:opgaver:relation:ASDD:2.0.0" type="ns5:KlasseFlerRelationType"/><element name="Overordnet" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:overordnet:relation:ASDD:2.0.0" type="ns5:OrganisationEnhedRelationType"/><element name="Produktionsenhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:produktionsenhed:relation:ASDD:2.0.0" type="ns5:VirksomhedRelationType"/><element name="Skatteenhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:skatteenhed:relation:ASDD:2.0.0" type="ns5:VirksomhedRelationType"/><element name="Tilhoerer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilhoerer:relation:ASDD:2.0.0" type="ns5:OrganisationRelationType"/><element name="TilknyttedeBrugere" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedebrugere:relation:ASDD:2.0.0" type="ns5:BrugerFlerRelationType"/><element name="TilknyttedeEnheder" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedeenheder:relation:ASDD:2.0.0" type="ns5:OrganisationEnhedFlerRelationType"/><element name="TilknyttedeFunktioner" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedefunktioner:relation:ASDD:2.0.0" type="ns5:OrganisationFunktionFlerRelationType"/><element name="TilknyttedeInteressefaellesskaber" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedeinteressefaellesskaber:relation:ASDD:2.0.0" type="ns5:InteressefaellesskabFlerRelationType"/><element name="TilknyttedeOrganisationer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedeorganisationer:relation:ASDD:2.0.0" type="ns5:OrganisationFlerRelationType"/><element name="TilknyttedePersoner" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedepersoner:relation:ASDD:2.0.0" type="ns5:PersonFlerRelationType"/><element name="TilknyttedeItSystemer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tilknyttedeitsystemer:relation:ASDD:2.0.0" type="ns5:ItSystemFlerRelationType"/><element name="Virksomhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virksomhed:relation:ASDD:1.0.0" type="ns5:VirksomhedRelationType"/><element name="Virksomhedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virksomhedstype:relation:ASDD:1.0.0" type="ns5:KlasseRelationType"/><element name="StandardRetur" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:standardretur:ADD:1.0.0" type="ns5:StandardReturType"/><element name="StatusKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:standardretur:ADD:1.0.0#statuskode" type="integer"/><element name="FejlbeskedTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:standardretur:ADD:1.0.0#fejlbesked" type="string"/><element name="Tidspunkt" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tidspunkt:ADD:2.0.0" type="ns5:TidspunktType"/><element name="GraenseIndikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tidspunkt:ADD:2.0.0#graense" type="boolean"/><element name="LaesFiltreretOutput" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:laesfiltreretoutput:ADD:1.0.0" type="ns5:LaesFiltreretOutputType"/><element name="SoegRegistrering" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegregistrering:ADD:1.0.0" type="ns5:SoegRegistreringType"/><element name="SoegAdresser" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegadresser:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegAnsatte" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegansatte:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegBranche" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegbranche:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegMyndighed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegmyndighed:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegMyndighedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegmyndighedstype:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegOpgaver" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegopgaver:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegOverordnet" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegoverordnet:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegProduktionsenhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegproduktionsenhed:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegSkatteenhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegskatteenhed:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilhoerer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilhoerer:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeBrugere" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedebrugere:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeEnheder" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedeenheder:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeFunktioner" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedefunktioner:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeInteressefaellesskaber" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedeinteressefaellesskaber:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeOrganisationer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedeorganisationer:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedePersoner" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedepersoner:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegTilknyttedeItSystemer" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegtilknyttedeitsystemer:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegVirksomhed" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegvirksomhed:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SoegVirksomhedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegvirksomhedstype:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="Enhedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:enhedstype:relation:ASDD:1.0.0" type="ns5:KlasseRelationType"/><element name="SoegEnhedstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegenhedstype:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="BrugerTyper" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugertyper:relation:ASDD:1.0.0" type="ns5:KlasseFlerRelationType"/><element name="SoegBrugerTyper" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegbrugertyper:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SystemTyper" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:systemtyper:relation:ASDD:1.0.0" type="ns5:KlasseFlerRelationType"/><element name="SoegSystemTyper" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegsystemtyper:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="Funktionstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:funktionstype:relation:ASDD:1.0.0" type="ns5:KlasseRelationType"/><element name="SoegFunktionstype" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegfunktionstype:ASDD:1.0.0" type="ns5:SoegRelationType"/><element name="SagDokObjekt" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:sagdokobjekt:ADD:1.0.0" type="ns5:SagDokObjektType"/><element name="Registrering" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:registrering:ADD:2.0.0" type="ns5:RegistreringType"/><element name="OrganisationNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationsnavn:BDD:1.0.0" type="string"/><element name="BrugervendtNoegleTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugervendtnoegle:BDD:1.0.0" type="string"/><element name="LokalUdvidelse" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:lokaludvidelse:ADD:1.0.0" type="ns5:LokalUdvidelseType"/><element name="AdresseFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adresseflerrelation:ADD:1.0.0" type="ns5:AdresseFlerRelationType"/><element name="PersonFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personflerrelation:ADD:1.0.0" type="ns5:PersonFlerRelationType"/><element name="KlasseRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:klasserelation:ADD:1.0.0" type="ns5:KlasseRelationType"/><element name="MyndighedRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:myndighedrelation:ADD:1.0.0" type="ns5:MyndighedRelationType"/><element name="KlasseFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:klasseflerrelation:ADD:1.0.0" type="ns5:KlasseFlerRelationType"/><element name="OrganisationEnhedRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationenhedrelation:ADD:1.0.0" type="ns5:OrganisationEnhedRelationType"/><element name="VirksomhedRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virksomhedrelation:ADD:1.0.0" type="ns5:VirksomhedRelationType"/><element name="OrganisationRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationrelation:ADD:1.0.0" type="ns5:OrganisationRelationType"/><element name="BrugerFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugerflerrelation:ADD:1.0.0" type="ns5:BrugerFlerRelationType"/><element name="OrganisationEnhedFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationenhedflerrelation:ADD:1.0.0" type="ns5:OrganisationEnhedFlerRelationType"/><element name="OrganisationFunktionFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationfunktionflerrelation:ADD:1.0.0" type="ns5:OrganisationFunktionFlerRelationType"/><element name="InteressefaellesskabFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:interessefaellesskabflerrelation:ADD:1.0.0" type="ns5:InteressefaellesskabFlerRelationType"/><element name="OrganisationFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationflerrelation:ADD:1.0.0" type="ns5:OrganisationFlerRelationType"/><element name="ItSystemFlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:itsystemflerrelation:ADD:1.0.0" type="ns5:ItSystemFlerRelationType"/><element name="TidsstempelDatoTid" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tidsstempel:BDD:1.0.0" type="dateTime"/><element name="FraTidspunkt" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:fratidspunkt:ASDD:2.0.0" type="ns5:TidspunktType"/><element name="LivscyklusKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livscyklus:DT:2.0.0" type="ns5:LivscyklusKodeType"/><element name="BrugerRef" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugerreference:ASDD:1.0.0" type="ns5:UnikIdType"/><element name="SoegVirkning" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegvirkning:ADD:1.0.0" type="ns5:SoegVirkningType"/><element name="SoegRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegrelation:ADD:1.0.0" type="ns5:SoegRelationType"/><element name="EnhedNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationenhedsnavn:BDD:1.0.0" type="string"/><element name="BrugerNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugernavn:BDD:1.0.0" type="string"/><element name="BrugerTypeTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugertype:BDD:1.0.0" type="string"/><element name="InteressefaellesskabNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:interessefaellesskabsnavn:BDD:1.0.0" type="string"/><element name="InteressefaellesskabTypeTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:interessefaellesskabstype:BDD:1.0.0" type="string"/><element name="ItSystemNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:itsystemnavn:BDD:1.0.0" type="string"/><element name="ItSystemTypeTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:itsystemtype:BDD:1.0.0" type="string"/><element name="KonfigurationReference" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:konfigurationselementer:BDD:1.0.0" type="string"/><element name="FunktionNavn" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationfunktionsnavn:BDD:1.0.0" type="string"/><element name="Virkning" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virkning:ADD:2.0.0" type="ns5:VirkningType"/><element name="FlerRelation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:flerrelation:ADD:2.0.0" type="ns5:FlerRelationType"/><element name="Relation" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:relation:ADD:2.0.0" type="ns5:RelationType"/><element name="UnikId" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:unikid:ADD:1.0.0" type="ns5:UnikIdType"/><element name="TilTidspunkt" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tiltidspunkt:ASDD:2.0.0" type="ns5:TidspunktType"/><element name="AktoerRef" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:aktoerreference:ASDD:1.0.0" type="ns5:UnikIdType"/><element name="ReferenceID" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:referenceid:ASDD:1.0.0" type="ns5:UnikIdType"/><element name="KaldenavnTekst" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:kaldenavn:BDD:1.0.0" type="string"/><element name="URNIdentifikator" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:urn:BDD:1.0.0" type="string"/><element name="AktoerTypeKode" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:aktoertype:DT:1.0.0" type="ns5:AktoerTypeKodeType"/><complexType name="ImportInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:importinput:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="UuidNoteInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:uuidnote:ADD:1.0.0">
+        <sequence>
+            <element oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="OpretInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:opretinput:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="BasicOutputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:basaloutput:ADD:1.0.0">
+        <sequence>
+            <element oio:content="standardretur" ref="ns5:StandardRetur"/>
+        </sequence>
+    </complexType><complexType name="RetInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:retinput:ADD:1.0.0">
+        <sequence>
+            <element oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="LaesInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:laesinput:ADD:1.0.0">
+        <sequence>
+            <element oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element minOccurs="0" oio:content="virkningfrafilter" ref="ns5:VirkningFraFilter"/>
+            <element minOccurs="0" oio:content="virkningtilfilter" ref="ns5:VirkningTilFilter"/>
+            <element minOccurs="0" oio:content="registreringfrafilter" ref="ns5:RegistreringFraFilter"/>
+            <element minOccurs="0" oio:content="registreringtilfilter" ref="ns5:RegistreringTilFilter"/>
+        </sequence>
+    </complexType><complexType name="ListInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:listinput:ADD:1.0.0">
+        <sequence>
+            <element maxOccurs="unbounded" oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element minOccurs="0" oio:content="virkningfrafilter" ref="ns5:VirkningFraFilter"/>
+            <element minOccurs="0" oio:content="virkningtilfilter" ref="ns5:VirkningTilFilter"/>
+            <element minOccurs="0" oio:content="registreringfrafilter" ref="ns5:RegistreringFraFilter"/>
+            <element minOccurs="0" oio:content="registreringtilfilter" ref="ns5:RegistreringTilFilter"/>
+        </sequence>
+    </complexType><complexType name="ListOutputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:listoutput:ADD:1.0.0">
+        <sequence>
+            <element oio:content="standardretur" ref="ns5:StandardRetur"/>
+        </sequence>
+    </complexType><complexType name="SoegInputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soeginput:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="foersteresultat" ref="ns5:FoersteResultatReference"/>
+            <element minOccurs="0" oio:content="maksimalantalresultater" ref="ns5:MaksimalAntalKvantitet"/>
+        </sequence>
+    </complexType><complexType name="SoegOutputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegoutput:ADD:1.0.0">
+        <sequence>
+            <element oio:content="standardretur" ref="ns5:StandardRetur"/>
+            <element minOccurs="0" oio:content="idliste" ref="ns5:IdListe"/>
+        </sequence>
+    </complexType><complexType name="SoegSagDokObjektType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegsagdokobjekt:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element minOccurs="0" oio:content="registrering" ref="ns5:SoegRegistrering"/>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:SoegVirkning"/>
+        </sequence>
+    </complexType><complexType name="IdListeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:idliste:ADD:1.0.0">
+        <sequence>
+            <element maxOccurs="unbounded" minOccurs="0" oio:content="id" ref="ns5:UUIDIdentifikator"/>
+        </sequence>
+    </complexType><complexType name="StandardReturType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:standardretur:ADD:1.0.0">
+        <sequence>
+            <element oio:content="statuskode" ref="ns5:StatusKode"/>
+            <element minOccurs="0" oio:content="fejlbesked" ref="ns5:FejlbeskedTekst"/>
+        </sequence>
+    </complexType><complexType name="TidspunktType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:tidspunkt:ADD:2.0.0">
+        <choice>
+            <element oio:content="tidsstempel" ref="ns5:TidsstempelDatoTid"/>
+            <element oio:content="graense" ref="ns5:GraenseIndikator"/>
+        </choice>
+    </complexType><complexType name="LaesFiltreretOutputType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:laesfiltreretoutput:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:SagDokObjektType"/>
+        </complexContent>
+    </complexType><complexType name="SoegRegistreringType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegregistrering:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="fratidspunkt" ref="ns5:FraTidspunkt"/>
+            <element minOccurs="0" oio:content="livscyklus" ref="ns5:LivscyklusKode"/>
+            <element minOccurs="0" oio:content="brugerref" ref="ns5:BrugerRef"/>
+        </sequence>
+    </complexType><complexType name="SagDokObjektType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:sagdokobjekt:ADD:1.0.0">
+        <sequence>
+            <element oio:content="id" ref="ns5:UUIDIdentifikator"/>
+        </sequence>
+    </complexType><complexType name="RegistreringType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:registrering:ADD:2.0.0">
+        <sequence>
+            <element oio:content="fratidspunkt" ref="ns5:FraTidspunkt"/>
+            <element oio:content="livscyklus" ref="ns5:LivscyklusKode"/>
+            <element minOccurs="0" oio:content="brugerref" ref="ns5:BrugerRef"/>
+        </sequence>
+    </complexType><complexType name="LokalUdvidelseType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:lokaludvidelse:ADD:1.0.0">
+        <sequence>
+            <any maxOccurs="unbounded" minOccurs="0" namespace="##other" oio:content="any" processContents="strict"/>
+        </sequence>
+    </complexType><complexType name="AdresseFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:adresseflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="PersonFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:personflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="KlasseRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:klasserelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="MyndighedRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:myndighedrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="KlasseFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:klasseflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="OrganisationEnhedRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationenhedrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="VirksomhedRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virksomhedrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="OrganisationRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:RelationType"/>
+        </complexContent>
+    </complexType><complexType name="BrugerFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:brugerflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="OrganisationEnhedFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationenhedflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="OrganisationFunktionFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationfunktionflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="InteressefaellesskabFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:interessefaellesskabflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="OrganisationFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:organisationflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="ItSystemFlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:itsystemflerrelation:ADD:1.0.0">
+        <complexContent>
+            <extension base="ns5:FlerRelationType"/>
+        </complexContent>
+    </complexType><complexType name="SoegVirkningType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegvirkning:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="fratidspunkt" ref="ns5:FraTidspunkt"/>
+            <element minOccurs="0" oio:content="tiltidspunkt" ref="ns5:TilTidspunkt"/>
+            <element minOccurs="0" oio:content="aktoerref" ref="ns5:AktoerRef"/>
+            <element minOccurs="0" oio:content="aktoertype" ref="ns5:AktoerTypeKode"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="SoegRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:soegrelation:ADD:1.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="virkning" ref="ns5:SoegVirkning"/>
+            <element minOccurs="0" oio:content="referenceid" ref="ns5:ReferenceID"/>
+        </sequence>
+    </complexType><complexType name="VirkningType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:virkning:ADD:2.0.0">
+        <sequence>
+            <element minOccurs="0" oio:content="fratidspunkt" ref="ns5:FraTidspunkt"/>
+            <element minOccurs="0" oio:content="tiltidspunkt" ref="ns5:TilTidspunkt"/>
+            <element oio:content="aktoerref" ref="ns5:AktoerRef"/>
+            <element oio:content="aktoertype" ref="ns5:AktoerTypeKode"/>
+            <element minOccurs="0" oio:content="note" ref="ns5:NoteTekst"/>
+        </sequence>
+    </complexType><complexType name="FlerRelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:flerrelation:ADD:2.0.0">
+        <sequence>
+            <element oio:content="virkning" ref="ns5:Virkning"/>
+            <element oio:content="referenceid" ref="ns5:ReferenceID"/>
+        </sequence>
+    </complexType><complexType name="RelationType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:relation:ADD:2.0.0">
+        <sequence>
+            <element oio:content="virkning" ref="ns5:Virkning"/>
+            <element oio:content="referenceid" ref="ns5:ReferenceID"/>
+        </sequence>
+    </complexType><complexType name="UnikIdType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:unikid:ADD:1.0.0">
+        <choice>
+            <element oio:content="uuid" ref="ns5:UUIDIdentifikator"/>
+            <element oio:content="urn" ref="ns5:URNIdentifikator"/>
+        </choice>
+    </complexType><simpleType name="LivscyklusKodeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:livscyklus:DT:2.0.0">
+        <restriction base="string">
+            <enumeration value="Opstaaet"/>
+            <enumeration value="Importeret"/>
+            <enumeration value="Passiveret"/>
+            <enumeration value="Slettet"/>
+            <enumeration value="Rettet"/>
+        </restriction>
+    </simpleType><simpleType name="AktoerTypeKodeType" xmlns:oio="urn:oio:definitions:1.0.0" oio:definition="urn:oio:sagdok:aktoertype:DT:1.0.0">
+        <restriction base="string">
+            <enumeration value="Organisation"/>
+            <enumeration value="OrganisationEnhed"/>
+            <enumeration value="OrganisationFunktion"/>
+            <enumeration value="Bruger"/>
+            <enumeration value="ItSystem"/>
+            <enumeration value="Interessefaellesskab"/>
+        </restriction>
+    </simpleType></schema>

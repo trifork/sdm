@@ -7,15 +7,20 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBException;
+
+import oio.sagdok.person._1_0.PersonType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import oio.sagdok.person._1_0.PersonType;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
+import com.trifork.stamdata.lookup.validation.PersonValidator;
 import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
@@ -59,4 +64,43 @@ public class PersonResource {
         builder.entity("<h3>Person med CPR " + cpr + " findes ikke i systemet</h3>");
         return builder.build();
     }
+
+    @GET
+	@Path("{cpr}/validate")
+	@Produces("text/plain; charset=utf-8")
+	public String getPersonValidationErrors(@PathParam("cpr") String cpr) throws JAXBException, SAXException  {
+		CurrentPersonData person = personDao.get(cpr);
+		PersonType personPart = personPartConverter.convert(person);
+		final StringBuilder result = new StringBuilder();
+		ErrorHandler errorHandler = new ErrorHandler() {
+			@Override
+			public void error(SAXParseException exception) throws SAXException {
+				result.append("ERROR: ").append(exception.getMessage()).append('\n');
+			}
+
+			@Override
+			public void fatalError(SAXParseException exception)
+					throws SAXException {
+				result.append("FATAL ERROR: ").append(exception.getMessage()).append('\n');
+			}
+
+			@Override
+			public void warning(SAXParseException exception)
+					throws SAXException {
+				result.append("WARNING: ").append(exception.getMessage()).append('\n');
+			}
+
+		};
+		try {
+			new PersonValidator().validate(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart), errorHandler);
+		}
+		catch(Exception e) {
+			result.append("stopping validation due to fatal error: " + e.getMessage() + "\n");
+			logger.info("Validation failed", e);
+		}
+		if(result.toString().isEmpty()) {
+			return "NO ERRORS";
+		}
+		return result.toString();
+	}
 }

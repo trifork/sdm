@@ -3,8 +3,13 @@ package com.trifork.stamdata.lookup.rest;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
+
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.validation.Validator;
 
 import oio.sagdok.person._1_0.PersonType;
 
@@ -13,10 +18,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
+import com.trifork.stamdata.lookup.validation.PersonValidator;
 import com.trifork.stamdata.replication.logging.UsageLogger;
 import com.trifork.stamdata.views.cpr.Person;
 

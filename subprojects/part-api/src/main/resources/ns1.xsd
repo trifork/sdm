@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/"
+	xmlns:ns10="urn:oio:sagdok:part:1.0.0" xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+	xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/"
+	xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/"
+	xmlns:ns14="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/"
+	xmlns:ns15="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+	xmlns:ns16="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/"
+	xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/"
+	xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+	xmlns:ns19="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/"
+	xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns:ns20="urn:oio:sagdok:person:1.0.0" xmlns:ns3="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/"
+	xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+	xmlns:ns5="urn:oio:sagdok:3.0.0" xmlns:ns6="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+	xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+	xmlns:ns8="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+	attributeFormDefault="unqualified" elementFormDefault="qualified"
+	targetNamespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/">
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/"
+		 />
+	<import namespace="urn:oio:sagdok:person:1.0.0"  />
+	<import namespace="urn:oio:sagdok:3.0.0"  />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/"
+		 />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+		 />
+	<import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/"
+		 />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/"
+		 />
+	<import namespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/"
+		 />
+	<import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+		 />
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/"
+		 />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+		 />
+	<import namespace="urn:oio:sagdok:part:1.0.0"  />
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+		 />
+	<import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+		 />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+		 />
+	<import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+		 />
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/"
+		 />
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/"
+		 />
+	<import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+		 />
+	<element name="GeographicPointLocation" type="ns1:GeographicPointLocationType" />
+	<complexType name="GeographicPointLocationType">
+		<sequence>
+			<element ref="ns1:GeographicCoordinateTuple" />
+		</sequence>
+		<attribute name="crsIdentifier" type="string" />
+	</complexType>
+	<element name="AddressPointIdentifier" type="anyURI" />
+	<element name="AddressPointStatusStructure" type="ns1:AddressPointStatusStructureType" />
+	<complexType name="AddressPointStatusStructureType">
+		<sequence>
+			<element ref="ns1:AddressPointRevisionDateTime" />
+			<element minOccurs="0" ref="ns1:AddressPointValidStartDateTime" />
+			<element minOccurs="0" ref="ns1:AddressPointValidEndDateTime" />
+			<element minOccurs="0" ref="ns1:AddressCoordinateQualityClassCode" />
+		</sequence>
+	</complexType>
+	<element name="AddressCoordinateQualityClassCode" type="ns1:AddressCoordinateQualityClassCodeType" />
+	<simpleType name="AddressCoordinateQualityClassCodeType">
+		<restriction base="string">
+			<enumeration value="A" />
+			<enumeration value="B" />
+			<enumeration value="U" />
+		</restriction>
+	</simpleType>
+	<element name="AddressPointRevisionDateTime" type="dateTime" />
+	<element name="AddressPointValidStartDateTime" type="dateTime" />
+	<element name="GeographicCoordinateTuple" type="ns1:GeographicCoordinateTupleType" />
+	<complexType name="GeographicCoordinateTupleType">
+		<sequence>
+			<element ref="ns1:GeographicEastingMeasure" />
+			<element ref="ns1:GeographicNorthingMeasure" />
+			<element minOccurs="0" ref="ns1:GeographicHeightMeasure" />
+		</sequence>
+	</complexType>
+	<element name="GeographicEastingMeasure" type="decimal" />
+	<element name="GeographicHeightMeasure" type="decimal" />
+	<element name="GeographicNorthingMeasure" type="decimal" />
+	<element name="AddressPointValidEndDateTime" type="dateTime" />
+	<element name="AddressPoint" type="ns1:AddressPointType" />
+	<complexType name="AddressPointType">
+		<sequence>
+			<element minOccurs="0" ref="ns1:AddressPointIdentifier" />
+			<element ref="ns1:GeographicPointLocation" />
+			<element minOccurs="0" ref="ns1:AddressPointStatusStructure" />
+		</sequence>
+	</complexType>
+</schema>

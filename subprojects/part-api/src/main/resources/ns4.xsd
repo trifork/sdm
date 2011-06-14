@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" xmlns:ns10="urn:oio:sagdok:part:1.0.0" xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" xmlns:ns14="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" xmlns:ns15="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns16="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns19="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns20="urn:oio:sagdok:person:1.0.0" xmlns:ns3="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns5="urn:oio:sagdok:3.0.0" xmlns:ns6="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns8="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/05/19/" /><import namespace="urn:oio:sagdok:person:1.0.0" /><import namespace="urn:oio:sagdok:3.0.0" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/19/" /><import namespace="http://rep.oio.dk/bbr.dk/xml/schemas/2006/09/30/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/03/" /><import namespace="http://rep.oio.dk/capevo.dk/xml/schemas/2007/08/01/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2008/05/01/" /><import namespace="urn:oio:sagdok:part:1.0.0" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" /><import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" /><import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2006/01/23/" /><import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/2007/01/02/" /><import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" /><element name="PostCodeIdentifier" type="ns4:PostCodeIdentifierType">
+		<annotation>
+			<documentation>The postal departments nationwide postal code.</documentation>
+		</annotation>
+	</element><simpleType name="PostCodeIdentifierType">
+		<restriction base="string">
+			<pattern value="[0-9]{4}"/>
+		</restriction>
+	</simpleType><element name="DistrictName" type="ns4:DistrictNameType">
+		<annotation>
+			<documentation>
+			Declares the name of a postal district in plain text.
+The field contains 20 positions, which enables it to fit a window envelope
+together with the postal code and one free position in addition. The postal
+district is defined by municipalitycode, roadcode, postalcode, housenumber
+from/to together with a code, which declares whether the roadsection in
+question contains even or uneven housenumbers.
+			</documentation>
+		</annotation>
+	</element><simpleType name="DistrictNameType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="20"/>
+		</restriction>
+	</simpleType><element name="StreetName" type="ns4:StreetNameType">
+		<annotation>
+			<documentation>The approved name of a road, a street, a square, a path and the like. Further more street names can be connected to other particularly limited areas like garden associations or summer residence areas without road network, large commercial or institutional areas with a large number of buildings, smaller islands without road network, larger sporting facilities and the like.
+			</documentation>
+		</annotation>
+	</element><simpleType name="StreetNameType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="40"/>
+		</restriction>
+	</simpleType><element name="DistrictSubdivisionIdentifier" type="ns4:DistrictSubdivisionIdentifierType">
+		<annotation>
+			<documentation>
+Name of a village, city or subdivision of a city or district, which is determined as a part of the official address specification for a certain street or specific parts of a street, defined by intervals of street building identifiers (da: house numbers).
+      </documentation>
+		</annotation>
+	</element><simpleType name="DistrictSubdivisionIdentifierType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="34"/>
+		</restriction>
+	</simpleType><element name="BirthDate" type="date">
+		<annotation>
+			<documentation>Declares on which date an individuals birth has taken
+place, and are consecutive used to declare an individuals age.</documentation>
+		</annotation>
+	</element></schema>
