@@ -51,6 +51,15 @@ dependencies {
 		exclude module: 'cargo-core-container-weblogic'
 	}
 
+	tomcat(libs.slf4j_api) {
+		 force = true
+	}
+	/*tomcat(libs.slf4j_log4j) {
+		force = true
+	}*/
+	tomcat(libs.jcl_over_slf4j) {
+		force = true
+	}
 	tomcat libs.hibernate_entitymanager
 }
 
@@ -78,7 +87,7 @@ task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-t
 	loadData.execute()
     copyConfig.execute()
 	startServer()
-	sleep 2000 // For test data to be read
+	sleep 4000 // For test data to be read
 	runIntegrationTest.execute()
 	stopServer()
 }
