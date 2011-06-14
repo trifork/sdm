@@ -27,26 +27,28 @@ public class PersonResource {
 	private final String clientSsn;
 
 	@Inject
-	public PersonResource(PersonDao personDao, PersonPartConverter personPartConverter, UsageLogger usageLogger, @AuthenticatedSSN String clientSsn) {
+	public PersonResource(PersonDao personDao,
+			PersonPartConverter personPartConverter, UsageLogger usageLogger,
+			@AuthenticatedSSN String clientSsn) {
 		this.personDao = personDao;
 		this.personPartConverter = personPartConverter;
 		this.usageLogger = usageLogger;
 		this.clientSsn = clientSsn;
 	}
-	
+
 	@GET
 	@Path("{cpr}")
 	@Produces("text/xml")
 	public Response getPerson(@PathParam("cpr") String cpr) {
-        CurrentPersonData person = personDao.get(cpr);
-        if (person == null) {
-		usageLogger.log(clientSsn, "lookup.cpr.person.notfound", 1);
-		logger.info("Opslag på ikke-eksisterende cpr-nummer. cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+		CurrentPersonData person = personDao.get(cpr);
+		if (person == null) {
+			usageLogger.log(clientSsn, "lookup.cpr.person.notfound", 1);
+			logger.info("Opslag på ikke-eksisterende cpr-nummer. cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
 		PersonType personPart = personPartConverter.convert(person);
 		usageLogger.log(clientSsn, "lookup.cpr.person.ok", 1);
-	logger.info("Opslag på cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
-		return Response.ok(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart)).build() ;
+		logger.info("Opslag på cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
+		return Response.ok(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart)).build();
 	}
 }
