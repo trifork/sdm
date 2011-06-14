@@ -23,11 +23,11 @@
 
 package com.trifork.stamdata.config;
 
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.trifork.configuration.ConfigurationLoader;
-import com.trifork.configuration.SystemPropertyBasedConfigurationLoader;
 
 
 public class Configuration {
@@ -35,33 +35,42 @@ public class Configuration {
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static Configuration defaultInstance = new Configuration();
 
-	private static final String STAMDATA_ENVIRONMENT_STRING_SYSPROP = "sdm.environment";
-	private static final String STAMDATA_CONFIG_DIRECTORY_SYSPROP = "sdm.config.directory";
-	private org.apache.commons.configuration.Configuration loadedConfiguration;
+	private Properties properties;
 
 	public Configuration() {
 
-		try {
-			loadedConfiguration = new SystemPropertyBasedConfigurationLoader("importer", STAMDATA_ENVIRONMENT_STRING_SYSPROP, STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
+		this("config");
+	}
+	
+	public Configuration(String configName)
+	{
+		try
+		{
+			logger.info("Loading configuration.");
+			
+			// Override the default configuration with the one found in
+			// stamdata-importer.properties.
+
+			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(configName + ".properties");
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
+
+			properties = new Properties();
+			properties.load(buildInConfig);
+			buildInConfig.close();
+
+			if (deploymentConfig != null)
+			{
+				properties.load(deploymentConfig);
+				deploymentConfig.close();
+			}
 		}
 		catch (Exception e) {
 			logger.error("Error loading config.properties not found.");
 		}
 	}
 
-	public Configuration(String env) {
-
-		try {
-			loadedConfiguration = new ConfigurationLoader(env, "importer", "/").loadConfiguration();
-		}
-		catch (Exception e) {
-			logger.error("Error loading config.properties not found.");
-		}
-
-	}
-
-	public static String getString(String key) {
-
+	public static String getString(String key)
+	{
 		return defaultInstance.getProperty(key);
 	}
 
@@ -72,7 +81,7 @@ public class Configuration {
 
 	private String getProperty(String key) {
 
-		return loadedConfiguration.getString(key);
+		return properties.getProperty(key);
 	}
 
 	public static void setDefaultInstance(Configuration conf) {

@@ -46,13 +46,13 @@ import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
-public class DGWSModule extends ServletModule {
-
+public class DGWSModule extends ServletModule
+{
 	private JAXBContext jaxbContext;
 
 	@Override
-	protected void configureServlets() {
-
+	protected void configureServlets()
+	{
 		// BIND THE SECURITY MANAGER
 		//
 		// The binding is required by the replication module.
@@ -86,18 +86,20 @@ public class DGWSModule extends ServletModule {
 		// @see AuthorizationRequestStructure
 		// @see AuthorizationResponseStructure
 
-		try {
+		try
+		{
 			jaxbContext = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
 		}
-		catch (JAXBException e) {
+		catch (JAXBException e)
+		{
 			addError(e);
 		}
 	}
 
 	@Provides
 	@Singleton
-	protected SOSIFactory provideSOSIFactory() {
-
+	protected SOSIFactory provideSOSIFactory()
+	{
 		// SETUP THE ENCRYPTION SETTINGS FOR SEAL
 		//
 		// Use SEAL's handy crypto provider selection algorithm
@@ -112,14 +114,14 @@ public class DGWSModule extends ServletModule {
 	}
 
 	@Provides
-	protected Marshaller provideMarshaller() throws JAXBException {
-
+	protected Marshaller provideMarshaller() throws JAXBException
+	{
 		return jaxbContext.createMarshaller();
 	}
 
 	@Provides
-	protected Unmarshaller provideUnmarshaller() throws JAXBException {
-
+	protected Unmarshaller provideUnmarshaller() throws JAXBException
+	{
 		return jaxbContext.createUnmarshaller();
 	}
 }

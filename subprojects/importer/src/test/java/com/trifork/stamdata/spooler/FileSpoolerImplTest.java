@@ -41,15 +41,12 @@ import org.apache.commons.io.filefilter.NameFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.FileImporter;
 import com.trifork.stamdata.importer.ImportTimeManager;
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
-import com.trifork.stamdata.spooler.FileSpoolerImpl;
-import com.trifork.stamdata.spooler.FileSpoolerSetup;
 
 
 

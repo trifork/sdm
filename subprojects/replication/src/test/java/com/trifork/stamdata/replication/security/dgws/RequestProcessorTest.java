@@ -36,18 +36,21 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.util.Date;
 import java.util.Map;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Node;
 
-import com.trifork.stamdata.replication.logging.DatabaseAuditLogger;
-import com.trifork.stamdata.replication.replication.views.MockView;
+import com.trifork.stamdata.replication.logging.AuditLogger;
 import com.trifork.stamdata.replication.security.dgws.AuthorizationServlet.RequestProcessor;
+import com.trifork.stamdata.replication.webservice.views.MockView;
 import com.trifork.stamdata.views.View;
 
 import dk.sosi.seal.SOSIFactory;
@@ -87,7 +90,7 @@ public class RequestProcessorTest {
 
 	private DGWSSecurityManager securityManager;
 
-	private DatabaseAuditLogger audit;
+	private AuditLogger audit;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Before
@@ -103,7 +106,7 @@ public class RequestProcessorTest {
 		when(factory.createNewErrorReply(any(Request.class), anyString(), anyString())).thenReturn(faultReply);
 		when(factory.createNewReply(any(Request.class), anyString())).thenReturn(okReply);
 
-		audit = mock(DatabaseAuditLogger.class);
+		audit = mock(AuditLogger.class);
 		securityManager = mock(DGWSSecurityManager.class);
 		Map registry = mock(Map.class);
 		

@@ -26,6 +26,7 @@ apply plugin: 'jetty'
 
 configurations {
 	all*.exclude module: 'xml-apis', version: '2.0.2'
+	all*.exclude group: 'stax'
 }
 
 dependencies {
@@ -36,27 +37,6 @@ dependencies {
 	
 	providedCompile libs.servlet_api
 	
-	// REFLECTION
-	
-	compile(libs.reflections) {
-		exclude module: 'logback-classic'
-	}
-	
-	// COMMONS CONFIGURATION
-	//
-	// Used in ApplicationContextListener to load properties.
-	
-	compile(libs.commons_configuration) {
-		exclude group: 'commons-logging'
-	}
-	
-	// COMMONS LANG
-	//
-	// This is used in the Profiling Filter (Stop Watch),
-	// and in some tests for random strings.
-	
-	compile libs.commons_lang
-	
 	// Guice
 	
 	compile libs.guice_servlet
@@ -66,33 +46,12 @@ dependencies {
 	providedCompile libs.hibernate_entitymanager
 	runtime libs.hibernate_c3p0
 	
-	// STS
+	// DGWS
 	
 	compile(libs.seal) {
 		exclude group: 'commons-logging'
-	}
-
-	// SAML
-
-	compile(libs.oiosaml) {
-		exclude group: 'org.slf4j'
-
-		// The Xerces implementation does not
-		// play well with others when deployed.
-
-		exclude group: 'org.apache.xerces'
-		exclude module:'bcprov-jdk15'
-
-		// Why this dependency is excluded in the
-		// POM is beyond me?
-
-		runtime('org.opensaml:opensaml:2.4.1') {
-			exclude group: 'velocity'
-			exclude group: 'org.slf4j'
-			exclude module:'bcprov-jdk15'
-		}
-
-		runtime libs.bouncycastle
+		exclude group: 'xerces'
+		exclude group: 'axis'
 	}
 	
 	// SLA LOGGING
@@ -100,7 +59,10 @@ dependencies {
 	// The service is required to use NSP Util to
 	// log SLA.
 
-	compile libs.nsp_util
+	compile(libs.nsp_util) {
+		exclude group: 'commons-logging'
+		exclude group: 'log4j'
+	}
 
 	// MySQL
 	//
@@ -117,11 +79,7 @@ dependencies {
 	
 	providedCompile 'com.sun.xml.fastinfoset:FastInfoset:1.2.2'
 	
-	// HTML Templates
-	
-	compile "org.freemarker:freemarker:2.3.16"
-	
-	// Encoding
+	// Encoding (TODO: Where is this used?)
 	
 	compile libs.commons_codec
 
@@ -132,17 +90,19 @@ dependencies {
 	testCompile libs.mockito
 	
 	// Logging
-	//
-	// Unfortunatly we have to use Log4J since OIOSAML
-	// uses some custom configuration that is log4j specific.
-	// Logback would have less overhead.
 	
 	compile libs.slf4j_api
-	runtime libs.log4j_slf4j
+	compile libs.jcl_over_slf4j
+	providedCompile libs.log4j_over_slf4j
+	compile libs.logback_classic
 	
-	testRuntime 'xerces:xercesImpl:2.8.0'
+	providedCompile libs.jaxb_api
+	providedCompile libs.stax_api
+	providedCompile libs.javax_activation
 
-	compile libs.ooapi
+	providedRuntime libs.jaxb_impl
+	
+	testRuntime 'xerces:xercesImpl:2.8.0' // TODO: Where is this used?
 }
 
 war.manifest.mainAttributes(
@@ -150,5 +110,5 @@ war.manifest.mainAttributes(
 	'Implementation-Version': version,
 	'Built-Version': version,
 	'Implementation-Vendor': 'Trifork Public A/S',
-	'Implementation-Title': 'Stamdata Replication Service',
+	'Implementation-Title': 'Stamdata Kopi-Register Service',
 )

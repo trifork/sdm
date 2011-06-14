@@ -36,7 +36,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -52,6 +51,7 @@ import com.trifork.stamdata.importer.cpr.model.Haendelse;
 import com.trifork.stamdata.importer.cpr.model.Klarskriftadresse;
 import com.trifork.stamdata.importer.cpr.model.KommunaleForhold;
 import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger;
+import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import com.trifork.stamdata.importer.cpr.model.NavneBeskyttelse;
 import com.trifork.stamdata.importer.cpr.model.Navneoplysninger;
 import com.trifork.stamdata.importer.cpr.model.Personoplysninger;
@@ -59,28 +59,38 @@ import com.trifork.stamdata.importer.cpr.model.Statsborgerskab;
 import com.trifork.stamdata.importer.cpr.model.Udrejseoplysninger;
 import com.trifork.stamdata.importer.cpr.model.UmyndiggoerelseVaergeRelation;
 import com.trifork.stamdata.importer.cpr.model.Valgoplysninger;
-import com.trifork.stamdata.importer.cpr.model.MorOgFaroplysninger.Foraeldertype;
 import com.trifork.stamdata.importer.exceptions.FileParseException;
 import com.trifork.stamdata.util.DateUtils;
 
 
-public class CPRParser {
+public class CPRParser
+{
 	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
 
-	public static CPRDataset parse(File f) throws FileParseException {
-
-		try {
+	
+	public static CPRDataset parse(File f) throws FileParseException
+	{
+		try
+		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "ISO-8859-1"));
-			try {
+			
+			try
+			{
 				return parseFileContents(reader);
-			} finally {
+			}
+			finally
+			{
                 reader.close();
 			}
-		} catch (IOException ioe) {
+		}
+		catch (IOException ioe)
+		{
 			throw new FileParseException("Der opstod en IO-fejl under læsning af cpr-person-fil.", ioe);
-		} catch (ParseException pe) {
+		}
+		catch (ParseException pe)
+		{
 			throw new FileParseException("Der opstod en parsningsfejl under læsning af cpr-person-fil.", pe);
 		}
 	}

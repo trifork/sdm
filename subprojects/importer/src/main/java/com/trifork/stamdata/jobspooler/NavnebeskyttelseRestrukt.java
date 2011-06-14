@@ -33,10 +33,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.cpr.model.Klarskriftadresse;
 import com.trifork.stamdata.importer.cpr.model.Navneoplysninger;
+import com.trifork.stamdata.persistence.AuditingPersister;
 
 
 public class NavnebeskyttelseRestrukt implements Job {

@@ -53,7 +53,7 @@ public class WebService extends HttpServlet {
 		Reply response;
 
 		try {
-			String xml = new Scanner(in.getInputStream()).useDelimiter("\\A").next();
+			String xml = new Scanner(in.getReader()).useDelimiter("\\A").next();
 			
 			Request request = factory.deserializeRequest(xml);
 			RequestProcessor processor = new RequestProcessor(factory, whitelist, jaxbContext.createMarshaller(), jaxbContext.createUnmarshaller(), authorizationDao.get());

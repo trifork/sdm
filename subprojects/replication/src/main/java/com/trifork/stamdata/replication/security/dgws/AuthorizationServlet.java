@@ -51,7 +51,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.replication.logging.AuditLogger;
-import com.trifork.stamdata.replication.replication.annotations.Registry;
+import com.trifork.stamdata.replication.webservice.annotations.Registry;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.Views;
 

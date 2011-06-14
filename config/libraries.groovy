@@ -47,6 +47,13 @@ libs = [
 	servlet_api: 'javax.servlet:servlet-api:2.4@jar',
 
 	reflections: 'org.reflections:reflections:0.9.5-RC3',
+	
+	jaxb_api: 'javax.xml.bind:jaxb-api:2.2.2',
+	jaxb_impl: 'com.sun.xml.bind:jaxb-impl:2.2.2',
+
+	stax_api: 'javax.xml.stream:stax-api:1.0-2',
+
+	javax_activation: 'javax.activation:activation:1.1',
 
 	// JBoss is fickle when it comes to class loading and you will
 	// have to override all the hibernate libraries if you want to
@@ -76,8 +83,6 @@ libs = [
 	oiosaml: 'dk.itst.oiosaml:oiosaml.java:5987',
 	
 	velocity: 'apache-velocity:velocity:1.5',
-	
-	jaxb: 'com.sun.xml.bind:jaxb-impl:2.2.2',
 	
 	guice: 'com.google.inject:guice:' + guiceVersion,
 	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion

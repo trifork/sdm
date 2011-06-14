@@ -39,7 +39,6 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.dao.Persister;
 import com.trifork.stamdata.importer.dosagesuggestions.DosageSuggestionImporter;
 import com.trifork.stamdata.importer.dosagesuggestions.models.DosageStructure;
 import com.trifork.stamdata.importer.dosagesuggestions.models.DosageUnit;
@@ -49,6 +48,7 @@ import com.trifork.stamdata.importer.exceptions.FilePersistException;
 import com.trifork.stamdata.model.CompleteDataset;
 import com.trifork.stamdata.model.Dataset;
 import com.trifork.stamdata.model.StamdataEntity;
+import com.trifork.stamdata.persistence.Persister;
 
 
 

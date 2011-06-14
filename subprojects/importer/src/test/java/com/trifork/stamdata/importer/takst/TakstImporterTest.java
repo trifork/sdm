@@ -44,10 +44,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.takst.model.Doseringskode;
 import com.trifork.stamdata.importer.takst.model.Takst;
 import com.trifork.stamdata.importer.takst.model.TakstDataset;
+import com.trifork.stamdata.persistence.AuditingPersister;
 import com.trifork.stamdata.util.DateUtils;
 
 

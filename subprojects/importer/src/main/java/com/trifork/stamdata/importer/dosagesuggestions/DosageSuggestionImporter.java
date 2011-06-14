@@ -46,8 +46,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
-import com.trifork.stamdata.dao.Persister;
 import com.trifork.stamdata.importer.FileImporter;
 import com.trifork.stamdata.importer.dosagesuggestions.models.DosageRecord;
 import com.trifork.stamdata.importer.dosagesuggestions.models.DosageStructure;
@@ -58,6 +56,8 @@ import com.trifork.stamdata.importer.dosagesuggestions.models.DrugDosageStructur
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
 import com.trifork.stamdata.model.CompleteDataset;
 import com.trifork.stamdata.model.StamdataEntity;
+import com.trifork.stamdata.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.Persister;
 
 
 

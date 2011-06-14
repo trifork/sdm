@@ -38,7 +38,6 @@ import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.replication.logging.LogEntry;
 import com.trifork.stamdata.replication.security.dgws.Authorization;
 import com.trifork.stamdata.views.Views;
 
@@ -52,8 +51,8 @@ public class DatabaseModule extends ServletModule {
 	private final String username;
 	private final String password;
 
-	public DatabaseModule(String driverClass, String hibernateDialect, String jdbcURL, String username, @Nullable String password) {
-		
+	public DatabaseModule(String driverClass, String hibernateDialect, String jdbcURL, String username, @Nullable String password)
+	{	
 		this.driverClass = checkNotNull(driverClass);
 		this.hibernateDialect = checkNotNull(hibernateDialect);
 		this.jdbcURL = checkNotNull(jdbcURL);
@@ -68,7 +67,6 @@ public class DatabaseModule extends ServletModule {
 
 		Set<Class<?>> classes = Sets.newHashSet();
 		classes.addAll(Views.findAllViews());
-		classes.add(LogEntry.class);
 		classes.add(Authorization.class);
 
 		try {

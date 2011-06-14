@@ -23,18 +23,13 @@
 
 package com.trifork.stamdata.replication.security;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import org.slf4j.Logger;
-
 import com.google.inject.servlet.ServletModule;
 
-public class UnrestrictedSecurityModule extends ServletModule {
-	private static final Logger logger = getLogger(UnrestrictedSecurityModule.class);
-
+public class UnrestrictedSecurityModule extends ServletModule
+{
 	@Override
-	protected void configureServlets() {
-		logger.warn("Security is disabled!");
+	protected void configureServlets()
+	{
 		bind(SecurityManager.class).to(UnrestrictedSecurityManager.class);
 	}
 }

@@ -24,5 +24,5 @@
 dependencies {
 	compile project(':shared')
 	compile libs.commons_io
-	runtime libs.jaxb
+	runtime libs.jaxb_impl
 }

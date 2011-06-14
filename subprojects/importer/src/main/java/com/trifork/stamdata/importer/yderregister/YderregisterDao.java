@@ -29,8 +29,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.exceptions.FilePersistException;
+import com.trifork.stamdata.persistence.AuditingPersister;
 
 public class YderregisterDao extends AuditingPersister {
 

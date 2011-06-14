@@ -39,28 +39,30 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.config.Configuration;
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.FileImporterControlledIntervals;
 import com.trifork.stamdata.importer.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.exceptions.FilePersistException;
 import com.trifork.stamdata.model.Dataset;
 import com.trifork.stamdata.model.StamdataEntity;
+import com.trifork.stamdata.persistence.AuditingPersister;
 import com.trifork.stamdata.util.DateUtils;
 
 
 
-public class CPRImporter implements FileImporterControlledIntervals {
-
+public class CPRImporter implements FileImporterControlledIntervals
+{
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
 
-	public CPRImporter() {
+
+	public CPRImporter()
+	{
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
-
 	}
+
 
 	public void run(List<File> files) throws FileImporterException {
 

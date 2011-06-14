@@ -77,5 +77,4 @@ public class DateUtilsTest {
 		java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
 		assertEquals(cal.getTime().getTime(), DateUtils.toCalendar(date).getTime().getTime());
 	}
-
 }

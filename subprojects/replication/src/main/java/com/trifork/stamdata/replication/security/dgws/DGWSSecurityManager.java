@@ -24,7 +24,7 @@
 
 package com.trifork.stamdata.replication.security.dgws;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static com.trifork.stamdata.views.Views.checkViewIntegrity;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.MULTILINE;
@@ -53,8 +53,8 @@ import dk.sosi.seal.xml.Base64;
  * @author Thomas Børlum (thomas@borlum.dk)
  */
 @RequestScoped
-public class DGWSSecurityManager implements SecurityManager {
-
+public class DGWSSecurityManager implements SecurityManager
+{
 	private static final Pattern authenticationRegex = Pattern.compile("STAMDATA (.*)", MULTILINE | CASE_INSENSITIVE);
 	private static final SecureRandom random = new SecureRandom();
 
@@ -62,8 +62,9 @@ public class DGWSSecurityManager implements SecurityManager {
 	private ClientDao clientDao;
 
 	@Inject
-	DGWSSecurityManager(AuthorizationDao authorizationDao, ClientDao clientDao) {
-		this.clientDao = clientDao;
+	DGWSSecurityManager(AuthorizationDao authorizationDao, ClientDao clientDao)
+	{
+		this.clientDao = checkNotNull(clientDao);
 		this.authorizationDao = checkNotNull(authorizationDao);
 	}
 
@@ -83,8 +84,8 @@ public class DGWSSecurityManager implements SecurityManager {
 	 * 
 	 * @return an authentication token, or null if the client is not authorized.
 	 */
-	public String issueAuthenticationToken(String cvr, Class<? extends View> viewClass, Date expiryDate) {
-
+	public String issueAuthenticationToken(String cvr, Class<? extends View> viewClass, Date expiryDate)
+	{
 		checkNotNull(cvr);
 		checkNotNull(expiryDate);
 		checkViewIntegrity(viewClass);
@@ -93,8 +94,8 @@ public class DGWSSecurityManager implements SecurityManager {
 		
 		Client client = clientDao.findByCvr(cvr);
 
-		if (client != null && client.isAuthorizedFor(Views.getViewPath(viewClass))) {
-
+		if (client != null && client.isAuthorizedFor(Views.getViewPath(viewClass)))
+		{
 			byte[] token = new byte[512];
 			random.nextBytes(token);
 
@@ -102,7 +103,8 @@ public class DGWSSecurityManager implements SecurityManager {
 
 			authorization = Base64.encode(token);
 		}
-		else {
+		else
+		{
 			authorization = null;
 		}
 
@@ -113,9 +115,6 @@ public class DGWSSecurityManager implements SecurityManager {
 	public boolean isAuthorized(HttpServletRequest request) {
 
 		checkNotNull(request);
-
-		// TODO: Cache the ~20 most recent tokens. We can use a priority queue
-		// for efficiency.
 
 		byte[] token = authenticationToken(request);
 
@@ -131,11 +130,13 @@ public class DGWSSecurityManager implements SecurityManager {
 	}
 
 	@Override
-	public String getClientId(HttpServletRequest request) {
+	public String getClientId(HttpServletRequest request)
+	{
 		return "CVR:" + authorizationDao.findCvr(authenticationToken(request));
 	}
 
-	protected byte[] authenticationToken(HttpServletRequest request) {
+	protected byte[] authenticationToken(HttpServletRequest request)
+	{
 		String header = request.getHeader("Authentication");
 		if (header == null) return null;
 

@@ -33,15 +33,17 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class UnrestrictedSecurityManager implements SecurityManager {
-
+public class UnrestrictedSecurityManager implements SecurityManager
+{
 	@Override
-	public boolean isAuthorized(HttpServletRequest request) {
+	public boolean isAuthorized(HttpServletRequest request)
+	{
 		return true;
 	}
 
 	@Override
-	public String getClientId(HttpServletRequest request) {
-		return "Unkown";
+	public String getClientId(HttpServletRequest request)
+	{
+		return "Unknown";
 	}
 }

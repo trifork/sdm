@@ -34,9 +34,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
 import com.trifork.stamdata.importer.FileImporterControlledIntervals;
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
+import com.trifork.stamdata.persistence.AuditingPersister;
 
 public class SORImporter implements FileImporterControlledIntervals {
 	private static Logger logger = LoggerFactory.getLogger(SORImporter.class);

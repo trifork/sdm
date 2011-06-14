@@ -38,8 +38,8 @@ import javax.servlet.http.HttpServletRequest;
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public interface SecurityManager {
-
+public interface SecurityManager
+{
 	/**
 	 * @return true if the request is authorized.
 	 */

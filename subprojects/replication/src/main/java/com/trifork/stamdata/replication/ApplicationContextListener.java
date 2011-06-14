@@ -39,21 +39,22 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
-import com.trifork.stamdata.replication.replication.RegistryModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
+import com.trifork.stamdata.replication.webservice.RegistryModule;
 
 
-public class ApplicationContextListener extends GuiceServletContextListener {
-
+public class ApplicationContextListener extends GuiceServletContextListener
+{
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
 
 	@Override
-	protected Injector getInjector() {
-
+	protected Injector getInjector()
+	{
 		Injector injector = null;
 
-		try {
+		try
+		{
 			logger.info("Loading configuration.");
 			
 			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
@@ -63,7 +64,8 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			config.load(buildInConfig);
 			buildInConfig.close();
 
-			if (deploymentConfig != null) {
+			if (deploymentConfig != null)
+			{
 				config.load(deploymentConfig);
 				deploymentConfig.close();
 			}
@@ -88,6 +90,10 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			));
 
 			// CONFIGURE PROFILING & MONITORING
+			//
+			// NB. The monitoring module must be placed before
+			// the registry module. Else the 'status' URL will be
+			// inturpreded as a registry.
 
 			modules.add(new MonitoringModule());
 
@@ -101,6 +107,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			}
 			else
 			{
+				logger.warn("Service running without security enabled.");
 				modules.add(new UnrestrictedSecurityModule());
 			}
 

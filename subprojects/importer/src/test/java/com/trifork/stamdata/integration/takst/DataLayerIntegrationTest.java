@@ -35,15 +35,14 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.dao.AuditingPersister;
-import com.trifork.stamdata.dao.Persister;
 import com.trifork.stamdata.importer.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.takst.TakstParser;
 import com.trifork.stamdata.importer.takst.model.Takst;
+import com.trifork.stamdata.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.Persister;
 
 
 

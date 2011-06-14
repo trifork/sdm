@@ -41,8 +41,8 @@ import com.trifork.stamdata.views.ViewPath;
 
 
 @Entity
-public class Authorization {
-
+public class Authorization
+{
 	@Id
 	@GeneratedValue
 	protected BigInteger id;
@@ -54,20 +54,19 @@ public class Authorization {
 	@Lob
 	protected byte[] token; 
 
-	protected Authorization() {
+	protected Authorization()
+	{
 
 	}
 
-	public Authorization(Class<? extends View> viewClass, String cvr, Date expiresAt, byte[] token) {
-
-		checkNotNull(cvr);
-		checkNotNull(expiresAt);
+	public Authorization(Class<? extends View> viewClass, String cvr, Date expiresAt, byte[] token)
+	{
 		checkViewIntegrity(viewClass);
 		checkNotNull(token);
 		checkArgument(token.length == 512);
 
-		this.cvr = cvr;
-		this.expiresAt = expiresAt;
+		this.cvr = checkNotNull(cvr);
+		this.expiresAt = checkNotNull(expiresAt);
 		this.viewName = viewClass.getAnnotation(ViewPath.class).value();
 		this.token = token;
 	}

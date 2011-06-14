@@ -6,7 +6,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +49,7 @@ public class TestAuthorizationServlet {
 
 	@Mock
 	SOSIFactory sosiFactory;
+	SOSIFactory sosiHelper;
 	
 	@Mock
 	Request request;
@@ -60,23 +64,26 @@ public class TestAuthorizationServlet {
 	RequestProcessor processor;
 
 	WebService webService;
+	
+	BufferedReader reader = new BufferedReader(new StringReader(""));
 
 	@Before
-	public void setUp() {
-
-		sosiFactory = Mockito.spy(new SOSIFactory(new EmptyCredentialVault(), setupCryptoProviderForJVM()));
-		
+	public void setUp() throws IOException
+	{
 		Set<String> whitelist = ImmutableSet.of("12345678");
 		
 		webService = new WebService(whitelist, sosiFactory, jaxbContext, authorizationProvider);
+		
+		sosiHelper = new SOSIFactory(new EmptyCredentialVault(), setupCryptoProviderForJVM());
 	}
 	
 	@Test
 	public void should_deserialize_the_request_and_pass_it_to_the_request_processor() throws Exception {
 
-		when(sosiFactory.deserializeRequest("")).thenReturn(request);
-		when(processor.process(request)).thenReturn(sosiFactory.createNewReply(DGWSConstants.VERSION_1_0_1, "1", "2", "OK"));
+		when(sosiFactory.deserializeRequest(Mockito.anyString())).thenReturn(request);
+		when(processor.process(request)).thenReturn(sosiHelper.createNewReply(DGWSConstants.VERSION_1_0_1, "1", "2", "OK"));
 		when(out.getWriter()).thenReturn(writer);
+		when(in.getReader()).thenReturn(reader);
 		
 		// We want to examine the contents of the response.
 		// So we store it in this variable.
@@ -95,7 +102,7 @@ public class TestAuthorizationServlet {
 		
 		webService.doPost(in, out);
 		
-		Reply reply = sosiFactory.deserializeReply(response.get());
+		Reply reply = sosiHelper.deserializeReply(response.get());
 		
 		assertFalse(reply.isFault());
 	}
