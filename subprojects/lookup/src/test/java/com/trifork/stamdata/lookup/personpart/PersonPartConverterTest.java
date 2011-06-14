@@ -449,12 +449,12 @@ public class PersonPartConverterTest {
 	}
 	
 	@Test
-	public void fillsOutErstatningFor() {
+	public void filssOutErstattetAf() {
 		Person person = createValidPerson();
 		person.gaeldendeCPR = "0987654321";
 		CurrentPersonData cp = new CurrentPersonData(person, null, null, null, null, null, null, null, null, null, null, null, null, null);
 		PersonType personType = converter.convert(cp);
-		assertEquals("URN:CPR:0987654321", personType.getRegistrering().get(0).getRelationListe().getErstatningFor().get(0).getReferenceID().getURNIdentifikator());
+		assertEquals("URN:CPR:0987654321", personType.getRegistrering().get(0).getRelationListe().getErstatttetAf().get(0).getReferenceID().getURNIdentifikator());
 	}
 	
 	@Test
