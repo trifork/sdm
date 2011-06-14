@@ -40,7 +40,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 					"lookup", STAMDATA_ENVIRONMENT_STRING_SYSPROP,
 					STAMDATA_CONFIG_DIRECTORY_SYSPROP).loadConfiguration();
 
-			logger.info("Configuring Stamdata Service.");
+			logger.info("Configuring Stamdata Lookup Service.");
 
 			List<Module> modules = new ArrayList<Module>();
 			boolean useOcesTest = config.getBoolean("security.ssl.test");
@@ -82,6 +82,7 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			throw new RuntimeException(
 					"Initialization failed do to a configuration error.", e);
 		}
+		logger.info("Done configuring Stamdata Lookup Service.");
 		return injector;
 	}
 
