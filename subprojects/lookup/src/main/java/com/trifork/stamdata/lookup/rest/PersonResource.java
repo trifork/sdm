@@ -31,15 +31,17 @@ public class PersonResource {
 	private final PersonPartConverter personPartConverter;
 	private final UsageLogger usageLogger;
 	private final String clientSsn;
+	private final PersonValidator personValidator;
 
 	@Inject
 	public PersonResource(PersonDao personDao,
 			PersonPartConverter personPartConverter, UsageLogger usageLogger,
-			@AuthenticatedSSN String clientSsn) {
+			@AuthenticatedSSN String clientSsn, PersonValidator personValidator) {
 		this.personDao = personDao;
 		this.personPartConverter = personPartConverter;
 		this.usageLogger = usageLogger;
 		this.clientSsn = clientSsn;
+		this.personValidator = personValidator;
 	}
 
 	@GET
@@ -92,7 +94,7 @@ public class PersonResource {
 
 		};
 		try {
-			new PersonValidator().validate(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart), errorHandler);
+			personValidator.validate(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart), errorHandler);
 		}
 		catch(Exception e) {
 			result.append("stopping validation due to fatal error: " + e.getMessage() + "\n");
