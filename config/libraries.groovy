@@ -94,4 +94,5 @@ libs = [
 	jersey_core: 'com.sun.jersey:jersey-core:' + jerseyVersion,
 	jersey_server: 'com.sun.jersey:jersey-server:' + jerseyVersion,
 	jersey_guice: 'com.sun.jersey.contribs:jersey-guice:' + jerseyVersion,
+	jersey_client: 'com.sun.jersey:jersey-client:' + jerseyVersion,
 ]

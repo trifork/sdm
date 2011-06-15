@@ -32,6 +32,10 @@ configurations {
 dependencies {
 	compile project(':common')
 	compile project(':client')
+	compile project(':part-api')
+	compile libs.jersey_core
+	compile libs.jersey_client
+	
 	testCompile libs.junit
 	testCompile libs.hamcrest
 	testCompile libs.mockito
