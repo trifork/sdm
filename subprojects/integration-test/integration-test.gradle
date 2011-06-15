@@ -127,7 +127,9 @@ def startServer() {
 			property(name: "cargo.servlet.port", value: "8081")
 			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.tomcat.ajp.port", value: "9009")
-			property(name: "cargo.logging", value: "high")
+			property(name: "cargo.rmi.port", value: "2009")
+			property(name: "cargo.logging", value: "medium")
+			property(name: "catalina.logging.level", value: "medium")
 			property(name: "cargo.jvmargs", value: jvmArgs)
 			configfile(file: "$projectDir/tomcat/server.xml", toFile: "conf/server.xml")
 			deployable(type: "war", file: project(':importer').war.archivePath) {
