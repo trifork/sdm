@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Singleton;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -26,6 +27,7 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
+@Singleton
 public class PersonValidator {
 	private static final String PERSON_XSD = "/ns20.xsd";
 

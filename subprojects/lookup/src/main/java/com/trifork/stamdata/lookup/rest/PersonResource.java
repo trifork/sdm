@@ -17,6 +17,7 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import com.google.inject.Provider;
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
@@ -31,12 +32,12 @@ public class PersonResource {
 	private final PersonPartConverter personPartConverter;
 	private final UsageLogger usageLogger;
 	private final String clientSsn;
-	private final PersonValidator personValidator;
+	private final Provider<PersonValidator> personValidator;
 
 	@Inject
 	public PersonResource(PersonDao personDao,
 			PersonPartConverter personPartConverter, UsageLogger usageLogger,
-			@AuthenticatedSSN String clientSsn, PersonValidator personValidator) {
+			@AuthenticatedSSN String clientSsn, Provider<PersonValidator> personValidator) {
 		this.personDao = personDao;
 		this.personPartConverter = personPartConverter;
 		this.usageLogger = usageLogger;
@@ -94,7 +95,7 @@ public class PersonResource {
 
 		};
 		try {
-			personValidator.validate(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart), errorHandler);
+			personValidator.get().validate(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart), errorHandler);
 		}
 		catch(Exception e) {
 			result.append("stopping validation due to fatal error: " + e.getMessage() + "\n");
