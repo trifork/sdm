@@ -26,8 +26,6 @@ import org.w3c.dom.ls.LSResourceResolver;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 
-import com.trifork.stamdata.lookup.rest.PersonResource;
-
 public class PersonValidator {
 	private static final String PERSON_XSD = "/ns20.xsd";
 
@@ -148,7 +146,7 @@ public class PersonValidator {
 	private void initSchemaMap() throws Exception {
 		for(int i= 1; ; ++i) {
 			String schemaLocation = "/ns" + i + ".xsd";
-			InputStream input = PersonResource.class.getResourceAsStream(schemaLocation);
+			InputStream input = PersonValidator.class.getResourceAsStream(schemaLocation);
 			if(input == null) {
 				break;
 			}
