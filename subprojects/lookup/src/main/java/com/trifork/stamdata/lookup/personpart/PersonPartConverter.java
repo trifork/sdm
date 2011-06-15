@@ -35,7 +35,6 @@ import oio.sagdok.person._1_0.RelationListeType;
 import oio.sagdok.person._1_0.TilstandListeType;
 import oio.sagdok.person._1_0.VerdenAdresseType;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -289,10 +288,6 @@ public class PersonPartConverter {
 		return result;
 	}
 
-	private String joinLines(String... lines) {
-		return StringUtils.join(lines, "\n");
-	}
-	
 	private VirkningType createVirkningType(Date from, Date to) {
 		VirkningType result = new VirkningType();
 		if (from != null) {
@@ -445,7 +440,7 @@ public class PersonPartConverter {
 			// check om postnummeret er groenlandsk og lav en groendlandsk adresse hvis det er tilfaeldet
 			// postnummer 2412 er julemandens postdistrikt, hvis han skulle gå hen og få et CPR-nummer :)
 			if((postnummer >= 3000 && postnummer < 4000) || postnummer == 2412) {
-				result.setGroenlandAdresse(createGroendlandAdresseType(person));
+				result.setGroenlandAdresse(createGroenlandAdresseType(person));
 			}
 			else {
 				result.setDanskAdresse(createDanskAdresseType(person));
@@ -457,7 +452,7 @@ public class PersonPartConverter {
 		return result;
 	}
 
-	private GroenlandAdresseType createGroendlandAdresseType(
+	private GroenlandAdresseType createGroenlandAdresseType(
 			CurrentPersonData person) {
 		GroenlandAdresseType result = new GroenlandAdresseType();
 		result.setAddressCompleteGreenland(createAddressCompleteGreendlandType(person));
