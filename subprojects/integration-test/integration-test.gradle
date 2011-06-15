@@ -100,7 +100,7 @@ task integrationTest(dependsOn: [':importer:war', ':lookup:war', ':integration-t
 }
 
 task initDb << {
-	runSql 'db/bootstrap.sql', 'test'
+	runSql 'db/bootstrap.sql', 'mysql'
 	//runSql "$rootDir/db/schema.sql", 'sdm_warehouse'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_ig'
 }

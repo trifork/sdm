@@ -42,7 +42,7 @@ dependencies {
 }
 
 task initTestDb << {
-	runSql 'db/bootstrap.sql', 'test'
+	runSql 'db/bootstrap.sql', 'mysql'
 	runSql "$rootDir/db/schema.sql", 'sdm_warehouse_test'
 }
 
