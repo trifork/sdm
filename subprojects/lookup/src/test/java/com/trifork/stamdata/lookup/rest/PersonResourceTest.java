@@ -1,15 +1,11 @@
 package com.trifork.stamdata.lookup.rest;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.*;
-
-import java.io.IOException;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.validation.Validator;
 
 import oio.sagdok.person._1_0.PersonType;
 
@@ -18,10 +14,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
+import com.google.inject.Provider;
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
@@ -34,13 +28,14 @@ public class PersonResourceTest {
 	@Mock PersonDao personDao;
 	@Mock PersonPartConverter personPartConverter;
 	@Mock UsageLogger usageLogger;
+	@Mock Provider<PersonValidator> personValidator;
 	String authenticatedSsn = "CVR:12345678-FID:1234";
 	
 	private PersonResource resource;
 
 	@Before
 	public void before() {
-		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn);
+		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn, personValidator);
 	}
 
 	@Test
@@ -54,7 +49,7 @@ public class PersonResourceTest {
 	public void usageLogsNotfound() {
 		resource.getPerson("1020304050");
 		verify(usageLogger).log(authenticatedSsn, "lookup.cpr.person.notfound", 1);
-		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn);
+		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn, personValidator);
 	}
 	
 	@Test
