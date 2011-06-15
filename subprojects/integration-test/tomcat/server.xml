@@ -26,7 +26,7 @@
 		truststoreFile="@tomcat-conf-home@/truststore.jks" truststorePass="Test1234" truststoreType="JKS"/>
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="@cargo.ssl.servlet.port@"/>
+    <Connector port="@cargo.tomcat.ajp.port@" protocol="AJP/1.3" redirectPort="@cargo.ssl.servlet.port@"/>
 
     <Engine name="Catalina" defaultHost="@cargo.hostname@" debug="@catalina.logging.level@">
 
