@@ -220,6 +220,13 @@ public class CurrentPersonData {
 		return person.navnebeskyttelseslettedato;
 	}
 	
+	public List<BarnRelation> getBarnRelationer() {
+		if(boern == null) {
+			return Collections.emptyList();
+		}
+		return boern;
+	}
+
 	public List<String> getBoernCpr() {
 		List<String> result = new ArrayList<String>();
 		if(boern == null) {

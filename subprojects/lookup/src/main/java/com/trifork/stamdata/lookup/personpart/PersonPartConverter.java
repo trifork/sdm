@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.lookup.dao.CurrentPersonData;
 import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.views.cpr.BarnRelation;
 import com.trifork.stamdata.views.cpr.Beskyttelse;
 import com.trifork.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
@@ -136,8 +137,9 @@ public class PersonPartConverter {
 		for (UmyndiggoerelseVaergeRelation vaergemaal : person.getVaergemaal()) {
 			result.getRetligHandleevneVaergemaalsindehaver().add(createPersonFlerRelationTypeForVaergemaal(vaergemaal));
 		}
-		for(String boernCpr : person.getBoernCpr()) {
-			result.getBoern().add(createPersonFlerRelationTypeForCpr(boernCpr));
+		for(BarnRelation barnRelation : person.getBarnRelationer()) {
+			// spørgsmålet er om barnrelationer må leveres med gyldighedsintervaller - tidligere forældre er vist hemmelige
+			result.getBoern().add(createPersonFlerRelationTypeForCpr(barnRelation.barnCPR, null, null));
 		}
 		addParentRelations(result, person);
 		addPartnerRelation(result, person);
@@ -160,7 +162,7 @@ public class PersonPartConverter {
 			return;
 		}
 		for(ForaeldremyndighedsRelation relation : person.getForaeldreMyndighedBoern()) {
-			result.getForaeldremyndighedsboern().add(createPersonFlerRelationTypeForCpr(relation.getCpr()));
+			result.getForaeldremyndighedsboern().add(createPersonFlerRelationTypeForCpr(relation.getCpr(), relation.getValidFrom(), relation.getValidTo()));
 		}
 	}
 
@@ -180,7 +182,7 @@ public class PersonPartConverter {
 					logger.error("There was a ForaeldremyndighedsRelation with type 0003 (mother), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getMorOplysninger().foraeldercpr));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getMorOplysninger().foraeldercpr, null, null));
 			}
 			else if(relation.typeKode.equals("0004")) {
 				// far
@@ -192,7 +194,7 @@ public class PersonPartConverter {
 					logger.error("There was a ForaeldremyndighedsRelation with type 0004 (father), but the MorOgFaroplysninger record had no foraeldercpr, cpr={}", person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getFarOplysninger().foraeldercpr));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(person.getFarOplysninger().foraeldercpr, null, null));
 			}
 			else if(relation.typeKode.equals("0005") || relation.typeKode.equals("0006")) {
 				// andre foraeldremyndighedsindehavere
@@ -200,7 +202,7 @@ public class PersonPartConverter {
 					logger.error("ForaeldremyndighedsRelation had type {} but did not have relationCpr, cpr={}", relation.typeKode, person.getCprNumber());
 					continue;
 				}
-				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(relation.relationCpr));
+				result.getForaeldremyndighedsindehaver().add(createPersonFlerRelationTypeForCpr(relation.relationCpr, null, null));
 			}
 			else {
 				logger.error("Ukendt foraeldremyndigheds-typekode {}, cpr={}", relation.typeKode, person.getCprNumber());
@@ -261,9 +263,10 @@ public class PersonPartConverter {
 	}
 
 	private PersonFlerRelationType createPersonFlerRelationTypeForCpr(
-			String cpr) {
+			String cpr, Date validFrom, Date validTo) {
 		PersonFlerRelationType result = new PersonFlerRelationType();
 		result.setReferenceID(createUnikIdType(URN_NAMESPACE_CPR, cpr));
+		result.setVirkning(createVirkningType(validFrom, validTo));
 		return result;
 	}
 
