@@ -1,6 +1,7 @@
 package com.trifork.stamdata.lookup.personpart;
 
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Formatter;
 import java.util.HashMap;
@@ -325,6 +326,7 @@ public class PersonPartConverter {
 
 	@SuppressWarnings("serial")
 	private static final Map<String, CivilStatusKodeType> civilStandMap = new HashMap<String, CivilStatusKodeType>() {{
+		put("D", CivilStatusKodeType.UGIFT); // Civilstatus burde egentlig ikke udfyldes for døde personer, men det er mandatory i PP
 		put("U", CivilStatusKodeType.UGIFT);
 		put("G", CivilStatusKodeType.GIFT);
 		put("F", CivilStatusKodeType.SKILT);
@@ -390,8 +392,18 @@ public class PersonPartConverter {
 		CprBorgerType result = new CprBorgerType();
 		result.setPersonCivilRegistrationIdentifier(person.getCprNumber());
 		result.setPersonNationalityCode(createCountryIdentificationCodeType(CountryIdentificationSchemeType.IMK, person.getStatsborgerskab()));
-		result.setFolkeregisterAdresse(createAdresseType(person));
-		
+		String[] statusesWithoutAddress = new String[] {
+				"20", // bosat i udlandet men tildelt personnumer af skattehensyn
+				"30", // annulleret
+				"50", // slettet
+				"60", // aendret
+				"70", // forsvundet
+				"90", // doed
+		};
+		if(!Arrays.asList(statusesWithoutAddress).contains(person.getStatus())) {
+			result.setFolkeregisterAdresse(createAdresseType(person));
+		}
+
 		result.setFolkekirkeMedlemIndikator(person.getMedlemAfFolkekirken());
 		boolean invalidCpr = "30".equals(person.getStatus()) || "50".equals(person.getStatus()) || "60".equals(person.getStatus());
 		result.setPersonNummerGyldighedStatusIndikator(!invalidCpr);
@@ -483,6 +495,7 @@ public class PersonPartConverter {
 		address.setPostalAddressThirdLineText(udrejseoplysninger.udlandsadresse3);
 		address.setPostalAddressFourthLineText(udrejseoplysninger.udlandsadresse4);
 		address.setPostalAddressFifthLineText(udrejseoplysninger.udlandsadresse5);
+		address.setLocationDescriptionText("");
 		return result;
 	}
 
