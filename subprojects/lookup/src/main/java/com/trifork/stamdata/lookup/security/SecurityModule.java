@@ -16,7 +16,7 @@ public class SecurityModule extends ServletModule {
 	
 	@Override
 	protected void configureServlets() {
-		filter("*").through(SecurityFilter.class);
+		filter("*").through(AuthorizationFilter.class);
 	}
 	
 	@AuthorizedClients

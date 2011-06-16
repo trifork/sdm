@@ -17,8 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
-import com.trifork.stamdata.ssl.MocesCertificateWrapper;
 import com.trifork.stamdata.ssl.OcesHelper;
+import com.trifork.stamdata.ssl.UncheckedProvider;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SslSecurityManagerTest {
@@ -26,18 +26,19 @@ public class SslSecurityManagerTest {
 	@Mock HttpServletRequest request;
 	@Mock ClientDao dao;
 	@Mock OcesHelper ocesHelper;
-	@Mock MocesCertificateWrapper certificateWrapper;
 	@Mock Client client;
 	SslSecurityManager securityManager;
 	X509Certificate[] certificateList;
 	String viewPath = "/foo/bar/v1";
 	String viewName = "foo/bar/v1";
 	String ssn = "CVR:12345678-RID:1234";
+	@Mock UncheckedProvider<String> ssnProvider;
 
 	@Before
 	public void before() {
-		securityManager = new SslSecurityManager(dao, ocesHelper);
+		securityManager = new SslSecurityManager(dao, ssnProvider);
 		certificateList = new X509Certificate[] {certificate};
+		when(ssnProvider.get()).thenReturn(ssn);
 		when(request.getPathInfo()).thenReturn(viewPath);
 	}
 
@@ -48,18 +49,7 @@ public class SslSecurityManagerTest {
 	}
 
 	@Test
-	public void rejectsClientWithInvalidCertificate() {
-		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.isValid()).thenReturn(false);
-
-		assertFalse(securityManager.isAuthorized(request));
-	}
-
-	@Test
 	public void acceptsClientWithKnownCvrWithPermission() {
-		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
 		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(client);
 		when(client.isAuthorizedFor(viewName)).thenReturn(true);
 
@@ -68,9 +58,6 @@ public class SslSecurityManagerTest {
 
 	@Test
 	public void rejectsClientWithKnownCvrWithoutPermission() {
-		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
 		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(client);
 		when(client.isAuthorizedFor(viewName)).thenReturn(false);
 
@@ -79,19 +66,13 @@ public class SslSecurityManagerTest {
 
 	@Test
 	public void rejectsClientWithUnknownCvr() {
-		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:unknown");
-		when(dao.findBySubjectSerialNumber("CVR:12345678-RID:unknown")).thenReturn(null);
+		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(null);
 
 		assertFalse(securityManager.isAuthorized(request));
 	}
 	
 	@Test
 	public void usesSubjectSerialNumberAsClientId() {
-		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:someRid");
-		
-		assertEquals("CVR:12345678-RID:someRid", securityManager.getClientId(request));
+		assertEquals(ssn, securityManager.getClientId(request));
 	}
 }

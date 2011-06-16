@@ -1,7 +1,8 @@
 package com.trifork.stamdata.replication.gui.security.twowayssl;
 
+import java.util.regex.Pattern;
+
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,34 +10,28 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Provider;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
-import com.trifork.stamdata.ssl.MocesCertificateWrapper;
-import com.trifork.stamdata.ssl.OcesHelper;
 import com.trifork.stamdata.ssl.MocesCertificateWrapper.Kind;
+import com.trifork.stamdata.ssl.UncheckedProvider;
+import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
 public class TwoWaySslUserProvider implements Provider<User> {
 	private static final Logger logger = LoggerFactory.getLogger(TwoWaySslUserProvider.class);
-	private final OcesHelper ocesHelper;
-	private final Provider<HttpServletRequest> request;
 	private final UserDao userDao;
+	private final UncheckedProvider<String> ssnProvider;
 	
 	@Inject
-	public TwoWaySslUserProvider(OcesHelper ocesHelper, UserDao userDao, Provider<HttpServletRequest> request) {
-		this.ocesHelper = ocesHelper;
+	public TwoWaySslUserProvider(UserDao userDao, @AuthenticatedSSN UncheckedProvider<String> ssnProvider) {
 		this.userDao = userDao;
-		this.request = request;
-		
+		this.ssnProvider = ssnProvider;
 	}
 	@Override
 	public User get() {
-		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request.get());
-		if(certificate != null) {
-			if(!certificate.isValid()) {
-				logger.info("Attempted to access with INVALID certificate, SubjectSerialNumber=" + certificate.getSubjectSerialNumber());
-				return null;
-			}
+		String ssn = ssnProvider.get();
+		if(!isMoces(ssn)) {
+			logger.info("Attempted to access with non-MOCES: {}", ssn);
+			return null;
+		}
 			if(certificate.getKind() != Kind.MOCES) {
-				logger.info("Attempted to access with non-MOCES: " + certificate.getKind());
-				return null;
 			}
 			String cvr = certificate.getCvr();
 			String subjectId = certificate.getSubjectId();
@@ -51,5 +46,8 @@ public class TwoWaySslUserProvider implements Provider<User> {
 		}
 		return null;
 	}
-
+	Pattern mocesPattern = Pattern.compile("CVR:[\\d]{8}-RID:.+");
+	private boolean isMoces(String ssn) {
+		return mocesPattern.matcher(ssn).matches();
+	}
 }

@@ -1,7 +1,6 @@
-package com.trifork.stamdata.lookup.security;
+package com.trifork.stamdata.ssl;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import javax.inject.Inject;
 import javax.servlet.Filter;
@@ -15,26 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Singleton;
-import com.trifork.stamdata.lookup.security.annotations.AuthorizedClients;
 import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException;
 import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException.Reason;
-import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
-@Singleton
-public class SecurityFilter implements Filter {
-	
-	private final UncheckedProvider<String> authenticatedSsnProvider;
-	private final Collection<String> authorizedClients;
-	private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
+public class OcesSslAuthenticationFilter implements Filter{
+
+	private static final Logger logger = LoggerFactory.getLogger(OcesSslAuthenticationFilter.class);
+
+	private final UncheckedProvider<String> ssnProvider;
 
 	@Inject
-	public SecurityFilter(@AuthenticatedSSN UncheckedProvider<String> authenticatedSsnProvider, @AuthorizedClients Collection<String> authorizedClients) {
-		this.authenticatedSsnProvider = authenticatedSsnProvider;
-		this.authorizedClients = authorizedClients;
-		logger.info("Initializing security filter, authorized clients: {}", authorizedClients);
+	public OcesSslAuthenticationFilter(@AuthenticatedSSN UncheckedProvider<String> ssnProvider) {
+		this.ssnProvider = ssnProvider;
+
 	}
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 	}
@@ -43,9 +38,8 @@ public class SecurityFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
-        String authenticatedSsn;
 		try {
-			authenticatedSsn = authenticatedSsnProvider.get();
+			ssnProvider.get();
 		}
 		catch(AuthenticationFailedException e) {
 			logger.info("Client authentication failed", e);
@@ -58,11 +52,6 @@ public class SecurityFilter implements Filter {
 			return;
 		}
 
-        if(!authorizedClients.contains(authenticatedSsn)) {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Client not authorized, client=" + authenticatedSsn);
-            return;
-		}
-		chain.doFilter(request, response);
 	}
 
 	@Override
