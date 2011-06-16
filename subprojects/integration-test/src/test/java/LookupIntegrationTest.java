@@ -1,10 +1,10 @@
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import javax.xml.bind.JAXBElement;
 
 import oio.sagdok.person._1_0.PersonType;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,16 +13,14 @@ import com.sun.jersey.api.client.GenericType;
 import com.trifork.stamdata.client.security.TwoWaySslSecurityHandler;
 
 public class LookupIntegrationTest {
+	private static final String LOOKUP_SERVICE_URL = "https://localhost:8444/lookup/person";
 	private static Client client = new Client();
-    @BeforeClass
+
+	@BeforeClass
     public static void beforeClass() {
         new IntegrationTestTwoWaySslSecurityHandler();
     }
     
-    @Before
-    public void setup() {
-    }
-
     @Test
     public void worksForSimplePerson() {
     	JAXBElement<PersonType> result = getPerson("0708610089");
@@ -36,21 +34,7 @@ public class LookupIntegrationTest {
     }
 
     @Test
-    public void canValidatePerson() {
-	checkValidPerson("0708610089");
-   }
-
-	private void checkValidPerson(String cpr) {
-		String validationResult = getValidationResult(cpr);
-        assertEquals("Person with cpr " + cpr + " is valid", "NO ERRORS", validationResult);
-	}
-
-	private void checkInvalidPerson(String cpr) {
-		String validationResult = getValidationResult(cpr);
-        assertFalse("NO ERRORS".equals(validationResult));
-	}
-    @Test
-    public void canValidateAllValidPersons() {
+    public void givesValidOutputForAllValidPeople() {
 		String[] validCprs = new String[] {  "0101429059",
 				"0101520013", "0101965058", "0101980014", "0107529039",
 				"0108610018", "0108610069", "0307610078", "0701614011",
@@ -72,36 +56,41 @@ public class LookupIntegrationTest {
 				"1307610015", "1312814362", "2802363039", "2802980011",
 				"2906980013", "3012995007", "3112000010",
 				"3112420028", "3112970079", };
-		for(String cpr : validCprs) {
-			String validationResult = getValidationResult(cpr);
-			System.out.println("CPR " + cpr + ": " + validationResult);
 
-		}
 		for(String cpr : validCprs) {
-			checkValidPerson(cpr);
+			assertValidPerson(cpr);
 		}
     }
 
     @Test
-    public void validationFailsForAllInvalidPersons() {
+    public void givesInvalidOutputForAllInvalidPeople() {
 		String[] invalidCprs = new String[] {
 				"0101005038", // addresseringsnavn tom streng
 				"3006980014", // navn og adresseringsnavn tom streng
 		};
-		for(String cpr : invalidCprs) {
-			checkInvalidPerson(cpr);
-		}
 
+		for(String cpr : invalidCprs) {
+			assertInvalidPerson(cpr);
+		}
     }
+
+	private void assertValidPerson(String cpr) {
+		String validationResult = getValidationResult(cpr);
+		assertEquals("Person with cpr " + cpr + " is valid", "NO ERRORS", validationResult);
+	}
+
+	private void assertInvalidPerson(String cpr) {
+		String validationResult = getValidationResult(cpr);
+		assertFalse("NO ERRORS".equals(validationResult));
+	}
     
 	private JAXBElement<PersonType> getPerson(String cpr) {
     	GenericType<JAXBElement<PersonType>> type = new GenericType<JAXBElement<PersonType>>() {};
-    	return client.resource("https://localhost:8444/lookup/person").path(cpr).get(type);    	
+	return client.resource(LOOKUP_SERVICE_URL).path(cpr).get(type);
     }
 	
 	private String getValidationResult(String cpr) {
-	   	return client.resource("https://localhost:8444/lookup/person").path(cpr).path("validate").get(String.class);    	
-		
+		return client.resource(LOOKUP_SERVICE_URL).path(cpr).path("validate").get(String.class);
 	}
 	
     static class IntegrationTestTwoWaySslSecurityHandler extends TwoWaySslSecurityHandler {
