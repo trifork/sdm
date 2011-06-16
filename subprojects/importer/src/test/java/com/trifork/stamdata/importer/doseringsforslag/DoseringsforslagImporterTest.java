@@ -195,7 +195,7 @@ public class DoseringsforslagImporterTest {
 	}
 
 
-	// HACK: MOCK PERSISTER
+	// MOCK PERSISTER
 
 	private class MockPersister implements Persister {
 

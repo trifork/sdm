@@ -76,11 +76,11 @@ public class DosageSuggestionImporter implements FileImporter {
 
 	}
 
+    /**
+     * Constructor for testing only
+     * @param mockPersister
+     */
 	public DosageSuggestionImporter(Persister mockPersister) {
-
-		// HACK: These importers are really not made for
-		// testing. We should refactor. (REMOVE THIS CTOR)
-
 		this.mockPersister = mockPersister;
 	}
 
@@ -211,7 +211,7 @@ public class DosageSuggestionImporter implements FileImporter {
 	}
 
 	/**
-	 * HACK: These dates should be taken from the complete data set.
+	 * TODO: These dates should be taken from the complete data set.
 	 * There is no reason why we set dates on each record.
 	 */
 	private void setValidityPeriod(CompleteDataset<?> dataset, DosageVersion version) {
