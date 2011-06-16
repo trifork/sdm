@@ -124,7 +124,7 @@ def startServer() {
 		extraClasspath(path: configurations.tomcat.asPath + ":$buildDir/config")
 		configuration {
 			property(name: "tomcat-conf-home", value: "$rootDir/subprojects/integration-test/tomcat")
-			property(name: "cargo.servlet.port", value: "8081")
+			property(name: "cargo.servlet.port", value: "8091")
 			property(name: "cargo.ssl.servlet.port", value: "8444")
 			property(name: "cargo.tomcat.ajp.port", value: "9009")
 			property(name: "cargo.rmi.port", value: "2009")
