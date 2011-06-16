@@ -172,6 +172,8 @@ public class PersonPartConverter {
 			return;
 		}
 		for(ForaeldremyndighedsRelation relation : person.getForaeldreMyndighedsIndehavere()) {
+			// Relationen er kun fyldt ud med cpr-nummer hvis typen er forskellig fra 3 (mor) og 4 (far). Er der tale om mor eller far,
+			// finder vi cpr-nummeret i MorOgFarOplysninger
 			if(relation.typeKode.equals("0003")) { 
 				// mor
 				if(person.getMorOplysninger() == null) {
