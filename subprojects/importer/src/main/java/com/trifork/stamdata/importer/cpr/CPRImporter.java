@@ -82,7 +82,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 			for (File personFile : files) {
 
-				logger.debug("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
+				logger.info("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
 
 				CPRDataset cpr = CPRParser.parse(personFile);
 
@@ -115,7 +115,7 @@ public class CPRImporter implements FileImporterControlledIntervals {
 
 				insertIkraft(cpr.getValidFrom(), connection);
 
-				logger.debug("Finish parsing 'CPR person' file " + personFile.getAbsolutePath());
+				logger.info("Finish parsing 'CPR person' file " + personFile.getAbsolutePath());
 
 				try {
 					connection.commit();
