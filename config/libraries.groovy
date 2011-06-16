@@ -88,6 +88,7 @@ libs = [
 	
 	guice: 'com.google.inject.guice:guice:' + guiceVersion,
 	guice_servlet: 'com.google.inject.extensions:guice-servlet:' + guiceVersion,
+	guice_throwingproviders: 'com.google.inject.extensions:guice-throwingproviders:' + guiceVersion,
 	
 	google_collections: 'com.google.collections:google-collections:1.0',
 	

@@ -48,6 +48,7 @@ dependencies {
 	// Guice
 	
 	compile libs.guice_servlet
+
 	compile libs.jersey_core
     compile 'com.sun.jersey:jersey-json:1.4'
 	compile libs.jersey_server

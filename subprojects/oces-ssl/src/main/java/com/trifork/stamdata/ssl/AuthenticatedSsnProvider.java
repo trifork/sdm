@@ -1,16 +1,13 @@
 package com.trifork.stamdata.ssl;
 
-import com.google.inject.Provider;
-import com.google.inject.servlet.RequestScoped;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import com.google.inject.servlet.RequestScoped;
+import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException.Reason;
+
 @RequestScoped
-public class AuthenticatedSsnProvider implements Provider<String> {
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticatedSsnProvider.class);
+public class AuthenticatedSsnProvider implements UncheckedProvider<String> {
     private final OcesHelper ocesHelper;
     private final HttpServletRequest request;
 
@@ -25,13 +22,32 @@ public class AuthenticatedSsnProvider implements Provider<String> {
     public String get() {
         MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request);
         if (certificate == null) {
-            logger.info("No certificate in request");
-            return null;
+		throw new AuthenticationFailedException(Reason.NO_CERTIFICATE, null);
         } else if (!certificate.isValid()) {
-            logger.info("Client used invalid certificate, client={}", certificate.getSubjectSerialNumber());
-            return null;
+		throw new AuthenticationFailedException(Reason.INVALID_CERTIFICATE, certificate.getSubjectSerialNumber());
         }
         return certificate.getSubjectSerialNumber();
     }
 
+    public static class AuthenticationFailedException extends RuntimeException {
+	private final Reason reason;
+		private final String ssn;
+		public enum Reason {
+		NO_CERTIFICATE, INVALID_CERTIFICATE
+	}
+	public AuthenticationFailedException(Reason reason, String ssn) {
+		super("Authentication Failed. Reason=" + reason + ", client=" + ssn);
+			this.reason = reason;
+			this.ssn = ssn;
+	}
+
+	public Reason getReason() {
+			return reason;
+		}
+
+		public String getSsn() {
+			return ssn;
+		}
+
+    }
 }

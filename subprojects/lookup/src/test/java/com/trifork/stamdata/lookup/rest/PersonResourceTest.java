@@ -21,6 +21,7 @@ import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
 import com.trifork.stamdata.lookup.validation.PersonValidator;
 import com.trifork.stamdata.replication.logging.UsageLogger;
+import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.views.cpr.Person;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -29,13 +30,15 @@ public class PersonResourceTest {
 	@Mock PersonPartConverter personPartConverter;
 	@Mock UsageLogger usageLogger;
 	@Mock Provider<PersonValidator> personValidator;
+	@Mock UncheckedProvider<String> ssnProvider;
 	String authenticatedSsn = "CVR:12345678-FID:1234";
 	
 	private PersonResource resource;
 
 	@Before
 	public void before() {
-		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn, personValidator);
+		when(ssnProvider.get()).thenReturn(authenticatedSsn);
+		resource = new PersonResource(personDao, personPartConverter, usageLogger, ssnProvider, personValidator);
 	}
 
 	@Test
@@ -49,7 +52,6 @@ public class PersonResourceTest {
 	public void usageLogsNotfound() {
 		resource.getPerson("1020304050");
 		verify(usageLogger).log(authenticatedSsn, "lookup.cpr.person.notfound", 1);
-		resource = new PersonResource(personDao, personPartConverter, usageLogger, authenticatedSsn, personValidator);
 	}
 	
 	@Test

@@ -8,6 +8,8 @@ dependencies {
 
 		// Guice
 	compile libs.guice_servlet
+	compile libs.guice_throwingproviders
+
 
 		// Encoding - specifically, base64 support
 	compile libs.commons_codec

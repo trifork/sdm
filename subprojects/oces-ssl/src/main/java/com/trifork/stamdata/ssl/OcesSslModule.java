@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.servlet.ServletModule;
+import com.google.inject.throwingproviders.CheckedProvider;
+import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
 public class OcesSslModule extends ServletModule {
@@ -46,6 +48,6 @@ public class OcesSslModule extends ServletModule {
 		else {
 			addError("Illegal configuration parameter for security.ssl.termination.method: {}", sslTerminationMethod);
 		}
-		bind(String.class).annotatedWith(AuthenticatedSSN.class).toProvider(AuthenticatedSsnProvider.class);
+		ThrowingProviderBinder.create(binder()).bind(UncheckedProvider.class, String.class).annotatedWith(AuthenticatedSSN.class).to(AuthenticatedSsnProvider.class);
 	}
 }
