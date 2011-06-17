@@ -19,18 +19,19 @@ import com.google.inject.Singleton;
 import com.trifork.stamdata.lookup.security.annotations.AuthorizedClients;
 import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException;
 import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException.Reason;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
 import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
 @Singleton
 public class SecurityFilter implements Filter {
 	
-	private final UncheckedProvider<String> authenticatedSsnProvider;
+	private final UncheckedProvider<SubjectSerialNumber> authenticatedSsnProvider;
 	private final Collection<String> authorizedClients;
 	private final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
 
 	@Inject
-	public SecurityFilter(@AuthenticatedSSN UncheckedProvider<String> authenticatedSsnProvider, @AuthorizedClients Collection<String> authorizedClients) {
+	public SecurityFilter(@AuthenticatedSSN UncheckedProvider<SubjectSerialNumber> authenticatedSsnProvider, @AuthorizedClients Collection<String> authorizedClients) {
 		this.authenticatedSsnProvider = authenticatedSsnProvider;
 		this.authorizedClients = authorizedClients;
 		logger.info("Initializing security filter, authorized clients: {}", authorizedClients);
@@ -43,7 +44,7 @@ public class SecurityFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
-        String authenticatedSsn;
+        SubjectSerialNumber authenticatedSsn;
 		try {
 			authenticatedSsn = authenticatedSsnProvider.get();
 		}
@@ -58,7 +59,7 @@ public class SecurityFilter implements Filter {
 			return;
 		}
 
-        if(!authorizedClients.contains(authenticatedSsn)) {
+        if(!authorizedClients.contains(authenticatedSsn.toString())) {
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Client not authorized, client=" + authenticatedSsn);
             return;
 		}

@@ -21,6 +21,8 @@ import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
 import com.trifork.stamdata.lookup.validation.PersonValidator;
 import com.trifork.stamdata.replication.logging.UsageLogger;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
+import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
 import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.views.cpr.Person;
 
@@ -30,8 +32,8 @@ public class PersonResourceTest {
 	@Mock PersonPartConverter personPartConverter;
 	@Mock UsageLogger usageLogger;
 	@Mock Provider<PersonValidator> personValidator;
-	@Mock UncheckedProvider<String> ssnProvider;
-	String authenticatedSsn = "CVR:12345678-FID:1234";
+	@Mock UncheckedProvider<SubjectSerialNumber> ssnProvider;
+	SubjectSerialNumber authenticatedSsn = new SubjectSerialNumber(Kind.FOCES, "12345678", "1234");
 	
 	private PersonResource resource;
 
@@ -45,13 +47,13 @@ public class PersonResourceTest {
 	public void usageLogsSuccessfulLookup() {
 		setupSuccessfulLookup();
 		resource.getPerson("1020304050");
-		verify(usageLogger).log(authenticatedSsn, "lookup.cpr.person.ok", 1);
+		verify(usageLogger).log(authenticatedSsn.toString(), "lookup.cpr.person.ok", 1);
 	}
 
 	@Test
 	public void usageLogsNotfound() {
 		resource.getPerson("1020304050");
-		verify(usageLogger).log(authenticatedSsn, "lookup.cpr.person.notfound", 1);
+		verify(usageLogger).log(authenticatedSsn.toString(), "lookup.cpr.person.notfound", 1);
 	}
 	
 	@Test

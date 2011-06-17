@@ -23,6 +23,7 @@ import com.trifork.stamdata.lookup.dao.PersonDao;
 import com.trifork.stamdata.lookup.personpart.PersonPartConverter;
 import com.trifork.stamdata.lookup.validation.PersonValidator;
 import com.trifork.stamdata.replication.logging.UsageLogger;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
 import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
@@ -33,12 +34,12 @@ public class PersonResource {
 	private final PersonPartConverter personPartConverter;
 	private final UsageLogger usageLogger;
 	private final Provider<PersonValidator> personValidator;
-	private final UncheckedProvider<String> clientSsn;
+	private final UncheckedProvider<SubjectSerialNumber> clientSsn;
 
 	@Inject
 	public PersonResource(PersonDao personDao,
 			PersonPartConverter personPartConverter, UsageLogger usageLogger,
-			@AuthenticatedSSN UncheckedProvider<String> clientSsn, Provider<PersonValidator> personValidator) {
+			@AuthenticatedSSN UncheckedProvider<SubjectSerialNumber> clientSsn, Provider<PersonValidator> personValidator) {
 		this.personDao = personDao;
 		this.personPartConverter = personPartConverter;
 		this.usageLogger = usageLogger;
@@ -52,12 +53,12 @@ public class PersonResource {
 	public Response getPerson(@PathParam("cpr") String cpr) {
 		CurrentPersonData person = personDao.get(cpr);
 		if (person == null) {
-			usageLogger.log(clientSsn.get(), "lookup.cpr.person.notfound", 1);
+			usageLogger.log(clientSsn.get().toString(), "lookup.cpr.person.notfound", 1);
 			logger.info("Opslag på ikke-eksisterende cpr-nummer. cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
             return buildNotFoundResponse(cpr);
 		}
 		PersonType personPart = personPartConverter.convert(person);
-		usageLogger.log(clientSsn.get(), "lookup.cpr.person.ok", 1);
+		usageLogger.log(clientSsn.get().toString(), "lookup.cpr.person.ok", 1);
 		logger.info("Opslag på cpr={}, subject-serialnumber='{}'", cpr, clientSsn);
 		return Response.ok(new oio.sagdok.person._1_0.ObjectFactory().createPerson(personPart)).build();
 	}

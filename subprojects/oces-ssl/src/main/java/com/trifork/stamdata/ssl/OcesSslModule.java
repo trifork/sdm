@@ -47,6 +47,6 @@ public class OcesSslModule extends ServletModule {
 		else {
 			addError("Illegal configuration parameter for security.ssl.termination.method: {}", sslTerminationMethod);
 		}
-		ThrowingProviderBinder.create(binder()).bind(UncheckedProvider.class, String.class).annotatedWith(AuthenticatedSSN.class).to(AuthenticatedSsnProvider.class);
+		ThrowingProviderBinder.create(binder()).bind(UncheckedProvider.class, SubjectSerialNumber.class).annotatedWith(AuthenticatedSSN.class).to(AuthenticatedSsnProvider.class);
 	}
 }
