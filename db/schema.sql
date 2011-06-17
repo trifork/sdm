@@ -241,7 +241,8 @@ CREATE TABLE BarnRelation (
 	INDEX (ValidFrom, ValidTo),
 	INDEX (modifiedDate, BarnRelationPID),
 	INDEX (CPR),
-	INDEX (BarnCPR)
+	INDEX (BarnCPR),
+	INDEX(Id)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Beregningsregler (
@@ -338,7 +339,8 @@ CREATE TABLE ForaeldreMyndighedRelation (
 	INDEX (ValidFrom, ValidTo),
 	INDEX (modifiedDate, ForaeldreMyndighedRelationPID),
 	INDEX (CPR),
-	INDEX (RelationCpr)
+	INDEX (RelationCpr),
+	INDEX(Id)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Formbetegnelse (
@@ -965,7 +967,8 @@ CREATE TABLE UmyndiggoerelseVaergeRelation (
 	INDEX (ValidFrom, ValidTo),
 	INDEX(modifiedDate, UmyndiggoerelseVaergeRelationPID),
 	INDEX(CPR),
-	INDEX(RelationCpr)
+	INDEX(RelationCpr),
+	INDEX(Id)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Yder (
@@ -1195,7 +1198,8 @@ CREATE TABLE MorOgFaroplysninger (
 	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom),
 	INDEX (ValidFrom, ValidTo),
 	INDEX(modifiedDate, MorOgFarPID),
-	INDEX(foraelderCpr)
+	INDEX(foraelderCpr),
+	INDEX(Id)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Beskyttelse (
@@ -1211,7 +1215,8 @@ CREATE TABLE Beskyttelse (
 	CreatedDate DATETIME NOT NULL,
 	CONSTRAINT Beskyttelse_1 UNIQUE(CPR, beskyttelsestype, validFrom),
 	INDEX (ValidFrom, ValidTo),
-	INDEX(modifiedDate, BeskyttelsePID)
+	INDEX(modifiedDate, BeskyttelsePID),
+	INDEX(Id)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE UsageLogEntry (
