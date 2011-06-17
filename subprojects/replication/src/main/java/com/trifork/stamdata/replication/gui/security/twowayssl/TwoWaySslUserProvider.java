@@ -11,7 +11,8 @@ import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.gui.models.UserDao;
 import com.trifork.stamdata.ssl.MocesCertificateWrapper;
 import com.trifork.stamdata.ssl.OcesHelper;
-import com.trifork.stamdata.ssl.MocesCertificateWrapper.Kind;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
+import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
 
 public class TwoWaySslUserProvider implements Provider<User> {
 	private static final Logger logger = LoggerFactory.getLogger(TwoWaySslUserProvider.class);
@@ -34,12 +35,13 @@ public class TwoWaySslUserProvider implements Provider<User> {
 				logger.info("Attempted to access with INVALID certificate, SubjectSerialNumber=" + certificate.getSubjectSerialNumber());
 				return null;
 			}
-			if(certificate.getKind() != Kind.MOCES) {
-				logger.info("Attempted to access with non-MOCES: " + certificate.getKind());
+			SubjectSerialNumber subjectSerialNumber = certificate.getSubjectSerialNumber();
+			if(subjectSerialNumber.getKind() != Kind.MOCES) {
+				logger.info("Attempted to access with non-MOCES: " + subjectSerialNumber.getKind());
 				return null;
 			}
-			String cvr = certificate.getCvr();
-			String subjectId = certificate.getSubjectId();
+			String cvr = subjectSerialNumber.getCvrNumber();
+			String subjectId = subjectSerialNumber.getSubjectId();
 			User user = userDao.findByCvrAndRid(cvr, subjectId);
 			String page = request.get().getRequestURI();
 			if(user != null) {

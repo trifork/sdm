@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.servlet.ServletModule;
-import com.google.inject.throwingproviders.CheckedProvider;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 

@@ -51,7 +51,7 @@ public class SslSecurityManager implements SecurityManager {
 
 	@Override
 	public String getClientId(HttpServletRequest request) {
-		return ocesHelper.extractCertificateFromRequest(request).getSubjectSerialNumber();
+		return ocesHelper.extractCertificateFromRequest(request).getSubjectSerialNumber().toString();
 	}
 	
 }

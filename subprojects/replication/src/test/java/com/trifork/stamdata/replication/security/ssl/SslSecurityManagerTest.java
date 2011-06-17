@@ -19,6 +19,8 @@ import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.ssl.MocesCertificateWrapper;
 import com.trifork.stamdata.ssl.OcesHelper;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
+import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SslSecurityManagerTest {
@@ -32,7 +34,7 @@ public class SslSecurityManagerTest {
 	X509Certificate[] certificateList;
 	String viewPath = "/foo/bar/v1";
 	String viewName = "foo/bar/v1";
-	String ssn = "CVR:12345678-RID:1234";
+	SubjectSerialNumber ssn = new SubjectSerialNumber(Kind.MOCES, "12345678", "1234");
 
 	@Before
 	public void before() {
@@ -81,8 +83,8 @@ public class SslSecurityManagerTest {
 	public void rejectsClientWithUnknownCvr() {
 		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
 		when(certificateWrapper.isValid()).thenReturn(true);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:unknown");
-		when(dao.findBySubjectSerialNumber("CVR:12345678-RID:unknown")).thenReturn(null);
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
+		when(dao.findBySubjectSerialNumber(ssn)).thenReturn(null);
 
 		assertFalse(securityManager.isAuthorized(request));
 	}
@@ -90,8 +92,8 @@ public class SslSecurityManagerTest {
 	@Test
 	public void usesSubjectSerialNumberAsClientId() {
 		when(ocesHelper.extractCertificateFromRequest(request)).thenReturn(certificateWrapper);
-		when(certificateWrapper.getSubjectSerialNumber()).thenReturn("CVR:12345678-RID:someRid");
+		when(certificateWrapper.getSubjectSerialNumber()).thenReturn(ssn);
 		
-		assertEquals("CVR:12345678-RID:someRid", securityManager.getClientId(request));
+		assertEquals(ssn.toString(), securityManager.getClientId(request));
 	}
 }

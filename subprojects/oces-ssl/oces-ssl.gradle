@@ -3,15 +3,20 @@ dependencies {
 	compile libs.slf4j_api
 	compile libs.ooapi
 
-		// SERVLETS
+	// SERVLETS
 	compile libs.servlet_api
 
-		// Guice
+	// Guice
 	compile libs.guice_servlet
 	compile libs.guice_throwingproviders
 
 
-		// Encoding - specifically, base64 support
+	// Encoding - specifically, base64 support
 	compile libs.commons_codec
 	runtime libs.bouncycastle
+
+	// Testing
+	testCompile libs.junit
+	testCompile libs.hamcrest
+	testCompile libs.mockito
 }

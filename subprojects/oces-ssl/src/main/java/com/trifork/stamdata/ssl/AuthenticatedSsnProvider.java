@@ -19,15 +19,15 @@ public class AuthenticatedSsnProvider implements UncheckedProvider<String> {
     }
 
     @Override
-    public String get() {
-        MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request);
-        if (certificate == null) {
-		throw new AuthenticationFailedException(Reason.NO_CERTIFICATE, null);
-        } else if (!certificate.isValid()) {
-		throw new AuthenticationFailedException(Reason.INVALID_CERTIFICATE, certificate.getSubjectSerialNumber());
-        }
-        return certificate.getSubjectSerialNumber();
-    }
+	public String get() {
+		MocesCertificateWrapper certificate = ocesHelper.extractCertificateFromRequest(request);
+		if (certificate == null) {
+			throw new AuthenticationFailedException(Reason.NO_CERTIFICATE, null);
+		} else if (!certificate.isValid()) {
+			throw new AuthenticationFailedException(Reason.INVALID_CERTIFICATE, certificate.getSubjectSerialNumber().toString());
+		}
+		return certificate.getSubjectSerialNumber().toString();
+	}
 
     public static class AuthenticationFailedException extends RuntimeException {
 	private final Reason reason;

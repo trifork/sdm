@@ -30,6 +30,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.google.inject.Inject;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
 
 
 public class ClientDao {
@@ -56,23 +57,20 @@ public class ClientDao {
 		return (Client) query.uniqueResult();
 	}
 
-	public Client findBySubjectSerialNumber(String subjectSerialNumber) {
-
+	public Client findBySubjectSerialNumber(SubjectSerialNumber subjectSerialNumber) {
 		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber = :subjectSerialNumber");
-		query.setParameter("subjectSerialNumber", subjectSerialNumber);
+		query.setParameter("subjectSerialNumber", subjectSerialNumber.toString());
 		return (Client) query.uniqueResult();
 	}
 
 	public boolean delete(String id) {
-
 		Query query = session.createQuery("DELETE Client WHERE id = :id");
 		query.setParameter("id", id);
 		return query.executeUpdate() == 1;
 	}
 
-	public Client create(String name, String subjectSerialNumber) {
-
-		Client client = new Client(name, subjectSerialNumber);
+	public Client create(String name, SubjectSerialNumber subjectSerialNumber) {
+		Client client = new Client(name, subjectSerialNumber.toString());
 		session.persist(client);
 		return client;
 	}

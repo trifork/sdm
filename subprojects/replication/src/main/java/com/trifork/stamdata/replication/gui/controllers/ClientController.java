@@ -46,6 +46,7 @@ import com.trifork.stamdata.replication.gui.models.Client;
 import com.trifork.stamdata.replication.gui.models.ClientDao;
 import com.trifork.stamdata.replication.gui.models.User;
 import com.trifork.stamdata.replication.replication.annotations.Registry;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
 import com.trifork.stamdata.views.View;
 
 
@@ -118,7 +119,7 @@ public class ClientController extends AbstractController {
 		// Create a new client.
 
 		String name = request.getParameter("name");
-		String subjectSerialNumber = request.getParameter("certificate_id");
+		SubjectSerialNumber subjectSerialNumber = new SubjectSerialNumber(request.getParameter("certificate_id"));
 
 		Client client = clients.get().create(name, subjectSerialNumber);
 		

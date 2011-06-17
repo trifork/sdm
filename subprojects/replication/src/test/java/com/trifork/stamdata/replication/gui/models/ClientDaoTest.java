@@ -17,11 +17,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.ssl.SubjectSerialNumber;
+import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
 
 public class ClientDaoTest {
 	private Session session;
 	private ClientDao dao;
 	private Client createdClient;
+	private SubjectSerialNumber ssn = new SubjectSerialNumber(Kind.VOCES, "12345678", "1203980293");
 	private static DatabaseHelper db;
 
 	@BeforeClass
@@ -39,7 +42,7 @@ public class ClientDaoTest {
 		session = db.openSession();
 		dao = new ClientDao(session);
 		session.beginTransaction();
-		createdClient = dao.create("test", "CVR:12345678-UID:1203980293");
+		createdClient = dao.create("test", ssn);
 	}
 
 	@After
@@ -60,17 +63,17 @@ public class ClientDaoTest {
 	
 	@Test
 	public void canFindBySubjectSerialNumber() {
-		assertNotNull(dao.findBySubjectSerialNumber("CVR:12345678-UID:1203980293"));
+		assertNotNull(dao.findBySubjectSerialNumber(ssn));
 	}
 	@Test
 	public void willNotReturnWrongSsn() {
-		assertNull(dao.findBySubjectSerialNumber("CVR:12341234-UID:1203980293"));
+		assertNull(dao.findBySubjectSerialNumber(new SubjectSerialNumber(Kind.VOCES, "87654321", "1203980293")));
 	}
 	
 	@Test
 	public void canDelete() {
 		dao.delete(createdClient.getId());
-		assertNull(dao.findBySubjectSerialNumber("CVR:12345678-UID:1203980293"));
+		assertNull(dao.findBySubjectSerialNumber(ssn));
 	}
 	
 	@Test
@@ -83,8 +86,8 @@ public class ClientDaoTest {
 	public void can_find_all_clients() throws Exception {
 
 		// Arrange
-		dao.create("name1", "ssn1");
-		dao.create("name2", "ssn2");
+		dao.create("name1", new SubjectSerialNumber(Kind.MOCES, "12345678", "ssn1"));
+		dao.create("name2", new SubjectSerialNumber(Kind.MOCES, "12345678", "ssn2"));
 
 		// Act
 		List<Client> result = dao.findAll();

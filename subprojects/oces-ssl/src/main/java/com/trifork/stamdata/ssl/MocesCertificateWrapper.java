@@ -11,19 +11,27 @@ import org.openoces.ooapi.certificate.PocesCertificate;
 import org.openoces.ooapi.certificate.VocesCertificate;
 import org.openoces.serviceprovider.ServiceProviderSetup;
 
-public class MocesCertificateWrapper {
+import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
 
+public class MocesCertificateWrapper {
 	private final OcesCertificate certificate;
 
 	public MocesCertificateWrapper(OcesCertificate certificate) {
 		this.certificate = certificate;
 	}
-	
-	public enum Kind {
-		MOCES, VOCES, FOCES, POCES,
+
+	public boolean isValid() {
+		return certificate.validityStatus() == CertificateStatus.VALID && !ServiceProviderSetup.getCurrentChecker().isRevoked(certificate);
 	}
 	
-	public Kind getKind() {
+	public SubjectSerialNumber getSubjectSerialNumber() {
+		Kind kind = getKind();
+		String cvr = getCvr();
+		String subjectId = getSubjectId();
+		return new SubjectSerialNumber(kind, cvr, subjectId);
+	}
+	
+	private Kind getKind() {
 		if (certificate instanceof FocesCertificate) {
 			return Kind.FOCES;
 		}
@@ -39,7 +47,7 @@ public class MocesCertificateWrapper {
 		throw new RuntimeException("Could not determine kind of certificate");
 	}
 
-	public String getCvr() {
+	private String getCvr() {
 		if(getKind() == Kind.FOCES) {
 			return ((FocesCertificate) certificate).getCvr();
 		}
@@ -52,21 +60,14 @@ public class MocesCertificateWrapper {
 		throw new IllegalStateException("Not a certificate with CVR number: " + certificate);
 	}
 	
-	public String getSubjectSerialNumber() {
-		return certificate.getSubjectSerialNumber();
-	}
-	
 	private static Pattern ssnPattern = Pattern.compile("CVR:([\\d]{8})-[RFU]ID:(.+)");
 	
-	public String getSubjectId() {
-		Matcher matcher = ssnPattern.matcher(getSubjectSerialNumber());
+	private String getSubjectId() {
+		String subjectSerialNumber = certificate.getSubjectSerialNumber();
+		Matcher matcher = ssnPattern.matcher(subjectSerialNumber);
 		if(!matcher.matches()) {
 			throw new RuntimeException("Could not extract subjectId from SubjectSerialNumber");
 		}
 		return matcher.group(2);
-	}
-
-	public boolean isValid() {
-		return certificate.validityStatus() == CertificateStatus.VALID && !ServiceProviderSetup.getCurrentChecker().isRevoked(certificate);
 	}
 }
