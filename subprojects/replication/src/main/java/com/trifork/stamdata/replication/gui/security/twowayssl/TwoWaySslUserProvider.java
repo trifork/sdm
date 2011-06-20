@@ -13,16 +13,17 @@ import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedExc
 import com.trifork.stamdata.ssl.AuthenticatedSsnProvider.AuthenticationFailedException.Reason;
 import com.trifork.stamdata.ssl.SubjectSerialNumber;
 import com.trifork.stamdata.ssl.SubjectSerialNumber.Kind;
+import com.trifork.stamdata.ssl.UncheckedProvider;
 import com.trifork.stamdata.ssl.annotations.AuthenticatedSSN;
 
 public class TwoWaySslUserProvider implements Provider<User> {
 	private static final Logger logger = LoggerFactory.getLogger(TwoWaySslUserProvider.class);
-	private final Provider<SubjectSerialNumber> ssnProvider;
+	private final UncheckedProvider<SubjectSerialNumber> ssnProvider;
 	private final Provider<HttpServletRequest> request;
 	private final UserDao userDao;
 	
 	@Inject
-	public TwoWaySslUserProvider(@AuthenticatedSSN Provider<SubjectSerialNumber> ssnProvider, UserDao userDao, Provider<HttpServletRequest> request) {
+	public TwoWaySslUserProvider(@AuthenticatedSSN UncheckedProvider<SubjectSerialNumber> ssnProvider, UserDao userDao, Provider<HttpServletRequest> request) {
 		this.ssnProvider = ssnProvider;
 		this.userDao = userDao;
 		this.request = request;
