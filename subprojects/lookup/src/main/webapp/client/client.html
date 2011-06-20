@@ -188,8 +188,10 @@
                 setCprInNode(relationListeNode, "Aegtefaelle", "#outputSpouse", "Gift med ");
 
                 $(this).find("Boern").each(function() {
-                    // Boern can contain many children, so we need to use .append(...) to give each child cpr a new line rather than .html(...)
-                    $("#outputChildren").append("<a class='urnCpr' href='#"+getCprNumber($(this))+"'>" + getCprNumber($(this)) + "</a><br />");
+                    $(this).find("ReferenceID").each(function() {
+                        // Boern can contain many children, so we need to use .append(...) to give each child cpr a new line rather than .html(...)
+                        $("#outputChildren").append("<a class='urnCpr' href='#"+getCprNumber($(this))+"'>" + getCprNumber($(this)) + "</a><br />");
+                    });
                 });
 
                 setCprInNode(relationListeNode, "RetligHandleevneVaergeForPersonen", "#outputGuardian", "");
