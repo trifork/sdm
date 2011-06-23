@@ -155,12 +155,14 @@ public class Main {
 		ViewXmlHelper viewXmlHelper = new ViewXmlHelper(viewClass);
 		XMLStreamWriter writer;
 		
-		writer = (useFastInfoset)
+		writer = useFastInfoset
 			? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8")
 			: XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, "UTF-8");
 		
 		Iterator<EntityRevision<T>> iterator = client.update(viewClass, startTag, pageSize);
 			
+		long beginStamp = System.currentTimeMillis();
+
 		writer.writeStartDocument("utf-8", "1.0");
 		String lastTag = null;
 		int writtenRecords = 0;
@@ -179,6 +181,7 @@ public class Main {
 
 		System.out.println("last entity tag: " + lastTag);
 		System.out.println("number of entities: " + writtenRecords);
+		System.out.println("Elapsed time: " + (System.currentTimeMillis() - beginStamp));
 
 		writer.writeEndDocument();
 	}
