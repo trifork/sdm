@@ -178,6 +178,7 @@ public class Main {
 		}
 
 		System.out.println("last entity tag: " + lastTag);
+		System.out.println("number of entities: " + writtenRecords);
 
 		writer.writeEndDocument();
 	}
