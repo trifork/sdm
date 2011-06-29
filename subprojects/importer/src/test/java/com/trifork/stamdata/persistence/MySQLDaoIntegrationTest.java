@@ -26,14 +26,14 @@ package com.trifork.stamdata.persistence;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.model.CompleteDataset;
-import com.trifork.stamdata.model.Id;
-import com.trifork.stamdata.model.Output;
-import com.trifork.stamdata.model.StamdataEntity;
-import com.trifork.stamdata.persistence.AuditingPersister;
-import com.trifork.stamdata.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.model.CompleteDataset;
+import com.trifork.stamdata.importer.model.Id;
+import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 import java.sql.Connection;
 import java.sql.Statement;

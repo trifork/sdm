@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.integration.cpr;
 
-import static com.trifork.stamdata.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -40,9 +40,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.cpr.CPRImporter;
-import com.trifork.stamdata.jobspooler.NavnebeskyttelseRestrukt;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.parsers.NavnebeskyttelseRestrukt;
+import com.trifork.stamdata.importer.parsers.cpr.CPRImporter;
 
 
 public class CPRNameAndAddressProtectionTest {

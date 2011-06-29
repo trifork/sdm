@@ -35,14 +35,17 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.sor.model.Apotek;
-import com.trifork.stamdata.importer.sor.model.Praksis;
-import com.trifork.stamdata.importer.sor.model.Sygehus;
-import com.trifork.stamdata.importer.sor.model.SygehusAfdeling;
-import com.trifork.stamdata.importer.sor.model.Yder;
-import com.trifork.stamdata.importer.sor.xmlmodel.SpecialityMapper;
-import com.trifork.stamdata.importer.sor.xmlmodel.UnitTypeMapper;
-import com.trifork.stamdata.model.AbstractStamdataEntity;
+import com.trifork.stamdata.importer.model.AbstractStamdataEntity;
+import com.trifork.stamdata.importer.parsers.sor.SORDataSets;
+import com.trifork.stamdata.importer.parsers.sor.SOREventHandler;
+import com.trifork.stamdata.importer.parsers.sor.SORParser;
+import com.trifork.stamdata.importer.parsers.sor.model.Apotek;
+import com.trifork.stamdata.importer.parsers.sor.model.Praksis;
+import com.trifork.stamdata.importer.parsers.sor.model.Sygehus;
+import com.trifork.stamdata.importer.parsers.sor.model.SygehusAfdeling;
+import com.trifork.stamdata.importer.parsers.sor.model.Yder;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.SpecialityMapper;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.UnitTypeMapper;
 
 public class SorParserTest {
 

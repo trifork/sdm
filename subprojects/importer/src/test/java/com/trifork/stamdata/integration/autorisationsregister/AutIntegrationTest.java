@@ -29,12 +29,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.autorisationsregister.AutImporter;
-import com.trifork.stamdata.importer.autorisationsregister.model.Autorisation;
-import com.trifork.stamdata.importer.autorisationsregister.model.Autorisationsregisterudtraek;
-import com.trifork.stamdata.importer.exceptions.FileImporterException;
-import com.trifork.stamdata.model.Dataset;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.model.Dataset;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.AutImporter;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisation;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
+import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 
 import java.io.File;
 import java.sql.Connection;

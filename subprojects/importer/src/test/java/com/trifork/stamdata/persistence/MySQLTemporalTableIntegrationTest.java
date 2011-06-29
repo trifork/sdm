@@ -32,11 +32,11 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.model.Id;
-import com.trifork.stamdata.model.Output;
-import com.trifork.stamdata.model.StamdataEntity;
-import com.trifork.stamdata.persistence.DatabaseTableWrapper;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.model.Id;
+import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 
 
 

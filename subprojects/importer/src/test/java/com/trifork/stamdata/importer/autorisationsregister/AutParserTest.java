@@ -34,9 +34,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.autorisationsregister.AutorisationsregisterParser;
-import com.trifork.stamdata.importer.autorisationsregister.model.Autorisation;
-import com.trifork.stamdata.importer.autorisationsregister.model.Autorisationsregisterudtraek;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.AutorisationsregisterParser;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisation;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
 
 
 

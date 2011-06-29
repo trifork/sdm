@@ -26,7 +26,7 @@ package com.trifork.stamdata.persistence;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 
 import java.sql.Connection;
 import java.sql.Statement;

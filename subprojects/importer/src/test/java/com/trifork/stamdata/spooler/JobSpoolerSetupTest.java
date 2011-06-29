@@ -27,8 +27,9 @@ import static junit.framework.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.config.Configuration;
-import com.trifork.stamdata.jobspooler.Job;
+import com.trifork.stamdata.importer.config.Configuration;
+import com.trifork.stamdata.importer.parsers.Job;
+import com.trifork.stamdata.importer.parsers.JobSpoolerSetup;
 
 
 

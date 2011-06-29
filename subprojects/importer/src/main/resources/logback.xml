@@ -1,6 +1,6 @@
 <configuration>
 	<define name="logFile"
-		class="com.trifork.stamdata.logging.LogbackPropertyLoader" />
+		class="com.trifork.stamdata.importer.logging.LogbackPropertyLoader" />
 
 	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>${logFile}</file>

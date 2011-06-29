@@ -39,16 +39,16 @@ import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.dosagesuggestions.DosageSuggestionImporter;
-import com.trifork.stamdata.importer.dosagesuggestions.models.DosageStructure;
-import com.trifork.stamdata.importer.dosagesuggestions.models.DosageUnit;
-import com.trifork.stamdata.importer.dosagesuggestions.models.DosageVersion;
-import com.trifork.stamdata.importer.dosagesuggestions.models.Drug;
-import com.trifork.stamdata.importer.exceptions.FilePersistException;
-import com.trifork.stamdata.model.CompleteDataset;
-import com.trifork.stamdata.model.Dataset;
-import com.trifork.stamdata.model.StamdataEntity;
-import com.trifork.stamdata.persistence.Persister;
+import com.trifork.stamdata.importer.model.CompleteDataset;
+import com.trifork.stamdata.importer.model.Dataset;
+import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.parsers.dosagesuggestions.DosageSuggestionImporter;
+import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageStructure;
+import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageUnit;
+import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageVersion;
+import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.Drug;
+import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 
 

@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 
 import java.sql.Connection;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 
 public class ConnectionTest extends TestCase{
 

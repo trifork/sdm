@@ -36,11 +36,11 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.exceptions.FileParseException;
-import com.trifork.stamdata.importer.yderregister.YderregisterParser;
-import com.trifork.stamdata.importer.yderregister.model.Yderregister;
-import com.trifork.stamdata.importer.yderregister.model.YderregisterDatasets;
-import com.trifork.stamdata.importer.yderregister.model.YderregisterPerson;
+import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
+import com.trifork.stamdata.importer.parsers.yderregister.YderregisterParser;
+import com.trifork.stamdata.importer.parsers.yderregister.model.Yderregister;
+import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterDatasets;
+import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterPerson;
 
 
 

@@ -26,15 +26,15 @@ package com.trifork.stamdata.persistence;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.takst.model.DivEnheder;
-import com.trifork.stamdata.importer.takst.model.Laegemiddel;
-import com.trifork.stamdata.importer.takst.model.Takst;
-import com.trifork.stamdata.importer.takst.model.TakstDataset;
-import com.trifork.stamdata.model.StamdataEntity;
-import com.trifork.stamdata.persistence.AuditingPersister;
-import com.trifork.stamdata.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.persistence.DatabaseTableWrapper.StamdataEntityVersion;
-import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.parsers.takst.model.DivEnheder;
+import com.trifork.stamdata.importer.parsers.takst.model.Laegemiddel;
+import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
+import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
+import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 import java.sql.Connection;
 import java.util.ArrayList;

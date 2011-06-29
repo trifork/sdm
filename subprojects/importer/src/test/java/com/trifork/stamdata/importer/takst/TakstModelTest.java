@@ -26,10 +26,10 @@ package com.trifork.stamdata.importer.takst;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.takst.model.ATCKoderOgTekst;
-import com.trifork.stamdata.importer.takst.model.Takst;
-import com.trifork.stamdata.importer.takst.model.TakstDataset;
-import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.importer.parsers.takst.model.ATCKoderOgTekst;
+import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;

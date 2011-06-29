@@ -25,7 +25,7 @@ package com.trifork.stamdata.importer;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.ImportTimeManager;
+import com.trifork.stamdata.importer.parsers.ImportTimeManager;
 
 import java.util.Calendar;
 

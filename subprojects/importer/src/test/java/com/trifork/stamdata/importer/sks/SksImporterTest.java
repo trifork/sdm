@@ -31,7 +31,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.sks.SksImporter;
+import com.trifork.stamdata.importer.parsers.sks.SksImporter;
 
 
 public class SksImporterTest {

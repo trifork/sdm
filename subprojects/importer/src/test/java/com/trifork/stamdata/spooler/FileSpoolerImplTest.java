@@ -43,10 +43,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.FileImporter;
-import com.trifork.stamdata.importer.ImportTimeManager;
-import com.trifork.stamdata.importer.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileSpoolerImpl;
+import com.trifork.stamdata.importer.parsers.FileSpoolerSetup;
+import com.trifork.stamdata.importer.parsers.ImportTimeManager;
+import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 
 
 

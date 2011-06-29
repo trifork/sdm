@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.spooler.FileSpoolerSetup;
+import com.trifork.stamdata.importer.parsers.FileSpoolerSetup;
 
 /**
  * FileSpoolerTest. Tests that setup of files and filesets are handled correct.

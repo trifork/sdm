@@ -28,9 +28,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import com.trifork.stamdata.importer.exceptions.FileParseException;
-import com.trifork.stamdata.importer.takst.TakstParser;
-import com.trifork.stamdata.importer.takst.model.*;
+import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
+import com.trifork.stamdata.importer.parsers.takst.TakstParser;
+import com.trifork.stamdata.importer.parsers.takst.model.*;
 
 import java.io.File;
 import java.util.*;

@@ -1,11 +1,11 @@
-<%@page import="com.trifork.stamdata.ProjectInfo"%>
-<%@ page import="com.trifork.stamdata.webinterface.DatabaseStatus"%>
-<%@ page import="com.trifork.stamdata.spooler.SpoolerManager"%>
+<%@page import="com.trifork.stamdata.importer.ProjectInfo"%>
+<%@ page import="com.trifork.stamdata.importer.webinterface.DatabaseStatus"%>
+<%@ page import="com.trifork.stamdata.importer.parsers.SpoolerManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="java.util.*" %>
-<%@ page import="com.trifork.stamdata.spooler.*" %>
+<%@ page import="com.trifork.stamdata.importer.spooler.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());

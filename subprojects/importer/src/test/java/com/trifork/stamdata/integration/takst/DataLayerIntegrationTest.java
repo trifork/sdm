@@ -37,12 +37,12 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.exceptions.FileImporterException;
-import com.trifork.stamdata.importer.takst.TakstParser;
-import com.trifork.stamdata.importer.takst.model.Takst;
-import com.trifork.stamdata.persistence.AuditingPersister;
-import com.trifork.stamdata.persistence.Persister;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.parsers.takst.TakstParser;
+import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 
 

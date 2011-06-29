@@ -26,9 +26,9 @@ package com.trifork.stamdata.spooler;
 import org.junit.After;
 import org.junit.Test;
 
-import com.trifork.stamdata.spooler.FileSpoolerImpl;
-import com.trifork.stamdata.spooler.JobSpoolerImpl;
-import com.trifork.stamdata.spooler.SpoolerManager;
+import com.trifork.stamdata.importer.parsers.FileSpoolerImpl;
+import com.trifork.stamdata.importer.parsers.JobSpoolerImpl;
+import com.trifork.stamdata.importer.parsers.SpoolerManager;
 
 import java.io.File;
 import java.util.HashMap;

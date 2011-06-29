@@ -28,9 +28,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.autorisationsregister.AutImporter;
-import com.trifork.stamdata.model.CompleteDataset;
-import com.trifork.stamdata.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.model.CompleteDataset;
+import com.trifork.stamdata.importer.parsers.autorisationsregister.AutImporter;
+import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 import java.io.File;
 import java.io.IOException;

@@ -5,7 +5,7 @@
 	<display-name>Stamdata Replication Module</display-name>
 
 	<listener>
-		<listener-class>com.trifork.stamdata.ApplicationContextListener</listener-class>
+		<listener-class>com.trifork.stamdata.importer.ApplicationContextListener</listener-class>
 	</listener>
 
 	<filter>

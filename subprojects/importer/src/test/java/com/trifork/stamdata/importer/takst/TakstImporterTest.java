@@ -43,12 +43,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.takst.model.Doseringskode;
-import com.trifork.stamdata.importer.takst.model.Takst;
-import com.trifork.stamdata.importer.takst.model.TakstDataset;
-import com.trifork.stamdata.persistence.AuditingPersister;
-import com.trifork.stamdata.util.DateUtils;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.parsers.takst.TakstImporter;
+import com.trifork.stamdata.importer.parsers.takst.model.Doseringskode;
+import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
+import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
 public class TakstImporterTest {

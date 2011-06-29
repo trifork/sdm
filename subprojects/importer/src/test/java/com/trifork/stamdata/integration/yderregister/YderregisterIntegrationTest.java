@@ -38,9 +38,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.exceptions.FilePersistException;
-import com.trifork.stamdata.importer.yderregister.YderregisterImporter;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
+import com.trifork.stamdata.importer.parsers.yderregister.YderregisterImporter;
 
 
 
