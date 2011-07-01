@@ -23,10 +23,10 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-import java.util.Calendar;
+import java.util.Date;
 
 
-public interface FileImporterControlledIntervals extends FileImporter {
-
-	public Calendar getNextImportExpectedBefore(Calendar lastImport);
+public interface FileImporterControlledIntervals extends FileImporter
+{
+	public Date getNextImportExpectedBefore(Date lastImport);
 }

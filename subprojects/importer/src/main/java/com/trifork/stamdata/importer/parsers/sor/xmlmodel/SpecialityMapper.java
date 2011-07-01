@@ -26,11 +26,15 @@ package com.trifork.stamdata.importer.parsers.sor.xmlmodel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpecialityMapper {
+
+public class SpecialityMapper
+{
 	static Map<Long, String> specialityMap;
 
-	private static void init() {
-		if (specialityMap == null) {
+	private static void init()
+	{
+		if (specialityMap == null)
+		{
 			specialityMap = new HashMap<Long, String>();
 			specialityMap.put(408443003L, "almen medicin");
 			specialityMap.put(394577000L, "anæstesiologi");
@@ -80,12 +84,14 @@ public class SpecialityMapper {
 		}
 	}
 
-	public static Map<Long, String> getMap() {
+	public static Map<Long, String> getMap()
+	{
 		init();
 		return specialityMap;
 	}
 
-	public static String kodeToString(Long code) {
+	public static String kodeToString(Long code)
+	{
 		init();
 		return specialityMap.get(code);
 	}

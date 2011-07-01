@@ -5,7 +5,7 @@
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
 <%@ page import="java.util.*" %>
-<%@ page import="com.trifork.stamdata.importer.spooler.*" %>
+<%@ page import="com.trifork.stamdata.importer.parsers.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());

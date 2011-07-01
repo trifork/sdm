@@ -26,15 +26,19 @@ package com.trifork.stamdata.importer.parsers.sor.xmlmodel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InstitutionTypeMapper {
+
+public class InstitutionTypeMapper
+{
 	static Map<Long, String> institutionTypeMap;
 
-	private static void init() {
-		if (institutionTypeMap == null) {
+	private static void init()
+	{
+		if (institutionTypeMap == null)
+		{
 			institutionTypeMap = new HashMap<Long, String>();
 			institutionTypeMap.put(550411000005105L, "andet sundhedsvæsen");
 			institutionTypeMap.put(264372000L, "apotek");
-			institutionTypeMap.put(20078004L,"behandlingscenter for stofmisbrugere");
+			institutionTypeMap.put(20078004L, "behandlingscenter for stofmisbrugere");
 			institutionTypeMap.put(546821000005103L, "ergoterapiklinik");
 			institutionTypeMap.put(547011000005103L, "fysioterapiklinik");
 			institutionTypeMap.put(546811000005109L, "genoptræningscenter");
@@ -56,12 +60,14 @@ public class InstitutionTypeMapper {
 		}
 	}
 
-	public static Map<Long, String> getMap() {
+	public static Map<Long, String> getMap()
+	{
 		init();
 		return institutionTypeMap;
 	}
 
-	public static String kodeToString(Long code) {
+	public static String kodeToString(Long code)
+	{
 		init();
 		return institutionTypeMap.get(code);
 	}

@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-
-public interface Job {
+public interface Job
+{
 	public void run() throws JobException;
 }

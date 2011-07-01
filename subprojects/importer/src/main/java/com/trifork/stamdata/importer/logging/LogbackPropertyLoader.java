@@ -16,11 +16,13 @@ import ch.qos.logback.core.PropertyDefinerBase;
  *
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class LogbackPropertyLoader extends PropertyDefinerBase {
+public class LogbackPropertyLoader extends PropertyDefinerBase
+{
 
 	private final String path;
 
-	public LogbackPropertyLoader() throws IOException {
+	public LogbackPropertyLoader() throws IOException
+	{
 
 		InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
 		InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
@@ -29,7 +31,8 @@ public class LogbackPropertyLoader extends PropertyDefinerBase {
 		properties.load(buildInConfig);
 		buildInConfig.close();
 
-		if (deploymentConfig != null) {
+		if (deploymentConfig != null)
+		{
 			properties.load(deploymentConfig);
 			deploymentConfig.close();
 		}
@@ -38,7 +41,8 @@ public class LogbackPropertyLoader extends PropertyDefinerBase {
 	}
 
 	@Override
-	public String getPropertyValue() {
+	public String getPropertyValue()
+	{
 
 		return path;
 	}

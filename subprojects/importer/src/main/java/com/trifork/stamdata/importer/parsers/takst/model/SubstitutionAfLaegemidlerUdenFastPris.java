@@ -26,33 +26,40 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity {
+public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
+{
 
-    private Long substitutionsgruppenummer;        //Substitutionsgruppe for pakningen
-    private Long varenummer;
+	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
+	private Long varenummer;
 
-    @Output
-    public Long getSubstitutionsgruppenummer() {
-        return this.substitutionsgruppenummer;
-    }
+	@Output
+	public Long getSubstitutionsgruppenummer()
+	{
+		return this.substitutionsgruppenummer;
+	}
 
-    public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer) {
-        this.substitutionsgruppenummer = substitutionsgruppenummer;
-    }
+	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	{
+		this.substitutionsgruppenummer = substitutionsgruppenummer;
+	}
 
-    @Id
-    @Output
-    public Long getVarenummer() {
-        return this.varenummer;
-    }
+	@Id
+	@Output
+	public Long getVarenummer()
+	{
+		return this.varenummer;
+	}
 
-    public void setVarenummer(Long varenummer) {
-        this.varenummer = varenummer;
-    }
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
+	}
 
-    public Long getKey() {
-        return varenummer;
-    }
+	public Long getKey()
+	{
+		return varenummer;
+	}
 
 }

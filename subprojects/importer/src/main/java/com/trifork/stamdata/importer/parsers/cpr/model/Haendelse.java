@@ -29,7 +29,8 @@ import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
 
-public class Haendelse extends CPREntity {
+public class Haendelse extends CPREntity
+{
 	String uuid;
 	Date ajourfoeringsdato;
 	String haendelseskode;
@@ -38,52 +39,63 @@ public class Haendelse extends CPREntity {
 
 	@Id
 	@Output
-	public String getUuid() {
+	public String getUuid()
+	{
 		return uuid;
 	}
 
-	public void setUuid(String uuid) {
+	public void setUuid(String uuid)
+	{
 		this.uuid = uuid;
 	}
 
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
 	@Output
-	public Date getAjourfoeringsdato() {
+	public Date getAjourfoeringsdato()
+	{
 		return ajourfoeringsdato;
 	}
 
-	public void setAjourfoeringsdato(Date ajourfoeringsdato) {
+	public void setAjourfoeringsdato(Date ajourfoeringsdato)
+	{
 		this.ajourfoeringsdato = ajourfoeringsdato;
 	}
 
 	@Output
-	public String getHaendelseskode() {
+	public String getHaendelseskode()
+	{
 		return haendelseskode;
 	}
 
-	public void setHaendelseskode(String haendelseskode) {
+	public void setHaendelseskode(String haendelseskode)
+	{
 		this.haendelseskode = haendelseskode;
 	}
 
 	@Output
-	public String getAfledtMarkering() {
+	public String getAfledtMarkering()
+	{
 		return afledtMarkering;
 	}
 
-	public void setAfledtMarkering(String afledtMarkering) {
+	public void setAfledtMarkering(String afledtMarkering)
+	{
 		this.afledtMarkering = afledtMarkering;
 	}
 
 	@Output
-	public String getNoeglekonstant() {
+	public String getNoeglekonstant()
+	{
 		return noeglekonstant;
 	}
 
-	public void setNoeglekonstant(String noeglekonstant) {
+	public void setNoeglekonstant(String noeglekonstant)
+	{
 		this.noeglekonstant = noeglekonstant;
 	}
 }

@@ -63,7 +63,7 @@ public class GenerateCPRTestData {
 		
 		for (int i = 0; i < 1000; i++) {
 			
-			Person person = new Person(Long.toString(cpr + i), "M", "Thomas", null, "Borlum",null, "Århus", "Vestre Ringgade", "224", null, "2", "TV", "Århus", new BigInteger("8000"), "Århus C", null, "1234567890", new Date(), "Datalog", new BigInteger("123"), new BigInteger("123"), new Date(), new Date(), new Date(), new Date(), new Date(), "TEST", "TEST");
+			Person person = new Person(Long.toString(cpr + i), "M", "Thomas", null, "Borlum",null, "Århus", "Vestre Ringgade", "224", null, "2", "TV", "Århus", new BigInteger("8000"), "Århus C", null, "1234567890", new Date(), "Datalog", new BigInteger("123"), new BigInteger("123"), new Date(), new Date(), new Date(), new Date(), new Date());
 			session.save(person);
 		}
 

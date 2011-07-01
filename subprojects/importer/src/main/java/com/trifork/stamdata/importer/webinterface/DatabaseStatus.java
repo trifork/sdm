@@ -36,26 +36,31 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 /**
  * @author Jan Buchholdt (jbu@trifork.com)
  */
-public class DatabaseStatus {
+public class DatabaseStatus
+{
 
 	private final Logger logger = LoggerFactory.getLogger(DatabaseStatus.class);
 
-	public boolean isAlive() {
+	public boolean isAlive()
+	{
 
 		boolean isAlive = false;
 		Connection con = null;
 
-		try {
+		try
+		{
 			con = MySQLConnectionManager.getConnection();
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT 1");
 			rs.next();
 			if (1 == rs.getInt(1)) isAlive = true;
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			logger.error("db connection down", e);
 		}
-		finally {
+		finally
+		{
 			MySQLConnectionManager.close(con);
 		}
 

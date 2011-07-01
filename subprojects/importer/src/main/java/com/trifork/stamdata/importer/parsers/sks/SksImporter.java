@@ -23,6 +23,13 @@
 
 package com.trifork.stamdata.importer.parsers.sks;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +41,6 @@ import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Persister;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.List;
-
 
 public class SksImporter implements FileImporterControlledIntervals
 {
@@ -49,16 +50,17 @@ public class SksImporter implements FileImporterControlledIntervals
 	 * SKS files usually arrive monthly
 	 */
 	@Override
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
+	public Date getNextImportExpectedBefore(Date lastImport)
 	{
+		Calendar cal = Calendar.getInstance();
 
-		Calendar cal;
-		if (lastImport == null)
-			cal = Calendar.getInstance();
-		else
-			cal = ((Calendar) lastImport.clone());
+		if (lastImport != null)
+		{
+			cal.setTime(lastImport);
+		}
+
 		cal.add(Calendar.DATE, 45);
-		return cal;
+		return cal.getTime();
 	}
 
 	@Override

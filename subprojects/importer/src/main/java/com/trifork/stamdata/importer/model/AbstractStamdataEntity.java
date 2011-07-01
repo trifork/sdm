@@ -23,9 +23,13 @@
 
 package com.trifork.stamdata.importer.model;
 
-
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,10 +47,12 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	public Object getKey()
 	{
 		Method idMethod = getIdMethod(getClass());
-		try {
+		try
+		{
 			return idMethod.invoke(this);
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			logger.error("Error getting id for object of class: " + getClass());
 			return null;
 		}
@@ -57,13 +63,16 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	 * @return the getter method that contains the unique id for the given
 	 *         StamdataEntity type
 	 */
-	public static Method getIdMethod(Class<? extends StamdataEntity> class1) {
+	public static Method getIdMethod(Class<? extends StamdataEntity> class1)
+	{
 
 		Method m = idMethodCache.get(class1);
 		if (m != null) return m;
 		Method[] allMethods = class1.getMethods();
-		for (Method method : allMethods) {
-			if (method.isAnnotationPresent(Id.class)) {
+		for (Method method : allMethods)
+		{
+			if (method.isAnnotationPresent(Id.class))
+			{
 				idMethodCache.put(class1, method);
 				return method;
 			}

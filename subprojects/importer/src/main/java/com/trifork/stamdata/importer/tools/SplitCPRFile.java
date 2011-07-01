@@ -38,7 +38,8 @@ import java.io.OutputStreamWriter;
  *
  * @author Jan Buchholdt (jbu@trifork.com)
  */
-public class SplitCPRFile {
+public class SplitCPRFile
+{
 
 	public static void main(String[] args) throws Exception
 	{
@@ -55,19 +56,23 @@ public class SplitCPRFile {
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(name), "ISO-8859-1"));
 
-		for (int i = 0; i < fileSplit; ++i) {
+		for (int i = 0; i < fileSplit; ++i)
+		{
 			outputs[i] = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(args[i + 1]), "ISO-8859-1"));
 		}
 
 		// First line in all files
 		String line = reader.readLine();
-		for (int i = 0; i < fileSplit; ++i) {
+		for (int i = 0; i < fileSplit; ++i)
+		{
 			outputs[i].write(line + "\r\n");
 		}
 
-		while (reader.ready()) {
+		while (reader.ready())
+		{
 			line = reader.readLine();
-			if (line.startsWith("999")) {
+			if (line.startsWith("999"))
+			{
 				break;
 			}
 			String lastCpr = line.substring(12, 13);
@@ -76,11 +81,13 @@ public class SplitCPRFile {
 		}
 
 		// Last line in all files
-		for (int i = 0; i < fileSplit; ++i) {
+		for (int i = 0; i < fileSplit; ++i)
+		{
 			outputs[i].write(line + "\r\n");
 		}
 
-		for (int i = 0; i < fileSplit; ++i) {
+		for (int i = 0; i < fileSplit; ++i)
+		{
 			outputs[i].close();
 		}
 	}

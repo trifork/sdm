@@ -26,11 +26,15 @@ package com.trifork.stamdata.importer.parsers.sor.xmlmodel;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UnitTypeMapper {
+
+public class UnitTypeMapper
+{
 	static Map<Long, String> unitTypeMap;
 
-	private static void init() {
-		if (unitTypeMap == null) {
+	private static void init()
+	{
+		if (unitTypeMap == null)
+		{
 			unitTypeMap = new HashMap<Long, String>();
 			unitTypeMap.put(550811000005108L, "administrativ enhed");
 			unitTypeMap.put(550871000005101L, "akut modtage enhed");
@@ -51,12 +55,14 @@ public class UnitTypeMapper {
 		}
 	}
 
-	public static Map<Long, String> getMap() {
+	public static Map<Long, String> getMap()
+	{
 		init();
 		return unitTypeMap;
 	}
 
-	public static String kodeToString(Long code) {
+	public static String kodeToString(Long code)
+	{
 		init();
 		return unitTypeMap.get(code);
 	}

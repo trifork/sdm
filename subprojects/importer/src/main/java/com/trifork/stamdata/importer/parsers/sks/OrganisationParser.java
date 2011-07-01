@@ -23,15 +23,14 @@
 
 package com.trifork.stamdata.importer.parsers.sks;
 
+import java.text.SimpleDateFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation.Organisationstype;
-import com.trifork.stamdata.importer.util.DateUtils;
-
-import java.text.SimpleDateFormat;
 
 
 public class OrganisationParser
@@ -77,8 +76,8 @@ public class OrganisationParser
 					org = new Organisation((type.equals("afd")) ? Organisationstype.Afdeling : Organisationstype.Sygehus);
 					org.setNummer(line.substring(3, 23).trim());
 					// logger.debug("nummer: " + afd.getNummer());
-					org.setValidFrom(DateUtils.toCalendar(sdf.parse(line.substring(23, 31))));
-					org.setValidTo(DateUtils.toCalendar(sdf.parse(line.substring(39, 47))));
+					org.setValidFrom(sdf.parse(line.substring(23, 31)));
+					org.setValidTo(sdf.parse(line.substring(39, 47)));
 					org.setNavn(line.substring(47, 167).trim());
 				}
 				else

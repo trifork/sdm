@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -30,7 +29,8 @@ import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 
 
-public interface Persister {
+public interface Persister
+{
 
 	/**
 	 * This method is for persisting the complete dataset so it is represented

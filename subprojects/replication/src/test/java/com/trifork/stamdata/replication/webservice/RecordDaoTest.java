@@ -104,9 +104,7 @@ public class RecordDaoTest
 		Folkekirkeoplysninger folkekirkeoplysninger = new Folkekirkeoplysninger();
 		folkekirkeoplysninger.cpr = "1234567890";
 		folkekirkeoplysninger.modifiedDate = nextDate();
-		folkekirkeoplysninger.modifiedBy = "";
 		folkekirkeoplysninger.createdDate = nextDate();
-		folkekirkeoplysninger.createdBy = "";
 		folkekirkeoplysninger.validFrom = nextDate();
 		folkekirkeoplysninger.forholdsKode = "A";
 		session.insert(folkekirkeoplysninger);

@@ -26,8 +26,10 @@ package com.trifork.stamdata.importer.parsers.cpr.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
-@Output(name="Person")
-public class Klarskriftadresse extends CPREntity {
+
+@Output(name = "Person")
+public class Klarskriftadresse extends CPREntity
+{
 
 	String cpr;
 	String adresseringsNavn;
@@ -47,135 +49,165 @@ public class Klarskriftadresse extends CPREntity {
 
 	@Id
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
-	public void setCpr(String cpr) {
+	public void setCpr(String cpr)
+	{
 		this.cpr = cpr;
 	}
 
-	public String getAdresseringsNavn() {
+	public String getAdresseringsNavn()
+	{
 		return adresseringsNavn;
 	}
 
-	public void setAdresseringsNavn(String adresseringsNavn) {
+	public void setAdresseringsNavn(String adresseringsNavn)
+	{
 		this.adresseringsNavn = adresseringsNavn;
 	}
 
 	@Output
-	public String getCoNavn() {
+	public String getCoNavn()
+	{
 		return coNavn;
 	}
 
-	public void setCoNavn(String coNavn) {
+	public void setCoNavn(String coNavn)
+	{
 		this.coNavn = coNavn;
 	}
 
 	@Output
-	public String getLokalitet() {
+	public String getLokalitet()
+	{
 		return Lokalitet;
 	}
 
-	public void setLokalitet(String lokalitet) {
+	public void setLokalitet(String lokalitet)
+	{
 		Lokalitet = lokalitet;
 	}
 
-	public String getStandardAdresse() {
+	public String getStandardAdresse()
+	{
 		return standardAdresse;
 	}
 
-	public void setStandardAdresse(String standardAdresse) {
+	public void setStandardAdresse(String standardAdresse)
+	{
 		this.standardAdresse = standardAdresse;
 	}
 
 	@Output
-	public String getByNavn() {
+	public String getByNavn()
+	{
 		return byNavn;
 	}
 
-	public void setByNavn(String byNavn) {
+	public void setByNavn(String byNavn)
+	{
 		this.byNavn = byNavn;
 	}
 
 	@Output
-	public Long getPostNummer() {
+	public Long getPostNummer()
+	{
 		return postNummer;
 	}
 
-	public void setPostNummer(Long postNummer) {
+	public void setPostNummer(Long postNummer)
+	{
 		this.postNummer = postNummer;
 	}
 
 	@Output
-	public String getPostDistrikt() {
+	public String getPostDistrikt()
+	{
 		return postDistrikt;
 	}
 
-	public void setPostDistrikt(String postDistrikt) {
+	public void setPostDistrikt(String postDistrikt)
+	{
 		this.postDistrikt = postDistrikt;
 	}
 
 	@Output
-	public Long getKommuneKode() {
+	public Long getKommuneKode()
+	{
 		return kommuneKode;
 	}
 
-	public void setKommuneKode(Long kommuneKode) {
+	public void setKommuneKode(Long kommuneKode)
+	{
 		this.kommuneKode = kommuneKode;
 	}
 
 	@Output
-	public Long getVejKode() {
+	public Long getVejKode()
+	{
 		return vejKode;
 	}
 
-	public void setVejKode(Long vejKode) {
+	public void setVejKode(Long vejKode)
+	{
 		this.vejKode = vejKode;
 	}
 
 	@Output
-	public String getHusNummer() {
+	public String getHusNummer()
+	{
 		return husNummer;
 	}
 
-	public void setHusNummer(String husNummer) {
+	public void setHusNummer(String husNummer)
+	{
 		this.husNummer = husNummer;
 	}
 
 	@Output
-	public String getEtage() {
+	public String getEtage()
+	{
 		return etage;
 	}
 
-	public void setEtage(String etage) {
+	public void setEtage(String etage)
+	{
 		this.etage = etage;
 	}
 
 	@Output
-	public String getSideDoerNummer() {
+	public String getSideDoerNummer()
+	{
 		return sideDoerNummer;
 	}
 
-	public void setSideDoerNummer(String sideDoerNummer) {
+	public void setSideDoerNummer(String sideDoerNummer)
+	{
 		this.sideDoerNummer = sideDoerNummer;
 	}
 
 	@Output
-	public String getBygningsNummer() {
+	public String getBygningsNummer()
+	{
 		return bygningsNummer;
 	}
 
-	public void setBygningsNummer(String bygningsNummer) {
+	public void setBygningsNummer(String bygningsNummer)
+	{
 		this.bygningsNummer = bygningsNummer;
 	}
 
 	@Output
-	public String getVejNavn() {
+	public String getVejNavn()
+	{
 		return vejNavn;
 	}
 
-	public void setVejNavn(String vejNavn) {
+	public void setVejNavn(String vejNavn)
+	{
 		this.vejNavn = vejNavn;
 	}
 }

@@ -23,31 +23,31 @@
 
 package com.trifork.stamdata.importer.parsers.sor;
 
-import org.xml.sax.helpers.DefaultHandler;
-
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import com.trifork.stamdata.importer.model.CompleteDataset;
-import com.trifork.stamdata.importer.parsers.sor.model.*;
-import com.trifork.stamdata.importer.parsers.sor.xmlmodel.*;
+import com.trifork.stamdata.importer.parsers.sor.model.Apotek;
+import com.trifork.stamdata.importer.parsers.sor.model.Praksis;
+import com.trifork.stamdata.importer.parsers.sor.model.Sygehus;
+import com.trifork.stamdata.importer.parsers.sor.model.SygehusAfdeling;
+import com.trifork.stamdata.importer.parsers.sor.model.Yder;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.AddressInformation;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.HealthInstitutionEntity;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.InstitutionOwnerEntity;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.OrganizationalUnitEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
 public class SOREventHandler extends DefaultHandler
 {
-	private static Logger logger = LoggerFactory.getLogger(SOREventHandler.class);
-
 	private String elementValue;
 
 	private InstitutionOwnerEntity curIOE;
@@ -110,7 +110,7 @@ public class SOREventHandler extends DefaultHandler
 		{
 			try
 			{
-				createDatasets(toCalendar(elementValue));
+				createDatasets(parseXSDDate(elementValue));
 			}
 			catch (ParseException e)
 			{
@@ -209,7 +209,6 @@ public class SOREventHandler extends DefaultHandler
 
 	private static void denormalizeAdress(InstitutionOwnerEntity ioe)
 	{
-
 		for (HealthInstitutionEntity hie : ioe.getHealthInstitutionEntity())
 		{
 			pushdownAdress(ioe, hie);
@@ -226,7 +225,6 @@ public class SOREventHandler extends DefaultHandler
 
 	private static void pushdownAdress(AddressInformation parrent, AddressInformation son)
 	{
-
 		if (parrent == null || son == null) return;
 		if (son.getCountryIdentificationCode() == null) son.setCountryIdentificationCode(parrent.getCountryIdentificationCode());
 		if (son.getDistrictName() == null) son.setDistrictName(parrent.getDistrictName());
@@ -241,13 +239,11 @@ public class SOREventHandler extends DefaultHandler
 		{
 			son.setEanLocationCode(parrent.getEanLocationCode());
 		}
-
 	}
 
 	@Override
 	public void characters(char[] chars, int start, int length)
 	{
-
 		elementValue += new String(chars, start, length);
 	}
 
@@ -257,124 +253,81 @@ public class SOREventHandler extends DefaultHandler
 		Method method = null;
 		Object object = null;
 
-		try
+		if (curOUE != null)
 		{
-			if (curOUE != null)
-			{
-				object = curOUE;
-			}
-			else if (curHIE != null)
-			{
-				object = curHIE;
-			}
-			else if (curIOE != null)
-			{
-				object = curIOE;
-			}
+			object = curOUE;
+		}
+		else if (curHIE != null)
+		{
+			object = curHIE;
+		}
+		else if (curIOE != null)
+		{
+			object = curIOE;
+		}
 
-			if (object != null)
+		if (object != null)
+		{
+			Class<?> target = object.getClass();
+			while (target != null && method == null)
 			{
-				Class<?> target = object.getClass();
-				while (target != null && method == null)
-				{
-					Method methods[] = target.getDeclaredMethods();
-					for (Method prop : methods)
-					{
-						if (prop.getName().equals("set" + qName))
-						{
-							method = prop;
-							break;
-						}
-					}
-					target = target.getSuperclass();
-				}
-			}
-			if (method != null)
-			{
-				Class<?> param = method.getParameterTypes()[0];
+				Method methods[] = target.getDeclaredMethods();
 
-				try
+				for (Method prop : methods)
 				{
-					if (param.isAssignableFrom(String.class))
+					if (prop.getName().equals("set" + qName))
 					{
-						method.invoke(object, value);
-						found = true;
-					}
-					else if (param.isAssignableFrom(Long.class))
-					{
-						Long convValue = null;
-						try
-						{
-							convValue = Long.parseLong(value);
-						}
-						catch (NumberFormatException e)
-						{
-							logger.error("Numberformat exception on property " + qName + ", method " + object.getClass().getName() + "." + method.getName() + "(" + param.getName() + ")", e);
-							throw e;
-						}
-						method.invoke(object, convValue);
-						found = true;
-					}
-					else if (param.isAssignableFrom(Calendar.class))
-					{
-						Date convValue = toCalendar(value);
-						method.invoke(object, convValue);
-						found = true;
-					}
-					else if (param.isAssignableFrom(Boolean.class))
-					{
-						Boolean b = ("true".equalsIgnoreCase(value)) ? new Boolean(true) : new Boolean(false);
-						method.invoke(object, b);
-					}
-					else
-					{
-						logger.error("Unsupported datatype for property " + qName + ", datatype was " + param.getClass().getName());
-						throw new Exception("Unsupported datatype for property " + qName + ", datatype was " + param.getClass().getName());
+						method = prop;
+						break;
 					}
 				}
-				catch (IllegalArgumentException e)
-				{
-					logger.error("Illegal argument exception on property " + qName + ", method " + object.getClass().getName() + "." + method.getName() + "(" + param.getName() + ")", e);
-					throw e;
-				}
-				catch (IllegalAccessException e)
-				{
-					logger.error("Illegal access exception on property " + qName + ", method " + object.getClass().getName() + "." + method.getName() + "(" + param.getName() + ")", e);
-					throw e;
-				}
-				catch (InvocationTargetException e)
-				{
-					logger.error("Invocation target exception on property " + qName + ", method " + object.getClass().getName() + "." + method.getName() + "(" + param.getName() + ")", e);
-					throw e;
-				}
+
+				target = target.getSuperclass();
 			}
 		}
-		catch (SecurityException e)
+
+		if (method != null)
 		{
-			logger.error("Security exception on property " + qName, e);
-			throw e;
+			Class<?> param = method.getParameterTypes()[0];
+
+			if (param.isAssignableFrom(String.class))
+			{
+				method.invoke(object, value);
+				found = true;
+			}
+			else if (param.isAssignableFrom(Long.class))
+			{
+				Long convValue = Long.parseLong(value);
+
+				method.invoke(object, convValue);
+				found = true;
+			}
+			else if (param.isAssignableFrom(Date.class))
+			{
+				Date convValue = parseXSDDate(value);
+				method.invoke(object, convValue);
+				found = true;
+			}
+			else if (param.isAssignableFrom(Boolean.class))
+			{
+				Boolean b = Boolean.valueOf(value);
+				method.invoke(object, b);
+			}
+			else
+			{
+				String message = "Unsupported datatype for property " + qName + ", expected datatype was " + param.getCanonicalName();
+				throw new Exception(message);
+			}
 		}
 
 		return found;
 	}
 
-	public static Date toCalendar(String xmlDate) throws ParseException
+	public static Date parseXSDDate(String xmlDate) throws ParseException
 	{
 		String datePattern = "yyyy-MM-dd";
 		DateFormat df = new SimpleDateFormat(datePattern);
-		Date cal = null;
 
-		try
-		{
-			Date sn = df.parse(xmlDate);
-			cal = DateUtils.toCalendar(sn);
-		}
-		catch (ParseException e)
-		{
-			logger.error("Invalid date found in xml. Expected " + datePattern + " found " + xmlDate, e);
-			throw e;
-		}
-
-		return cal;
+		return df.parse(xmlDate);
 	}
 }

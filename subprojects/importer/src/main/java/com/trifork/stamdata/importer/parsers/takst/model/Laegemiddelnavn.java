@@ -26,33 +26,40 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class Laegemiddelnavn extends TakstEntity {
+public class Laegemiddelnavn extends TakstEntity
+{
 
-    private Long drugid;        //Ref. t. LMS01, felt 01
-    private String laegemidletsUforkortedeNavn;
+	private Long drugid; // Ref. t. LMS01, felt 01
+	private String laegemidletsUforkortedeNavn;
 
-    @Id
-    @Output
-    public Long getDrugid() {
-        return this.drugid;
-    }
+	@Id
+	@Output
+	public Long getDrugid()
+	{
+		return this.drugid;
+	}
 
-    public void setDrugid(Long drugid) {
-        this.drugid = drugid;
-    }
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
 
-    @Output
-    public String getLaegemidletsUforkortedeNavn() {
-        return this.laegemidletsUforkortedeNavn;
-    }
+	@Output
+	public String getLaegemidletsUforkortedeNavn()
+	{
+		return this.laegemidletsUforkortedeNavn;
+	}
 
-    public void setLaegemidletsUforkortedeNavn(String laegemidletsUforkortedeNavn) {
-        this.laegemidletsUforkortedeNavn = laegemidletsUforkortedeNavn;
-    }
+	public void setLaegemidletsUforkortedeNavn(String laegemidletsUforkortedeNavn)
+	{
+		this.laegemidletsUforkortedeNavn = laegemidletsUforkortedeNavn;
+	}
 
-    public String getKey() {
-        return "" + this.drugid;
-    }
+	public String getKey()
+	{
+		return "" + this.drugid;
+	}
 
 }

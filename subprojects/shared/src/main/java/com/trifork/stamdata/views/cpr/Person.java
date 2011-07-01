@@ -46,12 +46,6 @@ import com.trifork.stamdata.views.ViewPath;
 @XmlRootElement
 @ViewPath("cpr/person/v1")
 public class Person extends View {
-
-	@XmlTransient
-	public String modifiedBy;
-
-	@XmlTransient
-	public String createdBy;
 	
 	@XmlTransient
 	public Date createdDate;
@@ -59,7 +53,7 @@ public class Person extends View {
 	@XmlTransient
 	public static int i = 100;
 
-	public Person() {
+	protected Person() {
 		
 	}
 	
@@ -69,7 +63,7 @@ public class Person extends View {
 	public Person(String cpr, String koen, String fornavn, String mellemnavn, String efternavn, String coNavn, String lokalitet,String vejnavn,	String bygningsnummer, String husnummer, String etage, 
 			String sideDoerNummer, String bynavn, BigInteger postnummer, String postdistrikt, String status, String gaeldendeCPR, 
 			Date foedselsdato, String stilling, BigInteger vejKode, BigInteger kommuneKode,
-			Date modifiedDate, Date navnebeskyttelseslettedato, Date navnebeskyttelsestartdato, Date validFrom, Date validTo, String modifiedBy, String createdBy) {
+			Date modifiedDate, Date navnebeskyttelseslettedato, Date navnebeskyttelsestartdato, Date validFrom, Date validTo) {
 
 		this.cpr = cpr;
 		this.koen = koen;
@@ -97,8 +91,6 @@ public class Person extends View {
 		this.navnebeskyttelsestartdato = navnebeskyttelsestartdato;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
-		this.modifiedBy = modifiedBy;
-		this.createdBy = createdBy;
 		this.createdDate = new Date();
 		i += 10000;
 		this.validFrom = new Date(new Date().getTime() + i);

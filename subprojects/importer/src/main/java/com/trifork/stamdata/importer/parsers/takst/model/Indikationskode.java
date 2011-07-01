@@ -26,45 +26,55 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output(name = "IndikationATCRef")
-public class Indikationskode extends TakstEntity {
+public class Indikationskode extends TakstEntity
+{
 
-    private String aTC;        //Ref. t. LMS01
-    private Long indikationskode;        //Ref. t. LMS26
-    private Long drugID;        //Ref. t. LMS01, felt 01
+	private String aTC; // Ref. t. LMS01
+	private Long indikationskode; // Ref. t. LMS26
+	private Long drugID; // Ref. t. LMS01, felt 01
 
-    @Id
-    @Output
-    public String getCID() {
-        // A calculated ID. Necessary because the DAO implementation needs a single key
-        return aTC + "-" + indikationskode;
-    }
+	@Id
+	@Output
+	public String getCID()
+	{
+		// A calculated ID. Necessary because the DAO implementation needs a
+		// single key
+		return aTC + "-" + indikationskode;
+	}
 
-    @Output
-    public String getATC() {
-        return this.aTC;
-    }
+	@Output
+	public String getATC()
+	{
+		return this.aTC;
+	}
 
-    public void setATC(String aTC) {
-        this.aTC = aTC;
-    }
+	public void setATC(String aTC)
+	{
+		this.aTC = aTC;
+	}
 
-    @Output(name = "IndikationKode")
-    public Long getIndikationskode() {
-        return this.indikationskode;
-    }
+	@Output(name = "IndikationKode")
+	public Long getIndikationskode()
+	{
+		return this.indikationskode;
+	}
 
-    public void setIndikationskode(Long indikationskode) {
-        this.indikationskode = indikationskode;
-    }
+	public void setIndikationskode(Long indikationskode)
+	{
+		this.indikationskode = indikationskode;
+	}
 
-    @Output
-    public Long getDrugID() {
-        return this.drugID;
-    }
+	@Output
+	public Long getDrugID()
+	{
+		return this.drugID;
+	}
 
-    public void setDrugID(Long drugID) {
-        this.drugID = drugID;
-    }
+	public void setDrugID(Long drugID)
+	{
+		this.drugID = drugID;
+	}
 
 }

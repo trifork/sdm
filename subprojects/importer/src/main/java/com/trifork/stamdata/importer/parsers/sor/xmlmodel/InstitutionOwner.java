@@ -23,37 +23,53 @@
 
 package com.trifork.stamdata.importer.parsers.sor.xmlmodel;
 
-import java.util.Calendar;
+import java.util.Date;
 
 
-public 	class InstitutionOwner extends AddressInformation{
+public class InstitutionOwner extends AddressInformation
+{
 	private Long sorIdentifier;
 	private String entityName;
-	private Calendar fromDate;
-	private Calendar toDate;
+	private Date fromDate;
+	private Date toDate;
 
-	public Long getSorIdentifier() {
+	public Long getSorIdentifier()
+	{
 		return sorIdentifier;
 	}
-	public void setSorIdentifier(Long sorIdentifier) {
+
+	public void setSorIdentifier(Long sorIdentifier)
+	{
 		this.sorIdentifier = sorIdentifier;
 	}
-	public String getEntityName() {
+
+	public String getEntityName()
+	{
 		return entityName;
 	}
-	public void setEntityName(String entityName) {
+
+	public void setEntityName(String entityName)
+	{
 		this.entityName = entityName;
 	}
-	public Calendar getFromDate() {
+
+	public Date getFromDate()
+	{
 		return fromDate;
 	}
-	public void setFromDate(Calendar validFrom) {
+
+	public void setFromDate(Date validFrom)
+	{
 		this.fromDate = validFrom;
 	}
-	public Calendar getToDate() {
+
+	public Date getToDate()
+	{
 		return toDate;
 	}
-	public void setToDate(Calendar toDate) {
+
+	public void setToDate(Date toDate)
+	{
 		this.toDate = toDate;
 	}
 }

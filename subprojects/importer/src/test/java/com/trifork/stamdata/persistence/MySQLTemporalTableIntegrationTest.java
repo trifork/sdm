@@ -28,7 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
-import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Test;
 
@@ -39,110 +39,119 @@ import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 
 
-
-public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest {
+public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest
+{
 
 	@Test
-	public void testFetchVersionsAbeforeB() throws Exception {
+	public void testFetchVersionsAbeforeB() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t2, t3);
 		assertFalse(found);
 		con.close();
 	}
 
 	@Test
-	public void testFetchVersionsBbeforeA() throws Exception {
+	public void testFetchVersionsBbeforeA() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
 		assertFalse(found);
 		con.close();
 	}
 
 	@Test
-	public void testFetchVersionsBinA() throws Exception {
+	public void testFetchVersionsBinA() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t2);
 		assertTrue(found);
 		con.close();
 	}
 
 	@Test
-	public void testFetchVersionsAinB() throws Exception {
+	public void testFetchVersionsAinB() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t3);
 		assertTrue(found);
 		con.close();
 	}
 
 	@Test
-	public void testFetchVersionsAoverlapsB() throws Exception {
+	public void testFetchVersionsAoverlapsB() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t3);
 		assertTrue(found);
 		con.close();
 	}
 
 	@Test
-	public void testFetchVersionsBoverlapsA() throws Exception {
+	public void testFetchVersionsBoverlapsA() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t2);
 		assertTrue(found);
 		con.close();
 	}
 
 	@Test
-	public void testGetValidFromAndTo() throws Exception {
-
+	public void testGetValidFromAndTo() throws Exception
+	{
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+
 		SDE a = new SDE(t0, t1);
-		table.insertRow(a, Calendar.getInstance());
-		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
-		assertTrue(found);
+		table.insertRow(a, new Date());
+
+		assertTrue(table.fetchEntityVersions(a.getKey(), t0, t1));
 		assertEquals(table.getCurrentRowValidFrom().getTime(), t0.getTime());
-		assertEquals(table.getCurrentRowValidTo(), t1);
+		assertEquals(table.getCurrentRowValidTo().getTime(), t1.getTime());
+
 		con.close();
 	}
 
 	@Test
-	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception {
-
+	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception
+	{
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
-		table.insertRow(a, Calendar.getInstance());
-		table.fetchEntityVersions(a.getKey(), t2, t3); // Find the row we just
-														// created
-		table.copyCurrentRowButWithChangedValidFrom(t0, Calendar.getInstance());
+		table.insertRow(a, new Date());
 
-		assertTrue(table.fetchEntityVersions(a.getKey(), t0, t1)); // We should
-																	// find the
-																	// copy
-																	// only.
+		// Find the row we just created.
+
+		table.fetchEntityVersions(a.getKey(), t2, t3);
+		table.copyCurrentRowButWithChangedValidFrom(t0, new Date());
+
+		// We should find the copy only.
+
+		assertTrue(table.fetchEntityVersions(a.getKey(), t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t3);
 		assertFalse(table.nextRow());
@@ -150,15 +159,15 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testUpdateValidToOnCurrentRow1() throws Exception {
-
+	public void testUpdateValidToOnCurrentRow1() throws Exception
+	{
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
 														// created
-		table.updateValidToOnCurrentRow(t2, Calendar.getInstance());
+		table.updateValidToOnCurrentRow(t2, new Date());
 
 		table.fetchEntityVersions(a.getKey(), t0, t1); // We should find it
 														// again.
@@ -169,17 +178,18 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testUpdateValidToOnCurrentRow_noSideEffects() throws Exception {
+	public void testUpdateValidToOnCurrentRow_noSideEffects() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
-		table.insertRow(a, Calendar.getInstance());
-		table.insertRow(b, Calendar.getInstance());
+		table.insertRow(a, new Date());
+		table.insertRow(b, new Date());
 		table.fetchEntityVersions(a.getKey(), t2, t3); // Find only the 'b' row
 														// we just created
-		table.updateValidToOnCurrentRow(t4, Calendar.getInstance());
+		table.updateValidToOnCurrentRow(t4, new Date());
 
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the 'a' row
 		assertEquals(table.getCurrentRowValidFrom(), t0);
@@ -193,12 +203,13 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testDeleteCurrentRow() throws Exception {
+	public void testDeleteCurrentRow() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1);
 		table.deleteCurrentRow();
 		assertFalse(table.fetchEntityVersions(a.getKey(), t0, t1));
@@ -206,15 +217,16 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testUpdateValidFromOnCurrentRow() throws Exception {
+	public void testUpdateValidFromOnCurrentRow() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t1, t2); // Find the row we just
 														// created
-		table.updateValidFromOnCurrentRow(t0, Calendar.getInstance());
+		table.updateValidFromOnCurrentRow(t0, new Date());
 
 		table.fetchEntityVersions(a.getKey(), t1, t2); // We should find it
 														// again.
@@ -225,13 +237,14 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testdataInCurrentRowEquals() throws Exception {
+	public void testdataInCurrentRowEquals() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
 														// created
 		assertTrue(table.dataInCurrentRowEquals(b));
@@ -239,21 +252,24 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testdataInCurrentRowEquals2() throws Exception {
+	public void testdataInCurrentRowEquals2() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
-		SDE b = new SDE(t2, t3) {
+		SDE b = new SDE(t2, t3)
+		{
 
 			@Id
 			@Output
-			public String getTakstuge() {
+			public String getTakstuge()
+			{
 
 				return "1997-11";
 			}
 		};
-		table.insertRow(a, Calendar.getInstance());
+		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
 														// created
 		assertFalse(table.dataInCurrentRowEquals(b));
@@ -261,14 +277,15 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Test
-	public void testFetchEntityVersions() throws Exception {
+	public void testFetchEntityVersions() throws Exception
+	{
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
-		table.insertRow(a, Calendar.getInstance());
-		table.insertRow(b, Calendar.getInstance());
+		table.insertRow(a, new Date());
+		table.insertRow(b, new Date());
 		table.fetchEntityVersions(t0, t3);
 		assertTrue(table.nextRow());
 		assertFalse(table.nextRow());
@@ -277,37 +294,43 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 
 
 	@Output(name = "TakstVersion")
-	public static class SDE implements StamdataEntity {
+	public static class SDE implements StamdataEntity
+	{
 
-		Calendar validfrom, validto;
+		Date validfrom, validto;
 
-		public SDE(Calendar validFrom, Calendar validTo) {
+		public SDE(Date validFrom, Date validTo)
+		{
 
 			this.validfrom = validFrom;
 			this.validto = validTo;
 		}
 
 		@Override
-		public Object getKey() {
+		public Object getKey()
+		{
 
 			return getTakstuge();
 		}
 
 		@Override
-		public Calendar getValidFrom() {
+		public Date getValidFrom()
+		{
 
 			return validfrom;
 		}
 
 		@Override
-		public Calendar getValidTo() {
+		public Date getValidTo()
+		{
 
 			return validto;
 		}
 
 		@Id
 		@Output
-		public String getTakstuge() {
+		public String getTakstuge()
+		{
 
 			return "1999-11";
 		}

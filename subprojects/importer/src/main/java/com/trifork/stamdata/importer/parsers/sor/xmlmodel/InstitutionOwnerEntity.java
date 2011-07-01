@@ -27,25 +27,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InstitutionOwnerEntity extends InstitutionOwner{
+public class InstitutionOwnerEntity extends InstitutionOwner
+{
 	private Long RegionCode;
 	private List<HealthInstitutionEntity> healthInstitutionEntities;
 
-	public InstitutionOwnerEntity() {
-		super();
+	public InstitutionOwnerEntity()
+	{
 		this.healthInstitutionEntities = new ArrayList<HealthInstitutionEntity>();
 	}
-	public Long getRegionCode() {
+
+	public Long getRegionCode()
+	{
 		return RegionCode;
 	}
-	public void setRegionCode(Long regionCode) {
+
+	public void setRegionCode(Long regionCode)
+	{
 		RegionCode = regionCode;
 	}
-	public List<HealthInstitutionEntity> getHealthInstitutionEntity() {
+
+	public List<HealthInstitutionEntity> getHealthInstitutionEntity()
+	{
 		return healthInstitutionEntities;
 	}
-	public void setHealthInstitutionEntity(
-			HealthInstitutionEntity healthInstitutionEntity) {
+
+	public void setHealthInstitutionEntity(HealthInstitutionEntity healthInstitutionEntity)
+	{
 		healthInstitutionEntity.setInstitutionOwnerEntity(this);
 		this.healthInstitutionEntities.add(healthInstitutionEntity);
 

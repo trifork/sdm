@@ -26,30 +26,39 @@ package com.trifork.stamdata.importer.parsers.cpr.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
-public class Foedselsregistreringsoplysninger extends CPREntity {
+
+public class Foedselsregistreringsoplysninger extends CPREntity
+{
 
 	private String foedselsregistreringsstedkode;
 	private String foedselsregistreringstekst;
+
 	@Id
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
 	@Output
-	public String getFoedselsregistreringsstedkode() {
+	public String getFoedselsregistreringsstedkode()
+	{
 		return foedselsregistreringsstedkode;
 	}
-	public void setFoedselsregistreringsstedkode(
-			String foedselsregistreringsstedkode) {
+
+	public void setFoedselsregistreringsstedkode(String foedselsregistreringsstedkode)
+	{
 		this.foedselsregistreringsstedkode = foedselsregistreringsstedkode;
 	}
 
 	@Output
-	public String getFoedselsregistreringstekst() {
+	public String getFoedselsregistreringstekst()
+	{
 		return foedselsregistreringstekst;
 	}
-	public void setFoedselsregistreringstekst(String foedselsregistreringstekst) {
+
+	public void setFoedselsregistreringstekst(String foedselsregistreringstekst)
+	{
 		this.foedselsregistreringstekst = foedselsregistreringstekst;
 	}
 }

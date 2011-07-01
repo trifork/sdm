@@ -30,14 +30,83 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
-import com.trifork.stamdata.importer.parsers.takst.model.*;
+import com.trifork.stamdata.importer.parsers.takst.model.ATCKoderOgTekst;
+import com.trifork.stamdata.importer.parsers.takst.model.ATCKoderOgTekstFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Administrationsvej;
+import com.trifork.stamdata.importer.parsers.takst.model.AdministrationsvejFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Beregningsregler;
+import com.trifork.stamdata.importer.parsers.takst.model.BeregningsreglerFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.DivEnheder;
+import com.trifork.stamdata.importer.parsers.takst.model.DivEnhederFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Dosering;
+import com.trifork.stamdata.importer.parsers.takst.model.DoseringFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Doseringskode;
+import com.trifork.stamdata.importer.parsers.takst.model.DoseringskodeFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.EmballagetypeKoder;
+import com.trifork.stamdata.importer.parsers.takst.model.EmballagetypeKoderFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Enhedspriser;
+import com.trifork.stamdata.importer.parsers.takst.model.EnhedspriserFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Firma;
+import com.trifork.stamdata.importer.parsers.takst.model.FirmaFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Indholdsstoffer;
+import com.trifork.stamdata.importer.parsers.takst.model.IndholdsstofferFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Indikation;
+import com.trifork.stamdata.importer.parsers.takst.model.IndikationFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Indikationskode;
+import com.trifork.stamdata.importer.parsers.takst.model.IndikationskodeFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Klausulering;
+import com.trifork.stamdata.importer.parsers.takst.model.KlausuleringFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Laegemiddel;
+import com.trifork.stamdata.importer.parsers.takst.model.LaegemiddelAdministrationsvejRef;
+import com.trifork.stamdata.importer.parsers.takst.model.LaegemiddelFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.LaegemiddelformBetegnelser;
+import com.trifork.stamdata.importer.parsers.takst.model.LaegemiddelformBetegnelserFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Laegemiddelnavn;
+import com.trifork.stamdata.importer.parsers.takst.model.LaegemiddelnavnFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Medicintilskud;
+import com.trifork.stamdata.importer.parsers.takst.model.MedicintilskudFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Opbevaringsbetingelser;
+import com.trifork.stamdata.importer.parsers.takst.model.OpbevaringsbetingelserFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.OplysningerOmDosisdispensering;
+import com.trifork.stamdata.importer.parsers.takst.model.OplysningerOmDosisdispenseringFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Pakning;
+import com.trifork.stamdata.importer.parsers.takst.model.PakningFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Pakningskombinationer;
+import com.trifork.stamdata.importer.parsers.takst.model.PakningskombinationerFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.PakningskombinationerUdenPriser;
+import com.trifork.stamdata.importer.parsers.takst.model.PakningskombinationerUdenPriserFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Pakningsstoerrelsesenhed;
+import com.trifork.stamdata.importer.parsers.takst.model.Priser;
+import com.trifork.stamdata.importer.parsers.takst.model.PriserFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Rekommandationer;
+import com.trifork.stamdata.importer.parsers.takst.model.RekommandationerFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.SpecialeForNBS;
+import com.trifork.stamdata.importer.parsers.takst.model.SpecialeForNBSFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Styrkeenhed;
+import com.trifork.stamdata.importer.parsers.takst.model.Substitution;
+import com.trifork.stamdata.importer.parsers.takst.model.SubstitutionAfLaegemidlerUdenFastPris;
+import com.trifork.stamdata.importer.parsers.takst.model.SubstitutionAfLaegemidlerUdenFastPrisFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.SubstitutionFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
+import com.trifork.stamdata.importer.parsers.takst.model.Tidsenhed;
+import com.trifork.stamdata.importer.parsers.takst.model.Tilskudsintervaller;
+import com.trifork.stamdata.importer.parsers.takst.model.TilskudsintervallerFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.TilskudsprisgrupperPakningsniveau;
+import com.trifork.stamdata.importer.parsers.takst.model.TilskudsprisgrupperPakningsniveauFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.UdgaaedeNavne;
+import com.trifork.stamdata.importer.parsers.takst.model.UdgaaedeNavneFactory;
+import com.trifork.stamdata.importer.parsers.takst.model.Udleveringsbestemmelser;
+import com.trifork.stamdata.importer.parsers.takst.model.UdleveringsbestemmelserFactory;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
@@ -303,7 +372,7 @@ public class TakstParser
 		return Integer.parseInt(line.substring(91, 93));
 	}
 
-	private Date getValidFromDate(String line)
+	public Date getValidFromDate(String line)
 	{
 		try
 		{

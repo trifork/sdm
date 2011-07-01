@@ -24,7 +24,6 @@
 package com.trifork.stamdata.importer.persistence;
 
 import java.sql.Connection;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +40,6 @@ import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEn
 
 public class AuditingPersister implements Persister
 {
-
 	private static Logger logger = LoggerFactory.getLogger(AuditingPersister.class);
 
 	protected Connection connection;
@@ -123,7 +121,8 @@ public class AuditingPersister implements Persister
 					{
 						if (existingValidTo.equals(record.getValidFrom()))
 						{
-							// This existing row is not in the range of our entity.
+							// This existing row is not in the range of our
+							// entity.
 							continue;
 						}
 
@@ -281,7 +280,6 @@ public class AuditingPersister implements Persister
 
 	public <T extends StamdataEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws FilePersistException
 	{
-
 		return new DatabaseTableWrapper<T>(connection, clazz);
 	}
 
@@ -291,10 +289,9 @@ public class AuditingPersister implements Persister
 	 */
 	private <T extends StamdataEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws FilePersistException
 	{
-
 		logger.debug("updateValidToOnRecordsNotInDataset " + dataset.getEntityTypeDisplayName() + " starting...");
 
-		Calendar now = Calendar.getInstance();
+		Date now = new Date();
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 
 		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
@@ -303,7 +300,6 @@ public class AuditingPersister implements Persister
 
 		for (StamdataEntityVersion ev : evs)
 		{
-
 			List<? extends StamdataEntity> entitiesWithId = dataset.getEntitiesById(ev.id);
 
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
@@ -321,7 +317,6 @@ public class AuditingPersister implements Persister
 
 	public Connection getConnection()
 	{
-
 		return connection;
 	}
 }

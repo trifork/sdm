@@ -23,7 +23,6 @@
 
 package com.trifork.stamdata.importer.parsers.autorisationsregister.model;
 
-
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -33,16 +32,17 @@ import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
+
 @Output
 public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
 {
-    private String nummer;
-    private String cpr;
-    private String efternavn;
-    private String fornavn;
-    private String uddKode;
+	private String nummer;
+	private String cpr;
+	private String efternavn;
+	private String fornavn;
+	private String uddKode;
 
-    Autorisationsregisterudtraek dataset;
+	Autorisationsregisterudtraek dataset;
 
 	public Autorisation(String line)
 	{

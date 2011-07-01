@@ -56,21 +56,6 @@ public class ATC extends View {
 	@Column(name = "ATCTekst")
 	protected String tekst;
 
-	@Column(name = "ATCNiveau1")
-	protected String niveau1;
-
-	@Column(name = "ATCNiveau2")
-	protected String niveau2;
-
-	@Column(name = "ATCNiveau3")
-	protected String niveau3;
-
-	@Column(name = "ATCNiveau4")
-	protected String niveau4;
-
-	@Column(name = "ATCNiveau5")
-	protected String niveau5;
-
 	@XmlTransient
 	@Column(name = "ModifiedDate")
 	private Date modifiedDate;

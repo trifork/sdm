@@ -23,16 +23,19 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-public class JobException extends Exception {
+public class JobException extends Exception
+{
 
 	private static final long serialVersionUID = 4805896456574735730L;
 
-	public JobException(String message, Throwable cause) {
+	public JobException(String message, Throwable cause)
+	{
 
 		super(message, cause);
 	}
 
-	public JobException(String message) {
+	public JobException(String message)
+	{
 
 		super(message);
 	}

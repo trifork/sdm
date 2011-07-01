@@ -26,33 +26,40 @@ package com.trifork.stamdata.importer.parsers.cpr.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class BarnRelation extends CPREntity {
+public class BarnRelation extends CPREntity
+{
 
 	String cpr;
 	String barnCpr;
 
 	@Id
 	@Output
-	public String getId() {
+	public String getId()
+	{
 		return cpr + "-" + barnCpr;
 	}
 
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
-	public void setCpr(String cpr) {
+	public void setCpr(String cpr)
+	{
 		this.cpr = cpr;
 	}
 
 	@Output
-	public String getBarnCpr() {
+	public String getBarnCpr()
+	{
 		return barnCpr;
 	}
 
-	public void setBarnCpr(String barnCpr) {
+	public void setBarnCpr(String barnCpr)
+	{
 		this.barnCpr = barnCpr;
 	}
 }

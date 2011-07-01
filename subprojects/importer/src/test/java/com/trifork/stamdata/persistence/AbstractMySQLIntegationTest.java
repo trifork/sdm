@@ -23,26 +23,29 @@
 
 package com.trifork.stamdata.persistence;
 
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.Date;
+
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Calendar;
 
-public class AbstractMySQLIntegationTest {
-
-	protected Calendar t0 = Calendar.getInstance();
-	protected Calendar t1 = Calendar.getInstance();
-	protected Calendar t2 = Calendar.getInstance();
-	protected Calendar t3 = Calendar.getInstance();
-	protected Calendar t4 = Calendar.getInstance();
-	protected Calendar t1000 = Calendar.getInstance();
+public class AbstractMySQLIntegationTest
+{
+	protected Date t0;
+	protected Date t1;
+	protected Date t2;
+	protected Date t3;
+	protected Date t4;
+	protected Date t1000;
 
 	@Before
-	public void setup() throws Exception {
+	public void setup() throws Exception
+	{
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate("truncate table TakstVersion");
@@ -51,22 +54,18 @@ public class AbstractMySQLIntegationTest {
 	}
 
 	@Before
-	public void initDates(){
-		t0.clear();
-		t1.clear();
-		t2.clear();
-		t3.clear();
-		t4.clear();
-		t1000.clear();
-		t0.set(2000, 0, 1, 1,2,3);
-		t1.set(2001, 0, 1, 1,2,3);
-		t2.set(2002, 0, 1, 1,2,3);
-		t3.set(2003, 0, 1, 1,2,3);
-		t4.set(2003, 0, 1, 1,2,3);
-		t1000.set(3003, 0, 1, 1,2,3);
+	public void initDates()
+	{
+		t0 = new DateTime(2000, 1, 1, 1, 2, 3, 0).toDate();
+		t1 = new DateTime(2001, 1, 1, 1, 2, 3, 0).toDate();
+		t2 = new DateTime(2002, 1, 1, 1, 2, 3, 0).toDate();
+		t3 = new DateTime(2003, 1, 1, 1, 2, 3, 0).toDate();
+		t4 = new DateTime(2003, 1, 1, 1, 2, 3, 0).toDate();
+		t1000 = new DateTime(3003, 1, 1, 1, 2, 3, 0).toDate();
 	}
 
 	@Test
-	public void dummyTest(){
+	public void dummyTest()
+	{
 	}
 }

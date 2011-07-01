@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,14 +23,14 @@
 
 package com.trifork.stamdata.importer.parsers.autorisationsregister.model;
 
-
 import java.util.Date;
 
 import com.trifork.stamdata.importer.model.CompleteDataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation> {
+public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation>
+{
 
 	public Autorisationsregisterudtraek(Date validFrom)
 	{

@@ -63,7 +63,6 @@ public class Takst extends TakstEntity
 	 */
 	public <A extends TakstEntity> TakstDataset<A> getDatasetOfType(Class<A> clazz)
 	{
-
 		for (Dataset<? extends StamdataEntity> dataset : datasets)
 		{
 			if (clazz.equals(dataset.getType())) return (TakstDataset<A>) dataset;
@@ -73,23 +72,23 @@ public class Takst extends TakstEntity
 
 	public List<CompleteDataset<? extends StamdataEntity>> getDatasets()
 	{
-
 		return datasets;
 	}
 
 	public List<StamdataEntity> getEntities()
 	{
 		List<StamdataEntity> result = new ArrayList<StamdataEntity>();
+
 		for (Dataset dataset : datasets)
 		{
 			result.addAll(dataset.getEntities());
 		}
+
 		return result;
 	}
 
 	public void addDataset(TakstDataset dataset)
 	{
-
 		datasets.add(dataset);
 	}
 
@@ -100,11 +99,13 @@ public class Takst extends TakstEntity
 	 */
 	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId)
 	{
-
 		if (entityId == null) return null;
-		Dataset avds = getDatasetOfType(type);
+
+		Dataset<?> avds = getDatasetOfType(type);
+
 		if (avds == null) return null;
-		return (T) avds.getEntityById(entityId);
+
+		return (T)avds.getEntityById(entityId);
 	}
 
 	@Output(name = "TakstUge")

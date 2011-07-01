@@ -27,7 +27,6 @@ import java.util.Date;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
 @Output
@@ -241,26 +240,22 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 	@Output
 	public String getRelationsTekst4()
 	{
-
 		return relationsTekst4;
 	}
 
 	public void setRelationsTekst4(String relationsTekst4)
 	{
-
 		this.relationsTekst4 = relationsTekst4;
 	}
 
 	@Output
 	public String getRelationsTekst5()
 	{
-
 		return relationsTekst5;
 	}
 
 	public void setRelationsTekst5(String relationsTekst5)
 	{
-
 		this.relationsTekst5 = relationsTekst5;
 	}
 
@@ -268,14 +263,14 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 	public Date getValidFrom()
 	{
 		// Hvis umyndiggørelses start dato er sat til senere end
-		// produktionsdatoen for udtrækket brug det ellers brug produktionsdatoen.
-		return (umyndigStartDato == null) ? super.getValidFrom() : (umyndigStartDato.after(super.getValidFrom())) ? DateUtils.toCalendar(umyndigStartDato) : super.getValidFrom();
+		// produktionsdatoen for udtrækket brug det ellers brug
+		// produktionsdatoen.
+		return (umyndigStartDato == null) ? super.getValidFrom() : (umyndigStartDato.after(super.getValidFrom())) ? umyndigStartDato : super.getValidFrom();
 	}
 
 	@Override
 	public Date getValidTo()
 	{
-
-		return (umyndigSletteDato == null) ? super.getValidTo() : DateUtils.toCalendar(umyndigSletteDato);
+		return (umyndigSletteDato == null) ? super.getValidTo() : umyndigSletteDato;
 	}
 }

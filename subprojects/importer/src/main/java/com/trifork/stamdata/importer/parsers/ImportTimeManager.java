@@ -23,11 +23,9 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.slf4j.Logger;
@@ -39,56 +37,61 @@ import com.trifork.stamdata.importer.util.DateUtils;
 
 public class ImportTimeManager
 {
-    private static Logger logger = LoggerFactory.getLogger(ImportTimeManager.class);
+	private static Logger logger = LoggerFactory.getLogger(ImportTimeManager.class);
 
-    public static Date getLastImportTime(String spoolername)
-    {
-        Connection con = null;
-        Statement stmt = null;
+	public static Date getLastImportTime(String spoolername)
+	{
+		Connection con = null;
+		Statement stmt = null;
 
-        try {
-            con = MySQLConnectionManager.getAutoCommitConnection();
-            stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT max(importtime) from " + MySQLConnectionManager.getHousekeepingDBName() + ".Import where spoolername = '" + spoolername + "'");
+		try
+		{
+			con = MySQLConnectionManager.getAutoCommitConnection();
+			stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT max(importtime) from " + MySQLConnectionManager.getHousekeepingDBName() + ".Import where spoolername = '" + spoolername + "'");
 
-            if (rs.next())
-            {
-                return DateUtils.toCalendar(rs.getTimestamp(1));
-            }
-            else
-            {
-                return null;
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error("getLastImportTime(" + spoolername + ")", e); // TODO: Throw don't log
-            return null;
-        }
-        finally
-        {
-            MySQLConnectionManager.close(stmt, con);
-        }
-    }
+			if (rs.next())
+			{
+				return rs.getTimestamp(1);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		catch (Exception e)
+		{
+			logger.error("getLastImportTime(" + spoolername + ")", e); // TODO:
+																		// Throw
+																		// don't
+																		// log
+			return null;
+		}
+		finally
+		{
+			MySQLConnectionManager.close(stmt, con);
+		}
+	}
 
-    public static void setImportTime(String spoolerName, Calendar importTime)
-    {
-        Connection con = null;
-        Statement stmt = null;
+	public static void setImportTime(String spoolerName, Date importTime)
+	{
+		Connection con = null;
+		Statement stmt = null;
 
-        try
-        {
-            con = MySQLConnectionManager.getAutoCommitConnection();
-            stmt = con.createStatement();
-            stmt.executeUpdate("insert into " + MySQLConnectionManager.getHousekeepingDBName() + ".Import values('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
-        }
-        catch (Exception e)
-        {
-            logger.error("getLastImportTime(" + spoolerName + ")", e); // TODO: Throw.
-        }
-        finally
-        {
-            MySQLConnectionManager.close(stmt, con);
-        }
-    }
+		try
+		{
+			con = MySQLConnectionManager.getAutoCommitConnection();
+			stmt = con.createStatement();
+			stmt.executeUpdate("insert into " + MySQLConnectionManager.getHousekeepingDBName() + ".Import values('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
+		}
+		catch (Exception e)
+		{
+			logger.error("getLastImportTime(" + spoolerName + ")", e); // TODO:
+																		// Throw.
+		}
+		finally
+		{
+			MySQLConnectionManager.close(stmt, con);
+		}
+	}
 }

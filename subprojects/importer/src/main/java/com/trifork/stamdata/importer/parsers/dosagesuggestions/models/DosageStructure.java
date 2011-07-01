@@ -28,7 +28,8 @@ import com.trifork.stamdata.importer.model.Output;
 
 
 @Output
-public class DosageStructure extends DosageRecord {
+public class DosageStructure extends DosageRecord
+{
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
@@ -64,50 +65,58 @@ public class DosageStructure extends DosageRecord {
 	private String longTranslation;
 
 	@Output
-	public long getReleaseNumber() {
+	public long getReleaseNumber()
+	{
 
 		return releaseNumber;
 	}
 
 	@Id
 	@Output
-	public long getCode() {
+	public long getCode()
+	{
 
 		return code;
 	}
 
 	@Output
-	public String getType() {
+	public String getType()
+	{
 
 		return type;
 	}
 
 	@Output
-	public String getSimpleString() {
+	public String getSimpleString()
+	{
 
 		return simpleString;
 	}
 
 	@Output
-	public String getSupplementaryText() {
+	public String getSupplementaryText()
+	{
 
 		return supplementaryText;
 	}
 
 	@Output
-	public String getXml() {
+	public String getXml()
+	{
 
 		return xml;
 	}
 
 	@Output
-	public String getShortTranslation() {
+	public String getShortTranslation()
+	{
 
 		return shortTranslation;
 	}
 
 	@Output
-	public String getLongTranslation() {
+	public String getLongTranslation()
+	{
 
 		return longTranslation;
 	}

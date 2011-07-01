@@ -39,16 +39,20 @@ import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
 import com.trifork.stamdata.importer.webinterface.ImporterServlet;
 
 
-public class ApplicationContextListener extends GuiceServletContextListener {
+public class ApplicationContextListener extends GuiceServletContextListener
+{
 
 	@Override
-	protected Injector getInjector() {
+	protected Injector getInjector()
+	{
 
 		Collection<Module> modules = Lists.newArrayList();
 
-		modules.add(new ServletModule() {
+		modules.add(new ServletModule()
+		{
 			@Override
-			protected void configureServlets() {
+			protected void configureServlets()
+			{
 
 				serve("/status").with(ImporterServlet.class);
 

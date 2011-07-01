@@ -23,7 +23,8 @@
 
 package com.trifork.stamdata.importer.parsers.sor.xmlmodel;
 
-public class AddressInformation {
+public class AddressInformation
+{
 	private String streetName;
 	private String streetBuildingIdentifier;
 	private String postCodeIdentifier;
@@ -38,71 +39,113 @@ public class AddressInformation {
 	private Long eanLocationCode;
 	private Boolean entityInheritedIndicator;
 
-	public String getStreetName() {
+	public String getStreetName()
+	{
 		return streetName;
 	}
-	public void setStreetName(String streetName) {
+
+	public void setStreetName(String streetName)
+	{
 		this.streetName = streetName;
 	}
-	public String getStreetBuildingIdentifier() {
+
+	public String getStreetBuildingIdentifier()
+	{
 		return streetBuildingIdentifier;
 	}
-	public void setStreetBuildingIdentifier(String streetBuildingIdentifier) {
+
+	public void setStreetBuildingIdentifier(String streetBuildingIdentifier)
+	{
 		this.streetBuildingIdentifier = streetBuildingIdentifier;
 	}
-	public String getPostCodeIdentifier() {
+
+	public String getPostCodeIdentifier()
+	{
 		return postCodeIdentifier;
 	}
-	public void setPostCodeIdentifier(String postCodeIdentifier) {
+
+	public void setPostCodeIdentifier(String postCodeIdentifier)
+	{
 		this.postCodeIdentifier = postCodeIdentifier;
 	}
-	public String getDistrictName() {
+
+	public String getDistrictName()
+	{
 		return districtName;
 	}
-	public void setDistrictName(String districtName) {
+
+	public void setDistrictName(String districtName)
+	{
 		this.districtName = districtName;
 	}
-	public String getCountryIdentificationCode() {
+
+	public String getCountryIdentificationCode()
+	{
 		return countryIdentificationCode;
 	}
-	public void setCountryIdentificationCode(String countryIdentificationCode) {
+
+	public void setCountryIdentificationCode(String countryIdentificationCode)
+	{
 		this.countryIdentificationCode = countryIdentificationCode;
 	}
 
-	public String getEmailAddressIdentifier() {
+	public String getEmailAddressIdentifier()
+	{
 		return emailAddressIdentifier;
 	}
-	public void setEmailAddressIdentifier(String emailAddressIdentifier) {
+
+	public void setEmailAddressIdentifier(String emailAddressIdentifier)
+	{
 		this.emailAddressIdentifier = emailAddressIdentifier;
 	}
-	public String getWebsite() {
+
+	public String getWebsite()
+	{
 		return website;
 	}
-	public void setWebsite(String website) {
+
+	public void setWebsite(String website)
+	{
 		this.website = website;
 	}
-	public String getTelephoneNumberIdentifier() {
+
+	public String getTelephoneNumberIdentifier()
+	{
 		return telephoneNumberIdentifier;
 	}
-	public void setTelephoneNumberIdentifier(String telephoneNumberIdentifier) {
+
+	public void setTelephoneNumberIdentifier(String telephoneNumberIdentifier)
+	{
 		this.telephoneNumberIdentifier = telephoneNumberIdentifier;
 	}
-	public String getFaxNumberIdentifier() {
+
+	public String getFaxNumberIdentifier()
+	{
 		return faxNumberIdentifier;
 	}
-	public void setFaxNumberIdentifier(String faxNumberIdentifier) {
+
+	public void setFaxNumberIdentifier(String faxNumberIdentifier)
+	{
 		this.faxNumberIdentifier = faxNumberIdentifier;
 	}
-	public Long getEanLocationCode() {
+
+	public Long getEanLocationCode()
+	{
 		return eanLocationCode;
 	}
-	public void setEanLocationCode(Long eanLocationCode) {
+
+	public void setEanLocationCode(Long eanLocationCode)
+	{
 		this.eanLocationCode = eanLocationCode;
 	}
-	public Boolean isEntityInheritedIndicator() {
+
+	public Boolean isEntityInheritedIndicator()
+	{
 		return entityInheritedIndicator;
 	}
-	public void setEntityInheritedIndicator(Boolean entityInheritedIndicator) {
+
+	public void setEntityInheritedIndicator(Boolean entityInheritedIndicator)
+	{
 		this.entityInheritedIndicator = entityInheritedIndicator;
 	}
 

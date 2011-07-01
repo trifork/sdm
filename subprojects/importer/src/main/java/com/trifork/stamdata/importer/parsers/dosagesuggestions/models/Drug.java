@@ -28,38 +28,44 @@ import com.trifork.stamdata.importer.model.Output;
 
 
 @Output(name = "DosageDrug")
-public class Drug extends DosageRecord {
+public class Drug extends DosageRecord
+{
 
 	private long drugId;
 	private int releaseNumber;
 	private String drugName;
 	private int dosageUnitCode;
 
-	protected Drug() {
+	protected Drug()
+	{
 
 	}
 
 	@Id
 	@Output
-	public long getDrugId() {
+	public long getDrugId()
+	{
 
 		return drugId;
 	}
 
 	@Output
-	public int getReleaseNumber() {
+	public int getReleaseNumber()
+	{
 
 		return releaseNumber;
 	}
 
 	@Output
-	public String getDrugName() {
+	public String getDrugName()
+	{
 
 		return drugName;
 	}
 
 	@Output
-	public int getDosageUnitCode() {
+	public int getDosageUnitCode()
+	{
 
 		return dosageUnitCode;
 	}

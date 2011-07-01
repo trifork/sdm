@@ -26,53 +26,65 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class Rekommandationer extends TakstEntity {
+public class Rekommandationer extends TakstEntity
+{
 
-    private Long rekommandationsgruppe;
-    private Long drugID;        //Ref. t. LMS01
-    private Long varenummer;        //Ref. t. LMS02
-    private String rekommandationsniveau;        //Værdier: Anbefales / … med forbehold / …ikke
+	private Long rekommandationsgruppe;
+	private Long drugID; // Ref. t. LMS01
+	private Long varenummer; // Ref. t. LMS02
+	private String rekommandationsniveau; // Værdier: Anbefales / … med
+											// forbehold / …ikke
 
-    @Output
-    public Long getRekommandationsgruppe() {
-        return this.rekommandationsgruppe;
-    }
+	@Output
+	public Long getRekommandationsgruppe()
+	{
+		return this.rekommandationsgruppe;
+	}
 
-    public void setRekommandationsgruppe(Long rekommandationsgruppe) {
-        this.rekommandationsgruppe = rekommandationsgruppe;
-    }
+	public void setRekommandationsgruppe(Long rekommandationsgruppe)
+	{
+		this.rekommandationsgruppe = rekommandationsgruppe;
+	}
 
-    @Output
-    public Long getDrugID() {
-        return this.drugID;
-    }
+	@Output
+	public Long getDrugID()
+	{
+		return this.drugID;
+	}
 
-    public void setDrugID(Long drugID) {
-        this.drugID = drugID;
-    }
+	public void setDrugID(Long drugID)
+	{
+		this.drugID = drugID;
+	}
 
-    @Id
-    @Output
-    public Long getVarenummer() {
-        return this.varenummer;
-    }
+	@Id
+	@Output
+	public Long getVarenummer()
+	{
+		return this.varenummer;
+	}
 
-    public void setVarenummer(Long varenummer) {
-        this.varenummer = varenummer;
-    }
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
+	}
 
-    @Output
-    public String getRekommandationsniveau() {
-        return this.rekommandationsniveau;
-    }
+	@Output
+	public String getRekommandationsniveau()
+	{
+		return this.rekommandationsniveau;
+	}
 
-    public void setRekommandationsniveau(String rekommandationsniveau) {
-        this.rekommandationsniveau = rekommandationsniveau;
-    }
+	public void setRekommandationsniveau(String rekommandationsniveau)
+	{
+		this.rekommandationsniveau = rekommandationsniveau;
+	}
 
-    public Long getKey() {
-        return varenummer;
-    }
+	public Long getKey()
+	{
+		return varenummer;
+	}
 
 }

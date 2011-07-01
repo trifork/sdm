@@ -26,44 +26,53 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output(name = "Formbetegnelse")
-public class LaegemiddelformBetegnelser extends TakstEntity {
+public class LaegemiddelformBetegnelser extends TakstEntity
+{
 
-    private String kode;        //Ref. t. LMS01, felt 08
-    private String tekst;
-    private String aktivInaktiv;        //A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke anerkendt term
+	private String kode; // Ref. t. LMS01, felt 08
+	private String tekst;
+	private String aktivInaktiv; // A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
+									// anerkendt term
 
+	@Id
+	@Output
+	public String getKode()
+	{
+		return this.kode;
+	}
 
-    @Id
-    @Output
-    public String getKode() {
-        return this.kode;
-    }
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
 
-    public void setKode(String kode) {
-        this.kode = kode;
-    }
+	@Output
+	public String getTekst()
+	{
+		return this.tekst;
+	}
 
-    @Output
-    public String getTekst() {
-        return this.tekst;
-    }
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
+	}
 
-    public void setTekst(String tekst) {
-        this.tekst = tekst;
-    }
+	@Output(name = "Aktiv")
+	public Boolean getAktivInaktiv()
+	{
+		return "A".equalsIgnoreCase(this.aktivInaktiv);
+	}
 
-    @Output(name = "Aktiv")
-    public Boolean getAktivInaktiv() {
-        return "A".equalsIgnoreCase(this.aktivInaktiv);
-    }
+	public void setAktivInaktiv(String aktivInaktiv)
+	{
+		this.aktivInaktiv = aktivInaktiv;
+	}
 
-    public void setAktivInaktiv(String aktivInaktiv) {
-        this.aktivInaktiv = aktivInaktiv;
-    }
-
-    public String getKey() {
-        return "" + this.kode;
-    }
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
 
 }

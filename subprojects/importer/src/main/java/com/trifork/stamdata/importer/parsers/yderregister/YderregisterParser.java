@@ -23,6 +23,17 @@
 
 package com.trifork.stamdata.importer.parsers.yderregister;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
@@ -33,14 +44,6 @@ import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
 import com.trifork.stamdata.importer.parsers.yderregister.model.Yderregister;
 import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterDatasets;
 import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterPerson;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 
 public class YderregisterParser

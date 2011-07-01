@@ -30,14 +30,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class Configuration {
+public class Configuration
+{
 
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static Configuration defaultInstance = new Configuration();
 
 	private Properties properties;
 
-	public Configuration() {
+	public Configuration()
+	{
 
 		this("config");
 	}
@@ -64,7 +66,8 @@ public class Configuration {
 				deploymentConfig.close();
 			}
 		}
-		catch (Exception e) {
+		catch (Exception e)
+		{
 			logger.error("Error loading config.properties not found.");
 		}
 	}
@@ -74,17 +77,20 @@ public class Configuration {
 		return defaultInstance.getProperty(key);
 	}
 
-	public static Integer getInt(String key) {
+	public static Integer getInt(String key)
+	{
 
 		return Integer.parseInt(defaultInstance.getProperty(key));
 	}
 
-	private String getProperty(String key) {
+	private String getProperty(String key)
+	{
 
 		return properties.getProperty(key);
 	}
 
-	public static void setDefaultInstance(Configuration conf) {
+	public static void setDefaultInstance(Configuration conf)
+	{
 
 		// Only for unit tests
 		defaultInstance = conf;

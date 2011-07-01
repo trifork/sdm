@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,6 +23,8 @@
 
 package com.trifork.stamdata.importer.parsers.autorisationsregister;
 
+import static com.trifork.stamdata.Preconditions.checkArgument;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.sql.Connection;
@@ -34,107 +35,116 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
+
 public class AutImporter implements FileImporterControlledIntervals
 {
-    @Override
-    public boolean checkRequiredFiles(List<File> files)
-    {
-	boolean passed = true;
+	@Override
+	public boolean checkRequiredFiles(List<File> files)
+	{
+		// It doesn't seem like we know anything about
+		// what the required files are. Therefore we just
+		// make sure that there are some.
 
-        if (files.size() == 0)
-        {
-            passed = false;
-        }
-        else
-        {
-	        // TODO: Check the expected files are present.
-        }
+		checkNotNull(files);
+		checkArgument(files.size() > 0, "You must not call this method with an empty set of files. This makes no sense.");
 
-        return passed;
-    }
+		return true;
+	}
 
-    @Override
-    public void run(List<File> files) throws FileImporterException
-    {
-        Connection connection = null;
+	@Override
+	public void run(List<File> files) throws FileImporterException
+	{
+		Connection connection = null;
 
-        try
-        {
-            connection = MySQLConnectionManager.getConnection();
-            AuditingPersister dao = new AuditingPersister(connection);
-            doImport(files, dao);
-            connection.commit();
-        }
-        catch (SQLException e)
-        {
-            throw new FileImporterException("Error using database during import of autorisationsregisteret.", e);
-        }
-        finally
-        {
-            MySQLConnectionManager.close(connection);
-        }
-    }
+		try
+		{
+			connection = MySQLConnectionManager.getConnection();
+			AuditingPersister dao = new AuditingPersister(connection);
+			doImport(files, dao);
+			connection.commit();
+		}
+		catch (SQLException e)
+		{
+			throw new FileImporterException("Error using database during import of autorisationsregisteret.", e);
+		}
+		finally
+		{
+			MySQLConnectionManager.close(connection);
+		}
+	}
 
-    /**
-     * Import Autorisationsregister-files using the Dao
-     *
-     * @param files, the files from which the Autorisationer should be parsed
-     * @param dao,   the dao to which Autorisationer should be saved
-     * @throws SQLException          If something goes wrong in the DAO
-     * @throws FileImporterException If importing fails
-     */
-    private void doImport(List<File> files, AuditingPersister dao) throws FileImporterException
-    {
-        for (File file : files)
-        {
-		Date date = parseDate(file.getName());
+	/**
+	 * Import Autorisationsregister-files using the Dao
+	 *
+	 * @param files, the files from which the Autorisationer should be parsed
+	 * @param dao, the dao to which Autorisationer should be saved
+	 * @throws SQLException If something goes wrong in the DAO
+	 * @throws FileImporterException If importing fails
+	 */
+	public void doImport(List<File> files, AuditingPersister dao) throws FileImporterException
+	{
+		for (File file : files)
+		{
+			Date date = parseDate(file.getName());
 
-            try
-            {
-                Autorisationsregisterudtraek dataset = AutorisationsregisterParser.parse(file, date);
-                dao.persistCompleteDataset(dataset);
-            }
-            catch (Exception e)
-            {
-                throw new FileImporterException("Error reading file: " + file, e);
-            }
-        }
-    }
+			try
+			{
+				Autorisationsregisterudtraek dataset = AutorisationsregisterParser.parse(file, date);
+				dao.persistCompleteDataset(dataset);
+			}
+			catch (Exception e)
+			{
+				throw new FileImporterException("Error reading file: " + file, e);
+			}
+		}
+	}
 
-    private Date parseDate(String filename) throws FileImporterException
-    {
-	try
-        {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		return formatter.parse(filename.substring(0, 8));
-        }
-        catch (ParseException e)
-        {
-		throw new FileImporterException("Filename format is invalid! Date could not be extracted.", e);
-        }
-    }
+	private Date parseDate(String filename) throws FileImporterException
+	{
+		try
+		{
+			return getDateFromFilename(filename);
+		}
+		catch (ParseException e)
+		{
+			throw new FileImporterException("Filename format is invalid! Date could not be extracted.", e);
+		}
+	}
 
+	public Date getDateFromFilename(String filename) throws ParseException
+	{
+		try
+		{
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+			return formatter.parse(filename.substring(0, 8));
+		}
+		catch (IndexOutOfBoundsException e)
+		{
+			throw new ParseException("Filename was too short to contain a date.", 8);
+		}
+	}
 
-    /**
-     * Largest gap observed was 15 days from 2008-10-18 to 2008-11-01
-     */
-    @Override
-    public Calendar getNextImportExpectedBefore(Calendar lastImport)
-    {
-        Calendar cal;
-        if (lastImport == null)
-            cal = Calendar.getInstance();
-        else cal = ((Calendar) lastImport.clone());
-        cal.add(Calendar.MONTH, 1);
-		return cal;
+	/**
+	 * Largest gap observed was 15 days from 2008-10-18 to 2008-11-01
+	 */
+	@Override
+	public Date getNextImportExpectedBefore(Date lastImport)
+	{
+		Calendar cal = Calendar.getInstance();
+
+		if (lastImport != null)
+		{
+			cal.setTime(lastImport);
+		}
+
+		cal.add(Calendar.MONTH, 1);
+
+		return cal.getTime();
 	}
 }

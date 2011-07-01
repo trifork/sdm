@@ -45,8 +45,8 @@ import com.trifork.stamdata.views.ViewPath;
 @XmlRootElement
 @Documented("Indeholder doseringsstrukturer.")
 @ViewPath("doseringsforslag/dosagestructure/v1")
-public class DosageStructure extends View {
-
+public class DosageStructure extends View
+{
 	@Id
 	@GeneratedValue
 	@XmlTransient
@@ -93,28 +93,31 @@ public class DosageStructure extends View {
 	protected String longTranslation;
 
 	@Temporal(TIMESTAMP)
-	@Column(name="ValidFrom")
+	@Column(name = "ValidFrom")
 	protected Date validFrom;
 
 	@XmlTransient
 	@Temporal(TIMESTAMP)
-	@Column(name="ModifiedDate")
+	@Column(name = "ModifiedDate")
 	protected Date modifiedDate;
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 
 		return code;
 	}
 
 	@Override
-	public BigInteger getRecordID() {
+	public BigInteger getRecordID()
+	{
 
 		return recordID;
 	}
 
 	@Override
-	public Date getUpdated() {
+	public Date getUpdated()
+	{
 
 		return modifiedDate;
 	}

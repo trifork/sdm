@@ -29,17 +29,24 @@ import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
 
-public class MorOgFaroplysninger extends CPREntity {
-	public enum Foraeldertype {
+public class MorOgFaroplysninger extends CPREntity
+{
+	public enum Foraeldertype
+	{
 		mor("M"), far("F");
 		private final String code;
-		private Foraeldertype(String code) {
+
+		private Foraeldertype(String code)
+		{
 			this.code = code;
 		}
-		public String getCode() {
+
+		public String getCode()
+		{
 			return code;
 		}
 	}
+
 	Foraeldertype foraeldertype;
 	Date dato;
 	String datousikkerhedsmarkering;
@@ -51,88 +58,108 @@ public class MorOgFaroplysninger extends CPREntity {
 
 	@Id
 	@Output
-	public String getId() {
+	public String getId()
+	{
 		return cpr + "-" + foraeldertype.getCode();
 	}
 
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
-	public Foraeldertype getForaeldertype() {
+	public Foraeldertype getForaeldertype()
+	{
 		return foraeldertype;
 	}
 
-	public void setForaeldertype(Foraeldertype foraeldertype) {
+	public void setForaeldertype(Foraeldertype foraeldertype)
+	{
 		this.foraeldertype = foraeldertype;
 	}
 
 	@Output
-	public String getForaelderkode() {
+	public String getForaelderkode()
+	{
 		return foraeldertype.getCode();
 	}
 
 	@Output
-	public Date getDato() {
+	public Date getDato()
+	{
 		return dato;
 	}
 
-	public void setDato(Date dato) {
+	public void setDato(Date dato)
+	{
 		this.dato = dato;
 	}
 
-	public String getDatousikkerhedsmarkering() {
+	public String getDatousikkerhedsmarkering()
+	{
 		return datousikkerhedsmarkering;
 	}
 
-	public void setDatousikkerhedsmarkering(String datousikkerhedsmarkering) {
+	public void setDatousikkerhedsmarkering(String datousikkerhedsmarkering)
+	{
 		this.datousikkerhedsmarkering = datousikkerhedsmarkering;
 	}
 
-	public void setForaeldercpr(String foraeldercpr) {
+	public void setForaeldercpr(String foraeldercpr)
+	{
 		this.foraeldercpr = foraeldercpr;
 	}
 
-	public String getForaeldercpr() {
+	public String getForaeldercpr()
+	{
 		return foraeldercpr;
 	}
 
-	public boolean hasCpr() {
+	public boolean hasCpr()
+	{
 		return foraeldercpr != null && !foraeldercpr.equals("0000000000");
 	}
 
 	@Output
-	public Date getFoedselsdato() {
+	public Date getFoedselsdato()
+	{
 		return foedselsdato;
 	}
 
-	public void setFoedselsdato(Date foedselsdato) {
+	public void setFoedselsdato(Date foedselsdato)
+	{
 		this.foedselsdato = foedselsdato;
 	}
 
-	public String getFoedselsdatousikkerhedsmarkering() {
+	public String getFoedselsdatousikkerhedsmarkering()
+	{
 		return foedselsdatousikkerhedsmarkering;
 	}
 
-	public void setFoedselsdatousikkerhedsmarkering(String foedselsdatousikkerhedsmarkering) {
+	public void setFoedselsdatousikkerhedsmarkering(String foedselsdatousikkerhedsmarkering)
+	{
 		this.foedselsdatousikkerhedsmarkering = foedselsdatousikkerhedsmarkering;
 	}
 
 	@Output
-	public String getNavn() {
+	public String getNavn()
+	{
 		return navn;
 	}
 
-	public void setNavn(String navn) {
+	public void setNavn(String navn)
+	{
 		this.navn = navn;
 	}
 
-	public String getNavnmarkering() {
+	public String getNavnmarkering()
+	{
 		return navnmarkering;
 	}
 
-	public void setNavnmarkering(String navnmarkering) {
+	public void setNavnmarkering(String navnmarkering)
+	{
 		this.navnmarkering = navnmarkering;
 	}
 }

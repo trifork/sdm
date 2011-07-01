@@ -23,6 +23,15 @@
 
 package com.trifork.stamdata.persistence;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,38 +44,35 @@ import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.importer.util.DateUtils;
 
-import java.sql.Connection;
-import java.sql.Statement;
 
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
-
-import static org.junit.Assert.*;
-
-
-public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
-
+public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
+{
 	@Before
-	public void setupTable() throws SQLException {
-
+	public void setupTable() throws SQLException
+	{
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		try {
+		try
+		{
 			Statement stmt = con.createStatement();
-			try {
+			try
+			{
 				stmt.executeUpdate("drop table if exists SDE");
-				stmt.executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedBy VARCHAR(200) NOT NULL, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedBy VARCHAR(200), CreatedDate DATETIME);");
-			} finally {
+				stmt.executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedDate DATETIME);");
+			}
+			finally
+			{
 				stmt.close();
 			}
-		} finally {
+		}
+		finally
+		{
 			con.close();
 		}
 	}
 
 	@Test
-	public void testPersistCompleteDataset() throws Exception {
-
+	public void testPersistCompleteDataset() throws Exception
+	{
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -81,8 +87,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	}
 
 	@Test
-	public void testPersistCompleteDatasetX2() throws Exception {
-
+	public void testPersistCompleteDatasetX2() throws Exception
+	{
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.FUTURE));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
@@ -98,8 +104,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	}
 
 	@Test
-	public void testPersistCompleteDatasetChangedStringSameValidity() throws Exception {
-
+	public void testPersistCompleteDatasetChangedStringSameValidity() throws Exception
+	{
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
@@ -118,12 +124,12 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	}
 
 	@Test
-	public void testPersistCompleteDatasetChangedDateSameValidity() throws Exception {
-
+	public void testPersistCompleteDatasetChangedDateSameValidity() throws Exception
+	{
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
-		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t3.getTime()));
-		dataset2.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t4.getTime()));
+		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t3));
+		dataset2.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a", t4));
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
@@ -132,14 +138,14 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(DateUtils.FUTURE, table.getCurrentRowValidTo());
-		assertEquals(t4.getTime().getTime(), table.currentRS.getTimestamp("date").getTime());
+		assertEquals(t4.getTime(), table.currentRS.getTimestamp("date").getTime());
 		assertFalse(table.nextRow());
 		con.close();
 	}
 
 	@Test
-	public void testPersistCompleteDatasetChangedDataNewValidFrom() throws Exception {
-
+	public void testPersistCompleteDatasetChangedDataNewValidFrom() throws Exception
+	{
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
@@ -163,19 +169,22 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 	}
 
 	@Test
-	public void testPersistCompleteDatasetChangedDataNewValidToNoDataChange() throws Exception {
-
+	public void testPersistCompleteDatasetChangedDataNewValidToNoDataChange() throws Exception
+	{
 		CompleteDataset<SDE> dataset1 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		CompleteDataset<SDE> dataset3 = new CompleteDataset<SDE>(SDE.class, t2, t1000);
 
-		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a")); // Normal
-																		// t0 ->
-																		// FUTURE
-		dataset2.addEntity(new SDE(t0, t1, "1", "a")); // Limit validTo to T1 no
-														// data change
-		dataset3.addEntity(new SDE(t0, t1000, "1", "a")); // Extend validTo to
-															// after FUTURE
+		// Normal t0 -> FUTURE
+
+		dataset1.addEntity(new SDE(t0, DateUtils.FUTURE, "1", "a"));
+
+		// Limit validTo to T1 no data change.
+
+		dataset2.addEntity(new SDE(t0, t1, "1", "a"));
+
+		// Extend validTo to after FUTURE
+		dataset3.addEntity(new SDE(t0, t1000, "1", "a"));
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
@@ -208,29 +217,29 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 
 
 	@Output
-	private static class SDE implements StamdataEntity {
-
-		Calendar validfrom, validto;
+	public static class SDE implements StamdataEntity
+	{
+		Date validfrom, validto;
 		String id = "1"; // default value
 		String data = "a"; // default value
-		Date date = DateUtils.toCalendar(2001, 1, 1, 1, 2, 3).getTime();
+		Date date = DateUtils.toDate(2001, 1, 1, 1, 2, 3);
 
-		public SDE(Calendar validFrom, Calendar validTo) {
-
+		public SDE(Date validFrom, Date validTo)
+		{
 			this.validfrom = validFrom;
 			this.validto = validTo;
 		}
 
-		public SDE(Calendar validFrom, Calendar validTo, String id, String data) {
-
+		public SDE(Date validFrom, Date validTo, String id, String data)
+		{
 			this.validfrom = validFrom;
 			this.validto = validTo;
 			this.data = data;
 			this.id = id;
 		}
 
-		public SDE(Calendar validFrom, Calendar validTo, String id, String data, Date date) {
-
+		public SDE(Date validFrom, Date validTo, String id, String data, Date date)
+		{
 			this.validfrom = validFrom;
 			this.validto = validTo;
 			this.data = data;
@@ -239,36 +248,34 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest {
 		}
 
 		@Override
-		public Calendar getValidFrom() {
-
+		public Date getValidFrom()
+		{
 			return validfrom;
 		}
 
 		@Override
-		public Calendar getValidTo() {
-
+		public Date getValidTo()
+		{
 			return validto;
 		}
 
 		@Output
-		@SuppressWarnings("unused")
-		public String getData() {
-
+		public String getData()
+		{
 			return data;
 		}
 
 		@Id
 		@Override
 		@Output(name = "id")
-		public Object getKey() {
-
+		public Object getKey()
+		{
 			return id;
 		}
 
 		@Output
-		@SuppressWarnings("unused")
-		public Date getDate() {
-
+		public Date getDate()
+		{
 			return date;
 		}
 	}

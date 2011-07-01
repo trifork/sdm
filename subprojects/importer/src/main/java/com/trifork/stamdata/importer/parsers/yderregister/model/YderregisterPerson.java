@@ -128,13 +128,13 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 	@Override
 	public Date getValidFrom()
 	{
-		return DateUtils.toCalendar(tilgangDato);
+		return tilgangDato;
 	}
 
 	@Override
 	public Date getValidTo()
 	{
-		if (afgangDato != null) return DateUtils.toCalendar(afgangDato);
+		if (afgangDato != null) return afgangDato;
 		return DateUtils.FUTURE;
 	}
 }

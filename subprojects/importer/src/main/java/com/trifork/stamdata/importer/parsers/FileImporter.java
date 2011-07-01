@@ -23,14 +23,14 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-
 import java.io.File;
 import java.util.List;
 
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 
 
-public interface FileImporter {
+public interface FileImporter
+{
 
 	public boolean checkRequiredFiles(List<File> files);
 

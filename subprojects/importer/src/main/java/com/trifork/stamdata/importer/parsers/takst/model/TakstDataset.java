@@ -26,16 +26,12 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.model.CompleteDataset;
 
 
 public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
 {
 	private Takst takst;
-	Logger logger = LoggerFactory.getLogger(getClass());
 
 	public TakstDataset(Takst takst, List<T> entities, Class<T> type)
 	{
@@ -66,6 +62,5 @@ public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
 	{
 		super.addEntity(entity);
 		entity.takst = takst;
-
 	}
 }

@@ -32,16 +32,16 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class DateUtils
 {
-	public static final Date FUTURE = toCalendar(2999,12,31);
-	public static final Date PAST = toCalendar(999, 12, 31);
+	public static final Date FUTURE = toDate(2999, 12, 31);
+	public static final Date PAST = toDate(999, 12, 31);
 
 	private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
 
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
-
 
 	/**
 	 * @param long1 representing a date sing the format: yyyyMMdd.
@@ -65,10 +65,10 @@ public class DateUtils
 		}
 	}
 
-	public static String toFilenameDatetime(Calendar cal)
+	public static String toFilenameDatetime(Date date)
 	{
 		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
-		return outformat.format(cal.getTime());
+		return outformat.format(date);
 	}
 
 	/**
@@ -76,11 +76,11 @@ public class DateUtils
 	 * @param month (1-12)
 	 * @param date (1-31)
 	 */
-	public static Date toCalendar(int year, int month, int date)
+	public static Date toDate(int year, int month, int date)
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
-		cal.set(year, month-1, date);
+		cal.set(year, month - 1, date);
 		return cal.getTime();
 	}
 
@@ -89,24 +89,15 @@ public class DateUtils
 	 * @param month (1-12)
 	 * @param date (1-31)
 	 */
-	public static Date toCalendar(int year, int month, int date, int hours, int minutes, int secs)
+	public static Date toDate(int year, int month, int date, int hours, int minutes, int secs)
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
-		cal.set(year, month-1, date, hours, minutes, secs);
+		cal.set(year, month - 1, date, hours, minutes, secs);
 		return cal.getTime();
 	}
 
 	public static Date toCalendar(java.sql.Date date)
-	{
-		if (date == null) return null;
-		Calendar cal = Calendar.getInstance();
-		cal.clear();
-		cal.setTimeInMillis(date.getTime());
-		return cal.getTime();
-	}
-
-	public static Date toCalendar(java.util.Date date)
 	{
 		if (date == null) return null;
 		Calendar cal = Calendar.getInstance();

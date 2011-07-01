@@ -36,7 +36,8 @@ import org.slf4j.Logger;
 import com.google.inject.Inject;
 
 
-public class ProjectInfo {
+public class ProjectInfo
+{
 
 	private static final Logger logger = getLogger(ProjectInfo.class);
 
@@ -47,26 +48,34 @@ public class ProjectInfo {
 	private String version;
 
 	@Inject
-	ProjectInfo(ServletContext context) {
+	ProjectInfo(ServletContext context)
+	{
 
 		InputStream inputStream = context.getResourceAsStream("/META-INF/MANIFEST.MF");
 
-		if (inputStream != null) {
-			try {
+		if (inputStream != null)
+		{
+			try
+			{
 
 				BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 				String line = reader.readLine();
-				while (line != null) {
-					if (line.startsWith("Built-Date:")) {
+				while (line != null)
+				{
+					if (line.startsWith("Built-Date:"))
+					{
 						buildInfo = line.substring("Built-Date:".length() + 1);
 					}
-					if (line.startsWith("Implementation-Vendor:")) {
+					if (line.startsWith("Implementation-Vendor:"))
+					{
 						vendor = line.substring("Implementation-Vendor:".length() + 1);
 					}
-					if (line.startsWith("Implementation-Title:")) {
+					if (line.startsWith("Implementation-Title:"))
+					{
 						title = line.substring("Implementation-Title:".length() + 1);
 					}
-					if (line.startsWith("Built-Version:")) {
+					if (line.startsWith("Built-Version:"))
+					{
 						version = line.substring("Built-Version:".length() + 1);
 					}
 					line = reader.readLine();
@@ -76,12 +85,14 @@ public class ProjectInfo {
 
 				deployType = "WAR";
 			}
-			catch (Exception e) {
+			catch (Exception e)
+			{
 
 				logger.error("Could not load file: 'META-INF/MANIFEST.MF'.", e);
 			}
 		}
-		else {
+		else
+		{
 			deployType = "Unknown";
 			buildInfo = "Unknown";
 			vendor = "Unknown";
@@ -90,27 +101,32 @@ public class ProjectInfo {
 		}
 	}
 
-	public String getDeployType() {
+	public String getDeployType()
+	{
 
 		return deployType;
 	}
 
-	public String getBuildInfo() {
+	public String getBuildInfo()
+	{
 
 		return buildInfo;
 	}
 
-	public String getVendor() {
+	public String getVendor()
+	{
 
 		return vendor;
 	}
 
-	public String getTitle() {
+	public String getTitle()
+	{
 
 		return title;
 	}
 
-	public String getVersion() {
+	public String getVersion()
+	{
 
 		return version;
 	}

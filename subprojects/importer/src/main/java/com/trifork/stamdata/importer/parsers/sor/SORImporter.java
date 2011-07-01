@@ -27,6 +27,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -58,6 +59,7 @@ public class SORImporter implements FileImporterControlledIntervals
 	public void run(List<File> files) throws FileImporterException
 	{
 		Connection connection = null;
+
 		try
 		{
 			connection = MySQLConnectionManager.getConnection();
@@ -71,6 +73,7 @@ public class SORImporter implements FileImporterControlledIntervals
 				dao.persistCompleteDataset(dataSets.getSygehusAfdelingDS());
 				dao.persistCompleteDataset(dataSets.getApotekDS());
 			}
+
 			connection.commit();
 		}
 		catch (SQLException e)
@@ -97,15 +100,17 @@ public class SORImporter implements FileImporterControlledIntervals
 	 * Should be updated every day
 	 */
 	@Override
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
+	public Date getNextImportExpectedBefore(Date lastImport)
 	{
-		Calendar cal;
-		if (lastImport == null)
-			cal = Calendar.getInstance();
-		else
-			cal = ((Calendar) lastImport.clone());
-		cal.add(Calendar.DATE, 3);
-		return cal;
-	}
+		Calendar cal = Calendar.getInstance();
 
+		if (lastImport != null)
+		{
+			cal.setTime(lastImport);
+		}
+
+		cal.add(Calendar.DATE, 3);
+
+		return cal.getTime();
+	}
 }

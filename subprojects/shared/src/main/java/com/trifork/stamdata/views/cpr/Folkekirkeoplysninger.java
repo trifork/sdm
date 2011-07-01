@@ -64,14 +64,8 @@ public class Folkekirkeoplysninger extends View {
 	public Date modifiedDate;
 
 	@XmlTransient
-	public String modifiedBy;
-
-	@XmlTransient
 	@Temporal(TIMESTAMP)
 	public Date createdDate;
-
-	@XmlTransient
-	public String createdBy;
 
 	@Temporal(TIMESTAMP)
 	public Date validFrom;
@@ -98,5 +92,4 @@ public class Folkekirkeoplysninger extends View {
 	public String toString() {
 		return "Folkekirkeoplysninger[cpr=" + cpr + ", forholdskode=" + forholdsKode + ", startdato=" + validFrom + "]";
 	}
-
 }

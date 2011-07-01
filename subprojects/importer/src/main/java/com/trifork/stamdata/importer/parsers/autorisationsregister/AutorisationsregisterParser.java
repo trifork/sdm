@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,7 +23,6 @@
 
 package com.trifork.stamdata.importer.parsers.autorisationsregister;
 
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +32,7 @@ import java.util.Date;
 
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
+
 
 public class AutorisationsregisterParser
 {

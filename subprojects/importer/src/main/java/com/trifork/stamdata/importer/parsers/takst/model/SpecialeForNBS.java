@@ -26,43 +26,52 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class SpecialeForNBS extends TakstEntity {
+public class SpecialeForNBS extends TakstEntity
+{
 
-    private String kode;        //Ref. t. LMS02, felt 11
-    private String kortTekst;        //Speciale, forkortet
-    private String tekst;        //Tekst for speciale
+	private String kode; // Ref. t. LMS02, felt 11
+	private String kortTekst; // Speciale, forkortet
+	private String tekst; // Tekst for speciale
 
-    @Id
-    @Output
-    public String getKode() {
-        return this.kode;
-    }
+	@Id
+	@Output
+	public String getKode()
+	{
+		return this.kode;
+	}
 
-    public void setKode(String kode) {
-        this.kode = kode;
-    }
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
 
-    @Output
-    public String getKortTekst() {
-        return this.kortTekst;
-    }
+	@Output
+	public String getKortTekst()
+	{
+		return this.kortTekst;
+	}
 
-    public void setKortTekst(String kortTekst) {
-        this.kortTekst = kortTekst;
-    }
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
+	}
 
-    @Output
-    public String getTekst() {
-        return this.tekst;
-    }
+	@Output
+	public String getTekst()
+	{
+		return this.tekst;
+	}
 
-    public void setTekst(String tekst) {
-        this.tekst = tekst;
-    }
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
+	}
 
-    public String getKey() {
-        return "" + this.kode;
-    }
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
 
 }

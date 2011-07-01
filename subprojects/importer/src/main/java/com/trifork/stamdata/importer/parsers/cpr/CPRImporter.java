@@ -52,21 +52,18 @@ import com.trifork.stamdata.importer.util.DateUtils;
 
 public class CPRImporter implements FileImporterControlledIntervals
 {
-
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
 
 	public CPRImporter()
 	{
-
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
 	}
 
 	public void run(List<File> files) throws FileImporterException
 	{
-
 		Connection connection = null;
 
 		try
@@ -74,7 +71,7 @@ public class CPRImporter implements FileImporterControlledIntervals
 			connection = MySQLConnectionManager.getConnection();
 			AuditingPersister dao = new AuditingPersister(connection);
 
-			logger.debug("Starting to parse CPR file ");
+			logger.info("Starting to parse CPR file ");
 
 			for (File personFile : files)
 			{
@@ -86,15 +83,16 @@ public class CPRImporter implements FileImporterControlledIntervals
 
 			for (File personFile : files)
 			{
-
-				logger.debug("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
+				logger.info("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
 
 				CPRDataset cpr = CPRParser.parse(personFile);
 
 				if (isDeltaFile(personFile))
 				{
-					// Check that the sequence is kept
+					// Check that the sequence is kept.
+
 					Date latestIKraft = getLatestIkraft(connection);
+
 					if (latestIKraft == null)
 					{
 						logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
@@ -105,14 +103,12 @@ public class CPRImporter implements FileImporterControlledIntervals
 					}
 				}
 
-				logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
+				if (logger.isDebugEnabled()) logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
 
 				for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
 				{
 					dao.persistDeltaDataset(dataset);
 				}
-
-				addressProtection(connection);
 
 				// Add latest 'ikraft' date to database if we are not importing
 				// a full set.
@@ -124,18 +120,7 @@ public class CPRImporter implements FileImporterControlledIntervals
 
 				logger.debug("Finish parsing 'CPR person' file " + personFile.getAbsolutePath());
 
-				try
-				{
-					connection.commit();
-				}
-				catch (SQLException e)
-				{
-					throw new FileImporterException("Could not commit transaction.", e);
-				}
-				catch (Exception e)
-				{
-					throw new FileImporterException("Error during commit transaction", e);
-				}
+				connection.commit();
 			}
 		}
 		catch (Exception e)
@@ -150,21 +135,18 @@ public class CPRImporter implements FileImporterControlledIntervals
 
 	private boolean isPersonerFile(File f)
 	{
-
 		return personFilePattern.matcher(f.getName()).matches();
 	}
 
 	private boolean isDeltaFile(File f)
 	{
-
 		return personFileDeltaPattern.matcher(f.getName()).matches();
 	}
 
 	@Override
 	public boolean checkRequiredFiles(List<File> files)
 	{
-
-		// TODO: Filter non wanted files based on filenames
+		// TODO: Filter unwanted files based on filenames
 		// return findPersonerFile(files).size() > 0;
 
 		return true;
@@ -175,16 +157,18 @@ public class CPRImporter implements FileImporterControlledIntervals
 	 * cpr during christmas 2008.
 	 */
 	@Override
-	public Calendar getNextImportExpectedBefore(Calendar lastImport)
+	public Date getNextImportExpectedBefore(Date lastImport)
 	{
+		Calendar cal = Calendar.getInstance();
 
-		Calendar cal;
-		if (lastImport == null)
-			cal = Calendar.getInstance();
-		else
-			cal = ((Calendar) lastImport.clone());
+		if (lastImport != null)
+		{
+			cal.setTime(lastImport);
+		}
+
 		cal.add(Calendar.DATE, 12);
-		return cal;
+
+		return cal.getTime();
 	}
 
 	static public Date getLatestIkraft(Connection con) throws FilePersistException
@@ -193,7 +177,7 @@ public class CPRImporter implements FileImporterControlledIntervals
 		{
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery("SELECT max(IkraftDato) AS Ikraft FROM PersonIkraft");
-			if (rs.first()) return DateUtils.toCalendar(rs.getTimestamp(1));
+			if (rs.first()) return rs.getTimestamp(1);
 			return null;
 		}
 		catch (SQLException sqle)
@@ -216,47 +200,4 @@ public class CPRImporter implements FileImporterControlledIntervals
 			throw new FilePersistException("Der opstod en fejl under indsættelse af ny ikrafttrædelsesdato til databasen.", sqle);
 		}
 	}
-
-	void addressProtection(Connection con) throws FilePersistException
-	{
-
-		try
-		{
-			// Copy name and addresses to the 'AdresseBeskyttelse' table
-			con.createStatement().execute(createProtectedNameAndAddressesSQL());
-			// Hide names and addresses for all citizens with name and address
-			// protection
-			con.createStatement().execute(createHideNameAndAddressesSQL());
-
-		}
-		catch (SQLException sqle)
-		{
-			throw new FilePersistException("Der opstod en fejl under indsættelse af ny ikrafttrædelsesdato til databasen.", sqle);
-		}
-	}
-
-	static private String createProtectedNameAndAddressesSQL()
-	{
-
-		String SQL = "REPLACE INTO " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse " + "(CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, Husnummer, Etage, " + "SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode) " + "(SELECT CPR, Fornavn, Mellemnavn, Efternavn, CoNavn, Lokalitet, Vejnavn, Bygningsnummer, " + "Husnummer, Etage, SideDoerNummer, Bynavn, Postnummer, PostDistrikt, NavneBeskyttelseStartDato, " + "NavneBeskyttelseSletteDato, VejKode, KommuneKode " + "FROM Person " + whereNameAndAddressesSQL() + " ORDER BY validTo)";
-
-		return SQL;
-	}
-
-	static private String createHideNameAndAddressesSQL()
-	{
-
-		String SQL = "UPDATE Person SET " + "Fornavn='Navnebeskyttet', " + "Mellemnavn='Navnebeskyttet', " + "Efternavn='Navnebeskyttet', " + "CoNavn='Navnebeskyttet', " + "Lokalitet='Adressebeskyttet', " + "Vejnavn='Adressebeskyttet', " + "Bygningsnummer='99', " + "Husnummer='99', " + "Etage='99', " + "SideDoerNummer='', " + "Bynavn='Adressebeskyttet', " + "Postnummer='9999', " + "PostDistrikt='Adressebeskyttet', " + "VejKode='99', " + "KommuneKode='999', " + "ModifiedBy='SDM2-AddressAndNameProtection' " + whereNameAndAddressesSQL();
-
-		return SQL;
-	}
-
-	static private String whereNameAndAddressesSQL()
-	{
-
-		String SQL = "WHERE NavneBeskyttelseStartDato < now() AND " + "(NavneBeskyttelseSletteDato > now() OR ISNULL(NavneBeskyttelseSletteDato)) AND " + "Lokalitet <> 'Adressebeskyttet'";
-
-		return SQL;
-	}
-
 }

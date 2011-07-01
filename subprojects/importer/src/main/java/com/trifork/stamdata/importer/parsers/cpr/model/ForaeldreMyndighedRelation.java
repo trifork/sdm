@@ -27,7 +27,6 @@ import java.util.Date;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
 @Output
@@ -169,21 +168,18 @@ public class ForaeldreMyndighedRelation extends CPREntity
 
 	public void setRelationCprStartDato(Date relationCprStartDato)
 	{
-
 		this.relationCprStartDato = relationCprStartDato;
 	}
 
 	@Override
 	public Date getValidFrom()
 	{
-
-		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : DateUtils.toCalendar(foraeldreMyndighedStartDato);
+		return (foraeldreMyndighedStartDato == null) ? super.getValidFrom() : foraeldreMyndighedStartDato;
 	}
 
 	@Override
 	public Date getValidTo()
 	{
-
-		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : DateUtils.toCalendar(foraeldreMyndighedSlettedato);
+		return (foraeldreMyndighedSlettedato == null) ? super.getValidTo() : foraeldreMyndighedSlettedato;
 	}
 }

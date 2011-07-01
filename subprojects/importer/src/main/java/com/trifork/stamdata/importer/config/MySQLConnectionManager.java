@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -24,73 +23,97 @@
 
 package com.trifork.stamdata.importer.config;
 
-import org.slf4j.*;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 
-public class MySQLConnectionManager {
-    private static Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    public static Connection getConnection() {
-        try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            Connection con = DriverManager.getConnection(Configuration.getString("db.url")+getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
-            con.setAutoCommit(false);
-            return con;
-        } catch (Exception e) {
-            logger.error("Error creating MySQL database connection", e);
-        }
-        return null;
-    }
 
-    public static Connection getAutoCommitConnection() {
-        try {
-            Connection con = getConnection();
-            con.setAutoCommit(true);
-            return con;
-        } catch (Exception e) {
-            logger.error("Error creating MySQL database connection", e);
-        }
-        return null;
-    }
+public class MySQLConnectionManager
+{
+	private static Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
 
-    public static String getDBName() {
-	return Configuration.getString("db.database");
-    }
+	public static Connection getConnection()
+	{
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection con = DriverManager.getConnection(Configuration.getString("db.url") + getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
+			con.setAutoCommit(false);
+			return con;
+		}
+		catch (Exception e)
+		{
+			logger.error("Error creating MySQL database connection", e);
+		}
+		return null;
+	}
 
-    public static String getHousekeepingDBName() {
+	public static Connection getAutoCommitConnection()
+	{
+		try
+		{
+			Connection con = getConnection();
+			con.setAutoCommit(true);
+			return con;
+		}
+		catch (Exception e)
+		{
+			logger.error("Error creating MySQL database connection", e);
+		}
+		return null;
+	}
 
-	String value = Configuration.getString("db.housekeepingdatabase");
-	return value != null
-		? value
-		: Configuration.getString("db.database");
-    }
+	public static String getDBName()
+	{
+		return Configuration.getString("db.database");
+	}
 
-    public static void close(Connection connection) {
-        try {
-            if (connection != null) {
-                connection.close();
-            } else logger.warn("Cannot commit and close connection, because connection == null");
-        }
-        catch (Exception e) {
-            logger.error("Could not close connection", e);
-        }
-    }
+	public static String getHousekeepingDBName()
+	{
 
-    public static void close(Statement stmt, Connection connection) {
-        try {
-            if (stmt != null) {
-                stmt.close();
-            } else logger.warn("Cannot close stmt, because stmt == null");
-        }
-        catch (Exception e) {
-            logger.error("Could not close stmt", e);
-        }
-        finally {
-            close(connection);
-        }
-    }
+		String value = Configuration.getString("db.housekeepingdatabase");
+		return value != null ? value : Configuration.getString("db.database");
+	}
+
+	public static void close(Connection connection)
+	{
+		try
+		{
+			if (connection != null)
+			{
+				connection.close();
+			}
+			else
+				logger.warn("Cannot commit and close connection, because connection == null");
+		}
+		catch (Exception e)
+		{
+			logger.error("Could not close connection", e);
+		}
+	}
+
+	public static void close(Statement stmt, Connection connection)
+	{
+		try
+		{
+			if (stmt != null)
+			{
+				stmt.close();
+			}
+			else
+				logger.warn("Cannot close stmt, because stmt == null");
+		}
+		catch (Exception e)
+		{
+			logger.error("Could not close stmt", e);
+		}
+		finally
+		{
+			close(connection);
+		}
+	}
 
 }

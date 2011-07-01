@@ -37,24 +37,26 @@ public class CPRDataset
 	{
 		private static final long serialVersionUID = -3429328343622839448L;
 
-		{{
-			add(new Dataset<Personoplysninger>(Personoplysninger.class));
-			add(new Dataset<Klarskriftadresse>(Klarskriftadresse.class));
-			add(new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class));
-			add(new Dataset<Navneoplysninger>(Navneoplysninger.class));
-			add(new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class));
-			add(new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class));
-			add(new Dataset<BarnRelation>(BarnRelation.class));
-			add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
-			add(new Dataset<Udrejseoplysninger>(Udrejseoplysninger.class));
-			add(new Dataset<Valgoplysninger>(Valgoplysninger.class));
-			add(new Dataset<Foedselsregistreringsoplysninger>(Foedselsregistreringsoplysninger.class));
-			add(new Dataset<Statsborgerskab>(Statsborgerskab.class));
-			add(new Dataset<KommunaleForhold>(KommunaleForhold.class));
-			add(new Dataset<AktuelCivilstand>(AktuelCivilstand.class));
-			add(new Dataset<Haendelse>(Haendelse.class));
-			add(new Dataset<MorOgFaroplysninger>(MorOgFaroplysninger.class));
-		}}
+		{
+			{
+				add(new Dataset<Personoplysninger>(Personoplysninger.class));
+				add(new Dataset<Klarskriftadresse>(Klarskriftadresse.class));
+				add(new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class));
+				add(new Dataset<Navneoplysninger>(Navneoplysninger.class));
+				add(new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class));
+				add(new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class));
+				add(new Dataset<BarnRelation>(BarnRelation.class));
+				add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
+				add(new Dataset<Udrejseoplysninger>(Udrejseoplysninger.class));
+				add(new Dataset<Valgoplysninger>(Valgoplysninger.class));
+				add(new Dataset<Foedselsregistreringsoplysninger>(Foedselsregistreringsoplysninger.class));
+				add(new Dataset<Statsborgerskab>(Statsborgerskab.class));
+				add(new Dataset<KommunaleForhold>(KommunaleForhold.class));
+				add(new Dataset<AktuelCivilstand>(AktuelCivilstand.class));
+				add(new Dataset<Haendelse>(Haendelse.class));
+				add(new Dataset<MorOgFaroplysninger>(MorOgFaroplysninger.class));
+			}
+		}
 	};
 
 	private Date validFrom, previousFileValidFrom;

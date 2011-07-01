@@ -28,18 +28,20 @@ import java.util.Date;
 import com.trifork.stamdata.importer.model.AbstractStamdataEntity;
 
 
-
-public abstract class DosageRecord extends AbstractStamdataEntity {
+public abstract class DosageRecord extends AbstractStamdataEntity
+{
 
 	private Date validFrom;
 
-	public void setVersion(Date validFrom) {
+	public void setVersion(Date validFrom)
+	{
 
 		this.validFrom = validFrom;
 	}
 
 	@Override
-	public Date getValidFrom() {
+	public Date getValidFrom()
+	{
 
 		return validFrom;
 	}

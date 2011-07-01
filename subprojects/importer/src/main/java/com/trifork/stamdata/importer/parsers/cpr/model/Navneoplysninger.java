@@ -29,8 +29,9 @@ import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
 
-@Output(name="Person")
-public class Navneoplysninger extends CPREntity {
+@Output(name = "Person")
+public class Navneoplysninger extends CPREntity
+{
 
 	String cpr;
 	String fornavn;
@@ -45,86 +46,106 @@ public class Navneoplysninger extends CPREntity {
 
 	@Id
 	@Output
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
-	public void setCpr(String cpr) {
+	public void setCpr(String cpr)
+	{
 		this.cpr = cpr;
 	}
 
 	@Output
-	public String getFornavn() {
+	public String getFornavn()
+	{
 		return fornavn;
 	}
 
-	public void setFornavn(String fornavn) {
+	public void setFornavn(String fornavn)
+	{
 		this.fornavn = fornavn;
 	}
 
-	public String getFornavnMarkering() {
+	public String getFornavnMarkering()
+	{
 		return fornavnMarkering;
 	}
 
-	public void setFornavnMarkering(String fornavnMarkering) {
+	public void setFornavnMarkering(String fornavnMarkering)
+	{
 		this.fornavnMarkering = fornavnMarkering;
 	}
 
 	@Output
-	public String getMellemnavn() {
+	public String getMellemnavn()
+	{
 		return mellemnavn;
 	}
 
-	public void setMellemnavn(String mellemnavn) {
+	public void setMellemnavn(String mellemnavn)
+	{
 		this.mellemnavn = mellemnavn;
 	}
 
-	public String getMellemnavnMarkering() {
+	public String getMellemnavnMarkering()
+	{
 		return mellemnavnMarkering;
 	}
 
-	public void setMellemnavnMarkering(String mellemnavnMarkering) {
+	public void setMellemnavnMarkering(String mellemnavnMarkering)
+	{
 		this.mellemnavnMarkering = mellemnavnMarkering;
 	}
 
 	@Output
-	public String getEfternavn() {
+	public String getEfternavn()
+	{
 		return efternavn;
 	}
 
-	public void setEfternavn(String efternavn) {
+	public void setEfternavn(String efternavn)
+	{
 		this.efternavn = efternavn;
 	}
 
-	public String getEfternavnMarkering() {
+	public String getEfternavnMarkering()
+	{
 		return efternavnMarkering;
 	}
 
-	public void setEfternavnMarkering(String efternavnMarkering) {
+	public void setEfternavnMarkering(String efternavnMarkering)
+	{
 		this.efternavnMarkering = efternavnMarkering;
 	}
 
-	public Date getStartDato() {
+	public Date getStartDato()
+	{
 		return startDato;
 	}
 
-	public void setStartDato(Date startDato) {
+	public void setStartDato(Date startDato)
+	{
 		this.startDato = startDato;
 	}
 
-	public String getStartDatoMarkering() {
+	public String getStartDatoMarkering()
+	{
 		return startDatoMarkering;
 	}
 
-	public void setStartDatoMarkering(String startDatoMarkering) {
+	public void setStartDatoMarkering(String startDatoMarkering)
+	{
 		this.startDatoMarkering = startDatoMarkering;
 	}
 
-	public String getAdresseringsNavn() {
+	public String getAdresseringsNavn()
+	{
 		return adresseringsNavn;
 	}
 
-	public void setAdresseringsNavn(String adresseringsNavn) {
+	public void setAdresseringsNavn(String adresseringsNavn)
+	{
 		this.adresseringsNavn = adresseringsNavn;
 	}
 }

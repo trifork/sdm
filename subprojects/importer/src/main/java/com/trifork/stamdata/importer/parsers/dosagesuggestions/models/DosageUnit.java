@@ -28,7 +28,8 @@ import com.trifork.stamdata.importer.model.Output;
 
 
 @Output
-public class DosageUnit extends DosageRecord {
+public class DosageUnit extends DosageRecord
+{
 
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
@@ -44,25 +45,29 @@ public class DosageUnit extends DosageRecord {
 
 	@Id
 	@Output
-	public int getCode() {
+	public int getCode()
+	{
 
 		return code;
 	}
 
 	@Output
-	public long getReleaseNumber() {
+	public long getReleaseNumber()
+	{
 
 		return releaseNumber;
 	}
 
 	@Output
-	public String getTextSingular() {
+	public String getTextSingular()
+	{
 
 		return textSingular;
 	}
 
 	@Output
-	public String getTextPlural() {
+	public String getTextPlural()
+	{
 
 		return textPlural;
 	}

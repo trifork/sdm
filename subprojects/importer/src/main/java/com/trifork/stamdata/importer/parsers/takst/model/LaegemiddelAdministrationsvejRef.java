@@ -26,39 +26,46 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class LaegemiddelAdministrationsvejRef extends TakstEntity {
-    private long drugId;
-    private String AdministrationsvejKode;
+public class LaegemiddelAdministrationsvejRef extends TakstEntity
+{
+	private long drugId;
+	private String AdministrationsvejKode;
 
+	public LaegemiddelAdministrationsvejRef(Laegemiddel lm, Administrationsvej av)
+	{
+		this.drugId = lm.getDrugid();
+		this.AdministrationsvejKode = av.getKode();
+	}
 
-    public LaegemiddelAdministrationsvejRef(Laegemiddel lm, Administrationsvej av) {
-        this.drugId = lm.getDrugid();
-        this.AdministrationsvejKode = av.getKode();
-    }
+	@Id
+	@Output
+	public String getCID()
+	{
+		return drugId + "-" + AdministrationsvejKode;
+	}
 
-    @Id
-    @Output
-    public String getCID() {
-        return drugId + "-" + AdministrationsvejKode;
-    }
+	@Output
+	public long getDrugId()
+	{
+		return drugId;
+	}
 
-    @Output
-    public long getDrugId() {
-        return drugId;
-    }
+	public void setDrugId(long drugId)
+	{
+		this.drugId = drugId;
+	}
 
-    public void setDrugId(long drugId) {
-        this.drugId = drugId;
-    }
+	@Output
+	public String getAdministrationsvejKode()
+	{
+		return AdministrationsvejKode;
+	}
 
-    @Output
-    public String getAdministrationsvejKode() {
-        return AdministrationsvejKode;
-    }
-
-    public void setAdministrationsvejKode(String administrationsvejKode) {
-        AdministrationsvejKode = administrationsvejKode;
-    }
+	public void setAdministrationsvejKode(String administrationsvejKode)
+	{
+		AdministrationsvejKode = administrationsvejKode;
+	}
 
 }

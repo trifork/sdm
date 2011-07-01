@@ -33,48 +33,48 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class DateUtilsTest {
-
+public class DateUtilsTest
+{
 	@Test
-	public void testFormatting() throws Exception {
-
+	public void testFormatting() throws Exception
+	{
 		assertEquals("1976-11-10", DateUtils.toISO8601date(19761110l));
 	}
 
 	@Test
-	public void testNull() throws Exception {
-
+	public void testNull() throws Exception
+	{
 		assertEquals(null, DateUtils.toISO8601date(0l));
 	}
 
 	@Test
-	public void testError() throws Exception {
-
+	public void testError() throws Exception
+	{
 		assertEquals("1", DateUtils.toISO8601date(1l));
 	}
 
 	@Test
-	public void testFormattingToFileNameDateformat() throws Exception {
-
-		Calendar cal = GregorianCalendar.getInstance();
+	public void testFormattingToFileNameDateformat() throws Exception
+	{
+		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
-		assertEquals("2009-08-21T21-45-40", DateUtils.toFilenameDatetime(cal));
+		assertEquals("2009-08-21T21-45-40", DateUtils.toFilenameDatetime(cal.getTime()));
 	}
 
 	@Test
-	public void testToMysqlFormat() throws Exception {
-
-		Calendar cal = GregorianCalendar.getInstance();
+	public void testToMysqlFormat() throws Exception
+	{
+		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
-		assertEquals("2009-08-21 21:45:40", DateUtils.toMySQLdate(cal));
+		assertEquals("2009-08-21 21:45:40", DateUtils.toMySQLdate(cal.getTime()));
 	}
 
 	@Test
-	public void testGetCalendarFromMysqlDate() throws Exception {
-
+	public void testGetCalendarFromMysqlDate() throws Exception
+	{
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
 		java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
-		assertEquals(cal.getTime().getTime(), DateUtils.toCalendar(date).getTime().getTime());
+		assertEquals(cal.getTime().getTime(), DateUtils.toCalendar(date).getTime());
 	}
 }

@@ -27,42 +27,51 @@ import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
+
 @Output
-public class UdgaaedeNavne extends TakstEntity {
-    private Long drugid;        //Ref. t. LMS01
-    private Long datoForAendringen;
-    private String tidligereNavn;
+public class UdgaaedeNavne extends TakstEntity
+{
+	private Long drugid; // Ref. t. LMS01
+	private Long datoForAendringen;
+	private String tidligereNavn;
 
-    @Output
-    public Long getDrugid() {
-        return this.drugid;
-    }
+	@Output
+	public Long getDrugid()
+	{
+		return this.drugid;
+	}
 
-    public void setDrugid(Long drugid) {
-        this.drugid = drugid;
-    }
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
 
-    @Output
-    public String getDatoForAendringen() {
-        return DateUtils.toISO8601date(this.datoForAendringen);
-    }
+	@Output
+	public String getDatoForAendringen()
+	{
+		return DateUtils.toISO8601date(this.datoForAendringen);
+	}
 
-    public void setDatoForAendringen(Long datoForAendringen) {
-        this.datoForAendringen = datoForAendringen;
-    }
+	public void setDatoForAendringen(Long datoForAendringen)
+	{
+		this.datoForAendringen = datoForAendringen;
+	}
 
-    @Output
-    public String getTidligereNavn() {
-        return this.tidligereNavn;
-    }
+	@Output
+	public String getTidligereNavn()
+	{
+		return this.tidligereNavn;
+	}
 
-    public void setTidligereNavn(String tidligereNavn) {
-        this.tidligereNavn = tidligereNavn;
-    }
+	public void setTidligereNavn(String tidligereNavn)
+	{
+		this.tidligereNavn = tidligereNavn;
+	}
 
-    @Id
-    @Output(name = "CID")
-    public String getKey() {
-        return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
-    }
+	@Id
+	@Output(name = "CID")
+	public String getKey()
+	{
+		return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
+	}
 }

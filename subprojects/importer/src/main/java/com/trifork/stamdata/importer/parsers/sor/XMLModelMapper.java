@@ -23,8 +23,15 @@
 
 package com.trifork.stamdata.importer.parsers.sor;
 
-import com.trifork.stamdata.importer.parsers.sor.model.*;
-import com.trifork.stamdata.importer.parsers.sor.xmlmodel.*;
+import com.trifork.stamdata.importer.parsers.sor.model.Apotek;
+import com.trifork.stamdata.importer.parsers.sor.model.Praksis;
+import com.trifork.stamdata.importer.parsers.sor.model.Sygehus;
+import com.trifork.stamdata.importer.parsers.sor.model.SygehusAfdeling;
+import com.trifork.stamdata.importer.parsers.sor.model.Yder;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.HealthInstitutionEntity;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.OrganizationalUnitEntity;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.SpecialityMapper;
+import com.trifork.stamdata.importer.parsers.sor.xmlmodel.UnitTypeMapper;
 
 
 public class XMLModelMapper

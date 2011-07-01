@@ -29,42 +29,40 @@ import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
 
-
-@Output(name="Person")
-public class NavneBeskyttelse extends CPREntity {
+@Output(name = "Person")
+public class NavneBeskyttelse extends CPREntity
+{
 
 	Date navneBeskyttelseStartDato;
 	Date navneBeskyttelseSletteDato;
 
-
 	@Id
 	@Output
 	@Override
-	public String getCpr() {
+	public String getCpr()
+	{
 		return cpr;
 	}
 
 	@Output
-	public Date getNavneBeskyttelseStartDato() {
+	public Date getNavneBeskyttelseStartDato()
+	{
 		return navneBeskyttelseStartDato;
 	}
 
-
-
-	public void setNavneBeskyttelseStartDato(Date startDato) {
+	public void setNavneBeskyttelseStartDato(Date startDato)
+	{
 		this.navneBeskyttelseStartDato = startDato;
 	}
 
-
-
 	@Output
-	public Date getNavneBeskyttelseSletteDato() {
+	public Date getNavneBeskyttelseSletteDato()
+	{
 		return navneBeskyttelseSletteDato;
 	}
 
-
-
-	public void setNavneBeskyttelseSletteDato(Date sletteDato) {
+	public void setNavneBeskyttelseSletteDato(Date sletteDato)
+	{
 		this.navneBeskyttelseSletteDato = sletteDato;
 	}
 }

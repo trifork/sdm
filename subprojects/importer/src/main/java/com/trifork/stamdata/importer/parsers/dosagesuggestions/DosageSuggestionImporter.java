@@ -35,7 +35,6 @@ import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +66,6 @@ import com.trifork.stamdata.importer.persistence.Persister;
  */
 public class DosageSuggestionImporter implements FileImporter
 {
-
 	private static final Logger logger = getLogger(DosageSuggestionImporter.class);
 
 	private Persister mockPersister = null;
@@ -79,7 +77,6 @@ public class DosageSuggestionImporter implements FileImporter
 
 	public DosageSuggestionImporter(Persister mockPersister)
 	{
-
 		// HACK: These importers are really not made for
 		// testing. We should refactor. (REMOVE THIS CTOR)
 
@@ -90,7 +87,6 @@ public class DosageSuggestionImporter implements FileImporter
 	@SuppressWarnings("unchecked")
 	public void run(List<File> files) throws FileImporterException
 	{
-
 		Connection connection = null;
 
 		try
@@ -130,9 +126,7 @@ public class DosageSuggestionImporter implements FileImporter
 				throw new FileImporterException("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
 			}
 
-			Calendar c = Calendar.getInstance();
-			c.setTime(version.getReleaseDate());
-			version.setVersion(c.getTime());
+			version.setVersion(version.getReleaseDate());
 
 			// OTHER FILES
 			//
@@ -180,12 +174,10 @@ public class DosageSuggestionImporter implements FileImporter
 		}
 		catch (Exception e)
 		{
-
 			throw new FileImporterException("Error during import of dosage suggestions.", e);
 		}
 		finally
 		{
-
 			MySQLConnectionManager.close(connection);
 		}
 	}
@@ -195,7 +187,6 @@ public class DosageSuggestionImporter implements FileImporter
 	 */
 	private DosageVersion parseVersionFile(File file) throws FileNotFoundException
 	{
-
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -212,7 +203,6 @@ public class DosageSuggestionImporter implements FileImporter
 	 */
 	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
 	{
-
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 
 		Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
@@ -270,7 +260,6 @@ public class DosageSuggestionImporter implements FileImporter
 	 */
 	private File getFile(List<File> files, String name)
 	{
-
 		File result = null;
 
 		for (File file : files)

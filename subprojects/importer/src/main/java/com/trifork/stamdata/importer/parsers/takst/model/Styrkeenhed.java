@@ -26,34 +26,41 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 
+
 @Output
-public class Styrkeenhed extends TakstEntity {
+public class Styrkeenhed extends TakstEntity
+{
 
-    private final DivEnheder enheder;
+	private final DivEnheder enheder;
 
-    public Styrkeenhed(DivEnheder enheder) {
-        this.enheder = enheder;
-    }
+	public Styrkeenhed(DivEnheder enheder)
+	{
+		this.enheder = enheder;
+	}
 
-    @Id
-    @Output
-    public String getStyrkeenhedKode() {
-        return enheder.getKode();
-    }
+	@Id
+	@Output
+	public String getStyrkeenhedKode()
+	{
+		return enheder.getKode();
+	}
 
-    @Output
-    public String getStyrkeenhedTekst() {
-        return enheder.getTekst();
-    }
+	@Output
+	public String getStyrkeenhedTekst()
+	{
+		return enheder.getTekst();
+	}
 
-    @Output
-    public String getStyrkeenhedKortTekst() {
-	return enheder.getKortTekst();
-    }
+	@Output
+	public String getStyrkeenhedKortTekst()
+	{
+		return enheder.getKortTekst();
+	}
 
-    @Override
-    public String getKey() {
-        return enheder.getKode();
-    }
+	@Override
+	public String getKey()
+	{
+		return enheder.getKode();
+	}
 
 }
