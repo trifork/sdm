@@ -30,7 +30,6 @@ import com.trifork.stamdata.importer.model.Output;
 @Output
 public class Tilskudsintervaller extends TakstEntity
 {
-
 	private Long type; // Patienttype: almen, barn, kroniker, terminal
 	private Long niveau; // fx 1-4 for alment tilskud, 1-3 for barn
 	private Long nedreGraense; // Nedre beløbsgrænse for niveauet (i øre)
@@ -40,7 +39,7 @@ public class Tilskudsintervaller extends TakstEntity
 	@Output
 	public Long getType()
 	{
-		return this.type;
+		return type;
 	}
 
 	public void setType(Long type)
@@ -51,7 +50,7 @@ public class Tilskudsintervaller extends TakstEntity
 	@Output
 	public Long getNiveau()
 	{
-		return this.niveau;
+		return niveau;
 	}
 
 	public void setNiveau(Long niveau)
@@ -62,7 +61,7 @@ public class Tilskudsintervaller extends TakstEntity
 	@Output
 	public Long getNedreGraense()
 	{
-		return this.nedreGraense;
+		return nedreGraense;
 	}
 
 	public void setNedreGraense(Long nedreGraense)

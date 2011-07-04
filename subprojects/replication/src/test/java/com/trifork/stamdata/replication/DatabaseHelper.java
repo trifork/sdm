@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.replication;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 import org.hibernate.SessionFactory;
@@ -36,9 +37,15 @@ public class DatabaseHelper {
 
 	public DatabaseHelper(Class<?>... entities) throws Exception {
 
-		Properties props = new Properties(); 
+		Properties props = new Properties();
+
+		InputStream inputStream = getClass().getClassLoader().getResourceAsStream("config.properties");
+		props.load(inputStream);
+		inputStream.close();
 
 		org.hibernate.cfg.Configuration config = new org.hibernate.cfg.Configuration();
+
+		String l = props.getProperty("db.connection.driverClass");
 
 		config.setProperty("hibernate.connection.driver_class", props.getProperty("db.connection.driverClass"));
 		config.setProperty("hibernate.dialect", props.getProperty("db.connection.sqlDialect"));
@@ -58,7 +65,6 @@ public class DatabaseHelper {
 		}
 
 		sessionFactory = config.buildSessionFactory();
-
 	}
 
 	public Session openSession() {

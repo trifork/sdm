@@ -5,17 +5,17 @@ import static dk.sosi.seal.model.constants.FaultCodeValues.PROCESSING_PROBLEM;
 import static dk.sosi.seal.xml.XmlUtil.node2String;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Scanner;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,17 +34,13 @@ public class WebService extends HttpServlet {
 	private static final Logger logger = LoggerFactory.getLogger(WebService.class);
 	
 	private final SOSIFactory factory;
-	private final JAXBContext jaxbContext;
-	private final Set<String> whitelist;
-	private final Provider<AuthorizationDao> authorizationDao;
+	private final Provider<RequestProcessor> requestProcessor;
 
 	@Inject
-	WebService(Set<String> whitelist, SOSIFactory factory, JAXBContext context, Provider<AuthorizationDao> authorizationDao) {
+	WebService(SOSIFactory factory, Provider<RequestProcessor> processorProvider) {
 
-		this.whitelist = whitelist;
 		this.factory = factory;
-		this.jaxbContext = context;
-		this.authorizationDao = authorizationDao;
+		this.requestProcessor = processorProvider;
 	}
 
 	@Override
@@ -53,11 +49,11 @@ public class WebService extends HttpServlet {
 		Reply response;
 
 		try {
-			String xml = new Scanner(in.getReader()).useDelimiter("\\A").next();
+			Reader input = in.getReader();
+			String xml = new Scanner(input).useDelimiter("\\A").next();
 			
 			Request request = factory.deserializeRequest(xml);
-			RequestProcessor processor = new RequestProcessor(factory, whitelist, jaxbContext.createMarshaller(), jaxbContext.createUnmarshaller(), authorizationDao.get());
-			response = processor.process(request);
+			response = requestProcessor.get().process(request);
 		}
 		catch (Exception e) {
 
@@ -71,7 +67,8 @@ public class WebService extends HttpServlet {
 
 		out.setContentType("application/xml+soap");
 
-		String xml = node2String(response.serialize2DOMDocument());
+		Document reply = response.serialize2DOMDocument();
+		String xml = node2String(reply);
 		out.getWriter().write(xml);
 	}
 

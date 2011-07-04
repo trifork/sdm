@@ -57,7 +57,7 @@ public class Pakningsstoerrelsesenhed extends View {
 	protected String tekst;
 
 	@Column(name = "PakningsstoerrelsesenhedKortTekst")
-	protected BigInteger kortTekst;
+	protected String kortTekst;
 
 	// Metadata
 

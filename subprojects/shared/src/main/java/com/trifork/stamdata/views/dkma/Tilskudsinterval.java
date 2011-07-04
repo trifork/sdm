@@ -53,7 +53,7 @@ public class Tilskudsinterval extends View {
 	private BigInteger recordID;
 
 	@Column(name = "CID")
-	protected BigInteger id;
+	protected String id;
 
 	@Column(name = "Type")
 	protected BigInteger type;

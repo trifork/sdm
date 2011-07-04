@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 
 public interface FileImporter
 {
-
 	public boolean checkRequiredFiles(List<File> files);
 
 	public void run(List<File> files) throws FileImporterException;

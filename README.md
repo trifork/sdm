@@ -19,8 +19,8 @@ get everything up and running.
 
 *   Create a MySQL database with the needed tables:
 
-        % mysqladmin create sdm_warehouse
-        % mysql -u _USERNAME_ sdm_warehouse < db/schema.sql
+        % mysqladmin [-u <USERNAME>] create sdm_warehouse
+        % mysql [-u <USERNAME>] sdm_warehouse < db/schema.sql
 
     If you want to call your database something else you can configure it in the
     config.properties files found in the subprojects. Just make sure not to push

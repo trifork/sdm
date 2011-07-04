@@ -55,6 +55,7 @@ public class CPRIntegrationTest
 	{
 		Connection con = MySQLConnectionManager.getConnection();
 		Statement statement = con.createStatement();
+
 		statement.execute("truncate table Person");
 		statement.execute("truncate table BarnRelation");
 		statement.execute("truncate table ForaeldreMyndighedRelation");
@@ -66,9 +67,8 @@ public class CPRIntegrationTest
 		statement.execute("truncate table Foedselsregistreringsoplysninger");
 		statement.execute("truncate table KommunaleForhold");
 		statement.execute("truncate table AktuelCivilstand");
-		statement.execute("truncate table " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
-		statement.close();
-		con.close();
+
+		MySQLConnectionManager.close(statement, con);
 	}
 
 	@Test
@@ -406,17 +406,11 @@ public class CPRIntegrationTest
 		assertEquals(1, rs.getInt(1));
 
 		// Check Address protection
-		rs = stmt.executeQuery("Select count(*) from Person WHERE NavneBeskyttelseStartDato < now() AND NavneBeskyttelseSletteDato > now()");
+
+		rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from Person WHERE Fornavn = 'Navnebeskyttet'");
-		rs.next();
-		assertEquals(1, rs.getInt(1));
-
-		rs = stmt.executeQuery("Select count(*) from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
-		rs.next();
-		assertEquals(1, rs.getInt(1));
 		stmt.close();
 		con.close();
 	}
@@ -449,13 +443,6 @@ public class CPRIntegrationTest
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from Person WHERE Fornavn = 'Navnebeskyttet'");
-		rs.next();
-		assertEquals(1, rs.getInt(1));
-
-		rs = stmt.executeQuery("Select count(*) from " + MySQLConnectionManager.getHousekeepingDBName() + ".AdresseBeskyttelse");
-		rs.next();
-		assertEquals(1, rs.getInt(1));
 		stmt.close();
 		con.close();
 	}

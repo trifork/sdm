@@ -18,6 +18,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 
+import com.google.inject.Inject;
+
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.Reply;
 import dk.sosi.seal.model.Request;
@@ -33,7 +35,8 @@ public class RequestProcessor {
 	private final Unmarshaller unmarshaller;
 	private final AuthorizationDao authorizationDao;
 
-	public RequestProcessor(SOSIFactory sosiFactory, Set<String> whitelist, Marshaller marshaller, Unmarshaller unmarshaller, AuthorizationDao authorizationDao) {
+	@Inject
+	RequestProcessor(SOSIFactory sosiFactory, Set<String> whitelist, Marshaller marshaller, Unmarshaller unmarshaller, AuthorizationDao authorizationDao) {
 
 		this.marshaller = marshaller;
 		this.unmarshaller = unmarshaller;

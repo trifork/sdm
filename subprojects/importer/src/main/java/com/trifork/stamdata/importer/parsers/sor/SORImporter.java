@@ -48,10 +48,12 @@ public class SORImporter implements FileImporterControlledIntervals
 	{
 		if (files.size() == 0) return false;
 		boolean xmlpresent = false;
+
 		for (File file : files)
 		{
 			if (file.getName().endsWith(".xml")) xmlpresent = true;
 		}
+
 		return xmlpresent;
 	}
 
@@ -86,6 +88,7 @@ public class SORImporter implements FileImporterControlledIntervals
 			{
 				logger.error("Cannot rollback", e1);
 			}
+
 			String mess = "Error using database during import of autorisationsregister";
 			logger.error(mess, e);
 			throw new FileImporterException(mess, e);

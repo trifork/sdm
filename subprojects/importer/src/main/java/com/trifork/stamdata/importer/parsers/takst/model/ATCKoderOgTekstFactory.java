@@ -70,7 +70,7 @@ public class ATCKoderOgTekstFactory extends AbstractFactory
 		{
 		case 0:
 			return 8;
-		case 5:
+		case 1:
 			return 72;
 		default:
 			return -1;

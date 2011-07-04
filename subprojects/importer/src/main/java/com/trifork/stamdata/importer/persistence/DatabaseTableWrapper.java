@@ -218,6 +218,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			}
 			catch (Exception e)
 			{}
+
 			throw new RuntimeException(message, sqle);
 		}
 	}

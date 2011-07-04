@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -33,23 +32,29 @@ import com.trifork.stamdata.replication.DatabaseHelper;
 import com.trifork.stamdata.views.Views;
 
 
-public class ViewTest {
-	
+public class ViewTest
+{
+
 	@Test
-	public void Should_be_able_to_query_all_views() throws Exception {
+	public void Should_be_able_to_query_all_views() throws Exception
+	{
 		Set<Class<?>> views = Views.findAllViews();
 		DatabaseHelper db = new DatabaseHelper(views.toArray(new Class<?>[0]));
-		for(Class<?> viewClass : views) {
+		for (Class<?> viewClass : views)
+		{
 			System.out.println(viewClass.getCanonicalName());
 			Session session = db.openSession();
 			session.beginTransaction();
-			try {
+			try
+			{
 				session.createCriteria(viewClass).list();
 			}
-			catch(Exception e) {
+			catch (Exception e)
+			{
 				throw new RuntimeException("Could not show view " + viewClass.getCanonicalName(), e);
 			}
-			finally {
+			finally
+			{
 				session.getTransaction().rollback();
 				session.close();
 			}

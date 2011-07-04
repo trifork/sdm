@@ -8,6 +8,9 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 
@@ -15,19 +18,22 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.SOSITestFederation;
+import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener {
 
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
+
+	private static JAXBContext jaxbContext;
 
 	@Override
 	protected Injector getInjector() {
@@ -60,16 +66,14 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 			final Set<String> whitelist = ImmutableSet.of(cvrNumbers.toArray(new String[] {}));
 
 			// SEAL
-
-			// FIXME: Allow Test Federation for testing.
 			
 			Properties cryptoSettings = setupCryptoProviderForJVM();
 			
-			final SOSIFactory sosiFactory = new SOSIFactory(new SOSITestFederation(cryptoSettings, new InMemoryIntermediateCertificateCache()), new EmptyCredentialVault(), cryptoSettings);
+			final SOSIFactory sosiFactory = new SOSIFactory(new SOSIFederation(cryptoSettings, new InMemoryIntermediateCertificateCache()), new EmptyCredentialVault(), cryptoSettings);
 
 			// XML SERIALIZATION
 
-			final JAXBContext jaxbContext = JAXBContext.newInstance(AuthorizationResponseStructure.class, AuthorizationRequestStructure.class);
+			jaxbContext = JAXBContext.newInstance(AuthorizationResponseStructure.class, AuthorizationRequestStructure.class);
 
 			// BIND THE DEPENDENCIES
 			//
@@ -88,7 +92,6 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 					));
 					
 					bind(SOSIFactory.class).toInstance(sosiFactory);
-					bind(JAXBContext.class).toInstance(jaxbContext);
 					bind(new TypeLiteral<Set<String>>() {}).toInstance(whitelist);
 					bind(AuthorizationDao.class);
 
@@ -96,6 +99,20 @@ public class ApplicationContextListener extends GuiceServletContextListener {
 					filter("/").through(PersistenceFilter.class);
 					
 					logger.info("Done configuring the stamdata authorization web-service.");
+				}
+
+				@Provides
+				@SuppressWarnings("unused")
+				public Marshaller provideMarshaller() throws JAXBException
+				{
+					return jaxbContext.createMarshaller();
+				}
+
+				@Provides
+				@SuppressWarnings("unused")
+				public Unmarshaller provideUnmarshaller() throws JAXBException
+				{
+					return jaxbContext.createUnmarshaller();
 				}
 			});
 		}
