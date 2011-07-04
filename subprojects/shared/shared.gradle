@@ -61,16 +61,17 @@ def sql(sqlQuery, database, printResult) {
     }
 
 task bootstrap << {
-    database = "sdm_warehouse"
-    System.out.println("Dropping database ${database}")
+    database = project.hasProperty('database.name') ? project.getProperty('database.name') : "sdm_warehouse"
+    
+    println("Dropping database ${database}")
     sql("drop database ${database}", "mysql", false)
-    System.out.println("Creating database ${database}")
+    println("Creating database ${database}")
     sql("create database ${database}", "mysql", false)
     
-    System.out.println("Loading schema into ${database}")
+    println("Loading schema into ${database}")
     runSql("${rootDir}/db/schema.sql", "${database}")
 
-    System.out.println("Tables in ${database}:")
+    println("Tables in ${database}:")
     sql("show tables", "${database}", true)
 }
 
