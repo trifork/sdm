@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -41,38 +42,10 @@ public class Dosering extends TakstEntity
 	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
 									// anvendes)
 
-	@Id
-	@Output
-	public Long getDoseringKode()
+	@Output(name = "Aktiv")
+	public Boolean getAktivInaktiv()
 	{
-		return this.doseringKode;
-	}
-
-	public void setDoseringskode(Long doseringskode)
-	{
-		this.doseringKode = doseringskode;
-	}
-
-	@Output
-	public String getDoseringKortTekst()
-	{
-		return this.doseringKortTekst;
-	}
-
-	public void setDoseringKortTekst(String doseringKortTekst)
-	{
-		this.doseringKortTekst = doseringKortTekst;
-	}
-
-	@Output(name = "DoseringTekst")
-	public String getDoseringstekstTotal()
-	{
-		return this.doseringstekstTotal;
-	}
-
-	public void setDoseringstekstTotal(String doseringstekstTotal)
-	{
-		this.doseringstekstTotal = doseringstekstTotal;
+		return "A".equalsIgnoreCase(this.aktivInaktiv);
 	}
 
 	@Output(name = "AntalEnhederPrDoegn")
@@ -81,9 +54,17 @@ public class Dosering extends TakstEntity
 		return this.antalEnhDoegn / 1000.0;
 	}
 
-	public void setAntalEnhDoegn(Long antalEnhDoegn)
+	@Id
+	@Output
+	public Long getDoseringKode()
 	{
-		this.antalEnhDoegn = antalEnhDoegn;
+		return this.doseringKode;
+	}
+
+	@Output
+	public String getDoseringKortTekst()
+	{
+		return this.doseringKortTekst;
 	}
 
 	@Output
@@ -92,20 +73,10 @@ public class Dosering extends TakstEntity
 		return this.doseringstekstLinie1;
 	}
 
-	public void setDoseringstekstLinie1(String doseringstekstLinie1)
-	{
-		this.doseringstekstLinie1 = doseringstekstLinie1;
-	}
-
 	@Output
 	public String getDoseringstekstLinie2()
 	{
 		return this.doseringstekstLinie2;
-	}
-
-	public void setDoseringstekstLinie2(String doseringstekstLinie2)
-	{
-		this.doseringstekstLinie2 = doseringstekstLinie2;
 	}
 
 	@Output
@@ -114,15 +85,16 @@ public class Dosering extends TakstEntity
 		return this.doseringstekstLinie3;
 	}
 
-	public void setDoseringstekstLinie3(String doseringstekstLinie3)
+	@Output(name = "DoseringTekst")
+	public String getDoseringstekstTotal()
 	{
-		this.doseringstekstLinie3 = doseringstekstLinie3;
+		return this.doseringstekstTotal;
 	}
 
-	@Output(name = "Aktiv")
-	public Boolean getAktivInaktiv()
+	@Override
+	public Long getKey()
 	{
-		return "A".equalsIgnoreCase(this.aktivInaktiv);
+		return this.doseringKode;
 	}
 
 	public void setAktivInaktiv(String aktivInaktiv)
@@ -130,9 +102,39 @@ public class Dosering extends TakstEntity
 		this.aktivInaktiv = aktivInaktiv;
 	}
 
-	public Long getKey()
+	public void setAntalEnhDoegn(Long antalEnhDoegn)
 	{
-		return this.doseringKode;
+		this.antalEnhDoegn = antalEnhDoegn;
+	}
+
+	public void setDoseringKortTekst(String doseringKortTekst)
+	{
+		this.doseringKortTekst = doseringKortTekst;
+	}
+
+	public void setDoseringskode(Long doseringskode)
+	{
+		this.doseringKode = doseringskode;
+	}
+
+	public void setDoseringstekstLinie1(String doseringstekstLinie1)
+	{
+		this.doseringstekstLinie1 = doseringstekstLinie1;
+	}
+
+	public void setDoseringstekstLinie2(String doseringstekstLinie2)
+	{
+		this.doseringstekstLinie2 = doseringstekstLinie2;
+	}
+
+	public void setDoseringstekstLinie3(String doseringstekstLinie3)
+	{
+		this.doseringstekstLinie3 = doseringstekstLinie3;
+	}
+
+	public void setDoseringstekstTotal(String doseringstekstTotal)
+	{
+		this.doseringstekstTotal = doseringstekstTotal;
 	}
 
 }

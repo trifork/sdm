@@ -31,10 +31,17 @@ import com.trifork.stamdata.importer.model.Output;
 
 public class KommunaleForhold extends CPREntity
 {
-
 	public enum Kommunalforholdstype
 	{
-		adskilt("1"), plejebarn("2"), pensionsforhold("3"), betalingskommunekode("4"), friVaerdimaengde1("5"), friVaerdimaengde2("6"), friVaerdimaengde3("7"), friVaerdimaengde4("8"), friVaerdimaengde5("9");
+		adskilt("1"),
+		plejebarn("2"),
+		pensionsforhold("3"),
+		betalingskommunekode("4"),
+		friVaerdimaengde1("5"),
+		friVaerdimaengde2("6"),
+		friVaerdimaengde3("7"),
+		friVaerdimaengde4("8"),
+		friVaerdimaengde5("9");
 
 		private final String code;
 

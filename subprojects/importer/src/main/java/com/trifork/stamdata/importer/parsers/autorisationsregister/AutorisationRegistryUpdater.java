@@ -1,4 +1,4 @@
-package com.trifork.stamdata.importer.parsers;
+package com.trifork.stamdata.importer.parsers.autorisationsregister;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -12,21 +12,19 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 
 /**
  * This class keeps a table of currently valid authorizations.
- *
+ * 
  * The table is replicated using MySQL replication. The table is used by the
  * STS.
- *
+ * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class AutorisationRegistryUpdater implements Job
+public class AutorisationRegistryUpdater implements Runnable
 {
-
-	private Logger logger = getLogger(AutorisationRegistryUpdater.class);
+	private static final Logger logger = getLogger(AutorisationRegistryUpdater.class);
 
 	@Override
-	public void run() throws JobException
+	public void run()
 	{
-
 		logger.info("Starting update of autreg table.");
 
 		Connection connection = null;
@@ -38,7 +36,7 @@ public class AutorisationRegistryUpdater implements Job
 			statement = connection.createStatement();
 
 			statement.executeUpdate("TRUNCATE TABLE autreg");
-			statement.executeUpdate("INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) " + "SELECT cpr, Fornavn, Efternavn, Autorisationsnummer, UddannelsesKode " + "FROM Autorisation WHERE ValidFrom <= NOW() AND ValidTo > NOW();");
+			statement.executeUpdate("INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) SELECT cpr, Fornavn, Efternavn, Autorisationsnummer, UddannelsesKode FROM Autorisation WHERE ValidFrom <= NOW() AND ValidTo > NOW();");
 
 			connection.commit();
 
@@ -53,7 +51,9 @@ public class AutorisationRegistryUpdater implements Job
 			catch (Exception ex)
 			{}
 
-			logger.error("Error in autorisation updating job.", e);
+			logger.error("Error in autorisation updating job.", e); // TODO:
+																	// Throw the
+																	// exception
 		}
 		finally
 		{

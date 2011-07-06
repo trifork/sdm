@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -37,26 +38,27 @@ public class Indholdsstoffer extends TakstEntity
 	private String substansgruppe;
 	private String substans; // Kun aktive substanser
 
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o.getClass() != Indholdsstoffer.class) return false;
+		Indholdsstoffer stof = (Indholdsstoffer) o;
+		return getKey().equals(stof.getKey());
+
+	}
+
 	@Output
 	public Long getDrugID()
 	{
 		return this.drugID;
 	}
 
-	public void setDrugID(Long drugID)
+	@Override
+	@Id
+	@Output(name = "CID")
+	public String getKey()
 	{
-		this.drugID = drugID;
-	}
-
-	@Output
-	public Long getVarenummer()
-	{
-		return this.varenummer;
-	}
-
-	public void setVarenummer(Long varenummer)
-	{
-		this.varenummer = varenummer;
+		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
 	}
 
 	@Output
@@ -65,9 +67,10 @@ public class Indholdsstoffer extends TakstEntity
 		return this.stofklasse;
 	}
 
-	public void setStofklasse(String stofklasse)
+	@Output
+	public String getSubstans()
 	{
-		this.stofklasse = stofklasse;
+		return this.substans;
 	}
 
 	@Output
@@ -76,15 +79,20 @@ public class Indholdsstoffer extends TakstEntity
 		return this.substansgruppe;
 	}
 
-	public void setSubstansgruppe(String substansgruppe)
+	@Output
+	public Long getVarenummer()
 	{
-		this.substansgruppe = substansgruppe;
+		return this.varenummer;
 	}
 
-	@Output
-	public String getSubstans()
+	public void setDrugID(Long drugID)
 	{
-		return this.substans;
+		this.drugID = drugID;
+	}
+
+	public void setStofklasse(String stofklasse)
+	{
+		this.stofklasse = stofklasse;
 	}
 
 	public void setSubstans(String substans)
@@ -92,19 +100,14 @@ public class Indholdsstoffer extends TakstEntity
 		this.substans = substans;
 	}
 
-	@Id
-	@Output(name = "CID")
-	public String getKey()
+	public void setSubstansgruppe(String substansgruppe)
 	{
-		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
+		this.substansgruppe = substansgruppe;
 	}
 
-	public boolean equals(Object o)
+	public void setVarenummer(Long varenummer)
 	{
-		if (o.getClass() != Indholdsstoffer.class) return false;
-		Indholdsstoffer stof = (Indholdsstoffer) o;
-		return getKey().equals(stof.getKey());
-
+		this.varenummer = varenummer;
 	}
 
 }

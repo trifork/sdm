@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -39,49 +40,10 @@ public class PakningskombinationerUdenPriser extends TakstEntity
 	private String informationspligtMarkering; // Markering (stjerne *) for
 												// informationspligt
 
-	@Id
-	@Output
-	public Long getVarenummerOrdineret()
-	{
-		return this.varenummerOrdineret;
-	}
-
-	public void setVarenummerOrdineret(Long varenummerOrdineret)
-	{
-		this.varenummerOrdineret = varenummerOrdineret;
-	}
-
-	@Output
-	public Long getVarenummerSubstitueret()
-	{
-		return this.varenummerSubstitueret;
-	}
-
-	public void setVarenummerSubstitueret(Long varenummerSubstitueret)
-	{
-		this.varenummerSubstitueret = varenummerSubstitueret;
-	}
-
-	@Output
-	public Long getVarenummerAlternativt()
-	{
-		return this.varenummerAlternativt;
-	}
-
-	public void setVarenummerAlternativt(Long varenummerAlternativt)
-	{
-		this.varenummerAlternativt = varenummerAlternativt;
-	}
-
 	@Output
 	public Long getAntalPakninger()
 	{
 		return this.antalPakninger;
-	}
-
-	public void setAntalPakninger(Long antalPakninger)
-	{
-		this.antalPakninger = antalPakninger;
 	}
 
 	@Output
@@ -90,14 +52,54 @@ public class PakningskombinationerUdenPriser extends TakstEntity
 		return this.informationspligtMarkering;
 	}
 
+	@Override
+	public Long getKey()
+	{
+		return this.varenummerOrdineret;
+	}
+
+	@Output
+	public Long getVarenummerAlternativt()
+	{
+		return this.varenummerAlternativt;
+	}
+
+	@Id
+	@Output
+	public Long getVarenummerOrdineret()
+	{
+		return this.varenummerOrdineret;
+	}
+
+	@Output
+	public Long getVarenummerSubstitueret()
+	{
+		return this.varenummerSubstitueret;
+	}
+
+	public void setAntalPakninger(Long antalPakninger)
+	{
+		this.antalPakninger = antalPakninger;
+	}
+
 	public void setInformationspligtMarkering(String informationspligtMarkering)
 	{
 		this.informationspligtMarkering = informationspligtMarkering;
 	}
 
-	public Long getKey()
+	public void setVarenummerAlternativt(Long varenummerAlternativt)
 	{
-		return this.varenummerOrdineret;
+		this.varenummerAlternativt = varenummerAlternativt;
+	}
+
+	public void setVarenummerOrdineret(Long varenummerOrdineret)
+	{
+		this.varenummerOrdineret = varenummerOrdineret;
+	}
+
+	public void setVarenummerSubstitueret(Long varenummerSubstitueret)
+	{
+		this.varenummerSubstitueret = varenummerSubstitueret;
 	}
 
 }

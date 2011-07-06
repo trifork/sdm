@@ -32,27 +32,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.Configuration;
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.model.StamdataEntity;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
+import com.trifork.stamdata.importer.parsers.FileImporter;
 import com.trifork.stamdata.importer.parsers.cpr.model.CPRDataset;
-import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class CPRImporter implements FileImporterControlledIntervals
+public class CPRImporter implements FileImporter
 {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+	private static final Logger logger = LoggerFactory.getLogger(CPRImporter.class);
+
 	private Pattern personFilePattern;
 	private Pattern personFileDeltaPattern;
 
@@ -61,75 +59,64 @@ public class CPRImporter implements FileImporterControlledIntervals
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
 	}
-
-	public void run(List<File> files) throws FileImporterException
+	
+	@Override
+	public String getIdentifier()
 	{
-		Connection connection = null;
+		return "cpr";
+	}
 
-		try
+	@Override
+	public void importFiles(File[] input, Connection connection) throws Exception
+	{
+		AuditingPersister dao = new AuditingPersister(connection);
+
+		logger.info("Starting to parse CPR file ");
+
+		for (File personFile : input)
 		{
-			connection = MySQLConnectionManager.getConnection();
-			AuditingPersister dao = new AuditingPersister(connection);
-
-			logger.info("Starting to parse CPR file ");
-
-			for (File personFile : files)
+			if (!isPersonerFile(personFile))
 			{
-				if (!isPersonerFile(personFile))
+				throw new FilePersistException("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing is imported from the fileset");
+			}
+		}
+
+		for (File personFile : input)
+		{
+			logger.info("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
+
+			CPRDataset cpr = CPRParser.parse(personFile);
+
+			if (isDeltaFile(personFile))
+			{
+				// Check that the sequence is kept.
+
+				Date latestIKraft = getLatestIkraft(connection);
+
+				if (latestIKraft == null)
 				{
-					throw new FilePersistException("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing is imported from the fileset");
+					logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
+				}
+				else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft))
+				{
+					throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(latestIKraft.getTime()));
 				}
 			}
 
-			for (File personFile : files)
+			if (logger.isDebugEnabled()) logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
+
+			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
 			{
-				logger.info("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
-
-				CPRDataset cpr = CPRParser.parse(personFile);
-
-				if (isDeltaFile(personFile))
-				{
-					// Check that the sequence is kept.
-
-					Date latestIKraft = getLatestIkraft(connection);
-
-					if (latestIKraft == null)
-					{
-						logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
-					}
-					else if (!cpr.getPreviousFileValidFrom().equals(latestIKraft))
-					{
-						throw new FilePersistException("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(latestIKraft.getTime()));
-					}
-				}
-
-				if (logger.isDebugEnabled()) logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
-
-				for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
-				{
-					dao.persistDeltaDataset(dataset);
-				}
-
-				// Add latest 'ikraft' date to database if we are not importing
-				// a full set.
-
-				if (isDeltaFile(personFile))
-				{
-					insertIkraft(cpr.getValidFrom(), connection);
-				}
-
-				logger.debug("Finish parsing 'CPR person' file " + personFile.getAbsolutePath());
-
-				connection.commit();
+				dao.persistDeltaDataset(dataset);
 			}
-		}
-		catch (Exception e)
-		{
-			throw new FileImporterException("Error during import of CPR files.", e);
-		}
-		finally
-		{
-			MySQLConnectionManager.close(connection);
+
+			// Add latest 'ikraft' date to database if we are not importing
+			// a full set.
+
+			if (isDeltaFile(personFile))
+			{
+				insertIkraft(cpr.getValidFrom(), connection);
+			}
 		}
 	}
 
@@ -144,7 +131,7 @@ public class CPRImporter implements FileImporterControlledIntervals
 	}
 
 	@Override
-	public boolean checkRequiredFiles(List<File> files)
+	public boolean ensureRequiredFileArePresent(File[] input)
 	{
 		// TODO: Filter unwanted files based on filenames
 		// return findPersonerFile(files).size() > 0;
@@ -156,7 +143,6 @@ public class CPRImporter implements FileImporterControlledIntervals
 	 * If no cpr in 12 days, fire alarm Maximum gap observed is 7 days without
 	 * cpr during christmas 2008.
 	 */
-	@Override
 	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Calendar cal = Calendar.getInstance();

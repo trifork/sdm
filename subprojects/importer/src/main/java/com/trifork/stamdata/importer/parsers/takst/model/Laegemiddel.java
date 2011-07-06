@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "Laegemiddel")
@@ -66,38 +67,25 @@ public class Laegemiddel extends TakstEntity
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Id
-	@Output(name = "DrugID")
-	public Long getDrugid()
+	public List<Administrationsvej> getAdministrationsveje()
 	{
-		return this.drugid;
-	}
-
-	public void setDrugid(Long drugid)
-	{
-		this.drugid = drugid;
-	}
-
-	@Output
-	public String getVaretype()
-	{
-		return this.varetype;
-	}
-
-	public void setVaretype(String varetype)
-	{
-		this.varetype = varetype;
+		List<Administrationsvej> adminveje = new ArrayList<Administrationsvej>();
+		for (int idx = 0; idx < administrationsvej.length(); idx += 2)
+		{
+			String avKode = administrationsvej.substring(idx, idx + 2);
+			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
+			if (adminVej == null)
+				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
+			else
+				adminveje.add(adminVej);
+		}
+		return adminveje;
 	}
 
 	@Output
-	public String getVaredeltype()
+	public String getAdministrationsvejKode()
 	{
-		return this.varedeltype;
-	}
-
-	public void setVaredeltype(String varedeltype)
-	{
-		this.varedeltype = varedeltype;
+		return administrationsvej;
 	}
 
 	@Output
@@ -106,183 +94,18 @@ public class Laegemiddel extends TakstEntity
 		return this.alfabetSekvensplads;
 	}
 
-	public void setAlfabetSekvensplads(String alfabetSekvensplads)
+	@Output(name = "ATCKode")
+	public String getATC()
 	{
-		this.alfabetSekvensplads = alfabetSekvensplads;
+		return aTC;
 	}
 
-	@Output
-	public Long getSpecNummer()
+	@Output(name = "ATCTekst")
+	public String getATCTekst()
 	{
-		return this.specNummer;
-	}
-
-	public void setSpecNummer(Long specNummer)
-	{
-		this.specNummer = specNummer;
-	}
-
-	@Output(name = "DrugName")
-	public String getNavn()
-	{
-		if (this.navn == null || this.navn.trim().equals(""))
-		{
-			return "Ikke angivet";
-		}
-		return this.navn;
-	}
-
-	public void setNavn(String navn)
-	{
-		this.navn = navn;
-	}
-
-	@Output
-	public String getLaegemiddelformTekst()
-	{
-		return this.laegemiddelformTekst;
-	}
-
-	public void setLaegemiddelformTekst(String laegemiddelformTekst)
-	{
-		this.laegemiddelformTekst = laegemiddelformTekst;
-	}
-
-	@Output(name = "FormKode")
-	public String getFormKode()
-	{
-		return this.formKode;
-	}
-
-	public void setFormKode(String formKode)
-	{
-		this.formKode = formKode;
-	}
-
-	@Output
-	public String getKodeForYderligereFormOplysn()
-	{
-		return this.kodeForYderligereFormOplysn;
-	}
-
-	public void setKodeForYderligereFormOplysn(String kodeForYderligereFormOplysn)
-	{
-		this.kodeForYderligereFormOplysn = kodeForYderligereFormOplysn;
-	}
-
-	@Output(name = "StyrkeTekst")
-	public String getStyrkeKlarTekst()
-	{
-		return this.styrkeKlarTekst;
-	}
-
-	public void setStyrkeKlarTekst(String styrkeKlarTekst)
-	{
-		this.styrkeKlarTekst = styrkeKlarTekst;
-	}
-
-	@Output(name = "StyrkeNumerisk")
-	public Double getStyrkeNumerisk()
-	{
-		if (styrkeNumerisk == null || styrkeNumerisk == 0)
-		{
-			return null;
-		}
-		return this.styrkeNumerisk / 1000.0;
-	}
-
-	public void setStyrkeNumerisk(Long styrkeNumerisk)
-	{
-		this.styrkeNumerisk = styrkeNumerisk;
-	}
-
-	@Output(name = "StyrkeEnhed")
-	public String getStyrke()
-	{
-		if (styrkeNumerisk == null || styrkeNumerisk == 0)
-		{
-			return null;
-		}
-		return styrkeEnhed;
-	}
-
-	public void setStyrkeEnhed(String styrkeEnhed)
-	{
-		this.styrkeEnhed = styrkeEnhed;
-	}
-
-	public Firma getMTIndehaverRef()
-	{
-		return takst.getEntity(Firma.class, this.mTIndehaver);
-	}
-
-	public void setMTIndehaver(Long mTIndehaver)
-	{
-		this.mTIndehaver = mTIndehaver;
-	}
-
-	public Firma getRepraesentantDistributoerRef()
-	{
-		return takst.getEntity(Firma.class, this.repraesentantDistributoer);
-	}
-
-	public void setRepraesentantDistributoer(Long repraesentantDistributoer)
-	{
-		this.repraesentantDistributoer = repraesentantDistributoer;
-	}
-
-	public void setATC(String aTC)
-	{
-		this.aTC = aTC;
-	}
-
-	public void setAdministrationsvej(String administrationsvej)
-	{
-		this.administrationsvej = administrationsvej;
-	}
-
-	@Output
-	public Boolean getTrafikadvarsel()
-	{
-		return "J".equalsIgnoreCase(this.trafikadvarsel);
-	}
-
-	public void setTrafikadvarsel(String trafikadvarsel)
-	{
-		this.trafikadvarsel = trafikadvarsel;
-	}
-
-	@Output
-	public String getSubstitution()
-	{
-		return this.substitution;
-	}
-
-	public void setSubstitution(String substitution)
-	{
-		this.substitution = substitution;
-	}
-
-	@Output
-	public String getLaegemidletsSubstitutionsgruppe()
-	{
-		return this.laegemidletsSubstitutionsgruppe;
-	}
-
-	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe)
-	{
-		this.laegemidletsSubstitutionsgruppe = laegemidletsSubstitutionsgruppe;
-	}
-
-	@Output(name = "Dosisdispenserbar")
-	public Integer getEgnetTilDosisdispensering()
-	{
-		return ("D".equals(this.egnetTilDosisdispensering)) ? 1 : 0;
-	}
-
-	public void setEgnetTilDosisdispensering(String egnetTilDosisdispensering)
-	{
-		this.egnetTilDosisdispensering = egnetTilDosisdispensering;
+		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, aTC);
+		if (atcObj == null) return null;
+		return atcObj.getTekst();
 	}
 
 	@Output
@@ -300,71 +123,6 @@ public class Laegemiddel extends TakstEntity
 			logger.error("Error converting DatoForAfregistrAfLaegemiddel to iso 8601 date format. Value was: \"" + this.datoForAfregistrAfLaegemiddel + "\". Returning unformated string: '" + this.datoForAfregistrAfLaegemiddel + "'");
 			return this.datoForAfregistrAfLaegemiddel;
 		}
-	}
-
-	public void setDatoForAfregistrAfLaegemiddel(String datoForAfregistrAfLaegemiddel)
-	{
-		this.datoForAfregistrAfLaegemiddel = datoForAfregistrAfLaegemiddel;
-	}
-
-	@Output
-	public String getKarantaenedato()
-	{
-		if (this.karantaenedato == null || "".equals(this.karantaenedato)) return null;
-		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd");
-		try
-		{
-			return outformat.format(informat.parse(this.karantaenedato));
-		}
-		catch (ParseException e)
-		{
-			logger.error("Error converting Karantaenedato to iso 8601 date format. Value was: \"" + this.karantaenedato + "\". Returning unformated string");
-			return this.karantaenedato;
-		}
-	}
-
-	public void setKarantaenedato(String karantaenedato)
-	{
-		this.karantaenedato = karantaenedato;
-	}
-
-	public List<UdgaaedeNavne> getUdgaaedeNavne()
-	{
-		List<UdgaaedeNavne> unavne = new ArrayList<UdgaaedeNavne>();
-		Dataset<UdgaaedeNavne> unds = takst.getDatasetOfType(UdgaaedeNavne.class);
-		if (unds == null) return null;
-		for (UdgaaedeNavne un : unds.getEntities())
-		{
-			if (un.getDrugid().equals(drugid)) unavne.add(un);
-		}
-		return unavne;
-	}
-
-	public List<Administrationsvej> getAdministrationsveje()
-	{
-		List<Administrationsvej> adminveje = new ArrayList<Administrationsvej>();
-		for (int idx = 0; idx < administrationsvej.length(); idx += 2)
-		{
-			String avKode = administrationsvej.substring(idx, idx + 2);
-			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
-			if (adminVej == null)
-				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
-			else
-				adminveje.add(adminVej);
-		}
-		return adminveje;
-	}
-
-	@Output(name = "FormTekst")
-	public String getForm()
-	{
-		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
-		if (lmfb == null)
-		{
-			return null;
-		}
-		return lmfb.getTekst();
 	}
 
 	/*
@@ -387,66 +145,39 @@ public class Laegemiddel extends TakstEntity
 		return result;
 	}
 
-	public List<Indikation> getIndikationer()
+	@Id
+	@Output(name = "DrugID")
+	public Long getDrugid()
 	{
-		List<Indikation> result = new ArrayList<Indikation>();
-		Dataset<Indikationskode> indikationskode = takst.getDatasetOfType(Indikationskode.class);
-		if (indikationskode == null) return null;
-		for (Indikationskode i : indikationskode.getEntities())
+		return this.drugid;
+	}
+
+	@Output(name = "Dosisdispenserbar")
+	public Integer getEgnetTilDosisdispensering()
+	{
+		return ("D".equals(this.egnetTilDosisdispensering)) ? 1 : 0;
+	}
+
+	public Boolean getEksperimentieltLaegemiddel()
+	{
+		return ("" + drugid).startsWith("2742");
+	}
+
+	@Output(name = "FormTekst")
+	public String getForm()
+	{
+		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
+		if (lmfb == null)
 		{
-			if (i.getDrugID().equals(this.drugid))
-			{
-				result.add(takst.getEntity(Indikation.class, i.getIndikationskode()));
-			}
+			return null;
 		}
-		return result;
+		return lmfb.getTekst();
 	}
 
-	public List<Pakning> getPakninger()
+	@Output(name = "FormKode")
+	public String getFormKode()
 	{
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		if (pakninger == null) return null;
-		List<Pakning> pakningerWithThisLaegemiddel = new ArrayList<Pakning>();
-		for (Pakning pakning : pakninger.getEntities())
-		{
-			if (pakning.getDrugid().equals(this.drugid))
-			{
-				pakningerWithThisLaegemiddel.add(pakning);
-			}
-		}
-		return pakningerWithThisLaegemiddel;
-	}
-
-	@Output(name = "ATCKode")
-	public String getATC()
-	{
-		return aTC;
-	}
-
-	@Output(name = "ATCTekst")
-	public String getATCTekst()
-	{
-		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, aTC);
-		if (atcObj == null) return null;
-		return atcObj.getTekst();
-	}
-
-	@Output
-	public String getAdministrationsvejKode()
-	{
-		return administrationsvej;
-	}
-
-	@Output
-	public Long getMTIndehaverKode()
-	{
-		return mTIndehaver;
-	}
-
-	@Output
-	public Long getRepraesentantDistributoerKode()
-	{
-		return repraesentantDistributoer;
+		return this.formKode;
 	}
 
 	public List<Indholdsstoffer> getIndholdsstoffer()
@@ -470,9 +201,54 @@ public class Laegemiddel extends TakstEntity
 		return result;
 	}
 
-	public Boolean getEksperimentieltLaegemiddel()
+	public List<Indikation> getIndikationer()
 	{
-		return ("" + drugid).startsWith("2742");
+		List<Indikation> result = new ArrayList<Indikation>();
+		Dataset<Indikationskode> indikationskode = takst.getDatasetOfType(Indikationskode.class);
+		if (indikationskode == null) return null;
+		for (Indikationskode i : indikationskode.getEntities())
+		{
+			if (i.getDrugID().equals(this.drugid))
+			{
+				result.add(takst.getEntity(Indikation.class, i.getIndikationskode()));
+			}
+		}
+		return result;
+	}
+
+	@Output
+	public String getKarantaenedato()
+	{
+		if (this.karantaenedato == null || "".equals(this.karantaenedato)) return null;
+		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
+		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd");
+		try
+		{
+			return outformat.format(informat.parse(this.karantaenedato));
+		}
+		catch (ParseException e)
+		{
+			logger.error("Error converting Karantaenedato to iso 8601 date format. Value was: \"" + this.karantaenedato + "\". Returning unformated string");
+			return this.karantaenedato;
+		}
+	}
+
+	@Output
+	public String getKodeForYderligereFormOplysn()
+	{
+		return this.kodeForYderligereFormOplysn;
+	}
+
+	@Output
+	public String getLaegemiddelformTekst()
+	{
+		return this.laegemiddelformTekst;
+	}
+
+	@Output
+	public String getLaegemidletsSubstitutionsgruppe()
+	{
+		return this.laegemidletsSubstitutionsgruppe;
 	}
 
 	public Boolean getMagistreltLaegemiddel()
@@ -480,9 +256,234 @@ public class Laegemiddel extends TakstEntity
 		return ("" + drugid).startsWith("8");
 	}
 
+	@Output
+	public Long getMTIndehaverKode()
+	{
+		return mTIndehaver;
+	}
+
+	public Firma getMTIndehaverRef()
+	{
+		return takst.getEntity(Firma.class, this.mTIndehaver);
+	}
+
+	@Output(name = "DrugName")
+	public String getNavn()
+	{
+		if (this.navn == null || this.navn.trim().equals(""))
+		{
+			return "Ikke angivet";
+		}
+		return this.navn;
+	}
+
+	public List<Pakning> getPakninger()
+	{
+		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
+		if (pakninger == null) return null;
+		List<Pakning> pakningerWithThisLaegemiddel = new ArrayList<Pakning>();
+		for (Pakning pakning : pakninger.getEntities())
+		{
+			if (pakning.getDrugid().equals(this.drugid))
+			{
+				pakningerWithThisLaegemiddel.add(pakning);
+			}
+		}
+		return pakningerWithThisLaegemiddel;
+	}
+
+	@Output
+	public Long getRepraesentantDistributoerKode()
+	{
+		return repraesentantDistributoer;
+	}
+
+	public Firma getRepraesentantDistributoerRef()
+	{
+		return takst.getEntity(Firma.class, this.repraesentantDistributoer);
+	}
+
+	@Output
+	public Long getSpecNummer()
+	{
+		return this.specNummer;
+	}
+
+	@Output(name = "StyrkeEnhed")
+	public String getStyrke()
+	{
+		if (styrkeNumerisk == null || styrkeNumerisk == 0)
+		{
+			return null;
+		}
+		return styrkeEnhed;
+	}
+
+	@Output(name = "StyrkeTekst")
+	public String getStyrkeKlarTekst()
+	{
+		return this.styrkeKlarTekst;
+	}
+
+	@Output(name = "StyrkeNumerisk")
+	public Double getStyrkeNumerisk()
+	{
+		if (styrkeNumerisk == null || styrkeNumerisk == 0)
+		{
+			return null;
+		}
+		return this.styrkeNumerisk / 1000.0;
+	}
+
+	@Output
+	public String getSubstitution()
+	{
+		return this.substitution;
+	}
+
+	@Output
+	public Boolean getTrafikadvarsel()
+	{
+		return "J".equalsIgnoreCase(this.trafikadvarsel);
+	}
+
+	public List<UdgaaedeNavne> getUdgaaedeNavne()
+	{
+		List<UdgaaedeNavne> unavne = new ArrayList<UdgaaedeNavne>();
+		Dataset<UdgaaedeNavne> unds = takst.getDatasetOfType(UdgaaedeNavne.class);
+		if (unds == null) return null;
+		for (UdgaaedeNavne un : unds.getEntities())
+		{
+			if (un.getDrugid().equals(drugid)) unavne.add(un);
+		}
+		return unavne;
+	}
+
+	@Output
+	public String getVaredeltype()
+	{
+		return this.varedeltype;
+	}
+
+	@Output
+	public String getVaretype()
+	{
+		return this.varetype;
+	}
+
 	public Boolean isTilHumanAnvendelse()
 	{
 		if (aTC == null) return null;
 		return !aTC.startsWith("Q");
+	}
+
+	public void setAdministrationsvej(String administrationsvej)
+	{
+		this.administrationsvej = administrationsvej;
+	}
+
+	public void setAlfabetSekvensplads(String alfabetSekvensplads)
+	{
+		this.alfabetSekvensplads = alfabetSekvensplads;
+	}
+
+	public void setATC(String aTC)
+	{
+		this.aTC = aTC;
+	}
+
+	public void setDatoForAfregistrAfLaegemiddel(String datoForAfregistrAfLaegemiddel)
+	{
+		this.datoForAfregistrAfLaegemiddel = datoForAfregistrAfLaegemiddel;
+	}
+
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
+
+	public void setEgnetTilDosisdispensering(String egnetTilDosisdispensering)
+	{
+		this.egnetTilDosisdispensering = egnetTilDosisdispensering;
+	}
+
+	public void setFormKode(String formKode)
+	{
+		this.formKode = formKode;
+	}
+
+	public void setKarantaenedato(String karantaenedato)
+	{
+		this.karantaenedato = karantaenedato;
+	}
+
+	public void setKodeForYderligereFormOplysn(String kodeForYderligereFormOplysn)
+	{
+		this.kodeForYderligereFormOplysn = kodeForYderligereFormOplysn;
+	}
+
+	public void setLaegemiddelformTekst(String laegemiddelformTekst)
+	{
+		this.laegemiddelformTekst = laegemiddelformTekst;
+	}
+
+	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe)
+	{
+		this.laegemidletsSubstitutionsgruppe = laegemidletsSubstitutionsgruppe;
+	}
+
+	public void setMTIndehaver(Long mTIndehaver)
+	{
+		this.mTIndehaver = mTIndehaver;
+	}
+
+	public void setNavn(String navn)
+	{
+		this.navn = navn;
+	}
+
+	public void setRepraesentantDistributoer(Long repraesentantDistributoer)
+	{
+		this.repraesentantDistributoer = repraesentantDistributoer;
+	}
+
+	public void setSpecNummer(Long specNummer)
+	{
+		this.specNummer = specNummer;
+	}
+
+	public void setStyrkeEnhed(String styrkeEnhed)
+	{
+		this.styrkeEnhed = styrkeEnhed;
+	}
+
+	public void setStyrkeKlarTekst(String styrkeKlarTekst)
+	{
+		this.styrkeKlarTekst = styrkeKlarTekst;
+	}
+
+	public void setStyrkeNumerisk(Long styrkeNumerisk)
+	{
+		this.styrkeNumerisk = styrkeNumerisk;
+	}
+
+	public void setSubstitution(String substitution)
+	{
+		this.substitution = substitution;
+	}
+
+	public void setTrafikadvarsel(String trafikadvarsel)
+	{
+		this.trafikadvarsel = trafikadvarsel;
+	}
+
+	public void setVaredeltype(String varedeltype)
+	{
+		this.varedeltype = varedeltype;
+	}
+
+	public void setVaretype(String varetype)
+	{
+		this.varetype = varetype;
 	}
 }

@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -41,14 +42,27 @@ public class Substitution extends TakstEntity
 	private Long billigsteVarenummer; // Henvisning til billigste pakning
 
 	@Output
-	public Long getSubstitutionsgruppenummer()
+	public Long getBilligsteVarenummer()
 	{
-		return this.substitutionsgruppenummer;
+		return this.billigsteVarenummer;
 	}
 
-	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	@Override
+	public Long getKey()
 	{
-		this.substitutionsgruppenummer = substitutionsgruppenummer;
+		return receptensVarenummer;
+	}
+
+	@Output
+	public Long getNumeriskPakningsstoerrelse()
+	{
+		return this.numeriskPakningsstoerrelse;
+	}
+
+	@Output
+	public String getProdAlfabetiskeSekvensplads()
+	{
+		return this.prodAlfabetiskeSekvensplads;
 	}
 
 	@Id
@@ -58,31 +72,10 @@ public class Substitution extends TakstEntity
 		return this.receptensVarenummer;
 	}
 
-	public void setReceptensVarenummer(Long receptensVarenummer)
-	{
-		this.receptensVarenummer = receptensVarenummer;
-	}
-
 	@Output
-	public Long getNumeriskPakningsstoerrelse()
+	public Long getSubstitutionsgruppenummer()
 	{
-		return this.numeriskPakningsstoerrelse;
-	}
-
-	public void setNumeriskPakningsstoerrelse(Long numeriskPakningsstoerrelse)
-	{
-		this.numeriskPakningsstoerrelse = numeriskPakningsstoerrelse;
-	}
-
-	@Output
-	public String getProdAlfabetiskeSekvensplads()
-	{
-		return this.prodAlfabetiskeSekvensplads;
-	}
-
-	public void setProdAlfabetiskeSekvensplads(String prodAlfabetiskeSekvensplads)
-	{
-		this.prodAlfabetiskeSekvensplads = prodAlfabetiskeSekvensplads;
+		return this.substitutionsgruppenummer;
 	}
 
 	@Output
@@ -91,25 +84,34 @@ public class Substitution extends TakstEntity
 		return this.substitutionskodeForPakning;
 	}
 
-	public void setSubstitutionskodeForPakning(String substitutionskodeForPakning)
-	{
-		this.substitutionskodeForPakning = substitutionskodeForPakning;
-	}
-
-	@Output
-	public Long getBilligsteVarenummer()
-	{
-		return this.billigsteVarenummer;
-	}
-
 	public void setBilligsteVarenummer(Long billigsteVarenummer)
 	{
 		this.billigsteVarenummer = billigsteVarenummer;
 	}
 
-	public Long getKey()
+	public void setNumeriskPakningsstoerrelse(Long numeriskPakningsstoerrelse)
 	{
-		return receptensVarenummer;
+		this.numeriskPakningsstoerrelse = numeriskPakningsstoerrelse;
+	}
+
+	public void setProdAlfabetiskeSekvensplads(String prodAlfabetiskeSekvensplads)
+	{
+		this.prodAlfabetiskeSekvensplads = prodAlfabetiskeSekvensplads;
+	}
+
+	public void setReceptensVarenummer(Long receptensVarenummer)
+	{
+		this.receptensVarenummer = receptensVarenummer;
+	}
+
+	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	{
+		this.substitutionsgruppenummer = substitutionsgruppenummer;
+	}
+
+	public void setSubstitutionskodeForPakning(String substitutionskodeForPakning)
+	{
+		this.substitutionskodeForPakning = substitutionskodeForPakning;
 	}
 
 }

@@ -44,8 +44,6 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.takst.model.Doseringskode;
-import com.trifork.stamdata.importer.parsers.takst.model.Takst;
-import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.DateUtils;
 
@@ -118,7 +116,6 @@ public class TakstImporterTest
 		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
 		takst.addDataset(dataset);
 
-		assertEquals(1, takst.getEntities().size());
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
 		AuditingPersister dao = new AuditingPersister(con);

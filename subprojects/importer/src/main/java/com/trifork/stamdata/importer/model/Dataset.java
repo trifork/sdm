@@ -38,6 +38,11 @@ public class Dataset<T extends StamdataEntity>
 	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
 	private Class<T> type;
 
+	public Dataset(Class<T> type)
+	{
+		this.type = type;
+	}
+
 	public Dataset(List<T> entities, Class<T> type)
 	{
 		this.type = type;
@@ -53,11 +58,6 @@ public class Dataset<T extends StamdataEntity>
 	public int size()
 	{
 		return getEntities().size();
-	}
-
-	public Dataset(Class<T> type)
-	{
-		this.type = type;
 	}
 
 	public Collection<T> getEntities()
@@ -85,7 +85,6 @@ public class Dataset<T extends StamdataEntity>
 
 	public Class<T> getType()
 	{
-
 		return type;
 	}
 
@@ -95,7 +94,6 @@ public class Dataset<T extends StamdataEntity>
 	 */
 	public String getEntityTypeDisplayName()
 	{
-
 		Output output = type.getAnnotation(Output.class);
 		if (output != null && !"".equals(output.name())) return output.name();
 		return type.getSimpleName();
@@ -103,7 +101,6 @@ public class Dataset<T extends StamdataEntity>
 
 	public static String getEntityTypeDisplayName(Class<? extends StamdataEntity> type)
 	{
-
 		Output output = type.getAnnotation(Output.class);
 		if (output != null && !"".equals(output.name())) return output.name();
 		return type.getSimpleName();
@@ -111,7 +108,6 @@ public class Dataset<T extends StamdataEntity>
 
 	public void removeEntities(List<T> entities)
 	{
-
 		for (T entity : entities)
 		{
 			this.entities.remove(entity.getKey());
@@ -120,7 +116,6 @@ public class Dataset<T extends StamdataEntity>
 
 	public void addEntity(T entity)
 	{
-
 		Object id = entity.getKey();
 
 		List<T> ents = entities.get(id);
@@ -136,7 +131,6 @@ public class Dataset<T extends StamdataEntity>
 
 	public static String getIdOutputName(Class<? extends StamdataEntity> clazz)
 	{
-
 		return getOutputFieldName(getIdMethod(clazz));
 	}
 }

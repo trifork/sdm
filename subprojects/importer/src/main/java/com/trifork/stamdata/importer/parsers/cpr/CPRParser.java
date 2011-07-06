@@ -278,7 +278,7 @@ public class CPRParser
 		k.setAdresseringsNavn(cut(line, 13, 47).trim());
 		k.setCoNavn(cut(line, 47, 81).trim());
 		k.setLokalitet(cut(line, 81, 115).trim());
-		k.setStandardAdresse(cut(line, 115, 149).trim());
+		k.setVejnavnTilAdresseringsNavn(cut(line, 115, 149).trim());
 		k.setByNavn(cut(line, 149, 183).trim());
 		k.setPostNummer(parseLong(line, 183, 187));
 		k.setPostDistrikt(cut(line, 187, 207).trim());

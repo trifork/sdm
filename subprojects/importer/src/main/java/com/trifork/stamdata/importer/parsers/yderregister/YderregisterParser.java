@@ -29,7 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -50,7 +49,7 @@ public class YderregisterParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(YderregisterParser.class);
 
-	public YderregisterDatasets parseYderregister(List<File> files) throws FileParseException
+	public YderregisterDatasets parseYderregister(File[] files) throws FileParseException
 	{
 		YderRegisterEventHandler handler = new YderRegisterEventHandler();
 		SAXParserFactory factory = SAXParserFactory.newInstance();

@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "Formbetegnelse")
@@ -36,16 +37,23 @@ public class LaegemiddelformBetegnelser extends TakstEntity
 	private String aktivInaktiv; // A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
 									// anerkendt term
 
+	@Output(name = "Aktiv")
+	public Boolean getAktivInaktiv()
+	{
+		return "A".equalsIgnoreCase(this.aktivInaktiv);
+	}
+
+	@Override
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
+
 	@Id
 	@Output
 	public String getKode()
 	{
 		return this.kode;
-	}
-
-	public void setKode(String kode)
-	{
-		this.kode = kode;
 	}
 
 	@Output
@@ -54,25 +62,19 @@ public class LaegemiddelformBetegnelser extends TakstEntity
 		return this.tekst;
 	}
 
-	public void setTekst(String tekst)
-	{
-		this.tekst = tekst;
-	}
-
-	@Output(name = "Aktiv")
-	public Boolean getAktivInaktiv()
-	{
-		return "A".equalsIgnoreCase(this.aktivInaktiv);
-	}
-
 	public void setAktivInaktiv(String aktivInaktiv)
 	{
 		this.aktivInaktiv = aktivInaktiv;
 	}
 
-	public String getKey()
+	public void setKode(String kode)
 	{
-		return "" + this.kode;
+		this.kode = kode;
+	}
+
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
 	}
 
 }

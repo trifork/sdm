@@ -35,7 +35,14 @@ public class AktuelCivilstand extends CPREntity
 
 	public enum Civilstand
 	{
-		ugift("U"), gift("G"), fraskilt("F"), enkeEllerEnkemand("E"), registreretPartnerskab("P"), ophaevetPartnerskab("O"), laengstlevendePartner("L"), doed("D");
+		ugift("U"),
+		gift("G"),
+		fraskilt("F"),
+		enkeEllerEnkemand("E"),
+		registreretPartnerskab("P"),
+		ophaevetPartnerskab("O"),
+		laengstlevendePartner("L"),
+		doed("D");
 
 		private final String code;
 

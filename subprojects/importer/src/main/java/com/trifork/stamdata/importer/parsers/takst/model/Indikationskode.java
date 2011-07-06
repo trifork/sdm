@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "IndikationATCRef")
@@ -34,6 +35,12 @@ public class Indikationskode extends TakstEntity
 	private String aTC; // Ref. t. LMS01
 	private Long indikationskode; // Ref. t. LMS26
 	private Long drugID; // Ref. t. LMS01, felt 01
+
+	@Output
+	public String getATC()
+	{
+		return this.aTC;
+	}
 
 	@Id
 	@Output
@@ -45,14 +52,9 @@ public class Indikationskode extends TakstEntity
 	}
 
 	@Output
-	public String getATC()
+	public Long getDrugID()
 	{
-		return this.aTC;
-	}
-
-	public void setATC(String aTC)
-	{
-		this.aTC = aTC;
+		return this.drugID;
 	}
 
 	@Output(name = "IndikationKode")
@@ -61,20 +63,19 @@ public class Indikationskode extends TakstEntity
 		return this.indikationskode;
 	}
 
-	public void setIndikationskode(Long indikationskode)
+	public void setATC(String aTC)
 	{
-		this.indikationskode = indikationskode;
-	}
-
-	@Output
-	public Long getDrugID()
-	{
-		return this.drugID;
+		this.aTC = aTC;
 	}
 
 	public void setDrugID(Long drugID)
 	{
 		this.drugID = drugID;
+	}
+
+	public void setIndikationskode(Long indikationskode)
+	{
+		this.indikationskode = indikationskode;
 	}
 
 }

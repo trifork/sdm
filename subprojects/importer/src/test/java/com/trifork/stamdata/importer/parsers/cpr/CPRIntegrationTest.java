@@ -32,6 +32,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Date;
@@ -48,14 +49,14 @@ import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 
 public class CPRIntegrationTest
 {
+	private Connection con;
 
 	@Before
-	@After
 	public void cleanDatabase() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getConnection();
-		Statement statement = con.createStatement();
+		con = MySQLConnectionManager.getConnection();
 
+		Statement statement = con.createStatement();
 		statement.execute("truncate table Person");
 		statement.execute("truncate table BarnRelation");
 		statement.execute("truncate table ForaeldreMyndighedRelation");
@@ -67,8 +68,13 @@ public class CPRIntegrationTest
 		statement.execute("truncate table Foedselsregistreringsoplysninger");
 		statement.execute("truncate table KommunaleForhold");
 		statement.execute("truncate table AktuelCivilstand");
+	}
 
-		MySQLConnectionManager.close(statement, con);
+	@After
+	public void teardown() throws SQLException
+	{
+		con.rollback();
+		con.close();
 	}
 
 	@Test
@@ -76,14 +82,11 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testEtablering/D100313.L431102");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
 		// When running a full load (file doesn't ends on 01) of CPR no
-		// LatestIkraft should be written to the db
+		// LatestIkraft should be written to the db.
+
 		Date latestIkraft = CPRImporter.getLatestIkraft(con);
 		assertNull(latestIkraft);
-
-		MySQLConnectionManager.close(con);
 	}
 
 	@Test
@@ -91,10 +94,8 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100315.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
+		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
@@ -103,7 +104,7 @@ public class CPRIntegrationTest
 
 		importFile("data/cpr/D100317.L431101");
 
-		rs = stmt.executeQuery("Select Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
+		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
@@ -113,16 +114,12 @@ public class CPRIntegrationTest
 		assertEquals("2010-03-17 00:00:00.0", rs.getString("validFrom"));
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
-		stmt.close();
-		con.close();
 	}
 
 	@Test(expected = FileImporterException.class)
 	public void failsWhenDatesAreNotInSequence() throws Exception
 	{
 		importFile("data/cpr/testSequence1/D100314.L431101");
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 
 		Date latestIkraft = CPRImporter.getLatestIkraft(con);
 		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
@@ -133,7 +130,6 @@ public class CPRIntegrationTest
 		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
 
 		importFile("data/cpr/testOutOfSequence/D100314.L431101");
-		con.close();
 	}
 
 	@Test(expected = FileImporterException.class)
@@ -153,10 +149,10 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testCPR1/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from Person where CPR='0101965058'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR='0101965058'");
 		rs.next();
+
 		assertEquals("K", rs.getString("Koen"));
 		assertEquals("Ude Ulrike", rs.getString("Fornavn"));
 		assertEquals("", rs.getString("Mellemnavn"));
@@ -182,8 +178,6 @@ public class CPRIntegrationTest
 		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
 		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -191,25 +185,32 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Person where CPR='3112970028'");
+
 		rs.next();
+
 		assertTrue(rs.last());
 
-		rs = stmt.executeQuery("Select * from BarnRelation where BarnCPR='3112970028'");
+		rs = stmt.executeQuery("SELECT * FROM BarnRelation WHERE BarnCPR='3112970028'");
+
 		rs.next();
+
 		assertEquals("0702614082", rs.getString("CPR"));
 		assertTrue(rs.last());
 
-		rs = stmt.executeQuery("Select * from ForaeldreMyndighedRelation where CPR='3112970028' order by TypeKode");
+		rs = stmt.executeQuery("SELECT * FROM ForaeldreMyndighedRelation WHERE CPR='3112970028' ORDER BY TypeKode");
+
 		rs.next();
+
 		assertEquals("0003", rs.getString("TypeKode"));
 		assertEquals("Mor", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
 		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
 		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+
 		rs.next();
+
 		assertEquals("0004", rs.getString("TypeKode"));
 		assertEquals("Far", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
@@ -217,8 +218,6 @@ public class CPRIntegrationTest
 		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -226,10 +225,11 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from UmyndiggoerelseVaergeRelation where CPR='0709614126'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
+
 		rs.next();
+
 		assertEquals("0001", rs.getString("TypeKode"));
 		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
 		assertEquals("0904414131", rs.getString("RelationCpr"));
@@ -244,8 +244,6 @@ public class CPRIntegrationTest
 		assertEquals(yyyy_MM_dd.parse("2001-11-19"), rs.getDate("ValidFrom"));
 		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -253,16 +251,15 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/folkekirkeoplysninger/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from Folkekirkeoplysninger where CPR='0709614126'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Folkekirkeoplysninger WHERE CPR='0709614126'");
+
 		rs.next();
+
 		assertEquals("0709614126", rs.getString("CPR"));
 		assertEquals("F", rs.getString("Forholdskode"));
 		assertEquals(yyyy_MM_dd.parse("1961-09-07"), rs.getDate("validFrom"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -270,9 +267,8 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/civilstand/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from AktuelCivilstand where CPR='0905414143'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM AktuelCivilstand WHERE CPR='0905414143'");
 		rs.next();
 		assertEquals("0905414143", rs.getString("CPR"));
 		assertEquals("E", rs.getString("Civilstandskode"));
@@ -282,8 +278,6 @@ public class CPRIntegrationTest
 		assertEquals(yyyy_MM_dd.parse("1961-03-13"), rs.getDate("validFrom"));
 		assertNull(rs.getDate("Separation"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -291,18 +285,17 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/kommunaleForhold/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from KommunaleForhold where CPR='2802363039'");
+
 		rs.next();
+
 		assertEquals("2802363039", rs.getString("CPR"));
 		assertEquals("3", rs.getString("Kommunalforholdstypekode"));
 		assertEquals("N", rs.getString("Kommunalforholdskode"));
 		assertEquals(yyyy_MM_dd.parse("2000-06-30"), rs.getDate("validFrom"));
 		assertEquals("Tekst til komforh3/pension", rs.getString("Bemaerkninger"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -310,18 +303,17 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/valgoplysninger/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Valgoplysninger where CPR='0708614335'");
+
 		rs.next();
+
 		assertEquals("0708614335", rs.getString("CPR"));
 		assertEquals("1", rs.getString("Valgkode"));
 		assertEquals(yyyy_MM_dd.parse("1999-03-10"), rs.getDate("Valgretsdato"));
 		assertEquals(yyyy_MM_dd.parse("1999-02-01"), rs.getDate("validFrom"));
 		assertEquals(yyyy_MM_dd.parse("2001-03-10"), rs.getDate("validTo"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -329,18 +321,17 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/haendelse/D100314.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Haendelse where CPR='0905414143'");
+
 		rs.next();
+
 		assertEquals("0905414143", rs.getString("CPR"));
 		assertEquals(yyyy_MM_dd.parse("2001-11-15"), rs.getDate("Ajourfoeringsdato"));
 		assertEquals("P10", rs.getString("Haendelseskode"));
 		assertEquals("", rs.getString("AfledtMarkering"));
 		assertEquals("", rs.getString("Noeglekonstant"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -348,24 +339,25 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from MorOgFaroplysninger where CPR='0905414143' order by Foraelderkode");
+
 		rs.next();
+
 		assertEquals("0905414143", rs.getString("CPR"));
 		assertEquals("F", rs.getString("Foraelderkode"));
 		assertEquals(yyyy_MM_dd.parse("1941-05-09"), rs.getDate("Dato"));
 		assertEquals(yyyy_MM_dd.parse("1970-09-05"), rs.getDate("Foedselsdato"));
 		assertEquals("Far Jens", rs.getString("Navn"));
+
 		rs.next();
+
 		assertEquals("0905414143", rs.getString("CPR"));
 		assertEquals("M", rs.getString("Foraelderkode"));
 		assertEquals(yyyy_MM_dd.parse("1941-05-09"), rs.getDate("Dato"));
 		assertEquals(yyyy_MM_dd.parse("1972-10-12"), rs.getDate("Foedselsdato"));
 		assertEquals("Mor Hanne", rs.getString("Navn"));
 		assertTrue(rs.last());
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -373,13 +365,10 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select count(*) c from MorOgFaroplysninger where CPR='0905414143'");
 		rs.next();
 		assertEquals(0, rs.getInt("c"));
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -387,7 +376,6 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100312.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select count(*) from Person");
 		rs.next();
@@ -410,9 +398,6 @@ public class CPRIntegrationTest
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
-
-		stmt.close();
-		con.close();
 	}
 
 	@Test
@@ -420,7 +405,6 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100313.L431101");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("Select count(*) from Person");
 		rs.next();
@@ -442,14 +426,11 @@ public class CPRIntegrationTest
 		rs = stmt.executeQuery("Select count(*) from Person WHERE NavneBeskyttelseStartDato < now() AND NavneBeskyttelseSletteDato > now()");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
-
-		stmt.close();
-		con.close();
 	}
 
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().run(Arrays.asList(file));
+		new CPRImporter().run(Arrays.asList(file), con);
 	}
 }

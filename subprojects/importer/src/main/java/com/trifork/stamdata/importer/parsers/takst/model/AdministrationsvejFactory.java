@@ -23,52 +23,18 @@
 
 package com.trifork.stamdata.importer.parsers.takst.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import com.trifork.stamdata.importer.parsers.takst.FixedLengthParserConfiguration;
 
-
-public class AdministrationsvejFactory extends AbstractFactory
+public class AdministrationsvejFactory implements FixedLengthParserConfiguration<Administrationsvej>
 {
-
-	private static void setFieldValue(Administrationsvej obj, int fieldNo, String value)
+	@Override
+	public String getFilename()
 	{
-		if ("".equals(value)) value = null;
-		switch (fieldNo)
-		{
-		case 0:
-			obj.setKode(value);
-			break;
-		case 1:
-			obj.setKortTekst(value);
-			break;
-		case 2:
-			obj.setTekst(value);
-			break;
-		default:
-			break;
-		}
+		return "LMS11";
 	}
 
-	private static int getOffset(int fieldNo)
-	{
-		switch (fieldNo)
-		{
-		case 0:
-			return 0;
-		case 1:
-			return 2;
-		case 2:
-			return 12;
-		default:
-			return -1;
-		}
-	}
-
-	private static int getLength(int fieldNo)
+	@Override
+	public int getLength(int fieldNo)
 	{
 		switch (fieldNo)
 		{
@@ -83,64 +49,44 @@ public class AdministrationsvejFactory extends AbstractFactory
 		}
 	}
 
-	private static int getNumberOfFields()
+	@Override
+	public int getNumberOfFields()
 	{
 		return 4;
 	}
 
-	private static String getLmsName()
+	@Override
+	public int getOffset(int fieldNo)
 	{
-		return "LMS11";
-	}
-
-	public static ArrayList<Administrationsvej> read(String rootFolder) throws IOException
-	{
-
-		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
-		ArrayList<Administrationsvej> list = new ArrayList<Administrationsvej>();
-		BufferedReader reader = null;
-		try
+		switch (fieldNo)
 		{
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
-				String line = reader.readLine();
-				if (line.trim().length() > 0)
-				{
-					list.add(parse(line));
-				}
-			}
-			return list;
-		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
-					reader.close();
-				}
-			}
-			catch (Exception e)
-			{
-				logger.warn("Could not close FileReader");
-			}
+		case 0:
+			return 0;
+		case 1:
+			return 2;
+		case 2:
+			return 12;
+		default:
+			return -1;
 		}
 	}
 
-	private static Administrationsvej parse(String line)
+	@Override
+	public void setFieldValue(Administrationsvej obj, int fieldNo, String value)
 	{
-		Administrationsvej obj = new Administrationsvej();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
+		switch (fieldNo)
 		{
-			if (getLength(fieldNo) > 0)
-			{
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
-				setFieldValue(obj, fieldNo, value);
-			}
+		case 0:
+			obj.setKode(value);
+			break;
+		case 1:
+			obj.setKortTekst(value);
+			break;
+		case 2:
+			obj.setTekst(value);
+			break;
+		default:
+			break;
 		}
-		return obj;
 	}
 }

@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "LaegemiddelDoseringRef")
@@ -41,26 +42,26 @@ public class Doseringskode extends TakstEntity
 		return drugid + "-" + doseringskode;
 	}
 
-	@Output(name = "DrugID")
-	public long getDrugid()
-	{
-		return this.drugid;
-	}
-
-	public void setDrugid(Long drugid)
-	{
-		this.drugid = drugid;
-	}
-
 	@Output(name = "DoseringKode")
 	public long getDoseringskode()
 	{
 		return this.doseringskode;
 	}
 
+	@Output(name = "DrugID")
+	public long getDrugid()
+	{
+		return this.drugid;
+	}
+
 	public void setDoseringskode(Long doseringskode)
 	{
 		this.doseringskode = doseringskode;
+	}
+
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
 	}
 
 }

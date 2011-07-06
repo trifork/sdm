@@ -42,10 +42,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.parsers.takst.Takst;
+import com.trifork.stamdata.importer.parsers.takst.TakstDataset;
 import com.trifork.stamdata.importer.parsers.takst.model.DivEnheder;
 import com.trifork.stamdata.importer.parsers.takst.model.Laegemiddel;
-import com.trifork.stamdata.importer.parsers.takst.model.Takst;
-import com.trifork.stamdata.importer.parsers.takst.model.TakstDataset;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;

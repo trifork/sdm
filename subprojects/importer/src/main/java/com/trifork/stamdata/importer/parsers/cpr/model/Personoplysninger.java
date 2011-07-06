@@ -32,7 +32,6 @@ import com.trifork.stamdata.importer.model.Output;
 @Output(name = "Person")
 public class Personoplysninger extends CPREntity
 {
-
 	String cpr;
 	String gaeldendeCpr;
 	String status;

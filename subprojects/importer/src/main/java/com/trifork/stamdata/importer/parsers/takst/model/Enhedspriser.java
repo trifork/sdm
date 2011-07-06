@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -39,14 +40,33 @@ public class Enhedspriser extends TakstEntity
 										// for DrugID
 
 	@Output
+	public String getBilligstePakning()
+	{
+		return this.billigstePakning;
+	}
+
+	@Output
 	public Long getDrugID()
 	{
 		return this.drugID;
 	}
 
-	public void setDrugID(Long drugID)
+	@Override
+	public String getKey()
 	{
-		this.drugID = drugID;
+		return "" + varenummer;
+	}
+
+	@Output
+	public Long getPrisPrDDD()
+	{
+		return this.prisPrDDD;
+	}
+
+	@Output
+	public Long getPrisPrEnhed()
+	{
+		return this.prisPrEnhed;
 	}
 
 	@Id
@@ -56,26 +76,14 @@ public class Enhedspriser extends TakstEntity
 		return this.varenummer;
 	}
 
-	public void setVarenummer(Long varenummer)
+	public void setBilligstePakning(String billigstePakning)
 	{
-		this.varenummer = varenummer;
+		this.billigstePakning = billigstePakning;
 	}
 
-	@Output
-	public Long getPrisPrEnhed()
+	public void setDrugID(Long drugID)
 	{
-		return this.prisPrEnhed;
-	}
-
-	public void setPrisPrEnhed(Long prisPrEnhed)
-	{
-		this.prisPrEnhed = prisPrEnhed;
-	}
-
-	@Output
-	public Long getPrisPrDDD()
-	{
-		return this.prisPrDDD;
+		this.drugID = drugID;
 	}
 
 	public void setPrisPrDDD(Long prisPrDDD)
@@ -83,20 +91,14 @@ public class Enhedspriser extends TakstEntity
 		this.prisPrDDD = prisPrDDD;
 	}
 
-	@Output
-	public String getBilligstePakning()
+	public void setPrisPrEnhed(Long prisPrEnhed)
 	{
-		return this.billigstePakning;
+		this.prisPrEnhed = prisPrEnhed;
 	}
 
-	public void setBilligstePakning(String billigstePakning)
+	public void setVarenummer(Long varenummer)
 	{
-		this.billigstePakning = billigstePakning;
-	}
-
-	public String getKey()
-	{
-		return "" + varenummer;
+		this.varenummer = varenummer;
 	}
 
 }

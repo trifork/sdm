@@ -88,5 +88,4 @@ public class SORDataSets
 	{
 		this.sygehusAfdelingDS = sygehusAfdelingDS;
 	}
-
 }

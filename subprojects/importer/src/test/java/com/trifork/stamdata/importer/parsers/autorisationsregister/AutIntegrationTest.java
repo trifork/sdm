@@ -24,7 +24,6 @@
 package com.trifork.stamdata.importer.parsers.autorisationsregister;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.sql.Connection;
@@ -38,11 +37,11 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.parsers.autorisationsregister.AutImporter;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
@@ -53,33 +52,41 @@ public class AutIntegrationTest
 	public static File initial;
 	public static File next;
 	public static File invalid;
+	
+	private Connection con;
 
 	static Autorisationsregisterudtraek initialCompares = new Autorisationsregisterudtraek(new Date());
-
-	static
-	{
+	
+	{{
 		initialCompares.addEntity(new Autorisation("0013F;0101251489;Bondo;Jørgen;7170"));
 		initialCompares.addEntity(new Autorisation("0013H;0101280063;Johnsen;Tage Søgaard;7170"));
 		initialCompares.addEntity(new Autorisation("0013J;0101280551;Bertelsen;Svend Christian;7170"));
 		initialCompares.addEntity(new Autorisation("0013K;0101280896;Frederiksen;Lilian;7170"));
-	}
+	}}
 
-	@Before
-	public void init()
+	@BeforeClass
+	public static void init()
 	{
-		initial = FileUtils.toFile(getClass().getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
-		next = FileUtils.toFile(getClass().getClassLoader().getResource("data/aut/valid/20090918AutDK.csv"));
-		invalid = FileUtils.toFile(getClass().getClassLoader().getResource("data/aut/invalid/20090915AutDK.csv"));
+		ClassLoader classLoader = AutIntegrationTest.class.getClassLoader();
+		
+		initial = FileUtils.toFile(classLoader.getResource("data/aut/valid/20090915AutDK.csv"));
+		next = FileUtils.toFile(classLoader.getResource("data/aut/valid/20090918AutDK.csv"));
+		invalid = FileUtils.toFile(classLoader.getResource("data/aut/invalid/20090915AutDK.csv"));
 	}
 
 	@Before
-	@After
 	public void cleanDb() throws SQLException
 	{
-		Connection con = MySQLConnectionManager.getConnection();
+		con = MySQLConnectionManager.getConnection();
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate("TRUNCATE TABLE " + Dataset.getEntityTypeDisplayName(Autorisation.class));
 		stmt.close();
+		con.commit();
+	}
+
+	@After
+	public void rollback() throws SQLException
+	{
 		con.close();
 	}
 
@@ -88,17 +95,18 @@ public class AutIntegrationTest
 	{
 		List<File> files = new ArrayList<File>();
 		files.add(initial);
+		
 		AutImporter importer = new AutImporter();
-		importer.run(files);
+		importer.run(files, con);
 
-		Connection con = MySQLConnectionManager.getConnection();
 		Statement stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("select count(*) from " + Dataset.getEntityTypeDisplayName(Autorisation.class));
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
 		rs.next();
+		
 		assertEquals("Number of records in database", initialCompares.getEntities().size(), rs.getInt(1));
 
-		rs = stmt.executeQuery("select * from " + Dataset.getEntityTypeDisplayName(Autorisation.class));
+		rs = stmt.executeQuery("SELECT * FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
 
 		for (int i = 0; i < initialCompares.getEntities().size(); i++)
 		{
@@ -109,30 +117,27 @@ public class AutIntegrationTest
 			assertEquals(compare.getEfternavn(), rs.getString("Efternavn"));
 			assertEquals(compare.getUddannelsesKode(), rs.getString("UddannelsesKode"));
 		}
-		stmt.close();
-		con.close();
-
 	}
 
 	@Test
 	public void testImportX2() throws Exception
 	{
-
 		List<File> files = new ArrayList<File>();
 		files.add(initial);
+		
 		AutImporter importer = new AutImporter();
-		importer.run(files);
-		importer.run(files);
-
-		Connection con = MySQLConnectionManager.getConnection();
+		
+		importer.run(files, con);
+		importer.run(files, con);
+		
 		Statement stmt = con.createStatement();
-
-		ResultSet rs = stmt.executeQuery("select count(*) from " + Dataset.getEntityTypeDisplayName(Autorisation.class));
+		
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
 		rs.next();
-		assertEquals("Number of records in database", initialCompares.getEntities().size(), rs.getInt(1));
-
-		rs = stmt.executeQuery("select * from " + Dataset.getEntityTypeDisplayName(Autorisation.class));
-
+		assertEquals("Number of records in database.", initialCompares.getEntities().size(), rs.getInt(1));
+		
+		rs = stmt.executeQuery("SELECT * FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
+		
 		for (int i = 0; i < initialCompares.getEntities().size(); i++)
 		{
 			rs.next();
@@ -142,28 +147,20 @@ public class AutIntegrationTest
 			assertEquals(compare.getEfternavn(), rs.getString("Efternavn"));
 			assertEquals(compare.getUddannelsesKode(), rs.getString("UddannelsesKode"));
 		}
-		stmt.close();
-		con.close();
 	}
 
-	/**
-	 * Test adding a dataset on top of an existing one
-	 *
-	 * @throws Exception
-	 */
 	@Test
 	public void testDelta() throws Exception
 	{
-
 		List<File> files = new ArrayList<File>();
 		files.add(initial);
 		AutImporter importer = new AutImporter();
-		importer.run(files);
+		importer.run(files, con);
 
 		List<File> nextFiles = new ArrayList<File>();
 		nextFiles.add(next);
 		importer = new AutImporter();
-		importer.run(nextFiles);
+		importer.run(nextFiles, con);
 
 		Dataset<Autorisation> nextCompares = new Dataset<Autorisation>(Autorisation.class);
 		nextCompares.addEntity(new Autorisation("0013H;0101280063;Johnsen;Tage Søgaard;7170"));
@@ -172,9 +169,8 @@ public class AutIntegrationTest
 		nextCompares.addEntity(new Autorisation("0013K;0101280896;Frederiksen;Lilian;7170"));
 		nextCompares.addEntity(new Autorisation("0013L;0101290565;Heering;Eli;7170"));
 
-		Connection con = MySQLConnectionManager.getConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("select count(*) from " + Dataset.getEntityTypeDisplayName(Autorisation.class) + " where validfrom < '2009-09-19' and validto > '2009-09-19'");
+		ResultSet rs = stmt.executeQuery("SELECT count(*) from " + Dataset.getEntityTypeDisplayName(Autorisation.class) + " where validfrom < '2009-09-19' and validto > '2009-09-19'");
 		rs.next();
 		assertEquals(nextCompares.getEntities().size(), rs.getInt(1));
 
@@ -191,23 +187,16 @@ public class AutIntegrationTest
 		}
 
 		stmt.close();
-		con.close();
 	}
 
-	@Test
+	@Test(expected = FileImporterException.class)
 	public void testInvalid() throws Exception
 	{
-
 		List<File> files = new ArrayList<File>();
 		files.add(invalid);
+		
 		AutImporter importer = new AutImporter();
-		try
-		{
-			importer.run(files);
-			fail();
-		}
-		catch (FileImporterException e)
-		{}
+		
+		importer.run(files, con);
 	}
-
 }

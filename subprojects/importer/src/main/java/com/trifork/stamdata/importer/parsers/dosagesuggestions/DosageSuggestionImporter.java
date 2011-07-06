@@ -36,9 +36,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -61,7 +63,7 @@ import com.trifork.stamdata.importer.persistence.Persister;
 
 /**
  * Importer for drug dosage suggestions data.
- *
+ * 
  * @author Thomas Børlum (thb@trifork.com)
  */
 public class DosageSuggestionImporter implements FileImporter
@@ -84,102 +86,86 @@ public class DosageSuggestionImporter implements FileImporter
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void run(List<File> files) throws FileImporterException
+	public void importFiles(File[] files, Connection connection) throws Exception
 	{
-		Connection connection = null;
+		// METADATA FILE
+		//
+		// The file contains information about the validity period
+		// of the data.
 
-		try
+		DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
+		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
+		versionDataset.addEntity(version);
+
+		// CHECK PREVIOUS VERSION
+		//
+		// Check that the version in imported in
+		// sequence and that we haven't missed one.
+
+		connection = MySQLConnectionManager.getConnection();
+
+		Statement versionStatement = connection.createStatement();
+		ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
+
+		if (!queryResults.next())
 		{
-			// METADATA FILE
-			//
-			// The file contains information about the validity period
-			// of the data.
-
-			DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
-			CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
-			versionDataset.addEntity(version);
-
-			// CHECK PREVIOUS VERSION
-			//
-			// Check that the version in imported in
-			// sequence and that we haven't missed one.
-
-			connection = MySQLConnectionManager.getConnection();
-
-			Statement versionStatement = connection.createStatement();
-			ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
-
-			if (!queryResults.next())
-			{
-				throw new FileImporterException("SQL statement returned no rows, expected NULL or int value.");
-			}
-
-			int maxVersion = queryResults.getInt(1);
-
-			if (queryResults.wasNull())
-			{
-				logger.warn("No previous version of Dosage Suggestion registry found, assuming initial import.");
-			}
-			else if (version.getReleaseNumber() != maxVersion + 1)
-			{
-				throw new FileImporterException("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
-			}
-
-			version.setVersion(version.getReleaseDate());
-
-			// OTHER FILES
-			//
-			// There are data files and relation file.
-			// Relation files act as one-to-one etc. relations.
-			//
-			// This data source represents the 'whole truth' for
-			// the validity period. That means that complete
-			// datasets will be used for persisting, and no existing
-			// records will be valid in the period.
-			//
-			// We have to declare the <T> types explicitly since GSon
-			// (Java is stupid) can't get the runtime types otherwise.
-
-			Type type;
-
-			type = new TypeToken<Map<String, Collection<Drug>>>()
-			{}.getType();
-			CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
-			setValidityPeriod(drugs, version);
-
-			type = new TypeToken<Map<String, Collection<DosageUnit>>>()
-			{}.getType();
-			CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
-			setValidityPeriod(units, version);
-
-			type = new TypeToken<Map<String, Collection<DosageStructure>>>()
-			{}.getType();
-			CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
-			setValidityPeriod(structures, version);
-
-			type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>()
-			{}.getType();
-			CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
-			setValidityPeriod(relations, version);
-
-			// PERSIST THE DATA
-
-			Persister persister = (mockPersister != null) ? mockPersister : new AuditingPersister(connection);
-			persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
-
-			connection.commit();
-
-			logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
+			throw new FileImporterException("SQL statement returned no rows, expected NULL or int value.");
 		}
-		catch (Exception e)
+
+		int maxVersion = queryResults.getInt(1);
+
+		if (queryResults.wasNull())
 		{
-			throw new FileImporterException("Error during import of dosage suggestions.", e);
+			logger.warn("No previous version of Dosage Suggestion registry found, assuming initial import.");
 		}
-		finally
+		else if (version.getReleaseNumber() != maxVersion + 1)
 		{
-			MySQLConnectionManager.close(connection);
+			throw new FileImporterException("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
 		}
+
+		version.setVersion(version.getReleaseDate());
+
+		// OTHER FILES
+		//
+		// There are data files and relation file.
+		// Relation files act as one-to-one etc. relations.
+		//
+		// This data source represents the 'whole truth' for
+		// the validity period. That means that complete
+		// datasets will be used for persisting, and no existing
+		// records will be valid in the period.
+		//
+		// We have to declare the <T> types explicitly since GSon
+		// (Java is stupid) can't get the runtime types otherwise.
+
+		Type type;
+
+		type = new TypeToken<Map<String, Collection<Drug>>>()
+		{}.getType();
+		CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
+		setValidityPeriod(drugs, version);
+
+		type = new TypeToken<Map<String, Collection<DosageUnit>>>()
+		{}.getType();
+		CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
+		setValidityPeriod(units, version);
+
+		type = new TypeToken<Map<String, Collection<DosageStructure>>>()
+		{}.getType();
+		CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
+		setValidityPeriod(structures, version);
+
+		type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>()
+		{}.getType();
+		CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
+		setValidityPeriod(relations, version);
+
+		// PERSIST THE DATA
+
+		Persister persister = (mockPersister != null) ? mockPersister : new AuditingPersister(connection);
+		persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
+
+		logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
 	}
 
 	/**
@@ -232,33 +218,32 @@ public class DosageSuggestionImporter implements FileImporter
 	}
 
 	@Override
-	public boolean checkRequiredFiles(List<File> files)
+	public boolean ensureRequiredFileArePresent(File[] input)
 	{
-
 		// ALL THE FOLLOWING FILES MUST BE PRESENT
 		//
 		// The import will fail if not all of the files can be found.
 
 		boolean present = true;
 
-		present &= getFile(files, "DosageStructures.json") != null;
-		present &= getFile(files, "DosageUnits.json") != null;
-		present &= getFile(files, "Drugs.json") != null;
-		present &= getFile(files, "DrugsDosageStructures.json") != null;
-		present &= getFile(files, "DosageVersion.json") != null;
+		present &= getFile(input, "DosageStructures.json") != null;
+		present &= getFile(input, "DosageUnits.json") != null;
+		present &= getFile(input, "Drugs.json") != null;
+		present &= getFile(input, "DrugsDosageStructures.json") != null;
+		present &= getFile(input, "DosageVersion.json") != null;
 
 		return present;
 	}
 
 	/**
 	 * Searches the provided file array for a specific file name.
-	 *
+	 * 
 	 * @param files the list of files to search.
 	 * @param name the file name of the file to return.
-	 *
+	 * 
 	 * @return the file with the specified name or null if no file is found.
 	 */
-	private File getFile(List<File> files, String name)
+	private File getFile(File[] files, String name)
 	{
 		File result = null;
 
@@ -273,5 +258,16 @@ public class DosageSuggestionImporter implements FileImporter
 		}
 
 		return result;
+	}
+
+	public Date getNextImportExpectedBefore(Date lastImport)
+	{
+		return new DateTime(lastImport).plusMonths(3).toDate();
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return "doseringsforslag";
 	}
 }

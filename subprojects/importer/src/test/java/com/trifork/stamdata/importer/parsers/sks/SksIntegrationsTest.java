@@ -28,42 +28,52 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.sks.SksImporter;
 
 
-public class SksIntegrationsTest {
+public class SksIntegrationsTest
+{
+	private File shakFile;
+	private Connection con;
 
-	public File SHAKCompleate;
+	@Before
+	public void cleanDb() throws Exception
+	{
+		shakFile = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
+
+		con = MySQLConnectionManager.getConnection();
+
+		Statement stmt = con.createStatement();
+		stmt.executeQuery("TRUNCATE TABLE Organisation");
+		stmt.close();
+	}
 
 	@After
-	@Before
-	public void cleanDb() throws Exception {
-
-		SHAKCompleate = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		stmt.executeQuery("truncate table Organisation");
-		stmt.close();
+	public void tearDown() throws SQLException
+	{
+		con.rollback();
 		con.close();
 	}
 
 	@Test
-	public void testSHAKImport() throws Throwable {
-
+	@Ignore
+	public void testSHAKImport() throws Throwable
+	{
 		ArrayList<File> files = new ArrayList<File>();
-		files.add(SHAKCompleate);
+		files.add(shakFile);
 		SksImporter importer = new SksImporter();
-		importer.run(files);
+		importer.run(files, con);
 
 		Connection con = MySQLConnectionManager.getConnection();
 		Statement stmt = con.createStatement();
@@ -81,5 +91,4 @@ public class SksIntegrationsTest {
 		stmt.close();
 		con.close();
 	}
-
 }

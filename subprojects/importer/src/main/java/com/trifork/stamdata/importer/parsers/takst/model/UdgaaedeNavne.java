@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
@@ -36,25 +37,23 @@ public class UdgaaedeNavne extends TakstEntity
 	private String tidligereNavn;
 
 	@Output
-	public Long getDrugid()
-	{
-		return this.drugid;
-	}
-
-	public void setDrugid(Long drugid)
-	{
-		this.drugid = drugid;
-	}
-
-	@Output
 	public String getDatoForAendringen()
 	{
 		return DateUtils.toISO8601date(this.datoForAendringen);
 	}
 
-	public void setDatoForAendringen(Long datoForAendringen)
+	@Output
+	public Long getDrugid()
 	{
-		this.datoForAendringen = datoForAendringen;
+		return this.drugid;
+	}
+
+	@Override
+	@Id
+	@Output(name = "CID")
+	public String getKey()
+	{
+		return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
 	}
 
 	@Output
@@ -63,15 +62,18 @@ public class UdgaaedeNavne extends TakstEntity
 		return this.tidligereNavn;
 	}
 
+	public void setDatoForAendringen(Long datoForAendringen)
+	{
+		this.datoForAendringen = datoForAendringen;
+	}
+
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
+
 	public void setTidligereNavn(String tidligereNavn)
 	{
 		this.tidligereNavn = tidligereNavn;
-	}
-
-	@Id
-	@Output(name = "CID")
-	public String getKey()
-	{
-		return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
 	}
 }

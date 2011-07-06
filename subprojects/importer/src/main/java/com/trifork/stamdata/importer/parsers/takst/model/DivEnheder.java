@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.importer.parsers.takst.model;
 
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
+
 // the entities of this type are output by these classes:
 // Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
@@ -38,56 +40,7 @@ public class DivEnheder extends TakstEntity
 	private String kortTekst;
 	private String tekst;
 
-	public boolean isEnhedstypeTid()
-	{
-		return this.enhedstype == ENHEDSTYPE_TID;
-	}
-
-	public boolean isEnhedstypeStyrke()
-	{
-		return this.enhedstype == ENHEDSTYPE_STYRKE;
-	}
-
-	public boolean isEnhedstypePakning()
-	{
-		return this.enhedstype == ENHEDSTYPE_PAKNING;
-	}
-
-	public void setEnhedstype(Long enhedstype)
-	{
-		this.enhedstype = enhedstype;
-	}
-
-	public String getKode()
-	{
-		return this.kode;
-	}
-
-	public void setKode(String kode)
-	{
-		this.kode = kode;
-	}
-
-	public String getKortTekst()
-	{
-		return this.kortTekst;
-	}
-
-	public void setKortTekst(String kortTekst)
-	{
-		this.kortTekst = kortTekst;
-	}
-
-	public String getTekst()
-	{
-		return this.tekst;
-	}
-
-	public void setTekst(String tekst)
-	{
-		this.tekst = tekst;
-	}
-
+	@Override
 	public String getKey()
 	{
 		/*
@@ -96,5 +49,55 @@ public class DivEnheder extends TakstEntity
 		 * code
 		 */
 		return enhedstype + kode;
+	}
+
+	public String getKode()
+	{
+		return this.kode;
+	}
+
+	public String getKortTekst()
+	{
+		return this.kortTekst;
+	}
+
+	public String getTekst()
+	{
+		return this.tekst;
+	}
+
+	public boolean isEnhedstypePakning()
+	{
+		return this.enhedstype == ENHEDSTYPE_PAKNING;
+	}
+
+	public boolean isEnhedstypeStyrke()
+	{
+		return this.enhedstype == ENHEDSTYPE_STYRKE;
+	}
+
+	public boolean isEnhedstypeTid()
+	{
+		return this.enhedstype == ENHEDSTYPE_TID;
+	}
+
+	public void setEnhedstype(Long enhedstype)
+	{
+		this.enhedstype = enhedstype;
+	}
+
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
+
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
+	}
+
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
 	}
 }

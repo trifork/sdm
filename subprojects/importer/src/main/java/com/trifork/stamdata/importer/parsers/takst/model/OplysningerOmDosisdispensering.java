@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -44,14 +45,51 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 	private Long billigsteDrugid; // Henvisning til billigste Drugid
 
 	@Output
+	public Long getBilligsteDrugid()
+	{
+		return this.billigsteDrugid;
+	}
+
+	@Output
 	public Long getDrugid()
 	{
 		return this.drugid;
 	}
 
-	public void setDrugid(Long drugid)
+	@Override
+	public Long getKey()
 	{
-		this.drugid = drugid;
+		return varenummer;
+	}
+
+	@Output
+	public String getKodeForBilligsteDrugid()
+	{
+		return this.kodeForBilligsteDrugid;
+	}
+
+	@Output
+	public String getLaegemidletsSubstitutionsgruppe()
+	{
+		return this.laegemidletsSubstitutionsgruppe;
+	}
+
+	@Output
+	public Long getMindsteAIPPrEnhed()
+	{
+		return this.mindsteAIPPrEnhed;
+	}
+
+	@Output
+	public Long getMindsteRegisterprisEnh()
+	{
+		return this.mindsteRegisterprisEnh;
+	}
+
+	@Output
+	public Long getTSPPrEnhed()
+	{
+		return this.tSPPrEnhed;
 	}
 
 	@Id
@@ -61,59 +99,14 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 		return this.varenummer;
 	}
 
-	public void setVarenummer(Long varenummer)
+	public void setBilligsteDrugid(Long billigsteDrugid)
 	{
-		this.varenummer = varenummer;
+		this.billigsteDrugid = billigsteDrugid;
 	}
 
-	@Output
-	public String getLaegemidletsSubstitutionsgruppe()
+	public void setDrugid(Long drugid)
 	{
-		return this.laegemidletsSubstitutionsgruppe;
-	}
-
-	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe)
-	{
-		this.laegemidletsSubstitutionsgruppe = laegemidletsSubstitutionsgruppe;
-	}
-
-	@Output
-	public Long getMindsteAIPPrEnhed()
-	{
-		return this.mindsteAIPPrEnhed;
-	}
-
-	public void setMindsteAIPPrEnhed(Long mindsteAIPPrEnhed)
-	{
-		this.mindsteAIPPrEnhed = mindsteAIPPrEnhed;
-	}
-
-	@Output
-	public Long getMindsteRegisterprisEnh()
-	{
-		return this.mindsteRegisterprisEnh;
-	}
-
-	public void setMindsteRegisterprisEnh(Long mindsteRegisterprisEnh)
-	{
-		this.mindsteRegisterprisEnh = mindsteRegisterprisEnh;
-	}
-
-	@Output
-	public Long getTSPPrEnhed()
-	{
-		return this.tSPPrEnhed;
-	}
-
-	public void setTSPPrEnhed(Long tSPPrEnhed)
-	{
-		this.tSPPrEnhed = tSPPrEnhed;
-	}
-
-	@Output
-	public String getKodeForBilligsteDrugid()
-	{
-		return this.kodeForBilligsteDrugid;
+		this.drugid = drugid;
 	}
 
 	public void setKodeForBilligsteDrugid(String kodeForBilligsteDrugid)
@@ -121,20 +114,29 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 		this.kodeForBilligsteDrugid = kodeForBilligsteDrugid;
 	}
 
-	@Output
-	public Long getBilligsteDrugid()
+	public void setLaegemidletsSubstitutionsgruppe(String laegemidletsSubstitutionsgruppe)
 	{
-		return this.billigsteDrugid;
+		this.laegemidletsSubstitutionsgruppe = laegemidletsSubstitutionsgruppe;
 	}
 
-	public void setBilligsteDrugid(Long billigsteDrugid)
+	public void setMindsteAIPPrEnhed(Long mindsteAIPPrEnhed)
 	{
-		this.billigsteDrugid = billigsteDrugid;
+		this.mindsteAIPPrEnhed = mindsteAIPPrEnhed;
 	}
 
-	public Long getKey()
+	public void setMindsteRegisterprisEnh(Long mindsteRegisterprisEnh)
 	{
-		return varenummer;
+		this.mindsteRegisterprisEnh = mindsteRegisterprisEnh;
+	}
+
+	public void setTSPPrEnhed(Long tSPPrEnhed)
+	{
+		this.tSPPrEnhed = tSPPrEnhed;
+	}
+
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
 	}
 
 }

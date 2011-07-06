@@ -25,31 +25,59 @@ package com.trifork.stamdata.importer.parsers.sks;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
-import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.parsers.FileImporter;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Persister;
 
 
-public class SksImporter implements FileImporterControlledIntervals
+public class SksImporter implements FileImporter
 {
-	private static final Logger logger = LoggerFactory.getLogger(FileImporterControlledIntervals.class);
+	private static final Logger logger = LoggerFactory.getLogger(SksImporter.class);
+
+	@Override
+	public boolean ensureRequiredFileArePresent(File[] input)
+	{
+		boolean present = false;
+
+		for (File file : input)
+		{
+			if (file.getName().toUpperCase().endsWith(".TXT")) present = true;
+		}
+
+		return present;
+	}
+
+	@Override
+	public void importFiles(File[] files, Connection con) throws Exception
+	{
+		Persister persister = new AuditingPersister(con);
+
+		for (File file : files)
+		{
+			if (file.getName().toUpperCase().endsWith(".TXT"))
+			{
+				Dataset<Organisation> dataset = SksParser.parseOrganisationer(file);
+				logger.debug("Done parsing " + dataset.getEntities().size() + " from file: " + file.getName());
+				persister.persistDeltaDataset(dataset);
+			}
+			else
+			{
+				logger.warn("Ignoring file, which neither matches *.TXT. File: " + file.getAbsolutePath());
+			}
+		}
+	}
 
 	/*
 	 * SKS files usually arrive monthly
 	 */
-	@Override
 	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -64,51 +92,8 @@ public class SksImporter implements FileImporterControlledIntervals
 	}
 
 	@Override
-	public boolean checkRequiredFiles(List<File> files)
+	public String getIdentifier()
 	{
-
-		boolean present = false;
-		for (File file : files)
-		{
-			if (file.getName().toUpperCase().endsWith(".TXT")) present = true;
-		}
-		return present;
-	}
-
-	@Override
-	public void run(List<File> files) throws FileImporterException
-	{
-		Connection con = null;
-
-		try
-		{
-			con = MySQLConnectionManager.getConnection();
-			Persister dao = new AuditingPersister(con);
-			for (File file : files)
-			{
-				if (file.getName().toUpperCase().endsWith(".TXT"))
-				{
-					Dataset<Organisation> dataset = SksParser.parseOrganisationer(file);
-					logger.debug("Done parsing " + dataset.getEntities().size() + " from file: " + file.getName());
-					dao.persistDeltaDataset(dataset);
-				}
-				else
-				{
-					logger.warn("Ignoring file, which neither matches *.TXT. File: " + file.getAbsolutePath());
-				}
-			}
-			try
-			{
-				con.commit();
-			}
-			catch (SQLException e)
-			{
-				throw new FileImporterException("could not commit transaction", e);
-			}
-		}
-		finally
-		{
-			MySQLConnectionManager.close(con);
-		}
+		return "sks";
 	}
 }

@@ -30,15 +30,19 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.model.CompleteDataset;
 import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.model.StamdataEntity;
@@ -51,14 +55,13 @@ import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 import com.trifork.stamdata.importer.persistence.Persister;
 
 
-
 /**
  * Tests that the dosage suggestion importer works as expected.
- *
+ * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class DoseringsforslagImporterTest {
-
+public class DoseringsforslagImporterTest
+{
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	private DosageSuggestionImporter importer;
@@ -71,8 +74,12 @@ public class DoseringsforslagImporterTest {
 
 	private MockPersister persister;
 
+	private Connection con;
+
 	@Before
-	public void setUp() {
+	public void setUp() throws SQLException
+	{
+		con = MySQLConnectionManager.getConnection();
 
 		// The 'single' files only contain one record each.
 		// This makes it easy to know that is imported and
@@ -88,9 +95,16 @@ public class DoseringsforslagImporterTest {
 		relationFile = getFile("single/DrugsDosageStructures.json");
 	}
 
-	@Test
-	public void Should_import_the_version_file_correctly() throws Exception {
+	@After
+	public void tearDown() throws SQLException
+	{
+		con.rollback();
+		con.close();
+	}
 
+	@Test
+	public void Should_import_the_version_file_correctly() throws Exception
+	{
 		runImporter();
 
 		DosageVersion version = getFirst(DosageVersion.class);
@@ -102,8 +116,8 @@ public class DoseringsforslagImporterTest {
 	}
 
 	@Test
-	public void Should_import_all_dosage_structures() throws Exception {
-
+	public void Should_import_all_dosage_structures() throws Exception
+	{
 		dosageStructureFile = getFile("multiple/DosageStructures.json");
 
 		runImporter();
@@ -114,8 +128,8 @@ public class DoseringsforslagImporterTest {
 	}
 
 	@Test
-	public void Should_import_the_structures_correctly() throws Exception {
-
+	public void Should_import_the_structures_correctly() throws Exception
+	{
 		runImporter();
 
 		DosageStructure structure = getFirst(DosageStructure.class);
@@ -131,8 +145,8 @@ public class DoseringsforslagImporterTest {
 	}
 
 	@Test
-	public void Should_import_all_dosage_units() throws Exception {
-
+	public void Should_import_all_dosage_units() throws Exception
+	{
 		unitsFile = getFile("multiple/DosageUnits.json");
 
 		runImporter();
@@ -143,8 +157,8 @@ public class DoseringsforslagImporterTest {
 	}
 
 	@Test
-	public void Should_import_dosage_units_correctly() throws Exception {
-
+	public void Should_import_dosage_units_correctly() throws Exception
+	{
 		runImporter();
 
 		DosageUnit unit = getFirst(DosageUnit.class);
@@ -156,8 +170,8 @@ public class DoseringsforslagImporterTest {
 	}
 
 	@Test
-	public void Should_import_all_drugs() throws Exception {
-
+	public void Should_import_all_drugs() throws Exception
+	{
 		drugsFile = getFile("multiple/Drugs.json");
 
 		runImporter();
@@ -169,27 +183,28 @@ public class DoseringsforslagImporterTest {
 
 	// HELPER METHODS
 
-	private Date date(String dateString) throws Exception {
-
+	private Date date(String dateString) throws Exception
+	{
 		return dateFormat.parse(dateString);
 	}
 
-	public File getFile(String filename) {
-
+	public File getFile(String filename)
+	{
 		return toFile(getClass().getClassLoader().getResource("data/doseringsforslag/" + filename));
 	}
 
-	public void runImporter() throws Exception {
-
+	public void runImporter() throws Exception
+	{
 		persister = new MockPersister();
 
 		importer = new DosageSuggestionImporter(persister);
 		List<File> files = asList(versionFile, drugsFile, dosageStructureFile, unitsFile, relationFile);
-		importer.run(files);
+
+		importer.run(files, con);
 	}
 
-	public <T extends StamdataEntity> T getFirst(Class<T> type) {
-
+	public <T extends StamdataEntity> T getFirst(Class<T> type)
+	{
 		CompleteDataset<T> structures = persister.getDataset(type);
 		return structures.getEntities().iterator().next();
 	}
@@ -197,27 +212,30 @@ public class DoseringsforslagImporterTest {
 
 	// HACK: MOCK PERSISTER
 
-	private class MockPersister implements Persister {
-
+	private class MockPersister implements Persister
+	{
 		Map<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>> results;
 
 		@Override
-		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException {
-
+		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException
+		{
 			results = new HashMap<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>>();
 
-			for (CompleteDataset<? extends StamdataEntity> dataset : datasets) {
+			for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
+			{
 				results.put(dataset.getType(), dataset);
 			}
 		}
 
 		@Override
-		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException {
+		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException
+		{
 
 		}
 
 		@SuppressWarnings("unchecked")
-		public <T extends StamdataEntity> CompleteDataset<T> getDataset(Class<T> type) {
+		public <T extends StamdataEntity> CompleteDataset<T> getDataset(Class<T> type)
+		{
 
 			return (CompleteDataset<T>) results.get(type);
 		}

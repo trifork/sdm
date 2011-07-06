@@ -30,7 +30,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,34 +38,29 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.importer.ProjectInfo;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
-import com.trifork.stamdata.importer.parsers.FileSpoolerImpl;
-import com.trifork.stamdata.importer.parsers.SpoolerManager;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.parsers.JobManager;
 
 
 /**
  * Status servlet for the importer, shows information about the running
  * processes.
- *
+ * 
  * @author Jan Buchholdt (jbu@trifork.com)
  * @author Thomas Børlum (thb@trifork.com)
  */
 @Singleton
 public class ImporterServlet extends HttpServlet
 {
-
 	private static final long serialVersionUID = 2264195929113132612L;
 
-	private final SpoolerManager spoolerManager;
+	private final JobManager jobManager;
 	private final DatabaseStatus isAlive;
 	private final ProjectInfo build;
 
 	@Inject
-	ImporterServlet(SpoolerManager spoolerManager, DatabaseStatus dbIsAlive, ProjectInfo projectInfo)
+	ImporterServlet(JobManager jobManager, DatabaseStatus dbIsAlive, ProjectInfo projectInfo)
 	{
-
-		this.spoolerManager = spoolerManager;
+		this.jobManager = jobManager;
 		this.isAlive = dbIsAlive;
 		this.build = projectInfo;
 	}
@@ -74,24 +68,28 @@ public class ImporterServlet extends HttpServlet
 	@Override
 	public void init() throws ServletException
 	{
-
-		spoolerManager.start();
+		try
+		{
+			jobManager.start();
+		}
+		catch (Exception e)
+		{
+			throw new ServletException("Could not start the job scheduler.", e);
+		}
 	}
 
 	@Override
 	public void destroy()
 	{
-
-		spoolerManager.stop();
+		jobManager.stop();
 	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
 	{
-
 		if ("spoolers".equals(req.getParameter("isAlive")))
 		{
-			isSpoolersAlive(spoolerManager, resp);
+			isSpoolersAlive(jobManager, resp);
 		}
 		else if ("db".equals(req.getParameter("isAlive")))
 		{
@@ -123,53 +121,46 @@ public class ImporterServlet extends HttpServlet
 
 	private void overdue(HttpServletResponse resp, String type) throws IOException
 	{
-
-		ServletOutputStream os = resp.getOutputStream();
-
-		try
-		{
-			FileSpoolerImpl spooler = spoolerManager.getSpooler(type);
-			if (!spooler.isOverdue())
-			{
-				os.print("SDM-" + build.getVersion() + "\nFile import for type: '" + type + "' is not overdue.");
-			}
-			else
-			{
-				resp.sendError(500, "SDM-" + build.getVersion() + "\nFile import for type: '" + type + "' is overdue! " + "Last import: " + DateUtils.toMySQLdate(spooler.getLastRun()) + " Next run was expected before: " + DateUtils.toMySQLdate(((FileImporterControlledIntervals) spooler.getImporter()).getNextImportExpectedBefore(spooler.getLastRun())));
-			}
-
-		}
-		catch (IllegalArgumentException e)
-		{
-			resp.sendError(500, "SDM-" + build.getVersion() + "\nUsage: rejectedFiles=type  example types: takst, cpr, ... " + e.getMessage());
-		}
+		/*
+		 * ServletOutputStream os = resp.getOutputStream();
+		 * 
+		 * try { FileParserJob spooler = jobManager.getSpooler(type);
+		 * 
+		 * if (!spooler.isOverdue()) { os.print("SDM-" + build.getVersion() +
+		 * "\nFile import for type: '" + type + "' is not overdue."); } else {
+		 * resp.sendError(500, "SDM-" + build.getVersion() +
+		 * "\nFile import for type: '" + type + "' is overdue! " +
+		 * "Last import: " + DateUtils.toMySQLdate(spooler.getLastRun()) +
+		 * " Next run was expected before: " + DateUtils.toMySQLdate(((Parser)
+		 * spooler
+		 * .getImporter()).getNextImportExpectedBefore(spooler.getLastRun())));
+		 * }
+		 * 
+		 * } catch (IllegalArgumentException e) { resp.sendError(500, "SDM-" +
+		 * build.getVersion() +
+		 * "\nUsage: rejectedFiles=type  example types: takst, cpr, ... " +
+		 * e.getMessage()); }
+		 */
 	}
 
 	private void rejectedFiles(HttpServletResponse resp, String type) throws IOException
 	{
-
-		ServletOutputStream os = resp.getOutputStream();
-
-		try
-		{
-			if (spoolerManager.isRejectDirEmpty(type))
-			{
-				os.print("SDM-" + build.getVersion() + "\nno files in rejected dir for type: '" + type + "'");
-			}
-			else
-			{
-				resp.sendError(500, "SDM-" + build.getVersion() + "\nrejected dirs contain rejected files!");
-			}
-		}
-		catch (IllegalArgumentException e)
-		{
-			resp.sendError(500, "SDM-" + build.getVersion() + "\nUsage: rejectedFiles=type  example types: takst, cpr, ... " + e.getMessage());
-		}
+		/*
+		 * ServletOutputStream os = resp.getOutputStream();
+		 * 
+		 * try { if (jobManager.isRejectDirEmpty(type)) { os.print("SDM-" +
+		 * build.getVersion() + "\nno files in rejected dir for type: '" + type
+		 * + "'"); } else { resp.sendError(500, "SDM-" + build.getVersion() +
+		 * "\nrejected dirs contain rejected files!"); } } catch
+		 * (IllegalArgumentException e) { resp.sendError(500, "SDM-" +
+		 * build.getVersion() +
+		 * "\nUsage: rejectedFiles=type  example types: takst, cpr, ... " +
+		 * e.getMessage()); }
+		 */
 	}
 
 	private void isDbAlive(HttpServletResponse resp) throws IOException
 	{
-
 		if (isAlive.isAlive())
 		{
 			resp.getOutputStream().print("SDM-" + build.getVersion() + "\ndb connection is up");
@@ -180,22 +171,19 @@ public class ImporterServlet extends HttpServlet
 		}
 	}
 
-	private void isSpoolersAlive(SpoolerManager manager, HttpServletResponse resp) throws IOException
+	private void isSpoolersAlive(JobManager manager, HttpServletResponse resp) throws IOException
 	{
-
-		if (manager.isAllSpoolersRunning())
-		{
-			resp.getOutputStream().println("SDM-" + build.getVersion() + "\nall spoolers configured and running");
-		}
-		else
-		{
-			resp.sendError(500, "SDM-" + build.getVersion() + "\nOne or more spoolers are not running");
-		}
+		/*
+		 * if (manager.isAllSpoolersRunning()) {
+		 * resp.getOutputStream().println("SDM-" + build.getVersion() +
+		 * "\nall spoolers configured and running"); } else {
+		 * resp.sendError(500, "SDM-" + build.getVersion() +
+		 * "\nOne or more spoolers are not running"); }
+		 */
 	}
 
 	private void importHistory(HttpServletResponse resp) throws IOException
 	{
-
 		PrintWriter writer = resp.getWriter();
 
 		writer.print("<html><head><title>Import History</title></head><body><h1>Import History</h1>");

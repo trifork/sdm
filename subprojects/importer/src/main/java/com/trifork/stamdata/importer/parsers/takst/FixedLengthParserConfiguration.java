@@ -21,46 +21,17 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.parsers.takst.model;
+package com.trifork.stamdata.importer.parsers.takst;
 
-import java.util.Date;
-import java.util.List;
-
-import com.trifork.stamdata.importer.model.CompleteDataset;
-
-
-public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
+public interface FixedLengthParserConfiguration<T>
 {
-	private Takst takst;
+	String getFilename();
 
-	public TakstDataset(Takst takst, List<T> entities, Class<T> type)
-	{
-		super(type, entities, takst.getValidFrom(), takst.getValidTo());
+	int getLength(int fieldNo);
 
-		for (TakstEntity entity : entities)
-		{
-			entity.takst = takst;
-		}
+	int getNumberOfFields();
 
-		this.takst = takst;
-	}
+	int getOffset(int fieldNo);
 
-	@Override
-	public Date getValidFrom()
-	{
-		return takst.getValidFrom();
-	}
-
-	@Override
-	public Date getValidTo()
-	{
-		return takst.getValidTo();
-	}
-
-	@Override
-	public void addEntity(T entity)
-	{
-		super.addEntity(entity);
-		entity.takst = takst;
-	}
+	void setFieldValue(T entity, int fieldNumber, String value);
 }

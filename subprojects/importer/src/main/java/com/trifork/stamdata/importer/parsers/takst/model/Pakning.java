@@ -30,6 +30,7 @@ import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
@@ -62,166 +63,10 @@ public class Pakning extends TakstEntity
 	private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
 	private Long pakningsdistributoer; // Ref. t. LMS09
 
-	@Output(name = "DrugID")
-	public Long getDrugid()
-	{
-		return this.drugid;
-	}
-
-	public void setDrugid(Long drugid)
-	{
-		this.drugid = drugid;
-	}
-
-	@Id
-	@Output(name = "Varenummer")
-	public Long getVarenummer()
-	{
-		return this.varenummer;
-	}
-
-	public void setVarenummer(Long varenummer)
-	{
-		this.varenummer = varenummer;
-	}
-
 	@Output
 	public Long getAlfabetSekvensnr()
 	{
 		return this.alfabetSekvensnr;
-	}
-
-	public void setAlfabetSekvensnr(Long alfabetSekvensnr)
-	{
-		this.alfabetSekvensnr = alfabetSekvensnr;
-	}
-
-	@Output(name = "VarenummerDelpakning")
-	public Long getVarenummerForDelpakning()
-	{
-		return this.varenummerForDelpakning;
-	}
-
-	public void setVarenummerForDelpakning(Long varenummerForDelpakning)
-	{
-		this.varenummerForDelpakning = varenummerForDelpakning;
-	}
-
-	@Output
-	public Long getAntalDelpakninger()
-	{
-		return this.antalDelpakninger;
-	}
-
-	public void setAntalDelpakninger(Long antalDelpakninger)
-	{
-		this.antalDelpakninger = antalDelpakninger;
-	}
-
-	@Output(name = "PakningsstoerrelseTekst")
-	public String getPakningsstoerrelseKlartekst()
-	{
-		return this.pakningsstoerrelseKlartekst;
-	}
-
-	public void setPakningsstoerrelseKlartekst(String pakningsstoerrelseKlartekst)
-	{
-		this.pakningsstoerrelseKlartekst = pakningsstoerrelseKlartekst;
-	}
-
-	@Output(name = "PakningsstoerrelseNumerisk")
-	public Double getPakningsstoerrelseNumerisk()
-	{
-		if (this.pakningsstoerrelseNumerisk == 0)
-		{
-			return null;
-		}
-		return this.pakningsstoerrelseNumerisk / 100.0;
-	}
-
-	public void setPakningsstoerrelseNumerisk(Long pakningsstoerrelseNumerisk)
-	{
-		this.pakningsstoerrelseNumerisk = pakningsstoerrelseNumerisk;
-	}
-
-	@Output(name = "Pakningsstoerrelsesenhed")
-	public String getPakningsstorrelseEnhed()
-	{
-		if (this.pakningsstoerrelseNumerisk == 0)
-		{
-			return null;
-		}
-		return this.pakningsstoerrelseEnhed;
-	}
-
-	public void setPakningsstoerrelseEnhed(String pakningsstoerrelseEnhed)
-	{
-		this.pakningsstoerrelseEnhed = pakningsstoerrelseEnhed;
-	}
-
-	@Output(name = "EmballageTypeKode")
-	public String getEmballagetype()
-	{
-		return emballagetype;
-	}
-
-	public void setEmballagetype(String emballagetype)
-	{
-		this.emballagetype = emballagetype;
-	}
-
-	public Udleveringsbestemmelser getUdleveringsbestemmelseRef()
-	{
-		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
-	}
-
-	@Output
-	public String getUdleveringsbestemmelse()
-	{
-		return this.udleveringsbestemmelse;
-	}
-
-	public void setUdleveringsbestemmelse(String udleveringsbestemmelse)
-	{
-		this.udleveringsbestemmelse = udleveringsbestemmelse;
-	}
-
-	public SpecialeForNBS getUdleveringSpecialeRef()
-	{
-		return takst.getEntity(SpecialeForNBS.class, udleveringSpeciale);
-	}
-
-	@Output
-	public String getUdleveringSpeciale()
-	{
-		return this.udleveringSpeciale;
-	}
-
-	public void setUdleveringSpeciale(String udleveringSpeciale)
-	{
-		this.udleveringSpeciale = udleveringSpeciale;
-	}
-
-	@Output(name = "MedicintilskudsKode")
-	public String getMedicintilskudskode()
-	{
-		return this.medicintilskudskode;
-	}
-
-	public void setMedicintilskudskode(String medicintilskudskode)
-	{
-		this.medicintilskudskode = medicintilskudskode;
-	}
-
-	@Output(name = "KlausuleringsKode")
-	public String getKlausulForMedicintilskud()
-	{
-		return this.klausulForMedicintilskud;
-	}
-
-	public void setKlausulForMedicintilskud(String klausulForMedicintilskud)
-	{
-		this.klausulForMedicintilskud = klausulForMedicintilskud;
 	}
 
 	@Output
@@ -230,88 +75,10 @@ public class Pakning extends TakstEntity
 		return (this.antalDDDPrPakning) / 1000.0;
 	}
 
-	public void setAntalDDDPrPakning(Long antalDDDPrPakning)
-	{
-		this.antalDDDPrPakning = antalDDDPrPakning;
-	}
-
 	@Output
-	public Long getOpbevaringstidNumerisk()
+	public Long getAntalDelpakninger()
 	{
-		return this.opbevaringstidNumerisk;
-	}
-
-	public void setOpbevaringstidNumerisk(Long opbevaringstidNumerisk)
-	{
-		this.opbevaringstidNumerisk = opbevaringstidNumerisk;
-	}
-
-	@Output
-	public Long getOpbevaringstid()
-	{
-		return this.opbevaringstidNumerisk;
-	}
-
-	public NumeriskMedEnhed getOpbevaringstidRef()
-	{
-		final int enhedstype = 1;
-		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getEntityById(opbevaringstidEnhed + "-" + enhedstype);
-		return new NumeriskMedEnhed(takst, null, opbevaringstidNumerisk, enhed);
-
-	}
-
-	public void setOpbevaringstidEnhed(String opbevaringstidEnhed)
-	{
-		this.opbevaringstidEnhed = opbevaringstidEnhed;
-	}
-
-	public Opbevaringsbetingelser getOpbevaringsbetingelserRef()
-	{
-		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getEntityById(opbevaringsbetingelser);
-	}
-
-	@Output
-	public String getOpbevaringsbetingelser()
-	{
-		return this.opbevaringsbetingelser;
-	}
-
-	public void setOpbevaringsbetingelser(String opbevaringsbetingelser)
-	{
-		this.opbevaringsbetingelser = opbevaringsbetingelser;
-	}
-
-	@Output
-	public String getOprettelsesdato()
-	{
-		return DateUtils.toISO8601date(this.oprettelsesdato);
-	}
-
-	public void setOprettelsesdato(Long oprettelsesdato)
-	{
-		this.oprettelsesdato = oprettelsesdato;
-	}
-
-	@Output
-	public String getDatoForSenestePrisaendring()
-	{
-		return DateUtils.toISO8601date(this.datoForSenestePrisaendring);
-	}
-
-	public void setDatoForSenestePrisaendring(Long datoForSenestePrisaendring)
-	{
-		this.datoForSenestePrisaendring = datoForSenestePrisaendring;
-	}
-
-	@Output
-	public String getUdgaaetDato()
-	{
-		return DateUtils.toISO8601date(this.udgaaetDato);
-	}
-
-	public void setUdgaaetDato(Long udgaaetDato)
-	{
-		this.udgaaetDato = udgaaetDato;
+		return this.antalDelpakninger;
 	}
 
 	public Beregningsregler getBeregningskodeAIPRegprisRef()
@@ -325,20 +92,46 @@ public class Pakning extends TakstEntity
 		return this.beregningskodeAIPRegpris;
 	}
 
-	public void setBeregningskodeAIPRegpris(String beregningskodeAIPRegpris)
+	public List<Pakning> getBilligsteSubstitution()
 	{
-		this.beregningskodeAIPRegpris = beregningskodeAIPRegpris;
+		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
+		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
+		List<Pakning> substitutioner = new ArrayList<Pakning>();
+		for (Substitution substitution : subst.getEntities())
+		{
+			if (substitution.getReceptensVarenummer().equals(varenummer) && !this.varenummer.equals(substitution.getBilligsteVarenummer()))
+			{
+				Pakning p = pakninger.getEntityById(substitution.getBilligsteVarenummer());
+				if (p != null) substitutioner.add(p);
+			}
+		}
+
+		if (substitutioner.size() == 0) return null;
+		return substitutioner;
 	}
 
 	@Output
-	public boolean getPakningOptagetITilskudsgruppe()
+	public String getDatoForSenestePrisaendring()
 	{
-		return "F".equalsIgnoreCase(this.pakningOptagetITilskudsgruppe);
+		return DateUtils.toISO8601date(this.datoForSenestePrisaendring);
 	}
 
-	public void setPakningOptagetITilskudsgruppe(String pakningOptagetITilskudsgruppe)
+	@Output
+	public Integer getDosisdispenserbar()
 	{
-		this.pakningOptagetITilskudsgruppe = pakningOptagetITilskudsgruppe;
+		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
+	}
+
+	@Output(name = "DrugID")
+	public Long getDrugid()
+	{
+		return this.drugid;
+	}
+
+	@Output(name = "EmballageTypeKode")
+	public String getEmballagetype()
+	{
+		return emballagetype;
 	}
 
 	@Output
@@ -347,25 +140,10 @@ public class Pakning extends TakstEntity
 		return "B".equalsIgnoreCase(this.faerdigfremstillingsgebyr);
 	}
 
-	public void setFaerdigfremstillingsgebyr(String faerdigfremstillingsgebyr)
+	@Output(name = "KlausuleringsKode")
+	public String getKlausulForMedicintilskud()
 	{
-		this.faerdigfremstillingsgebyr = faerdigfremstillingsgebyr;
-	}
-
-	public Firma getPakningsdistributoerRef()
-	{
-		return takst.getEntity(Firma.class, pakningsdistributoer);
-	}
-
-	@Output
-	public Long getPakningsdistributoer()
-	{
-		return this.pakningsdistributoer;
-	}
-
-	public void setPakningsdistributoer(Long pakningsdistributoer)
-	{
-		this.pakningsdistributoer = pakningsdistributoer;
+		return this.klausulForMedicintilskud;
 	}
 
 	public Laegemiddel getLaegemiddel()
@@ -377,6 +155,97 @@ public class Pakning extends TakstEntity
 			if (drugid.equals(lm.getDrugid())) return lm;
 		}
 		return null;
+	}
+
+	@Output(name = "MedicintilskudsKode")
+	public String getMedicintilskudskode()
+	{
+		return this.medicintilskudskode;
+	}
+
+	@Output
+	public String getOpbevaringsbetingelser()
+	{
+		return this.opbevaringsbetingelser;
+	}
+
+	public Opbevaringsbetingelser getOpbevaringsbetingelserRef()
+	{
+		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getEntityById(opbevaringsbetingelser);
+	}
+
+	@Output
+	public Long getOpbevaringstid()
+	{
+		return this.opbevaringstidNumerisk;
+	}
+
+	@Output
+	public Long getOpbevaringstidNumerisk()
+	{
+		return this.opbevaringstidNumerisk;
+	}
+
+	public NumeriskMedEnhed getOpbevaringstidRef()
+	{
+		final int enhedstype = 1;
+		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getEntityById(opbevaringstidEnhed + "-" + enhedstype);
+		return new NumeriskMedEnhed(takst, null, opbevaringstidNumerisk, enhed);
+
+	}
+
+	@Output
+	public String getOprettelsesdato()
+	{
+		return DateUtils.toISO8601date(this.oprettelsesdato);
+	}
+
+	@Output
+	public boolean getPakningOptagetITilskudsgruppe()
+	{
+		return "F".equalsIgnoreCase(this.pakningOptagetITilskudsgruppe);
+	}
+
+	@Output
+	public Long getPakningsdistributoer()
+	{
+		return this.pakningsdistributoer;
+	}
+
+	public Firma getPakningsdistributoerRef()
+	{
+		return takst.getEntity(Firma.class, pakningsdistributoer);
+	}
+
+	@Output(name = "PakningsstoerrelseTekst")
+	public String getPakningsstoerrelseKlartekst()
+	{
+		return this.pakningsstoerrelseKlartekst;
+	}
+
+	@Output(name = "PakningsstoerrelseNumerisk")
+	public Double getPakningsstoerrelseNumerisk()
+	{
+		if (this.pakningsstoerrelseNumerisk == 0)
+		{
+			return null;
+		}
+		return this.pakningsstoerrelseNumerisk / 100.0;
+	}
+
+	@Output(name = "Pakningsstoerrelsesenhed")
+	public String getPakningsstorrelseEnhed()
+	{
+		if (this.pakningsstoerrelseNumerisk == 0)
+		{
+			return null;
+		}
+		return this.pakningsstoerrelseEnhed;
+	}
+
+	public Priser getPriser()
+	{
+		return takst.getEntity(Priser.class, varenummer);
 	}
 
 	public List<Pakning> getSubstitutioner()
@@ -409,27 +278,45 @@ public class Pakning extends TakstEntity
 		return substitutioner;
 	}
 
-	public List<Pakning> getBilligsteSubstitution()
+	@Output
+	public String getUdgaaetDato()
 	{
-		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		List<Pakning> substitutioner = new ArrayList<Pakning>();
-		for (Substitution substitution : subst.getEntities())
-		{
-			if (substitution.getReceptensVarenummer().equals(varenummer) && !this.varenummer.equals(substitution.getBilligsteVarenummer()))
-			{
-				Pakning p = pakninger.getEntityById(substitution.getBilligsteVarenummer());
-				if (p != null) substitutioner.add(p);
-			}
-		}
-
-		if (substitutioner.size() == 0) return null;
-		return substitutioner;
+		return DateUtils.toISO8601date(this.udgaaetDato);
 	}
 
-	public Priser getPriser()
+	@Output
+	public String getUdleveringsbestemmelse()
 	{
-		return takst.getEntity(Priser.class, varenummer);
+		return this.udleveringsbestemmelse;
+	}
+
+	public Udleveringsbestemmelser getUdleveringsbestemmelseRef()
+	{
+		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
+	}
+
+	@Output
+	public String getUdleveringSpeciale()
+	{
+		return this.udleveringSpeciale;
+	}
+
+	public SpecialeForNBS getUdleveringSpecialeRef()
+	{
+		return takst.getEntity(SpecialeForNBS.class, udleveringSpeciale);
+	}
+
+	@Id
+	@Output(name = "Varenummer")
+	public Long getVarenummer()
+	{
+		return this.varenummer;
+	}
+
+	@Output(name = "VarenummerDelpakning")
+	public Long getVarenummerForDelpakning()
+	{
+		return this.varenummerForDelpakning;
 	}
 
 	public Boolean isTilHumanAnvendelse()
@@ -439,9 +326,123 @@ public class Pakning extends TakstEntity
 		return lm.isTilHumanAnvendelse();
 	}
 
-	@Output
-	public Integer getDosisdispenserbar()
+	public void setAlfabetSekvensnr(Long alfabetSekvensnr)
 	{
-		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
+		this.alfabetSekvensnr = alfabetSekvensnr;
+	}
+
+	public void setAntalDDDPrPakning(Long antalDDDPrPakning)
+	{
+		this.antalDDDPrPakning = antalDDDPrPakning;
+	}
+
+	public void setAntalDelpakninger(Long antalDelpakninger)
+	{
+		this.antalDelpakninger = antalDelpakninger;
+	}
+
+	public void setBeregningskodeAIPRegpris(String beregningskodeAIPRegpris)
+	{
+		this.beregningskodeAIPRegpris = beregningskodeAIPRegpris;
+	}
+
+	public void setDatoForSenestePrisaendring(Long datoForSenestePrisaendring)
+	{
+		this.datoForSenestePrisaendring = datoForSenestePrisaendring;
+	}
+
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
+
+	public void setEmballagetype(String emballagetype)
+	{
+		this.emballagetype = emballagetype;
+	}
+
+	public void setFaerdigfremstillingsgebyr(String faerdigfremstillingsgebyr)
+	{
+		this.faerdigfremstillingsgebyr = faerdigfremstillingsgebyr;
+	}
+
+	public void setKlausulForMedicintilskud(String klausulForMedicintilskud)
+	{
+		this.klausulForMedicintilskud = klausulForMedicintilskud;
+	}
+
+	public void setMedicintilskudskode(String medicintilskudskode)
+	{
+		this.medicintilskudskode = medicintilskudskode;
+	}
+
+	public void setOpbevaringsbetingelser(String opbevaringsbetingelser)
+	{
+		this.opbevaringsbetingelser = opbevaringsbetingelser;
+	}
+
+	public void setOpbevaringstidEnhed(String opbevaringstidEnhed)
+	{
+		this.opbevaringstidEnhed = opbevaringstidEnhed;
+	}
+
+	public void setOpbevaringstidNumerisk(Long opbevaringstidNumerisk)
+	{
+		this.opbevaringstidNumerisk = opbevaringstidNumerisk;
+	}
+
+	public void setOprettelsesdato(Long oprettelsesdato)
+	{
+		this.oprettelsesdato = oprettelsesdato;
+	}
+
+	public void setPakningOptagetITilskudsgruppe(String pakningOptagetITilskudsgruppe)
+	{
+		this.pakningOptagetITilskudsgruppe = pakningOptagetITilskudsgruppe;
+	}
+
+	public void setPakningsdistributoer(Long pakningsdistributoer)
+	{
+		this.pakningsdistributoer = pakningsdistributoer;
+	}
+
+	public void setPakningsstoerrelseEnhed(String pakningsstoerrelseEnhed)
+	{
+		this.pakningsstoerrelseEnhed = pakningsstoerrelseEnhed;
+	}
+
+	public void setPakningsstoerrelseKlartekst(String pakningsstoerrelseKlartekst)
+	{
+		this.pakningsstoerrelseKlartekst = pakningsstoerrelseKlartekst;
+	}
+
+	public void setPakningsstoerrelseNumerisk(Long pakningsstoerrelseNumerisk)
+	{
+		this.pakningsstoerrelseNumerisk = pakningsstoerrelseNumerisk;
+	}
+
+	public void setUdgaaetDato(Long udgaaetDato)
+	{
+		this.udgaaetDato = udgaaetDato;
+	}
+
+	public void setUdleveringsbestemmelse(String udleveringsbestemmelse)
+	{
+		this.udleveringsbestemmelse = udleveringsbestemmelse;
+	}
+
+	public void setUdleveringSpeciale(String udleveringSpeciale)
+	{
+		this.udleveringSpeciale = udleveringSpeciale;
+	}
+
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
+	}
+
+	public void setVarenummerForDelpakning(Long varenummerForDelpakning)
+	{
+		this.varenummerForDelpakning = varenummerForDelpakning;
 	}
 }

@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -34,15 +35,16 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 	private Long tilskudsprisGruppe;
 	private Long varenummer; // Ref. t. LMS02
 
+	@Override
+	public Long getKey()
+	{
+		return varenummer;
+	}
+
 	@Output
 	public Long getTilskudsprisGruppe()
 	{
 		return this.tilskudsprisGruppe;
-	}
-
-	public void setTilskudsprisGruppe(Long tilskudsprisGruppe)
-	{
-		this.tilskudsprisGruppe = tilskudsprisGruppe;
 	}
 
 	@Id
@@ -52,14 +54,14 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 		return this.varenummer;
 	}
 
+	public void setTilskudsprisGruppe(Long tilskudsprisGruppe)
+	{
+		this.tilskudsprisGruppe = tilskudsprisGruppe;
+	}
+
 	public void setVarenummer(Long varenummer)
 	{
 		this.varenummer = varenummer;
-	}
-
-	public Long getKey()
-	{
-		return varenummer;
 	}
 
 }

@@ -21,22 +21,46 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.parsers;
+package com.trifork.stamdata.importer.parsers.takst;
 
-public class JobException extends Exception
+import java.util.Date;
+import java.util.List;
+
+import com.trifork.stamdata.importer.model.CompleteDataset;
+
+
+public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
 {
+	private Takst takst;
 
-	private static final long serialVersionUID = 4805896456574735730L;
-
-	public JobException(String message, Throwable cause)
+	public TakstDataset(Takst takst, List<T> entities, Class<T> type)
 	{
+		super(type, entities, takst.getValidFrom(), takst.getValidTo());
 
-		super(message, cause);
+		for (TakstEntity entity : entities)
+		{
+			entity.takst = takst;
+		}
+
+		this.takst = takst;
 	}
 
-	public JobException(String message)
+	@Override
+	public void addEntity(T entity)
 	{
+		super.addEntity(entity);
+		entity.takst = takst;
+	}
 
-		super(message);
+	@Override
+	public Date getValidFrom()
+	{
+		return takst.getValidFrom();
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return takst.getValidTo();
 	}
 }

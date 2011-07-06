@@ -28,35 +28,26 @@ import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
+import com.google.common.collect.Maps;
+import com.trifork.stamdata.importer.parsers.FileImporter;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterDatasets;
 
 
-public class YderregisterImporter implements FileImporterControlledIntervals
+public class YderregisterImporter implements FileImporter
 {
-
 	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025", "K5094" };
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
-
-	public void run(List<File> files) throws FileImporterException
+	@Override
+	public void importFiles(File[] input, Connection connection) throws Exception
 	{
+		String versionString = null;
+		int version;
 
-		// get the Loebenummer from the files and verify that all files have the
-		// same loebenummer
-		String loebeNummerString = null;
-		int loebeNummer;
-		for (File f : files)
+		for (File f : input)
 		{
 			String curFileLoebe;
 
@@ -69,73 +60,54 @@ public class YderregisterImporter implements FileImporterControlledIntervals
 				continue;
 			}
 
-			if (loebeNummerString == null)
+			if (versionString == null)
 			{
-				loebeNummerString = curFileLoebe;
+				versionString = curFileLoebe;
 			}
 			else
 			{
-				if (!loebeNummerString.equals(curFileLoebe))
+				if (!versionString.equals(curFileLoebe))
 				{
 					throw new FileImporterException("Det blev forsøgt at importere yderregisterfiler med forskellige løbenumre. Løbenummeret fremgår af filnavnet");
 				}
 			}
 		}
 
-		if (loebeNummerString == null)
+		if (versionString == null)
 		{
 			throw new FileImporterException("Der blev ikke fundet yderregister filer med et løbenummer");
 		}
 
-		loebeNummer = Integer.parseInt(loebeNummerString);
+		version = Integer.parseInt(versionString);
 
-		Connection con = MySQLConnectionManager.getConnection();
+		YderregisterDao dao = new YderregisterDao(connection);
 
-		try
+		// Verify the version
+		
+		int latestInDB = dao.getLastLoebenummer();
+
+		if (latestInDB != 0)
 		{
-			YderregisterDao dao = new YderregisterDao(con);
-
-			// verify loebenummer
-			int latestInDB = dao.getLastLoebenummer();
-
-			if (latestInDB != 0)
+			if (latestInDB > version)
 			{
-				if (latestInDB > loebeNummer)
-				{
-					throw new FilePersistException("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer.");
-				}
+				throw new FilePersistException("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer.");
 			}
-			dao.setLastLoebenummer(loebeNummer);
-
-			logger.debug("Starting to parse yderregister");
-			YderregisterParser tp = new YderregisterParser();
-			YderregisterDatasets yderreg = tp.parseYderregister(files);
-			logger.debug("Yderregister parsed");
-
-			logger.debug("Starting to import yderregister into database");
-			dao.persistCompleteDataset(yderreg.getYderregisterDS());
-			dao.persistCompleteDataset(yderreg.getYderregisterPersonDS());
-			logger.debug("Done importing yderregister into database");
-			con.commit();
-		}
-		catch (Exception e)
-		{
-			logger.error("An error occured while persisting the yderregister to database " + e.getMessage(), e);
-			throw new FilePersistException("An error occured while persisting the yderregister to database: " + e.getMessage(), e);
-		}
-		finally
-		{
-			MySQLConnectionManager.close(con);
 		}
 
+		dao.setLastVersion(version);
+
+		YderregisterParser tp = new YderregisterParser();
+		YderregisterDatasets yderreg = tp.parseYderregister(input);
+
+		dao.persistCompleteDataset(yderreg.getYderregisterDS());
+		dao.persistCompleteDataset(yderreg.getYderregisterPersonDS());
 	}
 
-	public boolean checkRequiredFiles(List<File> files)
+	public boolean ensureRequiredFileArePresent(File[] input)
 	{
-		logger.debug("Checking yderregister file list for presence of all required files");
-
-		Map<String, File> fileMap = new HashMap<String, File>(files.size());
-		for (File f : files)
+		Map<String, File> fileMap = Maps.newHashMap();
+		
+		for (File f : input)
 		{
 			String fName = f.getName();
 			if (fName.indexOf('.') != fName.lastIndexOf('.'))
@@ -148,18 +120,16 @@ public class YderregisterImporter implements FileImporterControlledIntervals
 		{
 			if (!fileMap.containsKey(reqFileExt))
 			{
-				logger.debug("Did not find required file with extension: " + reqFileExt);
 				return false;
 			}
-			logger.debug("Found required file: " + reqFileExt);
 		}
+		
 		return true;
 	}
 
 	/**
 	 * They should come at least each quarter
 	 */
-	@Override
 	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Calendar cal;
@@ -176,5 +146,10 @@ public class YderregisterImporter implements FileImporterControlledIntervals
 		cal.add(Calendar.DATE, 95);
 
 		return cal.getTime();
+	}
+	
+	public String getIdentifier()
+	{
+		return "Yderregister";
 	}
 }

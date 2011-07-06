@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -41,9 +42,10 @@ public class Laegemiddelnavn extends TakstEntity
 		return this.drugid;
 	}
 
-	public void setDrugid(Long drugid)
+	@Override
+	public String getKey()
 	{
-		this.drugid = drugid;
+		return "" + this.drugid;
 	}
 
 	@Output
@@ -52,14 +54,14 @@ public class Laegemiddelnavn extends TakstEntity
 		return this.laegemidletsUforkortedeNavn;
 	}
 
+	public void setDrugid(Long drugid)
+	{
+		this.drugid = drugid;
+	}
+
 	public void setLaegemidletsUforkortedeNavn(String laegemidletsUforkortedeNavn)
 	{
 		this.laegemidletsUforkortedeNavn = laegemidletsUforkortedeNavn;
-	}
-
-	public String getKey()
-	{
-		return "" + this.drugid;
 	}
 
 }

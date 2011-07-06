@@ -23,15 +23,17 @@
 
 package com.trifork.stamdata.importer.parsers.yderregister;
 
+import static junit.framework.Assert.assertFalse;
+import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
-
-import junit.framework.Assert;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -40,8 +42,6 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
-import com.trifork.stamdata.importer.parsers.yderregister.YderregisterImporter;
-
 
 
 /*
@@ -49,47 +49,53 @@ import com.trifork.stamdata.importer.parsers.yderregister.YderregisterImporter;
  *
  * @author Anders Bo Christensen
  */
-public class YderregisterIntegrationTest {
+public class YderregisterIntegrationTest
+{
+	private Connection con;
 
-	public File getFile(String path) {
-
+	public File getFile(String path)
+	{
 		return FileUtils.toFile(getClass().getClassLoader().getResource(path));
 	}
 
 	@Before
-	@After
-	public void cleanDatabase() throws Exception {
+	public void cleanDatabase() throws Exception
+	{
+		con = MySQLConnectionManager.getConnection();
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		stmt.execute("truncate table Yderregister");
 		stmt.execute("truncate table YderregisterPerson");
 		stmt.execute("truncate table YderLoebenummer");
 		stmt.close();
-		con.close();
+	}
 
+	@After
+	public void tearDown() throws SQLException
+	{
+		con.rollback();
+		con.close();
 	}
 
 	@Test
-	public void ImportTest() throws Exception {
-
-		// Arrange
+	public void ImportTest() throws Exception
+	{
 		File fInitial = getFile("data/yderregister/initial/");
+		List<File> files = Arrays.asList((fInitial.listFiles()));
 
-		// Act and assert
-		new YderregisterImporter().run(Arrays.asList((fInitial.listFiles())));
+		new YderregisterImporter().run(files, con);
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 
-		ResultSet rs = stmt.executeQuery("SELECT count(*) FROM Yderregister;");
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Yderregister;");
+
 		rs.next();
+
 		assertEquals("Samlet antal yderere", 12, rs.getInt(1));
 
 		rs = stmt.executeQuery("SELECT * FROM Yderregister WHERE Nummer = 4219;");
-		if (!rs.next()) {
-			Assert.fail("Fandt ikke den forventede yder med ydernummer 4219");
-		}
+
+		assertFalse("Fandt ikke den forventede yder med ydernummer 4219", rs.next());
 
 		assertEquals("Yders Navn", "Jørgen Vagn Nielsen", rs.getString("Navn"));
 		assertEquals("Yders Vejnavn", "Store Kongensgade 96,4.", rs.getString("Vejnavn"));
@@ -102,39 +108,37 @@ public class YderregisterIntegrationTest {
 		assertEquals("Yders www", "1978-07-01 00:00:00.0", rs.getString("ValidFrom"));
 		assertEquals("Yders www", "2999-12-31 00:00:00.0", rs.getString("ValidTo"));
 		stmt.close();
-		con.close();
 	}
 
-	// TODO: Should this not be FileParseException? Will an alarm go off?
 	@Test(expected = FilePersistException.class)
-	public void LoebenummerTest() throws Exception {
-
-		// Arrange
-
+	public void LoebenummerTest() throws Exception
+	{
 		File fInitial = getFile("data/yderregister/initial/");
 		File fNext = getFile("data/yderregister/nextversion/");
 
-		new YderregisterImporter().run(Arrays.asList((fInitial.listFiles())));
+		List<File> files = Arrays.asList((fInitial.listFiles()));
 
-		// Act
+		new YderregisterImporter().run(files, con);
 
-		new YderregisterImporter().run(Arrays.asList((fNext.listFiles())));
+		files = Arrays.asList((fNext.listFiles()));
+
+		new YderregisterImporter().run(files, con);
 	}
 
 	@Test
-	public void CompleteFilesTest() throws Exception {
-
+	public void CompleteFilesTest() throws Exception
+	{
 		File fInitial = getFile("data/yderregister/initial/");
 
 		YderregisterImporter yImp = new YderregisterImporter();
 		boolean isComplete = yImp.checkRequiredFiles(Arrays.asList(fInitial.listFiles()));
 
-		assertEquals("Expected to be complete", true, isComplete);
+		assertTrue("Expected to be complete", isComplete);
 	}
 
 	@Test
-	public void IncompleteFilesTest() throws Exception {
-
+	public void IncompleteFilesTest() throws Exception
+	{
 		File fInitial = getFile("data/yderregister/incomplete/");
 
 		YderregisterImporter yImp = new YderregisterImporter();

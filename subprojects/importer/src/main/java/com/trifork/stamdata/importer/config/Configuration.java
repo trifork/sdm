@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 
 public class Configuration
 {
-
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static Configuration defaultInstance = new Configuration();
 
@@ -40,7 +39,6 @@ public class Configuration
 
 	public Configuration()
 	{
-
 		this("config");
 	}
 
@@ -91,7 +89,6 @@ public class Configuration
 
 	public static void setDefaultInstance(Configuration conf)
 	{
-
 		// Only for unit tests
 		defaultInstance = conf;
 	}

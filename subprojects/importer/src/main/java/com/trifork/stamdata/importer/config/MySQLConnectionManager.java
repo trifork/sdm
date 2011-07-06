@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.slf4j.Logger;
@@ -33,22 +34,25 @@ import org.slf4j.LoggerFactory;
 
 public class MySQLConnectionManager
 {
-	private static Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
 
-	public static Connection getConnection()
-	{
+	{{
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
-			Connection con = DriverManager.getConnection(Configuration.getString("db.url") + getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
-			con.setAutoCommit(false);
-			return con;
 		}
 		catch (Exception e)
 		{
-			logger.error("Error creating MySQL database connection", e);
+			throw new RuntimeException("Could not load the database driver: com.mysql.jdbc.Driver", e);
 		}
-		return null;
+	}}
+	
+	public static Connection getConnection() throws SQLException
+	{
+		Connection connection = DriverManager.getConnection(Configuration.getString("db.url") + getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
+		connection.setAutoCommit(false);
+
+		return connection;
 	}
 
 	public static Connection getAutoCommitConnection()
@@ -73,7 +77,6 @@ public class MySQLConnectionManager
 
 	public static String getHousekeepingDBName()
 	{
-
 		String value = Configuration.getString("db.housekeepingdatabase");
 		return value != null ? value : Configuration.getString("db.database");
 	}
@@ -87,7 +90,9 @@ public class MySQLConnectionManager
 				connection.close();
 			}
 			else
-				logger.warn("Cannot commit and close connection, because connection == null");
+			{
+				logger.warn("Cannot close connection, because the connection is null.");
+			}
 		}
 		catch (Exception e)
 		{
@@ -95,16 +100,18 @@ public class MySQLConnectionManager
 		}
 	}
 
-	public static void close(Statement stmt, Connection connection)
+	public static void close(Statement statement, Connection connection)
 	{
 		try
 		{
-			if (stmt != null)
+			if (statement != null)
 			{
-				stmt.close();
+				statement.close();
 			}
 			else
+			{
 				logger.warn("Cannot close stmt, because stmt == null");
+			}
 		}
 		catch (Exception e)
 		{
@@ -115,5 +122,4 @@ public class MySQLConnectionManager
 			close(connection);
 		}
 	}
-
 }

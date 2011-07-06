@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -36,27 +37,10 @@ public class Firma extends TakstEntity
 	private String firmamaerkeLangtNavn;
 	private String parallelimportoerKode;
 
-	@Id
-	@Output
-	public Long getFirmanummer()
-	{
-		return this.firmanummer;
-	}
-
-	public void setFirmanummer(Long firmanummer)
-	{
-		this.firmanummer = firmanummer;
-	}
-
 	@Output
 	public String getFirmamaerkeKort()
 	{
 		return this.firmamaerkeKort;
-	}
-
-	public void setFirmamaerkeKort(String firmamaerkeKort)
-	{
-		this.firmamaerkeKort = firmamaerkeKort;
 	}
 
 	@Output
@@ -65,9 +49,17 @@ public class Firma extends TakstEntity
 		return this.firmamaerkeLangtNavn;
 	}
 
-	public void setFirmamaerkeLangtNavn(String firmamaerkeLangtNavn)
+	@Id
+	@Output
+	public Long getFirmanummer()
 	{
-		this.firmamaerkeLangtNavn = firmamaerkeLangtNavn;
+		return this.firmanummer;
+	}
+
+	@Override
+	public Long getKey()
+	{
+		return this.firmanummer;
 	}
 
 	@Output
@@ -76,14 +68,24 @@ public class Firma extends TakstEntity
 		return this.parallelimportoerKode;
 	}
 
+	public void setFirmamaerkeKort(String firmamaerkeKort)
+	{
+		this.firmamaerkeKort = firmamaerkeKort;
+	}
+
+	public void setFirmamaerkeLangtNavn(String firmamaerkeLangtNavn)
+	{
+		this.firmamaerkeLangtNavn = firmamaerkeLangtNavn;
+	}
+
+	public void setFirmanummer(Long firmanummer)
+	{
+		this.firmanummer = firmanummer;
+	}
+
 	public void setParallelimportoerKode(String parallelimportoerKode)
 	{
 		this.parallelimportoerKode = parallelimportoerKode;
-	}
-
-	public Long getKey()
-	{
-		return this.firmanummer;
 	}
 
 }

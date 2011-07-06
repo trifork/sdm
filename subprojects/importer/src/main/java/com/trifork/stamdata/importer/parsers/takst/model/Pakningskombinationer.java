@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -42,47 +43,9 @@ public class Pakningskombinationer extends TakstEntity
 												// informationspligt
 
 	@Output
-	public Long getVarenummerOrdineret()
-	{
-		return this.varenummerOrdineret;
-	}
-
-	public void setVarenummerOrdineret(Long varenummerOrdineret)
-	{
-		this.varenummerOrdineret = varenummerOrdineret;
-	}
-
-	@Output
-	public Long getVarenummerSubstitueret()
-	{
-		return this.varenummerSubstitueret;
-	}
-
-	public void setVarenummerSubstitueret(Long varenummerSubstitueret)
-	{
-		this.varenummerSubstitueret = varenummerSubstitueret;
-	}
-
-	@Output
-	public Long getVarenummerAlternativt()
-	{
-		return this.varenummerAlternativt;
-	}
-
-	public void setVarenummerAlternativt(Long varenummerAlternativt)
-	{
-		this.varenummerAlternativt = varenummerAlternativt;
-	}
-
-	@Output
 	public Long getAntalPakninger()
 	{
 		return this.antalPakninger;
-	}
-
-	public void setAntalPakninger(Long antalPakninger)
-	{
-		this.antalPakninger = antalPakninger;
 	}
 
 	@Output
@@ -91,15 +54,46 @@ public class Pakningskombinationer extends TakstEntity
 		return this.ekspeditionensSamledePris;
 	}
 
-	public void setEkspeditionensSamledePris(Long ekspeditionensSamledePris)
-	{
-		this.ekspeditionensSamledePris = ekspeditionensSamledePris;
-	}
-
 	@Output
 	public String getInformationspligtMarkering()
 	{
 		return this.informationspligtMarkering;
+	}
+
+	@Override
+	@Id
+	@Output(name = "CID")
+	public String getKey()
+	{
+		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-' + antalPakninger;
+	}
+
+	@Output
+	public Long getVarenummerAlternativt()
+	{
+		return this.varenummerAlternativt;
+	}
+
+	@Output
+	public Long getVarenummerOrdineret()
+	{
+		return this.varenummerOrdineret;
+	}
+
+	@Output
+	public Long getVarenummerSubstitueret()
+	{
+		return this.varenummerSubstitueret;
+	}
+
+	public void setAntalPakninger(Long antalPakninger)
+	{
+		this.antalPakninger = antalPakninger;
+	}
+
+	public void setEkspeditionensSamledePris(Long ekspeditionensSamledePris)
+	{
+		this.ekspeditionensSamledePris = ekspeditionensSamledePris;
 	}
 
 	public void setInformationspligtMarkering(String informationspligtMarkering)
@@ -107,11 +101,19 @@ public class Pakningskombinationer extends TakstEntity
 		this.informationspligtMarkering = informationspligtMarkering;
 	}
 
-	@Id
-	@Output(name = "CID")
-	public String getKey()
+	public void setVarenummerAlternativt(Long varenummerAlternativt)
 	{
-		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-' + antalPakninger;
+		this.varenummerAlternativt = varenummerAlternativt;
+	}
+
+	public void setVarenummerOrdineret(Long varenummerOrdineret)
+	{
+		this.varenummerOrdineret = varenummerOrdineret;
+	}
+
+	public void setVarenummerSubstitueret(Long varenummerSubstitueret)
+	{
+		this.varenummerSubstitueret = varenummerSubstitueret;
 	}
 
 }

@@ -26,12 +26,8 @@ package com.trifork.stamdata.importer.parsers.takst;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -41,76 +37,45 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
-import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
-import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
-import com.trifork.stamdata.importer.parsers.takst.model.Takst;
+import com.trifork.stamdata.importer.parsers.FileImporter;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
-public class TakstImporter implements FileImporterControlledIntervals
+public class TakstImporter implements FileImporter
 {
-	public static final String[] requiredFileNames = new String[] { "system.txt", "lms01.txt", "lms02.txt", "lms03.txt", "lms04.txt", "lms05.txt", "lms07.txt", "lms09.txt", "lms10.txt", "lms11.txt", "lms12.txt", "lms13.txt", "lms14.txt", "lms15.txt", "lms16.txt", "lms17.txt", "lms18.txt", "lms19.txt", "lms20.txt", "lms23.txt", "lms24.txt", "lms25.txt", "lms26.txt", "lms27.txt", "lms28.txt" };
-
+	private static final Logger logger = LoggerFactory.getLogger(TakstImporter.class);
+	
 	private static final DateTimeFormatter weekFormatter = DateTimeFormat.forPattern("xxxxww").withLocale(new Locale("da", "DK"));
 
-	private final Logger logger = LoggerFactory.getLogger(getClass());
 
-	public void run(List<File> files) throws FileImporterException
+	public void importFiles(File[] input, Connection con) throws Exception
 	{
-		Takst takst;
-		logger.debug("Starting to parse takst");
 		TakstParser tp = new TakstParser();
-		takst = tp.parseFiles(files);
-		logger.debug("Takst parsed");
-		Connection con = null;
+		Takst takst = tp.parseFiles(input);
 
-		try
-		{
-			logger.debug("Starting to import takst into database");
-			con = MySQLConnectionManager.getConnection();
-			AuditingPersister versionedDao = new AuditingPersister(con);
-			versionedDao.persistCompleteDataset(takst.getDatasets());
-			logger.debug("Done importing takst into database");
-			try
-			{
-				con.commit();
-			}
-			catch (SQLException e)
-			{
-				throw new FileImporterException("could not commit transaction", e);
-			}
-
-		}
-		catch (Exception e)
-		{
-			logger.error("An error occured while persisting the takst to database " + e.getMessage(), e);
-			throw new FilePersistException("An error occured while persisting the takst to database: " + e.getMessage(), e);
-		}
-		finally
-		{
-			MySQLConnectionManager.close(con);
-		}
-
+		AuditingPersister persister = new AuditingPersister(con);
+		persister.persistCompleteDataset(takst.getDatasets());
 	}
 
-	public boolean checkRequiredFiles(List<File> files)
+	
+	public boolean ensureRequiredFileArePresent(File[] input)
 	{
-		logger.debug("Checking takst file list for presence of all required files");
-		Map<String, File> fileMap = new HashMap<String, File>(files.size());
-		for (File f : files)
-			fileMap.put(f.getName(), f);
+		final String[] requiredFileNames = new String[] { "system.txt", "lms01.txt", "lms02.txt", "lms03.txt", "lms04.txt", "lms05.txt", "lms07.txt", "lms09.txt", "lms10.txt", "lms11.txt", "lms12.txt", "lms13.txt", "lms14.txt", "lms15.txt", "lms16.txt", "lms17.txt", "lms18.txt", "lms19.txt", "lms20.txt", "lms23.txt", "lms24.txt", "lms25.txt", "lms26.txt", "lms27.txt", "lms28.txt" };
 
-		for (String reqFile : Arrays.asList(requiredFileNames))
+		Map<String, File> fileMap = Maps.newHashMap();
+		
+		for (File f : input)
 		{
-			if (!fileMap.containsKey(reqFile))
-			{
-				logger.debug("Did not find required file: " + reqFile);
-				return false;
-			}
-			logger.debug("Found required file: " + reqFile);
+			fileMap.put(f.getName(), f);
 		}
+
+		for (String reqFile : requiredFileNames)
+		{
+			if (!fileMap.containsKey(reqFile)) return false;
+		}
+		
 		return true;
 	}
 
@@ -119,7 +84,6 @@ public class TakstImporter implements FileImporterControlledIntervals
 	 * Ordinære takster skal komme hver 14. dag. "Indimellem" takster kommer ad
 	 * hoc, og vi kan ikke sætte forventning op til dem.
 	 */
-	@Override
 	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Connection con = null;
@@ -162,5 +126,10 @@ public class TakstImporter implements FileImporterControlledIntervals
 		}
 
 		return ordinaryTakst.toDate();
+	}
+	
+	public String getIdentifier()
+	{
+		return "Takst";
 	}
 }

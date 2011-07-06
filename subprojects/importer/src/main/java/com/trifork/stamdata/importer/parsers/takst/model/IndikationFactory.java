@@ -23,67 +23,18 @@
 
 package com.trifork.stamdata.importer.parsers.takst.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import com.trifork.stamdata.importer.parsers.takst.FixedLengthParserConfiguration;
 
-
-public class IndikationFactory extends AbstractFactory
+public class IndikationFactory implements FixedLengthParserConfiguration<Indikation>
 {
-
-	private static void setFieldValue(Indikation obj, int fieldNo, String value)
+	@Override
+	public String getFilename()
 	{
-		if ("".equals(value)) value = null;
-		switch (fieldNo)
-		{
-		case 0:
-			obj.setIndikationskode(toLong(value));
-			break;
-		case 1:
-			obj.setIndikationstekstTotal(value);
-			break;
-		case 2:
-			obj.setIndikationstekstLinie1(value);
-			break;
-		case 3:
-			obj.setIndikationstekstLinie2(value);
-			break;
-		case 4:
-			obj.setIndikationstekstLinie3(value);
-			break;
-		case 5:
-			obj.setAktivInaktiv(value);
-			break;
-		default:
-			break;
-		}
+		return "LMS26";
 	}
 
-	private static int getOffset(int fieldNo)
-	{
-		switch (fieldNo)
-		{
-		case 0:
-			return 0;
-		case 1:
-			return 7;
-		case 2:
-			return 85;
-		case 3:
-			return 111;
-		case 4:
-			return 137;
-		case 5:
-			return 163;
-		default:
-			return -1;
-		}
-	}
-
-	private static int getLength(int fieldNo)
+	@Override
+	public int getLength(int fieldNo)
 	{
 		switch (fieldNo)
 		{
@@ -104,65 +55,57 @@ public class IndikationFactory extends AbstractFactory
 		}
 	}
 
-	private static int getNumberOfFields()
+	@Override
+	public int getNumberOfFields()
 	{
 		return 6;
 	}
 
-	private static String getLmsName()
+	@Override
+	public int getOffset(int fieldNo)
 	{
-		return "LMS26";
-	}
-
-	public static ArrayList<Indikation> read(String rootFolder) throws IOException
-	{
-
-		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
-
-		ArrayList<Indikation> list = new ArrayList<Indikation>();
-		BufferedReader reader = null;
-		try
+		switch (fieldNo)
 		{
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
-				String line = reader.readLine();
-				if (line.trim().length() > 0)
-				{
-					list.add(parse(line));
-				}
-			}
-			return list;
-		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
-					reader.close();
-				}
-			}
-			catch (Exception e)
-			{
-				logger.warn("Could not close FileReader");
-			}
+		case 0:
+			return 0;
+		case 1:
+			return 7;
+		case 2:
+			return 85;
+		case 3:
+			return 111;
+		case 4:
+			return 137;
+		case 5:
+			return 163;
+		default:
+			return -1;
 		}
 	}
 
-	private static Indikation parse(String line)
+	@Override
+	public void setFieldValue(Indikation obj, int fieldNo, String value)
 	{
-		Indikation obj = new Indikation();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
+		switch (fieldNo)
 		{
-			if (getLength(fieldNo) > 0)
-			{
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
-				setFieldValue(obj, fieldNo, value);
-			}
+		case 0:
+			obj.setIndikationskode(Long.parseLong(value));
+			break;
+		case 1:
+			obj.setIndikationstekstTotal(value);
+			break;
+		case 2:
+			obj.setIndikationstekstLinie1(value);
+			break;
+		case 3:
+			obj.setIndikationstekstLinie2(value);
+			break;
+		case 4:
+			obj.setIndikationstekstLinie3(value);
+			break;
+		case 5:
+			obj.setAktivInaktiv(value);
+			break;
 		}
-		return obj;
 	}
 }

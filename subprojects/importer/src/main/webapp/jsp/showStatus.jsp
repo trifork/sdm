@@ -1,6 +1,6 @@
 <%@page import="com.trifork.stamdata.importer.ProjectInfo"%>
 <%@ page import="com.trifork.stamdata.importer.webinterface.DatabaseStatus"%>
-<%@ page import="com.trifork.stamdata.importer.parsers.SpoolerManager"%>
+<%@ page import="com.trifork.stamdata.importer.parsers.JobManager"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.google.inject.Guice"%>
@@ -10,7 +10,7 @@
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
 	boolean dbstatus = injector.getInstance(DatabaseStatus.class).isAlive();
-	SpoolerManager manager = injector.getInstance(SpoolerManager.class);
+	JobManager manager = injector.getInstance(JobManager.class);
 	ProjectInfo build = injector.getInstance(ProjectInfo.class);
 %>
 
@@ -118,7 +118,9 @@
 		</tr>
 		<tr><td>	
 			<table width="700" class="element">
-				<% for (FileSpoolerImpl spooler : manager.getSpoolers().values()) { %>
+				<%
+					for (FileParserJob spooler : manager.getSpoolers().values()) {
+				%>
 				<tr>
 					<% if (!spooler.getStatus().equals("ERROR")) { %>
 						<td class="success" align="left">
@@ -137,7 +139,9 @@
 				</tr>
 				<% } %>
 
-				<% for (JobSpoolerImpl spooler : manager.getJobSpoolers().values()) { %>
+				<%
+					for (Job spooler : manager.getJobSpoolers().values()) {
+				%>
 				<tr>
 					<% if (!spooler.getStatus().equals("ERROR")) { %>
 						<td class="success" align="left">

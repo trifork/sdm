@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -38,25 +39,27 @@ public class Rekommandationer extends TakstEntity
 											// forbehold / …ikke
 
 	@Output
-	public Long getRekommandationsgruppe()
-	{
-		return this.rekommandationsgruppe;
-	}
-
-	public void setRekommandationsgruppe(Long rekommandationsgruppe)
-	{
-		this.rekommandationsgruppe = rekommandationsgruppe;
-	}
-
-	@Output
 	public Long getDrugID()
 	{
 		return this.drugID;
 	}
 
-	public void setDrugID(Long drugID)
+	@Override
+	public Long getKey()
 	{
-		this.drugID = drugID;
+		return varenummer;
+	}
+
+	@Output
+	public Long getRekommandationsgruppe()
+	{
+		return this.rekommandationsgruppe;
+	}
+
+	@Output
+	public String getRekommandationsniveau()
+	{
+		return this.rekommandationsniveau;
 	}
 
 	@Id
@@ -66,15 +69,14 @@ public class Rekommandationer extends TakstEntity
 		return this.varenummer;
 	}
 
-	public void setVarenummer(Long varenummer)
+	public void setDrugID(Long drugID)
 	{
-		this.varenummer = varenummer;
+		this.drugID = drugID;
 	}
 
-	@Output
-	public String getRekommandationsniveau()
+	public void setRekommandationsgruppe(Long rekommandationsgruppe)
 	{
-		return this.rekommandationsniveau;
+		this.rekommandationsgruppe = rekommandationsgruppe;
 	}
 
 	public void setRekommandationsniveau(String rekommandationsniveau)
@@ -82,9 +84,9 @@ public class Rekommandationer extends TakstEntity
 		this.rekommandationsniveau = rekommandationsniveau;
 	}
 
-	public Long getKey()
+	public void setVarenummer(Long varenummer)
 	{
-		return varenummer;
+		this.varenummer = varenummer;
 	}
 
 }

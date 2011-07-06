@@ -25,6 +25,8 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.parsers.takst.Takst;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
@@ -39,23 +41,6 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 		this.klartekst = klartekst;
 		this.numerisk = numerisk;
 		this.enhed = enhed;
-	}
-
-	public String getKey()
-	{
-		return null;
-	}
-
-	@Output(name = "StyrkeTekst")
-	public String getKlartekst()
-	{
-		return klartekst;
-	}
-
-	@Output(name = "StyrkeNumerisk")
-	public double getNumerisk()
-	{
-		return numerisk;
 	}
 
 	@Output(name = "StyrkeEnhed")
@@ -80,5 +65,23 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 		// Should probably never be used as objects of this class are always
 		// nested
 		return getClass().getSimpleName();
+	}
+
+	@Override
+	public String getKey()
+	{
+		return null;
+	}
+
+	@Output(name = "StyrkeTekst")
+	public String getKlartekst()
+	{
+		return klartekst;
+	}
+
+	@Output(name = "StyrkeNumerisk")
+	public double getNumerisk()
+	{
+		return numerisk;
 	}
 }

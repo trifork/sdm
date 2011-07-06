@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -36,26 +37,12 @@ public class Tilskudsintervaller extends TakstEntity
 	private Long oevreGraense; // Øvre beløbsgrænse for niveauet (i øre)
 	private Double procent; // Tilskudsprocent
 
-	@Output
-	public Long getType()
+	@Override
+	@Id
+	@Output(name = "CID")
+	public String getKey()
 	{
-		return type;
-	}
-
-	public void setType(Long type)
-	{
-		this.type = type;
-	}
-
-	@Output
-	public Long getNiveau()
-	{
-		return niveau;
-	}
-
-	public void setNiveau(Long niveau)
-	{
-		this.niveau = niveau;
+		return type + "-" + niveau;
 	}
 
 	@Output
@@ -64,9 +51,10 @@ public class Tilskudsintervaller extends TakstEntity
 		return nedreGraense;
 	}
 
-	public void setNedreGraense(Long nedreGraense)
+	@Output
+	public Long getNiveau()
 	{
-		this.nedreGraense = nedreGraense;
+		return niveau;
 	}
 
 	@Output
@@ -75,15 +63,31 @@ public class Tilskudsintervaller extends TakstEntity
 		return this.oevreGraense;
 	}
 
-	public void setOevreGraense(Long oevreGraense)
-	{
-		this.oevreGraense = oevreGraense;
-	}
-
 	@Output
 	public Double getProcent()
 	{
 		return this.procent;
+	}
+
+	@Output
+	public Long getType()
+	{
+		return type;
+	}
+
+	public void setNedreGraense(Long nedreGraense)
+	{
+		this.nedreGraense = nedreGraense;
+	}
+
+	public void setNiveau(Long niveau)
+	{
+		this.niveau = niveau;
+	}
+
+	public void setOevreGraense(Long oevreGraense)
+	{
+		this.oevreGraense = oevreGraense;
 	}
 
 	public void setProcent(Double procent)
@@ -91,10 +95,8 @@ public class Tilskudsintervaller extends TakstEntity
 		this.procent = procent;
 	}
 
-	@Id
-	@Output(name = "CID")
-	public String getKey()
+	public void setType(Long type)
 	{
-		return type + "-" + niveau;
+		this.type = type;
 	}
 }

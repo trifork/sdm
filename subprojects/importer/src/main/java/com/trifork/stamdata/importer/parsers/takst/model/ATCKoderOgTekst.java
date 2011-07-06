@@ -28,6 +28,8 @@ import java.util.List;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstDataset;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "ATC")
@@ -35,34 +37,6 @@ public class ATCKoderOgTekst extends TakstEntity
 {
 	private String atc;
 	private String tekst;
-
-	@Output(name = "ATCTekst")
-	public String getTekst()
-	{
-		return this.tekst;
-	}
-
-	public void setTekst(String tekst)
-	{
-		this.tekst = tekst;
-	}
-
-	public void setATC(String atc)
-	{
-		this.atc = atc;
-	}
-
-	@Id
-	@Output(name = "ATC")
-	public String getKey()
-	{
-		return atc;
-	}
-
-	public Boolean isTilHumanAnvendelse()
-	{
-		return !atc.startsWith("Q");
-	}
 
 	public List<Indikation> getIndikationer()
 	{
@@ -75,5 +49,34 @@ public class ATCKoderOgTekst extends TakstEntity
 		}
 
 		return indikationer;
+	}
+
+	@Override
+	@Id
+	@Output(name = "ATC")
+	public String getKey()
+	{
+		return atc;
+	}
+
+	@Output(name = "ATCTekst")
+	public String getTekst()
+	{
+		return this.tekst;
+	}
+
+	public Boolean isTilHumanAnvendelse()
+	{
+		return !atc.startsWith("Q");
+	}
+
+	public void setATC(String atc)
+	{
+		this.atc = atc;
+	}
+
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
 	}
 }

@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -38,6 +39,12 @@ public class Pakningsstoerrelsesenhed extends TakstEntity
 		this.enheder = enheder;
 	}
 
+	@Override
+	public String getKey()
+	{
+		return enheder.getKode();
+	}
+
 	@Id
 	@Output
 	public String getPakningsstoerrelsesenhedKode()
@@ -46,21 +53,15 @@ public class Pakningsstoerrelsesenhed extends TakstEntity
 	}
 
 	@Output
-	public String getPakningsstoerrelsesenhedTekst()
-	{
-		return enheder.getTekst();
-	}
-
-	@Output
 	public String getPakningsstoerrelsesenhedKortTekst()
 	{
 		return enheder.getKortTekst();
 	}
 
-	@Override
-	public String getKey()
+	@Output
+	public String getPakningsstoerrelsesenhedTekst()
 	{
-		return enheder.getKode();
+		return enheder.getTekst();
 	}
 
 }

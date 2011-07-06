@@ -30,12 +30,11 @@ import com.trifork.stamdata.importer.model.Output;
 @Output(name = "Person")
 public class Klarskriftadresse extends CPREntity
 {
-
 	String cpr;
 	String adresseringsNavn;
 	String coNavn;
-	String Lokalitet;
-	String standardAdresse;
+	String lokalitet;
+	String adresseringsVejnavn;
 	String byNavn;
 	Long postNummer;
 	String postDistrikt;
@@ -83,22 +82,22 @@ public class Klarskriftadresse extends CPREntity
 	@Output
 	public String getLokalitet()
 	{
-		return Lokalitet;
+		return lokalitet;
 	}
 
 	public void setLokalitet(String lokalitet)
 	{
-		Lokalitet = lokalitet;
+		this.lokalitet = lokalitet;
 	}
 
-	public String getStandardAdresse()
+	public String getVejnavnTilAdresseringsNavn()
 	{
-		return standardAdresse;
+		return adresseringsVejnavn;
 	}
 
-	public void setStandardAdresse(String standardAdresse)
+	public void setVejnavnTilAdresseringsNavn(String adresse)
 	{
-		this.standardAdresse = standardAdresse;
+		this.adresseringsVejnavn = adresse;
 	}
 
 	@Output

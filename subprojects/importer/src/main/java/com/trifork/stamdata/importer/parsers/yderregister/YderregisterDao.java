@@ -65,7 +65,7 @@ public class YderregisterDao extends AuditingPersister
 		return latestInDB;
 	}
 
-	public void setLastLoebenummer(int loebeNummer) throws FilePersistException
+	public void setLastVersion(int loebeNummer) throws FilePersistException
 	{
 		try
 		{

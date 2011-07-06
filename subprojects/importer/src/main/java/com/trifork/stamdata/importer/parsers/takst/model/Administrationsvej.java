@@ -25,15 +25,21 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
 public class Administrationsvej extends TakstEntity
 {
-
 	private String kode; // Ref. t. LMS01, felt 16
 	private String kortTekst;
 	private String tekst;
+
+	@Override
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
 
 	@Id
 	@Output(name = "AdministrationsvejKode")
@@ -42,20 +48,10 @@ public class Administrationsvej extends TakstEntity
 		return this.kode;
 	}
 
-	public void setKode(String kode)
-	{
-		this.kode = kode;
-	}
-
 	@Output(name = "AdministrationsvejKortTekst")
 	public String getKortTekst()
 	{
 		return this.kortTekst;
-	}
-
-	public void setKortTekst(String kortTekst)
-	{
-		this.kortTekst = kortTekst;
 	}
 
 	@Output(name = "AdministrationsvejTekst")
@@ -64,14 +60,19 @@ public class Administrationsvej extends TakstEntity
 		return this.tekst;
 	}
 
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
+
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
+	}
+
 	public void setTekst(String tekst)
 	{
 		this.tekst = tekst;
-	}
-
-	public String getKey()
-	{
-		return "" + this.kode;
 	}
 
 }

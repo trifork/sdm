@@ -28,47 +28,49 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporterControlledIntervals;
+import com.trifork.stamdata.importer.parsers.FileImporter;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
-public class SORImporter implements FileImporterControlledIntervals
+public class SORImporter implements FileImporter
 {
 	private static Logger logger = LoggerFactory.getLogger(SORImporter.class);
 
 	@Override
-	public boolean checkRequiredFiles(List<File> files)
+	public boolean ensureRequiredFileArePresent(File[] input)
 	{
-		if (files.size() == 0) return false;
-		boolean xmlpresent = false;
+		if (input.length == 0) return false;
+		
+		boolean present = false;
 
-		for (File file : files)
+		for (File file : input)
 		{
-			if (file.getName().endsWith(".xml")) xmlpresent = true;
+			if (file.getName().toLowerCase().endsWith(".xml")) present = true;
 		}
 
-		return xmlpresent;
+		return present;
 	}
 
 	@Override
-	public void run(List<File> files) throws FileImporterException
+	public void importFiles(File[] files, Connection connection) throws FileImporterException
 	{
-		Connection connection = null;
-
 		try
 		{
 			connection = MySQLConnectionManager.getConnection();
 			AuditingPersister dao = new AuditingPersister(connection);
 			for (File file : files)
 			{
-				SORDataSets dataSets = SORParser.parse(file);
+				SORDataSets dataSets = parse(file);
 				dao.persistCompleteDataset(dataSets.getPraksisDS());
 				dao.persistCompleteDataset(dataSets.getYderDS());
 				dao.persistCompleteDataset(dataSets.getSygehusDS());
@@ -102,7 +104,6 @@ public class SORImporter implements FileImporterControlledIntervals
 	/**
 	 * Should be updated every day
 	 */
-	@Override
 	public Date getNextImportExpectedBefore(Date lastImport)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -115,5 +116,39 @@ public class SORImporter implements FileImporterControlledIntervals
 		cal.add(Calendar.DATE, 3);
 
 		return cal.getTime();
+	}
+	
+	public static SORDataSets parse(File file) throws FileParseException
+	{
+		SORDataSets dataSets = new SORDataSets();
+		SOREventHandler handler = new SOREventHandler(dataSets);
+		SAXParserFactory factory = SAXParserFactory.newInstance();
+
+		try
+		{
+			SAXParser parser = factory.newSAXParser();
+
+			if (file.getName().toUpperCase().endsWith("XML"))
+			{
+				parser.parse(file, handler);
+			}
+			else
+			{
+				logger.warn("Can only parse files with extension 'XML'! Ignoring: " + file.getAbsolutePath());
+			}
+		}
+		catch (Exception e)
+		{
+			String errorMessage = "Error parsing data from file: " + file.getAbsolutePath();
+			throw new FileParseException(errorMessage, e);
+		}
+
+		return dataSets;
+	}
+	
+	@Override
+	public String getIdentifier()
+	{
+		return "sor";
 	}
 }

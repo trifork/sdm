@@ -55,7 +55,6 @@ public class SorParserTest
 
 	public File getFile(String path)
 	{
-
 		return FileUtils.toFile(getClass().getClassLoader().getResource(path));
 	}
 
@@ -72,7 +71,7 @@ public class SorParserTest
 	@Test
 	public void testSinglePraksis() throws Exception
 	{
-		SORDataSets dataSets = SORParser.parse(onePraksis);
+		SORDataSets dataSets = SORImporter.parse(onePraksis);
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -112,8 +111,7 @@ public class SorParserTest
 	@Test
 	public void testSingleSygehus() throws Exception
 	{
-
-		SORDataSets dataSets = SORParser.parse(oneSygehus);
+		SORDataSets dataSets = SORImporter.parse(oneSygehus);
 
 		Collection<Sygehus> sygehus = dataSets.getSygehusDS().getEntities();
 		Collection<SygehusAfdeling> afdeling = dataSets.getSygehusAfdelingDS().getEntities();
@@ -190,8 +188,7 @@ public class SorParserTest
 	@Test
 	public void testSingleApotek() throws Exception
 	{
-
-		SORDataSets dataSets = SORParser.parse(oneApotek);
+		SORDataSets dataSets = SORImporter.parse(oneApotek);
 
 		Collection<Apotek> apotek = dataSets.getApotekDS().getEntities();
 
@@ -217,8 +214,7 @@ public class SorParserTest
 	@Test
 	public void testFullTest() throws Exception
 	{
-
-		SORDataSets dataSets = SORParser.parse(fullSor);
+		SORDataSets dataSets = SORImporter.parse(fullSor);
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -232,7 +228,7 @@ public class SorParserTest
 		assertEquals(2890, sygehusAfdeling.size());
 		assertEquals(328, apotek.size());
 
-		dataSets = SORParser.parse(fullSor2);
+		dataSets = SORImporter.parse(fullSor2);
 
 		praksis = dataSets.getPraksisDS().getEntities();
 		yder = dataSets.getYderDS().getEntities();
@@ -245,6 +241,5 @@ public class SorParserTest
 		assertEquals(475, sygehus.size());
 		assertEquals(2922, sygehusAfdeling.size());
 		assertEquals(329, apotek.size());
-
 	}
 }

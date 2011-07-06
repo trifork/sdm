@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -33,16 +34,17 @@ public class Beregningsregler extends TakstEntity
 	private String kode; // Ref. t. LMS02, felt 21
 	private String tekst;
 
+	@Override
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
+
 	@Id
 	@Output
 	public String getKode()
 	{
 		return this.kode;
-	}
-
-	public void setKode(String kode)
-	{
-		this.kode = kode;
 	}
 
 	@Output
@@ -51,14 +53,14 @@ public class Beregningsregler extends TakstEntity
 		return this.tekst;
 	}
 
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
+
 	public void setTekst(String tekst)
 	{
 		this.tekst = tekst;
-	}
-
-	public String getKey()
-	{
-		return "" + this.kode;
 	}
 
 }

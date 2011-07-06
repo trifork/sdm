@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.parsers.takst.model;
+package com.trifork.stamdata.importer.parsers.takst;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,6 +57,11 @@ public class Takst extends TakstEntity
 		this.validTo = validTo;
 	}
 
+	public void addDataset(TakstDataset<?> dataset)
+	{
+		datasets.add(dataset);
+	}
+
 	/**
 	 * @param clazz the Class that the returned entities should have
 	 * @return All entities of the given type in this takst.
@@ -67,29 +72,13 @@ public class Takst extends TakstEntity
 		{
 			if (clazz.equals(dataset.getType())) return (TakstDataset<A>) dataset;
 		}
+		
 		return null;
 	}
 
 	public List<CompleteDataset<? extends StamdataEntity>> getDatasets()
 	{
 		return datasets;
-	}
-
-	public List<StamdataEntity> getEntities()
-	{
-		List<StamdataEntity> result = new ArrayList<StamdataEntity>();
-
-		for (Dataset dataset : datasets)
-		{
-			result.addAll(dataset.getEntities());
-		}
-
-		return result;
-	}
-
-	public void addDataset(TakstDataset dataset)
-	{
-		datasets.add(dataset);
 	}
 
 	/**
@@ -111,30 +100,29 @@ public class Takst extends TakstEntity
 	@Output(name = "TakstUge")
 	public String getStableWeek()
 	{
-
 		return "" + validityYear + validityWeekNumber;
 	}
 
-	public void setValidityYear(int validityYear)
-	{
-
-		this.validityYear = validityYear;
-	}
-
-	public void setValidityWeekNumber(int validityWeekNumber)
-	{
-
-		this.validityWeekNumber = validityWeekNumber;
-	}
-
 	@Id
+	@Override
 	public Date getValidFrom()
 	{
 		return validFrom;
 	}
 
+	@Override
 	public Date getValidTo()
 	{
 		return validTo;
+	}
+
+	public void setValidityWeekNumber(int validityWeekNumber)
+	{
+		this.validityWeekNumber = validityWeekNumber;
+	}
+
+	public void setValidityYear(int validityYear)
+	{
+		this.validityYear = validityYear;
 	}
 }

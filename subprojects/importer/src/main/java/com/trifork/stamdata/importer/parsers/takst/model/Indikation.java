@@ -28,6 +28,8 @@ import java.util.List;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstDataset;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output(name = "Indikation")
@@ -41,6 +43,12 @@ public class Indikation extends TakstEntity
 	private String indikationstekstLinie3;
 	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
 									// anvendes)
+
+	@Output(name = "aktiv")
+	public Boolean getAktivInaktiv()
+	{
+		return "A".equalsIgnoreCase(this.aktivInaktiv);
+	}
 
 	public List<ATCKoderOgTekst> getATC()
 	{
@@ -60,31 +68,10 @@ public class Indikation extends TakstEntity
 		return this.indikationskode;
 	}
 
-	public void setIndikationskode(Long indikationskode)
-	{
-		this.indikationskode = indikationskode;
-	}
-
-	@Output(name = "IndikationTekst")
-	public String getIndikationstekstTotal()
-	{
-		return this.indikationstekstTotal;
-	}
-
-	public void setIndikationstekstTotal(String indikationstekstTotal)
-	{
-		this.indikationstekstTotal = indikationstekstTotal;
-	}
-
 	@Output
 	public String getIndikationstekstLinie1()
 	{
 		return this.indikationstekstLinie1;
-	}
-
-	public void setIndikationstekstLinie1(String indikationstekstLinie1)
-	{
-		this.indikationstekstLinie1 = indikationstekstLinie1;
 	}
 
 	@Output
@@ -93,26 +80,22 @@ public class Indikation extends TakstEntity
 		return this.indikationstekstLinie2;
 	}
 
-	public void setIndikationstekstLinie2(String indikationstekstLinie2)
-	{
-		this.indikationstekstLinie2 = indikationstekstLinie2;
-	}
-
 	@Output
 	public String getIndikationstekstLinie3()
 	{
 		return this.indikationstekstLinie3;
 	}
 
-	public void setIndikationstekstLinie3(String indikationstekstLinie3)
+	@Output(name = "IndikationTekst")
+	public String getIndikationstekstTotal()
 	{
-		this.indikationstekstLinie3 = indikationstekstLinie3;
+		return this.indikationstekstTotal;
 	}
 
-	@Output(name = "aktiv")
-	public Boolean getAktivInaktiv()
+	@Override
+	public Long getKey()
 	{
-		return "A".equalsIgnoreCase(this.aktivInaktiv);
+		return this.indikationskode;
 	}
 
 	public void setAktivInaktiv(String aktivInaktiv)
@@ -120,9 +103,29 @@ public class Indikation extends TakstEntity
 		this.aktivInaktiv = aktivInaktiv;
 	}
 
-	public Long getKey()
+	public void setIndikationskode(Long indikationskode)
 	{
-		return this.indikationskode;
+		this.indikationskode = indikationskode;
+	}
+
+	public void setIndikationstekstLinie1(String indikationstekstLinie1)
+	{
+		this.indikationstekstLinie1 = indikationstekstLinie1;
+	}
+
+	public void setIndikationstekstLinie2(String indikationstekstLinie2)
+	{
+		this.indikationstekstLinie2 = indikationstekstLinie2;
+	}
+
+	public void setIndikationstekstLinie3(String indikationstekstLinie3)
+	{
+		this.indikationstekstLinie3 = indikationstekstLinie3;
+	}
+
+	public void setIndikationstekstTotal(String indikationstekstTotal)
+	{
+		this.indikationstekstTotal = indikationstekstTotal;
 	}
 
 }

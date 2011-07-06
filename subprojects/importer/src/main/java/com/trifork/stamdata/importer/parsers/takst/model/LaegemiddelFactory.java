@@ -23,147 +23,18 @@
 
 package com.trifork.stamdata.importer.parsers.takst.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
+import com.trifork.stamdata.importer.parsers.takst.FixedLengthParserConfiguration;
 
-
-public class LaegemiddelFactory extends AbstractFactory
+public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegemiddel>
 {
-
-	private static void setFieldValue(Laegemiddel obj, int fieldNo, String value)
+	@Override
+	public String getFilename()
 	{
-		if ("".equals(value)) value = null;
-		switch (fieldNo)
-		{
-		case 0:
-			obj.setDrugid(toLong(value));
-			break;
-		case 1:
-			obj.setVaretype(value);
-			break;
-		case 2:
-			obj.setVaredeltype(value);
-			break;
-		case 3:
-			obj.setAlfabetSekvensplads(value);
-			break;
-		case 4:
-			obj.setSpecNummer(toLong(value));
-			break;
-		case 5:
-			obj.setNavn(value);
-			break;
-		case 6:
-			obj.setLaegemiddelformTekst(value);
-			break;
-		case 7:
-			obj.setFormKode(value);
-			break;
-		case 8:
-			obj.setKodeForYderligereFormOplysn(value);
-			break;
-		case 9:
-			obj.setStyrkeKlarTekst(value);
-			break;
-		case 10:
-			obj.setStyrkeNumerisk(toLong(value));
-			break;
-		case 11:
-			obj.setStyrkeEnhed(value);
-			break;
-		case 12:
-			obj.setMTIndehaver(toLong(value));
-			break;
-		case 13:
-			obj.setRepraesentantDistributoer(toLong(value));
-			break;
-		case 14:
-			obj.setATC(value);
-			break;
-		case 15:
-			obj.setAdministrationsvej(value);
-			break;
-		case 16:
-			obj.setTrafikadvarsel(value);
-			break;
-		case 17:
-			obj.setSubstitution(value);
-			break;
-		case 21:
-			obj.setLaegemidletsSubstitutionsgruppe(value);
-			break;
-		case 22:
-			obj.setEgnetTilDosisdispensering(value);
-			break;
-		case 23:
-			obj.setDatoForAfregistrAfLaegemiddel(value);
-			break;
-		case 24:
-			obj.setKarantaenedato(value);
-			break;
-		default:
-			break;
-		}
+		return "LMS01";
 	}
 
-	private static int getOffset(int fieldNo)
-	{
-		switch (fieldNo)
-		{
-		case 0:
-			return 0;
-		case 1:
-			return 11;
-		case 2:
-			return 13;
-		case 3:
-			return 15;
-		case 4:
-			return 24;
-		case 5:
-			return 29;
-		case 6:
-			return 59;
-		case 7:
-			return 79;
-		case 8:
-			return 86;
-		case 9:
-			return 93;
-		case 10:
-			return 113;
-		case 11:
-			return 123;
-		case 12:
-			return 126;
-		case 13:
-			return 132;
-		case 14:
-			return 138;
-		case 15:
-			return 146;
-		case 16:
-			return 154;
-		case 17:
-			return 155;
-		case 21:
-			return 159;
-		case 22:
-			return 163;
-		case 23:
-			return 164;
-		case 24:
-			return 172;
-		default:
-			return -1;
-		}
-	}
-
-	private static int getLength(int fieldNo)
+	@Override
+	public int getLength(int fieldNo)
 	{
 		switch (fieldNo)
 		{
@@ -216,65 +87,137 @@ public class LaegemiddelFactory extends AbstractFactory
 		}
 	}
 
-	private static int getNumberOfFields()
+	@Override
+	public int getNumberOfFields()
 	{
 		return 25;
 	}
 
-	public static String getLmsName()
+	@Override
+	public int getOffset(int fieldNo)
 	{
-		return "LMS01";
+		switch (fieldNo)
+		{
+		case 0:
+			return 0;
+		case 1:
+			return 11;
+		case 2:
+			return 13;
+		case 3:
+			return 15;
+		case 4:
+			return 24;
+		case 5:
+			return 29;
+		case 6:
+			return 59;
+		case 7:
+			return 79;
+		case 8:
+			return 86;
+		case 9:
+			return 93;
+		case 10:
+			return 113;
+		case 11:
+			return 123;
+		case 12:
+			return 126;
+		case 13:
+			return 132;
+		case 14:
+			return 138;
+		case 15:
+			return 146;
+		case 16:
+			return 154;
+		case 17:
+			return 155;
+		case 21:
+			return 159;
+		case 22:
+			return 163;
+		case 23:
+			return 164;
+		case 24:
+			return 172;
+		default:
+			return -1;
+		}
 	}
 
-	public static ArrayList<Laegemiddel> read(String rootFolder) throws IOException
+	@Override
+	public void setFieldValue(Laegemiddel obj, int fieldNo, String value)
 	{
-
-		File f = new File(rootFolder + getLmsName().toLowerCase() + ".txt");
-
-		ArrayList<Laegemiddel> list = new ArrayList<Laegemiddel>();
-		BufferedReader reader = null;
-		try
+		switch (fieldNo)
 		{
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "CP865"));
-			while (reader.ready())
-			{
-				String line = reader.readLine();
-				if (line.trim().length() > 0)
-				{
-					list.add(parse(line));
-				}
-			}
-			return list;
+		case 0:
+			obj.setDrugid(Long.parseLong(value));
+			break;
+		case 1:
+			obj.setVaretype(value);
+			break;
+		case 2:
+			obj.setVaredeltype(value);
+			break;
+		case 3:
+			obj.setAlfabetSekvensplads(value);
+			break;
+		case 4:
+			obj.setSpecNummer(Long.parseLong(value));
+			break;
+		case 5:
+			obj.setNavn(value);
+			break;
+		case 6:
+			obj.setLaegemiddelformTekst(value);
+			break;
+		case 7:
+			obj.setFormKode(value);
+			break;
+		case 8:
+			obj.setKodeForYderligereFormOplysn(value);
+			break;
+		case 9:
+			obj.setStyrkeKlarTekst(value);
+			break;
+		case 10:
+			obj.setStyrkeNumerisk(Long.parseLong(value));
+			break;
+		case 11:
+			obj.setStyrkeEnhed(value);
+			break;
+		case 12:
+			obj.setMTIndehaver(Long.parseLong(value));
+			break;
+		case 13:
+			obj.setRepraesentantDistributoer(Long.parseLong(value));
+			break;
+		case 14:
+			obj.setATC(value);
+			break;
+		case 15:
+			obj.setAdministrationsvej(value);
+			break;
+		case 16:
+			obj.setTrafikadvarsel(value);
+			break;
+		case 17:
+			obj.setSubstitution(value);
+			break;
+		case 21:
+			obj.setLaegemidletsSubstitutionsgruppe(value);
+			break;
+		case 22:
+			obj.setEgnetTilDosisdispensering(value);
+			break;
+		case 23:
+			obj.setDatoForAfregistrAfLaegemiddel(value);
+			break;
+		case 24:
+			obj.setKarantaenedato(value);
+			break;
 		}
-		finally
-		{
-			try
-			{
-				if (reader != null)
-				{
-					reader.close();
-				}
-			}
-			catch (Exception e)
-			{
-				logger.warn("Could not close FileReader");
-			}
-		}
-	}
-
-	public static Laegemiddel parse(String line)
-	{
-		Laegemiddel obj = new Laegemiddel();
-		for (int fieldNo = 0; fieldNo < getNumberOfFields(); fieldNo++)
-		{
-			if (getLength(fieldNo) > 0)
-			{
-				// System.out.print("Getting field "+fieldNo+" from"+getOffset(fieldNo)+" to "+(getOffset(fieldNo)+getLength(fieldNo)));
-				String value = line.substring(getOffset(fieldNo), getOffset(fieldNo) + getLength(fieldNo)).trim();
-				// System.out.println(": "+value);
-				setFieldValue(obj, fieldNo, value);
-			}
-		}
-		return obj;
 	}
 }

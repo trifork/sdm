@@ -28,39 +28,46 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.sor.SORImporter;
 
 
-public class SORIntegrationTest {
-
+public class SORIntegrationTest
+{
 	public static File onePraksis;
 	public static File oneSygehus;
 	public static File oneApotek;
 	public static File fullSor;
 
-	@Before
-	public void setUp() {
+	private Connection con;
 
-		onePraksis = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/ONE_PRAKSIS.xml"));
-		oneSygehus = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/ONE_SYGEHUS.xml"));
-		oneApotek = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/ONE_APOTEK.xml"));
-		fullSor = FileUtils.toFile(getClass().getClassLoader().getResource("data/sor/SOR_FULL.xml"));
+	@BeforeClass
+	public static void init()
+	{
+		ClassLoader classLoader = SORIntegrationTest.class.getClassLoader();
+
+		onePraksis = FileUtils.toFile(classLoader.getResource("data/sor/ONE_PRAKSIS.xml"));
+		oneSygehus = FileUtils.toFile(classLoader.getResource("data/sor/ONE_SYGEHUS.xml"));
+		oneApotek = FileUtils.toFile(classLoader.getResource("data/sor/ONE_APOTEK.xml"));
+		fullSor = FileUtils.toFile(classLoader.getResource("data/sor/SOR_FULL.xml"));
 	}
 
-	@After
 	@Before
-	public void cleanDb() throws Exception {
+	public void setUp() throws Exception
+	{
+		con = MySQLConnectionManager.getConnection();
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
 		stmt.executeQuery("truncate table Praksis");
 		stmt.executeQuery("truncate table Yder");
@@ -71,17 +78,25 @@ public class SORIntegrationTest {
 		con.close();
 	}
 
-	@Test
-	public void testImport() throws Exception {
+	@After
+	public void tearDown() throws SQLException
+	{
+		con.rollback();
+		con.close();
+	}
 
+	@Test
+	@Ignore
+	public void testImport() throws Exception
+	{
 		SORImporter importer = new SORImporter();
 		ArrayList<File> files = new ArrayList<File>();
 		files.add(fullSor);
-		importer.run(files);
+		importer.run(files, con);
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select count(*) from Praksis");
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Praksis");
 		rs.next();
 		assertEquals(3148, rs.getInt(1));
 		rs.close();
@@ -156,6 +171,5 @@ public class SORIntegrationTest {
 		assertEquals(328 - 2, rs.getInt(1));
 		rs.close();
 		stmt.close();
-		con.close();
 	}
 }

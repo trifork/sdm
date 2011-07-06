@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 
 import com.trifork.stamdata.importer.model.Id;
 import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
 
 
 @Output
@@ -36,27 +37,17 @@ public class Udleveringsbestemmelser extends TakstEntity
 	private String kortTekst;
 	private String tekst;
 
+	@Override
+	public String getKey()
+	{
+		return "" + this.kode;
+	}
+
 	@Id
 	@Output
 	public String getKode()
 	{
 		return this.kode;
-	}
-
-	public void setKode(String kode)
-	{
-		this.kode = kode;
-	}
-
-	@Output
-	public String getUdleveringsgruppe()
-	{
-		return this.udleveringsgruppe;
-	}
-
-	public void setUdleveringsgruppe(String udleveringsgruppe)
-	{
-		this.udleveringsgruppe = udleveringsgruppe;
 	}
 
 	@Output
@@ -65,15 +56,26 @@ public class Udleveringsbestemmelser extends TakstEntity
 		return this.kortTekst;
 	}
 
-	public void setKortTekst(String kortTekst)
-	{
-		this.kortTekst = kortTekst;
-	}
-
 	@Output
 	public String getTekst()
 	{
 		return this.tekst;
+	}
+
+	@Output
+	public String getUdleveringsgruppe()
+	{
+		return this.udleveringsgruppe;
+	}
+
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
+
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
 	}
 
 	public void setTekst(String tekst)
@@ -81,8 +83,8 @@ public class Udleveringsbestemmelser extends TakstEntity
 		this.tekst = tekst;
 	}
 
-	public String getKey()
+	public void setUdleveringsgruppe(String udleveringsgruppe)
 	{
-		return "" + this.kode;
+		this.udleveringsgruppe = udleveringsgruppe;
 	}
 }
