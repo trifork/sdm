@@ -33,12 +33,12 @@ import java.util.Date;
 
 import org.joda.time.DateTime;
 
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
-public class AutorisationImporter implements FileImporter
+public class AutorisationImporter implements FileParser
 {
 	@Override
 	public boolean ensureRequiredFileArePresent(File[] input)

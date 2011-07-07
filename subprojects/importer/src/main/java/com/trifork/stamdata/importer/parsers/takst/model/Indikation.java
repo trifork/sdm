@@ -26,10 +26,10 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.parsers.takst.TakstDataset;
 import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
 
 
 @Output(name = "Indikation")

@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.model;
+package com.trifork.stamdata.importer.persistence;
 
 import java.util.Date;
 import java.util.List;

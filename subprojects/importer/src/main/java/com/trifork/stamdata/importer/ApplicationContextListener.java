@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.importer;
 
+import java.io.File;
 import java.util.List;
 
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -35,9 +36,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.importer.parsers.FileParser;
+import com.trifork.stamdata.importer.parsers.FileParserJob;
 import com.trifork.stamdata.importer.parsers.Job;
 import com.trifork.stamdata.importer.parsers.JobManager;
 import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
@@ -52,30 +54,36 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	protected Injector getInjector()
 	{
 		final CompositeConfiguration config = loadConfiguration();
-		
+
 		// Parse the properties from the configuration files.
 
-		final String rootDir = config.getString("rootDir");
+		final File rootDir = new File(config.getString("rootDir").replace('/', File.separatorChar));
 
 		final List<Job> jobs = Lists.newArrayList();
 
-		for (String jobConfiguration : config.getStringArray("job"))
+		for (String jobConfiguration : config.getStringArray("parser"))
 		{
 			String[] values = jobConfiguration.split(";");
 
-			String className = values[0].trim();
-			String schedule = values.length == 2 ? values[1].trim() : "* * * * *";
+			if (values.length != 2)
+			{
+				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
+			}
 			
+			String className = values[0].trim();
+
 			try
 			{
-				Class<? extends Job> type = Class.forName(className).asSubclass(Job.class);
-				Job job = type.newInstance();
-				job.setSchedule(schedule);
-				jobs.add(job);
+				Class<? extends FileParser> type = Class.forName(className).asSubclass(FileParser.class);
+				FileParser parser = type.newInstance();
+				
+				// Wrap the parser in a file parser job.
+				
+				jobs.add(new FileParserJob(rootDir, parser));
 			}
 			catch (Exception e)
 			{
-				throw new RuntimeException("An error occurred while loading job. " + className, e);
+				throw new RuntimeException("An error occurred while loading job.", e);
 			}
 		}
 
@@ -88,8 +96,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			{
 				// Bind the configured jobs.
 
-				bind(new TypeLiteral<List<Job>>()
-				{}).toInstance(jobs);
+				bind(new TypeLiteral<List<Job>>() {}).toInstance(jobs);
 
 				// Serve the status servlet.
 
@@ -98,8 +105,6 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				bind(ProjectInfo.class).in(Scopes.SINGLETON);
 				bind(JobManager.class).in(Scopes.SINGLETON);
 				bind(DatabaseStatus.class).in(Scopes.SINGLETON);
-
-				bindConstant().annotatedWith(Names.named("RootDir")).to(rootDir);
 			}
 		});
 	}

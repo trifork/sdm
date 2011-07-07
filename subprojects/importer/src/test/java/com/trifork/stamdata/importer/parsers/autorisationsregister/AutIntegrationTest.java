@@ -41,10 +41,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.parsers.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
+import com.trifork.stamdata.importer.persistence.Dataset;
 
 
 public class AutIntegrationTest

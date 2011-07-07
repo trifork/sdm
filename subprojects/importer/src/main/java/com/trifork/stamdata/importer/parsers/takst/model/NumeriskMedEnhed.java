@@ -23,10 +23,10 @@
 
 package com.trifork.stamdata.importer.parsers.takst.model;
 
-import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.parsers.takst.Takst;
 import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
+import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity

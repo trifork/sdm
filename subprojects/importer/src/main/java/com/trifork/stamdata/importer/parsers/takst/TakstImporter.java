@@ -39,11 +39,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
-public class TakstImporter implements FileImporter
+public class TakstImporter implements FileParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(TakstImporter.class);
 	

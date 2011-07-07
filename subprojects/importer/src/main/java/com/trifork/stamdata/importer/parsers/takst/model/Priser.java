@@ -26,10 +26,10 @@ package com.trifork.stamdata.importer.parsers.takst.model;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
 import com.trifork.stamdata.importer.parsers.takst.Takst;
 import com.trifork.stamdata.importer.parsers.takst.TakstEntity;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
 
 
 @Output

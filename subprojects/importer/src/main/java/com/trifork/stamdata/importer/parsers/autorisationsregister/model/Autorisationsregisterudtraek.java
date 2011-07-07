@@ -25,7 +25,7 @@ package com.trifork.stamdata.importer.parsers.autorisationsregister.model;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 

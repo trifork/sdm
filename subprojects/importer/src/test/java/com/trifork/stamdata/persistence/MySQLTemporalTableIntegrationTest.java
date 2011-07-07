@@ -33,10 +33,10 @@ import java.util.Date;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest

@@ -43,16 +43,16 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.model.CompleteDataset;
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.DosageSuggestionImporter;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageStructure;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageUnit;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageVersion;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 /**

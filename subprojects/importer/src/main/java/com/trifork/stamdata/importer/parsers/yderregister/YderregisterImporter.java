@@ -31,13 +31,13 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 import com.trifork.stamdata.importer.parsers.yderregister.model.YderregisterDatasets;
 
 
-public class YderregisterImporter implements FileImporter
+public class YderregisterImporter implements FileParser
 {
 	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025", "K5094" };
 
@@ -150,6 +150,6 @@ public class YderregisterImporter implements FileImporter
 	
 	public String getIdentifier()
 	{
-		return "Yderregister";
+		return "yderregister";
 	}
 }

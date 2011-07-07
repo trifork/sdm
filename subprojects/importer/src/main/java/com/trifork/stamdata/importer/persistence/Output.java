@@ -21,16 +21,25 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.model;
+package com.trifork.stamdata.importer.persistence;
 
-import java.util.Date;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 
-public interface StamdataEntity
+/**
+ * This annotation shows that during streaming, this method should be called and
+ * the return value streamed. Intended to mark which getters should be called.
+ *
+ * @author Rune Skou Larsen <rsl@trifork.com>
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Output
 {
-	public Object getKey();
 
-	public Date getValidFrom();
-
-	public Date getValidTo();
+	/**
+	 * The name that þe annotated class or method should be called in the
+	 * output.
+	 */
+	public String name() default "";
 }

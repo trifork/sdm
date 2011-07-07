@@ -34,6 +34,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.trifork.stamdata.importer.ProjectInfo;
@@ -45,12 +48,13 @@ import com.trifork.stamdata.importer.parsers.JobManager;
  * Status servlet for the importer, shows information about the running
  * processes.
  * 
- * @author Jan Buchholdt (jbu@trifork.com)
- * @author Thomas Børlum (thb@trifork.com)
+ * @author Jan Buchholdt <jbu@trifork.com>
+ * @author Thomas Børlum <thb@trifork.com>
  */
 @Singleton
 public class ImporterServlet extends HttpServlet
 {
+	private static final Logger logger = LoggerFactory.getLogger(ImporterServlet.class);
 	private static final long serialVersionUID = 2264195929113132612L;
 
 	private final JobManager jobManager;
@@ -81,7 +85,14 @@ public class ImporterServlet extends HttpServlet
 	@Override
 	public void destroy()
 	{
-		jobManager.stop();
+		try
+		{
+			jobManager.stop();
+		}
+		catch (Exception e)
+		{
+			logger.error("Could not stop the job scheduler.", e);
+		}
 	}
 
 	@Override

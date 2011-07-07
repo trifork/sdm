@@ -35,7 +35,10 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,12 +70,14 @@ public class CPRParser
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
 
+	static boolean haltOnDateErrors = true;
+
 	public static CPRDataset parse(File f) throws FileParseException
 	{
+
 		try
 		{
 			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "ISO-8859-1"));
-
 			try
 			{
 				return parseFileContents(reader);
@@ -96,14 +101,12 @@ public class CPRParser
 	{
 		boolean endRecordReached = false;
 		CPRDataset cpr = new CPRDataset();
-
 		while (reader.ready())
 		{
 			String line = reader.readLine();
 			if (line.length() > 0)
 			{
 				int recordType = getRecordType(line);
-
 				if (recordType == END_RECORD)
 				{
 					endRecordReached = true;
@@ -122,7 +125,6 @@ public class CPRParser
 		{
 			throw new FileParseException("Slut-record mangler i cpr-filen");
 		}
-
 		return cpr;
 	}
 
@@ -133,10 +135,7 @@ public class CPRParser
 		case 0:
 			cpr.setValidFrom(getValidFrom(line));
 			Date forrigeIKraftdato = getForrigeIkraftDato(line);
-			if (forrigeIKraftdato != null)
-			{
-				cpr.setPreviousFileValidFrom(forrigeIKraftdato);
-			}
+			if (forrigeIKraftdato != null) cpr.setPreviousFileValidFrom(forrigeIKraftdato);
 			break;
 		case 1:
 			cpr.addEntity(personoplysninger(line));
@@ -148,7 +147,6 @@ public class CPRParser
 			String beskyttelseskode = cut(line, 13, 17);
 			if (beskyttelseskode.equals("0001"))
 			{
-				// Vi er kun interesseret i navnebeskyttelse
 				cpr.addEntity(navneBeskyttelse(line));
 			}
 			break;
@@ -176,14 +174,8 @@ public class CPRParser
 		case 15:
 			MorOgFaroplysninger moroplysninger = moroplysninger(line);
 			MorOgFaroplysninger faroplysninger = faroplysninger(line);
-			if (!moroplysninger.hasCpr())
-			{
-				cpr.addEntity(moroplysninger);
-			}
-			if (!faroplysninger.hasCpr())
-			{
-				cpr.addEntity(faroplysninger);
-			}
+			cpr.addEntity(moroplysninger);
+			cpr.addEntity(faroplysninger);
 			break;
 		case 16:
 			cpr.addEntity(foraeldreMyndighedRelation(line));
@@ -206,7 +198,6 @@ public class CPRParser
 	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws ParseException, FileParseException
 	{
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
-
 		u.setCpr(cut(line, 3, 13));
 		u.setUmyndigStartDato(parseDate(yyyy_MM_dd, line, 13, 23));
 		u.setUmyndigStartDatoMarkering(cut(line, 23, 24));
@@ -221,7 +212,6 @@ public class CPRParser
 		u.setRelationsTekst3(cut(line, 170, 204).trim());
 		u.setRelationsTekst4(cut(line, 204, 238).trim());
 		u.setRelationsTekst5(cut(line, 238, 272).trim());
-
 		return u;
 	}
 
@@ -278,7 +268,7 @@ public class CPRParser
 		k.setAdresseringsNavn(cut(line, 13, 47).trim());
 		k.setCoNavn(cut(line, 47, 81).trim());
 		k.setLokalitet(cut(line, 81, 115).trim());
-		k.setVejnavnTilAdresseringsNavn(cut(line, 115, 149).trim());
+		k.setVejnavnTilAdresseringsNavn(cut(line, 115, 149).trim()); // FIXME: Is this the correct field?
 		k.setByNavn(cut(line, 149, 183).trim());
 		k.setPostNummer(parseLong(line, 183, 187));
 		k.setPostDistrikt(cut(line, 187, 207).trim());
@@ -487,27 +477,22 @@ public class CPRParser
 
 	private static Date parseCalendar(DateFormat format, String line, int from, int to) throws ParseException, FileParseException
 	{
-		Date date = parseDate(format, line, from, to);
-
-		return date;
+		return parseDate(format, line, from, to);
 	}
 
 	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, FileParseException
 	{
 		String dateString = cut(line, from, to);
-
 		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING))
 		{
 			return parseDateAndCheckValidity(dateString, format, line);
 		}
-
 		return null;
 	}
 
 	private static Date getValidFrom(String line) throws FileParseException
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
 		try
 		{
 			return sdf.parse(cut(line, 19, 27));
@@ -521,7 +506,6 @@ public class CPRParser
 	private static Date getForrigeIkraftDato(String line) throws FileParseException
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
 		if (line.length() >= 25)
 		{
 			try
@@ -542,7 +526,6 @@ public class CPRParser
 		{
 			return null;
 		}
-
 		for (int index = 0; index < str.length(); index++)
 		{
 			if (str.charAt(index) != '0')
@@ -550,20 +533,110 @@ public class CPRParser
 				return str.substring(index);
 			}
 		}
-
 		return "";
 	}
 
-	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException
+	private static Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
+	private static Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
+
+	static String fixWeirdDate(String date)
 	{
+		Matcher dateMatcher = datePattern.matcher(date);
+		String fixedDate;
+		
+		if (dateMatcher.matches())
+		{
+			fixedDate = fixDate(dateMatcher);
+		}
+		else
+		{
+			Matcher timeMatcher = timestampPattern.matcher(date);
+			if (timeMatcher.matches())
+			{
+				fixedDate = fixTime(timeMatcher);
+			}
+			else
+			{
+				logger.error("Unexpected date format={}", date);
+				return date;
+			}
+		}
+		
+		if (logger.isDebugEnabled() && !fixedDate.equals(date))
+		{
+			logger.debug("Fixing CPR date from={} to={}", date, fixedDate);
+		}
+		
+		return fixedDate;
+	}
+
+	private static String fixTime(Matcher timeMatcher)
+	{
+		int year, month, day, hours, minutes;
+		year = Integer.parseInt(timeMatcher.group(1));
+		month = Integer.parseInt(timeMatcher.group(2));
+		day = Integer.parseInt(timeMatcher.group(3));
+		hours = Integer.parseInt(timeMatcher.group(4));
+		minutes = Integer.parseInt(timeMatcher.group(5));
+		if (month == 0)
+		{
+			month = 1;
+		}
+		if (day == 0)
+		{
+			day = 1;
+		}
+		if (hours >= 24)
+		{
+			hours = 0;
+		}
+		if (minutes >= 60)
+		{
+			minutes = 0;
+		}
+		StringBuilder result = new StringBuilder();
+		Formatter formatter = new Formatter(result);
+		formatter.format("%04d%02d%02d%02d%02d", year, month, day, hours, minutes);
+		return result.toString();
+	}
+
+	private static String fixDate(Matcher dateMatcher)
+	{
+		int year, month, day;
+		year = Integer.parseInt(dateMatcher.group(1));
+		month = Integer.parseInt(dateMatcher.group(2));
+		day = Integer.parseInt(dateMatcher.group(3));
+		if (month == 0)
+		{
+			month = 1;
+		}
+		if (day == 0)
+		{
+			day = 1;
+		}
+		StringBuilder result = new StringBuilder();
+		Formatter formatter = new Formatter(result);
+		formatter.format("%04d-%02d-%02d", year, month, day);
+		return result.toString();
+	}
+
+	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, FileParseException
+	{
+		dateString = fixWeirdDate(dateString);
 		Date date = format.parse(dateString);
 		String formattedDate = format.format(date);
-
+		
 		if (!formattedDate.equals(dateString))
 		{
-			logger.error("Ugyldig dato: " + dateString + " fra linjen [" + line + "]");
+			String errorMessage = "Ugyldig dato: " + dateString + " fra linjen [" + line + "]";
+			logger.error(errorMessage);
+			
+			if (haltOnDateErrors)
+			{
+				throw new FileParseException(errorMessage);
+			}
 		}
-
+		
 		return date;
 	}
 }

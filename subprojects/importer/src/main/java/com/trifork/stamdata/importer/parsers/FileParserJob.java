@@ -26,10 +26,10 @@ package com.trifork.stamdata.importer.parsers;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,26 +46,26 @@ import com.trifork.stamdata.importer.util.DateUtils;
  * @author Jan Buchholdt <jbu@trifork.com>
  * @author Thomas Børlum <thb@trifork.com>
  */
-public class FileParserJob extends Job
+public class FileParserJob implements Job
 {
 	private static final Logger logger = LoggerFactory.getLogger(FileParserJob.class);
 
-	private Date stabilizationPeriodEnd;
+	private DateTime stabilizationPeriodEnd;
 	private long inputDirSignature;
 
 	private Date lastRun;
 
-	private final FileImporter importer;
+	private final FileParser importer;
 	private final File rootDir;
+	
+	private JobStatus state = JobStatus.OK;
+	private JobActivity activity = JobActivity.AWAITING;
 
-	public FileParserJob(String schedule, File rootDir, FileImporter importer)
+	public FileParserJob(File rootDir, FileParser importer)
 	{
 		this.rootDir = rootDir;
 		this.importer = importer;
 		this.lastRun = ImportTimeManager.getLastImportTime(importer.getIdentifier());
-
-		setStatus(JobStatus.OK);
-		setActivity(JobActivity.AWAITING);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class FileParserJob extends Job
 
 		if (!isRejectedDirEmpty())
 		{
-			setStatus(JobStatus.ERROR);
+			state = JobStatus.ERROR;
 			return;
 		}
 
@@ -89,57 +89,53 @@ public class FileParserJob extends Job
 
 		if (getInputDir().list().length == 0) return;
 
-		// If there are files to import and
+		// If there are files to import wait a while and make sure the
+		// files are stable.
 
-		if (inputDirSignature != getDirSignature(getInputDir()))
+		if (inputDirSignature != getDirSignature())
 		{
+			logger.info("Files discovered in the input directory. Making sure the files have been completly transfered before parsing will begin. parser={}", importer.getIdentifier());
+			
 			startStabilizationPeriod();
+			return;
 		}
 
 		// Wait until the input files seem to be stable.
 
-		if (!Calendar.getInstance().after(stabilizationPeriodEnd))
-		{
-			logger.info("File importer stabilizing.");
-			return;
-		}
+		final DateTime now = new DateTime();
+		if (now.isAfter(stabilizationPeriodEnd)) return;
 
-		// Once stable check to see if they are all there.
+		// Once stable check to see if all the expected files are there.
 
 		File[] input = getInputDir().listFiles();
 
 		if (!importer.ensureRequiredFileArePresent(input))
 		{
+			logger.error("Not all expected files could be found. Moving the input to the rejected folder. parser={}", importer.getIdentifier());
+			
 			moveAllFilesToRejected();
-			setStatus(JobStatus.ERROR);
+			state = JobStatus.ERROR;
+			
 			return;
 		}
 
 		// If so parse and import them.
 
-		File fileSet;
+		moveInputToProcessing();
 
-		try
-		{
-			fileSet = moveToProcessingFileset(input);
-		}
-		catch (IOException e)
-		{
-			setStatus(JobStatus.ERROR);
-			return;
-		}
-
-		doImport(fileSet);
+		doImport();
 	}
 
+	private boolean isMundane(File file)
+	{
+		return file.getName().equals(".DS_Store");
+	}
+	
 	private boolean areMundane(File[] rejFiles)
 	{
 		for (File file : rejFiles)
 		{
-			if (!file.getName().equals(".DS_Store"))
-			{
-				return false;
-			}
+			if (!isMundane(file)) return false;
 		}
 
 		return true;
@@ -151,11 +147,11 @@ public class FileParserJob extends Job
 	 * @param inputDir
 	 * @return
 	 */
-	static long getDirSignature(File inputDir)
+	protected long getDirSignature()
 	{
 		long hash = 0;
 
-		for (File file : inputDir.listFiles())
+		for (File file : getInputDir().listFiles())
 		{
 			hash += file.getName().hashCode() * (file.lastModified() + file.length());
 		}
@@ -165,31 +161,42 @@ public class FileParserJob extends Job
 
 	private void startStabilizationPeriod()
 	{
-		setActivity(JobActivity.STABILIZING);
+		stabilizationPeriodEnd = new DateTime().plusSeconds(30);
 
-		Calendar end = Calendar.getInstance();
-		end.add(Calendar.SECOND, 30);
-		stabilizationPeriodEnd = end.getTime();
-
-		inputDirSignature = getDirSignature(getInputDir());
+		inputDirSignature = getDirSignature();
 	}
 
-	private File moveToProcessingFileset(File[] files) throws IOException
+	private boolean moveInputToProcessing()
 	{
-		File destination = new File(getProcessingDir(), DateUtils.toFilenameDatetime(new Date()));
-		destination.mkdirs();
-
-		for (File file : files)
+		boolean success;
+		
+		try
 		{
-			FileUtils.moveToDirectory(file, destination, true);
+			for (File file : getInputDir().listFiles())
+			{
+				// Skip any OS file and the like.
+				
+				if (isMundane(file)) continue;
+				
+				// Move each file.
+				
+				FileUtils.moveToDirectory(file, getProcessingDir(), true);
+			}
+			
+			success = true;
+		}
+		catch (IOException e)
+		{
+			logger.error("Could not move all input files to processing directory. parser={} message=\"{}\"", importer.getIdentifier(), e.getMessage());
+			success = false;
 		}
 
-		return destination;
+		return success;
 	}
 
-	private void doImport(File input)
+	private void doImport()
 	{
-		setActivity(JobActivity.IMPORTING);
+		activity = JobActivity.IMPORTING;
 
 		Connection connection = null;
 
@@ -197,31 +204,23 @@ public class FileParserJob extends Job
 		{
 			connection = MySQLConnectionManager.getConnection();
 
-			importer.importFiles(input.listFiles(), connection);
-
-			logger.info("Import completed. parser=", importer.getClass());
+			importer.importFiles(getProcessingDir().listFiles(), connection);
 
 			lastRun = new Date();
 
-			ImportTimeManager.setImportTime(getName(), lastRun);
+			ImportTimeManager.setImportTime(importer.getIdentifier(), lastRun);
 
-			if (!input.delete())
-			{
-				logger.error("Data was imported but couldn't delete fileset with files." + input.getAbsolutePath());
-				setStatus(JobStatus.ERROR);
-			}
-			else
-			{
-				connection.commit();
-				logger.info("Import completed. parser={}", importer);
-				setActivity(JobActivity.AWAITING);
-			}
+			connection.commit();
+				
+			logger.info("Import completed. parser={}", importer);
+			
+			FileUtils.deleteQuietly(getProcessingDir());
+			
+			activity = JobActivity.AWAITING;
 		}
 		catch (Exception e)
 		{
 			logger.error("Unhandled exception during import. Input files will be moved to the rejected folder.", e);
-
-			moveAllFilesToRejected();
 
 			try
 			{
@@ -232,7 +231,7 @@ public class FileParserJob extends Job
 				logger.error("Could not rollback the connection.", ex);
 			}
 
-			setStatus(JobStatus.ERROR);
+			moveAllFilesToRejected();
 		}
 		finally
 		{
@@ -254,10 +253,9 @@ public class FileParserJob extends Job
 				FileUtils.moveFileToDirectory(f, getRejectedDir(), true);
 			}
 		}
-		catch (Exception ex)
+		catch (Exception e)
 		{
-			logger.error("The files couldn't be moved to the rejected folder.", ex);
-			setStatus(JobStatus.ERROR);
+			logger.error("The files couldn't be moved to the rejected folder.", e);
 		}
 	}
 
@@ -265,22 +263,28 @@ public class FileParserJob extends Job
 	{
 		File[] filesInRejectedDir = getRejectedDir().listFiles();
 
-		return filesInRejectedDir != null && filesInRejectedDir.length > 0 && !areMundane(filesInRejectedDir);
+		return filesInRejectedDir.length == 0 || areMundane(filesInRejectedDir);
 	}
 
 	public File getInputDir()
 	{
-		return new File(rootDir, "input");
+		File file = new File(rootDir, getIdentifier() + "/input");
+		file.mkdirs();
+		return file;
 	}
 
 	public File getProcessingDir()
 	{
-		return new File(rootDir, "processing");
+		File file = new File(rootDir, getIdentifier() + "/processing");
+		file.mkdirs();
+		return file;
 	}
 
 	public File getRejectedDir()
 	{
-		return new File(rootDir, "rejected");
+		File file = new File(rootDir, getIdentifier() + "/rejected");
+		file.mkdirs();
+		return file;
 	}
 
 	public String getNextImportExpectedBeforeFormatted()
@@ -290,7 +294,7 @@ public class FileParserJob extends Job
 
 	public String getLastImportFormatted()
 	{
-		Date lastImport = ImportTimeManager.getLastImportTime(getName());
+		Date lastImport = ImportTimeManager.getLastImportTime(importer.getIdentifier());
 
 		if (lastImport == null)
 		{
@@ -310,5 +314,34 @@ public class FileParserJob extends Job
 	public boolean isOverdue()
 	{
 		return true; //getNextImportExpectedBefore(lastRun).before(new Date());
+	}
+	
+	@Override
+	public String getIdentifier()
+	{
+		return importer.getIdentifier();
+	}
+	
+	@Override
+	public JobStatus getState()
+	{
+		return isRejectedDirEmpty() ? JobStatus.ERROR : JobStatus.OK;
+	}
+	
+	@Override
+	public JobActivity getActivity()
+	{
+		return activity;
+	}
+	
+	/**
+	 * All file parser jobs continueously poll their input directory
+	 * for new data.
+	 * @return 
+	 */
+	@Override
+	public String getSchedule()
+	{
+		return "* * * * * ?";
 	}
 }

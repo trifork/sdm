@@ -25,7 +25,7 @@ package com.trifork.stamdata.importer.parsers.dosagesuggestions.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.model.AbstractStamdataEntity;
+import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 
 
 public abstract class DosageRecord extends AbstractStamdataEntity

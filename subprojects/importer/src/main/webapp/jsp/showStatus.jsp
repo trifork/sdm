@@ -122,35 +122,49 @@
 					for (FileParserJob spooler : manager.getSpoolers().values()) {
 				%>
 				<tr>
-					<% if (!spooler.getStatus().equals("ERROR")) { %>
+					<%
+						if (!spooler.getState().equals("ERROR")) {
+					%>
 						<td class="success" align="left">
 						<img class="header" src="images/success.png" />
-					<% } else { %>
+					<%
+						} else {
+					%>
 						<td class="failure" align="left">
 						<img class="header" src="images/failed.png" />
-					<% } %>
-					<%= spooler.getName() %> (<%= spooler.getStatus() %>, <%= spooler.getActivity() %>)<br />
-					Last import: <%= spooler.getLastImportFormatted() %> <br />
-					Next import expected before: <%= spooler.getNextImportExpectedBeforeFormatted() %><br />
-					<a href="?overdue=<%= spooler.getName() %>">Overdue Check</a> |
-					<a href="?rejectedFiles=<%= spooler.getName() %>">Rejected Check</a><br />
+					<%
+						}
+					%>
+					<%=spooler.getName()%> (<%=spooler.getState()%>, <%=spooler.getActivity()%>)<br />
+					Last import: <%=spooler.getLastImportFormatted()%> <br />
+					Next import expected before: <%=spooler.getNextImportExpectedBeforeFormatted()%><br />
+					<a href="?overdue=<%=spooler.getName()%>">Overdue Check</a> |
+					<a href="?rejectedFiles=<%=spooler.getName()%>">Rejected Check</a><br />
 					<hr />
 				</td>
 				</tr>
-				<% } %>
+				<%
+					}
+				%>
 
 				<%
 					for (Job spooler : manager.getJobSpoolers().values()) {
 				%>
 				<tr>
-					<% if (!spooler.getStatus().equals("ERROR")) { %>
+					<%
+						if (!spooler.getState().equals("ERROR")) {
+					%>
 						<td class="success" align="left">
 							<img class="header" src="images/success.png" />
-					<% } else { %>
+					<%
+						} else {
+					%>
 						<td class="failure" align="left">
 							<img class="header" src="images/failed.png" />
-					<% } %>
-					<%= spooler.getName() %> (<%= spooler.getStatus() %>, <%= spooler.getActivity() %>)<br />
+					<%
+						}
+					%>
+					<%=spooler.getName()%> (<%=spooler.getState()%>, <%= spooler.getActivity() %>)<br />
 					<hr />
 				</td>
 				</tr>

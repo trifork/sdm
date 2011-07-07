@@ -32,9 +32,9 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
+import com.trifork.stamdata.importer.persistence.Dataset;
 
 
 public class SksParser

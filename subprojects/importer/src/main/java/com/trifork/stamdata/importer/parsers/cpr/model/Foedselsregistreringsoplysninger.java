@@ -23,8 +23,8 @@
 
 package com.trifork.stamdata.importer.parsers.cpr.model;
 
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
 
 
 public class Foedselsregistreringsoplysninger extends CPREntity

@@ -21,10 +21,10 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.model;
+package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.model.AbstractStamdataEntity.getIdMethod;
-import static com.trifork.stamdata.importer.model.AbstractStamdataEntity.getOutputFieldName;
+import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getIdMethod;
+import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getOutputFieldName;
 
 import java.util.ArrayList;
 import java.util.Collection;

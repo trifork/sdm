@@ -26,10 +26,10 @@ package com.trifork.stamdata.importer.parsers.autorisationsregister.model;
 import java.util.Date;
 import java.util.StringTokenizer;
 
-import com.trifork.stamdata.importer.model.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 

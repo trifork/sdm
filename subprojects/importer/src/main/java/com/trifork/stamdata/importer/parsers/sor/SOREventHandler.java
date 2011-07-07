@@ -33,7 +33,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
 import com.trifork.stamdata.importer.parsers.sor.model.Apotek;
 import com.trifork.stamdata.importer.parsers.sor.model.Praksis;
 import com.trifork.stamdata.importer.parsers.sor.model.Sygehus;
@@ -43,6 +42,7 @@ import com.trifork.stamdata.importer.parsers.sor.xmlmodel.AddressInformation;
 import com.trifork.stamdata.importer.parsers.sor.xmlmodel.HealthInstitutionEntity;
 import com.trifork.stamdata.importer.parsers.sor.xmlmodel.InstitutionOwnerEntity;
 import com.trifork.stamdata.importer.parsers.sor.xmlmodel.OrganizationalUnitEntity;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 

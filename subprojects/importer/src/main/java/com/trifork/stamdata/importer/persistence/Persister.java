@@ -23,9 +23,6 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 
 

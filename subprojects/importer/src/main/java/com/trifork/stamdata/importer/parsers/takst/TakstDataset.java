@@ -26,7 +26,7 @@ package com.trifork.stamdata.importer.parsers.takst;
 import java.util.Date;
 import java.util.List;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
 
 public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>

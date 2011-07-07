@@ -35,8 +35,9 @@ import org.slf4j.LoggerFactory;
 public class MySQLConnectionManager
 {
 	private static final Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
-
-	{{
+	
+	public static Connection getConnection() throws SQLException
+	{
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
@@ -45,10 +46,7 @@ public class MySQLConnectionManager
 		{
 			throw new RuntimeException("Could not load the database driver: com.mysql.jdbc.Driver", e);
 		}
-	}}
-	
-	public static Connection getConnection() throws SQLException
-	{
+		
 		Connection connection = DriverManager.getConnection(Configuration.getString("db.url") + getDBName(), Configuration.getString("db.user"), Configuration.getString("db.pwd"));
 		connection.setAutoCommit(false);
 

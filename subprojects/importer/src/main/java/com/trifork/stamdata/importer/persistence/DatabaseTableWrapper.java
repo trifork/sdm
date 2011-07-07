@@ -40,9 +40,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.model.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 
 

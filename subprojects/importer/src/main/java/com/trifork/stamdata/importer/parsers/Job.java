@@ -23,51 +23,21 @@
 
 package com.trifork.stamdata.importer.parsers;
 
-public abstract class Job implements Runnable
+public interface Job extends Runnable
 {
-	private String schedule = "* * * * *";
-	private JobStatus status = JobStatus.INITIATING;
-	private JobActivity activity = JobActivity.AWAITING;
-
-	public abstract void run();
-
-	public JobActivity getActivity()
-	{
-		return activity;
-	}
-
-	void setActivity(JobActivity activity)
-	{
-		this.activity = activity;
-	}
-
-	void setStatus(JobStatus status)
-	{
-		this.status = status;
-	}
-
-	public JobStatus getStatus()
-	{
-		return status;
-	}
-
-	public String getName()
-	{
-		return getIdentifier();
-	}
-
-	public final String getIdentifier()
-	{
-		return getClass().getCanonicalName();
-	}
-
-	public String getSchedule()
-	{
-		return schedule;
-	}
+	/**
+	 * A unique string that identifies the importer.
+	 * 
+	 * This value is used to keep track of when the importer
+	 * was last run. The identifier must also be filesystem safe.
+	 * 
+	 * @return
+	 */
+	String getIdentifier();
 	
-	public void setSchedule(String schedule)
-	{
-		this.schedule = schedule;
-	}
+	JobActivity getActivity();
+	
+	JobStatus getState();
+	
+	String getSchedule();
 }

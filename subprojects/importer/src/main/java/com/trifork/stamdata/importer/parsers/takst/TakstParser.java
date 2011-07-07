@@ -37,7 +37,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.parsers.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.parsers.takst.model.ATCKoderOgTekstFactory;
 import com.trifork.stamdata.importer.parsers.takst.model.Administrationsvej;
@@ -104,6 +103,7 @@ import com.trifork.stamdata.importer.parsers.takst.model.UdgaaedeNavne;
 import com.trifork.stamdata.importer.parsers.takst.model.UdgaaedeNavneFactory;
 import com.trifork.stamdata.importer.parsers.takst.model.Udleveringsbestemmelser;
 import com.trifork.stamdata.importer.parsers.takst.model.UdleveringsbestemmelserFactory;
+import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 

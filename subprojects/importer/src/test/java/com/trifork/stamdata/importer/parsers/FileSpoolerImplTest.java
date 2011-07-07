@@ -169,7 +169,7 @@ public class FileSpoolerImplTest
 	public void testPollNoFiles() throws Exception
 	{
 		worker.run();
-		assertEquals(worker.getStatus(), FileSpoolerImpl.FileParserJob.OK);
+		assertEquals(worker.getState(), FileSpoolerImpl.FileParserJob.OK);
 		assertEquals(worker.getActivity(), FileSpoolerImpl.FileParserJob.AWAITING);
 		assertNull(worker.getMessage());
 	}
@@ -180,7 +180,7 @@ public class FileSpoolerImplTest
 		File f = new File(worker.getInputDir() + "/f");
 		assertTrue(f.createNewFile());
 		worker.run();
-		assertEquals(worker.getStatus(), FileSpoolerImpl.FileParserJob.OK);
+		assertEquals(worker.getState(), FileSpoolerImpl.FileParserJob.OK);
 		assertEquals(worker.getActivity(), FileSpoolerImpl.FileParserJob.STABILIZING);
 		assertNull(worker.getMessage());
 	}
@@ -221,7 +221,7 @@ public class FileSpoolerImplTest
 
 		// Check that status/activity is set correctly after import
 
-		assertEquals(worker.getStatus(), FileSpoolerImpl.FileParserJob.OK);
+		assertEquals(worker.getState(), FileSpoolerImpl.FileParserJob.OK);
 		assertEquals(worker.getActivity(), FileSpoolerImpl.FileParserJob.AWAITING);
 
 		// Check that no error message is set
@@ -305,7 +305,7 @@ public class FileSpoolerImplTest
 		assertEquals(2, FileUtils.listFiles(worker.getRejectedDir(), TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE).size());
 		assertEquals(1, FileUtils.listFiles(worker.getRejectedDir(), new NameFileFilter("f"), TrueFileFilter.INSTANCE).size());
 
-		assertEquals(FileSpoolerImpl.FileParserJob.ERROR, worker.getStatus());
+		assertEquals(FileSpoolerImpl.FileParserJob.ERROR, worker.getState());
 
 		assertNull(ImportTimeManager.getLastImportTime(worker.getSetup().getName()));
 

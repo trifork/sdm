@@ -23,12 +23,12 @@
 
 package com.trifork.stamdata.importer.parsers.sor;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
 import com.trifork.stamdata.importer.parsers.sor.model.Apotek;
 import com.trifork.stamdata.importer.parsers.sor.model.Praksis;
 import com.trifork.stamdata.importer.parsers.sor.model.Sygehus;
 import com.trifork.stamdata.importer.parsers.sor.model.SygehusAfdeling;
 import com.trifork.stamdata.importer.parsers.sor.model.Yder;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
 
 public class SORDataSets

@@ -25,8 +25,8 @@ package com.trifork.stamdata.importer.parsers.cpr.model;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
 
 
 public class MorOgFaroplysninger extends CPREntity

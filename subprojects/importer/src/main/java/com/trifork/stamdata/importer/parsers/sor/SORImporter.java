@@ -36,13 +36,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.parsers.exceptions.FileParseException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
-public class SORImporter implements FileImporter
+public class SORImporter implements FileParser
 {
 	private static Logger logger = LoggerFactory.getLogger(SORImporter.class);
 

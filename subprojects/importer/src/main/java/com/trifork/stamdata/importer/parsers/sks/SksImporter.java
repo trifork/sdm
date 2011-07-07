@@ -31,14 +31,14 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
 
 
-public class SksImporter implements FileImporter
+public class SksImporter implements FileParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(SksImporter.class);
 

@@ -27,11 +27,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.trifork.stamdata.importer.model.CompleteDataset;
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.Id;
-import com.trifork.stamdata.importer.model.Output;
-import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.Id;
+import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 /**

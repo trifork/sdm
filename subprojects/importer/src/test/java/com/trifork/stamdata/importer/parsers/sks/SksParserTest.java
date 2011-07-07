@@ -28,9 +28,9 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.model.Dataset;
 import com.trifork.stamdata.importer.parsers.sks.SksParser;
 import com.trifork.stamdata.importer.parsers.sks.model.Organisation;
+import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 import java.io.File;

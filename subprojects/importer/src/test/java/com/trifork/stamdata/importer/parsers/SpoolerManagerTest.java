@@ -66,19 +66,19 @@ public class SpoolerManagerTest
 
 		// Add a mocked running spooler
 		FileParserJob mock1 = mock(FileParserJob.class);
-		when(mock1.getStatus()).thenReturn(FileSpoolerImpl.FileParserJob.OK);
+		when(mock1.getState()).thenReturn(FileSpoolerImpl.FileParserJob.OK);
 		fsm.spoolers.put("takst", mock1);
 
 		assertTrue(fsm.isAllSpoolersRunning());
 
 		Job mock2 = mock(Job.class);
-		when(mock2.getStatus()).thenReturn(JobSpoolerImpl.Status.OK);
+		when(mock2.getState()).thenReturn(JobSpoolerImpl.Status.OK);
 		fsm.jobSpoolers.put("navnebeskyttelse", mock2);
 
 		assertTrue(fsm.isAllSpoolersRunning());
 
 		// And a spooler that is not runnning
-		when(mock1.getStatus()).thenReturn(FileSpoolerImpl.FileParserJob.ERROR);
+		when(mock1.getState()).thenReturn(FileSpoolerImpl.FileParserJob.ERROR);
 		fsm.spoolers.put("test2", mock1);
 		assertFalse(fsm.isAllSpoolersRunning());
 	}

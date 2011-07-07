@@ -49,7 +49,7 @@ dependencies {
 
 	// THE JOB SCHEDUALER
 	
-	compile "org.apache.sling:org.apache.sling.commons.scheduler:2.2.0"
+	compile "org.quartz-scheduler:quartz:2.0.1"
 	
 	// TESTING
 

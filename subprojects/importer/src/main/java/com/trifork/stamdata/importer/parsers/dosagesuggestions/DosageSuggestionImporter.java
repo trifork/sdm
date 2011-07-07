@@ -47,9 +47,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.model.CompleteDataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageRecord;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageStructure;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DosageUnit;
@@ -58,7 +56,9 @@ import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.parsers.dosagesuggestions.models.DrugDosageStructureRelation;
 import com.trifork.stamdata.importer.parsers.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 /**
@@ -66,7 +66,7 @@ import com.trifork.stamdata.importer.persistence.Persister;
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class DosageSuggestionImporter implements FileImporter
+public class DosageSuggestionImporter implements FileParser
 {
 	private static final Logger logger = getLogger(DosageSuggestionImporter.class);
 

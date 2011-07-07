@@ -38,16 +38,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.Configuration;
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
-import com.trifork.stamdata.importer.parsers.FileImporter;
+import com.trifork.stamdata.importer.parsers.FileParser;
 import com.trifork.stamdata.importer.parsers.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class CPRImporter implements FileImporter
+public class CPRImporter implements FileParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(CPRImporter.class);
 
@@ -59,7 +59,7 @@ public class CPRImporter implements FileImporter
 		personFilePattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person"));
 		personFileDeltaPattern = Pattern.compile(Configuration.getString("spooler.cpr.file.pattern.person.delta"));
 	}
-	
+
 	@Override
 	public String getIdentifier()
 	{
@@ -67,11 +67,17 @@ public class CPRImporter implements FileImporter
 	}
 
 	@Override
+	public boolean ensureRequiredFileArePresent(File[] input)
+	{
+		return true; // TODO: Ckech if the required files are there.
+	}
+
+	@Override
 	public void importFiles(File[] input, Connection connection) throws Exception
 	{
-		AuditingPersister dao = new AuditingPersister(connection);
-
 		logger.info("Starting to parse CPR file ");
+		
+		AuditingPersister dao = new AuditingPersister(connection);
 
 		for (File personFile : input)
 		{
@@ -103,8 +109,6 @@ public class CPRImporter implements FileImporter
 				}
 			}
 
-			if (logger.isDebugEnabled()) logger.debug("Persisting 'CPR person' file " + personFile.getAbsolutePath());
-
 			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
 			{
 				dao.persistDeltaDataset(dataset);
@@ -130,15 +134,6 @@ public class CPRImporter implements FileImporter
 		return personFileDeltaPattern.matcher(f.getName()).matches();
 	}
 
-	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
-	{
-		// TODO: Filter unwanted files based on filenames
-		// return findPersonerFile(files).size() > 0;
-
-		return true;
-	}
-
 	/**
 	 * If no cpr in 12 days, fire alarm Maximum gap observed is 7 days without
 	 * cpr during christmas 2008.
@@ -162,7 +157,7 @@ public class CPRImporter implements FileImporter
 		try
 		{
 			Statement stm = con.createStatement();
-			ResultSet rs = stm.executeQuery("SELECT max(IkraftDato) AS Ikraft FROM PersonIkraft");
+			ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
 			if (rs.first()) return rs.getTimestamp(1);
 			return null;
 		}
@@ -176,7 +171,6 @@ public class CPRImporter implements FileImporter
 	{
 		try
 		{
-			logger.debug("Inserting " + yyyy_MM_dd.format(calendar.getTime()) + " as new 'IkraftDato'");
 			Statement stm = con.createStatement();
 			String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
 			stm.execute(query);

@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.trifork.stamdata.importer.model.Dataset;
-import com.trifork.stamdata.importer.model.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 public class CPRDataset
