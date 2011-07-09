@@ -40,9 +40,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.parsers.exceptions.FilePersistException;
 
-
+/**
+ * @author Rune Skou Larsen <rsj@trifork.com>
+ */
 public class DatabaseTableWrapper<T extends StamdataEntity>
 {
 	private static Logger logger = LoggerFactory.getLogger(DatabaseTableWrapper.class);
@@ -54,9 +55,11 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	private PreparedStatement updateValidToStmt;
 	private PreparedStatement updateValidFromStmt;
 	private PreparedStatement deleteStmt;
-	protected Connection con;
+
+	protected Connection connection;
+
 	public ResultSet currentRS;
-	private Class<T> clazz;
+	private Class<T> type;
 	private String tablename;
 	private Method idMethod;
 
@@ -64,35 +67,27 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	private List<String> notUpdatedColumns;
 	private int insertedRecords, updatedRecords, deletedRecords = 0;
 
-	public DatabaseTableWrapper(Connection con, Class<T> clazz) throws FilePersistException
+	public DatabaseTableWrapper(Connection connnection, Class<T> type) throws SQLException
 	{
-
-		this(con, clazz, Dataset.getEntityTypeDisplayName(clazz));
+		this(connnection, type, Dataset.getEntityTypeDisplayName(type));
 	}
 
-	protected DatabaseTableWrapper(Connection con, Class<T> clazz, String tableName) throws FilePersistException
+	protected DatabaseTableWrapper(Connection con, Class<T> clazz, String tableName) throws SQLException
 	{
-
 		this.tablename = tableName;
-		this.clazz = clazz;
-		this.con = con;
+		this.type = clazz;
+		this.connection = con;
 		this.idMethod = AbstractStamdataEntity.getIdMethod(clazz);
-		try
-		{
-			outputMethods = AbstractStamdataEntity.getOutputMethods(clazz);
-			notUpdatedColumns = locateNotUpdatedColumns();
-			insertRecordStmt = prepareInsertStatement();
-			insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
-			updateRecordStmt = prepareUpdateStatement();
-			selectByIdStmt = prepareSelectByIdStatement();
-			updateValidToStmt = prepareUpdateValidtoStatement();
-			updateValidFromStmt = prepareUpdateValidFromStatement();
-			deleteStmt = prepareDeleteStatement();
-		}
-		catch (SQLException sqle)
-		{
-			throw new FilePersistException("An error occured while preparing statements for table '" + tableName + "'", sqle);
-		}
+
+		outputMethods = AbstractStamdataEntity.getOutputMethods(clazz);
+		notUpdatedColumns = locateNotUpdatedColumns();
+		insertRecordStmt = prepareInsertStatement();
+		insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
+		updateRecordStmt = prepareUpdateStatement();
+		selectByIdStmt = prepareSelectByIdStatement();
+		updateValidToStmt = prepareUpdateValidtoStatement();
+		updateValidFromStmt = prepareUpdateValidFromStatement();
+		deleteStmt = prepareDeleteStatement();
 	}
 
 	private PreparedStatement prepareInsertStatement() throws SQLException
@@ -111,7 +106,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		sql += "?,"; // validfrom
 		sql += "?"; // validto
 
-		for (int i=0; i<outputMethods.size();i++)
+		for (int i = 0; i < outputMethods.size(); i++)
 		{
 			sql += ",?";
 		}
@@ -119,7 +114,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		sql += ")";
 
 		// logger.debug("Preparing insert statement: " + sql);
-		return con.prepareStatement(sql);
+		return connection.prepareStatement(sql);
 	}
 
 	private PreparedStatement prepareInsertAndUpdateStatement() throws SQLException
@@ -155,7 +150,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		sql += ")";
 
-		return con.prepareStatement(sql);
+		return connection.prepareStatement(sql);
 	}
 
 	private PreparedStatement prepareUpdateStatement() throws SQLException
@@ -167,31 +162,17 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			sql += ", " + AbstractStamdataEntity.getOutputFieldName(method) + " = ?";
 		}
 
-		sql += " WHERE " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ? and ValidTo = ?";
+		sql += " WHERE " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ? and ValidTo = ?";
 
-		return con.prepareStatement(sql);
+		return connection.prepareStatement(sql);
 	}
 
-	private PreparedStatement prepareSelectByIdStatement() throws FilePersistException
+	private PreparedStatement prepareSelectByIdStatement() throws SQLException
 	{
-		PreparedStatement pstmt;
-		String pstmtString = null;
+		// Select where ids match and validity intervals overlap.
 
-		try
-		{
-			pstmtString = "SELECT * FROM " + tablename + " WHERE " + Dataset.getIdOutputName(clazz) + " = ? AND NOT (ValidTo < ? or ValidFrom > ?) ORDER BY ValidTo";
-			// select where ids match and validity intervals overlap
-
-			// logger.debug("Preparing select by id statement: " + pstmtString);
-			pstmt = con.prepareStatement(pstmtString);
-		}
-		catch (Exception sqle)
-		{
-			logger.error("An error occured while preparing the SelectById statement for type: " + Dataset.getEntityTypeDisplayName(clazz));
-			throw new FilePersistException("An error occured while preparing the SelectById statement for table: " + tablename + ". sql: " + pstmtString, sqle);
-		}
-
-		return pstmt;
+		String pstmtString = "SELECT * FROM " + tablename + " WHERE " + Dataset.getIdOutputName(type) + " = ? AND NOT (ValidTo < ? or ValidFrom > ?) ORDER BY ValidTo";
+		return connection.prepareStatement(pstmtString);
 	}
 
 	public void insertRow(StamdataEntity sde, Date transactionTime)
@@ -208,7 +189,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		catch (SQLException sqle)
 		{
-			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(clazz);
+			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
 			try
 			{
 				message += "entityid: " + sde.getKey();
@@ -234,7 +215,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		catch (SQLException sqle)
 		{
-			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(clazz);
+			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
 			try
 			{
 				message += "entityid: " + sde.getKey() + " SQLError: " + sqle.getMessage();
@@ -262,7 +243,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		catch (SQLException sqle)
 		{
-			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(clazz);
+			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
 
 			try
 			{
@@ -282,58 +263,28 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return insertedRecords;
 	}
 
-	private PreparedStatement prepareUpdateValidtoStatement() throws FilePersistException
+	private PreparedStatement prepareUpdateValidtoStatement() throws SQLException
 	{
-		String pstmtString = "update " + tablename + " set ValidTo = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(clazz) + " = ? and ValidFrom = ?";
+		String pstmtString = "update " + tablename + " set ValidTo = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ?";
 
-		PreparedStatement pstmt;
-		try
-		{
-			pstmt = con.prepareStatement(pstmtString);
-		}
-		catch (SQLException sqle)
-		{
-			throw new FilePersistException("An error occured while preparing the Update ValidTo statement.", sqle);
-		}
-
-		return pstmt;
+		return connection.prepareStatement(pstmtString);
 	}
 
-	private PreparedStatement prepareUpdateValidFromStatement() throws FilePersistException
+	private PreparedStatement prepareUpdateValidFromStatement() throws SQLException
 	{
-		String pstmtString = "update " + tablename + " set ValidFrom = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(clazz) + " = ? AND ValidFrom = ?";
+		String pstmtString = "update " + tablename + " set ValidFrom = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? AND ValidFrom = ?";
 
-		PreparedStatement pstmt;
-		try
-		{
-			pstmt = con.prepareStatement(pstmtString);
-		}
-		catch (SQLException sqle)
-		{
-			throw new FilePersistException("An error occured while preparing the Update ValidTo statement.", sqle);
-		}
-
-		return pstmt;
+		return connection.prepareStatement(pstmtString);
 	}
 
-	public PreparedStatement prepareDeleteStatement()
+	public PreparedStatement prepareDeleteStatement() throws SQLException
 	{
-		try
-		{
-			String sql = "delete from " + tablename + " where " + Dataset.getIdOutputName(clazz) + " = " + "? and ValidFrom = ?";
-			return con.prepareStatement(sql);
-		}
-		catch (SQLException e)
-		{
-			logger.error("prepareDeleteStatement");
-		}
-
-		return null;
+		String sql = "delete from " + tablename + " where " + Dataset.getIdOutputName(type) + " = " + "? and ValidFrom = ?";
+		return connection.prepareStatement(sql);
 	}
 
 	public int applyParamsToInsertStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime)
 	{
-
 		int idx = 1;
 
 		try
@@ -460,7 +411,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		try
 		{
-			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(clazz)));
+			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
 			setObjectOnPreparedStatement(pstmt, idx++, sde.getKey());
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidFrom.getTime()));
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidTo.getTime()));
@@ -540,7 +491,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		try
 		{
 			String sql = "select * from " + tablename + " where not (ValidTo < '" + toMySQLdate(validFrom) + "' or ValidFrom > '" + toMySQLdate(validTo) + "')";
-			currentRS = con.createStatement().executeQuery(sql);
+			currentRS = connection.createStatement().executeQuery(sql);
 			return currentRS.next();
 		}
 		catch (SQLException e)
@@ -629,7 +580,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 			sql += ")";
 
-			PreparedStatement stmt = con.prepareStatement(sql);
+			PreparedStatement stmt = connection.prepareStatement(sql);
 			int idx = 1;
 
 			for (Method method : outputMethods)
@@ -659,7 +610,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		{
 			updateValidToStmt.setTimestamp(1, new Timestamp(validTo.getTime()));
 			updateValidToStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
-			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(clazz)));
+			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
 			updateValidToStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"));
 
 			int rowsAffected = updateValidToStmt.executeUpdate();
@@ -678,7 +629,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	{
 		try
 		{
-			deleteStmt.setObject(1, currentRS.getObject(Dataset.getIdOutputName(clazz)));
+			deleteStmt.setObject(1, currentRS.getObject(Dataset.getIdOutputName(type)));
 			deleteStmt.setObject(2, currentRS.getObject("ValidFrom"));
 			int rowsAffected = deleteStmt.executeUpdate();
 			if (rowsAffected != 1) logger.error("deleteCurrentRow - expected to delete 1 row. Deleted: " + rowsAffected);
@@ -697,7 +648,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		{
 			updateValidFromStmt.setTimestamp(1, new Timestamp(validFrom.getTime()));
 			updateValidFromStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
-			updateValidFromStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(clazz)));
+			updateValidFromStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
 			updateValidFromStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"));
 			int rowsAffected = updateValidFromStmt.executeUpdate();
 			if (rowsAffected != 1) logger.error("updateValidFromStmt - expected to update 1 row. updated: " + rowsAffected);
@@ -777,10 +728,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		else
 		{
-			String message = "method " + Dataset.getEntityTypeDisplayName(clazz) + "." + method.getName() + " has unsupported returntype: " + o + ". DB mapping unknown";
-			logger.error(message);
-			throw new FilePersistException(message);
+			String message = "method " + Dataset.getEntityTypeDisplayName(type) + "." + method.getName() + " has unsupported returntype: " + o + ". DB mapping unknown";
+			throw new Exception(message);
 		}
+
 		return true;
 	}
 
@@ -794,29 +745,24 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return deletedRecords;
 	}
 
-	public List<StamdataEntityVersion> getEntityVersions(Date validFrom, Date validTo)
+	public List<StamdataEntityVersion> getEntityVersions(Date validFrom, Date validTo) throws SQLException
 	{
-		try
-		{
-			String sql = "select " + AbstractStamdataEntity.getOutputFieldName(idMethod) + ", validFrom from " + tablename + " where not (ValidTo < '" + toMySQLdate(validFrom) + "' or ValidFrom > '" + toMySQLdate(validTo) + "')";
-			currentRS = con.createStatement().executeQuery(sql);
+		String sql = "select " + AbstractStamdataEntity.getOutputFieldName(idMethod) + ", validFrom from " + tablename + " where not (ValidTo < '" + toMySQLdate(validFrom) + "' or ValidFrom > '" + toMySQLdate(validTo) + "')";
+		currentRS = connection.createStatement().executeQuery(sql);
 
-			List<StamdataEntityVersion> evs = new ArrayList<StamdataEntityVersion>();
-			while (currentRS.next())
-			{
-				StamdataEntityVersion ev = new StamdataEntityVersion();
-				ev.id = currentRS.getObject(1);
-				ev.validFrom = currentRS.getTimestamp(2);
-				evs.add(ev);
-			}
-			logger.debug("Returning " + evs.size() + " entity versions");
-			return evs;
-		}
-		catch (SQLException e)
+		List<StamdataEntityVersion> evs = new ArrayList<StamdataEntityVersion>();
+
+		while (currentRS.next())
 		{
-			logger.error("fetchEntityVersions", e);
-			return null;
+			StamdataEntityVersion ev = new StamdataEntityVersion();
+			ev.id = currentRS.getObject(1);
+			ev.validFrom = currentRS.getTimestamp(2);
+			evs.add(ev);
 		}
+
+		if (logger.isDebugEnabled()) logger.debug("Returning " + evs.size() + " entity versions");
+
+		return evs;
 	}
 
 
@@ -851,7 +797,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	{
 		try
 		{
-			con.createStatement().execute("truncate " + tablename + ";");
+			connection.createStatement().execute("truncate " + tablename + ";");
 		}
 		catch (Exception e)
 		{
@@ -863,7 +809,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	{
 		try
 		{
-			con.createStatement().execute("drop table " + tablename + ";");
+			connection.createStatement().execute("drop table " + tablename + ";");
 		}
 		catch (Exception e)
 		{
@@ -902,7 +848,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		try
 		{
-			stm = con.createStatement();
+			stm = connection.createStatement();
 			stm.execute("desc " + tablename);
 			ResultSet rs = stm.getResultSet();
 

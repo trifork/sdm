@@ -26,6 +26,9 @@ package com.trifork.stamdata.importer.persistence;
 import java.util.Date;
 
 
+/**
+ * @author Rune Skou Larsen <rsj@trifork.com>
+ */
 public interface StamdataEntity
 {
 	public Object getKey();

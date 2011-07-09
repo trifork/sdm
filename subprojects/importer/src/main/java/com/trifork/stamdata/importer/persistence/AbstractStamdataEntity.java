@@ -36,6 +36,9 @@ import org.slf4j.LoggerFactory;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
+/**
+ * @author Rune Skou Larsen <rsj@trifork.com>
+ */
 public abstract class AbstractStamdataEntity implements StamdataEntity
 {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
@@ -59,26 +62,31 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	}
 
 	/**
-	 * @param class1 . A type of StamdataEntity
+	 * @param type A type of StamdataEntity
 	 * @return the getter method that contains the unique id for the given
 	 *         StamdataEntity type
 	 */
-	public static Method getIdMethod(Class<? extends StamdataEntity> class1)
+	public static Method getIdMethod(Class<? extends StamdataEntity> type)
 	{
+		Method m = idMethodCache.get(type);
 
-		Method m = idMethodCache.get(class1);
 		if (m != null) return m;
-		Method[] allMethods = class1.getMethods();
+
+		Method[] allMethods = type.getMethods();
+
 		for (Method method : allMethods)
 		{
 			if (method.isAnnotationPresent(Id.class))
 			{
-				idMethodCache.put(class1, method);
+				idMethodCache.put(type, method);
 				return method;
 			}
 		}
+
 		// TODO: This should be an precondition exception.
-		logger.error("Could not find idmethod for class: " + class1 + " A getter must be annotated with @Id!");
+
+		logger.error("Could not find idmethod for class: " + type + " A getter must be annotated with @Id!");
+
 		return null;
 	}
 

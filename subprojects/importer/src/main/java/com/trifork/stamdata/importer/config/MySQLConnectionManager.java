@@ -31,7 +31,9 @@ import java.sql.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * @deprecated Static state is a bad idea in general. Send the configuration around instead of using this class.
+ */
 public class MySQLConnectionManager
 {
 	private static final Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);

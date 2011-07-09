@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * @author Rune Skou Larsen <rsj@trifork.com>
+ */
 public class Dataset<T extends StamdataEntity>
 {
 	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();

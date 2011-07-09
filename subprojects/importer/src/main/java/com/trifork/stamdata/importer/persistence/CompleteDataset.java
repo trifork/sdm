@@ -31,8 +31,8 @@ import java.util.List;
  * A Dataset that is the complete truth within the given validfrom-validto
  * interval. That is, no other records are allowed other than the ones in this
  * dataset.
- *
- * @author rsl
+ * 
+ * @author Rune Skou Larsen <rsj@trifork.com>
  */
 public class CompleteDataset<T extends StamdataEntity> extends Dataset<T>
 {

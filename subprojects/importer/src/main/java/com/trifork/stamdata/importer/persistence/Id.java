@@ -32,9 +32,8 @@ import java.lang.annotation.RetentionPolicy;
  * must be unique. But an entity can keep its id across changes, so there can be
  * more database records with the same id representing the entity at different
  * times.
- *
- * @author rsl
- *
+ * 
+ * @author Rune Skou Larsen <rsj@trifork.com>
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Id

@@ -29,7 +29,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * @deprecated Static state is a bad idea in general. Send the configuration around instead of using this class.
+ */
 public class Configuration
 {
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
@@ -46,8 +48,6 @@ public class Configuration
 	{
 		try
 		{
-			logger.info("Loading configuration.");
-
 			// Override the default configuration with the one found in
 			// stamdata-importer.properties.
 

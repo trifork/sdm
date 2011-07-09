@@ -38,12 +38,10 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
  */
 public class DatabaseStatus
 {
-
 	private final Logger logger = LoggerFactory.getLogger(DatabaseStatus.class);
 
 	public boolean isAlive()
 	{
-
 		boolean isAlive = false;
 		Connection con = null;
 

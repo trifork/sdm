@@ -30,7 +30,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * This annotation shows that during streaming, this method should be called and
  * the return value streamed. Intended to mark which getters should be called.
- *
+ * 
  * @author Rune Skou Larsen <rsl@trifork.com>
  */
 @Retention(RetentionPolicy.RUNTIME)
