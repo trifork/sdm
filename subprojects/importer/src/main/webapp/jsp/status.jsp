@@ -78,7 +78,7 @@
 				}
 				if (job.isExecuting())
 				{
-					jobStatus = "running";
+					jobStatus = "executing";
 				}
 				else if (!job.isOK())
 				{
