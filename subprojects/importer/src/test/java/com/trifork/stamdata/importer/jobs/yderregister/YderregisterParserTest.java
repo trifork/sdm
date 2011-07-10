@@ -27,15 +27,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.exceptions.FileParseException;
-import com.trifork.stamdata.importer.jobs.yderregister.YderregisterParser;
 import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
@@ -50,7 +46,7 @@ public class YderregisterParserTest
 	{
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/initial/"));
 
-		YderregisterDatasets yderReg = new YderregisterParser().parseYderregister(Arrays.asList(dir.listFiles()));
+		YderregisterDatasets yderReg = new YderregisterParser().parseYderregister(dir.listFiles());
 
 		assertEquals(12, yderReg.getYderregisterDS().getEntities().size());
 		Yderregister y = yderReg.getYderregisterDS().getEntityById("4219");
@@ -78,11 +74,10 @@ public class YderregisterParserTest
 		assertNotNull(yp);
 	}
 
-	@Test(expected = FileParseException.class)
-	public void testInvalid() throws IOException, FileParseException
+	@Test(expected = Exception.class)
+	public void testInvalid() throws Exception
 	{
-
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/invalid/"));
-		new YderregisterParser().parseYderregister(Arrays.asList(dir.listFiles()));
+		new YderregisterParser().parseYderregister(dir.listFiles());
 	}
 }

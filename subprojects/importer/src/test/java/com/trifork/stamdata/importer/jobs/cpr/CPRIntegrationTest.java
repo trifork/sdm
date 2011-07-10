@@ -41,8 +41,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.cpr.CPRImporter;
-import com.trifork.stamdata.importer.jobs.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
@@ -115,7 +113,7 @@ public class CPRIntegrationTest
 		assertFalse(rs.next());
 	}
 
-	@Test(expected = FileImporterException.class)
+	@Test(expected = Exception.class)
 	public void failsWhenDatesAreNotInSequence() throws Exception
 	{
 		importFile("data/cpr/testSequence1/D100314.L431101");
@@ -131,13 +129,13 @@ public class CPRIntegrationTest
 		importFile("data/cpr/testOutOfSequence/D100314.L431101");
 	}
 
-	@Test(expected = FileImporterException.class)
+	@Test(expected = Exception.class)
 	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception
 	{
 		importFile("data/cpr/endRecords/D100314.L431101");
 	}
 
-	@Test(expected = FileImporterException.class)
+	@Test(expected = Exception.class)
 	public void failsWhenNoEndRecordExists() throws Exception
 	{
 		importFile("data/cpr/endRecords/D100315.L431101");
@@ -149,7 +147,7 @@ public class CPRIntegrationTest
 		importFile("data/cpr/testCPR1/D100314.L431101");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR='0101965058'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR = '0101965058'");
 		rs.next();
 
 		assertEquals("K", rs.getString("Koen"));
@@ -321,7 +319,7 @@ public class CPRIntegrationTest
 		importFile("data/cpr/haendelse/D100314.L431101");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from Haendelse where CPR='0905414143'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Haendelse WHERE CPR = '0905414143'");
 
 		rs.next();
 
@@ -339,7 +337,7 @@ public class CPRIntegrationTest
 		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-udenCpr");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from MorOgFaroplysninger where CPR='0905414143' order by Foraelderkode");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM MorOgFaroplysninger WHERE CPR = '0905414143' ORDER BY Foraelderkode");
 
 		rs.next();
 
@@ -360,14 +358,14 @@ public class CPRIntegrationTest
 	}
 
 	@Test
-	public void ignoresMorOgFaroplysningerWhenParentCprIsSpecified() throws Exception
+	public void ignoresMorOgFaropltysningerWhenParentCprIsSpecified() throws Exception
 	{
 		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select count(*) c from MorOgFaroplysninger where CPR='0905414143'");
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM MorOgFaroplysninger WHERE CPR = '0905414143'");
 		rs.next();
-		assertEquals(0, rs.getInt("c"));
+		assertEquals(0, rs.getInt(1));
 	}
 
 	@Test
@@ -376,19 +374,19 @@ public class CPRIntegrationTest
 		importFile("data/cpr/D100312.L431101");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select count(*) from Person");
+		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(100, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from BarnRelation");
+		rs = stmt.executeQuery("Select COUNT(*) from BarnRelation");
 		rs.next();
 		assertEquals(30, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from ForaeldreMyndighedRelation");
+		rs = stmt.executeQuery("Select COUNT(*) from ForaeldreMyndighedRelation");
 		rs.next();
 		assertEquals(4, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select count(*) from UmyndiggoerelseVaergeRelation");
+		rs = stmt.executeQuery("Select COUNT(*) from UmyndiggoerelseVaergeRelation");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
@@ -405,7 +403,7 @@ public class CPRIntegrationTest
 		importFile("data/cpr/D100313.L431101");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select count(*) from Person");
+		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(80, rs.getInt(1));
 
@@ -430,6 +428,6 @@ public class CPRIntegrationTest
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().importFiles(file.listFiles(), new AuditingPersister(con));
+		new CPRImporter().importFiles(new File[] {file}, new AuditingPersister(con));
 	}
 }

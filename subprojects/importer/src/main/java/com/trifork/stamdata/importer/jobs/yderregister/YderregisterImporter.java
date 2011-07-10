@@ -28,49 +28,51 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 
 public class YderregisterImporter implements FileParser
 {
+	private static final Logger logger = LoggerFactory.getLogger(YderregisterImporter.class);
+	
 	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025", "K5094" };
 
 	@Override
-	public void importFiles(File[] input, AuditingPersister persister) throws Exception
+	public void importFiles(File[] input, Persister persister) throws Exception
 	{
 		String versionString = null;
 		int version;
 
 		for (File f : input)
 		{
-			String curFileLoebe;
+			String currentFileVersion;
 
 			if (f.getName().endsWith("XML") && f.getName().length() >= 15)
 			{
-				curFileLoebe = f.getName().substring(10, 15);
+				currentFileVersion = f.getName().substring(10, 15);
 			}
 			else
 			{
+				logger.warn("Unknown file encountered. filename='{}' parser='{}'", f.getName(), getIdentifier());
+				
 				continue;
 			}
 
 			if (versionString == null)
 			{
-				versionString = curFileLoebe;
+				versionString = currentFileVersion;
 			}
-			else
+			else if (!versionString.equals(currentFileVersion))
 			{
-				if (!versionString.equals(curFileLoebe))
-				{
-					throw new Exception("Det blev forsøgt at importere yderregisterfiler med forskellige løbenumre. Løbenummeret fremgår af filnavnet");
-				}
+				throw new Exception("Det blev forsøgt at importere yderregisterfiler med forskellige løbenumre. Løbenummeret fremgår af filnavnet.");
 			}
 		}
 
@@ -83,23 +85,20 @@ public class YderregisterImporter implements FileParser
 
 		// Verify the version
 
-		int latestInDB = getLastLoebenummer(persister.getConnection());
+		int latestInDB = getLastVersion(persister.getConnection());
 
-		if (latestInDB != 0)
+		if (latestInDB != 0 && latestInDB > version)
 		{
-			if (latestInDB > version)
-			{
-				throw new Exception("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer.");
-			}
+			throw new Exception("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer.");
 		}
 
 		setLastVersion(version, persister.getConnection());
 
-		YderregisterParser tp = new YderregisterParser();
-		YderregisterDatasets yderreg = tp.parseYderregister(input);
+		YderregisterParser parser = new YderregisterParser();
+		YderregisterDatasets dataset = parser.parseYderregister(input);
 
-		persister.persistCompleteDataset(yderreg.getYderregisterDS());
-		persister.persistCompleteDataset(yderreg.getYderregisterPersonDS());
+		persister.persistCompleteDataset(dataset.getYderregisterDS());
+		persister.persistCompleteDataset(dataset.getYderregisterPersonDS());
 	}
 
 	public boolean ensureRequiredFileArePresent(File[] input)
@@ -126,33 +125,19 @@ public class YderregisterImporter implements FileParser
 		return true;
 	}
 
-	/**
-	 * They should come at least each quarter
-	 */
-	public Date getNextImportExpectedBefore(Date lastImport)
-	{
-		Calendar cal;
-		if (lastImport == null)
-		{
-			cal = Calendar.getInstance();
-		}
-		else
-		{
-			cal = Calendar.getInstance();
-			cal.setTime(lastImport);
-		}
-
-		cal.add(Calendar.DATE, 95);
-
-		return cal.getTime();
-	}
-
+	@Override
 	public String getIdentifier()
 	{
 		return "yderregister";
 	}
 
-	public int getLastLoebenummer(Connection connection) throws Exception
+	@Override
+	public String getHumanName()
+	{
+		return "Yderregisteret Parser";
+	}
+
+	public int getLastVersion(Connection connection) throws Exception
 	{
 		int latestInDB = 0;
 
@@ -172,13 +157,7 @@ public class YderregisterImporter implements FileParser
 	public void setLastVersion(int version, Connection connection) throws Exception
 	{
 		Statement stm = connection.createStatement();
-		stm.execute("INSERT INTO YderLoebenummer (Loebenummer) values (" + version + "); ");
+		stm.execute("INSERT INTO YderLoebenummer (Loebenummer) VALUES (" + version + "); ");
 		stm.close();
-	}
-
-	@Override
-	public String getHumanName()
-	{
-		return "Yderregisteret Parser";
 	}
 }

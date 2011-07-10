@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 /**
  *	Parser for the SOR register.
@@ -61,7 +61,7 @@ public class SORImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] files, AuditingPersister persister) throws Exception
+	public void importFiles(File[] files, Persister persister) throws Exception
 	{
 		for (File file : files)
 		{

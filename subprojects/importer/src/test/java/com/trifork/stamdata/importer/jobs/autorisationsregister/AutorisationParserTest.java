@@ -23,42 +23,53 @@
 
 package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 
 import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Connection;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import com.trifork.stamdata.importer.jobs.autorisationsregister.AutorisationImporter;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
 
-public class AutImporterTest
+public class AutorisationParserTest
 {
-	private static final File valid = FileUtils.toFile(AutImporterTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
-	
+	private static final File valid = FileUtils.toFile(AutorisationParserTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
+
 	private AutorisationImporter importer = new AutorisationImporter();
 
-	@Mock
-	private AuditingPersister persister;
-	
-	@Test
-	public void testAreRequiredInputFilesPresent()
+	private Connection connection;
+
+	@Before
+	public void setUp() throws Exception
 	{
-		File[] files = new File[] {valid};
+		connection = MySQLConnectionManager.getConnection();
+	}
+
+	@After
+	public void tearDown() throws Exception
+	{
+		connection.rollback();
+		connection.close();
+	}
+
+	@Test
+	public void should_return_true_if_expected_files_are_present()
+	{
+		File[] files = new File[] { valid };
 		assertTrue(importer.ensureRequiredFileArePresent(files));
 	}
 
+	@Test
 	public void should_return_false_if_no_file_are_present()
 	{
 		File[] file = new File[] {};
@@ -66,19 +77,13 @@ public class AutImporterTest
 	}
 
 	@Test
-	public void testImport() throws Exception
+	public void should_successfully_import_a_file() throws Exception
 	{
-		File[] files = new File[] {valid};
-		importer.importFiles(files, persister);
-		
-		verify(persister).persistCompleteDataset(Mockito.any(CompleteDataset.class));
-	}
+		AuditingPersister persister = Mockito.spy(new AuditingPersister(connection));
 
-	@Test
-	public void testGetDateFromFileName() throws ParseException
-	{
-		AutorisationImporter importer = new AutorisationImporter();
-		Date date = importer.getDateFromFilename("19761110sgfdgfg");
-		assertEquals("19761110", new SimpleDateFormat("yyyyMMdd").format(date));
+		File[] files = new File[] { valid };
+		importer.importFiles(files, persister);
+
+		verify(persister).persistCompleteDataset(Mockito.any(CompleteDataset.class));
 	}
 }

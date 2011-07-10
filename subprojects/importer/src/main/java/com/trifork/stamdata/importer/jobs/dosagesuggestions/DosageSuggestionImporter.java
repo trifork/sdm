@@ -53,8 +53,8 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageUnit;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DrugDosageStructureRelation;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
@@ -66,7 +66,7 @@ public class DosageSuggestionImporter implements FileParser
 	private static final Logger logger = getLogger(DosageSuggestionImporter.class);
 
 	@Override
-	public void importFiles(File[] files, AuditingPersister persister) throws Exception
+	public void importFiles(File[] files, Persister persister) throws Exception
 	{
 		// METADATA FILE
 		//

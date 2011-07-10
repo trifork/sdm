@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
 
 import java.io.File;
@@ -39,8 +40,8 @@ import org.slf4j.LoggerFactory;
 import com.trifork.stamdata.importer.config.Configuration;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.cpr.model.CPRDataset;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
@@ -71,15 +72,18 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] input, AuditingPersister persister) throws Exception
+	public void importFiles(File[] input, Persister persister) throws Exception
 	{
+		checkNotNull(input);
+		checkNotNull(persister);
+		
 		logger.info("Starting to parse CPR file ");
 
 		for (File personFile : input)
 		{
 			if (!isPersonerFile(personFile))
 			{
-				throw new Exception("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing is imported from the fileset");
+				throw new Exception("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing will be imported from the fileset.");
 			}
 		}
 
@@ -102,7 +106,7 @@ public class CPRImporter implements FileParser
 
 				if (previousVersion == null)
 				{
-					logger.warn("could not get latestIKraft from database. Asuming empty database and skipping import sequence checks.");
+					logger.debug("Find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
 				}
 				else if (!cpr.getPreviousFileValidFrom().equals(previousVersion))
 				{
@@ -115,12 +119,12 @@ public class CPRImporter implements FileParser
 				persister.persistDeltaDataset(dataset);
 			}
 
-			// Add latest 'ikraft' date to database if we are not importing
+			// Add latest 'version' date to database if we are not importing
 			// a full set.
 
 			if (isDeltaFile(personFile))
 			{
-				insertIkraft(cpr.getValidFrom(), connection);
+				insertVersion(cpr.getValidFrom(), connection);
 			}
 		}
 	}
@@ -146,7 +150,7 @@ public class CPRImporter implements FileParser
 		return null; 
 	}
 
-	void insertIkraft(Date calendar, Connection con) throws SQLException
+	void insertVersion(Date calendar, Connection con) throws SQLException
 	{
 		Statement stm = con.createStatement();
 		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";

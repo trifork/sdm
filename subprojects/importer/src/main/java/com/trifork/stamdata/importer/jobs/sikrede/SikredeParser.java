@@ -5,6 +5,7 @@ import java.io.File;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 public class SikredeParser implements FileParser
 {
@@ -31,7 +32,7 @@ public class SikredeParser implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] input, AuditingPersister persister) throws Exception
+	public void importFiles(File[] input, Persister persister) throws Exception
 	{
 		// 1. CHECK VERSIONS
 		//

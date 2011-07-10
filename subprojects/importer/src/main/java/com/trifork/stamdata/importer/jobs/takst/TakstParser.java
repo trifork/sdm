@@ -118,16 +118,21 @@ public class TakstParser
 		takst.addDataset(new TakstDataset<T>(takst, entities, type));
 	}
 
-	private <T extends TakstEntity> void addOptional(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws IOException
+	private <T extends TakstEntity> void addOptional(File[] input, Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws IOException
 	{
-		List<T> entities = parser.parse(config, type);
-		takst.addDataset(new TakstDataset<T>(takst, entities, type));
+		File file = getFileByName(config.getFilename(), input);
+		
+		if (file != null && file.isFile())
+		{
+			List<T> entities = parser.parse(config, type);
+			takst.addDataset(new TakstDataset<T>(takst, entities, type));
+		}
 	}
 
 	public Takst parseFiles(File[] input) throws Exception
 	{
 		// Parse required meta information first.
-		
+
 		String systemline = getSystemLine(input);
 		String version = getVersion(systemline);
 
@@ -179,20 +184,20 @@ public class TakstParser
 		// Now parse optional files one at a time, to be robust to them not
 		// being present.
 
-		addOptional(takst, parser, new LaegemiddelnavnFactory(), Laegemiddelnavn.class);
-		addOptional(takst, parser, new LaegemiddelformBetegnelserFactory(), LaegemiddelformBetegnelser.class);
-		addOptional(takst, parser, new RekommandationerFactory(), Rekommandationer.class);
-		addOptional(takst, parser, new IndholdsstofferFactory(), Indholdsstoffer.class);
-		addOptional(takst, parser, new EnhedspriserFactory(), Enhedspriser.class);
-		addOptional(takst, parser, new PakningskombinationerFactory(), Pakningskombinationer.class);
-		addOptional(takst, parser, new PakningskombinationerUdenPriserFactory(), PakningskombinationerUdenPriser.class);
-		
+		addOptional(input, takst, parser, new LaegemiddelnavnFactory(), Laegemiddelnavn.class);
+		addOptional(input, takst, parser, new LaegemiddelformBetegnelserFactory(), LaegemiddelformBetegnelser.class);
+		addOptional(input, takst, parser, new RekommandationerFactory(), Rekommandationer.class);
+		addOptional(input, takst, parser, new IndholdsstofferFactory(), Indholdsstoffer.class);
+		addOptional(input, takst, parser, new EnhedspriserFactory(), Enhedspriser.class);
+		addOptional(input, takst, parser, new PakningskombinationerFactory(), Pakningskombinationer.class);
+		addOptional(input, takst, parser, new PakningskombinationerUdenPriserFactory(), PakningskombinationerUdenPriser.class);
+
 		// Post process the data.
-		
+
 		addTypedDivEnheder(takst);
 		addLaegemiddelAdministrationsvejRefs(takst);
 		filterOutVetDrugs(takst);
-		
+
 		return takst;
 	}
 
@@ -205,7 +210,7 @@ public class TakstParser
 	{
 		TakstDataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
 		List<LaegemiddelAdministrationsvejRef> lars = new ArrayList<LaegemiddelAdministrationsvejRef>();
-		
+
 		for (Laegemiddel lm : lmr.getEntities())
 		{
 			for (Administrationsvej av : lm.getAdministrationsveje())
@@ -213,7 +218,7 @@ public class TakstParser
 				lars.add(new LaegemiddelAdministrationsvejRef(lm, av));
 			}
 		}
-		
+
 		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class));
 	}
 
@@ -234,7 +239,7 @@ public class TakstParser
 		List<Pakningsstoerrelsesenhed> pakEnheder = new ArrayList<Pakningsstoerrelsesenhed>();
 		List<Styrkeenhed> styrkeEnheder = new ArrayList<Styrkeenhed>();
 		Dataset<DivEnheder> divEnheder = takst.getDatasetOfType(DivEnheder.class);
-		
+
 		for (DivEnheder enhed : divEnheder.getEntities())
 		{
 			if (enhed.isEnhedstypeTid())
@@ -265,7 +270,7 @@ public class TakstParser
 	{
 		List<Pakning> pakningerToBeRemoved = new ArrayList<Pakning>();
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		
+
 		if (pakninger != null)
 		{
 			for (Pakning pakning : pakninger.getEntities())
@@ -274,10 +279,10 @@ public class TakstParser
 			}
 			pakninger.removeEntities(pakningerToBeRemoved);
 		}
-		
+
 		Dataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
 		List<Laegemiddel> laegemidlerToBeRemoved = new ArrayList<Laegemiddel>();
-		
+
 		if (lmr != null)
 		{
 			for (Laegemiddel lm : lmr.getEntities())
@@ -286,10 +291,10 @@ public class TakstParser
 			}
 			lmr.removeEntities(laegemidlerToBeRemoved);
 		}
-		
+
 		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
 		List<ATCKoderOgTekst> atcToBeRemoved = new ArrayList<ATCKoderOgTekst>();
-		
+
 		if (atckoder != null)
 		{
 			for (ATCKoderOgTekst atc : atckoder.getEntities())

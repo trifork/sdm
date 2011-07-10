@@ -46,8 +46,6 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageStructu
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageUnit;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
-import com.trifork.stamdata.importer.jobs.exceptions.FilePersistException;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
@@ -72,13 +70,13 @@ public class DoseringsforslagImporterTest
 	private File relationFile;
 
 	private Connection connection;
-	private MockPersister persister;
+	private MockPersister persister = new MockPersister();
 
 	@Before
 	public void setUp() throws SQLException
-	{
+	{		
 		connection = MySQLConnectionManager.getConnection();
-
+		
 		// The 'single' files only contain one record each.
 		// This makes it easy to know that is imported and
 		// it is a lot faster.
@@ -196,7 +194,7 @@ public class DoseringsforslagImporterTest
 		importer = new DosageSuggestionImporter();
 		File[] files = new File[] { versionFile, drugsFile, dosageStructureFile, unitsFile, relationFile };
 
-		importer.importFiles(files, new AuditingPersister(connection));
+		importer.importFiles(files, persister);
 	}
 
 	public <T extends StamdataEntity> T getFirst(Class<T> type)
@@ -211,7 +209,7 @@ public class DoseringsforslagImporterTest
 		Map<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>> results;
 
 		@Override
-		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws FilePersistException
+		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
 		{
 			results = new HashMap<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>>();
 
@@ -222,7 +220,7 @@ public class DoseringsforslagImporterTest
 		}
 
 		@Override
-		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws FilePersistException
+		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 		{
 			// Don't use this.
 		}

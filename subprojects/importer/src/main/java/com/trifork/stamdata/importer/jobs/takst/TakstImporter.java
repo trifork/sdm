@@ -40,7 +40,8 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 /**
  * Parser for the DKMA register. Also known as 'Taksten'.
@@ -72,11 +73,11 @@ public class TakstImporter implements FileParser
 		return true;
 	}
 	
-	public void importFiles(File[] input, AuditingPersister persister) throws Exception
+	public void importFiles(File[] input, Persister persister) throws Exception
 	{
 		Takst takst = new TakstParser().parseFiles(input);
 
-		persister.persistCompleteDataset(takst.getDatasets());
+		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[] {}));
 	}
 
 	/**

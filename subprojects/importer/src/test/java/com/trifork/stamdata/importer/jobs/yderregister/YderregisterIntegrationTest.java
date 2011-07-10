@@ -32,9 +32,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -42,8 +39,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.exceptions.FilePersistException;
-import com.trifork.stamdata.importer.jobs.yderregister.YderregisterImporter;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
@@ -54,7 +49,7 @@ import com.trifork.stamdata.importer.persistence.AuditingPersister;
  */
 public class YderregisterIntegrationTest
 {
-	private Connection con;
+	private Connection connection;
 
 	public File getFile(String path)
 	{
@@ -64,9 +59,9 @@ public class YderregisterIntegrationTest
 	@Before
 	public void cleanDatabase() throws Exception
 	{
-		con = MySQLConnectionManager.getConnection();
+		connection = MySQLConnectionManager.getConnection();
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		stmt.execute("truncate table Yderregister");
 		stmt.execute("truncate table YderregisterPerson");
 		stmt.execute("truncate table YderLoebenummer");
@@ -76,28 +71,28 @@ public class YderregisterIntegrationTest
 	@After
 	public void tearDown() throws SQLException
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
 	public void ImportTest() throws Exception
 	{
 		File fInitial = getFile("data/yderregister/initial/");
-		
-		new YderregisterImporter().importFiles(fInitial.listFiles(), new AuditingPersister(con));
 
-		Statement stmt = con.createStatement();
+		new YderregisterImporter().importFiles(fInitial.listFiles(), new AuditingPersister(connection));
 
-		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Yderregister;");
+		Statement stmt = connection.createStatement();
+
+		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Yderregister");
 
 		rs.next();
 
-		assertEquals("Samlet antal yderere", 12, rs.getInt(1));
+		assertEquals("Number of rows.", 12, rs.getInt(1));
 
-		rs = stmt.executeQuery("SELECT * FROM Yderregister WHERE Nummer = 4219;");
+		rs = stmt.executeQuery("SELECT * FROM Yderregister WHERE Nummer = 4219");
 
-		assertFalse("Fandt ikke den forventede yder med ydernummer 4219", rs.next());
+		rs.next();
 
 		assertEquals("Yders Navn", "Jørgen Vagn Nielsen", rs.getString("Navn"));
 		assertEquals("Yders Vejnavn", "Store Kongensgade 96,4.", rs.getString("Vejnavn"));
@@ -112,19 +107,17 @@ public class YderregisterIntegrationTest
 		stmt.close();
 	}
 
-	@Test(expected = FilePersistException.class)
+	@Test(expected = Exception.class)
 	public void LoebenummerTest() throws Exception
-	{		
+	{
 		File fInitial = getFile("data/yderregister/initial/");
 		File fNext = getFile("data/yderregister/nextversion/");
 
-		List<File> files = Arrays.asList((fInitial.listFiles()));
+		AuditingPersister persister = new AuditingPersister(connection);
 
-		new YderregisterImporter().run(files, con);
+		new YderregisterImporter().importFiles(fInitial.listFiles(), persister);
 
-		files = Arrays.asList((fNext.listFiles()));
-
-		new YderregisterImporter().run(files, con);
+		new YderregisterImporter().importFiles(fNext.listFiles(), persister);
 	}
 
 	@Test
@@ -133,7 +126,7 @@ public class YderregisterIntegrationTest
 		File fInitial = getFile("data/yderregister/initial/");
 
 		YderregisterImporter yImp = new YderregisterImporter();
-		boolean isComplete = yImp.checkRequiredFiles(Arrays.asList(fInitial.listFiles()));
+		boolean isComplete = yImp.ensureRequiredFileArePresent(fInitial.listFiles());
 
 		assertTrue("Expected to be complete", isComplete);
 	}
@@ -144,7 +137,7 @@ public class YderregisterIntegrationTest
 		File fInitial = getFile("data/yderregister/incomplete/");
 
 		YderregisterImporter yImp = new YderregisterImporter();
-		boolean isComplete = yImp.checkRequiredFiles(Arrays.asList(fInitial.listFiles()));
+		boolean isComplete = yImp.ensureRequiredFileArePresent(fInitial.listFiles());
 
 		assertEquals("Expected to be incomplete", false, isComplete);
 	}

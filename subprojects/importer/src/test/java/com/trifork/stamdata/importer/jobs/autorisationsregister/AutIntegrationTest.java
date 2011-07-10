@@ -30,9 +30,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -41,10 +39,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.AutorisationImporter;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
-import com.trifork.stamdata.importer.jobs.exceptions.FileImporterException;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Dataset;
 
@@ -79,16 +75,15 @@ public class AutIntegrationTest
 	}
 
 	@Before
-	public void cleanDb() throws SQLException
+	public void setUp() throws SQLException
 	{
-		connection = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = connection.createStatement();
-		stmt.executeUpdate("TRUNCATE TABLE " + Dataset.getEntityTypeDisplayName(Autorisation.class));
-		stmt.close();
+		connection = MySQLConnectionManager.getConnection();
+		connection.createStatement().execute("TRUNCATE TABLE Autorisation");
+		connection.commit();
 	}
 
 	@After
-	public void rollback() throws SQLException
+	public void tearDown() throws SQLException
 	{
 		connection.rollback();
 		connection.close();
@@ -119,33 +114,16 @@ public class AutIntegrationTest
 		}
 	}
 
-	@Test
-	public void testImportX2() throws Exception
+	@Test(expected = Exception.class)
+	public void should_not_allow_the_same_version_to_be_imported_twice() throws Exception
 	{
 		AutorisationImporter importer = new AutorisationImporter();
 		AuditingPersister persister = new AuditingPersister(connection);
+
 		File[] files = new File[] { initial };
 
 		importer.importFiles(files, persister);
 		importer.importFiles(files, persister);
-
-		Statement stmt = connection.createStatement();
-
-		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
-		rs.next();
-		assertEquals("Number of records in database.", initialCompares.getEntities().size(), rs.getInt(1));
-
-		rs = stmt.executeQuery("SELECT * FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
-
-		for (int i = 0; i < initialCompares.getEntities().size(); i++)
-		{
-			rs.next();
-			Autorisation compare = initialCompares.getEntityById(rs.getString("Autorisationsnummer"));
-			assertEquals(compare.getCpr(), rs.getString("cpr"));
-			assertEquals(compare.getFornavn(), rs.getString("Fornavn"));
-			assertEquals(compare.getEfternavn(), rs.getString("Efternavn"));
-			assertEquals(compare.getUddannelsesKode(), rs.getString("UddannelsesKode"));
-		}
 	}
 
 	@Test
@@ -184,7 +162,7 @@ public class AutIntegrationTest
 		stmt.close();
 	}
 
-	@Test(expected = FileImporterException.class)
+	@Test(expected = Exception.class)
 	public void testInvalid() throws Exception
 	{
 		File[] files = new File[] { invalid };

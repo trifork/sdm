@@ -3,6 +3,7 @@ package com.trifork.stamdata.importer.jobs;
 import java.io.File;
 
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 public interface FileParser
 {
@@ -14,7 +15,7 @@ public interface FileParser
 	
 	boolean ensureRequiredFileArePresent(File[] input);
 	
-	void importFiles(File[] input, AuditingPersister persister) throws Exception;
+	void importFiles(File[] input, Persister persister) throws Exception;
 	
 	/**
 	 * (non-javadoc)

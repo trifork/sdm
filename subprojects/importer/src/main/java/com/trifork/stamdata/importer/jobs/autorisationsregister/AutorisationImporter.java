@@ -25,25 +25,27 @@ package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 
 public class AutorisationImporter implements FileParser
 {
+	private static final String FILENAME_DATE_FORMAT = "yyyyMMdd";
 	private static final String FILE_ENCODING = "ISO8859-15";
 
 	@Override
@@ -54,7 +56,7 @@ public class AutorisationImporter implements FileParser
 		// make sure that there are some.
 
 		checkNotNull(input);
-		
+
 		return (input.length > 0);
 	}
 
@@ -65,46 +67,60 @@ public class AutorisationImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] files, AuditingPersister persister) throws Exception
+	public String getHumanName()
 	{
+		return "Autorisationsregisteret Parser";
+	}
+
+	@Override
+	public void importFiles(File[] files, Persister persister) throws Exception
+	{
+		// Make sure the file set has not been imported before.
+		// Check what the previous highest version is (the ValidFrom column).
+
+		Connection connection = persister.getConnection();
+		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ValidFrom) as version FROM Autorisation");
+
+		// There will always be a next here, but it might be null.
+
+		rows.next();
+		Timestamp previousVersion = rows.getTimestamp("version");
+
+		DateTime currentVersion = getDateFromFilename(files[0].getName());
+
+		if (previousVersion != null && !currentVersion.isAfter(previousVersion.getTime()))
+		{
+			throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + currentVersion + "'.");
+		}
+
 		for (File file : files)
 		{
-			Date date = getDateFromFilename(file.getName());
-
-			Autorisationsregisterudtraek dataset = parse(file, date);
+			Autorisationsregisterudtraek dataset = parse(file, currentVersion);
 			persister.persistCompleteDataset(dataset);
 		}
 	}
 
-	protected Date getDateFromFilename(String filename) throws ParseException
+	protected DateTime getDateFromFilename(String filename)
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-		return formatter.parse(filename.substring(0, 8));
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(FILENAME_DATE_FORMAT);
+		return formatter.parseDateTime(filename.substring(0, 8));
 	}
 
-	public Date getNextImportExpectedBefore(Date lastImport)
+	public Autorisationsregisterudtraek parse(File file, DateTime validFrom) throws IOException
 	{
-		// Largest gap observed was 15 days from 2008-10-18 to 2008-11-01.
+		Autorisationsregisterudtraek dataset = new Autorisationsregisterudtraek(validFrom.toDate());
 
-		return new DateTime(lastImport).plusMonths(1).toDate();
-	}
-	
-	public Autorisationsregisterudtraek parse(File file, Date validFrom) throws IOException
-	{
-		Autorisationsregisterudtraek dataset = new Autorisationsregisterudtraek(validFrom);
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), FILE_ENCODING));
+		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
 
-		while (reader.ready())
+		// TODO (thb): The parsing should not be handled in a constructor. That
+		// is bad design.
+
+		while (lineIterator.hasNext())
 		{
-			dataset.addEntity(new Autorisation(reader.readLine()));
+			String line = lineIterator.nextLine();
+			dataset.addEntity(new Autorisation(line));
 		}
 
 		return dataset;
-	}
-
-	@Override
-	public String getHumanName()
-	{
-		return "Autorisationsregisteret Parser";
 	}
 }

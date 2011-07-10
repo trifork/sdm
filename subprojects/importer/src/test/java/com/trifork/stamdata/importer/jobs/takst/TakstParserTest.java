@@ -28,9 +28,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -42,7 +39,6 @@ import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.slf4j.Logger;
 
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
@@ -101,7 +97,7 @@ public class TakstParserTest
 	public void should_parse_takst_drug_version_2() throws Exception
 	{
 		LaegemiddelFactory config = new LaegemiddelFactory();
-		File file = createFileWithContent(config, "28100110949SPLMXYLOCA00200985Xylocain                      inj.v�ske, opl�sningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          ");
+		File file = createFileWithContent(config, "28100110949SPLMXYLOCA00200985Xylocain                      inj.væske, opløsningINJVSKO       10 mg/ml            0000010000MGM056100056100 N01BB02EDIRIVPE                          ");
 		List<Laegemiddel> drugs = new FixedLengthFileParser(new File[] {file}).parse(config, Laegemiddel.class);
 
 		// Assert
@@ -120,7 +116,7 @@ public class TakstParserTest
 		assertEquals("N01BB02", drug.getATC());
 		assertEquals("INJVSKO", drug.getFormKode());
 		assertEquals("EDIRIVPE", drug.getAdministrationsvejKode());
-		assertEquals("inj.v�ske, opl�sning", drug.getLaegemiddelformTekst());
+		assertEquals("inj.væske, opløsning", drug.getLaegemiddelformTekst());
 	}
 
 	@Test
@@ -163,25 +159,6 @@ public class TakstParserTest
 		TakstParser takstParser = new TakstParser();
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/takst/unparsable/"));
 		takstParser.parseFiles(dir.listFiles());
-	}
-
-	@Test
-	public void testWarningWrongVersion() throws Exception
-	{
-		// Arrange. Try parsing a system file with unkown version number
-
-		TakstParser takstParser = new TakstParser();
-		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/takst/unknown_version/"));
-		
-		// Mock the logger to verify that a warning is logged.
-
-		TakstParser.logger = mock(Logger.class);
-
-		// Act
-		takstParser.parseFiles(dir.listFiles());
-
-		// Assert
-		verify(TakstParser.logger).warn(contains("version"));
 	}
 
 	@Test

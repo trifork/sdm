@@ -32,8 +32,8 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sks.model.Organisation;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Dataset;
+import com.trifork.stamdata.importer.persistence.Persister;
 
 
 /**
@@ -59,7 +59,7 @@ public class SksImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] files, AuditingPersister persister) throws Exception
+	public void importFiles(File[] files, Persister persister) throws Exception
 	{
 		for (File file : files)
 		{

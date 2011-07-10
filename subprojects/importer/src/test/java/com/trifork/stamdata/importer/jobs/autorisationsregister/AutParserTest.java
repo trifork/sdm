@@ -31,31 +31,30 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.autorisationsregister.AutorisationsregisterParser;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
 import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
 
 
-
-public class AutParserTest {
-
+public class AutParserTest
+{
 	public static File valid;
 	public static File invalid;
 
 	@Before
-	public void setUp() {
-
+	public void setUp()
+	{
 		valid = FileUtils.toFile(getClass().getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
 		invalid = FileUtils.toFile(getClass().getClassLoader().getResource("data/aut/invalid/20090915AutDK.csv"));
 	}
 
 	@Test
-	public void testParse() throws IOException {
-
-		Autorisationsregisterudtraek auts = AutorisationsregisterParser.parse(valid, new Date());
+	public void testParse() throws IOException
+	{
+		Autorisationsregisterudtraek auts = new AutorisationImporter().parse(valid, new DateTime());
 		assertEquals(4, auts.getEntities().size());
 		Autorisation a = auts.getEntityById("0013H");
 		assertNotNull(a);
@@ -64,8 +63,8 @@ public class AutParserTest {
 	}
 
 	@Test(expected = Exception.class)
-	public void testInvalid() throws IOException {
-
-		AutorisationsregisterParser.parse(invalid, new Date());
+	public void testInvalid() throws IOException
+	{
+		new AutorisationImporter().parse(invalid, new DateTime());
 	}
 }
