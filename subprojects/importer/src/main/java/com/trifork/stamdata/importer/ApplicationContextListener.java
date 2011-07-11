@@ -23,47 +23,236 @@
 
 package com.trifork.stamdata.importer;
 
+import java.io.File;
+import java.net.URL;
 import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.ServletContextEvent;
+
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
 import com.google.inject.Scopes;
-import com.google.inject.name.Names;
+import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.importer.config.Configuration;
-import com.trifork.stamdata.importer.parsers.SpoolerManager;
+import com.trifork.stamdata.importer.jobs.FileParser;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
+import com.trifork.stamdata.importer.jobs.Job;
+import com.trifork.stamdata.importer.jobs.JobManager;
+import com.trifork.stamdata.importer.jobs.Updater;
+import com.trifork.stamdata.importer.jobs.UpdaterJob;
 import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
-import com.trifork.stamdata.importer.webinterface.ImporterServlet;
+import com.trifork.stamdata.importer.webinterface.GUIServlet;
+import com.trifork.stamdata.importer.webinterface.LogServlet;
+import com.trifork.stamdata.importer.webinterface.StatusServelet;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener
 {
+	public static final String BUILDIN_CONFIG_FILE = "config.properties";
+	public static final String DEPLOYMENT_CONFIG_FILE = "stamdata-importer.properties";
+	
+	private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
+	private Injector injector;
+	
+	@Override
+	public void contextInitialized(ServletContextEvent servletContextEvent)
+	{
+		super.contextInitialized(servletContextEvent);
+	
+		// Start the jobs.
+		
+		try
+		{
+			JobManager manager = injector.getInstance(JobManager.class);
+			manager.start();
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Could not start the job manager.", e);
+		}
+	}
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent)
+	{
+		try
+		{
+			JobManager manager = injector.getInstance(JobManager.class);
+			manager.stop();
+		}
+		catch (Exception e)
+		{
+			// We'll just log the error here and allow the rest of the
+			// system to shut down.
+			
+			logger.error("Could not start the job manager.", e);
+		}
+		
+		super.contextDestroyed(servletContextEvent);
+	}
+	
 	@Override
 	protected Injector getInjector()
 	{
+		if (injector != null) return injector;
+		
+		final CompositeConfiguration config = loadConfiguration();
 
-		Collection<Module> modules = Lists.newArrayList();
+		// Parse the properties from the configuration files.
 
-		modules.add(new ServletModule()
+		final List<Job> jobs = Lists.newArrayList();
+		
+		jobs.addAll(getConfiguredUpdateJobs(config));
+		jobs.addAll(getConfiguredParserJobs(config));
+
+		injector = Guice.createInjector(new ServletModule()
 		{
 			@Override
 			protected void configureServlets()
 			{
+				// Bind the configured jobs.
 
-				serve("/status").with(ImporterServlet.class);
+				bind(new TypeLiteral<List<Job>>() {}).toInstance(jobs);
 
+				// Serve the status servlet.
+
+				serve("/status").with(StatusServelet.class);
+				serve("/log").with(LogServlet.class);
+				serve("/").with(GUIServlet.class);
+				
+				// Bind the required dependencies.
+				
 				bind(ProjectInfo.class).in(Scopes.SINGLETON);
-				bind(SpoolerManager.class).in(Scopes.SINGLETON);
+				bind(JobManager.class).in(Scopes.SINGLETON);
 				bind(DatabaseStatus.class).in(Scopes.SINGLETON);
-
-				bindConstant().annotatedWith(Names.named("RootDir")).to(Configuration.getString("spooler.rootdir"));
 			}
 		});
+		
+		return injector;
+	}
 
-		return Guice.createInjector(modules);
+	private Collection<? extends Job> getConfiguredUpdateJobs(CompositeConfiguration config)
+	{
+		// Job config format:
+		//
+		// job : <Job's class name>; <cron expression>
+		
+		List<Job> jobs = Lists.newArrayList();
+		
+		for (String jobConfiguration : config.getStringArray("job"))
+		{
+			String[] values = jobConfiguration.split(";");
+
+			if (values.length != 2)
+			{
+				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
+			}
+			
+			String className = values[0].trim();
+			String cronExpression = values[1].trim();
+
+			try
+			{
+				Class<? extends Updater> type = Class.forName(className).asSubclass(Updater.class);
+				Updater job = type.newInstance();
+				
+				// Wrap the updater in a updater job.
+				
+				jobs.add(new UpdaterJob(job, cronExpression));
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("An error occurred while loading job.", e);
+			}
+		}
+		
+		return jobs;
+	}
+
+	private List<Job> getConfiguredParserJobs(final CompositeConfiguration config)
+	{
+		// File parser config format:
+		//
+		// parser : <File parser's canonical class name>; <minimum import frequency in days>
+		
+		List<Job> fileParsers = Lists.newArrayList();
+		
+		final File rootDir = new File(config.getString("rootDir"));
+		
+		for (String jobConfiguration : config.getStringArray("parser"))
+		{
+			String[] values = jobConfiguration.split(";");
+
+			if (values.length != 2)
+			{
+				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
+			}
+			
+			String className = values[0].trim();
+			int minimumImportFrequency = Integer.parseInt(values[1].trim());
+
+			try
+			{
+				Class<? extends FileParser> type = Class.forName(className).asSubclass(FileParser.class);
+				FileParser parser = type.newInstance();
+				
+				// Wrap the parser in a file parser job.
+				
+				fileParsers.add(new FileParserJob(rootDir, parser, minimumImportFrequency));
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException("An error occurred while loading job.", e);
+			}
+		}
+		
+		return fileParsers;
+	}
+
+	private CompositeConfiguration loadConfiguration()
+	{
+		try
+		{
+			// Override the default configuration 'config.properties' with
+			// the one found in 'stamdata-importer.properties'.
+			//
+			// Composite configurations always return the first version of a
+			// property
+			// that is added to it. Therefore we load the defaults last.
+
+			CompositeConfiguration configuration = new CompositeConfiguration();
+
+			URL deploymentConfigurationFile = getClass().getClassLoader().getResource(DEPLOYMENT_CONFIG_FILE);
+			
+			if (deploymentConfigurationFile != null)
+			{
+				configuration.addConfiguration(new PropertiesConfiguration(deploymentConfigurationFile));
+				logger.info("Configuration file '{}' loaded.", deploymentConfigurationFile);
+			}
+			else
+			{
+				logger.warn("Configuration file '{}' could not be found. Using default configuration.", DEPLOYMENT_CONFIG_FILE);
+			}
+
+			// Add any missing properties from the defaults.
+
+			configuration.addConfiguration(new PropertiesConfiguration(BUILDIN_CONFIG_FILE));
+
+			return configuration;
+
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("The application could not be started do to a configuration error.", e);
+		}
 	}
 }

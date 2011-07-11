@@ -12,7 +12,7 @@ import org.hibernate.Session;
 import com.google.inject.Inject;
 
 /**
- *  Data access object for authorizations.
+ * Data access object for authorizations.
  * 
  * This class is thread safe.
  * 

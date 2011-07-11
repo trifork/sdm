@@ -1,0 +1,65 @@
+@charset "UTF-8";
+
+body, html {
+	font-family: verdana, helvetica, sans-serif;
+	background-color: #FFF;
+	margin: 0;
+	padding: 0;
+}
+
+h2 {
+	font-weight: normal;	
+}
+
+div#container {
+	width: 1000px;
+	margin: 0 auto;	
+}
+
+div#header {
+	margin: 20px 0;
+}
+
+div.right {
+	float: right;
+	text-align: right;
+}
+
+div {
+	line-height: 24px;
+	margin-bottom: 7px;
+	background-position: 7px 7px;
+	background-repeat: no-repeat;
+	border-radius: 5px;
+}
+
+.job {
+	border: 1px solid #999;
+	padding: 7px 7px 7px 42px;
+}
+
+div.ok {
+	background-image: url(../images/ok.gif);
+	background-color: #CCFF99;
+}
+
+div.warning {
+	background-image: url(../images/warn.gif);
+	background-color: #FFFFCC;
+}
+
+div.error {
+	background-image: url(../images/error.png);
+	background-color: #FF9999;
+}
+
+div.executing {
+	background-image: url(../images/running.png);
+	background-color: #DBF5FD;
+}
+
+div#footer {
+	text-align: right;
+	margin-top: 10px;
+	color: #CCC;
+}

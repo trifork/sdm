@@ -104,21 +104,18 @@ public class DosageStructure extends View
 	@Override
 	public String getId()
 	{
-
 		return code;
 	}
 
 	@Override
 	public BigInteger getRecordID()
 	{
-
 		return recordID;
 	}
 
 	@Override
 	public Date getUpdated()
 	{
-
 		return modifiedDate;
 	}
 }

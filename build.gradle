@@ -84,7 +84,7 @@ subprojects { subproject ->
 	// Also enable code assertions while testing.
 
 	test {
-		jvmArgs '-ea', '-Xmx512m'
+		jvmArgs '-ea', '-Xmx768m'
 	}
 	
 	// Test coverage.
@@ -103,9 +103,11 @@ buildscript {
 		mavenRepo name: 'trifork-releases', urls: 'http://nexus.ci81.trifork.com/content/groups/public/'
 		mavenRepo name: 'trifork-snapshots', urls: 'http://nexus.ci81.trifork.com/content/groups/public-snapshots/'
 	}
-	dependencies {
+
+    dependencies {
 		classpath 'com.trifork:gradle-plugins:0.1.0'
 	}
+
 }
 
 // Gradle is a new tool, and as such you can't expect people
