@@ -64,7 +64,7 @@ public class FileSpoolerImplTest
 	public void setUp()
 	{
 
-		impl = new FileSpoolerImpl(new FileSpoolerSetup("TestSpooler", spoolerDir, TestFileImporter.class));
+		impl = new FileSpoolerImpl(new FileSpoolerSetup("TestSpooler", spoolerDir, TstFileImporter.class));
 
 		try
 		{
@@ -200,7 +200,7 @@ public class FileSpoolerImplTest
 		impl.stabilizationPeriodEnd = cal;
 		impl.inputdirSignature = FileSpoolerImpl.getDirSignature(impl.getInputDir());
 		// Make an importer that always succeeds
-		TestFileImporter importer = new TestFileImporter()
+		TstFileImporter importer = new TstFileImporter()
 		{
 
 			@Override
@@ -263,7 +263,7 @@ public class FileSpoolerImplTest
 		impl.inputdirSignature = FileSpoolerImpl.getDirSignature(impl.getInputDir());
 
 		// Make an importer that always fails
-		TestFileImporter importer = new TestFileImporter()
+		TstFileImporter importer = new TstFileImporter()
 		{
 
 			@Override
@@ -332,7 +332,7 @@ public class FileSpoolerImplTest
 }
 
 
-class TestFileImporter implements FileImporter
+class TstFileImporter implements FileImporter
 {
 
 	int importFileCalled = 0;

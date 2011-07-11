@@ -1,0 +1,207 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.trifork.stamdata</groupId>
+    <artifactId>parent</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>Stamdata project</name>
+
+    <modules>
+        <module>subprojects/authorization-ws</module>
+        <module>subprojects/importer</module>
+        <module>subprojects/performance</module>
+        <module>subprojects/replication</module>
+        <module>subprojects/shared</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <slf4j.version>1.6.1</slf4j.version>
+        <guice.version>3.0</guice.version>
+    </properties>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                        <showDeprecation>true</showDeprecation>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.1.2</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-site-plugin</artifactId>
+                    <version>2.2</version>
+                    <configuration>
+                        <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+                        <outputEncoding>${project.reporting.outputEncoding}</outputEncoding>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <excludes>
+                            <exclude>**/*IntegrationTest.*</exclude>
+                            <exclude>**/*Test*$*.*</exclude>
+                            <!-- Exclude Test execution for inner classes and IntegrationTest classes (IntegrationTest classes will be run in the integration-test phase instead) -->
+                        </excludes>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>2.8.1</version>
+                    <configuration>
+                        <includes>
+                            <include>**/*IntegrationTest.*</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/*$*.*</exclude>
+                        </excludes>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet>
+                        <id>integration-tests</id>
+                        <reports>
+                            <report>report-only</report>
+                        </reports>
+                        <configuration>
+                            <outputName>failsafe-report</outputName>
+                            <reportsDirectories>
+                                <reportsDirectory>${project.build.directory}/failsafe-reports</reportsDirectory>
+                            </reportsDirectories>
+                        </configuration>
+                    </reportSet>
+                    <reportSet>
+                        <id>tests</id>
+                        <reports>
+                            <report>report-only</report>
+                        </reports>
+                        <configuration>
+                            <outputName>test-report</outputName>
+                            <reportsDirectories>
+                                <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                            </reportsDirectories>
+                        </configuration>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <!--plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-xmaven-xdoc-plugin</artifactId>
+            </plugin-->
+        </plugins>
+    </reporting>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <repositories>
+        <repository>
+            <id>new-trifork-releases</id>
+            <name>Trifork new releases</name>
+            <layout>default</layout>
+            <url>https://nexus.trifork.com/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>trifork-releases</id>
+            <name>Trifork new releases</name>
+            <layout>default</layout>
+            <url>http://nexus.ci81.trifork.com/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>trifork-snapshots</id>
+            <name>Trifork new releases</name>
+            <layout>default</layout>
+            <url>http://nexus.ci81.trifork.com/content/groups/public-snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>java.net.m2</id>
+            <name>JAVA net</name>
+            <layout>default</layout>
+            <url>http://download.java.net/maven/2</url>
+            <!--snapshots>
+                <enabled>true</enabled>
+            </snapshots-->
+        </repository>
+    </repositories>
+
+
+</project>

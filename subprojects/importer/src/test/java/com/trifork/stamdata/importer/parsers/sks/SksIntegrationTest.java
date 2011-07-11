@@ -40,7 +40,7 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.parsers.sks.SksImporter;
 
 
-public class SksIntegrationsTest {
+public class SksIntegrationTest {
 
 	public File SHAKCompleate;
 

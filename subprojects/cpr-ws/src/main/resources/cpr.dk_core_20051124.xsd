@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns1="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+        xmlns:ns10="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+        xmlns:ns11="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+        xmlns:ns12="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+        xmlns:ns13="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+        xmlns:ns14="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+        xmlns:ns15="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/"
+        xmlns:ns2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        xmlns:ns3="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+        xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+        xmlns:ns5="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+        xmlns:ns6="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+        xmlns:ns7="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+        xmlns:ns8="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+        xmlns:ns9="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" attributeFormDefault="unqualified"
+        elementFormDefault="qualified" targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/">
+    <import namespace="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/" schemaLocation="ois.dk_20060425.xsd"/>
+    <import namespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+            schemaLocation="medcom.sundcom.dk_20070201.xsd"/>
+    <import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" schemaLocation="dkcc_20030213.xsd"/>
+    <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/" schemaLocation="cpr.dk_core_20060117.xsd"/>
+    <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/" schemaLocation="cpr.dk_core_20060901.xsd"/>
+    <import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" schemaLocation="xkom.dk_20050315.xsd"/>
+    <import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" schemaLocation="dkcc_20050901.xsd"/>
+    <import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" schemaLocation="itst.dk_20050624.xsd"/>
+    <import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="dkcc_20050315.xsd"/>
+    <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+            schemaLocation="cpr.dk_core_20050318.xsd"/>
+    <import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" schemaLocation="xkom.dk_20060106.xsd"/>
+    <import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" schemaLocation="dkcc_20050513.xsd"/>
+    <import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" schemaLocation="itst.dk_20060117.xsd"/>
+    <import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" schemaLocation="itst.dk_20050222.xsd"/>
+    <element name="BirthDateUncertaintyIndicator" type="boolean"/>
+    <element name="PersonBirthDateStructure" type="ns6:PersonBirthDateStructureType"/>
+    <complexType name="PersonBirthDateStructureType">
+        <sequence>
+            <element ref="ns9:BirthDate"/>
+            <element ref="ns6:BirthDateUncertaintyIndicator"/>
+        </sequence>
+    </complexType>
+    <element name="PersonCivilRegistrationStatusCode" type="ns6:PersonCivilRegistrationStatusCodeType"/>
+    <simpleType name="PersonCivilRegistrationStatusCodeType">
+        <restriction base="integer">
+            <enumeration value="01"/>
+            <enumeration value="03"/>
+            <enumeration value="05"/>
+            <enumeration value="07"/>
+            <enumeration value="20"/>
+            <enumeration value="30"/>
+            <enumeration value="50"/>
+            <enumeration value="60"/>
+            <enumeration value="70"/>
+            <enumeration value="80"/>
+            <enumeration value="90"/>
+        </restriction>
+    </simpleType>
+    <element name="PersonInformationProtectionIndicator" type="boolean"/>
+</schema>

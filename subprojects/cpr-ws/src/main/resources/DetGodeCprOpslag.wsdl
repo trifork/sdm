@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:tns="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+    <wsdl:types>
+        <s:schema
+                xmlns:tns="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+                xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+                elementFormDefault="qualified"
+                targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/">
+
+            <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+                       schemaLocation="cpr.dk_core_20050318.xsd"/>
+
+            <xs:import namespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+                       schemaLocation="medcom.sundcom.dk_20070201.xsd"/>
+
+            <xs:element name="getPersonWithHealthCareInformationIn">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="cpr:PersonCivilRegistrationIdentifier"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonInformationIn">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="cpr:PersonCivilRegistrationIdentifier"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonWithHealthCareInformationOut">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="medcom:PersonWithHealthCareInformationStructure"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getPersonInformationOut">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="medcom:PersonInformationStructure"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </s:schema>
+    </wsdl:types>
+    <wsdl:message name="getPersonWithHealthCareInformationIn">
+        <wsdl:part name="parameters" element="tns:getPersonWithHealthCareInformationIn"/>
+    </wsdl:message>
+    <wsdl:message name="getPersonInformationIn">
+        <wsdl:part name="parameters" element="tns:getPersonInformationIn"/>
+    </wsdl:message>
+    <wsdl:message name="getPersonWithHealthCareInformationOut">
+        <wsdl:part name="parameters" element="tns:getPersonWithHealthCareInformationOut"/>
+    </wsdl:message>
+    <wsdl:message name="getPersonInformationOut">
+        <wsdl:part name="parameters" element="tns:getPersonInformationOut"/>
+    </wsdl:message>
+    <wsdl:portType name="DetGodeCPROpslag">
+        <wsdl:operation name="getPersonInformation">
+            <wsdl:input message="tns:getPersonInformationIn"/>
+            <wsdl:output message="tns:getPersonInformationOut"/>
+        </wsdl:operation>
+        <wsdl:operation name="getPersonWithHealthCareInformation">
+            <wsdl:input message="tns:getPersonWithHealthCareInformationIn"/>
+            <wsdl:output message="tns:getPersonWithHealthCareInformationOut"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="DetGodeCPROpslagBinding" type="tns:DetGodeCPROpslag">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+        <wsdl:operation name="getPersonInformation">
+            <soap:operation soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonInformation"
+                            style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getPersonWithHealthCareInformation">
+            <soap:operation
+                    soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonWithHealthCareInformation"
+                    style="document"/>
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="DetGodeCPROpslagService" >
+        <wsdl:port name="DetGodeCPROpslag" binding="tns:DetGodeCPROpslagBinding" >
+           <soap:address location="http://localhost:8080/DetGodeCPROpslagService" />
+        </wsdl:port>
+    </wsdl:service>
+
+</wsdl:definitions>
