@@ -1088,3 +1088,18 @@ CREATE TABLE UsageLogEntry (
 	Amount INTEGER NOT NULL,
 	INDEX (ClientId, UsageLogEntryPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE patientdoctorrelation (
+	PatientDoctorRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	Id VARCHAR(21) NOT NULL,
+	CPR VARCHAR(10) NOT NULL,
+	LaegeCPR VARCHAR(10) NOT NULL,
+
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME NOT NULL,
+	INDEX (ValidFrom, ValidTo),
+	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom),
+	INDEX (modifiedDate, PatientDoctorRelationPID)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;

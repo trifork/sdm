@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -35,6 +36,11 @@ public class PatientDoctorRelation extends View
 	@Temporal(TIMESTAMP)
 	@Column(name = "ModifiedDate")
 	protected Date modifiedDate;
+
+    @XmlElement(required = true)
+    @Column(name = "CPR")
+    protected String cpr;
+
 
 	@Override
 	public String getId()

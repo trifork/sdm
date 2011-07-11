@@ -69,7 +69,11 @@
                             <exclude>**/*Test*$*.*</exclude>
                             <!-- Exclude Test execution for inner classes and IntegrationTest classes (IntegrationTest classes will be run in the integration-test phase instead) -->
                         </excludes>
+                        <systemProperties>
+                            <argLine>-Xmx768m -XX:MaxPermSize=256m</argLine>
+                        </systemProperties>
                     </configuration>
+
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
