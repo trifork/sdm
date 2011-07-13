@@ -33,7 +33,7 @@ import com.trifork.stamdata.importer.util.DateUtils;
 
 
 @Output
-public class Yderregister extends AbstractStamdataEntity implements StamdataEntity
+public class Yderregister extends AbstractStamdataEntity
 {
 	private String nummer;
 	private String telefon;
