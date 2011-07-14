@@ -14,25 +14,18 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
 @XmlRootElement
-@ViewPath("sikrede/sikrede/v1")
-@Table(name = "Sikrede")
+@ViewPath("sikrede/saerligsundhedskort/v1")
+@Table(name = "SaerligSundhedskort")
 public class SaerligSundhedskort extends View {
     @Id
     @GeneratedValue
     @XmlTransient
-    @Column(name = "SikredePID")
+    @Column(name = "SaerligSundhedskortPID")
     protected BigInteger recordID;
 
     @XmlElement(required = true)
     @Column(name = "CPR")
     protected String cpr;
-
-/*    protected YderRelation currentYderRelation;
-    protected YderRelation previousYderRelation;
-    protected YderRelation futureYderRelation;
-*/
-    
-
 
     @Temporal(TIMESTAMP)
     @Column(name = "ValidFrom")

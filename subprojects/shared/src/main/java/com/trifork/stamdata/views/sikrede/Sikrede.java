@@ -14,7 +14,7 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
 @XmlRootElement
-@ViewPath("sikrede/patientdoctorrelation/v1")
+@ViewPath("sikrede/sikrede/v1")
 @Table(name = "Sikrede")
 public class Sikrede extends View {
     @Id
