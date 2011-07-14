@@ -1096,7 +1096,7 @@ CREATE TABLE Sikrede (
 	--Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
     kommunekode CHAR(3) NOT NULL, /* Person.KommuneKode  */
-    kommunekodeIkraftDato DATE NOT NULL, /* KommuneKode validFrom for person */
+    kommunekodeIkraftDato DATE, /* KommuneKode validFrom for person */
     foelgeskabsPersonCpr VARCHAR(10), /* CPR paa ledsager */
     status CHAR(2),
     bevisIkraftDato DATE, /* Sygesikringsbevis validFrom dato */
@@ -1106,16 +1106,18 @@ CREATE TABLE Sikrede (
     forsikringsinstans VARCHAR(21) NOT NUll,
     forsikringsinstansKode VARCHAR(10) NOT NULL,
     forsikringsnummer VARCHAR(15) NOT NULL,
-    validFrom DATE NOT NULL,
-    validTo DATE NOT NULL,
+    sslGyldigFra DATE NOT NULL,
+    sslGyldigTil DATE NOT NULL,
     socialLand VARCHAR(47) NOT NULL,
     socialLandKode CHAR(2) NOT NULL,
 
-	ModifiedDate DATETIME NOT NULL,
+    ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, validFrom),
-	INDEX (modifiedDate, SikredePID)
+	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
+	INDEX (ModifiedDate, SikredePID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  YderRelation (For each Sikrede, there are three sikredeyderrelation-records - 'current', 'old', 'future') */
@@ -1126,18 +1128,19 @@ CREATE TABLE SikredeYderRelation (
 
     -- Nuvaerende valg af yder
 	ydernummer MEDIUMINT(6) NOT NULL, 
-	validFrom DATE NOT NULL,/* ydernummerIkraftDato ? */
-	modifiedDate DATE NOT NULL, /*  ydernummerRegistreringDato ? */
+	ydernummerIkraftDato DATE NOT NULL,
 	sikringsgruppeKode CHAR(1) NOT NULL,
 	gruppeKodeIkraftDato DATE NOT NULL,
 	gruppekodeRegistreringDato DATE NOT NULL,
     ydernummerRegistreringDato DATE NOT NULL,
 
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (modifiedDate, SikredeYderRelationPID)
+	CONSTRAINT UC_Person_1 UNIQUE (id, ValidFrom),
+	INDEX (ModifiedDate, SikredeYderRelationPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  SSK */
@@ -1153,14 +1156,16 @@ CREATE TABLE SaerligSundhedskort (
     emailAdresse VARCHAR(50),
     familieRelationCpr VARCHAR(10), /* CPR paa familierelation */
     foedselsDato DATE,
-    validFrom DATE,
-    validTo DATE,
+    sskGyldigFra DATE,
+    sskGyldigTil DATE,
     mobilNummer VARCHAR(20),
     postnummerBy VARCHAR(40),
 
 	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (modifiedDate, SaerligSundhedskortPID)
+	INDEX (ModifiedDate, SaerligSundhedskortPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;

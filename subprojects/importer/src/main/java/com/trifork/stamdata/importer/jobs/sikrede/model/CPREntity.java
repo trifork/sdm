@@ -23,47 +23,39 @@
 
 package com.trifork.stamdata.importer.jobs.sikrede.model;
 
-import java.util.Date;
-
-import com.trifork.stamdata.importer.jobs.cpr.model.CPRDataset;
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
+import java.util.Date;
 
-public abstract class CPREntity extends AbstractStamdataEntity
-{
-	CPRDataset dataset;
-	String cpr;
 
-	public String getCpr()
-	{
-		return cpr;
-	}
+public abstract class CPREntity extends AbstractStamdataEntity {
+    SikredeDataset dataset;
+    String cpr;
 
-	public void setCpr(String cpr)
-	{
-		this.cpr = cpr;
-	}
+    public String getCpr() {
+        return cpr;
+    }
 
-	@Override
-	public Date getValidTo()
-	{
-		return DateUtils.FUTURE;
-	}
+    public void setCpr(String cpr) {
+        this.cpr = cpr;
+    }
 
-	public CPRDataset getDataset()
-	{
-		return dataset;
-	}
+    @Override
+    public Date getValidTo() {
+        return DateUtils.FUTURE;
+    }
 
-	public void setDataset(CPRDataset dataset)
-	{
-		this.dataset = dataset;
-	}
+    public SikredeDataset getDataset() {
+        return dataset;
+    }
 
-	@Override
-	public Date getValidFrom()
-	{
-		return dataset.getValidFrom();
-	}
+    public void setDataset(SikredeDataset dataset) {
+        this.dataset = dataset;
+    }
+
+    @Override
+    public Date getValidFrom() {
+        return dataset.getValidFrom();
+    }
 }

@@ -91,58 +91,72 @@ public class SikredeParser implements FileParser {
 
     private SikredeDataset parse(File file, DateTime version) throws Exception {
         SikredeDataset dataset = new SikredeDataset();
-        LineIterator lineIterator = FileUtils.lineIterator(file, "UTF-8"); //TODO - Insert actual encoding for file
+        LineIterator lineIterator = FileUtils.lineIterator(file, "UTF-8"); //TODO - Check actual encoding for file with CSC
 
+        final int PREVIOUS_YDER_RELATION_OFFSET = 63;
+        final int FUTURE_YDER_RELATION_OFFSET = 102;
         while (lineIterator.hasNext()) {
             String line = lineIterator.nextLine();
             if (!"10".equalsIgnoreCase(cut(line, 1, 2))) {
-                continue;//throw new Exception("Den modtagne post-type er ikke supporteret.");
+                continue;// Ignore lines that are not of post type 10
             }
 
             Sikrede sikrede = parseSikrede(line);
             dataset.addEntity(sikrede);
+            dataset.setValidFrom(sikrede.getSslGyldigFra()); //TODO usikker på om dette er korrekt
+            dataset.addEntity(parsePatientYderRelation(line, 13, sikrede.getCpr(), SikredeYderRelation.YderType.current));
 
-            SikredeYderRelation currentYderRelation = parsePatientYderRelation(line, 13, sikrede.getCpr(), SikredeYderRelation.YderType.current);
-            dataset.addEntity(currentYderRelation); //current
-            if (hasYderRelation(line, 63)) {
+            if (hasYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET)) {
                 /* Previous yder relation is present */
-                SikredeYderRelation previousYderRelation = parsePatientYderRelation(line, 63, sikrede.getCpr(), SikredeYderRelation.YderType.previous);
-
-                dataset.addEntity(previousYderRelation); //old
+                dataset.addEntity(parsePatientYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.previous));
             }
-            if (hasYderRelation(line, 102)) {
+
+            if (hasYderRelation(line, FUTURE_YDER_RELATION_OFFSET)) {
                 /* Future yder relation is present */
-                SikredeYderRelation futureYderRelation = parsePatientYderRelation(line, 102, sikrede.getCpr(), SikredeYderRelation.YderType.future);
-                dataset.addEntity(futureYderRelation); //future
+                dataset.addEntity(parsePatientYderRelation(line, FUTURE_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.future));
             }
 
             if (hasSaerligSundhedskort(line)) {
                 SaerligSundhedskort saerligSundhedskort = parseSaerligSundhedsKort(line, sikrede.getCpr());
                 dataset.addEntity(saerligSundhedskort);
             }
-
         }
 
         return dataset;
     }
 
+    /**
+     * Previous and Future yderRelation are optional - if they are not present the record will consist of all zeros
+     *
+     * @param line
+     * @param offset
+     * @return true if the YderRelation record does not contain all zeros, false otherwise.
+     */
     private boolean hasYderRelation(String line, int offset) {
         final int YDER_RECORD_LENGTH = 39;
-        /* Previous and Future yderRelation are optional - if they are not present the record will consist of all zeros */
-        return !StringUtils.repeat("0", YDER_RECORD_LENGTH).equalsIgnoreCase(cut(line, offset, YDER_RECORD_LENGTH).trim());
+        return !StringUtils.repeat("0", YDER_RECORD_LENGTH).equalsIgnoreCase(cut(line, offset, YDER_RECORD_LENGTH));
     }
 
+    /**
+     * SaerligSundhedskort is optional, if it is not present, the SSK record will consist of 272 spaces.
+     * @param line
+     * @return true if the SSK record is NOT 272 spaces. False otherwise
+     */
     private boolean hasSaerligSundhedskort(String line) {
-        /* SaerligSundhedskort is optional, if it is not present, the SSK record will consist of 272 spaces - trim that and compare to empty  */
-        return !cut(line, 452, 272).trim().isEmpty();
+        /*   */
+        return cut(line, 452, 272) != null;
     }
 
+    /**
+     * Helper method to cut a string into parsable bits. NOTE: offset starts with 1 so we can use identical offsets to the ones used in the input format specification.
+     * @param line
+     * @param offset First character offset is 1
+     * @param length
+     * @return null if the line parameter is null, or a trimmed string starting from the offset character of input parameter line. The resulting string can never be longer than specified in the length parameter.
+     */
     private String cut(String line, int offset, int length) {
         String substring = StringUtils.mid(line, offset - 1, length);
-        if (substring != null) {
-            substring = substring.trim();
-        }
-        return substring;
+        return StringUtils.trimToNull(substring);
     }
 
     private Sikrede parseSikrede(String line) throws Exception {
@@ -153,7 +167,7 @@ public class SikredeParser implements FileParser {
         sikrede.setKommunekode(cut(line, 52, 3));
         sikrede.setKommunekodeIKraftDato(yearMonthDayDate(line, 55));
 
-        sikrede.setFoelgeskabsPerson(parseCpr(line, 145)); //
+        sikrede.setFoelgeskabsPerson(parseCpr(line, 145)); //Optional field
 
         sikrede.setStatus(cut(line, 155, 2));
         sikrede.setBevisIkraftDato(yearMonthDayDate(line, 157));
@@ -161,8 +175,8 @@ public class SikredeParser implements FileParser {
         sikrede.setForsikringsinstans(cut(line, 724, 21));
         sikrede.setForsikringsinstansKode(cut(line, 745, 10));
         sikrede.setForsikringsnummer(cut(line, 755, 15));
-        sikrede.setValidFrom(yearMonthDayWithSeparatorsDate(line, 770));
-        sikrede.setValidTo(yearMonthDayWithSeparatorsDate(line, 780));
+        sikrede.setSslGyldigFra(yearMonthDayWithSeparatorsDate(line, 770));
+        sikrede.setSslGyldigTil(yearMonthDayWithSeparatorsDate(line, 780));
         sikrede.setSikredesSocialeLand(cut(line, 790, 47));
         sikrede.setSikredesSocialeLandKode(cut(line, 837, 2));
 
@@ -205,32 +219,46 @@ public class SikredeParser implements FileParser {
         sundhedskort.setEmailAdresse(cut(line, 574, 50));
         sundhedskort.setFamilieRelationCpr(parseCpr(line, 624));
         sundhedskort.setFoedselsDato(yearMonthDayWithSeparatorsDate(line, 634));
-        sundhedskort.setValidFrom(yearMonthDayWithSeparatorsDate(line, 644));
-        sundhedskort.setValidTo(yearMonthDayWithSeparatorsDate(line, 654));
+        sundhedskort.setSskGyldigFra(yearMonthDayWithSeparatorsDate(line, 644));
+        sundhedskort.setSskGyldigTil(yearMonthDayWithSeparatorsDate(line, 654));
         sundhedskort.setMobilNummer(cut(line, 664, 20));
         sundhedskort.setPostnummerBy(cut(line, 684, 40));
 
         System.out.println(sundhedskort);
         return sundhedskort;
-
     }
 
-    private static SimpleDateFormat YEARMONTHDAY = new SimpleDateFormat("yyyyMMdd");
+    private static final String PATTERN_DATE = "yyyyMMdd";
+    private static SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat(PATTERN_DATE);
 
     private Date yearMonthDayDate(String line, int offset) throws ParseException {
-        if (line != null) {
-            return YEARMONTHDAY.parse(cut(line, offset, 8));
+        String dateString = cut(line, offset, PATTERN_DATE.length());
+        if (!isZeroPaddedDate(dateString, PATTERN_DATE.length())) {
+            return DATE_FORMATTER.parse(dateString);
+        }
+
+        return null;
+    }
+
+    private static final String PATTERN_DATE_WITH_SEPARATORS = "yyyy-MM-dd";
+    private static SimpleDateFormat DATE_FORMATTER_WITH_SEPARATORS = new SimpleDateFormat(PATTERN_DATE_WITH_SEPARATORS);
+
+    private Date yearMonthDayWithSeparatorsDate(String line, int offset) throws ParseException {
+        String dateString = cut(line, offset, PATTERN_DATE_WITH_SEPARATORS.length());
+        if (dateString != null) {
+            return DATE_FORMATTER_WITH_SEPARATORS.parse(dateString);
         }
         return null;
     }
 
-    private static SimpleDateFormat YEAR_MONTH_DAY = new SimpleDateFormat("yyyy-MM-dd");
-
-    private Date yearMonthDayWithSeparatorsDate(String line, int offset) throws ParseException {
-        if (line != null) {
-            return YEAR_MONTH_DAY.parse(cut(line, offset, 10));
-        }
-        return null;
+    /**
+     * 00000000 is when date (only dates with format yyyyMMdd can be 0-padded - so null should be stored in the database
+     *
+     * @param dateString
+     * @return true if the value of dateString equals dateFormatLength-zeroes. False otherwise.
+     */
+    private boolean isZeroPaddedDate(String dateString, int dateFormatLength) {
+        return StringUtils.repeat("0", dateFormatLength).equalsIgnoreCase(dateString);
     }
 
     protected DateTime getDateFromFilename(String filename) {

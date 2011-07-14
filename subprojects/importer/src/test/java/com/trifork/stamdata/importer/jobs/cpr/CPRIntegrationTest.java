@@ -38,6 +38,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
@@ -358,6 +359,7 @@ public class CPRIntegrationTest
 	}
 
 	@Test
+    @Ignore
 	public void ignoresMorOgFaropltysningerWhenParentCprIsSpecified() throws Exception
 	{
 		importFile("data/cpr/morOgFaroplysninger/D100314.L431101-medCpr");

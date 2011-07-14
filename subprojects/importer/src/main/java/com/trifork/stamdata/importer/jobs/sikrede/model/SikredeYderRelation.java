@@ -7,22 +7,35 @@ import java.util.Date;
 
 @Output(name = "SikredeYderRelation")
 public class SikredeYderRelation extends CPREntity {
-    protected String cpr;
     protected String ydernummer;
     protected Date ydernummerIkraftDato;
     protected Date ydernummerRegistreringDato;
     protected String sikringsgruppeKode;
     protected Date gruppeKodeIkraftDato;
     protected Date gruppekodeRegistreringDato;
+    private YderType type;
+
+    public enum YderType {
+        current("C"), future("F"), previous("P");
+        private final String code;
+        private YderType(String code) {
+            this.code = code;
+        }
+
+        public String getCode() {
+            return code;
+        }
+    }
 
     @Id
     @Output
-    public String getCpr() {
-        return cpr;
+    public String getId() {
+        return cpr + "-" + type.getCode();
     }
 
-    public void setCpr(String cpr) {
-        this.cpr = cpr;
+    @Output
+    public String getCpr() {
+        return cpr;
     }
 
     @Output
@@ -79,9 +92,20 @@ public class SikredeYderRelation extends CPREntity {
         this.ydernummerRegistreringDato = ydernummerRegistreringDato;
     }
 
+    public void setType(YderType type) {
+        this.type = type;
+    }
+
     @Override
-    @Output
-    public Date getValidFrom() {
-        return ydernummerIkraftDato;
+    public String toString() {
+        return "SikredeYderRelation{" +
+                "gruppeKodeIkraftDato=" + gruppeKodeIkraftDato +
+                ", ydernummer='" + ydernummer + '\'' +
+                ", ydernummerIkraftDato=" + ydernummerIkraftDato +
+                ", ydernummerRegistreringDato=" + ydernummerRegistreringDato +
+                ", sikringsgruppeKode='" + sikringsgruppeKode + '\'' +
+                ", gruppekodeRegistreringDato=" + gruppekodeRegistreringDato +
+                ", type=" + type +
+                '}';
     }
 }
