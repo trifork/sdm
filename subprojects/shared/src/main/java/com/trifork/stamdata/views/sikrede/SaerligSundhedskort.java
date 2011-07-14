@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.math.BigInteger;
 import java.util.Date;
 
+import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
@@ -31,11 +32,66 @@ public class SaerligSundhedskort extends View {
     @Column(name = "ValidFrom")
     protected Date validFrom;
 
+    @Temporal(TIMESTAMP)
+    @Column(name = "ValidTo")
+    protected Date validTo;
+
     @XmlTransient
     @Temporal(TIMESTAMP)
     @Column(name = "ModifiedDate")
     protected Date modifiedDate;
 
+    @XmlElement
+    @Column(name = "adresseLinje1")
+    protected String adresseLinje1;
+
+    @XmlElement
+    @Column(name = "adresseLinje2")
+    protected String adresseLinje2;
+
+    @XmlElement
+    @Column(name = "bopelsLand")
+    protected String bopelsLand;
+
+    @XmlElement
+    @Column(name = "bopelsLandKode")
+    protected String bopelsLandKode;
+
+    @XmlElement
+    @Column(name = "emailAdresse")
+    protected String emailAdresse;
+
+    @XmlElement
+    @Column(name = "familieRelationCpr")
+    protected String familieRelationCpr;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "foedselsDato")
+    protected Date foedselsDato;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "sskGyldigFra")
+    protected Date sskGyldigFra;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "sskGyldigTil")
+    protected Date sskGyldigTil;
+
+    @XmlElement
+    @Column(name = "mobilNummer")
+    protected String mobilNummer;
+
+    @XmlElement
+    @Column(name = "postnummerBy")
+    protected String postnummerBy;
+
+    
+/*
+	CreatedDate DATETIME NOT NULL,
+ */
 
     @Override
     public String getId() {

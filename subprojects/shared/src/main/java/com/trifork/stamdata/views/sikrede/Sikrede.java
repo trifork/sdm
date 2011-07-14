@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import java.math.BigInteger;
 import java.util.Date;
 
+import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 @Entity
@@ -27,12 +28,14 @@ public class Sikrede extends View {
     @Column(name = "CPR")
     protected String cpr;
 
-/*    protected YderRelation currentYderRelation;
-    protected YderRelation previousYderRelation;
-    protected YderRelation futureYderRelation;
-*/
-    
+    @XmlElement
+    @Column(name = "kommunekode")
+    protected String kommunekode;
 
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "kommunekodeIkraftDato")
+    protected Date kommunekodeIkraftDato;
 
     @Temporal(TIMESTAMP)
     @Column(name = "ValidFrom")
@@ -43,6 +46,56 @@ public class Sikrede extends View {
     @Column(name = "ModifiedDate")
     protected Date modifiedDate;
 
+    @XmlElement(required = false)
+    @Column(name = "foelgeskabsPersonCpr")
+    protected String foelgeskabsPersonCpr;
+
+    @XmlElement(required = false)
+    @Column(name = "status")
+    protected String status;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "bevisIkraftDato")
+    protected Date bevisIkraftDato;
+
+    @XmlElement
+    @Column(name = "forsikringsinstans")
+    protected String forsikringsinstans;
+
+    @XmlElement
+    @Column(name = "forsikringsinstansKode")
+    protected String forsikringsinstansKode;
+
+    @XmlElement
+    @Column(name = "forsikringsnummer")
+    protected String forsikringsnummer;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "sslGyldigFra")
+    protected Date sslGyldigFra;
+
+    @XmlElement
+    @Temporal(DATE)
+    @Column(name = "sslGyldigTil")
+    protected Date sslGyldigTil;
+
+    @XmlElement
+    @Column(name = "socialLand")
+    protected String socialLand;
+
+    @XmlElement
+    @Column(name = "socialLandKode")
+    protected String socialLandKode;
+    /*
+
+    ValidTo DATETIME,
+    CreatedDate DATETIME
+    NOT NULL,
+
+
+    */
 
     @Override
     public String getId() {
