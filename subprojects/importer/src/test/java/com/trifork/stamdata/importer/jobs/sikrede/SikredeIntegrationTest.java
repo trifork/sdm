@@ -36,7 +36,7 @@ public class SikredeIntegrationTest {
     }
 
     @Test
-    public void canImportSSK() throws Exception {
+    public void canImportPersonWithSaerligSunhedskort() throws Exception {
         importFile("data/sikrede/20110701.SIKREDE_SSK");
 
         Statement stmt = con.createStatement();
@@ -54,7 +54,7 @@ public class SikredeIntegrationTest {
     }
 
     @Test
-    public void canImportSikredeWithoutSSK() throws Exception {
+    public void canImportSikredeWithoutSaerligSundhedskort() throws Exception {
         importFile("data/sikrede/20110701.SIKREDE");
 
         Statement stmt = con.createStatement();
