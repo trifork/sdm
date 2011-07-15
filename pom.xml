@@ -12,6 +12,7 @@
 
     <modules>
         <module>subprojects/authorization-ws</module>
+        <module>subprojects/cpr-ws</module>
         <module>subprojects/importer</module>
         <module>subprojects/performance</module>
         <module>subprojects/replication</module>
