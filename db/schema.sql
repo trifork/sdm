@@ -1093,7 +1093,6 @@ CREATE TABLE UsageLogEntry (
 /* "Sikrede" type 10  */
 CREATE TABLE Sikrede (
 	SikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	--Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
     kommunekode CHAR(3) NOT NULL, /* Person.KommuneKode  */
     kommunekodeIkraftDato DATE, /* KommuneKode validFrom for person */
@@ -1126,7 +1125,7 @@ CREATE TABLE SikredeYderRelation (
 	Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
 
-    -- Nuvaerende valg af yder
+    /* Nuvaerende valg af yder */
 	ydernummer MEDIUMINT(6) NOT NULL, 
 	ydernummerIkraftDato DATE NOT NULL,
 	sikringsgruppeKode CHAR(1) NOT NULL,
@@ -1146,7 +1145,6 @@ CREATE TABLE SikredeYderRelation (
 /* "Sikrede" type 10  SSK */
 CREATE TABLE SaerligSundhedskort (
 	SaerligSundhedskortPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	--Id VARCHAR(21) NOT NULL,
 	CPR VARCHAR(10) NOT NULL,
 
     adresseLinje1 VARCHAR(40),
