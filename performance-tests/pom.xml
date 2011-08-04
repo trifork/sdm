@@ -1,0 +1,241 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dk.nsi.stamdata</groupId>
+        <artifactId>java-pom</artifactId>
+        <version>3.0-SNAPSHOT</version>
+        <relativePath>../config/java-pom.xml</relativePath>
+    </parent>
+
+    <groupId>dk.nsi.stamdata</groupId>
+    <artifactId>performance</artifactId>
+    <packaging>jar</packaging>
+    <name>Stamdata Performace Tests</name>
+
+    <properties>
+    	<hostname>localhost</hostname>
+    </properties>
+
+    <dependencies>
+        
+        <dependency>
+            <groupId>dk.sosi.seal</groupId>
+            <artifactId>seal</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+        	<groupId>dk.nsi.stamdata</groupId>
+        	<artifactId>shared</artifactId>
+        	<version>${project.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>apache</groupId>
+			<artifactId>JMeter-core</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>apache</groupId>
+			<artifactId>JMeter-java</artifactId>
+			<version>2.4</version>
+		</dependency>
+        <dependency>
+            <groupId>org.apache.jorphan</groupId>
+            <artifactId>jorphan</artifactId>
+            <version>2.4</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>excalibur-logger</groupId>
+            <artifactId>excalibur-logger</artifactId>
+            <version>1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>avalon-logkit</groupId>
+            <artifactId>avalon-logkit</artifactId>
+            <version>2.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.avalon.framework</groupId>
+            <artifactId>avalon-framework-impl</artifactId>
+            <version>4.3.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>oro</groupId>
+            <artifactId>oro</artifactId>
+            <version>2.0.8</version>
+            <scope>runtime</scope>
+        </dependency>
+
+    </dependencies>
+
+	<profiles>
+		<profile>
+			<id>integration-test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>chronos-maven-plugin</artifactId>
+						<version>1.0-SNAPSHOT</version>
+						<configuration>
+							<heap>768m</heap>
+							<permsize>512m</permsize>
+							<sysproperties>
+								<property>
+									<name>search_paths</name>
+									<value>${basedir}/target</value>
+								</property>
+								<property>
+									<name>java.awt.headless</name>
+									<value>false</value>
+								</property>
+							</sysproperties>
+						</configuration>
+						<executions>
+							<execution>
+								<id>importer-status-test</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>importer-status-test</dataid>
+									<jmeterVariables>
+										<property>
+											<name>hostname</name>
+											<value>${hostname}</value>
+										</property>
+									</jmeterVariables>
+									<input>${basedir}/src/main/resources/StatusPerformanceTest.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>importer-status-test-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>importer-status-test</reportid>
+									<dataid>importer-status-test</dataid>
+									<description>Importer Servlet Status Repsponse Times</description>
+									<title>Load test importer, 10 req/sec minimum</title>
+								</configuration>
+							</execution>
+							
+							<!-- Authorization WS Test -->
+							<execution>
+								<id>authorization-ws-test</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>authorization-ws-data</dataid>
+									<jmeterVariables>
+										<property>
+											<name>hostname</name>
+											<value>${hostname}</value>
+										</property>
+									</jmeterVariables>
+									<input>${basedir}/src/main/resources/AuthorizationWS.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>authorization-ws-test-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>authorization-ws-test-report</reportid>
+									<dataid>authorization-ws-data</dataid>
+									<description>Authorization Lookup Service Response Times</description>
+									<title>Load test, 10 req/sec minimum requirement</title>
+								</configuration>
+							</execution>
+							
+							<!-- Replication WS Test -->
+							
+							<execution>
+								<id>replication-ws-test</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>replication-ws-data</dataid>
+									<jmeterVariables>
+										<property>
+											<name>hostname</name>
+											<value>${hostname}</value>
+										</property>
+									</jmeterVariables>
+									<input>${basedir}/src/main/resources/Replication.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>replication-ws-test-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>replication-ws-test-report</reportid>
+									<dataid>replication-ws-data</dataid>
+									<description>Replication Throughput and Response Times</description>
+									<title>Load test, no minimum requirement</title>
+								</configuration>
+							</execution>
+							
+							<!-- Replication Token WS Test -->
+							<execution>
+								<id>replication-ws-token-test</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>replication-ws-token-data</dataid>
+									<jmeterVariables>
+										<property>
+											<name>hostname</name>
+											<value>${hostname}</value>
+										</property>
+									</jmeterVariables>
+									<input>${basedir}/src/main/resources/ReplicationTokenService.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>replication-token-ws-test-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>replication-token-ws-test-report</reportid>
+									<dataid>replication-ws-token-data</dataid>
+									<description>Replication Token Service Response Times</description>
+									<title>Load test, 10/sec minimum requirement</title>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>

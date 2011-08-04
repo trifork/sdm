@@ -1,11 +1,5 @@
 -- ADMINISTRATION TABLES (USERS ETC.)
 
-CREATE TABLE User (
-	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	name VARCHAR(200) NOT NULL,
-	subjectSerialNumber VARCHAR(64) NOT NULL
-) ENGINE=InnoDB COLLATE=utf8_danish_ci;
-
 CREATE TABLE Client (
 	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	name VARCHAR(200) NOT NULL,
@@ -447,9 +441,9 @@ CREATE TABLE Klausulering (
 
 CREATE TABLE Medicintilskud (
 	MedicintilskudPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	Kode VARCHAR(10) NOT NULL,
-	KortTekst VARCHAR(20),
-	Tekst VARCHAR(60),
+	Kode CHAR(2) NOT NULL,
+	KortTekst VARCHAR(10),
+	Tekst VARCHAR(50),
 
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
@@ -1063,23 +1057,6 @@ CREATE TABLE Haendelse (
 	INDEX(modifiedDate, HaendelsePID)	
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
-CREATE TABLE MorOgFaroplysninger (
-	MorOgFarPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	Id VARCHAR(12) NOT NULL,
-	CPR VARCHAR(10) NOT NULL,
-	Foraelderkode VARCHAR(1) NOT NULL,
-	Dato DATETIME,
-	Foedselsdato DATETIME,
-	Navn VARCHAR(34) NOT NULL,
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	INDEX(modifiedDate, MorOgFarPID),
-	CONSTRAINT MorOgFaroplysninger_Person_1 UNIQUE (CPR, Foraelderkode, ValidFrom)
-) ENGINE=InnoDB COLLATE=utf8_danish_ci;
-
 CREATE TABLE UsageLogEntry (
 	UsageLogEntryPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	ClientId VARCHAR(100) NOT NULL,
@@ -1093,10 +1070,10 @@ CREATE TABLE UsageLogEntry (
 /* "Sikrede" type 10  */
 CREATE TABLE Sikrede (
 	SikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	CPR VARCHAR(10) NOT NULL,
+	CPR CHAR(10) NOT NULL,
     kommunekode CHAR(3) NOT NULL, /* Person.KommuneKode  */
     kommunekodeIkraftDato DATE, /* KommuneKode validFrom for person */
-    foelgeskabsPersonCpr VARCHAR(10), /* CPR paa ledsager */
+    foelgeskabsPersonCpr CHAR(10), /* CPR paa ledsager */
     status CHAR(2),
     bevisIkraftDato DATE, /* Sygesikringsbevis validFrom dato */
     /* Personens civilstand findes i AktuelCivilstand.CivilStandskode, Personens adresseinfo findes i Person.* */
@@ -1122,8 +1099,10 @@ CREATE TABLE Sikrede (
 /* "Sikrede" type 10  YderRelation (For each Sikrede, there are three sikredeyderrelation-records - 'current', 'old', 'future') */
 CREATE TABLE SikredeYderRelation (
 	SikredeYderRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	Id VARCHAR(21) NOT NULL,
-	CPR VARCHAR(10) NOT NULL,
+	Id CHAR(12) NOT NULL,
+	CPR CHAR(10) NOT NULL,
+	
+	type CHAR(1) NOT NULL, /* C = Current, P = Past, F = Future */
 
     /* Nuvaerende valg af yder */
 	ydernummer MEDIUMINT(6) NOT NULL, 
@@ -1145,14 +1124,14 @@ CREATE TABLE SikredeYderRelation (
 /* "Sikrede" type 10  SSK */
 CREATE TABLE SaerligSundhedskort (
 	SaerligSundhedskortPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	CPR VARCHAR(10) NOT NULL,
+	CPR CHAR(10) NOT NULL,
 
     adresseLinje1 VARCHAR(40),
     adresseLinje2 VARCHAR(40),
     bopelsLand VARCHAR(40),
     bopelsLandKode VARCHAR(2),
     emailAdresse VARCHAR(50),
-    familieRelationCpr VARCHAR(10), /* CPR paa familierelation */
+    familieRelationCpr CHAR(10), /* CPR paa familierelation */
     foedselsDato DATE,
     sskGyldigFra DATE,
     sskGyldigTil DATE,

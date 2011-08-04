@@ -1,11 +1,13 @@
 .project
 .settings
 .classpath
-build
-bin
+build/
+bin/
 .gradle
 .properties
 .ser
 access.*
 subprojects/importer/sdm_log
 .checkstyle
+target/
+performance-tests/jmeter/
