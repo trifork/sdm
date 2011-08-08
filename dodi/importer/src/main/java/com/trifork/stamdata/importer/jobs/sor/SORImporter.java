@@ -24,26 +24,35 @@
 package com.trifork.stamdata.importer.jobs.sor;
 
 import java.io.File;
-import java.util.Date;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Persister;
 
+
 /**
- *	Parser for the SOR register.
- *
- *  SOR is an acronym for 'Sundhedsvæsenets Organisationsregister'.
+ * Parser for the SOR register.
+ * 
+ * SOR is an acronym for 'Sundhedsvæsenets Organisationsregister'.
  */
 public class SORImporter implements FileParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(SORImporter.class);
+
+	@Override
+	public String getIdentifier()
+	{
+		return "sor";
+	}
+
+	@Override
+	public String getHumanName()
+	{
+		return "SOR Parser";
+	}
 
 	@Override
 	public boolean ensureRequiredFileArePresent(File[] input)
@@ -75,11 +84,6 @@ public class SORImporter implements FileParser
 		}
 	}
 
-	public Date getNextImportExpectedBefore(Date lastImport)
-	{
-		return new DateTime(lastImport).plusDays(3).toDate();
-	}
-
 	public static SORDataSets parse(File file) throws Exception
 	{
 		SORDataSets dataSets = new SORDataSets();
@@ -90,13 +94,13 @@ public class SORImporter implements FileParser
 		{
 			SAXParser parser = factory.newSAXParser();
 
-			if (file.getName().toUpperCase().endsWith("XML"))
+			if (file.getName().toLowerCase().endsWith("xml"))
 			{
 				parser.parse(file, handler);
 			}
 			else
 			{
-				logger.warn("Can only parse files with extension 'XML'! Ignoring: " + file.getAbsolutePath());
+				logger.warn("Can only parse files with extension 'xml'! The file is ignored. file={}", file.getAbsolutePath());
 			}
 		}
 		catch (Exception e)
@@ -105,17 +109,5 @@ public class SORImporter implements FileParser
 		}
 
 		return dataSets;
-	}
-
-	@Override
-	public String getIdentifier()
-	{
-		return "sor";
-	}
-
-	@Override
-	public String getHumanName()
-	{
-		return "SOR Parser";
 	}
 }

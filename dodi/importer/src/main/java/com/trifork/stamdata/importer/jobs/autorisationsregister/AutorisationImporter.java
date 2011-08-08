@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -117,7 +118,15 @@ public class AutorisationImporter implements FileParser
 		while (lineIterator.hasNext())
 		{
 			String line = lineIterator.nextLine();
-			dataset.addEntity(new Autorisation(line));
+			
+			StringTokenizer st = new StringTokenizer(line, ";");
+			String nummer = st.nextToken();
+			String cpr = st.nextToken();
+			String efternavn = st.nextToken();
+			String fornavn = st.nextToken();
+			String educationCode = st.nextToken();
+			
+			dataset.addEntity(new Autorisation(nummer, cpr, fornavn, efternavn, educationCode));
 		}
 
 		return dataset;

@@ -9,10 +9,10 @@
 	</parent>
 
 	<groupId>dk.nsi.stamdata</groupId>
-	<artifactId>shared</artifactId>
+	<artifactId>stamdata-common</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Stamdata Shared Lib</name>
+	<name>Stamdata Common Lib</name>
 
 	<dependencies>
 		<dependency>

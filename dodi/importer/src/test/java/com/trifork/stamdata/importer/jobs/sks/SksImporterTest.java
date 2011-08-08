@@ -30,28 +30,28 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.sks.SksImporter;
+import com.trifork.stamdata.importer.jobs.sks.SKSParser;
 
 
 public class SksImporterTest
 {
-	public static File correctExtension = new File("./test/data/sks/SHAKCOMPLETE.TXT");
-	public static File wrongExtension = new File("./test/data/sks/SHAKCOMPLETE.XML");
+	public static File CORRECT_EXTENSION = new File("./test/data/sks/SHAKCOMPLETE.TXT");
+	public static File INCORRECT_EXTENSION = new File("./test/data/sks/SHAKCOMPLETE.XML");
 
 	@Test
 	public void testAreRequiredInputFilesPresent()
 	{
-		SksImporter importer = new SksImporter();
+		SKSParser importer = new SKSParser();
 
 		File[] files = new File[] {};
 
 		assertFalse(importer.ensureRequiredFileArePresent(files));
 
-		files = new File[] { correctExtension };
+		files = new File[] { CORRECT_EXTENSION };
 
 		assertTrue(importer.ensureRequiredFileArePresent(files));
 
-		files = new File[] { wrongExtension };
+		files = new File[] { INCORRECT_EXTENSION };
 
 		assertFalse(importer.ensureRequiredFileArePresent(files));
 	}

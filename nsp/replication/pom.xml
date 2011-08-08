@@ -11,14 +11,14 @@
 	</parent>
 
 	<groupId>com.trifork.stamdata</groupId>
-	<artifactId>replication</artifactId>
+	<artifactId>stamdata-batch-copy-ws</artifactId>
 	<packaging>war</packaging>
-	<name>Stamdata Batch Registry Cloning WebService</name>
+	<name>Stamdata Batch Copy WebService</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>dk.nsi.stamdata</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>stamdata-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

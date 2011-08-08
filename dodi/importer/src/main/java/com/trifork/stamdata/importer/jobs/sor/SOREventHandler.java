@@ -121,41 +121,46 @@ public class SOREventHandler extends DefaultHandler
 		{
 			denormalizeAdress(curIOE);
 
-			for (HealthInstitutionEntity hie : curIOE.getHealthInstitutionEntity())
+			for (HealthInstitutionEntity institutuinEntity : curIOE.getHealthInstitutionEntity())
 			{
-				if (hie.getInstitutionType() == 394761003L || hie.getInstitutionType() == 550671000005100L)
+				if (institutuinEntity.getInstitutionType() == 394761003L || institutuinEntity.getInstitutionType() == 550671000005100L)
 				{
-					// Lægepraksis og special læger
-					Praksis p = XMLModelMapper.toPraksis(hie);
-					for (OrganizationalUnitEntity oue : hie.getOrganizationalUnitEntities())
+					// Lægepraksis og special læger.
+
+					Praksis praksis = XMLModelMapper.toPraksis(institutuinEntity);
+					for (OrganizationalUnitEntity oue : institutuinEntity.getOrganizationalUnitEntities())
 					{
-						// Yder for Lægepraksis
-						Yder y = XMLModelMapper.toYder(oue);
-						dataSets.getYderDS().addEntity(y);
+						// Yder for Lægepraksis.
+
+						Yder yder = XMLModelMapper.toYder(oue);
+						dataSets.getYderDS().addEntity(yder);
+
 						if (!oue.getSons().isEmpty())
 						{
 							new SAXException("Lægepraksis skal ikke have en level 2 OrganizationalUnitEntity. SORId=" + oue.getSorIdentifier() + " har!!");
 						}
 					}
 
-					dataSets.getPraksisDS().addEntity(p);
+					dataSets.getPraksisDS().addEntity(praksis);
 				}
-				else if (hie.getInstitutionType() == 22232009L)
+				else if (institutuinEntity.getInstitutionType() == 22232009L)
 				{
-					// Sygehus
-					Sygehus s = XMLModelMapper.toSygehus(hie);
+					// Sygehus.
 
-					for (OrganizationalUnitEntity oue : hie.getOrganizationalUnitEntities())
+					Sygehus s = XMLModelMapper.toSygehus(institutuinEntity);
+
+					for (OrganizationalUnitEntity oue : institutuinEntity.getOrganizationalUnitEntities())
 					{
 						addAfdelinger(oue);
 					}
 
 					dataSets.getSygehusDS().addEntity(s);
 				}
-				else if (hie.getInstitutionType() == 264372000L)
+				else if (institutuinEntity.getInstitutionType() == 264372000L)
 				{
-					// Apotek
-					for (OrganizationalUnitEntity oue : hie.getOrganizationalUnitEntities())
+					// Apotek.
+
+					for (OrganizationalUnitEntity oue : institutuinEntity.getOrganizationalUnitEntities())
 					{
 						Apotek a = XMLModelMapper.toApotek(oue);
 						dataSets.getApotekDS().addEntity(a);
@@ -203,7 +208,6 @@ public class SOREventHandler extends DefaultHandler
 
 	private static String stripNS(String qName)
 	{
-
 		return (qName.indexOf(':') != -1) ? qName.substring(qName.indexOf(':') + 1) : qName;
 	}
 

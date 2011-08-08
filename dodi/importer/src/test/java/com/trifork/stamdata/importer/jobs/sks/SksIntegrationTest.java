@@ -46,7 +46,7 @@ public class SksIntegrationTest
 	private Connection con;
 
 	@Before
-	public void cleanDb() throws Exception
+	public void setUp() throws Exception
 	{
 		shakFile = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
 
@@ -68,7 +68,7 @@ public class SksIntegrationTest
 	public void testSHAKImport() throws Throwable
 	{
 		File[] files = new File[] { shakFile };
-		SksImporter importer = new SksImporter();
+		SKSParser importer = new SKSParser();
 		importer.importFiles(files, new AuditingPersister(con));
 
 		Statement stmt = con.createStatement();

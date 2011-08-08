@@ -29,25 +29,24 @@ import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
 
-
-public class Organisation extends AbstractStamdataEntity
+@Output(name="Organisation")
+public class Institution extends AbstractStamdataEntity
 {
 	private Date validFrom;
 	private Date validTo;
 	private String navn;
 	private String nummer;
+	
+	private final InstitutionType type;
 
-
-	public enum Organisationstype
+	public enum InstitutionType
 	{
-		Afdeling, Sygehus
+		HOSPITAL_DEPARTMENT, HOSPITAL
 	}
 
-	private final Organisationstype organisationstype;
-
-	public Organisation(Organisationstype organisationstype)
+	public Institution(InstitutionType organisationstype)
 	{
-		this.organisationstype = organisationstype;
+		this.type = organisationstype;
 	}
 
 	public Date getValidTo()
@@ -86,11 +85,11 @@ public class Organisation extends AbstractStamdataEntity
 	@Output
 	public String getOrganisationstype()
 	{
-		if (organisationstype == Organisationstype.Afdeling)
+		if (type == InstitutionType.HOSPITAL_DEPARTMENT)
 		{
 			return "Afdeling";
 		}
-		else if (organisationstype == Organisationstype.Sygehus)
+		else if (type == InstitutionType.HOSPITAL)
 		{
 			return "Sygehus";
 		}

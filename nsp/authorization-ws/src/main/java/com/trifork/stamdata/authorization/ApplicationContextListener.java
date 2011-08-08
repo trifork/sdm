@@ -55,11 +55,14 @@ import dk.sosi.seal.vault.EmptyCredentialVault;
 
 public class ApplicationContextListener extends GuiceServletContextListener
 {
-	private static final String DGWS_TEST_SECURITY = "dgwsTest";
-
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
 
-	private static JAXBContext jaxbContext;
+	private static final String CONFIG_FILENAME_BUILDIN = "config.properties";
+	private static final String CONFIG_FILENAME_DEPLOYMENT = "stamdata-authorization-lookup-ws.properties";
+
+	private static final String DGWS_TEST_SECURITY = "dgwsTest";
+
+	private JAXBContext jaxbContext;
 
 	@Override
 	protected Injector getInjector()
@@ -70,8 +73,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		{
 			// LOAD CONFIGURATION FILES
 
-			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-authorization-ws.properties");
+			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_BUILDIN);
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_DEPLOYMENT);
 
 			final Properties config = new Properties();
 			config.load(buildInConfig);
@@ -109,7 +112,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			if (DGWS_TEST_SECURITY.equalsIgnoreCase(config.getProperty("security")))
 			{
 				logger.warn("Allowing ID Cards from the Test STS!");
-				
+
 				federation = new SOSITestFederation(cryptoSettings, new InMemoryIntermediateCertificateCache());
 			}
 			else
@@ -137,7 +140,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 					bind(SOSIFactory.class).toInstance(sosiFactory);
 					bind(new TypeLiteral<Set<String>>()
-					{}).toInstance(whitelist);
+					{
+					}).toInstance(whitelist);
 					bind(AuthorizationDao.class);
 
 					serve("/").with(WebService.class);
@@ -163,7 +167,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		}
 		catch (Exception e)
 		{
-			throw new IllegalStateException("Cannot start the authorization web service.", e);
+			throw new IllegalStateException("Cannot start the authorization lookup web-service.", e);
 		}
 	}
 }

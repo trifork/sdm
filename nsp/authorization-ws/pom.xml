@@ -9,14 +9,14 @@
 	</parent>
 
 	<groupId>dk.nsi.stamdata</groupId>
-	<artifactId>authorization-ws</artifactId>
+	<artifactId>stamdata-authorization-lookup-ws</artifactId>
 	<packaging>war</packaging>
 	<name>Stamdata Authorization Lookup WebService</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>dk.nsi.stamdata</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>stamdata-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -38,13 +38,6 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
-			<scope>runtime</scope>
 		</dependency>
 
         <!-- Logging -->

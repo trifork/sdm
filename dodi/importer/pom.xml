@@ -8,7 +8,7 @@
 	</parent>
 
 	<groupId>dk.nsi.stamdata</groupId>
-	<artifactId>data-platform</artifactId>
+	<artifactId>stamdata-data-manager</artifactId>
 	<packaging>war</packaging>
 	<name>Stamdata Data Manager</name>
 	
@@ -17,7 +17,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>dk.nsi.stamdata</groupId>
-			<artifactId>shared</artifactId>
+			<artifactId>stamdata-common</artifactId>
 			<version>${project.version}</version>
 			<scope>compile</scope>
 		</dependency>

@@ -1,8 +1,0 @@
-<?xml version='1.0'?>
-<SOAP:Envelope xmlns:SOAP="urn:schemas-xmlsoap-org:soap.v1">
-	<SOAP:Body>
-		<auth:AuthorizationRequestScructure xmlns:auth="http://trifork.com/2011/authorization-ws">
-			<cpr>2003671122</cpr>
-		</auth:AuthorizationRequestScructure>
-	</SOAP:Body>
-</SOAP:Envelope>

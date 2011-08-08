@@ -24,12 +24,8 @@
 package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import java.util.Date;
-import java.util.StringTokenizer;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
@@ -40,18 +36,17 @@ public class Autorisation extends AbstractStamdataEntity implements StamdataEnti
 	private String cpr;
 	private String efternavn;
 	private String fornavn;
-	private String uddKode;
+	private String educationCode;
 
 	Autorisationsregisterudtraek dataset;
 
-	public Autorisation(String line)
+	public Autorisation(String number, String cpr, String firstName, String lastName, String educationCode)
 	{
-		StringTokenizer st = new StringTokenizer(line, ";");
-		nummer = st.nextToken();
-		cpr = st.nextToken();
-		efternavn = st.nextToken();
-		fornavn = st.nextToken();
-		uddKode = st.nextToken();
+		this.nummer = number;
+		this.cpr = cpr;
+		this.fornavn = firstName;
+		this.efternavn = lastName;
+		this.educationCode = educationCode;
 	}
 
 	@Output
@@ -82,7 +77,7 @@ public class Autorisation extends AbstractStamdataEntity implements StamdataEnti
 	@Output
 	public String getUddannelsesKode()
 	{
-		return uddKode;
+		return educationCode;
 	}
 
 	@Override
