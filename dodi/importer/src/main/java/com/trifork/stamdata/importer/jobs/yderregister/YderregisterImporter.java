@@ -45,6 +45,7 @@ public class YderregisterImporter implements FileParser
 	
 	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025", "K5094" };
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void importFiles(File[] input, Persister persister) throws Exception
 	{

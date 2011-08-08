@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 {
-
 	private Long tilskudsprisGruppe;
 	private Long varenummer; // Ref. t. LMS02
 
@@ -44,14 +43,14 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 	@Output
 	public Long getTilskudsprisGruppe()
 	{
-		return this.tilskudsprisGruppe;
+		return tilskudsprisGruppe;
 	}
 
 	@Id
 	@Output
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setTilskudsprisGruppe(Long tilskudsprisGruppe)
@@ -63,5 +62,4 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 	{
 		this.varenummer = varenummer;
 	}
-
 }

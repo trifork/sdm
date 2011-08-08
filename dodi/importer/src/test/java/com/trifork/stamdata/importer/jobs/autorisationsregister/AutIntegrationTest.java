@@ -39,8 +39,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Dataset;
 

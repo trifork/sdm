@@ -21,44 +21,26 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.model;
+package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import java.util.Date;
+
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class Foedselsregistreringsoplysninger extends CPREntity
+public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation>
 {
 
-	private String foedselsregistreringsstedkode;
-	private String foedselsregistreringstekst;
-
-	@Id
-	@Output
-	public String getCpr()
+	public Autorisationsregisterudtraek(Date validFrom)
 	{
-		return cpr;
+		super(Autorisation.class, validFrom, DateUtils.FUTURE);
 	}
 
-	@Output
-	public String getFoedselsregistreringsstedkode()
+	@Override
+	public void addEntity(Autorisation aut)
 	{
-		return foedselsregistreringsstedkode;
-	}
-
-	public void setFoedselsregistreringsstedkode(String foedselsregistreringsstedkode)
-	{
-		this.foedselsregistreringsstedkode = foedselsregistreringsstedkode;
-	}
-
-	@Output
-	public String getFoedselsregistreringstekst()
-	{
-		return foedselsregistreringstekst;
-	}
-
-	public void setFoedselsregistreringstekst(String foedselsregistreringstekst)
-	{
-		this.foedselsregistreringstekst = foedselsregistreringstekst;
+		aut.dataset = this;
+		super.addEntity(aut);
 	}
 }

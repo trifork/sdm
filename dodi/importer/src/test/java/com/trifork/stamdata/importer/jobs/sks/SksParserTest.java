@@ -29,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.jobs.sks.SksParser;
-import com.trifork.stamdata.importer.jobs.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 

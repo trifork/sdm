@@ -38,8 +38,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
 import com.trifork.stamdata.importer.persistence.Persister;
 
 
@@ -72,6 +70,7 @@ public class AutorisationImporter implements FileParser
 		return "Autorisationsregisteret Parser";
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void importFiles(File[] files, Persister persister) throws Exception
 	{

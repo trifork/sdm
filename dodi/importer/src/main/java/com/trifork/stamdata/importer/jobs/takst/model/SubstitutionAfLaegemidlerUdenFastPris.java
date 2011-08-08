@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
 {
-
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long varenummer;
 
@@ -44,14 +43,14 @@ public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
 	@Output
 	public Long getSubstitutionsgruppenummer()
 	{
-		return this.substitutionsgruppenummer;
+		return substitutionsgruppenummer;
 	}
 
 	@Id
 	@Output
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
@@ -63,5 +62,4 @@ public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
 	{
 		this.varenummer = varenummer;
 	}
-
 }

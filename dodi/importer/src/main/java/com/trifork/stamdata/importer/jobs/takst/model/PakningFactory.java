@@ -23,6 +23,9 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
@@ -31,6 +34,8 @@ import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
 
 public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 {
+	private static final String YYYYMMDD_DATE_FORMAT = "yyyyMMdd";
+
 	@Override
 	public String getFilename()
 	{
@@ -160,7 +165,7 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 	}
 
 	@Override
-	public void setFieldValue(Pakning obj, int fieldNo, String value)
+	public void setFieldValue(Pakning obj, int fieldNo, String value) throws Exception
 	{
 		switch (fieldNo)
 		{
@@ -210,19 +215,31 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 			obj.setOpbevaringstidNumerisk(NumberUtils.createLong(value));
 			break;
 		case 15:
-			obj.setOpbevaringstidEnhed(value);
+			// Ignored
 			break;
 		case 16:
 			obj.setOpbevaringsbetingelser(value);
 			break;
 		case 17:
-			obj.setOprettelsesdato(NumberUtils.createLong(value));
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				obj.setOprettelsesdato(date);
+			}
 			break;
 		case 18:
-			obj.setDatoForSenestePrisaendring(NumberUtils.createLong(value));
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				obj.setDatoForSenestePrisaendring(date);
+			}
 			break;
 		case 19:
-			obj.setUdgaaetDato(NumberUtils.createLong(value));
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				obj.setUdgaaetDato(date);
+			}
 			break;
 		case 20:
 			obj.setBeregningskodeAIPRegpris(value);

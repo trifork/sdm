@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.Configuration;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.cpr.model.CPRDataset;
+import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;

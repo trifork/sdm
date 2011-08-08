@@ -37,7 +37,6 @@ import javax.xml.bind.Unmarshaller;
 
 import org.slf4j.Logger;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -99,7 +98,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				cvrNumbers.add(item.split("-")[0].split(":")[1]);
 			}
 
-			final Set<String> whitelist = ImmutableSet.of(cvrNumbers.toArray(new String[] {}));
+			final Set<String> whitelist = Sets.newHashSet(cvrNumbers.toArray(new String[] {}));
 
 			// SEAL
 

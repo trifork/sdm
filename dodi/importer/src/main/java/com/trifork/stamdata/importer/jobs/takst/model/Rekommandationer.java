@@ -31,17 +31,17 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Rekommandationer extends TakstEntity
 {
-
 	private Long rekommandationsgruppe;
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
-	private String rekommandationsniveau; // Værdier: Anbefales / … med
-											// forbehold / …ikke
+	
+	// Værdier: Anbefales med forbehold / Anbefales ikke
+	private String rekommandationsniveau;
 
 	@Output
 	public Long getDrugID()
 	{
-		return this.drugID;
+		return drugID;
 	}
 
 	@Override
@@ -53,20 +53,20 @@ public class Rekommandationer extends TakstEntity
 	@Output
 	public Long getRekommandationsgruppe()
 	{
-		return this.rekommandationsgruppe;
+		return rekommandationsgruppe;
 	}
 
 	@Output
 	public String getRekommandationsniveau()
 	{
-		return this.rekommandationsniveau;
+		return rekommandationsniveau;
 	}
 
 	@Id
 	@Output
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setDrugID(Long drugID)
@@ -88,5 +88,4 @@ public class Rekommandationer extends TakstEntity
 	{
 		this.varenummer = varenummer;
 	}
-
 }

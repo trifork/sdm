@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.model;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.ArrayList;
 import java.util.Date;

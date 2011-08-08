@@ -70,6 +70,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDataset() throws Exception
 	{
@@ -86,6 +87,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		con.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDatasetX2() throws Exception
 	{
@@ -103,6 +105,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		con.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDatasetChangedStringSameValidity() throws Exception
 	{
@@ -123,6 +126,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		con.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDatasetChangedDateSameValidity() throws Exception
 	{
@@ -143,6 +147,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		con.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDatasetChangedDataNewValidFrom() throws Exception
 	{
@@ -168,6 +173,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		con.close();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testPersistCompleteDatasetChangedDataNewValidToNoDataChange() throws Exception
 	{

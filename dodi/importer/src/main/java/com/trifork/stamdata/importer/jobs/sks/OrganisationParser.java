@@ -28,8 +28,7 @@ import java.text.SimpleDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.jobs.sks.model.Organisation;
-import com.trifork.stamdata.importer.jobs.sks.model.Organisation.Organisationstype;
+import com.trifork.stamdata.importer.jobs.sks.Organisation.Organisationstype;
 
 
 public class OrganisationParser

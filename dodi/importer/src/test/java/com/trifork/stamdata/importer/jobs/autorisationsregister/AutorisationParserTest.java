@@ -76,6 +76,7 @@ public class AutorisationParserTest
 		assertFalse(importer.ensureRequiredFileArePresent(file));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void should_successfully_import_a_file() throws Exception
 	{

@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -31,13 +30,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
+
 @Entity
 @XmlRootElement
 @ViewPath("foo/bar/v1")
-public abstract class MockEntity extends View {
-
+public abstract class MockEntity extends View
+{
 	@Id
-	public String id() {
-		return null;
+	public String getID()
+	{
+		return "TEST_ID";
+	}
+	
+	public void setID(String id)
+	{
+		
 	}
 }

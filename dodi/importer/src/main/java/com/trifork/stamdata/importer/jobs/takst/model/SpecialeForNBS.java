@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class SpecialeForNBS extends TakstEntity
 {
-
 	private String kode; // Ref. t. LMS02, felt 11
 	private String kortTekst; // Speciale, forkortet
 	private String tekst; // Tekst for speciale
@@ -39,26 +38,26 @@ public class SpecialeForNBS extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
 	@Output
 	public String getKode()
 	{
-		return this.kode;
+		return kode;
 	}
 
 	@Output
 	public String getKortTekst()
 	{
-		return this.kortTekst;
+		return kortTekst;
 	}
 
 	@Output
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	public void setKode(String kode)
@@ -75,5 +74,4 @@ public class SpecialeForNBS extends TakstEntity
 	{
 		this.tekst = tekst;
 	}
-
 }

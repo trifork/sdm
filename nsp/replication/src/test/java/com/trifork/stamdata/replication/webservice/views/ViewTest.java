@@ -28,7 +28,9 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.junit.Test;
 
+import com.google.common.collect.Sets;
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.replication.mocks.MockEntity;
 import com.trifork.stamdata.views.Views;
 
 
@@ -37,11 +39,14 @@ public class ViewTest
 	@Test
 	public void Should_be_able_to_query_all_views() throws Exception
 	{
-		Set<Class<?>> views = Views.findAllViews();
+		Set<Class<?>> views = Sets.newHashSet(Views.findAllViews());
+
 		DatabaseHelper db = new DatabaseHelper(views.toArray(new Class<?>[0]));
 		
 		for (Class<?> viewClass : views)
 		{
+			if (viewClass == MockEntity.class) continue;
+			
 			System.out.println(viewClass.getCanonicalName());
 			Session session = db.openSession();
 			session.beginTransaction();

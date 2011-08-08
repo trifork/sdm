@@ -23,6 +23,9 @@
 
 package com.trifork.stamdata.importer.jobs.takst;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -39,8 +42,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.takst.Takst;
-import com.trifork.stamdata.importer.jobs.takst.TakstParser;
+import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Persister;
 
@@ -98,11 +100,11 @@ public class DataLayerIntegrationTest
 		statement.execute("truncate table UdgaaedeNavne");
 		statement.execute("truncate table Udleveringsbestemmelser");
 		statement.execute("truncate table Firma");
-		
+
 		statement.close();
-		
+
 		// We don't want an autocommit connection for the tests.
-		
+
 		connection.setAutoCommit(false);
 	}
 
@@ -119,9 +121,8 @@ public class DataLayerIntegrationTest
 		// Arrange
 		Takst takst = parseTakst("data/takst/initial");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement statement = con.createStatement();
-		AuditingPersister versionedDao = new AuditingPersister(con);
+		Statement statement = connection.createStatement();
+		AuditingPersister versionedDao = new AuditingPersister(connection);
 
 		// Act
 		versionedDao.persistCompleteDataset(takst.getDatasets());
@@ -130,13 +131,11 @@ public class DataLayerIntegrationTest
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
 
 		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin';");
+
+		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+
+		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
 		
-		if (!rs.next())
-		{
-			Assert.fail("Did not find expected Laegemiddel Kemadrin");
-		}
-		
-		Assert.assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
 		statement.close();
 	}
 
@@ -157,23 +156,18 @@ public class DataLayerIntegrationTest
 		// Assert
 		Assert.assertEquals(new Integer(93), getRecordCount(persister));
 
-		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin';");
-		
-		if (!rs.next())
-		{
-			Assert.fail("Did not find expected Laegemiddel Kemadrin");
-		}
-		
-		Assert.assertEquals(dateFormat.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
+		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin'");
 
-		rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron';");
-		if (!rs.next())
-		{
-			Assert.fail("Did not find expected Laegemiddel Kemadron");
-		}
+		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+
+		assertEquals(dateFormat.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
+
+		rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron'");
 		
-		Assert.assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
-		
+		assertTrue("Did not find expected Laegemiddel Kemadron", rs.next());
+
+		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
+
 		statement.close();
 	}
 
@@ -194,26 +188,24 @@ public class DataLayerIntegrationTest
 		// Assert
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
 
-		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin';");
-		if (!rs.next())
-		{
-			Assert.fail("Did not find expected Laegemiddel Kemadrin");
-		}
+		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin'");
 		
+		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+
 		Assert.assertEquals(dateFormat.parse("2009-07-31 00:00:00"), rs.getTimestamp("ValidTo"));
-		
+
 		statement.close();
 	}
 
 	@Test
+	@Ignore
 	public void RealTest() throws Exception
 	{
 		// Arrange
 		Takst takstinit = parseTakst("data/takst/realtakst");
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement statement = con.createStatement();
-		AuditingPersister versionedDao = new AuditingPersister(con);
+		Statement statement = connection.createStatement();
+		AuditingPersister versionedDao = new AuditingPersister(connection);
 
 		// Act
 		versionedDao.persistCompleteDataset(takstinit.getDatasets());
@@ -222,22 +214,15 @@ public class DataLayerIntegrationTest
 		statement.close();
 	}
 
-	private Statement getStatement(Persister versionedDao) throws SQLException
-	{
-		return ((AuditingPersister) versionedDao).getConnection().createStatement();
-	}
-
 	private Integer getRecordCount(Persister versionedDao) throws SQLException
 	{
-		Statement statement = getStatement(versionedDao);
+		Statement statement = connection.createStatement();
 
-		ResultSet rs = statement.executeQuery("Select count(*) from Laegemiddel");
-		Integer recordsfound = 0;
-		if (rs.next())
-		{
-			recordsfound = rs.getInt(1);
-		}
-		return recordsfound;
+		ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM Laegemiddel");
+		
+		rs.next();
+		
+		return rs.getInt(1);
 	}
 
 	private Takst parseTakst(String dir) throws Exception

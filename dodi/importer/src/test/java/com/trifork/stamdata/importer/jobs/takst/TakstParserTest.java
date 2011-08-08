@@ -40,6 +40,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
 import com.trifork.stamdata.importer.jobs.takst.model.LaegemiddelFactory;
@@ -75,7 +76,7 @@ public class TakstParserTest
 		assertEquals(new Long(28100009555l), drug.getDrugid());
 		assertEquals(new Double(5.0), drug.getStyrkeNumerisk());
 		assertEquals("5 mg", drug.getStyrkeKlarTekst());
-		assertEquals(new Integer(1), drug.getEgnetTilDosisdispensering());
+		assertTrue(drug.getEgnetTilDosisdispensering());
 		assertEquals("N04AA04", drug.getATC());
 		assertEquals("TAB", drug.getFormKode());
 		assertEquals("tabletter", drug.getLaegemiddelformTekst());
@@ -112,7 +113,7 @@ public class TakstParserTest
 		assertEquals(new Long(28100110949l), drug.getDrugid());
 		assertEquals(new Double(10), drug.getStyrkeNumerisk());
 		assertEquals("10 mg/ml", drug.getStyrkeKlarTekst());
-		assertEquals(new Integer(0), drug.getEgnetTilDosisdispensering());
+		assertFalse(drug.getEgnetTilDosisdispensering());
 		assertEquals("N01BB02", drug.getATC());
 		assertEquals("INJVSKO", drug.getFormKode());
 		assertEquals("EDIRIVPE", drug.getAdministrationsvejKode());
@@ -164,7 +165,6 @@ public class TakstParserTest
 	@Test
 	public void testVetFiltering()
 	{
-
 		// setup some objects
 		ATCKoderOgTekst atcVet = new ATCKoderOgTekst();
 		atcVet.setATC("QQ"); // starter med Q = til dyr

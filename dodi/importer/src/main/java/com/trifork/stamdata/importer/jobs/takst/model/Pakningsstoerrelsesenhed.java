@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Pakningsstoerrelsesenhed extends TakstEntity
 {
-
 	private final DivEnheder enheder;
 
 	public Pakningsstoerrelsesenhed(DivEnheder enheder)
@@ -63,5 +62,4 @@ public class Pakningsstoerrelsesenhed extends TakstEntity
 	{
 		return enheder.getTekst();
 	}
-
 }

@@ -40,32 +40,32 @@ public class Udleveringsbestemmelser extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
 	@Output
 	public String getKode()
 	{
-		return this.kode;
+		return kode;
 	}
 
 	@Output
 	public String getKortTekst()
 	{
-		return this.kortTekst;
+		return kortTekst;
 	}
 
 	@Output
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	@Output
 	public String getUdleveringsgruppe()
 	{
-		return this.udleveringsgruppe;
+		return udleveringsgruppe;
 	}
 
 	public void setKode(String kode)

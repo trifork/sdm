@@ -23,10 +23,6 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
@@ -35,67 +31,55 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output(name = "Indikation")
 public class Indikation extends TakstEntity
 {
-
 	private Long indikationskode; // Ref. t. LMS25
 	private String indikationstekstTotal; // Felt 03 + 04 + 05
 	private String indikationstekstLinie1;
 	private String indikationstekstLinie2;
 	private String indikationstekstLinie3;
-	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
-									// anvendes)
+	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke anvendes)
+	// TODO: Hvorfor står denne som "bør ikke anvendes"?
 
 	@Output(name = "aktiv")
-	public Boolean getAktivInaktiv()
+	public boolean isActive()
 	{
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
-	}
-
-	public List<ATCKoderOgTekst> getATC()
-	{
-		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
-		List<ATCKoderOgTekst> atcKoder = new ArrayList<ATCKoderOgTekst>();
-		for (Indikationskode ik : indikationskoder.getEntities())
-		{
-			if (ik.getIndikationskode().equals(this.getIndikationskode())) atcKoder.add(takst.getEntity(ATCKoderOgTekst.class, ik.getATC()));
-		}
-		return atcKoder;
 	}
 
 	@Id
 	@Output(name = "IndikationKode")
 	public Long getIndikationskode()
 	{
-		return this.indikationskode;
+		return indikationskode;
 	}
 
 	@Output
 	public String getIndikationstekstLinie1()
 	{
-		return this.indikationstekstLinie1;
+		return indikationstekstLinie1;
 	}
 
 	@Output
 	public String getIndikationstekstLinie2()
 	{
-		return this.indikationstekstLinie2;
+		return indikationstekstLinie2;
 	}
 
 	@Output
 	public String getIndikationstekstLinie3()
 	{
-		return this.indikationstekstLinie3;
+		return indikationstekstLinie3;
 	}
 
 	@Output(name = "IndikationTekst")
 	public String getIndikationstekstTotal()
 	{
-		return this.indikationstekstTotal;
+		return indikationstekstTotal;
 	}
 
 	@Override
 	public Long getKey()
 	{
-		return this.indikationskode;
+		return indikationskode;
 	}
 
 	public void setAktivInaktiv(String aktivInaktiv)
@@ -127,5 +111,4 @@ public class Indikation extends TakstEntity
 	{
 		this.indikationstekstTotal = indikationstekstTotal;
 	}
-
 }

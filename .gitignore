@@ -11,3 +11,5 @@ subprojects/importer/sdm_log
 .checkstyle
 target/
 performance-tests/jmeter/
+jmeter/
+*/**/jmeter.log

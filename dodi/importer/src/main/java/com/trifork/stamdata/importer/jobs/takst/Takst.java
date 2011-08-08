@@ -66,6 +66,7 @@ public class Takst extends TakstEntity
 	 * @param clazz the Class that the returned entities should have
 	 * @return All entities of the given type in this takst.
 	 */
+	@SuppressWarnings("unchecked")
 	public <A extends TakstEntity> TakstDataset<A> getDatasetOfType(Class<A> clazz)
 	{
 		for (Dataset<? extends StamdataEntity> dataset : datasets)
@@ -86,6 +87,7 @@ public class Takst extends TakstEntity
 	 * @param entityId the id of the requested entity
 	 * @return the requested entity
 	 */
+	@SuppressWarnings("unchecked")
 	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId)
 	{
 		if (entityId == null) return null;

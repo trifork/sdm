@@ -26,34 +26,31 @@ package com.trifork.stamdata.importer.jobs.cpr;
 import static com.trifork.stamdata.importer.util.DateUtils.yyyyMMddHHmm;
 import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.cpr.model.AktuelCivilstand;
-import com.trifork.stamdata.importer.jobs.cpr.model.AktuelCivilstand.Civilstand;
-import com.trifork.stamdata.importer.jobs.cpr.model.BarnRelation;
-import com.trifork.stamdata.importer.jobs.cpr.model.CPRDataset;
-import com.trifork.stamdata.importer.jobs.cpr.model.Foedselsregistreringsoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.Folkekirkeoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.Folkekirkeoplysninger.Folkekirkeforhold;
-import com.trifork.stamdata.importer.jobs.cpr.model.ForaeldreMyndighedRelation;
-import com.trifork.stamdata.importer.jobs.cpr.model.Haendelse;
-import com.trifork.stamdata.importer.jobs.cpr.model.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.model.KommunaleForhold;
-import com.trifork.stamdata.importer.jobs.cpr.model.KommunaleForhold.Kommunalforholdstype;
-import com.trifork.stamdata.importer.jobs.cpr.model.NavneBeskyttelse;
-import com.trifork.stamdata.importer.jobs.cpr.model.Navneoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.Personoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.Statsborgerskab;
-import com.trifork.stamdata.importer.jobs.cpr.model.Udrejseoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.UmyndiggoerelseVaergeRelation;
-import com.trifork.stamdata.importer.jobs.cpr.model.Valgoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.model.Valgoplysninger.Valgret;
-import com.trifork.stamdata.views.cpr.MorOgFaroplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.AktuelCivilstand;
+import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
+import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
+import com.trifork.stamdata.importer.jobs.cpr.models.Foedselsregistreringsoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.Folkekirkeoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
+import com.trifork.stamdata.importer.jobs.cpr.models.Haendelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
+import com.trifork.stamdata.importer.jobs.cpr.models.KommunaleForhold;
+import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.Statsborgerskab;
+import com.trifork.stamdata.importer.jobs.cpr.models.Udrejseoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
+import com.trifork.stamdata.importer.jobs.cpr.models.Valgoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.AktuelCivilstand.Civilstand;
+import com.trifork.stamdata.importer.jobs.cpr.models.Folkekirkeoplysninger.Folkekirkeforhold;
+import com.trifork.stamdata.importer.jobs.cpr.models.KommunaleForhold.Kommunalforholdstype;
+import com.trifork.stamdata.importer.jobs.cpr.models.Valgoplysninger.Valgret;
 
 
 public class CPRParserTest

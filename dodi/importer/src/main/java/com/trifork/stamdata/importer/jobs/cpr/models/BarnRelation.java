@@ -21,58 +21,45 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.model;
-
-import java.util.Date;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
 
 
 @Output
-public class Statsborgerskab extends CPREntity
+public class BarnRelation extends CPREntity
 {
-	private String landekode;
-	private Date validFrom;
-	private String statsborgerskabstartdatousikkerhedsmarkering;
+
+	String cpr;
+	String barnCpr;
 
 	@Id
+	@Output
+	public String getId()
+	{
+		return cpr + "-" + barnCpr;
+	}
+
 	@Output
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	@Output
-	public String getLandekode()
+	public void setCpr(String cpr)
 	{
-		return landekode;
-	}
-
-	public void setLandekode(String landekode)
-	{
-		this.landekode = landekode;
+		this.cpr = cpr;
 	}
 
 	@Output
-	public String getStatsborgerskabstartdatousikkerhedsmarkering()
+	public String getBarnCpr()
 	{
-		return statsborgerskabstartdatousikkerhedsmarkering;
+		return barnCpr;
 	}
 
-	public void setStatsborgerskabstartdatousikkerhedsmarkering(String statsborgerskabstartdatousikkerhedsmarkering)
+	public void setBarnCpr(String barnCpr)
 	{
-		this.statsborgerskabstartdatousikkerhedsmarkering = statsborgerskabstartdatousikkerhedsmarkering;
-	}
-
-	@Override
-	public Date getValidFrom()
-	{
-		return validFrom;
-	}
-
-	public void setValidFrom(Date validFrom)
-	{
-		this.validFrom = validFrom;
+		this.barnCpr = barnCpr;
 	}
 }

@@ -21,79 +21,91 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.autorisationsregister.model;
+package com.trifork.stamdata.importer.jobs.sks;
 
 import java.util.Date;
-import java.util.StringTokenizer;
 
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output
-public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
+public class Organisation extends AbstractStamdataEntity
 {
+	private Date validFrom;
+	private Date validTo;
+	private String navn;
 	private String nummer;
-	private String cpr;
-	private String efternavn;
-	private String fornavn;
-	private String uddKode;
 
-	Autorisationsregisterudtraek dataset;
 
-	public Autorisation(String line)
+	public enum Organisationstype
 	{
-		StringTokenizer st = new StringTokenizer(line, ";");
-		nummer = st.nextToken();
-		cpr = st.nextToken();
-		efternavn = st.nextToken();
-		fornavn = st.nextToken();
-		uddKode = st.nextToken();
+		Afdeling, Sygehus
+	}
+
+	private final Organisationstype organisationstype;
+
+	public Organisation(Organisationstype organisationstype)
+	{
+		this.organisationstype = organisationstype;
+	}
+
+	public Date getValidTo()
+	{
+		return validTo;
+	}
+
+	public void setValidTo(Date validTo)
+	{
+		this.validTo = validTo;
 	}
 
 	@Output
+	public String getNavn()
+	{
+		return navn;
+	}
+
+	public void setNavn(String navn)
+	{
+		this.navn = navn;
+	}
+
 	@Id
-	public String getAutorisationsnummer()
+	@Output
+	public String getNummer()
 	{
 		return nummer;
 	}
 
-	@Output
-	public String getCpr()
+	public void setNummer(String nummer)
 	{
-		return cpr;
+		this.nummer = nummer;
 	}
 
 	@Output
-	public String getEfternavn()
+	public String getOrganisationstype()
 	{
-		return efternavn;
+		if (organisationstype == Organisationstype.Afdeling)
+		{
+			return "Afdeling";
+		}
+		else if (organisationstype == Organisationstype.Sygehus)
+		{
+			return "Sygehus";
+		}
+
+		return null;
 	}
 
-	@Output
-	public String getFornavn()
+	public void setValidFrom(Date validFrom)
 	{
-		return fornavn;
-	}
-
-	@Output
-	public String getUddannelsesKode()
-	{
-		return uddKode;
+		this.validFrom = validFrom;
 	}
 
 	@Override
 	public Date getValidFrom()
 	{
-		return dataset.getValidFrom();
-	}
-
-	@Override
-	public Date getValidTo()
-	{
-		return DateUtils.FUTURE;
+		return validFrom;
 	}
 }

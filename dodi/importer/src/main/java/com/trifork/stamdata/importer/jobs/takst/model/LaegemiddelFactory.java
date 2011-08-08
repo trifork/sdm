@@ -23,6 +23,9 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
@@ -150,7 +153,7 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 	}
 
 	@Override
-	public void setFieldValue(Laegemiddel obj, int fieldNo, String value)
+	public void setFieldValue(Laegemiddel obj, int fieldNo, String value) throws Exception
 	{
 		switch (fieldNo)
 		{
@@ -203,7 +206,8 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 			obj.setAdministrationsvej(value);
 			break;
 		case 16:
-			obj.setTrafikadvarsel(value);
+			boolean hasWarning = "J".equalsIgnoreCase(value);
+			obj.setTrafikadvarsel(hasWarning);
 			break;
 		case 17:
 			obj.setSubstitution(value);
@@ -212,13 +216,22 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 			obj.setLaegemidletsSubstitutionsgruppe(value);
 			break;
 		case 22:
-			obj.setEgnetTilDosisdispensering(value);
+			boolean suitedForDosageDispensation = "D".equalsIgnoreCase(value);
+			obj.setEgnetTilDosisdispensering(suitedForDosageDispensation);
 			break;
 		case 23:
-			obj.setDatoForAfregistrAfLaegemiddel(value);
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+				obj.setDatoForAfregistrAfLaegemiddel(date);
+			}
 			break;
 		case 24:
-			obj.setKarantaenedato(value);
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+				obj.setKarantaenedato(date);
+			}
 			break;
 		}
 	}

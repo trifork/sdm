@@ -37,20 +37,20 @@ public class Beregningsregler extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
 	@Output
 	public String getKode()
 	{
-		return this.kode;
+		return kode;
 	}
 
 	@Output
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	public void setKode(String kode)

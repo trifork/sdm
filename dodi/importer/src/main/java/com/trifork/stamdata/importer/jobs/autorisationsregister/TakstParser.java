@@ -21,12 +21,11 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.takst;
+package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,6 +36,12 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
+import com.trifork.stamdata.importer.jobs.takst.FixedLengthFileParser;
+import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
+import com.trifork.stamdata.importer.jobs.takst.Takst;
+import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
+import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekstFactory;
 import com.trifork.stamdata.importer.jobs.takst.model.Administrationsvej;
@@ -112,16 +117,16 @@ public class TakstParser
 	private static final String SUPPORTED_TAKST_VERSION = "12.0";
 	protected static Logger logger = LoggerFactory.getLogger(TakstParser.class);
 
-	private <T extends TakstEntity> void add(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws IOException
+	private <T extends TakstEntity> void add(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
 		List<T> entities = parser.parse(config, type);
 		takst.addDataset(new TakstDataset<T>(takst, entities, type));
 	}
 
-	private <T extends TakstEntity> void addOptional(File[] input, Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws IOException
+	private <T extends TakstEntity> void addOptional(File[] input, Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
 		File file = getFileByName(config.getFilename(), input);
-		
+
 		if (file != null && file.isFile())
 		{
 			List<T> entities = parser.parse(config, type);
@@ -136,7 +141,7 @@ public class TakstParser
 		String systemline = getSystemLine(input);
 		String version = getVersion(systemline);
 
-		if (!SUPPORTED_TAKST_VERSION.equals(version)) logger.warn("Parsing unsupported version={} of the takst! expected={}", version, SUPPORTED_TAKST_VERSION);
+		if (!SUPPORTED_TAKST_VERSION.equals(version)) logger.warn("Parsing unsupported of the takst! supported={}, actual={}", version, SUPPORTED_TAKST_VERSION);
 
 		Date fromDate = getValidFromDate(systemline);
 
@@ -201,10 +206,13 @@ public class TakstParser
 		return takst;
 	}
 
+	private String getVersion(String systemline)
+	{
+		return systemline.substring(2, 7).trim();
+	}
+
 	/**
-	 * Extracts the administrationsveje and adds them to the takst
-	 * 
-	 * @param takst
+	 * Extracts the routes of administration and adds them to the takst.
 	 */
 	private void addLaegemiddelAdministrationsvejRefs(Takst takst)
 	{
@@ -213,7 +221,7 @@ public class TakstParser
 
 		for (Laegemiddel lm : lmr.getEntities())
 		{
-			for (Administrationsvej av : lm.getAdministrationsveje())
+			for (Administrationsvej av : getAdministrationsveje(lm, takst))
 			{
 				lars.add(new LaegemiddelAdministrationsvejRef(lm, av));
 			}
@@ -222,16 +230,31 @@ public class TakstParser
 		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class));
 	}
 
-	private String getVersion(String systemline)
+	private List<Administrationsvej> getAdministrationsveje(Laegemiddel drug, Takst takst)
 	{
-		return systemline.substring(2, 7).trim();
+		List<Administrationsvej> adminveje = Lists.newArrayList();
+
+		for (int idx = 0; idx < drug.getAdministrationsvejKode().length(); idx += 2)
+		{
+			String avKode = drug.getAdministrationsvejKode().substring(idx, idx + 2);
+			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
+
+			if (adminVej == null)
+			{
+				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
+			}
+			else
+			{
+				adminveje.add(adminVej);
+			}
+		}
+
+		return adminveje;
 	}
 
 	/**
 	 * Sorterer DivEnheder ud på stærke(re) typede entiteter for at matche fmk
-	 * stamtabel skemaet
-	 * 
-	 * @param takst
+	 * stamtabel skemaet.
 	 */
 	private void addTypedDivEnheder(Takst takst)
 	{
@@ -262,75 +285,72 @@ public class TakstParser
 	}
 
 	/**
-	 * Filter out veterinære entities
+	 * Filtes out veterinary medicin from a dataset.
 	 * 
 	 * @param takst
 	 */
-	static void filterOutVetDrugs(Takst takst)
+	public static void filterOutVetDrugs(Takst takst)
 	{
-		List<Pakning> pakningerToBeRemoved = new ArrayList<Pakning>();
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
 
 		if (pakninger != null)
 		{
+			List<Pakning> pakningerToBeRemoved = Lists.newArrayList();
+
 			for (Pakning pakning : pakninger.getEntities())
 			{
 				if (!pakning.isTilHumanAnvendelse()) pakningerToBeRemoved.add(pakning);
 			}
+
 			pakninger.removeEntities(pakningerToBeRemoved);
 		}
 
 		Dataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
-		List<Laegemiddel> laegemidlerToBeRemoved = new ArrayList<Laegemiddel>();
 
 		if (lmr != null)
 		{
+			List<Laegemiddel> laegemidlerToBeRemoved = Lists.newArrayList();
+
 			for (Laegemiddel lm : lmr.getEntities())
 			{
 				if (!lm.isTilHumanAnvendelse()) laegemidlerToBeRemoved.add(lm);
 			}
+
 			lmr.removeEntities(laegemidlerToBeRemoved);
 		}
 
 		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
-		List<ATCKoderOgTekst> atcToBeRemoved = new ArrayList<ATCKoderOgTekst>();
 
 		if (atckoder != null)
 		{
+			List<ATCKoderOgTekst> atcToBeRemoved = Lists.newArrayList();
+
 			for (ATCKoderOgTekst atc : atckoder.getEntities())
 			{
 				if (!atc.isTilHumanAnvendelse()) atcToBeRemoved.add(atc);
 			}
+
 			atckoder.removeEntities(atcToBeRemoved);
 		}
 	}
 
 	private int getValidYear(String line)
 	{
-
 		return Integer.parseInt(line.substring(87, 91));
 	}
 
 	private int getValidWeek(String line)
 	{
-
 		return Integer.parseInt(line.substring(91, 93));
 	}
 
-	public Date getValidFromDate(String line)
+	public Date getValidFromDate(String line) throws ParseException
 	{
-		try
-		{
-			String dateline = line.substring(47, 55);
-			DateFormat df = new SimpleDateFormat("yyyyMMdd");
+		String dateline = line.substring(47, 55);
+		DateFormat df = new SimpleDateFormat("yyyyMMdd");
 
-			return df.parse(dateline);
-		}
-		catch (ParseException e)
-		{
-			logger.error("getValidFromDate(" + line + ")", e);
-			return null;
-		}
+		return df.parse(dateline);
+
 	}
 
 	private String getSystemLine(File[] input) throws Exception

@@ -31,41 +31,40 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output(name = "IndikationATCRef")
 public class Indikationskode extends TakstEntity
 {
-
-	private String aTC; // Ref. t. LMS01
+	private String atc; // Ref. t. LMS01
 	private Long indikationskode; // Ref. t. LMS26
 	private Long drugID; // Ref. t. LMS01, felt 01
 
 	@Output
 	public String getATC()
 	{
-		return this.aTC;
+		return atc;
 	}
 
 	@Id
 	@Output
 	public String getCID()
 	{
-		// A calculated ID. Necessary because the DAO implementation needs a
-		// single key
-		return aTC + "-" + indikationskode;
+		// A calculated ID.
+		// Necessary because the DAO implementation needs a single key.
+		return atc + "-" + indikationskode;
 	}
 
 	@Output
 	public Long getDrugID()
 	{
-		return this.drugID;
+		return drugID;
 	}
 
 	@Output(name = "IndikationKode")
 	public Long getIndikationskode()
 	{
-		return this.indikationskode;
+		return indikationskode;
 	}
 
-	public void setATC(String aTC)
+	public void setATC(String atc)
 	{
-		this.aTC = aTC;
+		this.atc = atc;
 	}
 
 	public void setDrugID(Long drugID)
@@ -77,5 +76,4 @@ public class Indikationskode extends TakstEntity
 	{
 		this.indikationskode = indikationskode;
 	}
-
 }

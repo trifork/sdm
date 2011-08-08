@@ -21,57 +21,81 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.takst.model;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
-import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
+import java.util.Date;
+
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
-public class Klausulering extends TakstEntity
+public class Haendelse extends CPREntity
 {
-	private String kode; // Ref. t. LMS02, felt 13
-	private String kortTekst; // Klausultekst, forkortet
-	private String tekst; // Tilskudsklausul (sygdom/pensionist/kroniker)
-
-	@Override
-	public String getKey()
-	{
-		return kode;
-	}
+	String uuid;
+	Date ajourfoeringsdato;
+	String haendelseskode;
+	String afledtMarkering;
+	String noeglekonstant;
 
 	@Id
 	@Output
-	public String getKode()
+	public String getUuid()
 	{
-		return kode;
+		return uuid;
+	}
+
+	public void setUuid(String uuid)
+	{
+		this.uuid = uuid;
 	}
 
 	@Output
-	public String getKortTekst()
+	public String getCpr()
 	{
-		return kortTekst;
+		return cpr;
 	}
 
 	@Output
-	public String getTekst()
+	public Date getAjourfoeringsdato()
 	{
-		return tekst;
+		return ajourfoeringsdato;
 	}
 
-	public void setKode(String kode)
+	public void setAjourfoeringsdato(Date ajourfoeringsdato)
 	{
-		this.kode = kode;
+		this.ajourfoeringsdato = ajourfoeringsdato;
 	}
 
-	public void setKortTekst(String kortTekst)
+	@Output
+	public String getHaendelseskode()
 	{
-		this.kortTekst = kortTekst;
+		return haendelseskode;
 	}
 
-	public void setTekst(String tekst)
+	public void setHaendelseskode(String haendelseskode)
 	{
-		this.tekst = tekst;
+		this.haendelseskode = haendelseskode;
+	}
+
+	@Output
+	public String getAfledtMarkering()
+	{
+		return afledtMarkering;
+	}
+
+	public void setAfledtMarkering(String afledtMarkering)
+	{
+		this.afledtMarkering = afledtMarkering;
+	}
+
+	@Output
+	public String getNoeglekonstant()
+	{
+		return noeglekonstant;
+	}
+
+	public void setNoeglekonstant(String noeglekonstant)
+	{
+		this.noeglekonstant = noeglekonstant;
 	}
 }

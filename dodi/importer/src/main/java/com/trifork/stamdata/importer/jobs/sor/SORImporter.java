@@ -60,6 +60,7 @@ public class SORImporter implements FileParser
 		return present;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void importFiles(File[] files, Persister persister) throws Exception
 	{

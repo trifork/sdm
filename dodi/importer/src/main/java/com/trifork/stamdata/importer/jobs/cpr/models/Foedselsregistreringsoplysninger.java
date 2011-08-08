@@ -21,34 +21,19 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.model;
-
-import java.util.Date;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
 
 
-public class Haendelse extends CPREntity
+public class Foedselsregistreringsoplysninger extends CPREntity
 {
-	String uuid;
-	Date ajourfoeringsdato;
-	String haendelseskode;
-	String afledtMarkering;
-	String noeglekonstant;
+
+	private String foedselsregistreringsstedkode;
+	private String foedselsregistreringstekst;
 
 	@Id
-	@Output
-	public String getUuid()
-	{
-		return uuid;
-	}
-
-	public void setUuid(String uuid)
-	{
-		this.uuid = uuid;
-	}
-
 	@Output
 	public String getCpr()
 	{
@@ -56,46 +41,24 @@ public class Haendelse extends CPREntity
 	}
 
 	@Output
-	public Date getAjourfoeringsdato()
+	public String getFoedselsregistreringsstedkode()
 	{
-		return ajourfoeringsdato;
+		return foedselsregistreringsstedkode;
 	}
 
-	public void setAjourfoeringsdato(Date ajourfoeringsdato)
+	public void setFoedselsregistreringsstedkode(String foedselsregistreringsstedkode)
 	{
-		this.ajourfoeringsdato = ajourfoeringsdato;
-	}
-
-	@Output
-	public String getHaendelseskode()
-	{
-		return haendelseskode;
-	}
-
-	public void setHaendelseskode(String haendelseskode)
-	{
-		this.haendelseskode = haendelseskode;
+		this.foedselsregistreringsstedkode = foedselsregistreringsstedkode;
 	}
 
 	@Output
-	public String getAfledtMarkering()
+	public String getFoedselsregistreringstekst()
 	{
-		return afledtMarkering;
+		return foedselsregistreringstekst;
 	}
 
-	public void setAfledtMarkering(String afledtMarkering)
+	public void setFoedselsregistreringstekst(String foedselsregistreringstekst)
 	{
-		this.afledtMarkering = afledtMarkering;
-	}
-
-	@Output
-	public String getNoeglekonstant()
-	{
-		return noeglekonstant;
-	}
-
-	public void setNoeglekonstant(String noeglekonstant)
-	{
-		this.noeglekonstant = noeglekonstant;
+		this.foedselsregistreringstekst = foedselsregistreringstekst;
 	}
 }

@@ -24,20 +24,18 @@
 package com.trifork.stamdata.importer.jobs.takst.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
 @Output(name = "Pakning")
 public class Pakning extends TakstEntity
 {
-
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer;
 	private Long alfabetSekvensnr;
@@ -53,11 +51,10 @@ public class Pakning extends TakstEntity
 	private String klausulForMedicintilskud; // Ref. t. LMS17
 	private Long antalDDDPrPakning;
 	private Long opbevaringstidNumerisk; // Hos distributør
-	private String opbevaringstidEnhed; // Ref. t. LMS15, enhedstype 1
 	private String opbevaringsbetingelser; // Ref. t. LMS20
-	private Long oprettelsesdato; // Format: ååååmmdd
-	private Long datoForSenestePrisaendring; // Format: ååååmmdd
-	private Long udgaaetDato; // Format: ååååmmdd
+	private Date oprettelsesdato; // Format: ååååmmdd
+	private Date datoForSenestePrisaendring; // Format: ååååmmdd
+	private Date udgaaetDato; // Format: ååååmmdd
 	private String beregningskodeAIPRegpris; // Ref. t. LMS13
 	private String pakningOptagetITilskudsgruppe; // 2 muligh.: F eller blank
 	private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
@@ -81,43 +78,20 @@ public class Pakning extends TakstEntity
 		return this.antalDelpakninger;
 	}
 
-	public Beregningsregler getBeregningskodeAIPRegprisRef()
-	{
-		return takst.getEntity(Beregningsregler.class, this.beregningskodeAIPRegpris);
-	}
-
 	@Output
 	public String getBeregningskodeAIRegpris()
 	{
 		return this.beregningskodeAIPRegpris;
 	}
 
-	public List<Pakning> getBilligsteSubstitution()
+	@Output
+	public Date getDatoForSenestePrisaendring()
 	{
-		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		List<Pakning> substitutioner = new ArrayList<Pakning>();
-		for (Substitution substitution : subst.getEntities())
-		{
-			if (substitution.getReceptensVarenummer().equals(varenummer) && !this.varenummer.equals(substitution.getBilligsteVarenummer()))
-			{
-				Pakning p = pakninger.getEntityById(substitution.getBilligsteVarenummer());
-				if (p != null) substitutioner.add(p);
-			}
-		}
-
-		if (substitutioner.size() == 0) return null;
-		return substitutioner;
+		return datoForSenestePrisaendring;
 	}
 
 	@Output
-	public String getDatoForSenestePrisaendring()
-	{
-		return DateUtils.toISO8601date(this.datoForSenestePrisaendring);
-	}
-
-	@Output
-	public Integer getDosisdispenserbar()
+	public boolean getDosisdispenserbar()
 	{
 		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
 	}
@@ -143,18 +117,7 @@ public class Pakning extends TakstEntity
 	@Output(name = "KlausuleringsKode")
 	public String getKlausulForMedicintilskud()
 	{
-		return this.klausulForMedicintilskud;
-	}
-
-	public Laegemiddel getLaegemiddel()
-	{
-		Dataset<Laegemiddel> laegemidler = takst.getDatasetOfType(Laegemiddel.class);
-		for (StamdataEntity sde : laegemidler.getEntities())
-		{
-			Laegemiddel lm = (Laegemiddel) sde;
-			if (drugid.equals(lm.getDrugid())) return lm;
-		}
-		return null;
+		return klausulForMedicintilskud;
 	}
 
 	@Output(name = "MedicintilskudsKode")
@@ -168,12 +131,6 @@ public class Pakning extends TakstEntity
 	{
 		return this.opbevaringsbetingelser;
 	}
-
-	public Opbevaringsbetingelser getOpbevaringsbetingelserRef()
-	{
-		return takst.getDatasetOfType(Opbevaringsbetingelser.class).getEntityById(opbevaringsbetingelser);
-	}
-
 	@Output
 	public Long getOpbevaringstid()
 	{
@@ -186,18 +143,10 @@ public class Pakning extends TakstEntity
 		return this.opbevaringstidNumerisk;
 	}
 
-	public NumeriskMedEnhed getOpbevaringstidRef()
-	{
-		final int enhedstype = 1;
-		DivEnheder enhed = takst.getDatasetOfType(DivEnheder.class).getEntityById(opbevaringstidEnhed + "-" + enhedstype);
-		return new NumeriskMedEnhed(takst, null, opbevaringstidNumerisk, enhed);
-
-	}
-
 	@Output
-	public String getOprettelsesdato()
+	public Date getOprettelsesdato()
 	{
-		return DateUtils.toISO8601date(this.oprettelsesdato);
+		return oprettelsesdato;
 	}
 
 	@Output
@@ -279,9 +228,9 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output
-	public String getUdgaaetDato()
+	public Date getUdgaaetDato()
 	{
-		return DateUtils.toISO8601date(this.udgaaetDato);
+		return udgaaetDato;
 	}
 
 	@Output
@@ -319,10 +268,12 @@ public class Pakning extends TakstEntity
 		return this.varenummerForDelpakning;
 	}
 
-	public Boolean isTilHumanAnvendelse()
+	public boolean isTilHumanAnvendelse()
 	{
 		Laegemiddel lm = takst.getEntity(Laegemiddel.class, drugid);
-		if (lm == null) return null;
+		
+		if (lm == null) return true;
+		
 		return lm.isTilHumanAnvendelse();
 	}
 
@@ -346,7 +297,7 @@ public class Pakning extends TakstEntity
 		this.beregningskodeAIPRegpris = beregningskodeAIPRegpris;
 	}
 
-	public void setDatoForSenestePrisaendring(Long datoForSenestePrisaendring)
+	public void setDatoForSenestePrisaendring(Date datoForSenestePrisaendring)
 	{
 		this.datoForSenestePrisaendring = datoForSenestePrisaendring;
 	}
@@ -381,17 +332,12 @@ public class Pakning extends TakstEntity
 		this.opbevaringsbetingelser = opbevaringsbetingelser;
 	}
 
-	public void setOpbevaringstidEnhed(String opbevaringstidEnhed)
-	{
-		this.opbevaringstidEnhed = opbevaringstidEnhed;
-	}
-
 	public void setOpbevaringstidNumerisk(Long opbevaringstidNumerisk)
 	{
 		this.opbevaringstidNumerisk = opbevaringstidNumerisk;
 	}
 
-	public void setOprettelsesdato(Long oprettelsesdato)
+	public void setOprettelsesdato(Date oprettelsesdato)
 	{
 		this.oprettelsesdato = oprettelsesdato;
 	}
@@ -421,7 +367,7 @@ public class Pakning extends TakstEntity
 		this.pakningsstoerrelseNumerisk = pakningsstoerrelseNumerisk;
 	}
 
-	public void setUdgaaetDato(Long udgaaetDato)
+	public void setUdgaaetDato(Date udgaaetDato)
 	{
 		this.udgaaetDato = udgaaetDato;
 	}

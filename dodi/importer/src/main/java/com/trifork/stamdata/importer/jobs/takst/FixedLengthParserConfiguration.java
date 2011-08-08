@@ -33,5 +33,5 @@ public interface FixedLengthParserConfiguration<T>
 
 	int getOffset(int fieldNo);
 
-	void setFieldValue(T entity, int fieldNumber, String value);
+	void setFieldValue(T entity, int fieldNumber, String value) throws Exception;
 }

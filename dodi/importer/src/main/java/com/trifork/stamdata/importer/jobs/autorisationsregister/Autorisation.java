@@ -21,48 +21,79 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.model;
+package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import java.util.Date;
+import java.util.StringTokenizer;
 
+import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output(name = "Person")
-public class NavneBeskyttelse extends CPREntity
+@Output
+public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
 {
+	private String nummer;
+	private String cpr;
+	private String efternavn;
+	private String fornavn;
+	private String uddKode;
 
-	Date navneBeskyttelseStartDato;
-	Date navneBeskyttelseSletteDato;
+	Autorisationsregisterudtraek dataset;
 
-	@Id
+	public Autorisation(String line)
+	{
+		StringTokenizer st = new StringTokenizer(line, ";");
+		nummer = st.nextToken();
+		cpr = st.nextToken();
+		efternavn = st.nextToken();
+		fornavn = st.nextToken();
+		uddKode = st.nextToken();
+	}
+
 	@Output
-	@Override
+	@Id
+	public String getAutorisationsnummer()
+	{
+		return nummer;
+	}
+
+	@Output
 	public String getCpr()
 	{
 		return cpr;
 	}
 
 	@Output
-	public Date getNavneBeskyttelseStartDato()
+	public String getEfternavn()
 	{
-		return navneBeskyttelseStartDato;
-	}
-
-	public void setNavneBeskyttelseStartDato(Date startDato)
-	{
-		this.navneBeskyttelseStartDato = startDato;
+		return efternavn;
 	}
 
 	@Output
-	public Date getNavneBeskyttelseSletteDato()
+	public String getFornavn()
 	{
-		return navneBeskyttelseSletteDato;
+		return fornavn;
 	}
 
-	public void setNavneBeskyttelseSletteDato(Date sletteDato)
+	@Output
+	public String getUddannelsesKode()
 	{
-		this.navneBeskyttelseSletteDato = sletteDato;
+		return uddKode;
+	}
+
+	@Override
+	public Date getValidFrom()
+	{
+		return dataset.getValidFrom();
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return DateUtils.FUTURE;
 	}
 }

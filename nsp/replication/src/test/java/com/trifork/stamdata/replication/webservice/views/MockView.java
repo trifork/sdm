@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -30,23 +29,23 @@ import java.util.Date;
 import com.trifork.stamdata.views.View;
 
 
-public class MockView extends View {
-
+public class MockView extends View
+{
 	@Override
-	public String getId() {
-
+	public String getId()
+	{
 		return null;
 	}
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return null;
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return null;
 	}
 }

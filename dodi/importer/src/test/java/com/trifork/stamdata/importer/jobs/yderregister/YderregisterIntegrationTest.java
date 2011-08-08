@@ -23,7 +23,6 @@
 
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 

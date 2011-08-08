@@ -28,15 +28,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisation;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.model.Autorisationsregisterudtraek;
 
 
 public class AutParserTest

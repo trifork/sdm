@@ -156,6 +156,7 @@ public class MySQLStamDAOTest
 	}
 
 	@Test
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void testDeltaPutRemoved() throws Exception
 	{
 		// An empty takst.

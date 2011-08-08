@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Firma extends TakstEntity
 {
-
 	private Long firmanummer; // Ref. t. LMS01, felt 13 - 14
 	private String firmamaerkeKort; // P.t. tomt
 	private String firmamaerkeLangtNavn;
@@ -40,32 +39,32 @@ public class Firma extends TakstEntity
 	@Output
 	public String getFirmamaerkeKort()
 	{
-		return this.firmamaerkeKort;
+		return firmamaerkeKort;
 	}
 
 	@Output
 	public String getFirmamaerkeLangtNavn()
 	{
-		return this.firmamaerkeLangtNavn;
+		return firmamaerkeLangtNavn;
 	}
 
 	@Id
 	@Output
 	public Long getFirmanummer()
 	{
-		return this.firmanummer;
+		return firmanummer;
 	}
 
 	@Override
 	public Long getKey()
 	{
-		return this.firmanummer;
+		return firmanummer;
 	}
 
 	@Output
 	public String getParallelimportoerKode()
 	{
-		return this.parallelimportoerKode;
+		return parallelimportoerKode;
 	}
 
 	public void setFirmamaerkeKort(String firmamaerkeKort)
@@ -87,5 +86,4 @@ public class Firma extends TakstEntity
 	{
 		this.parallelimportoerKode = parallelimportoerKode;
 	}
-
 }

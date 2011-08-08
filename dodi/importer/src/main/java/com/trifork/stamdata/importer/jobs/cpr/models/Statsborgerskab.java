@@ -21,91 +21,58 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.sks.model;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
 
 
-public class Organisation extends AbstractStamdataEntity
+@Output
+public class Statsborgerskab extends CPREntity
 {
+	private String landekode;
 	private Date validFrom;
-	private Date validTo;
-	private String navn;
-	private String nummer;
-
-
-	public enum Organisationstype
-	{
-		Afdeling, Sygehus
-	}
-
-	private final Organisationstype organisationstype;
-
-	public Organisation(Organisationstype organisationstype)
-	{
-		this.organisationstype = organisationstype;
-	}
-
-	public Date getValidTo()
-	{
-		return validTo;
-	}
-
-	public void setValidTo(Date validTo)
-	{
-		this.validTo = validTo;
-	}
-
-	@Output
-	public String getNavn()
-	{
-		return navn;
-	}
-
-	public void setNavn(String navn)
-	{
-		this.navn = navn;
-	}
+	private String statsborgerskabstartdatousikkerhedsmarkering;
 
 	@Id
 	@Output
-	public String getNummer()
+	public String getCpr()
 	{
-		return nummer;
-	}
-
-	public void setNummer(String nummer)
-	{
-		this.nummer = nummer;
+		return cpr;
 	}
 
 	@Output
-	public String getOrganisationstype()
+	public String getLandekode()
 	{
-		if (organisationstype == Organisationstype.Afdeling)
-		{
-			return "Afdeling";
-		}
-		else if (organisationstype == Organisationstype.Sygehus)
-		{
-			return "Sygehus";
-		}
-
-		return null;
+		return landekode;
 	}
 
-	public void setValidFrom(Date validFrom)
+	public void setLandekode(String landekode)
 	{
-		this.validFrom = validFrom;
+		this.landekode = landekode;
+	}
+
+	@Output
+	public String getStatsborgerskabstartdatousikkerhedsmarkering()
+	{
+		return statsborgerskabstartdatousikkerhedsmarkering;
+	}
+
+	public void setStatsborgerskabstartdatousikkerhedsmarkering(String statsborgerskabstartdatousikkerhedsmarkering)
+	{
+		this.statsborgerskabstartdatousikkerhedsmarkering = statsborgerskabstartdatousikkerhedsmarkering;
 	}
 
 	@Override
 	public Date getValidFrom()
 	{
 		return validFrom;
+	}
+
+	public void setValidFrom(Date validFrom)
+	{
+		this.validFrom = validFrom;
 	}
 }

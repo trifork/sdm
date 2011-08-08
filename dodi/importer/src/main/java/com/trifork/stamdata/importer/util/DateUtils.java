@@ -29,8 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.trifork.stamdata.Preconditions;
 
 
 public class DateUtils
@@ -38,31 +37,18 @@ public class DateUtils
 	public static final Date FUTURE = toDate(2999, 12, 31);
 	public static final Date PAST = toDate(999, 12, 31);
 
-	private static Logger logger = LoggerFactory.getLogger(DateUtils.class);
-
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
 	 * @param long1 representing a date sing the format: yyyyMMdd.
 	 * @return a String representing the ISO 8601 date without time zone.
+	 * @throws ParseException 
 	 */
-	public static String toISO8601date(Long long1)
+	public static Date toISO8601date(String dateString) throws ParseException
 	{
-		if (long1 == null || long1 == 0) return null;
-
 		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
-		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd");
-
-		try
-		{
-			return "" + outformat.format(informat.parse("" + long1));
-		}
-		catch (ParseException e)
-		{
-			logger.error("Error converting date to iso 8601 date format. Returning unformated string: '" + long1 + "'");
-			return "" + long1;
-		}
+		return informat.parse(dateString);
 	}
 
 	public static String toFilenameDatetime(Date date)
@@ -108,11 +94,7 @@ public class DateUtils
 
 	public static String toMySQLdate(Date date)
 	{
-		if (date == null)
-		{
-			logger.warn("Cannot convert null to mysqldate");
-			return null;
-		}
+		Preconditions.checkNotNull(date);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);

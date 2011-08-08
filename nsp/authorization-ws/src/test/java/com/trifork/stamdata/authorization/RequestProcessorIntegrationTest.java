@@ -115,8 +115,6 @@ public class RequestProcessorIntegrationTest {
 		Transformer transformer = TransformerFactory.newInstance().newTransformer();
 		transformer.transform(new DOMSource(request.serialize2DOMDocument()), new StreamResult(w));
 		
-		String s = w.toString();
-		
 		RequestProcessor processor = new RequestProcessor(factory, ImmutableSet.of(TEST_CVR), context.createMarshaller(), context.createUnmarshaller(), authorizationDao);
 
 		Reply reply = processor.process(request);

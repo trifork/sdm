@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Indholdsstoffer extends TakstEntity
 {
-
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
 	private String stofklasse;
@@ -64,25 +63,25 @@ public class Indholdsstoffer extends TakstEntity
 	@Output
 	public String getStofklasse()
 	{
-		return this.stofklasse;
+		return stofklasse;
 	}
 
 	@Output
 	public String getSubstans()
 	{
-		return this.substans;
+		return substans;
 	}
 
 	@Output
 	public String getSubstansgruppe()
 	{
-		return this.substansgruppe;
+		return substansgruppe;
 	}
 
 	@Output
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setDrugID(Long drugID)
@@ -109,5 +108,4 @@ public class Indholdsstoffer extends TakstEntity
 	{
 		this.varenummer = varenummer;
 	}
-
 }

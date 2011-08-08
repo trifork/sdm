@@ -24,14 +24,11 @@
 package com.trifork.stamdata.importer.jobs.sks;
 
 import java.io.File;
-import java.util.Calendar;
-import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
 

@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Substitution extends TakstEntity
 {
-
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
 	private Long receptensVarenummer; // Varenr. hvis substitutionsmuligheder
 										// skal findes
@@ -56,32 +55,32 @@ public class Substitution extends TakstEntity
 	@Output
 	public Long getNumeriskPakningsstoerrelse()
 	{
-		return this.numeriskPakningsstoerrelse;
+		return numeriskPakningsstoerrelse;
 	}
 
 	@Output
 	public String getProdAlfabetiskeSekvensplads()
 	{
-		return this.prodAlfabetiskeSekvensplads;
+		return prodAlfabetiskeSekvensplads;
 	}
 
 	@Id
 	@Output
 	public Long getReceptensVarenummer()
 	{
-		return this.receptensVarenummer;
+		return receptensVarenummer;
 	}
 
 	@Output
 	public Long getSubstitutionsgruppenummer()
 	{
-		return this.substitutionsgruppenummer;
+		return substitutionsgruppenummer;
 	}
 
 	@Output
 	public String getSubstitutionskodeForPakning()
 	{
-		return this.substitutionskodeForPakning;
+		return substitutionskodeForPakning;
 	}
 
 	public void setBilligsteVarenummer(Long billigsteVarenummer)
@@ -113,5 +112,4 @@ public class Substitution extends TakstEntity
 	{
 		this.substitutionskodeForPakning = substitutionskodeForPakning;
 	}
-
 }

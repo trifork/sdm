@@ -24,7 +24,6 @@
 package com.trifork.stamdata.importer.jobs.takst;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -34,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 
 
 public class FixedLengthFileParser
@@ -49,8 +49,10 @@ public class FixedLengthFileParser
 		this.input = input;
 	}
 
-	public <T extends TakstEntity> List<T> parse(FixedLengthParserConfiguration<T> configuration, Class<T> type) throws IOException
+	public <T extends TakstEntity> List<T> parse(FixedLengthParserConfiguration<T> configuration, Class<T> type) throws Exception
 	{
+		logger.debug("Parsing file={}", configuration.getFilename());
+		
 		File file = TakstParser.getFileByName(configuration.getFilename(), input);
 		LineIterator lines = FileUtils.lineIterator(file, FILE_ENCODING);
 

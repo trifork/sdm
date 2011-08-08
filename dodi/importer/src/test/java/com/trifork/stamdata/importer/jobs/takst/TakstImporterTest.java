@@ -98,6 +98,7 @@ public class TakstImporterTest
 		assertEquals(DateUtils.toDate(2010, 1, 16, 12, 0, 0).getTime(), new TakstImporter().getNextImportExpectedBefore(DateUtils.toDate(2008, 12, 12, 15, 10, 0)).getTime());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testLaegemiddelDoseringRef() throws Exception
 	{

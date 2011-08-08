@@ -29,7 +29,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.trifork.stamdata.importer.jobs.sks.model.Organisation;
 import com.trifork.stamdata.importer.persistence.Dataset;
 
 

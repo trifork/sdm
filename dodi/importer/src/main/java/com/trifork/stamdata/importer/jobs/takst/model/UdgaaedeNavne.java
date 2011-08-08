@@ -23,37 +23,39 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import java.util.Date;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
 @Output
 public class UdgaaedeNavne extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01
-	private Long datoForAendringen;
+	private Date datoForAendringen;
 	private String tidligereNavn;
 
 	@Output
-	public String getDatoForAendringen()
+	public Date getDatoForAendringen()
 	{
-		return DateUtils.toISO8601date(this.datoForAendringen);
+		return datoForAendringen;
 	}
 
 	@Output
 	public Long getDrugid()
 	{
-		return this.drugid;
+		return drugid;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Id
 	@Output(name = "CID")
 	public String getKey()
 	{
-		return datoForAendringen + '-' + tidligereNavn + '-' + drugid;
+		return datoForAendringen.toGMTString() + '-' + tidligereNavn + '-' + drugid;
 	}
 
 	@Output
@@ -62,7 +64,7 @@ public class UdgaaedeNavne extends TakstEntity
 		return this.tidligereNavn;
 	}
 
-	public void setDatoForAendringen(Long datoForAendringen)
+	public void setDatoForAendringen(Date datoForAendringen)
 	{
 		this.datoForAendringen = datoForAendringen;
 	}

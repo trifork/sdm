@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class EmballagetypeKoder extends TakstEntity
 {
-
 	private String kode; // Ref. t. LMS02, felt 09
 	private String kortTekst;
 	private String tekst;
@@ -39,26 +38,26 @@ public class EmballagetypeKoder extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
 	@Output
 	public String getKode()
 	{
-		return this.kode;
+		return kode;
 	}
 
 	@Output
 	public String getKortTekst()
 	{
-		return this.kortTekst;
+		return kortTekst;
 	}
 
 	@Output
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	public void setKode(String kode)
@@ -75,5 +74,4 @@ public class EmballagetypeKoder extends TakstEntity
 	{
 		this.tekst = tekst;
 	}
-
 }

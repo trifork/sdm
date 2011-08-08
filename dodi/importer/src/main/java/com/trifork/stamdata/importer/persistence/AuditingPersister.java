@@ -60,10 +60,14 @@ public class AuditingPersister implements Persister
 
 	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
 	{
+		int i = 1;
+		
 		for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
 		{
 			if (!dataset.getType().isAnnotationPresent(Output.class)) continue;
 
+			logger.info("Dataset {}/{}", i++, datasets.length);
+			
 			updateValidToOnRecordsNotInDataset(dataset);
 			persistDeltaDataset(dataset);
 		}
@@ -92,14 +96,14 @@ public class AuditingPersister implements Persister
 		for (T record : dataset.getEntities())
 		{
 			processedEntities++;
-
+			
 			Date validFrom = record.getValidFrom();
 
 			boolean exists = table.fetchEntityVersions(record.getKey(), validFrom, record.getValidTo());
 
 			if (!exists)
 			{
-				// Entity was not found, so create it
+				// Entity was not found, so create it.
 				table.insertRow(record, transactionTime);
 			}
 			else

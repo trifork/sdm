@@ -23,6 +23,10 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
@@ -76,7 +80,7 @@ public class UdgaaedeNavneFactory implements FixedLengthParserConfiguration<Udga
 	}
 
 	@Override
-	public void setFieldValue(UdgaaedeNavne obj, int fieldNo, String value)
+	public void setFieldValue(UdgaaedeNavne obj, int fieldNo, String value) throws ParseException
 	{
 		switch (fieldNo)
 		{
@@ -84,7 +88,11 @@ public class UdgaaedeNavneFactory implements FixedLengthParserConfiguration<Udga
 			obj.setDrugid(NumberUtils.createLong(value));
 			break;
 		case 1:
-			obj.setDatoForAendringen(NumberUtils.createLong(value));
+			if (value != null)
+			{
+				Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+				obj.setDatoForAendringen(date);
+			}
 			break;
 		case 2:
 			obj.setTidligereNavn(value);

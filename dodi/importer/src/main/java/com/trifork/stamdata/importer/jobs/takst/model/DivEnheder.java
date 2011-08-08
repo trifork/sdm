@@ -25,12 +25,11 @@ package com.trifork.stamdata.importer.jobs.takst.model;
 
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 
-// the entities of this type are output by these classes:
+// The entities of this type are output by these classes:
 // Tidsenhed, Styrkeenhed, Pakningsstoerrelsesenhed
 
 public class DivEnheder extends TakstEntity
 {
-
 	private static final long ENHEDSTYPE_TID = 1;
 	private static final long ENHEDSTYPE_STYRKE = 3;
 	private static final long ENHEDSTYPE_PAKNING = 4;

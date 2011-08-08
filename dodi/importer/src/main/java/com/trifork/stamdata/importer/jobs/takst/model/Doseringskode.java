@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output(name = "LaegemiddelDoseringRef")
 public class Doseringskode extends TakstEntity
 {
-
 	private Long drugid; // Ref. t. LMS01
 	private Long doseringskode; // Ref. t. LMS28
 
@@ -63,5 +62,4 @@ public class Doseringskode extends TakstEntity
 	{
 		this.drugid = drugid;
 	}
-
 }

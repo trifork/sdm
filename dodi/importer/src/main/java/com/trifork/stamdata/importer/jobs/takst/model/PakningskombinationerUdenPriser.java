@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class PakningskombinationerUdenPriser extends TakstEntity
 {
-
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
 	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan
 											// substitueres til
@@ -43,38 +42,38 @@ public class PakningskombinationerUdenPriser extends TakstEntity
 	@Output
 	public Long getAntalPakninger()
 	{
-		return this.antalPakninger;
+		return antalPakninger;
 	}
 
 	@Output
 	public String getInformationspligtMarkering()
 	{
-		return this.informationspligtMarkering;
+		return informationspligtMarkering;
 	}
 
 	@Override
 	public Long getKey()
 	{
-		return this.varenummerOrdineret;
+		return varenummerOrdineret;
 	}
 
 	@Output
 	public Long getVarenummerAlternativt()
 	{
-		return this.varenummerAlternativt;
+		return varenummerAlternativt;
 	}
 
 	@Id
 	@Output
 	public Long getVarenummerOrdineret()
 	{
-		return this.varenummerOrdineret;
+		return varenummerOrdineret;
 	}
 
 	@Output
 	public Long getVarenummerSubstitueret()
 	{
-		return this.varenummerSubstitueret;
+		return varenummerSubstitueret;
 	}
 
 	public void setAntalPakninger(Long antalPakninger)
@@ -101,5 +100,4 @@ public class PakningskombinationerUdenPriser extends TakstEntity
 	{
 		this.varenummerSubstitueret = varenummerSubstitueret;
 	}
-
 }

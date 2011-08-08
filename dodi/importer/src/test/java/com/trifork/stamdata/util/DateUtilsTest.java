@@ -36,24 +36,6 @@ import com.trifork.stamdata.importer.util.DateUtils;
 public class DateUtilsTest
 {
 	@Test
-	public void testFormatting() throws Exception
-	{
-		assertEquals("1976-11-10", DateUtils.toISO8601date(19761110l));
-	}
-
-	@Test
-	public void testNull() throws Exception
-	{
-		assertEquals(null, DateUtils.toISO8601date(0l));
-	}
-
-	@Test
-	public void testError() throws Exception
-	{
-		assertEquals("1", DateUtils.toISO8601date(1l));
-	}
-
-	@Test
 	public void testFormattingToFileNameDateformat() throws Exception
 	{
 		Calendar cal = Calendar.getInstance();

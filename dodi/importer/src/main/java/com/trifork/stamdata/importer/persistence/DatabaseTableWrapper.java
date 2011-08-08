@@ -37,8 +37,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.management.RuntimeErrorException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -206,23 +204,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		try
 		{
 			insertAndUpdateRecordStmt.execute();
-			if (++insertedRecords % 1000 == 0)
-			{
-				logger.debug("Inserted " + tablename + ": " + insertedRecords);
-			}
 		}
 		catch (SQLException sqle)
 		{
-			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
-			try
-			{
-				message += "entityid: " + sde.getKey() + " SQLError: " + sqle.getMessage();
-			}
-			catch (Exception e)
-			{
-				message += " Error: " + e.getMessage();
-			}
-			throw new RuntimeException(message, sqle);
+			throw new RuntimeException("Could not insert record.", sqle);
 		}
 	}
 
@@ -233,26 +218,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		try
 		{
 			updateRecordStmt.execute();
-
-			if (++updatedRecords % 1000 == 0)
-			{
-				logger.debug("Updated " + tablename + ": " + updatedRecords);
-			}
 		}
 		catch (SQLException sqle)
 		{
-			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
-
-			try
-			{
-				message += "entityid: " + sde.getKey();
-			}
-			catch (Exception e)
-			{
-
-			}
-
-			throw new RuntimeException(message, sqle);
+			throw new RuntimeException("Could not update record.", sqle);
 		}
 	}
 

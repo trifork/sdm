@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Styrkeenhed extends TakstEntity
 {
-
 	private final DivEnheder enheder;
 
 	public Styrkeenhed(DivEnheder enheder)
@@ -63,5 +62,4 @@ public class Styrkeenhed extends TakstEntity
 	{
 		return enheder.getTekst();
 	}
-
 }

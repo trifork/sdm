@@ -23,10 +23,6 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.persistence.Id;
 import com.trifork.stamdata.importer.persistence.Output;
@@ -37,19 +33,6 @@ public class ATCKoderOgTekst extends TakstEntity
 {
 	private String atc;
 	private String tekst;
-
-	public List<Indikation> getIndikationer()
-	{
-		TakstDataset<Indikationskode> indikationskoder = takst.getDatasetOfType(Indikationskode.class);
-		List<Indikation> indikationer = new ArrayList<Indikation>();
-
-		for (Indikationskode ik : indikationskoder.getEntities())
-		{
-			if (ik.getATC().equals(this.getKey())) indikationer.add(takst.getEntity(Indikation.class, ik.getIndikationskode()));
-		}
-
-		return indikationer;
-	}
 
 	@Override
 	@Id
@@ -65,11 +48,6 @@ public class ATCKoderOgTekst extends TakstEntity
 		return this.tekst;
 	}
 
-	public Boolean isTilHumanAnvendelse()
-	{
-		return !atc.startsWith("Q");
-	}
-
 	public void setATC(String atc)
 	{
 		this.atc = atc;
@@ -78,5 +56,10 @@ public class ATCKoderOgTekst extends TakstEntity
 	public void setTekst(String tekst)
 	{
 		this.tekst = tekst;
+	}
+
+	public boolean isTilHumanAnvendelse()
+	{
+		return !atc.startsWith("Q");
 	}
 }

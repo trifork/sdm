@@ -21,26 +21,48 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.autorisationsregister.model;
+package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation>
+public abstract class CPREntity extends AbstractStamdataEntity
 {
+	CPRDataset dataset;
+	String cpr;
 
-	public Autorisationsregisterudtraek(Date validFrom)
+	public String getCpr()
 	{
-		super(Autorisation.class, validFrom, DateUtils.FUTURE);
+		return cpr;
+	}
+
+	public void setCpr(String cpr)
+	{
+		this.cpr = cpr;
 	}
 
 	@Override
-	public void addEntity(Autorisation aut)
+	public Date getValidTo()
 	{
-		aut.dataset = this;
-		super.addEntity(aut);
+		return DateUtils.FUTURE;
+	}
+
+	public CPRDataset getDataset()
+	{
+		return dataset;
+	}
+
+	public void setDataset(CPRDataset dataset)
+	{
+		this.dataset = dataset;
+	}
+
+	@Override
+	public Date getValidFrom()
+	{
+		return dataset.getValidFrom();
 	}
 }

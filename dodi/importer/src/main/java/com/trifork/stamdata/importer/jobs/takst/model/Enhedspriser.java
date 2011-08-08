@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Enhedspriser extends TakstEntity
 {
-
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
 	private Long prisPrEnhed; // Pris = Ekspeditionens samlede pris (ESP)
@@ -42,38 +41,38 @@ public class Enhedspriser extends TakstEntity
 	@Output
 	public String getBilligstePakning()
 	{
-		return this.billigstePakning;
+		return billigstePakning;
 	}
 
 	@Output
 	public Long getDrugID()
 	{
-		return this.drugID;
+		return drugID;
 	}
 
 	@Override
 	public String getKey()
 	{
-		return "" + varenummer;
+		return varenummer.toString();
 	}
 
 	@Output
 	public Long getPrisPrDDD()
 	{
-		return this.prisPrDDD;
+		return prisPrDDD;
 	}
 
 	@Output
 	public Long getPrisPrEnhed()
 	{
-		return this.prisPrEnhed;
+		return prisPrEnhed;
 	}
 
 	@Id
 	@Output
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setBilligstePakning(String billigstePakning)
@@ -100,5 +99,4 @@ public class Enhedspriser extends TakstEntity
 	{
 		this.varenummer = varenummer;
 	}
-
 }

@@ -38,26 +38,26 @@ public class Administrationsvej extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
 	@Output(name = "AdministrationsvejKode")
 	public String getKode()
 	{
-		return this.kode;
+		return kode;
 	}
 
 	@Output(name = "AdministrationsvejKortTekst")
 	public String getKortTekst()
 	{
-		return this.kortTekst;
+		return kortTekst;
 	}
 
 	@Output(name = "AdministrationsvejTekst")
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	public void setKode(String kode)
@@ -74,5 +74,4 @@ public class Administrationsvej extends TakstEntity
 	{
 		this.tekst = tekst;
 	}
-
 }

@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.Output;
 @Output
 public class Dosering extends TakstEntity
 {
-
 	private Long doseringKode; // Ref. t. LMS27
 	private String doseringKortTekst;
 	private String doseringstekstTotal; // Felt 05 + 06 + 07
@@ -136,5 +135,4 @@ public class Dosering extends TakstEntity
 	{
 		this.doseringstekstTotal = doseringstekstTotal;
 	}
-
 }

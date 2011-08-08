@@ -38,7 +38,6 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
@@ -60,7 +59,6 @@ public class CPRIntegrationTest
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
-		statement.execute("truncate table MorOgFaroplysninger");
 		statement.execute("truncate table Udrejseoplysninger");
 		statement.execute("truncate table Statsborgerskab");
 		statement.execute("truncate table Foedselsregistreringsoplysninger");

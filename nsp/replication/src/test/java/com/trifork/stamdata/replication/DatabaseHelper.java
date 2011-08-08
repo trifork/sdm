@@ -45,8 +45,6 @@ public class DatabaseHelper {
 
 		org.hibernate.cfg.Configuration config = new org.hibernate.cfg.Configuration();
 
-		String l = props.getProperty("db.connection.driverClass");
-
 		config.setProperty("hibernate.connection.driver_class", props.getProperty("db.connection.driverClass"));
 		config.setProperty("hibernate.dialect", props.getProperty("db.connection.sqlDialect"));
 		config.setProperty("hibernate.connection.url", props.getProperty("db.connection.jdbcURL"));
