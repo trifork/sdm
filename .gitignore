@@ -3,6 +3,8 @@
 .classpath
 build/
 bin/
+out/
+.idea/
 .gradle
 .properties
 .ser
@@ -13,3 +15,7 @@ target/
 performance-tests/jmeter/
 jmeter/
 */**/jmeter.log
+**/*.iml
+*.iml
+*.ipr
+*.iws
