@@ -74,11 +74,11 @@ public class SksIntegrationTest
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Sygehus'");
 		rs.next();
-		assertEquals(689, rs.getInt(1));
+		assertEquals(745, rs.getInt(1));
 
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Afdeling'");
 		rs.next();
-		assertEquals(9028, rs.getInt(1));
+		assertEquals(9754, rs.getInt(1));
 		stmt.close();
 	}
 }
