@@ -31,6 +31,7 @@ import java.util.List;
 import javax.servlet.ServletContextEvent;
 
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,6 +109,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		if (injector != null) return injector;
 
 		final CompositeConfiguration config = loadConfiguration();
+		
+		 ConfigurationUtils.dump(config, System.out);
 
 		// Parse the properties from the configuration files.
 

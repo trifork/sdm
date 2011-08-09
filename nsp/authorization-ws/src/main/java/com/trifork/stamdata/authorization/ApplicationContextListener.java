@@ -82,8 +82,14 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 			if (deploymentConfig != null)
 			{
+				logger.info("Configuration file 'stamdata-authorization-lookup-ws.properties' found.");
+				
 				config.load(deploymentConfig);
 				deploymentConfig.close();
+			}
+			else
+			{
+				logger.warn("Could not find stamdata-authorization-lookup-ws.properties. Using default configuration.");
 			}
 
 			// READ THE SUBJECT SERIAL NUMBERS OF CLIENTS

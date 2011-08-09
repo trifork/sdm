@@ -102,8 +102,18 @@ public class SKSParser implements FileParser
 				LineIterator lines = FileUtils.lineIterator(file, FILE_ENCODING);
 				while (lines.hasNext())
 				{
-					Institution institution = parseLine(lines.nextLine());
-					dataset.addEntity(institution);
+					String line = lines.nextLine();
+					
+					Institution institution = parseLine(line);
+					
+					if (institution != null)
+					{
+						dataset.addEntity(institution);
+					}
+					else
+					{
+						logger.debug("Line ignored. line_content={}", line);
+					}
 				}
 
 				persister.persistDeltaDataset(dataset);
