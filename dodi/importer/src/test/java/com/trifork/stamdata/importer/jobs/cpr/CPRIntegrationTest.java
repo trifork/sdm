@@ -24,7 +24,7 @@
 package com.trifork.stamdata.importer.jobs.cpr;
 
 import static com.trifork.stamdata.Helpers.*;
-import static com.trifork.stamdata.importer.util.DateUtils.*;
+import static com.trifork.stamdata.importer.util.Dates.*;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -65,7 +65,7 @@ public class CPRIntegrationTest
 	@Test
 	public void canEstablishData() throws Exception
 	{
-		importFile("data/cpr/testEtablering/D100313.L431102");
+		parseFile("data/cpr/testEtablering/D100313.L431102");
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
@@ -77,7 +77,7 @@ public class CPRIntegrationTest
 	@Test
 	public void canImportAnUpdate() throws Exception
 	{
-		importFile("data/cpr/D100315.L431101");
+		parseFile("data/cpr/D100315.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
@@ -87,9 +87,9 @@ public class CPRIntegrationTest
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
 
-		importFile("data/cpr/D100317.L431101");
+		parseFile("data/cpr/D100317.L431101");
 
-		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098' ORDER BY validFrom");
+		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo FROM Person WHERE cpr='1312095098' ORDER BY validFrom");
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
@@ -104,35 +104,35 @@ public class CPRIntegrationTest
 	@Test(expected = Exception.class)
 	public void failsWhenDatesAreNotInSequence() throws Exception
 	{
-		importFile("data/cpr/testSequence1/D100314.L431101");
+		parseFile("data/cpr/testSequence1/D100314.L431101");
 
 		Date latestIkraft = CPRParser.getLatestVersion(connection);
-		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), latestIkraft);
 
-		importFile("data/cpr/testSequence2/D100314.L431101");
+		parseFile("data/cpr/testSequence2/D100314.L431101");
 
 		latestIkraft = CPRParser.getLatestVersion(connection);
-		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), latestIkraft);
 
-		importFile("data/cpr/testOutOfSequence/D100314.L431101");
+		parseFile("data/cpr/testOutOfSequence/D100314.L431101");
 	}
 
 	@Test(expected = Exception.class)
 	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception
 	{
-		importFile("data/cpr/endRecords/D100314.L431101");
+		parseFile("data/cpr/endRecords/D100314.L431101");
 	}
 
 	@Test(expected = Exception.class)
 	public void failsWhenNoEndRecordExists() throws Exception
 	{
-		importFile("data/cpr/endRecords/D100315.L431101");
+		parseFile("data/cpr/endRecords/D100315.L431101");
 	}
 
 	@Test
 	public void canImportPersonNavnebeskyttelse() throws Exception
 	{
-		importFile("data/cpr/testCPR1/D100314.L431101");
+		parseFile("data/cpr/testCPR1/D100314.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR = '0101965058'");
@@ -153,22 +153,22 @@ public class CPRIntegrationTest
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(yyyy_MM_dd.parse("1997-09-09"), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(yyyy_MM_dd.parse("2001-02-20"), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
 	@Test
 	public void canImportForaeldreMyndighedBarn() throws Exception
 	{
-		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
+		parseFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Person where CPR='3112970028'");
@@ -191,16 +191,16 @@ public class CPRIntegrationTest
 		assertEquals("0003", rs.getString("TypeKode"));
 		assertEquals("Mor", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		rs.next();
 
 		assertEquals("0004", rs.getString("TypeKode"));
 		assertEquals("Far", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		assertTrue(rs.last());
 	}
@@ -208,7 +208,7 @@ public class CPRIntegrationTest
 	@Test
 	public void canImportUmyndighedVaerge() throws Exception
 	{
-		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
+		parseFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
@@ -218,7 +218,7 @@ public class CPRIntegrationTest
 		assertEquals("0001", rs.getString("TypeKode"));
 		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
 		assertEquals("0904414131", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("RelationCprStartDato"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
 		assertEquals("", rs.getString("VaergesNavn"));
 		assertEquals(null, rs.getDate("VaergesNavnStartDato"));
 		assertEquals("", rs.getString("RelationsTekst1"));
@@ -226,30 +226,30 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst3"));
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
-		assertEquals(yyyy_MM_dd.parse("2001-11-19"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
 	@Test
 	public void ImportU12160Test() throws Exception
 	{
-		importFile("data/cpr/D100312.L431101");
+		parseFile("data/cpr/D100312.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(100, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select COUNT(*) from BarnRelation");
+		rs = stmt.executeQuery("SELECT COUNT(*) from BarnRelation");
 		rs.next();
 		assertEquals(30, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select COUNT(*) from ForaeldreMyndighedRelation");
+		rs = stmt.executeQuery("SELECT COUNT(*) from ForaeldreMyndighedRelation");
 		rs.next();
 		assertEquals(4, rs.getInt(1));
 
-		rs = stmt.executeQuery("Select COUNT(*) from UmyndiggoerelseVaergeRelation");
+		rs = stmt.executeQuery("SELECT COUNT(*) from UmyndiggoerelseVaergeRelation");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 
@@ -263,7 +263,7 @@ public class CPRIntegrationTest
 	@Test
 	public void ImportU12170Test() throws Exception
 	{
-		importFile("data/cpr/D100313.L431101");
+		parseFile("data/cpr/D100313.L431101");
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
@@ -282,15 +282,16 @@ public class CPRIntegrationTest
 		rs.next();
 		assertEquals(2, rs.getInt(1));
 
-		// Check Address protection
+		// Check address protection.
+
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
 	}
 
-	private void importFile(String fileName) throws Exception
+	private void parseFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRParser(FAKE_TIME_GAP).run(new File[] {file}, new AuditingPersister(connection));
+		new CPRParser(FAKE_TIME_GAP).run(new File[] { file }, new AuditingPersister(connection));
 	}
 }

@@ -26,7 +26,7 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 import java.util.Date;
 
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 @Output
@@ -103,7 +103,7 @@ public class Praksis extends AbstractStamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return (validTo != null) ? validTo : DateUtils.THE_END_OF_TIME;
+		return (validTo != null) ? validTo : Dates.THE_END_OF_TIME;
 	}
 
 	public void setValidTo(Date validTo)

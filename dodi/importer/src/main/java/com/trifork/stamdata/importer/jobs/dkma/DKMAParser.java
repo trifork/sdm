@@ -36,7 +36,7 @@ import com.google.inject.name.Named;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.jobs.dkma.model.*;
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 /**
@@ -143,7 +143,7 @@ public class DKMAParser implements FileParserJob
 
 		Date fromDate = getValidFromDate(systemline);
 
-		Takst takst = new Takst(fromDate, DateUtils.THE_END_OF_TIME);
+		Takst takst = new Takst(fromDate, Dates.THE_END_OF_TIME);
 
 		// Add the takst itself to the takst as a "meta entity" to represent
 		// in DB that the takst was loaded.

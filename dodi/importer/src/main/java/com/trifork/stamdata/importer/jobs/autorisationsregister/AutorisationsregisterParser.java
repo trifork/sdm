@@ -25,7 +25,7 @@ package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import java.io.*;
 import java.sql.*;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import org.apache.commons.io.*;
 import org.joda.time.*;
@@ -36,11 +36,13 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class AutorisationsregisterParser implements FileParserJob
 {
-	private static final DateTimeFormatter FILENAME_DATE_FORMAT = ISODateTimeFormat.basicDate();
+	private static final DateTimeFormatter FILENAME_DATE_FORMAT = Dates.CET_yyyyMMdd;
+	
 	private static final String FILE_ENCODING = "ISO8859-15";
 	private static final String JOB_IDENTIFIER = "autorisationsregister_parser";
 	
@@ -59,7 +61,7 @@ public class AutorisationsregisterParser implements FileParserJob
 		// what the required files are. Therefore we just
 		// make sure that there are some.
 		
-		Preconditions.checkNotNull(input);
+		Preconditions.checkNotNull(input, "input");
 		
 		return (input.length > 0);
 	}
@@ -97,16 +99,16 @@ public class AutorisationsregisterParser implements FileParserJob
 		rows.next();
 		Timestamp previousVersion = rows.getTimestamp("version");
 
-		DateTime currentVersion = getDateFromFilename(files[0].getName());
+		DateTime newVersion = getDateFromFilename(files[0].getName());
 
-		if (previousVersion != null && !currentVersion.isAfter(previousVersion.getTime()))
+		if (previousVersion != null && !newVersion.isAfter(previousVersion.getTime()))
 		{
-			throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + currentVersion + "'.");
+			throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + newVersion + "'.");
 		}
 
 		for (File file : files)
 		{
-			AutorisationDataset dataset = parse(file, currentVersion);
+			AutorisationDataset dataset = parse(file, newVersion);
 			persister.persistCompleteDataset(dataset);
 		}
 		

@@ -47,7 +47,7 @@ import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class MySQLStamDAOTest
@@ -62,7 +62,7 @@ public class MySQLStamDAOTest
 	public void setUp() throws Exception
 	{
 
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new Takst(Dates.toCETDate(2009, 7, 1), Dates.toCETDate(2009, 7, 14));
 		// Add a dataset to the takst with one member
 		List<Laegemiddel> list = new ArrayList<Laegemiddel>();
 		laegemiddel = new Laegemiddel();
@@ -116,8 +116,8 @@ public class MySQLStamDAOTest
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		// So it must be updated.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(Dates.toCETDate(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(Dates.THE_END_OF_TIME);
 
 		// Simulate that the entity has changed.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(false);
@@ -138,8 +138,8 @@ public class MySQLStamDAOTest
 		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class))).thenReturn(true);
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(Dates.toCETDate(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(Dates.THE_END_OF_TIME);
 
 		// Simulate that the entity is unchanged.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(true);
@@ -159,7 +159,7 @@ public class MySQLStamDAOTest
 	{
 		// An empty takst.
 
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new Takst(Dates.toCETDate(2009, 7, 1), Dates.toCETDate(2009, 7, 14));
 		// ..with an empty dataset
 		TakstDataset<?> lmr = new TakstDataset(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
 		takst.addDataset(lmr);
@@ -170,7 +170,7 @@ public class MySQLStamDAOTest
 		sv.id = 1;
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		sv.validFrom = DateUtils.toDate(1950, 01, 1);
+		sv.validFrom = Dates.toCETDate(1950, 01, 1);
 		sev.add(sv);
 
 		when(laegemiddeltableMock.getEntityVersions(any(Date.class), any(Date.class))).thenReturn(sev);
@@ -178,6 +178,6 @@ public class MySQLStamDAOTest
 		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the existing record is updated
-		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(eq(DateUtils.toDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
+		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(eq(Dates.toCETDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
 	}
 }

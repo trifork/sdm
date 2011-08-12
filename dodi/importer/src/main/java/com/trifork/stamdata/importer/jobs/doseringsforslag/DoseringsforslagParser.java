@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.doseringsforslag;
 
-import static com.trifork.stamdata.importer.util.DateUtils.*;
+import static com.trifork.stamdata.importer.util.Dates.*;
 import static org.slf4j.LoggerFactory.*;
 
 import java.io.*;

@@ -30,18 +30,16 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.jobs.dkma.model.ATCKoderOgTekst;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class TakstModelTest extends TestCase
 {
-
 	@Test
 	public void testManyToMany() throws Exception
 	{
-
-		Date from = DateUtils.toDate(2000, 1, 1);
-		Date to = DateUtils.toDate(2000, 15, 1);
+		Date from = Dates.toCETDate(2000, 1, 1);
+		Date to = Dates.toCETDate(2000, 12, 1);
 		Takst takst = new Takst(from, to);
 		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst, new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);
 		takst.addDataset(atckoder);

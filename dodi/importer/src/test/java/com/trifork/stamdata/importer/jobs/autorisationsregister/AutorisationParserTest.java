@@ -42,7 +42,7 @@ public class AutorisationParserTest
 {
 	private static final File valid = FileUtils.toFile(AutorisationParserTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
 
-	private AutorisationsregisterParser importer = new AutorisationsregisterParser(FAKE_TIME_GAP);
+	private AutorisationsregisterParser parser = new AutorisationsregisterParser(FAKE_TIME_GAP);
 
 	private Connection connection;
 
@@ -63,14 +63,14 @@ public class AutorisationParserTest
 	public void should_return_true_if_expected_files_are_present()
 	{
 		File[] files = new File[] { valid };
-		assertTrue(importer.checkFileSet(files));
+		assertTrue(parser.checkFileSet(files));
 	}
 
 	@Test
 	public void should_return_false_if_no_file_are_present()
 	{
 		File[] file = new File[] {};
-		assertFalse(importer.checkFileSet(file));
+		assertFalse(parser.checkFileSet(file));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -80,7 +80,7 @@ public class AutorisationParserTest
 		AuditingPersister persister = Mockito.spy(new AuditingPersister(connection));
 
 		File[] files = new File[] { valid };
-		importer.run(files, persister);
+		parser.run(files, persister);
 
 		verify(persister).persistCompleteDataset(Mockito.any(CompleteDataset.class));
 	}

@@ -26,7 +26,7 @@ package com.trifork.stamdata.importer.jobs.autorisationsregister;
 import java.util.Date;
 
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class AutorisationDataset extends CompleteDataset<Autorisation>
@@ -34,7 +34,7 @@ public class AutorisationDataset extends CompleteDataset<Autorisation>
 
 	public AutorisationDataset(Date validFrom)
 	{
-		super(Autorisation.class, validFrom, DateUtils.THE_END_OF_TIME);
+		super(Autorisation.class, validFrom, Dates.THE_END_OF_TIME);
 	}
 
 	@Override

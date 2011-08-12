@@ -37,7 +37,7 @@ import org.junit.*;
 import com.trifork.stamdata.Helpers;
 import com.trifork.stamdata.importer.jobs.dkma.model.Doseringskode;
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class TakstImporterTest
@@ -82,8 +82,8 @@ public class TakstImporterTest
 	@Test
 	public void testLaegemiddelDoseringRef() throws Exception
 	{
-		Date from = DateUtils.toDate(2008, 01, 01);
-		Date to = DateUtils.toDate(2009, 01, 01);
+		Date from = Dates.toCETDate(2008, 01, 01);
+		Date to = Dates.toCETDate(2009, 01, 01);
 
 		Takst takst = new Takst(from, to);
 

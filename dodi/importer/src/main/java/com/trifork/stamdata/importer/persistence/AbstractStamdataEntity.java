@@ -28,7 +28,7 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 /**
@@ -130,6 +130,6 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 }

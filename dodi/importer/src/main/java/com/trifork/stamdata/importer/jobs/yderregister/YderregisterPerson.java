@@ -26,7 +26,7 @@ package com.trifork.stamdata.importer.jobs.yderregister;
 import java.util.Date;
 
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 @Output
@@ -135,6 +135,6 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 		{
 			return afgangDato;
 		}
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 }

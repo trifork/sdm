@@ -44,11 +44,10 @@ import com.trifork.stamdata.importer.persistence.*;
  * written to the database
  * 
  * @author Anders Bo Christensen
- * 
  */
 public class DataLayerIntegrationTest
 {
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	private static final SimpleDateFormat MYSQL_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	private Connection connection;
 
 	@Before
@@ -94,10 +93,6 @@ public class DataLayerIntegrationTest
 		statement.execute("truncate table Firma");
 
 		statement.close();
-
-		// We don't want an autocommit connection for the tests.
-
-		connection.setAutoCommit(false);
 	}
 
 	@After
@@ -110,24 +105,21 @@ public class DataLayerIntegrationTest
 	@Test
 	public void ImportTest() throws Exception
 	{
-		// Arrange
 		Takst takst = parseTakst("data/takst/initial");
 
 		Statement statement = connection.createStatement();
 		AuditingPersister versionedDao = new AuditingPersister(connection);
 
-		// Act
 		versionedDao.persistCompleteDataset(takst.getDatasets());
 
-		// Assert
-		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
+		assertEquals(new Integer(92), getRecordCount(versionedDao));
 
 		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin';");
 
 		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
 
-		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
-		
+		assertEquals(MYSQL_DATE_FORMAT.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
+
 		statement.close();
 	}
 
@@ -152,13 +144,13 @@ public class DataLayerIntegrationTest
 
 		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
 
-		assertEquals(dateFormat.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
+		assertEquals(MYSQL_DATE_FORMAT.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
 
 		rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron'");
-		
+
 		assertTrue("Did not find expected Laegemiddel Kemadron", rs.next());
 
-		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
+		assertEquals(MYSQL_DATE_FORMAT.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
 
 		statement.close();
 	}
@@ -181,10 +173,10 @@ public class DataLayerIntegrationTest
 		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
 
 		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin'");
-		
+
 		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
 
-		Assert.assertEquals(dateFormat.parse("2009-07-31 00:00:00"), rs.getTimestamp("ValidTo"));
+		Assert.assertEquals(MYSQL_DATE_FORMAT.parse("2009-07-31 00:00:00"), rs.getTimestamp("ValidTo"));
 
 		statement.close();
 	}
@@ -211,9 +203,9 @@ public class DataLayerIntegrationTest
 		Statement statement = connection.createStatement();
 
 		ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM Laegemiddel");
-		
+
 		rs.next();
-		
+
 		return rs.getInt(1);
 	}
 

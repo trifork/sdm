@@ -23,32 +23,44 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.*;
+import static com.trifork.stamdata.importer.util.Dates.*;
+import static org.slf4j.helpers.MessageFormatter.*;
 
-import java.io.*;
+import java.io.File;
 import java.sql.*;
-import java.text.*;
+import java.text.ParseException;
 import java.util.*;
 import java.util.Date;
 import java.util.regex.*;
 
-import org.joda.time.Period;
+import org.apache.commons.io.*;
+import org.joda.time.*;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.*;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.*;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 
 public class CPRParser implements FileParserJob
 {
 	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
 
+	private static final String FILE_ENCODING = "ISO-8859-1";
+
 	private static final String DELTA_CPR_FILE_FILE_ENDING = "01";
 	private static final String JOB_IDENTIFIER = "cpr_parser";
+
+	private static final int END_RECORD = 999;
+	private static final String EMPTY_DATE_STRING = "000000000000";
+
+	private static final boolean haltOnDateErrors = true;
+
+	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
+	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
 
 	private final Period maxTimeGap;
 
@@ -90,7 +102,7 @@ public class CPRParser implements FileParserJob
 		{
 			logger.info("Parsing 'CPR person' file. filename=" + personFile.getAbsolutePath());
 
-			CPRDataset cpr = parse(personFile);
+			CPRDataset cpr = parseFile(personFile);
 
 			// HACK: Don't use the connection this way. @see
 			// Persister#getConnection()
@@ -103,7 +115,7 @@ public class CPRParser implements FileParserJob
 			}
 			else if (!cpr.getPreviousFileValidFrom().equals(previousVersion))
 			{
-				throw new Exception("CPR file out of sequence. file_date=" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + " database_date=" + yyyy_MM_dd.format(previousVersion.getTime()));
+				throw new Exception("CPR file out of sequence. file_date=" + cpr.getPreviousFileValidFrom() + " database_date=" + previousVersion);
 			}
 
 			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
@@ -113,6 +125,7 @@ public class CPRParser implements FileParserJob
 
 			// Add the new 'version' date to database,
 			// if it is a delta file. Full imports don't have a version.
+
 			// TODO: Should we reset the version if we get a new full
 			// import, when we already have data?
 
@@ -123,19 +136,20 @@ public class CPRParser implements FileParserJob
 		}
 	}
 
-	static public Date getLatestVersion(Connection con) throws SQLException
+	static public Date getLatestVersion(Connection connection) throws SQLException
 	{
-		Statement stm = con.createStatement();
+		Statement stm = connection.createStatement();
 		ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
 		rs.next();
 		return rs.getTimestamp(1);
 	}
 
-	void insertVersion(Date calendar, Connection con) throws SQLException
+	void insertVersion(Date date, Connection con) throws SQLException
 	{
-		Statement stm = con.createStatement();
-		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
-		stm.execute(query);
+		PreparedStatement updateRegistryVersion = con.prepareStatement("INSERT INTO PersonIkraft (IkraftDato) VALUES (?)");
+		updateRegistryVersion.setObject(1, date);
+		updateRegistryVersion.execute();
+		updateRegistryVersion.close();
 	}
 
 	@Override
@@ -144,73 +158,50 @@ public class CPRParser implements FileParserJob
 		return "CPR Parser";
 	}
 
-	private static final String FILE_ENCODING = "ISO-8859-1";
-
-	private static final int END_RECORD = 999;
-	private static final String EMPTY_DATE_STRING = "000000000000";
-
-	static boolean haltOnDateErrors = true;
-
-	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
-	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
-
-	public static CPRDataset parse(File f) throws Exception
+	public static CPRDataset parseFile(File f) throws Exception
 	{
-		try
-		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), FILE_ENCODING));
+		LineIterator lineIterator = FileUtils.lineIterator(f, FILE_ENCODING);
 
-			try
-			{
-				return parseFileContents(reader);
-			}
-			finally
-			{
-				reader.close();
-			}
-		}
-		catch (IOException ioe)
-		{
-			throw new Exception("Der opstod en IO-fejl under læsning af cpr-person-fil.", ioe);
-		}
-		catch (ParseException pe)
-		{
-			throw new Exception("Der opstod en parsningsfejl under læsning af cpr-person-fil.", pe);
-		}
-	}
-
-	private static CPRDataset parseFileContents(BufferedReader reader) throws IOException, Exception, ParseException
-	{
 		boolean endRecordReached = false;
-		CPRDataset cpr = new CPRDataset();
+		CPRDataset dataset = new CPRDataset();
 
-		while (reader.ready())
+		int currentLine = 1;
+
+		while (lineIterator.hasNext())
 		{
-			String line = reader.readLine();
+			String line = lineIterator.nextLine();
+
 			if (line.length() > 0)
 			{
 				int recordType = getRecordType(line);
+
 				if (recordType == END_RECORD)
 				{
 					endRecordReached = true;
 				}
 				else if (endRecordReached)
 				{
-					throw new Exception("Slut-record midt i cpr-filen");
+					throw new Exception(format("End record encountered in the middle of a CPR file. filename={}, line_number={}", f.getName(), currentLine));
 				}
 				else
 				{
-					parseLine(recordType, line, cpr);
+					parseLine(recordType, line, dataset);
 				}
 			}
+			else
+			{
+				logger.debug("Ignoring empty line in CPR file. filename={}, line_number={}", f.getName(), currentLine);
+			}
+
+			currentLine++;
 		}
 
 		if (!endRecordReached)
 		{
-			throw new Exception("Slut-record mangler i cpr-filen");
+			throw new Exception("End record is missing from the CPR file. filename=" + f.getName());
 		}
 
-		return cpr;
+		return dataset;
 	}
 
 	static void parseLine(int recordType, String line, CPRDataset cpr) throws Exception, ParseException
@@ -248,7 +239,7 @@ public class CPRParser implements FileParserJob
 			cpr.addEntity(barnRelation(line));
 			break;
 		case 16:
-			cpr.addEntity(foraeldreMyndighedRelation(line));
+			cpr.addEntity(foraeldremyndighedRelation(line));
 			break;
 		case 17:
 			cpr.addEntity(umyndiggoerelseVaergeRelation(line));
@@ -259,33 +250,37 @@ public class CPRParser implements FileParserJob
 	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws Exception
 	{
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
+
 		u.setCpr(cut(line, 3, 13));
-		u.setUmyndigStartDato(parseDate(yyyy_MM_dd, line, 13, 23));
+		u.setUmyndigStartDato(parseDate(CET_yyyy_MM_dd, line, 13, 23));
 		u.setUmyndigStartDatoMarkering(cut(line, 23, 24));
-		u.setUmyndigSletteDato(parseDate(yyyy_MM_dd, line, 24, 34));
+		u.setUmyndigSletteDato(parseDate(CET_yyyy_MM_dd, line, 24, 34));
 		u.setType(cut(line, 34, 38));
 		u.setRelationCpr(cut(line, 38, 48));
-		u.setRelationCprStartDato(parseDate(yyyy_MM_dd, line, 48, 58));
+		u.setRelationCprStartDato(parseDate(CET_yyyy_MM_dd, line, 48, 58));
 		u.setVaergesNavn(cut(line, 58, 92).trim());
-		u.setVaergesNavnStartDato(parseDate(yyyy_MM_dd, line, 92, 102));
+		u.setVaergesNavnStartDato(parseDate(CET_yyyy_MM_dd, line, 92, 102));
 		u.setRelationsTekst1(cut(line, 102, 136).trim());
 		u.setRelationsTekst2(cut(line, 136, 170).trim());
 		u.setRelationsTekst3(cut(line, 170, 204).trim());
 		u.setRelationsTekst4(cut(line, 204, 238).trim());
 		u.setRelationsTekst5(cut(line, 238, 272).trim());
+
 		return u;
 	}
 
-	static ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line) throws Exception
+	static ForaeldreMyndighedRelation foraeldremyndighedRelation(String line) throws Exception
 	{
 		ForaeldreMyndighedRelation f = new ForaeldreMyndighedRelation();
+
 		f.setCpr(cut(line, 3, 13));
 		f.setType(cut(line, 13, 17));
-		f.setForaeldreMyndighedStartDato(parseDate(yyyy_MM_dd, line, 17, 27));
+		f.setForaeldreMyndighedStartDato(parseDate(CET_yyyy_MM_dd, line, 17, 27));
 		f.setForaeldreMyndighedMarkering(cut(line, 27, 28));
-		f.setForaeldreMyndighedSlettedato(parseDate(yyyy_MM_dd, line, 28, 38));
+		f.setForaeldreMyndighedSlettedato(parseDate(CET_yyyy_MM_dd, line, 28, 38));
 		f.setRelationCpr(cut(line, 38, 48));
-		f.setRelationCprStartDato(parseDate(yyyy_MM_dd, line, 48, 58));
+		f.setRelationCprStartDato(parseDate(CET_yyyy_MM_dd, line, 48, 58));
+
 		return f;
 	}
 
@@ -294,6 +289,7 @@ public class CPRParser implements FileParserJob
 		BarnRelation b = new BarnRelation();
 		b.setCpr(cut(line, 3, 13));
 		b.setBarnCpr(cut(line, 13, 23));
+
 		return b;
 	}
 
@@ -307,7 +303,7 @@ public class CPRParser implements FileParserJob
 		n.setMellemnavnMarkering(cut(line, 104, 105));
 		n.setEfternavn(cut(line, 105, 145).trim());
 		n.setEfternavnMarkering(cut(line, 145, 146));
-		n.setStartDato(parseDate(yyyyMMddHHmm, line, 146, 158));
+		n.setStartDato(parseDate(CET_yyyyMMddHHmm, line, 146, 158));
 		n.setStartDatoMarkering(cut(line, 158, 159));
 		n.setAdresseringsNavn(cut(line, 159, 193).trim());
 		return n;
@@ -317,8 +313,8 @@ public class CPRParser implements FileParserJob
 	{
 		NavneBeskyttelse n = new NavneBeskyttelse();
 		n.setCpr(cut(line, 3, 13));
-		n.setNavneBeskyttelseStartDato(parseDate(yyyy_MM_dd, line, 17, 27));
-		n.setNavneBeskyttelseSletteDato(parseDate(yyyy_MM_dd, line, 27, 37));
+		n.setNavneBeskyttelseStartDato(parseDate(CET_yyyy_MM_dd, line, 17, 27));
+		n.setNavneBeskyttelseSletteDato(parseDate(CET_yyyy_MM_dd, line, 27, 37));
 		return n;
 	}
 
@@ -344,26 +340,29 @@ public class CPRParser implements FileParserJob
 		k.setSideDoerNummer(cut(line, 221, 225).trim());
 		k.setBygningsNummer(cut(line, 225, 229).trim());
 		k.setVejNavn(cut(line, 229, 249).trim());
+
 		return k;
 	}
 
 	static Personoplysninger personoplysninger(String line) throws Exception
 	{
-		Personoplysninger p = new Personoplysninger();
-		p.setCpr(cut(line, 3, 13));
-		p.setGaeldendeCpr(cut(line, 13, 23).trim());
-		p.setStatus(cut(line, 23, 25));
-		p.setStatusDato(parseDate(yyyyMMddHHmm, line, 25, 37));
-		p.setStatusMakering(cut(line, 37, 38));
-		p.setKoen(cut(line, 38, 39));
-		p.setFoedselsdato(parseDate(yyyy_MM_dd, line, 39, 49));
-		p.setFoedselsdatoMarkering(cut(line, 49, 50));
-		p.setStartDato(parseDate(yyyy_MM_dd, line, 50, 60));
-		p.setStartDatoMarkering(cut(line, 60, 61));
-		p.setSlutdato(parseDate(yyyy_MM_dd, line, 61, 71));
-		p.setSlutDatoMarkering(cut(line, 71, 72));
-		p.setStilling(cut(line, 72, 106).trim());
-		return p;
+		Personoplysninger person = new Personoplysninger();
+
+		person.setCpr(cut(line, 3, 13));
+		person.setGaeldendeCpr(cut(line, 13, 23).trim());
+		person.setStatus(cut(line, 23, 25));
+		person.setStatusDato(parseDate(CET_yyyyMMddHHmm, line, 25, 37));
+		person.setStatusMakering(cut(line, 37, 38));
+		person.setKoen(cut(line, 38, 39));
+		person.setFoedselsdato(parseDate(CET_yyyy_MM_dd, line, 39, 49));
+		person.setFoedselsdatoMarkering(cut(line, 49, 50));
+		person.setStartDato(parseDate(CET_yyyy_MM_dd, line, 50, 60));
+		person.setStartDatoMarkering(cut(line, 60, 61));
+		person.setSlutdato(parseDate(CET_yyyy_MM_dd, line, 61, 71));
+		person.setSlutDatoMarkering(cut(line, 71, 72));
+		person.setStilling(cut(line, 72, 106).trim());
+
+		return person;
 	}
 
 	/**
@@ -376,15 +375,15 @@ public class CPRParser implements FileParserJob
 
 	private static String cut(String line, int beginIndex, int endIndex)
 	{
-		String res = "";
+		String result = "";
 
 		if (line.length() > beginIndex)
 		{
 			int end = line.length() < endIndex ? line.length() : endIndex;
-			res = line.substring(beginIndex, end);
+			result = line.substring(beginIndex, end);
 		}
 
-		return res;
+		return result;
 	}
 
 	private static int readInt(String line, int from, int to) throws Exception
@@ -411,7 +410,7 @@ public class CPRParser implements FileParserJob
 		}
 	}
 
-	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, Exception
+	private static Date parseDate(DateTimeFormatter format, String line, int from, int to) throws ParseException, Exception
 	{
 		String dateString = cut(line, from, to);
 		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING))
@@ -423,8 +422,7 @@ public class CPRParser implements FileParserJob
 
 	private static Date getValidFrom(String line) throws Exception
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		return sdf.parse(cut(line, 19, 27));
+		return CET_yyyyMMdd.parseDateTime(cut(line, 19, 27)).toDate();
 	}
 
 	private static Date getForrigeIkraftDato(String line) throws Exception
@@ -432,11 +430,9 @@ public class CPRParser implements FileParserJob
 		// TODO (thb): Why would you return null here if the line is less then
 		// 25 chars?
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
 		if (line.length() >= 25)
 		{
-			return sdf.parse(cut(line, 27, 35));
+			return CET_yyyyMMdd.parseDateTime(cut(line, 27, 35)).toDate();
 		}
 
 		return null;
@@ -444,20 +440,7 @@ public class CPRParser implements FileParserJob
 
 	private static String removeLeadingZeros(String str)
 	{
-		if (str == null)
-		{
-			return null;
-		}
-
-		for (int index = 0; index < str.length(); index++)
-		{
-			if (str.charAt(index) != '0')
-			{
-				return str.substring(index);
-			}
-		}
-
-		return "";
+		return CharMatcher.is('0').trimLeadingFrom(str);
 	}
 
 	static String fixWeirdDate(String date)
@@ -526,9 +509,11 @@ public class CPRParser implements FileParserJob
 	private static String fixDate(Matcher dateMatcher)
 	{
 		int year, month, day;
+
 		year = Integer.parseInt(dateMatcher.group(1));
 		month = Integer.parseInt(dateMatcher.group(2));
 		day = Integer.parseInt(dateMatcher.group(3));
+
 		if (month == 0)
 		{
 			month = 1;
@@ -537,17 +522,18 @@ public class CPRParser implements FileParserJob
 		{
 			day = 1;
 		}
+
 		StringBuilder result = new StringBuilder();
 		Formatter formatter = new Formatter(result);
 		formatter.format("%04d-%02d-%02d", year, month, day);
 		return result.toString();
 	}
 
-	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, Exception
+	private static Date parseDateAndCheckValidity(String dateString, DateTimeFormatter format, String line) throws ParseException, Exception
 	{
 		dateString = fixWeirdDate(dateString);
-		Date date = format.parse(dateString);
-		String formattedDate = format.format(date);
+		DateTime date = format.parseDateTime(dateString);
+		String formattedDate = date.toString(format);
 
 		if (!formattedDate.equals(dateString))
 		{
@@ -563,6 +549,6 @@ public class CPRParser implements FileParserJob
 			}
 		}
 
-		return date;
+		return date.toDate();
 	}
 }

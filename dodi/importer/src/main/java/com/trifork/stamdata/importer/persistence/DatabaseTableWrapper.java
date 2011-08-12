@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.util.DateUtils.*;
+import static com.trifork.stamdata.importer.util.Dates.*;
 
 import java.lang.reflect.*;
 import java.sql.*;
@@ -183,7 +183,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 				message += " entityid=" + sde.getKey();
 			}
 			catch (Exception e)
-			{}
+			{
+			}
 
 			throw new RuntimeException(message, sqle);
 		}
@@ -437,7 +438,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public boolean fetchEntityVersions(Date validFrom, Date validTo) throws SQLException
 	{
-		String sql = "select * from " + tablename + " where not (ValidTo < '" + toMySQLdate(validFrom) + "' or ValidFrom > '" + toMySQLdate(validTo) + "')";
+		String sql = "SELECT * FROM " + tablename + " WHERE NOT (ValidTo < '" + toMySQLdate(validFrom) + "' OR ValidFrom > '" + toMySQLdate(validTo) + "')";
 		currentRS = connection.createStatement().executeQuery(sql);
 		return currentRS.next();
 	}
@@ -531,14 +532,14 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	{
 		deleteStmt.setObject(1, currentRS.getObject(Dataset.getIdOutputName(type)));
 		deleteStmt.setObject(2, currentRS.getObject("ValidFrom"));
-		
+
 		int rowsAffected = deleteStmt.executeUpdate();
-		
+
 		if (rowsAffected != 1)
 		{
 			throw new RuntimeException("deleteCurrentRow wrong number of affected rows - expected=1, actual=" + rowsAffected);
 		}
-		
+
 		deletedRecords += rowsAffected;
 	}
 
@@ -548,13 +549,13 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		updateValidFromStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
 		updateValidFromStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
 		updateValidFromStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"));
-		
+
 		int rowsAffected = updateValidFromStmt.executeUpdate();
 		if (rowsAffected != 1)
 		{
 			throw new RuntimeException("updateValidFromStmt wrong number of affected rows - expected=1, actual=" + rowsAffected);
 		}
-			
+
 		updatedRecords += rowsAffected;
 	}
 
@@ -685,7 +686,6 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return evs;
 	}
 
-
 	public static class StamdataEntityVersion
 	{
 		public Object id;
@@ -715,8 +715,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	/*
 	 * Get a list with all columns that will not be updated by the Entity
-	 * Entities don't have to be complete. They can update only parts of a table
-	 * and then the rest have to be copied as not changed.
+	 * Entities don't have to be complete. They can update only parts of a
+	 * table and then the rest have to be copied as not changed.
 	 */
 	public List<String> locateNotUpdatedColumns() throws SQLException
 	{

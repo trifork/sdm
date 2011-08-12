@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer;
 
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.ServletContextEvent;
 
