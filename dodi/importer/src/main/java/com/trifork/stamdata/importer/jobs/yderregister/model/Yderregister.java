@@ -212,6 +212,6 @@ public class Yderregister extends AbstractStamdataEntity
 	public Date getValidTo()
 	{
 		if (afgangDato != null) return afgangDato;
-		return DateUtils.FUTURE;
+		return DateUtils.THE_END_OF_TIME;
 	}
 }

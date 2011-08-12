@@ -36,8 +36,8 @@ public class YderregisterDatasets
 
 	public YderregisterDatasets(Date validFrom)
 	{
-		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom, DateUtils.FUTURE);
-		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class, validFrom, DateUtils.FUTURE);
+		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom, DateUtils.THE_END_OF_TIME);
+		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class, validFrom, DateUtils.THE_END_OF_TIME);
 	}
 
 	public CompleteDataset<Yderregister> getYderregisterDS()

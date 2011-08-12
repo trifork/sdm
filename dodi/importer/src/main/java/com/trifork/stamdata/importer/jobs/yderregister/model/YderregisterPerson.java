@@ -135,6 +135,6 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 	public Date getValidTo()
 	{
 		if (afgangDato != null) return afgangDato;
-		return DateUtils.FUTURE;
+		return DateUtils.THE_END_OF_TIME;
 	}
 }

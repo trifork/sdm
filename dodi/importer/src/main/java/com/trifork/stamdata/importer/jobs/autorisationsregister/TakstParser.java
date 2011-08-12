@@ -145,7 +145,7 @@ public class TakstParser
 
 		Date fromDate = getValidFromDate(systemline);
 
-		Takst takst = new Takst(fromDate, DateUtils.FUTURE);
+		Takst takst = new Takst(fromDate, DateUtils.THE_END_OF_TIME);
 
 		// Add the takst itself to the takst as a "meta entity" to represent
 		// in DB that the takst was loaded.

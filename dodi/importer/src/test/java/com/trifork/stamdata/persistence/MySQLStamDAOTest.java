@@ -119,7 +119,7 @@ public class MySQLStamDAOTest
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		// So it must be updated.
 		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
 
 		// Simulate that the entity has changed.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(false);
@@ -141,7 +141,7 @@ public class MySQLStamDAOTest
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.FUTURE);
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
 
 		// Simulate that the entity is unchanged.
 		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(true);

@@ -29,6 +29,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.importer.ApplicationContextListener;
+
 /**
  * @author Jan Buchholdt <jbu@trifork.com>
  * 
@@ -54,7 +56,7 @@ public class Configuration
 			// stamdata-importer.properties.
 
 			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(configName + ".properties");
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-importer.properties");
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(ApplicationContextListener.DEPLOYMENT_CONFIG_FILE);
 
 			properties = new Properties();
 			properties.load(buildInConfig);

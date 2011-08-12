@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions;
 
-import static com.trifork.stamdata.importer.util.DateUtils.FUTURE;
+import static com.trifork.stamdata.importer.util.DateUtils.THE_END_OF_TIME;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -73,7 +73,7 @@ public class DosageSuggestionImporter implements FileParser
 		// of the data.
 
 		DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
-		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), FUTURE);
+		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), THE_END_OF_TIME);
 		versionDataset.addEntity(version);
 
 		// CHECK PREVIOUS VERSION

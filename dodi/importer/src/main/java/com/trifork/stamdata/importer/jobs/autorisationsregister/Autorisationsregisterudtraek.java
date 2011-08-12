@@ -34,7 +34,7 @@ public class Autorisationsregisterudtraek extends CompleteDataset<Autorisation>
 
 	public Autorisationsregisterudtraek(Date validFrom)
 	{
-		super(Autorisation.class, validFrom, DateUtils.FUTURE);
+		super(Autorisation.class, validFrom, DateUtils.THE_END_OF_TIME);
 	}
 
 	@Override

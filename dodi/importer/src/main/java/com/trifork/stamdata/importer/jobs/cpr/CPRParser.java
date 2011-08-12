@@ -36,29 +36,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.jobs.cpr.models.AktuelCivilstand;
 import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
-import com.trifork.stamdata.importer.jobs.cpr.models.Foedselsregistreringsoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.Folkekirkeoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.Haendelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.KommunaleForhold;
 import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.Statsborgerskab;
-import com.trifork.stamdata.importer.jobs.cpr.models.Udrejseoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.Valgoplysninger;
 
 
 public class CPRParser
@@ -160,53 +151,17 @@ public class CPRParser
 				cpr.addEntity(navneBeskyttelse(line));
 			}
 			break;
-		case 5:
-			cpr.addEntity(udrejseoplysninger(line));
-			break;
-		case 6:
-			// Ignored
-			break;
-		case 7:
-			// Ignored
-			break;
 		case 8:
 			cpr.addEntity(navneoplysninger(line));
 			break;
-		case 9:
-			cpr.addEntity(foedselsregistreringsoplysninger(line));
-			break;
-		case 10:
-			cpr.addEntity(statsborgerskab(line));
-			break;
-		case 11:
-			cpr.addEntity(folkekirkeoplysninger(line));
-			break;
-		case 12:
-			cpr.addEntity(aktuelCivilstand(line));
-			break;
-		case 13:
-			// Ignored
-			break;
 		case 14:
 			cpr.addEntity(barnRelation(line));
-			break;
-		case 15:
-			// Ignored
 			break;
 		case 16:
 			cpr.addEntity(foraeldreMyndighedRelation(line));
 			break;
 		case 17:
 			cpr.addEntity(umyndiggoerelseVaergeRelation(line));
-			break;
-		case 18:
-			cpr.addEntity(kommunaleForhold(line));
-			break;
-		case 20:
-			cpr.addEntity(valgoplysninger(line));
-			break;
-		case 99:
-			cpr.addEntity(haendelse(line));
 			break;
 		}
 	}
@@ -321,101 +276,6 @@ public class CPRParser
 		return p;
 	}
 
-	public static Folkekirkeoplysninger folkekirkeoplysninger(String line) throws Exception
-	{
-		Folkekirkeoplysninger result = new Folkekirkeoplysninger();
-		result.setCpr(cut(line, 3, 13));
-		result.setForholdskode(cut(line, 13, 14));
-		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 14, 24));
-		result.setStartdatomarkering(cut(line, 24, 25));
-		return result;
-	}
-
-	public static AktuelCivilstand aktuelCivilstand(String line) throws Exception
-	{
-		AktuelCivilstand result = new AktuelCivilstand();
-		result.setCpr(cut(line, 3, 13));
-		result.setCivilstandskode(cut(line, 13, 14));
-		result.setAegtefaellepersonnummer(cut(line, 14, 24).trim());
-		result.setAegtefaellefoedselsdato(parseDate(yyyy_MM_dd, line, 24, 34));
-		result.setAegtefaellefoedselsdatomarkering(cut(line, 34, 35));
-		result.setAegtefaellenavn(cut(line, 35, 69).trim());
-		result.setAegtefaellenavnmarkering(cut(line, 69, 70));
-		result.setValidFrom(parseCalendar(yyyyMMddHHmm, line, 70, 82));
-		result.setStartdatomarkering(cut(line, 82, 83));
-		result.setSeparation(parseDate(yyyyMMddHHmm, line, 83, 95));
-		return result;
-	}
-
-	public static Udrejseoplysninger udrejseoplysninger(String line) throws ParseException, Exception
-	{
-
-		Udrejseoplysninger u = new Udrejseoplysninger();
-		u.setCpr(cut(line, 3, 13));
-		u.setUdrejseLandekode(cut(line, 13, 17));
-		u.setUdrejsedato(parseDate(yyyyMMddHHmm, line, 17, 29));
-		u.setUdrejsedatoUsikkerhedsmarkering(cut(line, 29, 30));
-		u.setUdlandsadresse1(cut(line, 30, 64).trim());
-		u.setUdlandsadresse2(cut(line, 64, 98).trim());
-		u.setUdlandsadresse3(cut(line, 98, 132).trim());
-		u.setUdlandsadresse4(cut(line, 132, 166).trim());
-		u.setUdlandsadresse5(cut(line, 166, 200).trim());
-		return u;
-	}
-
-	public static Foedselsregistreringsoplysninger foedselsregistreringsoplysninger(String line) throws ParseException, Exception
-	{
-		Foedselsregistreringsoplysninger r = new Foedselsregistreringsoplysninger();
-		r.setCpr(cut(line, 3, 13));
-		r.setFoedselsregistreringsstedkode(cut(line, 13, 17));
-		r.setFoedselsregistreringstekst(cut(line, 17, 37));
-		return r;
-	}
-
-	public static Statsborgerskab statsborgerskab(String line) throws ParseException, Exception
-	{
-		Statsborgerskab s = new Statsborgerskab();
-		s.setCpr(cut(line, 3, 13));
-		s.setLandekode(cut(line, 13, 17));
-		s.setValidFrom(parseCalendar(yyyyMMddHHmm, line, 17, 29));
-		s.setStatsborgerskabstartdatousikkerhedsmarkering(cut(line, 29, 30));
-		return s;
-	}
-
-	public static KommunaleForhold kommunaleForhold(String line) throws ParseException, Exception
-	{
-		KommunaleForhold result = new KommunaleForhold();
-		result.setCpr(cut(line, 3, 13));
-		result.setKommunalforholdstypekode(cut(line, 13, 14));
-		result.setKommunalforholdskode(cut(line, 14, 19).trim());
-		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 19, 29));
-		result.setStartdatomarkering(cut(line, 29, 30));
-		result.setBemaerkninger(line.substring(30).trim());
-		return result;
-	}
-
-	public static Valgoplysninger valgoplysninger(String line) throws ParseException, Exception
-	{
-		Valgoplysninger result = new Valgoplysninger();
-		result.setCpr(cut(line, 3, 13));
-		result.setValgkode(removeLeadingZeros(cut(line, 13, 17)));
-		result.setValgretsdato(parseDate(yyyy_MM_dd, line, 17, 27));
-		result.setValidFrom(parseCalendar(yyyy_MM_dd, line, 27, 37));
-		result.setValidTo(parseCalendar(yyyy_MM_dd, line, 37, 47));
-		return result;
-	}
-
-	public static Haendelse haendelse(String line) throws ParseException, Exception
-	{
-		Haendelse result = new Haendelse();
-		result.setUuid(UUID.randomUUID().toString());
-		result.setCpr(cut(line, 3, 13));
-		result.setAjourfoeringsdato(parseDate(yyyyMMddHHmm, line, 13, 25));
-		result.setHaendelseskode(cut(line, 25, 28));
-		result.setAfledtMarkering(cut(line, 28, 30));
-		result.setNoeglekonstant(cut(line, 30, 45));
-		return result;
-	}
 
 	/**
 	 * Gets the record type of a line in the CPR file.
@@ -460,11 +320,6 @@ public class CPRParser
 		{
 			throw new Exception("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, e);
 		}
-	}
-
-	private static Date parseCalendar(DateFormat format, String line, int from, int to) throws ParseException, Exception
-	{
-		return parseDate(format, line, from, to);
 	}
 
 	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, Exception

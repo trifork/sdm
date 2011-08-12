@@ -14,6 +14,7 @@
 
 	<properties>
 		<hostname>localhost</hostname>
+		<port>8080</port>
 	</properties>
 
 	<dependencies>
@@ -84,6 +85,7 @@
 			<id>stamdata-load-test</id>
 			<build>
 				<plugins>
+				  
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>chronos-maven-plugin</artifactId>
@@ -103,39 +105,7 @@
 							</sysproperties>
 						</configuration>
 						<executions>
-							<execution>
-								<id>importer-status-test</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>importer-status-test</dataid>
-									<jmeterVariables>
-										<property>
-											<name>hostname</name>
-											<value>${hostname}</value>
-										</property>
-									</jmeterVariables>
-									<input>${basedir}/src/main/resources/StatusPerformanceTest.jmx</input>
-								</configuration>
-							</execution>
-							<execution>
-								<id>importer-status-test-report</id>
-								<phase>site</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-								<configuration>
-									<showgc>false</showgc>
-									<showpercentile99>true</showpercentile99>
-									<reportid>importer-status-test</reportid>
-									<dataid>importer-status-test</dataid>
-									<description>Importer Servlet Status Repsponse Times</description>
-									<title>Load test importer, 10 req/sec minimum</title>
-								</configuration>
-							</execution>
-							
+														
 							<!-- Authorization WS Test -->
 							<execution>
 								<id>authorization-ws-test</id>
@@ -149,6 +119,10 @@
 										<property>
 											<name>hostname</name>
 											<value>${hostname}</value>
+										</property>
+										<property>
+											<name>port</name>
+											<value>${port}</value>
 										</property>
 									</jmeterVariables>
 									<input>${basedir}/src/main/resources/AuthorizationWS.jmx</input>
@@ -170,74 +144,7 @@
 								</configuration>
 							</execution>
 							
-							<!-- Replication WS Test -->
-
-							<execution>
-								<id>replication-ws-test</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>replication-ws-data</dataid>
-									<jmeterVariables>
-										<property>
-											<name>hostname</name>
-											<value>${hostname}</value>
-										</property>
-									</jmeterVariables>
-									<input>${basedir}/src/main/resources/Replication.jmx</input>
-								</configuration>
-							</execution>
-							<execution>
-								<id>replication-ws-test-report</id>
-								<phase>site</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-								<configuration>
-									<showgc>false</showgc>
-									<showpercentile99>true</showpercentile99>
-									<reportid>replication-ws-test-report</reportid>
-									<dataid>replication-ws-data</dataid>
-									<description>Replication Throughput and Response Times</description>
-									<title>Load test, no minimum requirement</title>
-								</configuration>
-							</execution>
 							
-							<!-- Replication Token WS Test -->
-							<execution>
-								<id>replication-ws-token-test</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>replication-ws-token-data</dataid>
-									<jmeterVariables>
-										<property>
-											<name>hostname</name>
-											<value>${hostname}</value>
-										</property>
-									</jmeterVariables>
-									<input>${basedir}/src/main/resources/ReplicationTokenService.jmx</input>
-								</configuration>
-							</execution>
-							<execution>
-								<id>replication-token-ws-test-report</id>
-								<phase>site</phase>
-								<goals>
-									<goal>report</goal>
-								</goals>
-								<configuration>
-									<showgc>false</showgc>
-									<showpercentile99>true</showpercentile99>
-									<reportid>replication-token-ws-test-report</reportid>
-									<dataid>replication-ws-token-data</dataid>
-									<description>Replication Token Service Response Times</description>
-									<title>Load test, 10/sec minimum requirement</title>
-								</configuration>
-							</execution>
 						</executions>
 					</plugin>
 				</plugins>

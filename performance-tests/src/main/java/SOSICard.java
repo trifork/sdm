@@ -56,8 +56,6 @@ public class SOSICard extends AbstractJavaSamplerClient {
 			
 			idCard = xmlheader;
 			
-			System.out.println(idCard);
-			
 			result.setResponseData(idCard.getBytes());
 			result.setResponseCode("200");
 			result.setResponseMessage(idCard);

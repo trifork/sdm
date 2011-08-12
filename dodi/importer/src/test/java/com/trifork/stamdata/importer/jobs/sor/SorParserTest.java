@@ -88,7 +88,7 @@ public class SorParserTest
 		assertEquals(new Long(8331000016009L), p.getSorNummer());
 		assertEquals(new Long(1084L), p.getRegionCode());
 		assertEquals(SOREventHandler.parseXSDDate("1999-03-25"), p.getValidFrom());
-		assertEquals(DateUtils.FUTURE, p.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, p.getValidTo());
 		assertEquals(new Long(5790000141227L), p.getEanLokationsnummer());
 
 		Yder y = yder.iterator().next();
@@ -108,7 +108,7 @@ public class SorParserTest
 		assertEquals(SpecialityMapper.kodeToString(408443003L), y.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.parseXSDDate("1999-03-25"), y.getValidFrom());
-		assertEquals(DateUtils.FUTURE, y.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, y.getValidTo());
 	}
 
 	@Test
@@ -136,7 +136,7 @@ public class SorParserTest
 		assertEquals("J.Thulesen@dadlnet.dk", s.getEmail());
 
 		assertEquals(SOREventHandler.parseXSDDate("2009-10-08"), s.getValidFrom());
-		assertEquals(DateUtils.FUTURE, s.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, s.getValidTo());
 
 		assertEquals(2, afdeling.size());
 
@@ -160,7 +160,7 @@ public class SorParserTest
 		assertEquals(new Long(550811000005108L), sa.getAfdelingTypeKode());
 		assertEquals(UnitTypeMapper.kodeToString(new Long(550811000005108L)), sa.getAfdelingTypeTekst());
 		assertEquals(SOREventHandler.parseXSDDate("2009-10-07"), sa.getValidFrom());
-		assertEquals(DateUtils.FUTURE, sa.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, sa.getValidTo());
 
 		sa = dataSets.getSygehusAfdelingDS().getEntityById(347831000016005L);
 		assertNotNull(sa);
@@ -185,7 +185,7 @@ public class SorParserTest
 		assertEquals(SpecialityMapper.kodeToString(394594003L), sa.getHovedSpecialeTekst());
 
 		assertEquals(SOREventHandler.parseXSDDate("2009-10-08"), sa.getValidFrom());
-		assertEquals(DateUtils.FUTURE, sa.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, sa.getValidTo());
 	}
 
 	@Test
@@ -211,7 +211,7 @@ public class SorParserTest
 		assertNull(a.getEmail());
 
 		assertEquals(SOREventHandler.parseXSDDate("1995-02-20"), a.getValidFrom());
-		assertEquals(DateUtils.FUTURE, a.getValidTo());
+		assertEquals(DateUtils.THE_END_OF_TIME, a.getValidTo());
 	}
 
 	@Test

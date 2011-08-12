@@ -129,6 +129,6 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return DateUtils.FUTURE;
+		return DateUtils.THE_END_OF_TIME;
 	}
 }

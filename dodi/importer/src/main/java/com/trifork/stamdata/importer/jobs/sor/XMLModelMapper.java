@@ -95,7 +95,6 @@ public class XMLModelMapper
 
 	public static SygehusAfdeling toSygehusAfdeling(OrganizationalUnitEntity oue)
 	{
-
 		SygehusAfdeling sa = new SygehusAfdeling();
 		sa.setEanLokationsnummer(oue.getEanLocationCode());
 		sa.setSorNummer(oue.getSorIdentifier());
@@ -129,7 +128,6 @@ public class XMLModelMapper
 
 	public static Apotek toApotek(OrganizationalUnitEntity oue)
 	{
-
 		Apotek a = new Apotek();
 		a.setSorNummer(oue.getSorIdentifier());
 		if (oue.getPharmacyIdentifier() != null)

@@ -240,7 +240,7 @@ public class Apotek extends AbstractStamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return (validTo != null) ? validTo : DateUtils.FUTURE;
+		return (validTo != null) ? validTo : DateUtils.THE_END_OF_TIME;
 	}
 
 	public void setValidTo(Date validTo)

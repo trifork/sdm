@@ -23,37 +23,26 @@
 
 package com.trifork.stamdata.importer.jobs.cpr.models;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
 public class CPRDataset
 {
-	private final List<Dataset<? extends StamdataEntity>> datasets = new ArrayList<Dataset<? extends StamdataEntity>>()
-	{
-		private static final long serialVersionUID = -3429328343622839448L;
-		{{
-			add(new Dataset<Personoplysninger>(Personoplysninger.class));
-			add(new Dataset<Klarskriftadresse>(Klarskriftadresse.class));
-			add(new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class));
-			add(new Dataset<Navneoplysninger>(Navneoplysninger.class));
-			add(new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class));
-			add(new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class));
-			add(new Dataset<BarnRelation>(BarnRelation.class));
-			add(new Dataset<Folkekirkeoplysninger>(Folkekirkeoplysninger.class));
-			add(new Dataset<Udrejseoplysninger>(Udrejseoplysninger.class));
-			add(new Dataset<Valgoplysninger>(Valgoplysninger.class));
-			add(new Dataset<Foedselsregistreringsoplysninger>(Foedselsregistreringsoplysninger.class));
-			add(new Dataset<Statsborgerskab>(Statsborgerskab.class));
-			add(new Dataset<KommunaleForhold>(KommunaleForhold.class));
-			add(new Dataset<AktuelCivilstand>(AktuelCivilstand.class));
-			add(new Dataset<Haendelse>(Haendelse.class));
-		}}
-	};
+	@SuppressWarnings("unchecked")
+	private final List<Dataset<? extends CPREntity>> datasets = Lists.newArrayList(
+			new Dataset<Personoplysninger>(Personoplysninger.class),
+			new Dataset<Klarskriftadresse>(Klarskriftadresse.class),
+			new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class),
+			new Dataset<Navneoplysninger>(Navneoplysninger.class),
+			new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class),
+			new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class),
+			new Dataset<BarnRelation>(BarnRelation.class)
+	);
 
 	private Date validFrom, previousFileValidFrom;
 
@@ -92,7 +81,7 @@ public class CPRDataset
 		}
 	}
 
-	public List<Dataset<? extends StamdataEntity>> getDatasets()
+	public List<Dataset<? extends CPREntity>> getDatasets()
 	{
 		return datasets;
 	}

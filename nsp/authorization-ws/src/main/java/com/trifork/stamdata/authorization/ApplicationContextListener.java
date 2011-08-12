@@ -131,7 +131,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			// XML SERIALIZATION
 
 			jaxbContext = JAXBContext.newInstance(AuthorizationResponseStructure.class, AuthorizationRequestStructure.class);
-
+			
 			// BIND THE DEPENDENCIES
 			//
 			// All these dependencies are type safe so we just bind them
@@ -143,15 +143,14 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				protected void configureServlets()
 				{
 					install(new DatabaseModule(config.getProperty("db.connection.jdbcURL"), config.getProperty("db.connection.username"), config.getProperty("db.connection.password", "")));
-
+					install(new MonitoringModule());
+					
 					bind(SOSIFactory.class).toInstance(sosiFactory);
-					bind(new TypeLiteral<Set<String>>()
-					{
-					}).toInstance(whitelist);
+					bind(new TypeLiteral<Set<String>>() {}).toInstance(whitelist);
 					bind(AuthorizationDao.class);
 
 					serve("/").with(WebService.class);
-					filter("/").through(PersistenceFilter.class);
+					filter("/*").through(PersistenceFilter.class);
 
 					logger.info("Done configuring the stamdata authorization web-service.");
 				}

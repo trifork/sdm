@@ -63,11 +63,11 @@ public class SOREventHandler extends DefaultHandler
 
 	private void createDatasets(Date snapshotDate)
 	{
-		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, DateUtils.FUTURE));
-		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, DateUtils.FUTURE));
-		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, DateUtils.FUTURE));
-		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, DateUtils.FUTURE));
-		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, DateUtils.FUTURE));
+		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, DateUtils.THE_END_OF_TIME));
 	}
 
 	@Override
