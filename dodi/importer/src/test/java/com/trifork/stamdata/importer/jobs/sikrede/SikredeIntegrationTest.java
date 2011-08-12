@@ -14,9 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class SikredeIntegrationTest
@@ -115,13 +113,62 @@ public class SikredeIntegrationTest
 		importFile("data/sikrede/20110701.SIKREDE_SSK");
 
 		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Sikrede");
-		rs.next();
-		assertEquals("Præcis én sygesikret forventes oprettet efter import", 1, rs.getInt(1));
+		ResultSet rs = stmt.executeQuery("Select * from Sikrede where cpr='1607769871'");
+		assertTrue("Der forventes en sygesikret oprettet efter import", rs.next());
+        assertEquals("ValidFrom matcher ikke",new DateTime(2011, 7, 13, 0, 0, 0, 0), new DateTime(rs.getTimestamp("ValidFrom")));
+        assertNull("foelgeskabsPersonCpr skal være null", rs.getString("foelgeskabsPersonCpr"));
+        assertEquals("kommunekode matcher ikke","851", rs.getString("kommunekode"));
+        assertEquals("kommunekodeIkraftDato matcher ikke", new DateTime(2001,2, 1, 0, 0, 0, 0), new DateTime(rs.getTimestamp("kommunekodeIkraftDato")));
 
-		rs = stmt.executeQuery("SELECT COUNT(*) FROM SaerligSundhedskort");
-		rs.next();
-		assertEquals("Præcis ét sundhedskort forventes efter import", 1, rs.getInt(1));
+        assertEquals("Status", "G", rs.getString("status"));
+        assertEquals("bevisIkraftDato matcher ikke", new DateTime(2011, 2, 1, 0, 0, 0, 0), new DateTime(rs.getTimestamp("bevisIkraftDato")));
+
+        assertEquals("forsikringsinstans matcher ikke", "Sygesikringen", rs.getString("forsikringsinstans"));
+        assertEquals("forsikringsinstansKode matcher ikke", "9876543210", rs.getString("forsikringsinstansKode"));
+        assertEquals("forsikringsnummer matcher ikke", "999999999999999", rs.getString("forsikringsnummer"));
+        assertEquals("sslGyldigFra matcher ikke", new DateTime(2009, 1, 1, 0,0,0,0), new DateTime(rs.getTimestamp("sslGyldigFra")));
+        assertEquals("sslGyldigTil matcher ikke", new DateTime(9999,12,31, 0,0,0,0), new DateTime(rs.getTimestamp("sslGyldigTil")));
+        assertEquals("socialLand matcher ikke", "Sverige", rs.getString("socialLand"));
+        assertEquals("socialLandKode matcher ikke", "SE", rs.getString("socialLandKode"));
+        rs.close();
+
+        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='P'");
+        assertFalse("Der skal ikke være importeret noget tidligere valg af ydernummer", rs.next());
+        rs.close();
+
+        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='F'");
+        assertFalse("Der skal ikke være importeret noget fremtidigt valg af ydernummer", rs.next());
+        rs.close();
+
+
+        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
+        int ydernummer = 4294;
+        DateTime ydernummerIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+        DateTime gruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
+        DateTime ydernummerRegistreringsDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
+        String sikringsgruppekode = "1";
+        DateTime gruppeKodeIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        rs.close();
+
+
+
+		rs = stmt.executeQuery("SELECT * FROM SaerligSundhedskort where cpr='1607769871'");
+		assertTrue("Præcis ét sundhedskort forventes efter import", rs.next());
+        assertEquals("adresseLinje1", "Hovedgatan 1024", rs.getString("adresseLinje1"));
+        assertEquals("adresseLinje2", "2.tv", rs.getString("adresseLinje2"));
+        assertEquals("bopelsLand", "Sverige", rs.getString("bopelsLand"));
+        assertEquals("bopelsLandKode", "SE", rs.getString("bopelsLandKode"));
+        assertEquals("emailAdresse", "frj@trifork.com", rs.getString("emailAdresse"));
+        assertEquals("familieRelationCpr", "2108751234", rs.getString("familieRelationCpr"));
+        assertEquals("foedselsDato", new DateTime(1976, 7, 16, 0, 0, 0, 0), new DateTime(rs.getTimestamp("foedselsDato")));
+        assertEquals("sskGyldigFra", new DateTime(2009, 1, 1, 0, 0, 0, 0), new DateTime(rs.getTimestamp("sskGyldigFra")));
+        assertEquals("sskGyldigTil", new DateTime(9999, 12, 31, 0, 0, 0, 0), new DateTime(rs.getTimestamp("sskGyldigTil")));
+        assertEquals("mobilNummer", "0044123456789", rs.getString("mobilNummer"));
+        assertEquals("postnummerBy", "21120 MAlMO", rs.getString("postnummerBy"));
+
+
+        rs.close();
 
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
 		rs.next();
