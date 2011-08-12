@@ -24,14 +24,9 @@
 package com.trifork.stamdata.importer.persistence;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 import com.trifork.stamdata.importer.util.DateUtils;
 
@@ -70,7 +65,10 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	{
 		Method m = idMethodCache.get(type);
 
-		if (m != null) return m;
+		if (m != null)
+		{
+			return m;
+		}
 
 		Method[] allMethods = type.getMethods();
 
@@ -120,7 +118,10 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 
 		for (Method method : methods)
 		{
-			if (method.isAnnotationPresent(Output.class)) outputMethods.add(method);
+			if (method.isAnnotationPresent(Output.class))
+			{
+				outputMethods.add(method);
+			}
 		}
 
 		return outputMethods;

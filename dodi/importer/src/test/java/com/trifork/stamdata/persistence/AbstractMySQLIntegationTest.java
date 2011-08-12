@@ -23,15 +23,13 @@
 
 package com.trifork.stamdata.persistence;
 
-import java.sql.Connection;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.Helpers;
 
 
 public class AbstractMySQLIntegationTest
@@ -46,7 +44,7 @@ public class AbstractMySQLIntegationTest
 	@Before
 	public void setup() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		Statement stmt = con.createStatement();
 		stmt.executeUpdate("truncate table TakstVersion");
 		stmt.close();

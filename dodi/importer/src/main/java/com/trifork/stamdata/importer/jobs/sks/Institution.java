@@ -25,9 +25,7 @@ package com.trifork.stamdata.importer.jobs.sks;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.*;
 
 @Output(name="Organisation")
 public class Institution extends AbstractStamdataEntity
@@ -46,9 +44,10 @@ public class Institution extends AbstractStamdataEntity
 
 	public Institution(InstitutionType organisationstype)
 	{
-		this.type = organisationstype;
+		type = organisationstype;
 	}
 
+	@Override
 	public Date getValidTo()
 	{
 		return validTo;

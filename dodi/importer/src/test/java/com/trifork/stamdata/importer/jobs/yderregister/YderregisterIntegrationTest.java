@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.yderregister;
 
+import static com.trifork.stamdata.Helpers.*;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -37,8 +38,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 /*
@@ -58,7 +59,7 @@ public class YderregisterIntegrationTest
 	@Before
 	public void cleanDatabase() throws Exception
 	{
-		connection = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 
 		Statement stmt = connection.createStatement();
 		stmt.execute("truncate table Yderregister");
@@ -79,7 +80,7 @@ public class YderregisterIntegrationTest
 	{
 		File fInitial = getFile("data/yderregister/initial/");
 
-		new YderregisterImporter().importFiles(fInitial.listFiles(), new AuditingPersister(connection));
+		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), new AuditingPersister(connection));
 
 		Statement stmt = connection.createStatement();
 
@@ -114,9 +115,9 @@ public class YderregisterIntegrationTest
 
 		AuditingPersister persister = new AuditingPersister(connection);
 
-		new YderregisterImporter().importFiles(fInitial.listFiles(), persister);
+		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), persister);
 
-		new YderregisterImporter().importFiles(fNext.listFiles(), persister);
+		new YderregisterParser(FAKE_TIME_GAP).run(fNext.listFiles(), persister);
 	}
 
 	@Test
@@ -124,8 +125,8 @@ public class YderregisterIntegrationTest
 	{
 		File fInitial = getFile("data/yderregister/initial/");
 
-		YderregisterImporter yImp = new YderregisterImporter();
-		boolean isComplete = yImp.ensureRequiredFileArePresent(fInitial.listFiles());
+		YderregisterParser yImp = new YderregisterParser(FAKE_TIME_GAP);
+		boolean isComplete = yImp.checkFileSet(fInitial.listFiles());
 
 		assertTrue("Expected to be complete", isComplete);
 	}
@@ -135,8 +136,8 @@ public class YderregisterIntegrationTest
 	{
 		File fInitial = getFile("data/yderregister/incomplete/");
 
-		YderregisterImporter yImp = new YderregisterImporter();
-		boolean isComplete = yImp.ensureRequiredFileArePresent(fInitial.listFiles());
+		YderregisterParser yImp = new YderregisterParser(FAKE_TIME_GAP);
+		boolean isComplete = yImp.checkFileSet(fInitial.listFiles());
 
 		assertEquals("Expected to be incomplete", false, isComplete);
 	}

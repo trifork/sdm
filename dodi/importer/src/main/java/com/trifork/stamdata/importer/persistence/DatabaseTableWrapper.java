@@ -23,22 +23,14 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.util.DateUtils.toMySQLdate;
+import static com.trifork.stamdata.importer.util.DateUtils.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.lang.reflect.*;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 
 /**
@@ -570,7 +562,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	{
 		for (Method method : outputMethods)
 		{
-			if (!fieldEqualsCurrentRow(method, sde)) return false;
+			if (!fieldEqualsCurrentRow(method, sde))
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -586,40 +581,67 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		{
 			String value = currentRS.getString(fieldname);
 			// Null strings and empty strings are the same
-			if (value == null && ((String) o).trim().isEmpty()) return true;
-			if (!o.equals(value)) return false;
+			if (value == null && ((String) o).trim().isEmpty())
+			{
+				return true;
+			}
+			if (!o.equals(value))
+			{
+				return false;
+			}
 		}
 		else if (o instanceof Integer)
 		{
 			Integer value = currentRS.getInt(fieldname);
-			if (!o.equals(value)) return false;
+			if (!o.equals(value))
+			{
+				return false;
+			}
 		}
 		else if (o instanceof Long)
 		{
 			Long value = currentRS.getLong(fieldname);
-			if (!o.equals(value)) return false;
+			if (!o.equals(value))
+			{
+				return false;
+			}
 		}
 		else if (o instanceof Double)
 		{
 			Double value = currentRS.getDouble(fieldname);
-			if (!o.equals(value)) return false;
+			if (!o.equals(value))
+			{
+				return false;
+			}
 		}
 		else if (o instanceof Boolean)
 		{
 			Boolean value = currentRS.getInt(fieldname) != 0;
-			if (!o.equals(value)) return false;
+			if (!o.equals(value))
+			{
+				return false;
+			}
 		}
 		else if (o instanceof Date)
 		{
 			Timestamp ts = currentRS.getTimestamp(fieldname);
-			if (ts == null) return false;
+			if (ts == null)
+			{
+				return false;
+			}
 			long millis = ts.getTime();
-			if (millis != ((Date) o).getTime()) return false;
+			if (millis != ((Date) o).getTime())
+			{
+				return false;
+			}
 		}
 		else if (o == null)
 		{
 			Object value = currentRS.getObject(fieldname);
-			if (value != null) return false;
+			if (value != null)
+			{
+				return false;
+			}
 		}
 		else
 		{
@@ -655,7 +677,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			evs.add(ev);
 		}
 
-		if (logger.isDebugEnabled()) logger.debug("Returning {} entity versions.", evs.size());
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("Returning {} entity versions.", evs.size());
+		}
 
 		return evs;
 	}
@@ -682,7 +707,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		updatedRecords += rowsAffected;
 
-		if (logger.isDebugEnabled() && updatedRecords % 100 == 0) logger.debug("Updated validto on {} records.", updatedRecords);
+		if (logger.isDebugEnabled() && updatedRecords % 100 == 0)
+		{
+			logger.debug("Updated validto on {} records.", updatedRecords);
+		}
 	}
 
 	/*
@@ -705,11 +733,26 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 			// Ignore all system columns
 
-			if (colName.toUpperCase().indexOf("PID") > 0) continue;
-			if (colName.equalsIgnoreCase("ModifiedDate")) continue;
-			if (colName.equalsIgnoreCase("CreatedDate")) continue;
-			if (colName.equalsIgnoreCase("ValidFrom")) continue;
-			if (colName.equalsIgnoreCase("ValidTo")) continue;
+			if (colName.toUpperCase().indexOf("PID") > 0)
+			{
+				continue;
+			}
+			if (colName.equalsIgnoreCase("ModifiedDate"))
+			{
+				continue;
+			}
+			if (colName.equalsIgnoreCase("CreatedDate"))
+			{
+				continue;
+			}
+			if (colName.equalsIgnoreCase("ValidFrom"))
+			{
+				continue;
+			}
+			if (colName.equalsIgnoreCase("ValidTo"))
+			{
+				continue;
+			}
 
 			boolean found = false;
 			for (Method method : outputMethods)

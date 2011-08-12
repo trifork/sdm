@@ -23,18 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.trifork.stamdata.Helpers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-
-import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
 
 
 public class YderregisterParserTest
@@ -46,7 +42,7 @@ public class YderregisterParserTest
 	{
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/initial/"));
 
-		YderregisterDatasets yderReg = new YderregisterParser().parseYderregister(dir.listFiles());
+		YderregisterDatasets yderReg = new YderregisterParser(FAKE_TIME_GAP).parseYderregister(dir.listFiles());
 
 		assertEquals(12, yderReg.getYderregisterDS().getEntities().size());
 		Yderregister y = yderReg.getYderregisterDS().getEntityById("4219");
@@ -78,6 +74,6 @@ public class YderregisterParserTest
 	public void testInvalid() throws Exception
 	{
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/invalid/"));
-		new YderregisterParser().parseYderregister(dir.listFiles());
+		new YderregisterParser(FAKE_TIME_GAP).parseYderregister(dir.listFiles());
 	}
 }

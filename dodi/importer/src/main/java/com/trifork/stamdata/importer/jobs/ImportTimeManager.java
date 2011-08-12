@@ -23,87 +23,85 @@
 
 package com.trifork.stamdata.importer.jobs;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Date;
 
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.util.DateUtils;
 
 // FIXME (thb): This class serves no purpose and can be refactored into the FileParserJob class.
 public class ImportTimeManager
 {
-	private static Logger logger = LoggerFactory.getLogger(ImportTimeManager.class);
-
-	public static DateTime getLastImportTime(String spoolername)
+	public static DateTime getLastRunTime(Connection connection, Job job)
 	{
-		// TODO (thb): This should NOT create its own connection but use the file parser job's.
-		
-		Connection connection = null;
-		Statement stmt = null;
+		Statement fetchLastRuntime = null;
 		DateTime result = null;
 
 		try
 		{
-			connection = MySQLConnectionManager.getAutoCommitConnection();
-			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT MAX(importtime) FROM Import WHERE spoolername = '" + spoolername + "'");
+			fetchLastRuntime = connection.createStatement();
+			ResultSet rs = fetchLastRuntime.executeQuery("SELECT MAX(importtime) FROM Import WHERE spoolername = '" + job.getIdentifier() + "'");
 
 			if (rs.next())
 			{
 				// We cannot dump the timestamp directly into the
 				// DateTime or we will get the current date.
 				// We have to check for null first.
-				
+
 				Timestamp timestamp = rs.getTimestamp(1);
-				
+
 				if (timestamp != null)
 				{
 					result = new DateTime(timestamp);
 				}
 			}
-			
+
 			rs.close();
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
-			// TODO (thb): Throw, don't log.
-			
-			logger.error("getLastImportTime(" + spoolername + ")", e);
+			throw new RuntimeException("Could not get the last run time. job=" + job.getIdentifier(), e);
 		}
 		finally
 		{
-			MySQLConnectionManager.close(stmt, connection);
+			try
+			{
+				if (fetchLastRuntime != null) fetchLastRuntime.close();
+			}
+			catch (Exception e)
+			{
+
+			}
 		}
-		
+
 		return result;
 	}
 
-	public static void setImportTime(String spoolerName, Date importTime)
+	public static void updateLastRunTime(Connection connection, Job job)
 	{
-		Connection con = null;
-		Statement stmt = null;
+		PreparedStatement updateLastRunTime = null;
 
 		try
 		{
-			con = MySQLConnectionManager.getAutoCommitConnection();
-			stmt = con.createStatement();
-			stmt.executeUpdate("INSERT INTO Import VALUES ('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
+			updateLastRunTime = connection.prepareStatement("INSERT INTO Import VALUES (?, ?)");
+			updateLastRunTime.setObject(1, new Date());
+			updateLastRunTime.setString(1, job.getIdentifier());
+			updateLastRunTime.executeUpdate();
 		}
-		catch (Exception e)
+		catch (SQLException e)
 		{
-			// TODO: Throw.
-			logger.error("getLastImportTime(" + spoolerName + ")", e); 
+			throw new RuntimeException("Could not update the last run time for a job. job=" + job.getIdentifier(), e);
 		}
 		finally
 		{
-			MySQLConnectionManager.close(stmt, con);
+			try
+			{
+				if (updateLastRunTime != null) updateLastRunTime.close();
+			}
+			catch (Exception e)
+			{
+
+			}
 		}
 	}
 }

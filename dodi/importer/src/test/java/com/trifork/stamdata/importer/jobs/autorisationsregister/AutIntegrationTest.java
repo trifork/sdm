@@ -32,19 +32,21 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.Helpers;
 import com.trifork.stamdata.importer.persistence.*;
 
 
 public class AutIntegrationTest
 {
+	private static String IMPORT_INTERVAL = "10";
+	
 	private static File initial;
 	private static File next;
 	private static File invalid;
 
 	private Connection connection;
 
-	private static Autorisationsregisterudtraek initialCompares = new Autorisationsregisterudtraek(new Date());
+	private static AutorisationDataset initialCompares = new AutorisationDataset(new Date());
 	
 	static
 	{
@@ -67,7 +69,7 @@ public class AutIntegrationTest
 	@Before
 	public void setUp() throws SQLException
 	{
-		connection = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 		connection.createStatement().execute("TRUNCATE TABLE Autorisation");
 		connection.commit();
 	}
@@ -82,7 +84,7 @@ public class AutIntegrationTest
 	@Test
 	public void testImport() throws Exception
 	{
-		new AutorisationImporter().importFiles(new File[] { initial }, new AuditingPersister(connection));
+		new AutorisationsregisterParser(IMPORT_INTERVAL).run(new File[] { initial }, new AuditingPersister(connection));
 
 		Statement stmt = connection.createStatement();
 
@@ -107,23 +109,23 @@ public class AutIntegrationTest
 	@Test(expected = Exception.class)
 	public void should_not_allow_the_same_version_to_be_imported_twice() throws Exception
 	{
-		AutorisationImporter importer = new AutorisationImporter();
+		AutorisationsregisterParser importer = new AutorisationsregisterParser(IMPORT_INTERVAL);
 		AuditingPersister persister = new AuditingPersister(connection);
 
 		File[] files = new File[] { initial };
 
-		importer.importFiles(files, persister);
-		importer.importFiles(files, persister);
+		importer.run(files, persister);
+		importer.run(files, persister);
 	}
 
 	@Test
 	public void testDelta() throws Exception
 	{
-		AutorisationImporter importer = new AutorisationImporter();
+		AutorisationsregisterParser importer = new AutorisationsregisterParser(IMPORT_INTERVAL);
 		AuditingPersister persister = new AuditingPersister(connection);
 
-		importer.importFiles(new File[] { initial }, persister);
-		importer.importFiles(new File[] { next }, persister);
+		importer.run(new File[] { initial }, persister);
+		importer.run(new File[] { next }, persister);
 
 		Dataset<Autorisation> nextCompares = new Dataset<Autorisation>(Autorisation.class);
 		nextCompares.addEntity(new Autorisation("0013H", "0101280063", "Tage Søgaard", "Johnsen", "7170"));
@@ -153,9 +155,9 @@ public class AutIntegrationTest
 	}
 
 	@Test(expected = Exception.class)
-	public void testInvalid() throws Exception
+	public void should_fail_to_persist_invalid_file() throws Exception
 	{
 		File[] files = new File[] { invalid };
-		new AutorisationImporter().importFiles(files, new AuditingPersister(connection));
+		new AutorisationsregisterParser(IMPORT_INTERVAL).run(files, new AuditingPersister(connection));
 	}
 }

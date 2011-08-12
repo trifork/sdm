@@ -23,8 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.sor.xmlmodel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class OrganizationalUnitEntity extends OrganizationalUnit
@@ -48,7 +47,10 @@ public class OrganizationalUnitEntity extends OrganizationalUnit
 
 	public void setParrent(OrganizationalUnitEntity parrent)
 	{
-		if (parrent != null) parrent.setSon(this);
+		if (parrent != null)
+		{
+			parrent.setSon(this);
+		}
 		this.parrent = parrent;
 	}
 

@@ -36,7 +36,7 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.jobs.sor.SORDataSets;
 import com.trifork.stamdata.importer.jobs.sor.SOREventHandler;
-import com.trifork.stamdata.importer.jobs.sor.SORImporter;
+import com.trifork.stamdata.importer.jobs.sor.SORParser;
 import com.trifork.stamdata.importer.jobs.sor.model.Apotek;
 import com.trifork.stamdata.importer.jobs.sor.model.Praksis;
 import com.trifork.stamdata.importer.jobs.sor.model.Sygehus;
@@ -74,7 +74,7 @@ public class SorParserTest
 	@Test
 	public void testSinglePraksis() throws Exception
 	{
-		SORDataSets dataSets = SORImporter.parse(onePraksis);
+		SORDataSets dataSets = SORParser.parse(onePraksis);
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -114,7 +114,7 @@ public class SorParserTest
 	@Test
 	public void testSingleSygehus() throws Exception
 	{
-		SORDataSets dataSets = SORImporter.parse(oneSygehus);
+		SORDataSets dataSets = SORParser.parse(oneSygehus);
 
 		Collection<Sygehus> sygehus = dataSets.getSygehusDS().getEntities();
 		Collection<SygehusAfdeling> afdeling = dataSets.getSygehusAfdelingDS().getEntities();
@@ -191,7 +191,7 @@ public class SorParserTest
 	@Test
 	public void testSingleApotek() throws Exception
 	{
-		SORDataSets dataSets = SORImporter.parse(oneApotek);
+		SORDataSets dataSets = SORParser.parse(oneApotek);
 
 		Collection<Apotek> apotek = dataSets.getApotekDS().getEntities();
 
@@ -217,7 +217,7 @@ public class SorParserTest
 	@Test
 	public void testFullTest() throws Exception
 	{
-		SORDataSets dataSets = SORImporter.parse(fullSor);
+		SORDataSets dataSets = SORParser.parse(fullSor);
 
 		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
 		Collection<Yder> yder = dataSets.getYderDS().getEntities();
@@ -231,7 +231,7 @@ public class SorParserTest
 		assertEquals(2890, sygehusAfdeling.size());
 		assertEquals(328, apotek.size());
 
-		dataSets = SORImporter.parse(fullSor2);
+		dataSets = SORParser.parse(fullSor2);
 
 		praksis = dataSets.getPraksisDS().getEntities();
 		yder = dataSets.getYderDS().getEntities();

@@ -23,16 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static com.trifork.stamdata.Helpers.*;
+import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 
 
@@ -51,7 +49,7 @@ public class AutParserTest
 	@Test
 	public void testParse() throws IOException
 	{
-		Autorisationsregisterudtraek auts = new AutorisationImporter().parse(valid, new DateTime());
+		AutorisationDataset auts = new AutorisationsregisterParser(FAKE_TIME_GAP).parse(valid, new DateTime());
 		assertEquals(4, auts.getEntities().size());
 		Autorisation a = auts.getEntityById("0013H");
 		assertNotNull(a);
@@ -62,6 +60,6 @@ public class AutParserTest
 	@Test(expected = Exception.class)
 	public void testInvalid() throws IOException
 	{
-		new AutorisationImporter().parse(invalid, new DateTime());
+		new AutorisationsregisterParser(FAKE_TIME_GAP).parse(invalid, new DateTime());
 	}
 }

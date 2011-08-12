@@ -32,11 +32,8 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest
@@ -46,7 +43,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAbeforeB() throws Exception
 	{
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
@@ -58,8 +55,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testFetchVersionsBbeforeA() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
@@ -71,8 +67,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testFetchVersionsBinA() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
 		table.insertRow(a, new Date());
@@ -84,8 +79,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testFetchVersionsAinB() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
@@ -98,7 +92,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAoverlapsB() throws Exception
 	{
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
 		table.insertRow(a, new Date());
@@ -110,8 +104,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testFetchVersionsBoverlapsA() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
 		table.insertRow(a, new Date());
@@ -123,7 +116,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testGetValidFromAndTo() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 
 		SDE a = new SDE(t0, t1);
@@ -139,7 +132,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
@@ -161,7 +154,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testUpdateValidToOnCurrentRow1() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
@@ -181,7 +174,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidToOnCurrentRow_noSideEffects() throws Exception
 	{
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
@@ -205,8 +198,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testDeleteCurrentRow() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
@@ -219,8 +211,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testUpdateValidFromOnCurrentRow() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
@@ -239,8 +230,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testdataInCurrentRowEquals() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
@@ -254,8 +244,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testdataInCurrentRowEquals2() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3)
@@ -265,13 +254,14 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 			@Output
 			public String getTakstuge()
 			{
-
 				return "1997-11";
 			}
 		};
+
+		// Find the row we just created.
+
 		table.insertRow(a, new Date());
-		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
-														// created
+		table.fetchEntityVersions(a.getKey(), t0, t1);
 		assertFalse(table.dataInCurrentRowEquals(b));
 		con.close();
 	}
@@ -279,8 +269,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	@Test
 	public void testFetchEntityVersions() throws Exception
 	{
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
@@ -292,16 +281,13 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		con.close();
 	}
 
-
 	@Output(name = "TakstVersion")
 	public static class SDE implements StamdataEntity
 	{
-
 		Date validfrom, validto;
 
 		public SDE(Date validFrom, Date validTo)
 		{
-
 			this.validfrom = validFrom;
 			this.validto = validTo;
 		}
@@ -309,21 +295,18 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		@Override
 		public Object getKey()
 		{
-
 			return getTakstuge();
 		}
 
 		@Override
 		public Date getValidFrom()
 		{
-
 			return validfrom;
 		}
 
 		@Override
 		public Date getValidTo()
 		{
-
 			return validto;
 		}
 
@@ -331,7 +314,6 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		@Output
 		public String getTakstuge()
 		{
-
 			return "1999-11";
 		}
 	}

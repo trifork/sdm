@@ -23,38 +23,34 @@
 
 package com.trifork.stamdata.importer.jobs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import com.google.inject.Inject;
+import com.google.common.collect.Sets;
+import com.google.inject.*;
+import com.trifork.stamdata.importer.persistence.ConnectionPool;
 
 
 public class JobManager
 {
+	private static final boolean WAIT_FOR_JOBS_TO_COMPLETE = true;
 	private static final String DATA_MAP_OBJECT = "QuartzJobScheduler.Object";
 
-	private final List<Job> jobs;
 	private Scheduler scheduler;
 
-	@Inject
-	JobManager(List<Job> jobs) throws Exception
-	{
-		// Clone the set of jobs.
+	private final Set<BatchJob> batchJobs;
+	private final Set<FileParserJob> parsers;
+	private Set<Executer> jobs;
+	private final ConnectionPool connectionPool;
 
-		this.jobs = Collections.synchronizedList(new ArrayList<Job>(jobs));
+	@Inject
+	JobManager(Set<BatchJob> batchJobs, Set<FileParserJob> parsers, ConnectionPool connectionPool)
+	{
+		this.batchJobs = batchJobs;
+		this.parsers = parsers;
+		this.connectionPool = connectionPool;
 	}
 
 	public void start() throws Exception
@@ -67,30 +63,51 @@ public class JobManager
 
 			// To avoid problems with concurrency, we restrict
 			// jobs to be run in serial. This is not a problem
-			// since performace is not an critical at the moment.
+			// since performance is not an critical at the moment.
 			//
 			// See quartz.properties.
 
 			// Schedule all the jobs.
 
-			for (Job job : jobs)
-			{
-				final CronScheduleBuilder schedule = CronScheduleBuilder.cronSchedule(job.getCronExpression());
-				final Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(schedule).build();
+			Set<Executer> jobs = Sets.newHashSet();
 
-				final JobDataMap jobDataMap = this.initDataMap(job.getIdentifier(), job);
-				final JobDetail detail = this.createJobDetail(job.getIdentifier(), jobDataMap);
+			CronScheduleBuilder everyFewSeconds = CronScheduleBuilder.cronSchedule("0/5 * * * * ?");
+
+			for (FileParserJob job : parsers)
+			{
+				Executer executer = new FileParserJobExecuter(job, connectionPool);
+
+				Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(everyFewSeconds).build();
+				JobDataMap jobDataMap = initDataMap(job.getIdentifier(), executer);
+				JobDetail jobDetail = createJobDetail(job.getIdentifier(), jobDataMap);
+				scheduler.scheduleJob(jobDetail, trigger);
+
+				jobs.add(executer);
+			}
+
+			for (BatchJob job : batchJobs)
+			{
+				Executer executer = new BatchJobExecuter(job, connectionPool);
+
+				CronScheduleBuilder configuredSchedule = CronScheduleBuilder.cronSchedule(job.getCronExpression());
+				Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(configuredSchedule).build();
+
+				JobDataMap jobDataMap = initDataMap(job.getIdentifier(), executer);
+				JobDetail detail = createJobDetail(job.getIdentifier(), jobDataMap);
 
 				scheduler.scheduleJob(detail, trigger);
+
+				jobs.add(executer);
 			}
 		}
 
-		this.scheduler.start();
+		scheduler.start();
 	}
 
 	public void stop() throws Exception
 	{
-		this.scheduler.shutdown(true);
+		jobs.clear();
+		scheduler.shutdown(WAIT_FOR_JOBS_TO_COMPLETE);
 	}
 
 	protected JobDataMap initDataMap(String jobName, Object job)
@@ -107,23 +124,24 @@ public class JobManager
 		return JobBuilder.newJob(QuartzJobExecutor.class).usingJobData(jobDataMap).build();
 	}
 
-
 	public static class QuartzJobExecutor implements org.quartz.Job
 	{
 		@Override
 		public void execute(JobExecutionContext context) throws JobExecutionException
 		{
-			Job job = (Job) context.getMergedJobDataMap().get(DATA_MAP_OBJECT);
-
+			Executer job = (Executer) context.getMergedJobDataMap().get(DATA_MAP_OBJECT);
 			job.run();
 		}
 	}
 
 	public boolean areAllJobsRunning()
 	{
-		for (Job job : jobs)
+		for (Executer job : jobs)
 		{
-			if (!job.isOK()) return false;
+			if (!job.isOK())
+			{
+				return false;
+			}
 		}
 
 		return true;
@@ -131,15 +149,18 @@ public class JobManager
 
 	public boolean areAnyJobsOverdue()
 	{
-		for (Job job : jobs)
+		for (Executer job : jobs)
 		{
-			if (job.isOverdue()) return true;
+			if (job.isOverdue())
+			{
+				return true;
+			}
 		}
 
 		return false;
 	}
 
-	public Iterator<Job> getJobIterator()
+	public Iterator<Executer> getJobIterator()
 	{
 		return jobs.iterator();
 	}

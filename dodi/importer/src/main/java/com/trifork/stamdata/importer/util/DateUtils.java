@@ -23,13 +23,8 @@
 
 package com.trifork.stamdata.importer.util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import com.trifork.stamdata.Preconditions;
+import java.text.*;
+import java.util.*;
 
 
 public class DateUtils
@@ -40,9 +35,10 @@ public class DateUtils
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
-	 * @param long1 representing a date sing the format: yyyyMMdd.
+	 * @param long1
+	 *            representing a date sing the format: yyyyMMdd.
 	 * @return a String representing the ISO 8601 date without time zone.
-	 * @throws ParseException 
+	 * @throws ParseException
 	 */
 	public static Date toISO8601date(String dateString) throws ParseException
 	{
@@ -58,8 +54,10 @@ public class DateUtils
 
 	/**
 	 * @param year
-	 * @param month (1-12)
-	 * @param date (1-31)
+	 * @param month
+	 *            (1-12)
+	 * @param date
+	 *            (1-31)
 	 */
 	public static Date toDate(int year, int month, int date)
 	{
@@ -71,8 +69,10 @@ public class DateUtils
 
 	/**
 	 * @param year
-	 * @param month (1-12)
-	 * @param date (1-31)
+	 * @param month
+	 *            (1-12)
+	 * @param date
+	 *            (1-31)
 	 */
 	public static Date toDate(int year, int month, int date, int hours, int minutes, int secs)
 	{
@@ -84,7 +84,10 @@ public class DateUtils
 
 	public static Date toCalendar(java.sql.Date date)
 	{
-		if (date == null) return null;
+		if (date == null)
+		{
+			return null;
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.clear();
 		cal.setTimeInMillis(date.getTime());
@@ -93,7 +96,7 @@ public class DateUtils
 
 	public static String toMySQLdate(Date date)
 	{
-		Preconditions.checkNotNull(date);
+		com.google.common.base.Preconditions.checkNotNull(date);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return sdf.format(date);

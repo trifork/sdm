@@ -23,18 +23,17 @@
 
 package com.trifork.stamdata.importer.jobs.sor.xmlmodel;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class InstitutionOwnerEntity extends InstitutionOwner
 {
 	private Long RegionCode;
-	private List<HealthInstitutionEntity> healthInstitutionEntities;
+	private final List<HealthInstitutionEntity> healthInstitutionEntities;
 
 	public InstitutionOwnerEntity()
 	{
-		this.healthInstitutionEntities = new ArrayList<HealthInstitutionEntity>();
+		healthInstitutionEntities = new ArrayList<HealthInstitutionEntity>();
 	}
 
 	public Long getRegionCode()
@@ -55,7 +54,7 @@ public class InstitutionOwnerEntity extends InstitutionOwner
 	public void setHealthInstitutionEntity(HealthInstitutionEntity healthInstitutionEntity)
 	{
 		healthInstitutionEntity.setInstitutionOwnerEntity(this);
-		this.healthInstitutionEntities.add(healthInstitutionEntity);
+		healthInstitutionEntities.add(healthInstitutionEntity);
 
 	}
 

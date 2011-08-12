@@ -23,13 +23,11 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
 
@@ -58,13 +56,17 @@ public class AuditingPersister implements Persister
 		persistCompleteDataset(array);
 	}
 
+	@Override
 	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
 	{
 		int i = 1;
 		
 		for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
 		{
-			if (!dataset.getType().isAnnotationPresent(Output.class)) continue;
+			if (!dataset.getType().isAnnotationPresent(Output.class))
+			{
+				continue;
+			}
 
 			logger.info("Dataset {}/{}", i++, datasets.length);
 			
@@ -83,13 +85,17 @@ public class AuditingPersister implements Persister
 	 * in this dataset. If an entity is no longer in the dataset, its record
 	 * will be "closed" in mysql by assigning validto.
 	 */
+	@Override
 	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 	{
 		Date transactionTime = new Date();
 
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 
-		if (logger.isDebugEnabled()) logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
+		if (logger.isDebugEnabled())
+		{
+			logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
+		}
 
 		int processedEntities = 0;
 
@@ -155,7 +161,10 @@ public class AuditingPersister implements Persister
 							{
 								// If necesary, increase validto on existing
 								// entity to our validTo.
-								if (table.getCurrentRowValidTo().before(record.getValidTo())) table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
+								if (table.getCurrentRowValidTo().before(record.getValidTo()))
+								{
+									table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
+								}
 								// No need to insert our version as the range is
 								// covered by existing version
 								insertVersion = false;
@@ -272,7 +281,10 @@ public class AuditingPersister implements Persister
 
 					}
 				} while (table.nextRow());
-				if (insertVersion) table.insertAndUpdateRow(record, transactionTime);
+				if (insertVersion)
+				{
+					table.insertAndUpdateRow(record, transactionTime);
+				}
 			}
 		}
 		logger.debug("...persistDeltaDataset complete. " + processedEntities + " processed, " + table.getInsertedRows() + " inserted, " + table.getUpdatedRecords() + " updated, " + table.getDeletedRecords() + " deleted");
@@ -286,7 +298,7 @@ public class AuditingPersister implements Persister
 
 	/**
 	 * @param dataset
-	 * @throws SQLException 
+	 * @throws SQLException
 	 * @throws FilePersistException
 	 */
 	private <T extends StamdataEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws SQLException
@@ -309,7 +321,10 @@ public class AuditingPersister implements Persister
 
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
 
-			if (!recordFoundInCompleteDataset) table.updateValidToOnEntityVersion(dataset.getValidFrom(), ev, now);
+			if (!recordFoundInCompleteDataset)
+			{
+				table.updateValidToOnEntityVersion(dataset.getValidFrom(), ev, now);
+			}
 
 			if (logger.isDebugEnabled() && ++nExisting % 10000 == 0)
 			{
@@ -323,6 +338,7 @@ public class AuditingPersister implements Persister
 		}
 	}
 
+	@Override
 	public Connection getConnection()
 	{
 		return connection;

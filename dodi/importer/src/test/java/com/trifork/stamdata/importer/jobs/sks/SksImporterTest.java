@@ -23,14 +23,12 @@
 
 package com.trifork.stamdata.importer.jobs.sks;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.trifork.stamdata.Helpers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 
 import org.junit.Test;
-
-import com.trifork.stamdata.importer.jobs.sks.SKSParser;
 
 
 public class SksImporterTest
@@ -41,18 +39,18 @@ public class SksImporterTest
 	@Test
 	public void testAreRequiredInputFilesPresent()
 	{
-		SKSParser importer = new SKSParser();
+		SKSParser importer = new SKSParser(FAKE_TIME_GAP);
 
 		File[] files = new File[] {};
 
-		assertFalse(importer.ensureRequiredFileArePresent(files));
+		assertFalse(importer.checkFileSet(files));
 
 		files = new File[] { CORRECT_EXTENSION };
 
-		assertTrue(importer.ensureRequiredFileArePresent(files));
+		assertTrue(importer.checkFileSet(files));
 
 		files = new File[] { INCORRECT_EXTENSION };
 
-		assertFalse(importer.ensureRequiredFileArePresent(files));
+		assertFalse(importer.checkFileSet(files));
 	}
 }

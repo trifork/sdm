@@ -24,31 +24,163 @@
 package com.trifork.stamdata.importer.jobs.yderregister;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.*;
+import java.text.*;
+import java.util.*;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import org.joda.time.Period;
+import org.slf4j.*;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
+import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
+import com.trifork.stamdata.importer.persistence.Persister;
 
-/**
- * @author Jan Buchholdt <jbu@trofork.com>
- */
-public class YderregisterParser
+
+public class YderregisterParser implements FileParserJob
 {
 	private static final Logger logger = LoggerFactory.getLogger(YderregisterParser.class);
+
+	private static final String[] requiredFileExt = new String[] { "K05", "K40", "K45", "K1025", "K5094" };
+
+	private static final String JOB_IDENTIFIER = "yderregister_parser";
+
+	private final Period maxTimeGap;
+
+	@Inject
+	YderregisterParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
+	{
+		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return JOB_IDENTIFIER;
+	}
+
+	@Override
+	public String getHumanName()
+	{
+		return "Yderregisteret Parser";
+	}
+
+	@Override
+	public Period getMaxTimeGap()
+	{
+		return maxTimeGap;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void run(File[] input, Persister persister) throws Exception
+	{
+		String versionString = null;
+		int version;
+
+		for (File f : input)
+		{
+			String currentFileVersion;
+
+			if (f.getName().endsWith("XML") && f.getName().length() >= 15)
+			{
+				currentFileVersion = f.getName().substring(10, 15);
+			}
+			else
+			{
+				logger.warn("Unknown file encountered. filename='{}' parser='{}'", f.getName(), getIdentifier());
+
+				continue;
+			}
+
+			if (versionString == null)
+			{
+				versionString = currentFileVersion;
+			}
+			else if (!versionString.equals(currentFileVersion))
+			{
+				throw new Exception("Det blev forsøgt at importere yderregisterfiler med forskellige løbenumre. Løbenummeret fremgår af filnavnet.");
+			}
+		}
+
+		if (versionString == null)
+		{
+			throw new Exception("Der blev ikke fundet yderregister filer med et løbenummer");
+		}
+
+		version = Integer.parseInt(versionString);
+
+		// Verify the version
+
+		int latestInDB = getLastVersion(persister.getConnection());
+
+		if (latestInDB != 0 && latestInDB > version)
+		{
+			throw new Exception("Det blev forsøgt at indlæse et yderregister med et løbenummer, der er lavere end det seneste importerede løbenummer.");
+		}
+
+		setLastVersion(version, persister.getConnection());
+
+		YderregisterDatasets dataset = parseYderregister(input);
+
+		persister.persistCompleteDataset(dataset.getYderregisterDS());
+		persister.persistCompleteDataset(dataset.getYderregisterPersonDS());
+	}
+
+	@Override
+	public boolean checkFileSet(File[] input)
+	{
+		Map<String, File> fileMap = Maps.newHashMap();
+
+		for (File f : input)
+		{
+			String fName = f.getName();
+			if (fName.indexOf('.') != fName.lastIndexOf('.'))
+			{
+				fileMap.put(fName.substring(fName.indexOf('.') + 1, fName.lastIndexOf('.')), f);
+			}
+		}
+
+		for (String reqFileExt : Arrays.asList(requiredFileExt))
+		{
+			if (!fileMap.containsKey(reqFileExt))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public int getLastVersion(Connection connection) throws Exception
+	{
+		int latestInDB = 0;
+
+		Statement stm = connection.createStatement();
+		ResultSet rs = stm.executeQuery("SELECT MAX(Loebenummer) FROM YderLoebenummer");
+
+		if (rs.next())
+		{
+			latestInDB = rs.getInt(1);
+		}
+
+		stm.close();
+
+		return latestInDB;
+	}
+
+	public void setLastVersion(int version, Connection connection) throws Exception
+	{
+		Statement stm = connection.createStatement();
+		stm.execute("INSERT INTO YderLoebenummer (Loebenummer) VALUES (" + version + "); ");
+		stm.close();
+	}
 
 	public YderregisterDatasets parseYderregister(File[] files) throws Exception
 	{
@@ -77,7 +209,6 @@ public class YderregisterParser
 		return handler.getDataset();
 	}
 
-
 	protected class YderRegisterEventHandler extends DefaultHandler
 	{
 		protected static final String SUPPORTED_INTERFACE_VERSION = "S1040013";
@@ -95,6 +226,7 @@ public class YderregisterParser
 
 		protected YderregisterDatasets dataset;
 
+		@Override
 		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException
 		{
 			if (START_QNAME.equals(qName))
@@ -120,7 +252,7 @@ public class YderregisterParser
 				{
 					throw new SAXException("Yder-register filen har forkert modtagerangivelse: " + modtager + " i stedet for" + EXPECTED_RECEIPIENT_ID + ".");
 				}
-				
+
 				if (!SUPPORTED_INTERFACE_VERSION.equals(snitfladeID.trim()))
 				{
 					throw new SAXException("Yder-register filen har forkert snitfladeID: " + snitfladeID + " i stedet for " + SUPPORTED_INTERFACE_VERSION + ".");
@@ -138,10 +270,10 @@ public class YderregisterParser
 
 				Date afgDato = null;
 				Date tilgDato = null;
-				
+
 				String afgDatoString = "";
 				String tilgDatoString = "";
-				
+
 				try
 				{
 					afgDatoString = atts.getValue("AfgDatoYder").trim();
@@ -151,7 +283,7 @@ public class YderregisterParser
 					{
 						afgDato = datoFormatter.parse(afgDatoString);
 					}
-					
+
 					if (!tilgDatoString.trim().isEmpty())
 					{
 						tilgDato = datoFormatter.parse(tilgDatoString);
@@ -195,10 +327,10 @@ public class YderregisterParser
 
 				Date afgDato = null;
 				Date tilgDato = null;
-				
+
 				String afgDatoString = "";
 				String tilgDatoString = "";
-				
+
 				try
 				{
 					afgDatoString = atts.getValue("AfgDatoPerson").trim();
@@ -221,8 +353,8 @@ public class YderregisterParser
 				Long rolleKode = Long.valueOf(atts.getValue("PersonrolleKode"));
 				String rolleTekst = atts.getValue("PersonrolleTxt").trim();
 
-				// Ignore empty CPR numbers. TODO (thb): Why? Ask Jan Buchholdt 
-				
+				// Ignore empty CPR numbers. TODO (thb): Why? Ask Jan Buchholdt
+
 				if (cpr != null && cpr.length() == 10)
 				{
 					YderregisterPerson yderPerson = new YderregisterPerson();
@@ -247,15 +379,16 @@ public class YderregisterParser
 		{
 			// Strips leading zeros but leaves one if the input is all zeros.
 			// E.g. "0000" -> "0".
-			
+
 			return valueToStrip.replaceFirst("^0+(?!$)", "");
 		}
 	}
 
 	public Date getDateFromOpgDato(String opgDato)
 	{
-		// TODO (thb): Use a SimpleDateFormat here. Why would you return null? Shouldn't it throw an exception. Ask Jan Buchholdt.
-		
+		// TODO (thb): Use a SimpleDateFormat here. Why would you return null?
+		// Shouldn't it throw an exception. Ask Jan Buchholdt.
+
 		try
 		{
 			int year = new Integer(opgDato.substring(0, 4));
@@ -268,5 +401,4 @@ public class YderregisterParser
 			return null;
 		}
 	}
-
 }

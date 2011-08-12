@@ -2,8 +2,7 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
@@ -21,6 +20,7 @@ public class SaerligSundhedskort extends CPREntity
 	private Date sskGyldigTil;
 	private Date sskGyldigFra;
 
+	@Override
 	@Id
 	@Output
 	public String getCpr()
@@ -124,7 +124,7 @@ public class SaerligSundhedskort extends CPREntity
 
 	public void setPostnummerBy(String postNummerBy)
 	{
-		this.postnummerBy = postNummerBy;
+		postnummerBy = postNummerBy;
 	}
 
 	@Output
@@ -146,7 +146,7 @@ public class SaerligSundhedskort extends CPREntity
 
 	public void setSskGyldigTil(Date gyldigTil)
 	{
-		this.sskGyldigTil = gyldigTil;
+		sskGyldigTil = gyldigTil;
 	}
 
 	@Override

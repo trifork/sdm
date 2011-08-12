@@ -23,8 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.sor.xmlmodel;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class SpecialityMapper

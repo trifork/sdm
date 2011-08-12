@@ -1,17 +1,14 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 public class SikredeDataset
 {
 	@SuppressWarnings("unchecked")
-	private final List<Dataset<? extends CPREntity>> datasets = (List<Dataset<? extends CPREntity>>) Arrays.asList(new Dataset<Sikrede>(Sikrede.class), new Dataset<SikredeYderRelation>(SikredeYderRelation.class), new Dataset<SaerligSundhedskort>(SaerligSundhedskort.class));
+	private final List<Dataset<? extends CPREntity>> datasets = Arrays.asList(new Dataset<Sikrede>(Sikrede.class), new Dataset<SikredeYderRelation>(SikredeYderRelation.class), new Dataset<SaerligSundhedskort>(SaerligSundhedskort.class));
 
 	private Date validFrom;
 	private Date previousFileValidFrom;

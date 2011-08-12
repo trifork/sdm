@@ -23,43 +23,30 @@
 
 package com.trifork.stamdata.importer;
 
-import java.io.File;
-import java.net.URL;
-import java.util.Collection;
-import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.FileParserJob;
-import com.trifork.stamdata.importer.jobs.Job;
-import com.trifork.stamdata.importer.jobs.JobManager;
-import com.trifork.stamdata.importer.jobs.Updater;
-import com.trifork.stamdata.importer.jobs.UpdaterJob;
-import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
-import com.trifork.stamdata.importer.webinterface.GUIServlet;
-import com.trifork.stamdata.importer.webinterface.StatusServelet;
+import com.google.inject.*;
+import com.google.inject.multibindings.Multibinder;
+import com.google.inject.name.Names;
+import com.google.inject.servlet.*;
+import com.trifork.stamdata.ConfigurationLoader;
+import com.trifork.stamdata.importer.jobs.*;
+import com.trifork.stamdata.importer.jobs.autorisationsregister.*;
+import com.trifork.stamdata.importer.jobs.cpr.CPRParser;
+import com.trifork.stamdata.importer.jobs.doseringsforslag.DoseringsforslagParser;
+import com.trifork.stamdata.importer.persistence.ConnectionPool;
+import com.trifork.stamdata.importer.webinterface.*;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
-	public static final String BUILDIN_CONFIG_FILE = "config.properties";
-	public static final String DEPLOYMENT_CONFIG_FILE = "stamdata-data-manager.properties";
+	public static final String COMPONENT_NAME = "stamdata-data-manager";
 
 	private Injector injector;
 
@@ -68,15 +55,14 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	{
 		// We have to call the super method to allow Guice to initialize
 		// itself.
-		
+
 		super.contextInitialized(servletContextEvent);
 
 		// Start the jobs.
 
 		try
 		{
-			JobManager manager = injector.getInstance(JobManager.class);
-			manager.start();
+			injector.getInstance(JobManager.class).start();
 		}
 		catch (Exception e)
 		{
@@ -87,10 +73,11 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent)
 	{
+		// Shutdown the job manager.
+		
 		try
 		{
-			JobManager manager = injector.getInstance(JobManager.class);
-			manager.stop();
+			injector.getInstance(JobManager.class).stop();
 		}
 		catch (Exception e)
 		{
@@ -106,157 +93,44 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	@Override
 	protected Injector getInjector()
 	{
-		if (injector != null) return injector;
-
-		final CompositeConfiguration config = loadConfiguration();
+		// Load the configuration file.
 		
-		 ConfigurationUtils.dump(config, System.out);
-
-		// Parse the properties from the configuration files.
-
-		final List<Job> jobs = Lists.newArrayList();
-
-		jobs.addAll(getConfiguredUpdateJobs(config));
-		jobs.addAll(getConfiguredParserJobs(config));
-
-		injector = Guice.createInjector(new ServletModule()
-		{
+		final Properties configuration = ConfigurationLoader.getForComponent(COMPONENT_NAME);
+		
+		// Bind the dependencies.
+		
+		return Guice.createInjector(Stage.PRODUCTION, new ServletModule()
+		{			
 			@Override
 			protected void configureServlets()
 			{
-				// Bind the configured jobs.
-
-				bind(new TypeLiteral<List<Job>>() {}).toInstance(jobs);
-
-				// Serve the status servlet.
+				// Bind the configuration.
+				
+				Names.bindProperties(binder(), configuration);
+				
+				// Serve the GUI and status servlet.
 
 				serve("/status").with(StatusServelet.class);
 				serve("/").with(GUIServlet.class);
 
-				// Bind the required dependencies.
+				// Bind the service dependencies.
 
 				bind(JobManager.class).in(Scopes.SINGLETON);
 				bind(DatabaseStatus.class).in(Scopes.SINGLETON);
+				bind(ConnectionPool.class).in(Scopes.SINGLETON);
+				
+				// Bind the file parsers.
+				
+				Multibinder<FileParserJob> parsers = Multibinder.newSetBinder(binder(), FileParserJob.class);
+				parsers.addBinding().to(AutorisationsregisterParser.class);
+				parsers.addBinding().to(CPRParser.class);
+				parsers.addBinding().to(DoseringsforslagParser.class);
+				
+				// Bind the batch jobs.
+				
+				Multibinder<BatchJob> batchJobs = Multibinder.newSetBinder(binder(), BatchJob.class);
+				batchJobs.addBinding().to(AutorisationsregisterUpdater.class);
 			}
 		});
-
-		return injector;
-	}
-
-	private Collection<? extends Job> getConfiguredUpdateJobs(CompositeConfiguration config)
-	{
-		// Job config format:
-		//
-		// job : <Job's class name>; <cron expression>
-
-		List<Job> jobs = Lists.newArrayList();
-
-		for (String jobConfiguration : config.getStringArray("job"))
-		{
-			String[] values = jobConfiguration.split(";");
-
-			if (values.length != 2)
-			{
-				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
-			}
-
-			String className = values[0].trim();
-			String cronExpression = values[1].trim();
-
-			try
-			{
-				Class<? extends Updater> type = Class.forName(className).asSubclass(Updater.class);
-				Updater job = type.newInstance();
-
-				// Wrap the updater in a updater job.
-
-				jobs.add(new UpdaterJob(job, cronExpression));
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException("An error occurred while loading job.", e);
-			}
-		}
-
-		return jobs;
-	}
-
-	private List<Job> getConfiguredParserJobs(final CompositeConfiguration config)
-	{
-		// File parser config format:
-		//
-		// parser : <File parser's canonical class name>; <minimum import
-		// frequency in days>
-
-		List<Job> fileParsers = Lists.newArrayList();
-
-		final File rootDir = new File(config.getString("rootDir"));
-
-		for (String jobConfiguration : config.getStringArray("parser"))
-		{
-			String[] values = jobConfiguration.split(";");
-
-			if (values.length != 2)
-			{
-				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
-			}
-
-			String className = values[0].trim();
-			int minimumImportFrequency = Integer.parseInt(values[1].trim());
-
-			try
-			{
-				Class<? extends FileParser> type = Class.forName(className).asSubclass(FileParser.class);
-				FileParser parser = type.newInstance();
-
-				// Wrap the parser in a file parser job.
-
-				fileParsers.add(new FileParserJob(rootDir, parser, minimumImportFrequency));
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException("An error occurred while loading job.", e);
-			}
-		}
-
-		return fileParsers;
-	}
-
-	private CompositeConfiguration loadConfiguration()
-	{
-		try
-		{
-			// Override the build-in configuration 'config.properties' with
-			// the one found in 'stamdata-data-manager.properties'.
-			//
-			// Composite configurations always return the first version of a
-			// property
-			// that is added to it. Therefore we load the defaults last.
-
-			CompositeConfiguration configuration = new CompositeConfiguration();
-
-			URL deploymentConfigurationFile = getClass().getClassLoader().getResource(DEPLOYMENT_CONFIG_FILE);
-
-			if (deploymentConfigurationFile != null)
-			{
-				configuration.addConfiguration(new PropertiesConfiguration(deploymentConfigurationFile));
-				logger.info("Configuration file '{}' loaded.", deploymentConfigurationFile);
-			}
-			else
-			{
-				logger.warn("Configuration file '{}' could not be found. Using default configuration.", DEPLOYMENT_CONFIG_FILE);
-			}
-
-			// Add any missing properties from the defaults.
-
-			configuration.addConfiguration(new PropertiesConfiguration(BUILDIN_CONFIG_FILE));
-
-			return configuration;
-
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("The application could not be started do to a configuration error.", e);
-		}
 	}
 }

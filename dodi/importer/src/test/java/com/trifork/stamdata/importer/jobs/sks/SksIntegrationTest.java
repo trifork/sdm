@@ -23,36 +23,32 @@
 
 package com.trifork.stamdata.importer.jobs.sks;
 
-import static org.junit.Assert.assertEquals;
+import static com.trifork.stamdata.Helpers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 public class SksIntegrationTest
 {
 	private File shakFile;
-	private Connection con;
+	private Connection connection;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		shakFile = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
 
-		con = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		stmt.executeQuery("TRUNCATE TABLE Organisation");
 		stmt.close();
 	}
@@ -60,18 +56,18 @@ public class SksIntegrationTest
 	@After
 	public void tearDown() throws SQLException
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
 	public void testSHAKImport() throws Throwable
 	{
 		File[] files = new File[] { shakFile };
-		SKSParser importer = new SKSParser();
-		importer.importFiles(files, new AuditingPersister(con));
+		SKSParser importer = new SKSParser(FAKE_TIME_GAP);
+		importer.run(files, new AuditingPersister(connection));
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Sygehus'");
 		rs.next();
 		assertEquals(745, rs.getInt(1));

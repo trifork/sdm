@@ -23,14 +23,9 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getIdMethod;
-import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getOutputFieldName;
+import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -38,8 +33,8 @@ import java.util.Map;
  */
 public class Dataset<T extends StamdataEntity>
 {
-	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
-	private Class<T> type;
+	private final Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
+	private final Class<T> type;
 
 	public Dataset(Class<T> type)
 	{
@@ -76,8 +71,14 @@ public class Dataset<T extends StamdataEntity>
 	public T getEntityById(Object id)
 	{
 		List<T> ents = entities.get(id);
-		if (ents == null) return null;
-		if (ents.size() == 1) return ents.get(0);
+		if (ents == null)
+		{
+			return null;
+		}
+		if (ents.size() == 1)
+		{
+			return ents.get(0);
+		}
 		throw new RuntimeException("Multiple entities exist with entityid " + id);
 	}
 
@@ -98,14 +99,20 @@ public class Dataset<T extends StamdataEntity>
 	public String getEntityTypeDisplayName()
 	{
 		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
+		if (output != null && !"".equals(output.name()))
+		{
+			return output.name();
+		}
 		return type.getSimpleName();
 	}
 
 	public static String getEntityTypeDisplayName(Class<? extends StamdataEntity> type)
 	{
 		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
+		if (output != null && !"".equals(output.name()))
+		{
+			return output.name();
+		}
 		return type.getSimpleName();
 	}
 

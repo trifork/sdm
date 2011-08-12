@@ -134,7 +134,7 @@ public class OrganizationalUnit extends AddressInformation
 
 	public void setFromDate(Date validFrom)
 	{
-		this.fromDate = validFrom;
+		fromDate = validFrom;
 	}
 
 	public Date getToDate()

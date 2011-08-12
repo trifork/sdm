@@ -25,9 +25,7 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 

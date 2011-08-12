@@ -23,33 +23,22 @@
 
 package com.trifork.stamdata.authorization;
 
-import static dk.sosi.seal.model.SignatureUtil.setupCryptoProviderForJVM;
-import static org.slf4j.LoggerFactory.getLogger;
+import static dk.sosi.seal.model.SignatureUtil.*;
+import static org.slf4j.LoggerFactory.*;
 
-import java.io.InputStream;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 
 import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Provides;
-import com.google.inject.TypeLiteral;
-import com.google.inject.servlet.GuiceServletContextListener;
-import com.google.inject.servlet.ServletModule;
+import com.google.inject.*;
+import com.google.inject.servlet.*;
+import com.trifork.stamdata.ConfigurationLoader;
 
 import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.SOSIFederation;
-import dk.sosi.seal.pki.SOSITestFederation;
+import dk.sosi.seal.pki.*;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
 
@@ -57,8 +46,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 {
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
 
-	private static final String CONFIG_FILENAME_BUILDIN = "config.properties";
-	private static final String CONFIG_FILENAME_DEPLOYMENT = "stamdata-authorization-lookup-ws.properties";
+	private static final String CONFIGURATION_NAME = "stamdata-authorization-lookup-ws";
 
 	private static final String DGWS_TEST_SECURITY = "dgwsTest";
 
@@ -71,26 +59,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 		try
 		{
-			// LOAD CONFIGURATION FILES
-
-			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_BUILDIN);
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_DEPLOYMENT);
-
-			final Properties config = new Properties();
-			config.load(buildInConfig);
-			buildInConfig.close();
-
-			if (deploymentConfig != null)
-			{
-				logger.info("Configuration file 'stamdata-authorization-lookup-ws.properties' found.");
-				
-				config.load(deploymentConfig);
-				deploymentConfig.close();
-			}
-			else
-			{
-				logger.warn("Could not find stamdata-authorization-lookup-ws.properties. Using default configuration.");
-			}
+			final Properties properties = ConfigurationLoader.getForComponent(CONFIGURATION_NAME);
 
 			// READ THE SUBJECT SERIAL NUMBERS OF CLIENTS
 			//
@@ -98,7 +67,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			// The list contains both CVR and UID but we only need
 			// the CVR (for now). This may change in future releases.
 
-			String whiteListProperty = config.getProperty("subjectSerialNumbers", "");
+			String whiteListProperty = properties.getProperty("subjectSerialNumbers", "");
 
 			Set<String> cvrNumbers = Sets.newHashSet();
 
@@ -115,7 +84,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 			Federation federation;
 
-			if (DGWS_TEST_SECURITY.equalsIgnoreCase(config.getProperty("security")))
+			if (DGWS_TEST_SECURITY.equalsIgnoreCase(properties.getProperty("security")))
 			{
 				logger.warn("Allowing ID Cards from the Test STS!");
 
@@ -142,7 +111,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				@Override
 				protected void configureServlets()
 				{
-					install(new DatabaseModule(config.getProperty("db.connection.jdbcURL"), config.getProperty("db.connection.username"), config.getProperty("db.connection.password", "")));
+					install(new DatabaseModule(properties.getProperty("db.connection.jdbcURL"), properties.getProperty("db.connection.username"), properties.getProperty("db.connection.password", "")));
 					install(new MonitoringModule());
 					
 					bind(SOSIFactory.class).toInstance(sosiFactory);

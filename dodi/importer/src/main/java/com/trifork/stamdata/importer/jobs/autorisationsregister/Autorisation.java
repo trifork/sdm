@@ -32,20 +32,20 @@ import com.trifork.stamdata.importer.util.DateUtils;
 @Output
 public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
 {
-	private String nummer;
-	private String cpr;
-	private String efternavn;
-	private String fornavn;
-	private String educationCode;
+	private final String nummer;
+	private final String cpr;
+	private final String efternavn;
+	private final String fornavn;
+	private final String educationCode;
 
-	Autorisationsregisterudtraek dataset;
+	AutorisationDataset dataset;
 
 	public Autorisation(String number, String cpr, String firstName, String lastName, String educationCode)
 	{
-		this.nummer = number;
+		nummer = number;
 		this.cpr = cpr;
-		this.fornavn = firstName;
-		this.efternavn = lastName;
+		fornavn = firstName;
+		efternavn = lastName;
 		this.educationCode = educationCode;
 	}
 

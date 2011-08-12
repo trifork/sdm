@@ -23,22 +23,17 @@
 
 package com.trifork.stamdata.importer.jobs.sor;
 
-import static org.junit.Assert.assertEquals;
+import static com.trifork.stamdata.Helpers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 public class SORIntegrationTest
@@ -48,7 +43,7 @@ public class SORIntegrationTest
 	public static File oneApotek;
 	public static File fullSor;
 
-	private Connection con;
+	private Connection connection;
 
 	@BeforeClass
 	public static void init()
@@ -64,9 +59,9 @@ public class SORIntegrationTest
 	@Before
 	public void setUp() throws Exception
 	{
-		con = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		stmt.executeQuery("truncate table Praksis");
 		stmt.executeQuery("truncate table Yder");
 		stmt.executeQuery("truncate table Sygehus");
@@ -78,19 +73,19 @@ public class SORIntegrationTest
 	@After
 	public void tearDown() throws SQLException
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
 	public void testImport() throws Exception
 	{
-		SORImporter importer = new SORImporter();
+		SORParser importer = new SORParser(FAKE_TIME_GAP);
 		File[] files = new File[] { fullSor };
 
-		importer.importFiles(files, new AuditingPersister(con));
+		importer.run(files, new AuditingPersister(connection));
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Praksis");
 		rs.next();
 		assertEquals(3148, rs.getInt(1));

@@ -1,9 +1,8 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-
 import java.util.Date;
+
+import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
@@ -26,6 +25,7 @@ public class Sikrede extends CPREntity
 	private String socialLand;
 	private String socialLandKode;
 
+	@Override
 	@Id
 	@Output
 	public String getCpr()
@@ -58,7 +58,7 @@ public class Sikrede extends CPREntity
 
 	public void setKommunekodeIKraftDato(Date iKraftDato)
 	{
-		this.kommunekodeIkraftDato = iKraftDato;
+		kommunekodeIkraftDato = iKraftDato;
 	}
 
 	public void setFoelgeskabsPersonCpr(String foelgeskabsPersonCpr)
@@ -73,7 +73,7 @@ public class Sikrede extends CPREntity
 
 	public void setFoelgeskabsPerson(String cprFoelgeskabsPerson)
 	{
-		this.foelgeskabsPersonCpr = cprFoelgeskabsPerson;
+		foelgeskabsPersonCpr = cprFoelgeskabsPerson;
 	}
 
 	public void setStatus(String status)
@@ -98,12 +98,12 @@ public class Sikrede extends CPREntity
 
 	public void setSikredesSocialeLand(String land)
 	{
-		this.socialLand = land;
+		socialLand = land;
 	}
 
 	public void setSikredesSocialeLandKode(String landekode)
 	{
-		this.socialLandKode = landekode;
+		socialLandKode = landekode;
 	}
 
 	@Output
@@ -136,7 +136,7 @@ public class Sikrede extends CPREntity
 
 	public void setSslGyldigFra(Date gyldigFra)
 	{
-		this.sslGyldigFra = gyldigFra;
+		sslGyldigFra = gyldigFra;
 	}
 
 	@Output
@@ -147,7 +147,7 @@ public class Sikrede extends CPREntity
 
 	public void setSslGyldigTil(Date gyldigTil)
 	{
-		this.SslGyldigTil = gyldigTil;
+		SslGyldigTil = gyldigTil;
 	}
 
 	@Output

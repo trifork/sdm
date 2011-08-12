@@ -41,10 +41,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.takst.Takst;
-import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
-import com.trifork.stamdata.importer.jobs.takst.model.DivEnheder;
-import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
+import com.trifork.stamdata.importer.jobs.dkma.*;
+import com.trifork.stamdata.importer.jobs.dkma.model.*;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;

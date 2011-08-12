@@ -1,33 +1,25 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.*;
+import java.text.*;
 import java.util.Date;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
+import org.apache.commons.io.*;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.*;
+import org.joda.time.format.*;
+import org.slf4j.*;
 
-import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
+import com.trifork.stamdata.importer.persistence.*;
 
 
-public class SikredeParser implements FileParser
+public class SikredeParser implements FileParserJob
 {
-	private static final int CURRENT_YDER_RELATION_OFFSET = 13;
-
 	private static final Logger logger = LoggerFactory.getLogger(SikredeParser.class);
 	
 	private static final String FILE_ENCODING = "ISO-8859-1";
@@ -38,8 +30,18 @@ public class SikredeParser implements FileParser
 	private static final int YDERNUMMER_LENGTH = 6;
 	private static final int DATEFORMAT_LENGTH = 8;
 	private static final int KODE_LENGTH = 1;
+	private static final int CURRENT_YDER_RELATION_OFFSET = 13;
 	
-
+	private static final String JOB_IDENTIFIER = "sikrede_parser";
+	
+	private final Period maxTimeGap;
+	
+	@Inject
+	SikredeParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
+	{
+		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
+	}
+	
 	/* TODO: Check actual encoding for file with CSC. Also change the encoding of the test files to match. */
 
 	private static final String FILENAME_DATE_FORMAT = "yyyyMMdd";
@@ -54,7 +56,7 @@ public class SikredeParser implements FileParser
 	@Override
 	public String getIdentifier()
 	{
-		return "sikrede";
+		return JOB_IDENTIFIER;
 	}
 
 	@Override
@@ -62,19 +64,25 @@ public class SikredeParser implements FileParser
 	{
 		return "\"Sikrede\" Parser";
 	}
+	
+	@Override
+	public Period getMaxTimeGap()
+	{
+		return maxTimeGap;
+	}
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean checkFileSet(File[] input)
 	{
 		// 1. CHECK THAT ALL FILES ARE PRESENT
 
-		checkNotNull(input);
+		Preconditions.checkNotNull(input);
 
 		return (input.length > 0);
 	}
 
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister) throws Exception
 	{
 		// 1. CHECK VERSIONS
 		//
@@ -119,7 +127,7 @@ public class SikredeParser implements FileParser
 	{
 		SikredeDataset dataset = new SikredeDataset();
 		
-		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING); 
+		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
 
 		final int PREVIOUS_YDER_RELATION_OFFSET = 63;
 		final int FUTURE_YDER_RELATION_OFFSET = 102;
@@ -254,7 +262,10 @@ public class SikredeParser implements FileParser
 		sikrede.setSikredesSocialeLand(cut(line, 790, 47));
 		sikrede.setSikredesSocialeLandKode(cut(line, 837, 2));
 
-		if (logger.isDebugEnabled()) logger.debug(sikrede.toString());
+		if (logger.isDebugEnabled())
+		{
+			logger.debug(sikrede.toString());
+		}
 		
 		return sikrede;
 	}
@@ -291,7 +302,10 @@ public class SikredeParser implements FileParser
 		position = position + DATEFORMAT_LENGTH;
 		yderRelation.setGruppekodeRegistreringDato(yearMonthDayDate(line, offset + position));
 
-		if (logger.isDebugEnabled()) logger.debug(yderRelation.toString());
+		if (logger.isDebugEnabled())
+		{
+			logger.debug(yderRelation.toString());
+		}
 		
 		return yderRelation;
 	}
@@ -312,7 +326,10 @@ public class SikredeParser implements FileParser
 		sundhedskort.setMobilNummer(cut(line, 664, 20));
 		sundhedskort.setPostnummerBy(cut(line, 684, 40));
 
-		if (logger.isDebugEnabled()) logger.debug(sundhedskort.toString());
+		if (logger.isDebugEnabled())
+		{
+			logger.debug(sundhedskort.toString());
+		}
 		
 		return sundhedskort;
 	}

@@ -68,11 +68,11 @@
 
 		<h2>Liste over processer:</h2>
 		<%
-			Iterator<Job> jobs = manager.getJobIterator();
+			Iterator<Executer> jobs = manager.getJobIterator();
 
 			while (jobs.hasNext())
 			{
-				Job job = jobs.next();
+				Executer job = jobs.next();
 				String jobStatus = "ok";
 
 				if (job.isOverdue() || !job.hasBeenRun())

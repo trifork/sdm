@@ -23,25 +23,15 @@
 
 package com.trifork.stamdata.persistence;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
@@ -50,24 +40,11 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 	@Before
 	public void setupTable() throws SQLException
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		try
-		{
-			Statement stmt = con.createStatement();
-			try
-			{
-				stmt.executeUpdate("drop table if exists SDE");
-				stmt.executeUpdate("create table SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedDate DATETIME);");
-			}
-			finally
-			{
-				stmt.close();
-			}
-		}
-		finally
-		{
-			con.close();
-		}
+		Connection connection = Helpers.getConnection();
+		Statement stmt = connection.createStatement();
+
+		stmt.executeUpdate("DROP TABLE IF EXISTS SDE");
+		stmt.executeUpdate("CREATE TABLE SDE(id VARCHAR(20) NOT NULL, data VARCHAR(20), date DATETIME, ModifiedDate DATETIME NOT NULL, ValidFrom DATETIME, ValidTo DATETIME, CreatedDate DATETIME);");
 	}
 
 	@SuppressWarnings("unchecked")
@@ -76,7 +53,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 	{
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME));
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 		DatabaseTableWrapper<SDE> table = dao.getTable(SDE.class);
@@ -93,7 +70,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 	{
 		CompleteDataset<SDE> dataset = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME));
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 		dao.persistCompleteDataset(dataset);
@@ -113,7 +90,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset1.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME, "1", "a"));
 		dataset2.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME, "1", "b"));
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
@@ -134,7 +111,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t0, t1);
 		dataset1.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME, "1", "a", t3));
 		dataset2.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME, "1", "a", t4));
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
@@ -155,7 +132,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		CompleteDataset<SDE> dataset2 = new CompleteDataset<SDE>(SDE.class, t1, t2);
 		dataset1.addEntity(new SDE(t0, DateUtils.THE_END_OF_TIME, "1", "a"));
 		dataset2.addEntity(new SDE(t1, DateUtils.THE_END_OF_TIME, "1", "b"));
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
@@ -192,7 +169,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		// Extend validTo to after THE_END_OF_TIME
 		dataset3.addEntity(new SDE(t0, t1000, "1", "a"));
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = Helpers.getConnection();
 
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
@@ -220,7 +197,6 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		assertFalse(table.nextRow());
 		con.close();
 	}
-
 
 	@Output
 	public static class SDE implements StamdataEntity

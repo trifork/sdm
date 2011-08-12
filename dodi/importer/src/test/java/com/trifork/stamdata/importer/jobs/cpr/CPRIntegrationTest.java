@@ -23,54 +23,43 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static com.trifork.stamdata.Helpers.*;
+import static com.trifork.stamdata.importer.util.DateUtils.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 public class CPRIntegrationTest
 {
-	private Connection con;
+	private Connection connection;
 
 	@Before
 	public void cleanDatabase() throws Exception
 	{
-		con = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 
-		Statement statement = con.createStatement();
+		Statement statement = connection.createStatement();
 		statement.execute("truncate table Person");
 		statement.execute("truncate table BarnRelation");
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
-		statement.execute("truncate table Udrejseoplysninger");
-		statement.execute("truncate table Statsborgerskab");
-		statement.execute("truncate table Foedselsregistreringsoplysninger");
-		statement.execute("truncate table KommunaleForhold");
-		statement.execute("truncate table AktuelCivilstand");
 	}
 
 	@After
 	public void tearDown() throws Exception
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
@@ -81,7 +70,7 @@ public class CPRIntegrationTest
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
 
-		Date latestIkraft = CPRImporter.getLatestVersion(con);
+		Date latestIkraft = CPRParser.getLatestVersion(connection);
 		assertNull(latestIkraft);
 	}
 
@@ -90,7 +79,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100315.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
@@ -117,12 +106,12 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testSequence1/D100314.L431101");
 
-		Date latestIkraft = CPRImporter.getLatestVersion(con);
+		Date latestIkraft = CPRParser.getLatestVersion(connection);
 		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
 
 		importFile("data/cpr/testSequence2/D100314.L431101");
 
-		latestIkraft = CPRImporter.getLatestVersion(con);
+		latestIkraft = CPRParser.getLatestVersion(connection);
 		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
 
 		importFile("data/cpr/testOutOfSequence/D100314.L431101");
@@ -145,7 +134,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testCPR1/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR = '0101965058'");
 		rs.next();
 
@@ -181,7 +170,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Person where CPR='3112970028'");
 
 		rs.next();
@@ -221,7 +210,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
 
 		rs.next();
@@ -247,7 +236,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100312.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(100, rs.getInt(1));
@@ -276,7 +265,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100313.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(80, rs.getInt(1));
@@ -302,6 +291,6 @@ public class CPRIntegrationTest
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().importFiles(new File[] {file}, new AuditingPersister(con));
+		new CPRParser(FAKE_TIME_GAP).run(new File[] {file}, new AuditingPersister(connection));
 	}
 }

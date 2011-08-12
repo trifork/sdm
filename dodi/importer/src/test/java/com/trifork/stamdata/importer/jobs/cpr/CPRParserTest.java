@@ -29,14 +29,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
-import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
-import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
 
 
 public class CPRParserTest

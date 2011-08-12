@@ -93,7 +93,7 @@ public class HealthInstitution extends AddressInformation
 
 	public void setFromDate(Date validFrom)
 	{
-		this.fromDate = validFrom;
+		fromDate = validFrom;
 	}
 
 	public Date getToDate()

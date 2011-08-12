@@ -23,49 +23,136 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyyMMddHHmm;
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.DateUtils.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.*;
+import java.sql.*;
+import java.text.*;
+import java.util.*;
 import java.util.Date;
-import java.util.Formatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.Period;
+import org.slf4j.*;
 
-import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
-import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
-import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
-import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
+import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
+import com.trifork.stamdata.importer.persistence.*;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class CPRParser
+public class CPRParser implements FileParserJob
 {
-	private static final String FILE_ENCODING = "ISO-8859-1";
-
 	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
+
+	private static final String DELTA_CPR_FILE_FILE_ENDING = "01";
+	private static final String JOB_IDENTIFIER = "cpr_parser";
+
+	private final Period maxTimeGap;
+
+	@Inject
+	CPRParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
+	{
+		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return JOB_IDENTIFIER;
+	}
+
+	@Override
+	public boolean checkFileSet(File[] input)
+	{
+		return true; // TODO: Check if the required files are there.
+	}
+
+	@Override
+	public Period getMaxTimeGap()
+	{
+		return maxTimeGap;
+	}
+
+	@Override
+	public void run(File[] input, Persister persister) throws Exception
+	{
+		Preconditions.checkNotNull(input);
+		Preconditions.checkNotNull(persister);
+
+		// Check that the sequence is kept.
+
+		Connection connection = persister.getConnection();
+
+		for (File personFile : input)
+		{
+			logger.info("Parsing 'CPR person' file. filename=" + personFile.getAbsolutePath());
+
+			CPRDataset cpr = parse(personFile);
+
+			// HACK: Don't use the connection this way. @see
+			// Persister#getConnection()
+
+			Date previousVersion = getLatestVersion(connection);
+
+			if (previousVersion == null)
+			{
+				logger.debug("Count not find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
+			}
+			else if (!cpr.getPreviousFileValidFrom().equals(previousVersion))
+			{
+				throw new Exception("CPR file out of sequence. file_date=" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + " database_date=" + yyyy_MM_dd.format(previousVersion.getTime()));
+			}
+
+			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
+			{
+				persister.persistDeltaDataset(dataset);
+			}
+
+			// Add the new 'version' date to database,
+			// if it is a delta file. Full imports don't have a version.
+			// TODO: Should we reset the version if we get a new full
+			// import, when we already have data?
+
+			if (personFile.getName().endsWith(DELTA_CPR_FILE_FILE_ENDING))
+			{
+				insertVersion(cpr.getValidFrom(), connection);
+			}
+		}
+	}
+
+	static public Date getLatestVersion(Connection con) throws SQLException
+	{
+		Statement stm = con.createStatement();
+		ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
+		rs.next();
+		return rs.getTimestamp(1);
+	}
+
+	void insertVersion(Date calendar, Connection con) throws SQLException
+	{
+		Statement stm = con.createStatement();
+		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
+		stm.execute(query);
+	}
+
+	@Override
+	public String getHumanName()
+	{
+		return "CPR Parser";
+	}
+
+	private static final String FILE_ENCODING = "ISO-8859-1";
 
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
 
 	static boolean haltOnDateErrors = true;
-	
+
 	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
 	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
-
 
 	public static CPRDataset parse(File f) throws Exception
 	{
@@ -96,7 +183,7 @@ public class CPRParser
 	{
 		boolean endRecordReached = false;
 		CPRDataset cpr = new CPRDataset();
-		
+
 		while (reader.ready())
 		{
 			String line = reader.readLine();
@@ -117,12 +204,12 @@ public class CPRParser
 				}
 			}
 		}
-		
+
 		if (!endRecordReached)
 		{
 			throw new Exception("Slut-record mangler i cpr-filen");
 		}
-		
+
 		return cpr;
 	}
 
@@ -133,7 +220,10 @@ public class CPRParser
 		case 0:
 			cpr.setValidFrom(getValidFrom(line));
 			Date forrigeIKraftdato = getForrigeIkraftDato(line);
-			if (forrigeIKraftdato != null) cpr.setPreviousFileValidFrom(forrigeIKraftdato);
+			if (forrigeIKraftdato != null)
+			{
+				cpr.setPreviousFileValidFrom(forrigeIKraftdato);
+			}
 			break;
 		case 1:
 			cpr.addEntity(personoplysninger(line));
@@ -276,7 +366,6 @@ public class CPRParser
 		return p;
 	}
 
-
 	/**
 	 * Gets the record type of a line in the CPR file.
 	 */
@@ -291,7 +380,7 @@ public class CPRParser
 
 		if (line.length() > beginIndex)
 		{
-			int end = (line.length() < endIndex) ? line.length() : endIndex;
+			int end = line.length() < endIndex ? line.length() : endIndex;
 			res = line.substring(beginIndex, end);
 		}
 
@@ -355,11 +444,17 @@ public class CPRParser
 
 	private static String removeLeadingZeros(String str)
 	{
-		if (str == null) return null;
+		if (str == null)
+		{
+			return null;
+		}
 
 		for (int index = 0; index < str.length(); index++)
 		{
-			if (str.charAt(index) != '0') return str.substring(index);
+			if (str.charAt(index) != '0')
+			{
+				return str.substring(index);
+			}
 		}
 
 		return "";

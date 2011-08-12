@@ -1,9 +1,8 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-
 import java.util.Date;
+
+import com.trifork.stamdata.importer.persistence.*;
 
 @Output(name = "SikredeYderRelation")
 public class SikredeYderRelation extends CPREntity {
@@ -37,7 +36,8 @@ public class SikredeYderRelation extends CPREntity {
         return cpr + "-" + type.getCode();
     }
 
-    @Output
+    @Override
+	@Output
     public String getCpr() {
         return cpr;
     }

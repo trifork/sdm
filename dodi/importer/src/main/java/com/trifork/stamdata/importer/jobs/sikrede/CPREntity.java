@@ -23,10 +23,10 @@
 
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import java.util.Date;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
-
-import java.util.Date;
 
 
 public abstract class CPREntity extends AbstractStamdataEntity {

@@ -23,45 +23,33 @@
 
 package com.trifork.stamdata.importer.jobs.doseringsforslag;
 
-import static org.apache.commons.io.FileUtils.toFile;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static com.trifork.stamdata.Helpers.*;
+import static org.apache.commons.io.FileUtils.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.DosageSuggestionImporter;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageStructure;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageUnit;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
-import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.Helpers;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 /**
  * Tests that the dosage suggestion importer works as expected.
  * 
- * @author Thomas Børlum (thb@trifork.com)
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class DoseringsforslagImporterTest
 {
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	private DosageSuggestionImporter importer;
+	private DoseringsforslagParser importer;
 
 	private File versionFile;
 	private File drugsFile;
@@ -75,7 +63,7 @@ public class DoseringsforslagImporterTest
 	@Before
 	public void setUp() throws SQLException
 	{		
-		connection = MySQLConnectionManager.getConnection();
+		connection = Helpers.getConnection();
 		
 		// The 'single' files only contain one record each.
 		// This makes it easy to know that is imported and
@@ -191,10 +179,10 @@ public class DoseringsforslagImporterTest
 
 	public void runImporter() throws Exception
 	{
-		importer = new DosageSuggestionImporter();
+		importer = new DoseringsforslagParser(FAKE_TIME_GAP);
 		File[] files = new File[] { versionFile, drugsFile, dosageStructureFile, unitsFile, relationFile };
 
-		importer.importFiles(files, persister);
+		importer.run(files, persister);
 	}
 
 	public <T extends StamdataEntity> T getFirst(Class<T> type)

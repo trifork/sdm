@@ -23,17 +23,18 @@
 
 package com.trifork.stamdata.importer.jobs.sks;
 
-import java.io.*;
+import java.io.File;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.Period;
+import org.slf4j.*;
 
-import com.trifork.stamdata.importer.jobs.FileParser;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.jobs.sks.Institution.InstitutionType;
-import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.persistence.*;
 
 
 /**
@@ -41,10 +42,10 @@ import com.trifork.stamdata.importer.persistence.Persister;
  * 
  * SKS is an acronym for 'Sundhedsvæsenets KlassifikationsSystem'.
  */
-public class SKSParser implements FileParser
+public class SKSParser implements FileParserJob
 {
 	private static final Logger logger = LoggerFactory.getLogger(SKSParser.class);
-	
+
 	private static final int SKS_NUMBER_END_INDEX = 23;
 	private static final int SKS_NUMBER_START_INDEX = 3;
 	private static final int NAME_END_INDEX = 167;
@@ -65,6 +66,16 @@ public class SKSParser implements FileParser
 
 	private static final String FILE_ENCODING = "ISO8859-15";
 
+	private static final String JOB_IDENTIFIER = "sks_parser";
+
+	private final Period maxTimeGap;
+
+	@Inject
+	SKSParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
+	{
+		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
+	}
+
 	@Override
 	public String getIdentifier()
 	{
@@ -78,20 +89,29 @@ public class SKSParser implements FileParser
 	}
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public Period getMaxTimeGap()
+	{
+		return maxTimeGap;
+	}
+
+	@Override
+	public boolean checkFileSet(File[] input)
 	{
 		boolean present = false;
 
 		for (File file : input)
 		{
-			if (file.getName().toUpperCase().endsWith(".TXT")) present = true;
+			if (file.getName().toUpperCase().endsWith(".TXT"))
+			{
+				present = true;
+			}
 		}
 
 		return present;
 	}
 
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister) throws Exception
 	{
 		for (File file : files)
 		{
@@ -103,9 +123,9 @@ public class SKSParser implements FileParser
 				while (lines.hasNext())
 				{
 					String line = lines.nextLine();
-					
+
 					Institution institution = parseLine(line);
-					
+
 					if (institution != null)
 					{
 						dataset.addEntity(institution);

@@ -24,24 +24,14 @@
 package com.trifork.stamdata.importer.jobs.sor;
 
 import java.lang.reflect.Method;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.Date;
 
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.trifork.stamdata.importer.jobs.sor.model.Apotek;
-import com.trifork.stamdata.importer.jobs.sor.model.Praksis;
-import com.trifork.stamdata.importer.jobs.sor.model.Sygehus;
-import com.trifork.stamdata.importer.jobs.sor.model.SygehusAfdeling;
-import com.trifork.stamdata.importer.jobs.sor.model.Yder;
-import com.trifork.stamdata.importer.jobs.sor.xmlmodel.AddressInformation;
-import com.trifork.stamdata.importer.jobs.sor.xmlmodel.HealthInstitutionEntity;
-import com.trifork.stamdata.importer.jobs.sor.xmlmodel.InstitutionOwnerEntity;
-import com.trifork.stamdata.importer.jobs.sor.xmlmodel.OrganizationalUnitEntity;
+import com.trifork.stamdata.importer.jobs.sor.model.*;
+import com.trifork.stamdata.importer.jobs.sor.xmlmodel.*;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.util.DateUtils;
 
@@ -54,7 +44,7 @@ public class SOREventHandler extends DefaultHandler
 	private HealthInstitutionEntity curHIE;
 	private OrganizationalUnitEntity curOUE;
 
-	private SORDataSets dataSets;
+	private final SORDataSets dataSets;
 
 	public SOREventHandler(SORDataSets dataSets)
 	{
@@ -229,16 +219,46 @@ public class SOREventHandler extends DefaultHandler
 
 	private static void pushdownAdress(AddressInformation parrent, AddressInformation son)
 	{
-		if (parrent == null || son == null) return;
-		if (son.getCountryIdentificationCode() == null) son.setCountryIdentificationCode(parrent.getCountryIdentificationCode());
-		if (son.getDistrictName() == null) son.setDistrictName(parrent.getDistrictName());
-		if (son.getEmailAddressIdentifier() == null) son.setEmailAddressIdentifier(parrent.getEmailAddressIdentifier());
-		if (son.getFaxNumberIdentifier() == null) son.setFaxNumberIdentifier(parrent.getFaxNumberIdentifier());
-		if (son.getPostCodeIdentifier() == null) son.setPostCodeIdentifier(parrent.getPostCodeIdentifier());
-		if (son.getStreetBuildingIdentifier() == null) son.setStreetBuildingIdentifier(parrent.getStreetBuildingIdentifier());
-		if (son.getStreetName() == null) son.setStreetName(parrent.getStreetName());
-		if (son.getTelephoneNumberIdentifier() == null) son.setTelephoneNumberIdentifier(parrent.getTelephoneNumberIdentifier());
-		if (son.getWebsite() == null) son.setWebsite(parrent.getWebsite());
+		if (parrent == null || son == null)
+		{
+			return;
+		}
+		if (son.getCountryIdentificationCode() == null)
+		{
+			son.setCountryIdentificationCode(parrent.getCountryIdentificationCode());
+		}
+		if (son.getDistrictName() == null)
+		{
+			son.setDistrictName(parrent.getDistrictName());
+		}
+		if (son.getEmailAddressIdentifier() == null)
+		{
+			son.setEmailAddressIdentifier(parrent.getEmailAddressIdentifier());
+		}
+		if (son.getFaxNumberIdentifier() == null)
+		{
+			son.setFaxNumberIdentifier(parrent.getFaxNumberIdentifier());
+		}
+		if (son.getPostCodeIdentifier() == null)
+		{
+			son.setPostCodeIdentifier(parrent.getPostCodeIdentifier());
+		}
+		if (son.getStreetBuildingIdentifier() == null)
+		{
+			son.setStreetBuildingIdentifier(parrent.getStreetBuildingIdentifier());
+		}
+		if (son.getStreetName() == null)
+		{
+			son.setStreetName(parrent.getStreetName());
+		}
+		if (son.getTelephoneNumberIdentifier() == null)
+		{
+			son.setTelephoneNumberIdentifier(parrent.getTelephoneNumberIdentifier());
+		}
+		if (son.getWebsite() == null)
+		{
+			son.setWebsite(parrent.getWebsite());
+		}
 		if (son.isEntityInheritedIndicator() != null && son.isEntityInheritedIndicator())
 		{
 			son.setEanLocationCode(parrent.getEanLocationCode());

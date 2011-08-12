@@ -23,14 +23,12 @@
 
 package com.trifork.stamdata.importer.webinterface;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.*;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.google.inject.Inject;
+import com.trifork.stamdata.importer.persistence.ConnectionPool;
 
 
 /**
@@ -40,28 +38,49 @@ public class DatabaseStatus
 {
 	private final Logger logger = LoggerFactory.getLogger(DatabaseStatus.class);
 
+	private final ConnectionPool connectionPool;
+
+	@Inject
+	DatabaseStatus(ConnectionPool connectionPool)
+	{
+		this.connectionPool = connectionPool;
+	}
+
 	public boolean isAlive()
 	{
-		boolean isAlive = false;
-		Connection con = null;
+		boolean isUp = false;
+		Connection connection = null;
+		Statement simpleStatement = null;
 
 		try
 		{
-			con = MySQLConnectionManager.getConnection();
-			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT 1");
+			connection = connectionPool.getConnection();
+			simpleStatement = connection.createStatement();
+
+			ResultSet rs = simpleStatement.executeQuery("SELECT 1");
+
 			rs.next();
-			if (1 == rs.getInt(1)) isAlive = true;
+
+			isUp = (1 == rs.getInt(1));
+
+			rs.close();
 		}
 		catch (Exception e)
 		{
-			logger.error("db connection down", e);
+			logger.error("The database connection is down.", e);
 		}
 		finally
 		{
-			MySQLConnectionManager.close(con);
+			try
+			{
+				if (simpleStatement != null) simpleStatement.close();
+				if (connection != null) connection.close();
+			}
+			catch (Exception e)
+			{
+			}
 		}
 
-		return isAlive;
+		return isUp;
 	}
 }
