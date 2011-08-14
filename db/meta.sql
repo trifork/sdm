@@ -70,3 +70,13 @@ CREATE TABLE PersonEntity (
 	
 	KEY (Name)
 ) ENGINE = InnoDB;
+
+CREATE TABLE PetEntity (
+	PID SERIAL,
+	
+	Name VARCHAR(100) NOT NULL,
+	Address VARCHAR(100) NOT NULL,
+	
+	KEY (Name)
+) ENGINE = InnoDB;
+

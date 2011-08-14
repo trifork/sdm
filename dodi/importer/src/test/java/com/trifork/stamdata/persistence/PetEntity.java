@@ -6,12 +6,12 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class PersonEntity implements Record
+public class PetEntity implements Record
 {
 	private final String name;
 	private String address;
 
-	public PersonEntity(String name, String address)
+	public PetEntity(String name, String address)
 	{
 		this.name = name;
 		this.address = address;

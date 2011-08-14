@@ -46,7 +46,7 @@ public class WorkingPersister<T extends Record>
 
 	public WorkingPersister(long changeset, boolean isCompleteRegister, Connection connection, Class<T> type) throws SQLException
 	{
-		checkArgument(changeset > 0, "version");
+		checkArgument(changeset >= INITIAL_CHANGESET_VERSION, "changeset");
 		checkNotNull(connection, "connection");
 		checkNotNull(type, "type");
 
