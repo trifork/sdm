@@ -26,6 +26,7 @@ package com.trifork.stamdata.importer.jobs.dkma;
 import static com.google.common.base.Preconditions.*;
 
 import java.io.*;
+import java.sql.Connection;
 import java.text.ParseException;
 import java.util.*;
 
@@ -106,9 +107,9 @@ public class DKMAParser implements FileParserJob
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void run(File[] input, Persister persister) throws Exception
+	public void run(File[] input, Persister persister, Connection connection, long changeset) throws Exception
 	{
-		Takst takst = parseFiles(input);
+		TakstVersion takst = parseFiles(input);
 
 		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[] {}));
 	}
@@ -116,13 +117,13 @@ public class DKMAParser implements FileParserJob
 	// TODO: Update only version number on standard dkma imports, not for delta
 	// updates.
 
-	private <T extends TakstEntity> void add(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
+	private <T extends TakstEntity> void add(TakstVersion takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
 		List<T> entities = parser.parse(config, type);
 		takst.addDataset(new TakstDataset<T>(takst, entities, type));
 	}
 
-	private <T extends TakstEntity> void addOptional(File[] input, Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
+	private <T extends TakstEntity> void addOptional(File[] input, TakstVersion takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
 		File file = getFileByName(config.getFilename(), input);
 
@@ -133,7 +134,7 @@ public class DKMAParser implements FileParserJob
 		}
 	}
 
-	public Takst parseFiles(File[] input) throws Exception
+	public TakstVersion parseFiles(File[] input) throws Exception
 	{
 		checkNotNull(input, "input");
 		
@@ -149,7 +150,7 @@ public class DKMAParser implements FileParserJob
 
 		Date fromDate = getValidFromDate(systemline);
 
-		Takst takst = new Takst(fromDate, Dates.THE_END_OF_TIME);
+		TakstVersion takst = new TakstVersion(fromDate, Dates.THE_END_OF_TIME);
 
 		// Add the takst itself to the takst as a "meta entity" to represent
 		// in DB that the takst was loaded.
@@ -157,9 +158,9 @@ public class DKMAParser implements FileParserJob
 		takst.setValidityWeekNumber(getValidWeek(systemline));
 		takst.setValidityYear(getValidYear(systemline));
 
-		List<Takst> takstMetaEntity = new ArrayList<Takst>();
+		List<TakstVersion> takstMetaEntity = new ArrayList<TakstVersion>();
 		takstMetaEntity.add(takst);
-		takst.addDataset(new TakstDataset<Takst>(takst, takstMetaEntity, Takst.class));
+		takst.addDataset(new TakstDataset<TakstVersion>(takst, takstMetaEntity, TakstVersion.class));
 
 		// Now parse the required data files.
 
@@ -218,7 +219,7 @@ public class DKMAParser implements FileParserJob
 	 * 
 	 * @param takst
 	 */
-	public static void filterOutVetDrugs(Takst takst)
+	public static void filterOutVetDrugs(TakstVersion takst)
 	{
 		// TODO: Do this while parsing instead.
 		

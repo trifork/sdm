@@ -80,7 +80,7 @@ public class YderregisterIntegrationTest
 	{
 		File fInitial = getFile("data/yderregister/initial/");
 
-		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), new AuditingPersister(connection));
+		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), new AuditingPersister(connection), null, 0);
 
 		Statement stmt = connection.createStatement();
 
@@ -115,9 +115,9 @@ public class YderregisterIntegrationTest
 
 		AuditingPersister persister = new AuditingPersister(connection);
 
-		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), persister);
+		new YderregisterParser(FAKE_TIME_GAP).run(fInitial.listFiles(), persister, null, 0);
 
-		new YderregisterParser(FAKE_TIME_GAP).run(fNext.listFiles(), persister);
+		new YderregisterParser(FAKE_TIME_GAP).run(fNext.listFiles(), persister, null, 0);
 	}
 
 	@Test

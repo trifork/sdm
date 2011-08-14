@@ -82,7 +82,7 @@ public class SikredeParser implements FileParserJob
 	}
 
 	@Override
-	public void run(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		// 1. CHECK VERSIONS
 		//
@@ -93,7 +93,6 @@ public class SikredeParser implements FileParserJob
 		// version.
 		// The versions should be in sequence.
 
-		Connection connection = persister.getConnection();
 		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ValidFrom) AS version FROM Sikrede");
 
 		// There will always be a next here, but it might be null.

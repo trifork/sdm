@@ -52,7 +52,7 @@ import com.trifork.stamdata.importer.util.Dates;
 
 public class MySQLStamDAOTest
 {
-	private Takst takst;
+	private TakstVersion takst;
 	private Laegemiddel laegemiddel;
 	private AuditingPersister dao;
 	private TableWrapper<?> laegemiddeltableMock;
@@ -60,7 +60,7 @@ public class MySQLStamDAOTest
 	@Before
 	public void setUp() throws Exception
 	{
-		takst = new Takst(Dates.newDateDK(2009, 7, 1), Dates.newDateDK(2009, 7, 14));
+		takst = new TakstVersion(Dates.newDateDK(2009, 7, 1), Dates.newDateDK(2009, 7, 14));
 
 		// Add a dataset to the takst with one member.
 
@@ -153,7 +153,7 @@ public class MySQLStamDAOTest
 	{
 		// An empty takst.
 
-		takst = new Takst(Dates.newDateDK(2009, 7, 1), Dates.newDateDK(2009, 7, 14));
+		takst = new TakstVersion(Dates.newDateDK(2009, 7, 1), Dates.newDateDK(2009, 7, 14));
 		// ..with an empty dataset
 		TakstDataset<?> lmr = new TakstDataset(takst, Lists.newArrayList(), Laegemiddel.class);
 		takst.addDataset(lmr);

@@ -63,6 +63,14 @@ public class CPRParser implements FileParserJob
 	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
 	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
 
+	private WorkingPersister<UmyndiggoerelseVaergeRelation> umyndigPersister;
+	private WorkingPersister<BarnRelation> barnPersister;
+	private WorkingPersister<ForaeldreMyndighedRelation> foraeldrePersister;
+	private WorkingPersister<Klarskriftadresse> klarskriftsadressePersister;
+	private WorkingPersister<NavneBeskyttelse> navneBeskyttelsePersister;
+	private WorkingPersister<Navneoplysninger> navneOplysningerPersister;
+	private WorkingPersister<Personoplysninger> personOplysningerPersister;
+	
 	private final Period maxTimeGap;
 
 	@Inject
@@ -90,14 +98,20 @@ public class CPRParser implements FileParserJob
 	}
 
 	@Override
-	public void run(File[] input, Persister persister) throws Exception
+	public void run(File[] input, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		Preconditions.checkNotNull(input);
 		Preconditions.checkNotNull(persister);
-
+		
+		umyndigPersister = new WorkingPersister<UmyndiggoerelseVaergeRelation>(changeset, true, connection, UmyndiggoerelseVaergeRelation.class);
+		barnPersister = new WorkingPersister<BarnRelation>(changeset, true, connection, BarnRelation.class);
+		foraeldrePersister = new WorkingPersister<ForaeldreMyndighedRelation>(changeset, true, connection, ForaeldreMyndighedRelation.class);
+		klarskriftsadressePersister = new WorkingPersister<Klarskriftadresse>(changeset, true, connection, Klarskriftadresse.class);
+		navneBeskyttelsePersister = new WorkingPersister<NavneBeskyttelse>(changeset, true, connection, NavneBeskyttelse.class);
+		navneOplysningerPersister = new WorkingPersister<Navneoplysninger>(changeset, true, connection, Navneoplysninger.class);
+		personOplysningerPersister = new WorkingPersister<Personoplysninger>(changeset, true, connection, Personoplysninger.class);
+		
 		// Check that the sequence is kept.
-
-		Connection connection = persister.getConnection();
 
 		for (File personFile : input)
 		{

@@ -83,7 +83,7 @@ public class SORIntegrationTest
 		SORParser importer = new SORParser(FAKE_TIME_GAP);
 		File[] files = new File[] { fullSor };
 
-		importer.run(files, new AuditingPersister(connection));
+		importer.run(files, new AuditingPersister(connection), null, 0);
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Praksis");

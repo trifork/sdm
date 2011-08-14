@@ -65,7 +65,7 @@ public class SksIntegrationTest
 	{
 		File[] files = new File[] { shakFile };
 		SKSParser importer = new SKSParser(FAKE_TIME_GAP);
-		importer.run(files, new AuditingPersister(connection));
+		importer.run(files, new AuditingPersister(connection), null, 0);
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Sygehus'");

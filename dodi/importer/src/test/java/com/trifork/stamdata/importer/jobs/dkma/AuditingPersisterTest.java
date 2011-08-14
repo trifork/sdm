@@ -64,7 +64,7 @@ public class AuditingPersisterTest
 	@Test
 	public void ImportTest() throws Exception
 	{
-		Takst takst = parseTakst("data/takst/initial");
+		TakstVersion takst = parseTakst("data/takst/initial");
 
 		Statement statement = connection.createStatement();
 		AuditingPersister persister = new AuditingPersister(connection);
@@ -85,8 +85,8 @@ public class AuditingPersisterTest
 	@Test
 	public void UpdateTest() throws Exception
 	{
-		Takst takstinit = parseTakst("data/takst/initial");
-		Takst takstupd = parseTakst("data/takst/update");
+		TakstVersion takstinit = parseTakst("data/takst/initial");
+		TakstVersion takstupd = parseTakst("data/takst/update");
 
 		Statement statement = connection.createStatement();
 		AuditingPersister persister = new AuditingPersister(connection);
@@ -114,8 +114,8 @@ public class AuditingPersisterTest
 	@Test
 	public void DeleteTest() throws Exception
 	{
-		Takst takstinit = parseTakst("data/takst/initial");
-		Takst deleteupd = parseTakst("data/takst/delete");
+		TakstVersion takstinit = parseTakst("data/takst/initial");
+		TakstVersion deleteupd = parseTakst("data/takst/delete");
 
 		Statement statement = connection.createStatement();
 		AuditingPersister persister = new AuditingPersister(connection);
@@ -140,7 +140,7 @@ public class AuditingPersisterTest
 	{
 		AuditingPersister persister = new AuditingPersister(connection);
 		
-		Takst takst = parseTakst("data/takst/realtakst");
+		TakstVersion takst = parseTakst("data/takst/realtakst");
 		persister.persist(takst.getDatasets());
 	}
 
@@ -155,12 +155,12 @@ public class AuditingPersisterTest
 		return rs.getInt("count");
 	}
 
-	private Takst parseTakst(String inputDirectory) throws Exception
+	private TakstVersion parseTakst(String inputDirectory) throws Exception
 	{
 		URL fileURL = getClass().getClassLoader().getResource(inputDirectory);
 		File file = FileUtils.toFile(fileURL);
 		DKMAParser tp = new DKMAParser(FAKE_TIME_GAP);
-		Takst takst = tp.parseFiles(file.listFiles());
+		TakstVersion takst = tp.parseFiles(file.listFiles());
 
 		return takst;
 	}

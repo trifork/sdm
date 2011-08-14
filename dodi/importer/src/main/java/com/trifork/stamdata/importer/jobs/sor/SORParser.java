@@ -26,6 +26,7 @@ package com.trifork.stamdata.importer.jobs.sor;
 import static com.google.common.base.Preconditions.*;
 
 import java.io.File;
+import java.sql.Connection;
 
 import javax.xml.parsers.*;
 
@@ -100,7 +101,7 @@ public class SORParser implements FileParserJob
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void run(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		checkNotNull(files, "file");
 		checkNotNull(persister, "persister");

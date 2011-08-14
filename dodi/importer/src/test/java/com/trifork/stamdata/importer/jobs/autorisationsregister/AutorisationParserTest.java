@@ -25,14 +25,12 @@ package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import static com.trifork.stamdata.Helpers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import java.io.File;
-import java.sql.Connection;
+import java.sql.*;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
-import org.mockito.Mockito;
 
 import com.trifork.stamdata.Helpers;
 import com.trifork.stamdata.importer.persistence.*;
@@ -40,30 +38,78 @@ import com.trifork.stamdata.importer.persistence.*;
 
 public class AutorisationParserTest
 {
-	private static final File valid = FileUtils.toFile(AutorisationParserTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
-
 	private AutorisationsregisterParser parser = new AutorisationsregisterParser(FAKE_TIME_GAP);
 
 	private Connection connection;
 
+	private File[] next;
+	private File[] initial;
+	private File[] invalid;
+
 	@Before
-	public void setUp() throws Exception
+	public void init()
 	{
 		connection = Helpers.getConnection();
+
+		ClassLoader classLoader = getClass().getClassLoader();
+
+		initial = new File[] { FileUtils.toFile(classLoader.getResource("data/aut/valid/20090915AutDK.csv")) };
+		next = new File[] { FileUtils.toFile(classLoader.getResource("data/aut/valid/20090918AutDK.csv")) };
+		invalid = new File[] { FileUtils.toFile(classLoader.getResource("data/aut/invalid/20090915AutDK.csv")) };
 	}
 
 	@After
-	public void tearDown() throws Exception
+	public void tearDown() throws SQLException
 	{
 		connection.rollback();
 		connection.close();
 	}
 
 	@Test
+	public void testImport() throws Exception
+	{
+		parser.run(initial, null, connection, 0);
+
+		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) AS count FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class));
+		rs.next();
+
+		assertEquals("Number of records in database.", 4, rs.getInt("count"));
+
+		rs = connection.createStatement().executeQuery("SELECT * FROM Autorisation ORDER BY PID");
+
+		rs.next();
+		assertEquals(rs.getString("Autorisationsnummer"), "0013F");
+		assertEquals(rs.getString("CPR"), "0101251489");
+		assertEquals(rs.getString("Fornavn"), "Jørgen");
+		assertEquals(rs.getString("Efternavn"), "Bondo");
+		assertEquals(rs.getString("Uddannelseskode"), "7170");
+
+		rs.next();
+		assertEquals(rs.getString("Autorisationsnummer"), "0013H");
+		assertEquals(rs.getString("CPR"), "0101280063");
+		assertEquals(rs.getString("Fornavn"), "Tage Søgaard");
+		assertEquals(rs.getString("Efternavn"), "Johnsen");
+		assertEquals(rs.getString("Uddannelseskode"), "7170");
+
+		rs.next();
+		assertEquals(rs.getString("Autorisationsnummer"), "0013J");
+		assertEquals(rs.getString("CPR"), "0101280551");
+		assertEquals(rs.getString("Fornavn"), "Svend Christian");
+		assertEquals(rs.getString("Efternavn"), "Bertelsen");
+		assertEquals(rs.getString("Uddannelseskode"), "7170");
+
+		rs.next();
+		assertEquals(rs.getString("Autorisationsnummer"), "0013K");
+		assertEquals(rs.getString("CPR"), "0101280896");
+		assertEquals(rs.getString("Fornavn"), "Lilian");
+		assertEquals(rs.getString("Efternavn"), "Frederiksen");
+		assertEquals(rs.getString("Uddannelseskode"), "7170");
+	}
+
+	@Test
 	public void should_return_true_if_expected_files_are_present()
 	{
-		File[] files = new File[] { valid };
-		assertTrue(parser.checkFileSet(files));
+		assertTrue(parser.checkFileSet(initial));
 	}
 
 	@Test
@@ -73,15 +119,48 @@ public class AutorisationParserTest
 		assertFalse(parser.checkFileSet(file));
 	}
 
-	@SuppressWarnings("unchecked")
 	@Test
-	public void should_successfully_import_a_file() throws Exception
+	public void should_keep_the_STS_table_updated_after_each_import() throws Exception
 	{
-		AuditingPersister persister = Mockito.spy(new AuditingPersister(connection));
+		parser.run(initial, null, connection, 0);
 
-		File[] files = new File[] { valid };
-		parser.run(files, persister);
+		ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM autreg ORDER BY aut_id");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013F");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013H");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013J");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013K");
 
-		verify(persister).persistCompleteDataset(Mockito.any(CompleteDataset.class));
+		// Update the registry with a new file.
+		
+		parser.run(next, null, connection, 1);
+		
+		rs = connection.createStatement().executeQuery("SELECT * FROM autreg ORDER BY aut_id");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013H");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013J");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013K");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013L");
+		rs.next();
+		assertEquals(rs.getString("aut_id"), "0013M");
+	}
+
+	@Test(expected = Exception.class)
+	public void should_not_allow_the_same_version_to_be_imported_twice() throws Exception
+	{
+		parser.run(initial, null, connection, 0);
+		parser.run(initial, null, connection, 0);
+	}
+
+	@Test(expected = Exception.class)
+	public void should_fail_to_persist_invalid_file() throws Exception
+	{
+		parser.run(invalid, null, connection, 0);
 	}
 }

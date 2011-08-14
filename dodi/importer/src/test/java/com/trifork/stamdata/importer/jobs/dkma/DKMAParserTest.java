@@ -74,7 +74,7 @@ public class DKMAParserTest
 		List<Laegemiddel> drugs = new FixedLengthFileParser(new File[] { file }).parse(config, Laegemiddel.class);
 
 		Date now = new Date();
-		Takst takst = new Takst(now, now);
+		TakstVersion takst = new TakstVersion(now, now);
 		TakstDataset<Laegemiddel> ds = new TakstDataset<Laegemiddel>(takst, drugs, Laegemiddel.class);
 		takst.addDataset(ds);
 
@@ -106,7 +106,7 @@ public class DKMAParserTest
 
 		// Check the fields missing in the drug above.
 
-		takst = new Takst(now, now);
+		takst = new TakstVersion(now, now);
 		ds = new TakstDataset<Laegemiddel>(takst, drugs, Laegemiddel.class);
 		takst.addDataset(ds);
 
@@ -131,7 +131,7 @@ public class DKMAParserTest
 		List<Pakning> packages = new FixedLengthFileParser(new File[] { file }).parse(config, Pakning.class);
 
 		Date now = new Date();
-		Takst takst = new Takst(now, now);
+		TakstVersion takst = new TakstVersion(now, now);
 		TakstDataset<Pakning> ds = new TakstDataset<Pakning>(takst, packages, Pakning.class);
 		takst.addDataset(ds);
 
@@ -197,7 +197,7 @@ public class DKMAParserTest
 	{
 		Date from = Dates.newDateDK(2000, 1, 1);
 		Date to = Dates.newDateDK(2000, 12, 1);
-		Takst takst = new Takst(from, to);
+		TakstVersion takst = new TakstVersion(from, to);
 		TakstDataset<ATC> atckoder = new TakstDataset<ATC>(takst, new ArrayList<ATC>(), ATC.class);
 		takst.addDataset(atckoder);
 	}
@@ -242,7 +242,7 @@ public class DKMAParserTest
 		laegemidler.add(lmVet);
 
 		// Add the arrays to the takst as datasets
-		Takst takst = new Takst(new Date(), new Date());
+		TakstVersion takst = new TakstVersion(new Date(), new Date());
 		TakstDataset<Laegemiddel> lmr = new TakstDataset<Laegemiddel>(takst, laegemidler, Laegemiddel.class);
 		TakstDataset<Pakning> pkr = new TakstDataset<Pakning>(takst, pakninger, Pakning.class);
 		TakstDataset<ATC> atcr = new TakstDataset<ATC>(takst, atcKoder, ATC.class);

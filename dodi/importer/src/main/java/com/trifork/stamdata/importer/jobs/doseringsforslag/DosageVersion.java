@@ -29,9 +29,8 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class DosageVersion extends DosageRecord
+public class DosageVersion extends AbstractStamdataEntity
 {
-
 	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.
 	protected Date daDate;
@@ -49,14 +48,12 @@ public class DosageVersion extends DosageRecord
 	@Output
 	public Date getDaDate()
 	{
-
 		return daDate;
 	}
 
 	@Output
 	public Date getLmsDate()
 	{
-
 		return lmsDate;
 	}
 
@@ -64,14 +61,18 @@ public class DosageVersion extends DosageRecord
 	@Output
 	public Date getReleaseDate()
 	{
-
 		return releaseDate;
 	}
 
 	@Output
 	public long getReleaseNumber()
 	{
-
 		return releaseNumber;
+	}
+
+	@Override
+	public Date getValidFrom()
+	{
+		return null;
 	}
 }

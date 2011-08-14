@@ -299,6 +299,6 @@ public class CPRIntegrationTest
 	private void parseFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRParser(FAKE_TIME_GAP).run(new File[] { file }, new AuditingPersister(connection));
+		new CPRParser(FAKE_TIME_GAP).run(new File[] { file }, new AuditingPersister(connection), null, 0);
 	}
 }

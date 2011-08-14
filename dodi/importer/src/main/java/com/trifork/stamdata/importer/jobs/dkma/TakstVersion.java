@@ -34,7 +34,7 @@ import com.trifork.stamdata.importer.persistence.*;
  * @author Rune
  */
 @Output(name = "TakstVersion")
-public class Takst extends TakstEntity
+public class TakstVersion extends TakstEntity
 {
 	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
@@ -45,7 +45,7 @@ public class Takst extends TakstEntity
 
 	private final Date validFrom, validTo;
 
-	public Takst(Date validFrom, Date validTo)
+	public TakstVersion(Date validFrom, Date validTo)
 	{
 		this.validFrom = validFrom;
 		this.validTo = validTo;

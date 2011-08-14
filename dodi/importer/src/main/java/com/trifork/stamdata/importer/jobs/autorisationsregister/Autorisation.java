@@ -30,15 +30,13 @@ import com.trifork.stamdata.importer.util.Dates;
 
 
 @Output
-public class Autorisation extends AbstractStamdataEntity implements Record
+public class Autorisation extends AbstractStamdataEntity
 {
 	private final String nummer;
 	private final String cpr;
 	private final String efternavn;
 	private final String fornavn;
 	private final String educationCode;
-
-	AutorisationDataset dataset;
 
 	public Autorisation(String number, String cpr, String firstName, String lastName, String educationCode)
 	{
@@ -83,7 +81,7 @@ public class Autorisation extends AbstractStamdataEntity implements Record
 	@Override
 	public Date getValidFrom()
 	{
-		return dataset.getValidFrom();
+		return null;
 	}
 
 	@Override

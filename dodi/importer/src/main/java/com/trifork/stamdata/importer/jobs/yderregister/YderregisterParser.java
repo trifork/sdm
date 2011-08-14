@@ -79,7 +79,7 @@ public class YderregisterParser implements FileParserJob
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public void run(File[] input, Persister persister) throws Exception
+	public void run(File[] input, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		String versionString = null;
 		int version;

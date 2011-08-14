@@ -23,13 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.doseringsforslag;
 
+import java.util.Date;
+
 import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output(name = "DosageDrug")
-public class Drug extends DosageRecord
+public class Drug extends AbstractStamdataEntity
 {
-
 	private long drugId;
 	private int releaseNumber;
 	private String drugName;
@@ -67,5 +68,11 @@ public class Drug extends DosageRecord
 	{
 
 		return dosageUnitCode;
+	}
+
+	@Override
+	public Date getValidFrom()
+	{
+		return null;
 	}
 }

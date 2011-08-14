@@ -41,7 +41,7 @@ public class FileParserJobExecuter implements Executer
 {
 	private static final Logger logger = LoggerFactory.getLogger(FileParserJobExecuter.class);
 
-	private static final File ROOT_DIR = new File(System.getProperty("jboss.server.data.dir/stamdata/"));
+	private static final File ROOT_DIR = new File(System.getProperty("jboss.server.data.dir") + "/stamdata/");
 
 	private DateTime stabilizationPeriodEnd;
 	private long inputDirSignature;
@@ -209,7 +209,7 @@ public class FileParserJobExecuter implements Executer
 
 			connection = connectionPool.getConnection();
 
-			parser.run(getProcessingFiles(), new AuditingPersister(connection));
+			parser.run(getProcessingFiles(), new AuditingPersister(connection), connection, 0);
 			ImportTimeManager.updateLastRunTime(connection, parser);
 
 			connection.commit();

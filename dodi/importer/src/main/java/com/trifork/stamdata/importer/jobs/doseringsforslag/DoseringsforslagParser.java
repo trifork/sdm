@@ -23,7 +23,6 @@
 
 package com.trifork.stamdata.importer.jobs.doseringsforslag;
 
-import static com.trifork.stamdata.importer.util.Dates.*;
 import static org.slf4j.LoggerFactory.*;
 
 import java.io.*;
@@ -48,17 +47,17 @@ import com.trifork.stamdata.importer.persistence.*;
 public class DoseringsforslagParser implements FileParserJob
 {
 	private static final Logger logger = getLogger(DoseringsforslagParser.class);
-	
+
 	private static final String JOB_IDENTIFIER = "doseringsforslag_parser";
 
 	private final Period maxTimeGap;
-	
+
 	@Inject
 	DoseringsforslagParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
 	{
 		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
 	}
-	
+
 	@Override
 	public String getIdentifier()
 	{
@@ -76,10 +75,9 @@ public class DoseringsforslagParser implements FileParserJob
 	{
 		return maxTimeGap;
 	}
-	
-	@SuppressWarnings("unchecked")
+
 	@Override
-	public void run(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		// METADATA FILE
 		//
@@ -87,15 +85,11 @@ public class DoseringsforslagParser implements FileParserJob
 		// of the data.
 
 		DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
-		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), THE_END_OF_TIME);
-		versionDataset.addEntity(version);
 
 		// CHECK PREVIOUS VERSION
 		//
 		// Check that the version in imported in
 		// sequence and that we haven't missed one.
-
-		Connection connection = persister.getConnection();
 
 		Statement versionStatement = connection.createStatement();
 		ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
@@ -116,7 +110,11 @@ public class DoseringsforslagParser implements FileParserJob
 			throw new Exception("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
 		}
 
-		version.setVersion(version.getReleaseDate());
+		// The version is in sequence we can persist it.
+
+		WorkingPersister<DosageVersion> persister2 = new WorkingPersister<DosageVersion>(changeset, true, connection, DosageVersion.class);
+		persister2.persist(version);
+		persister2.finish();
 
 		// OTHER FILES
 		//
@@ -133,25 +131,25 @@ public class DoseringsforslagParser implements FileParserJob
 
 		Type type;
 
-		type = new TypeToken<Map<String, Collection<Drug>>>() {}.getType();
-		CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
-		setValidityPeriod(drugs, version);
+		type = new TypeToken<Map<String, Collection<Drug>>>()
+		{
+		}.getType();
+		parseDataFile(changeset, connection, getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
 
-		type = new TypeToken<Map<String, Collection<DosageUnit>>>() {}.getType();
-		CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
-		setValidityPeriod(units, version);
+		type = new TypeToken<Map<String, Collection<DosageUnit>>>()
+		{
+		}.getType();
+		parseDataFile(changeset, connection, getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
 
-		type = new TypeToken<Map<String, Collection<DosageStructure>>>() {}.getType();
-		CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
-		setValidityPeriod(structures, version);
+		type = new TypeToken<Map<String, Collection<DosageStructure>>>()
+		{
+		}.getType();
+		parseDataFile(changeset, connection, getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
 
-		type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>() {}.getType();
-		CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
-		setValidityPeriod(relations, version);
-
-		// PERSIST THE DATA
-
-		persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
+		type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>()
+		{
+		}.getType();
+		parseDataFile(changeset, connection, getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
 
 		logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
 	}
@@ -165,7 +163,8 @@ public class DoseringsforslagParser implements FileParserJob
 
 		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 		Type type = new TypeToken<Map<String, DosageVersion>>()
-		{}.getType();
+		{
+		}.getType();
 
 		Map<String, DosageVersion> versions = gson.fromJson(reader, type);
 
@@ -174,36 +173,22 @@ public class DoseringsforslagParser implements FileParserJob
 
 	/**
 	 * Parses other data files.
+	 * 
+	 * @throws Exception
 	 */
-	private <T extends Record> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
+	private <T extends Record> void parseDataFile(long changeset, Connection connection, File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws Exception
 	{
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 
 		Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
-
-		CompleteDataset<T> dataset = new CompleteDataset<T>(type, version.getValidFrom(), version.getValidTo());
+		WorkingPersister<T> persister = new WorkingPersister<T>(changeset, true, connection, type);
 
 		for (T structure : parsedData.get(root))
 		{
-			dataset.addEntity(structure);
+			persister.persist(structure);
 		}
 
-		return dataset;
-	}
-
-	/**
-	 * HACK: These dates should be taken from the complete data set. There is no
-	 * reason why we set dates on each record.
-	 */
-	@SuppressWarnings("unchecked")
-	private void setValidityPeriod(CompleteDataset<?> dataset, DosageVersion version)
-	{
-		CompleteDataset<? extends DosageRecord> records = (CompleteDataset<? extends DosageRecord>) dataset;
-
-		for (DosageRecord record : records.getEntities())
-		{
-			record.setVersion(version.getValidFrom());
-		}
+		persister.finish();
 	}
 
 	@Override
@@ -227,8 +212,10 @@ public class DoseringsforslagParser implements FileParserJob
 	/**
 	 * Searches the provided file array for a specific file name.
 	 * 
-	 * @param files the list of files to search.
-	 * @param name the file name of the file to return.
+	 * @param files
+	 *            the list of files to search.
+	 * @param name
+	 *            the file name of the file to return.
 	 * 
 	 * @return the file with the specified name or null if no file is found.
 	 */

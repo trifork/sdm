@@ -23,13 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.doseringsforslag;
 
+import java.util.Date;
+
 import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class DosageUnit extends DosageRecord
+public class DosageUnit extends AbstractStamdataEntity
 {
-
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
 
@@ -69,5 +70,11 @@ public class DosageUnit extends DosageRecord
 	{
 
 		return textPlural;
+	}
+
+	@Override
+	public Date getValidFrom()
+	{
+		return null;
 	}
 }

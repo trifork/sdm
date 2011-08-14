@@ -29,6 +29,7 @@ import java.sql.Connection;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public interface Persister
 {
 	/**

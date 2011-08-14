@@ -33,7 +33,7 @@ public class NumeriskMedEnhed extends TakstEntity implements Record
 	private final double numerisk;
 	private final Object enhed;
 
-	public NumeriskMedEnhed(Takst takst, String klartekst, double numerisk, Object enhed)
+	public NumeriskMedEnhed(TakstVersion takst, String klartekst, double numerisk, Object enhed)
 	{
 		this.takst = takst;
 		this.klartekst = klartekst;

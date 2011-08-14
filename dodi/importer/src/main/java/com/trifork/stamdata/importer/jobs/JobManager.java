@@ -67,7 +67,7 @@ public class JobManager
 
 			// Schedule all the jobs.
 
-			Set<Executer> jobs = Sets.newHashSet();
+			executers = Sets.newHashSet();
 
 			CronScheduleBuilder everyFiveSeconds = CronScheduleBuilder.cronSchedule("0/5 * * * * ?");
 
@@ -80,7 +80,7 @@ public class JobManager
 				JobDetail jobDetail = createJobDetail(job.getIdentifier(), jobDataMap);
 				scheduler.scheduleJob(jobDetail, trigger);
 
-				jobs.add(executer);
+				executers.add(executer);
 			}
 		}
 

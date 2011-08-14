@@ -23,26 +23,23 @@
 
 package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
-import java.io.*;
+import java.io.File;
 import java.sql.*;
-import java.util.*;
+import java.util.StringTokenizer;
 
 import org.apache.commons.io.*;
 import org.joda.time.*;
-import org.joda.time.format.*;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
-import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.Dates;
 
 
 public class AutorisationsregisterParser implements FileParserJob
-{
-	private static final DateTimeFormatter FILENAME_DATE_FORMAT = Dates.DK_yyyyMMdd;
-	
+{	
 	private static final String FILE_ENCODING = "ISO8859-15";
 	private static final String JOB_IDENTIFIER = "autorisationsregister_parser";
 	
@@ -84,32 +81,57 @@ public class AutorisationsregisterParser implements FileParserJob
 		return maxTimeGap;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void run(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		// Make sure the file set has not been imported before.
 		// Check what the previous highest version is (the ValidFrom column).
+		
 
-		Connection connection = persister.getConnection();
-		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ValidFrom) as version FROM Autorisation");
-
-		// There will always be a next here, but it might be null.
+		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ReleaseDate) AS ReleaseDate FROM AutorisationVersion");
 
 		rows.next();
-		Timestamp previousVersion = rows.getTimestamp("version");
+		DateTime previousReleaseDate = (rows.getDate("ReleaseDate") != null) ? new DateTime(rows.getDate("ReleaseDate")).withZone(Dates.DK_TIMEZONE) : null;
 
-		DateTime newVersion = getDateFromFilename(files[0].getName());
+		DateTime newVersionReleaseDate = getDateFromFilename(files[0].getName());
 
-		if (previousVersion != null && !newVersion.isAfter(previousVersion.getTime()))
+		if (previousReleaseDate != null && !newVersionReleaseDate.isAfter(previousReleaseDate))
 		{
-			throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + newVersion + "'.");
+			throw new Exception("The version of autorisationsregister that was placed for import was out of order. previous_version=" + previousReleaseDate + ", new_version=" + newVersionReleaseDate + ".");
 		}
-
+		
+		// The file in in sequence.
+		
+		WorkingPersister<AutorisationVersion> versionPersister = new WorkingPersister<AutorisationVersion>(changeset, true, connection, AutorisationVersion.class);
+		AutorisationVersion version = new AutorisationVersion(newVersionReleaseDate.toDate());
+		versionPersister.persist(version);
+		versionPersister.finish();
+		
+		// TODO: Are there really multiple files?
+		
 		for (File file : files)
 		{
-			AutorisationDataset dataset = parse(file, newVersion);
-			persister.persistCompleteDataset(dataset);
+			WorkingPersister<Autorisation> persister2 = new WorkingPersister<Autorisation>(changeset, true, connection, Autorisation.class);
+			
+			LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
+
+			while (lineIterator.hasNext())
+			{
+				String line = lineIterator.nextLine();
+				
+				StringTokenizer st = new StringTokenizer(line, ";");
+				String nummer = st.nextToken();
+				String cpr = st.nextToken();
+				String efternavn = st.nextToken();
+				String fornavn = st.nextToken();
+				String educationCode = st.nextToken();
+				
+				persister2.persist(new Autorisation(nummer, cpr, fornavn, efternavn, educationCode));
+			}
+			
+			lineIterator.close();
+
+			persister2.finish();
 		}
 		
 		// Once the registry has been updated we want to
@@ -124,35 +146,21 @@ public class AutorisationsregisterParser implements FileParserJob
 		dropExistingRecords.close();
 		
 		Statement tranferTheRegistry = connection.createStatement();
-		tranferTheRegistry.execute("INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) SELECT cpr, Fornavn, Efternavn, Autorisationsnummer, UddannelsesKode FROM Autorisation WHERE ValidFrom <= NOW() AND ValidTo > NOW();");
+		tranferTheRegistry.execute(
+				"INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) " + 
+				"SELECT CPR, Fornavn, Efternavn, Autorisationsnummer, Uddannelseskode " +
+				"FROM (" +
+				"SELECT * FROM (" +
+				"SELECT MAX(EventID) AS LatestEventID, Autorisationsnummer AS TheAut " +
+				"FROM VersionEvent e, Autorisation a WHERE e.EntityID = a.PID " + 
+				"GROUP BY Autorisationsnummer) AS x, VersionEvent e, Autorisation a " +
+				"WHERE a.Autorisationsnummer = x.TheAut AND x.LatestEventID = e.EventID AND EventType != 'DELETE') AS Y;");
+		
 		tranferTheRegistry.close();
 	}
 
 	private DateTime getDateFromFilename(String filename)
 	{
-		return FILENAME_DATE_FORMAT.parseDateTime(filename.substring(0, 8));
-	}
-
-	public AutorisationDataset parse(File file, DateTime validFrom) throws IOException
-	{
-		AutorisationDataset dataset = new AutorisationDataset(validFrom.toDate());
-
-		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
-
-		while (lineIterator.hasNext())
-		{
-			String line = lineIterator.nextLine();
-			
-			StringTokenizer st = new StringTokenizer(line, ";");
-			String nummer = st.nextToken();
-			String cpr = st.nextToken();
-			String efternavn = st.nextToken();
-			String fornavn = st.nextToken();
-			String educationCode = st.nextToken();
-			
-			dataset.addEntity(new Autorisation(nummer, cpr, fornavn, efternavn, educationCode));
-		}
-
-		return dataset;
+		return Dates.DK_yyyyMMdd.parseDateTime(filename.substring(0, 8));
 	}
 }

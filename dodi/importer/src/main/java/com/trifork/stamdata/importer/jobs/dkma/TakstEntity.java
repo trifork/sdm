@@ -31,7 +31,7 @@ import com.trifork.stamdata.importer.util.Dates;
 
 public abstract class TakstEntity extends AbstractStamdataEntity
 {
-	protected Takst takst;
+	protected TakstVersion takst;
 
 	@Override
 	public Date getValidFrom()

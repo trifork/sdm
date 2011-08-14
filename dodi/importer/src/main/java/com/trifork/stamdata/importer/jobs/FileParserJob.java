@@ -1,6 +1,7 @@
 package com.trifork.stamdata.importer.jobs;
 
 import java.io.File;
+import java.sql.Connection;
 
 import org.joda.time.Period;
 
@@ -12,7 +13,7 @@ public interface FileParserJob extends Job
 	
 	boolean checkFileSet(File[] input);
 	
-	void run(File[] input, Persister persister) throws Exception;
+	void run(File[] input, Persister persister, Connection connection, long changeset) throws Exception;
 	
 	/**
 	 * The maximum time in minutes between file arrivals.

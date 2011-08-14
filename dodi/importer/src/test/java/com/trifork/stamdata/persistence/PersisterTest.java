@@ -4,8 +4,6 @@ import static java.lang.String.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-import java.lang.reflect.InvocationTargetException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.*;
 
 import org.junit.*;
@@ -74,7 +72,7 @@ public class PersisterTest
 	}
 
 	@Test
-	public void should_create_delete_event_if_the_an_entity_is_not_found_while_persisting_a_complete_registry() throws NoSuchAlgorithmException, IllegalArgumentException, SQLException, IllegalAccessException, InvocationTargetException
+	public void should_create_delete_event_if_the_an_entity_is_not_found_while_persisting_a_complete_registry() throws Exception
 	{
 		persister1.persist(person1);
 		persister1.persist(person2);
@@ -92,14 +90,14 @@ public class PersisterTest
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void should_not_allow_persisting_any_more_records_after_finish_is_called() throws SQLException, NoSuchAlgorithmException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public void should_not_allow_persisting_any_more_records_after_finish_is_called() throws Exception
 	{
 		persister1.finish();
 		persister1.persist(person1);
 	}
 
 	@Test
-	public void should_not_create_delete_events_if_a_record_does_not_appear_in_a_delta_import() throws NoSuchAlgorithmException, IllegalArgumentException, SQLException, IllegalAccessException, InvocationTargetException
+	public void should_not_create_delete_events_if_a_record_does_not_appear_in_a_delta_import() throws Exception
 	{
 		deltaPersister1.persist(person1);
 		deltaPersister1.persist(person2);
@@ -116,7 +114,7 @@ public class PersisterTest
 	}
 
 	@Test
-	public void should_not_have_different_types_interfearing_with_each_other_even_if_they_have_the_same_column_hash() throws NoSuchAlgorithmException, IllegalArgumentException, SQLException, IllegalAccessException, InvocationTargetException
+	public void should_not_have_different_types_interfearing_with_each_other_even_if_they_have_the_same_column_hash() throws Exception
 	{
 		persister1.persist(person1);
 		persister1.finish();
@@ -134,7 +132,7 @@ public class PersisterTest
 	}
 
 	@Test
-	public void should_create_update_events_when_entities_exist_in_the_db_but_have_changed_values() throws NoSuchAlgorithmException, IllegalArgumentException, SQLException, IllegalAccessException, InvocationTargetException
+	public void should_create_update_events_when_entities_exist_in_the_db_but_have_changed_values() throws Exception
 	{
 		persister1.persist(person1);
 		persister1.finish();

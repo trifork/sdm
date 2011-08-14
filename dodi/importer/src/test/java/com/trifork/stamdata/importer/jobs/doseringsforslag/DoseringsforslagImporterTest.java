@@ -31,13 +31,11 @@ import static org.junit.Assert.*;
 import java.io.File;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.Date;
 
 import org.junit.*;
 
 import com.trifork.stamdata.Helpers;
-import com.trifork.stamdata.importer.persistence.*;
 
 
 /**
@@ -58,7 +56,6 @@ public class DoseringsforslagImporterTest
 	private File relationFile;
 
 	private Connection connection;
-	private MockPersister persister = new MockPersister();
 
 	@Before
 	public void setUp() throws SQLException
@@ -90,13 +87,15 @@ public class DoseringsforslagImporterTest
 	public void Should_import_the_version_file_correctly() throws Exception
 	{
 		runImporter();
+		
+		ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM DosageVersion");
+		
+		rs.next();
 
-		DosageVersion version = getFirst(DosageVersion.class);
-
-		assertThat(version.getReleaseNumber(), equalTo(125L));
-		assertThat(version.getReleaseDate(), equalTo(date("2011-02-15")));
-		assertThat(version.getLmsDate(), equalTo(date("2011-02-02")));
-		assertThat(version.getDaDate(), equalTo(date("2011-01-24")));
+		assertThat(rs.getLong("releaseNumber"), is(125L));
+		assertThat(rs.getDate("releaseDate"), is(date("2011-02-15")));
+		assertThat(rs.getDate("lmsDate"), equalTo(date("2011-02-02")));
+		assertThat(rs.getDate("daDate"), equalTo(date("2011-01-24")));
 	}
 
 	@Test
@@ -106,26 +105,29 @@ public class DoseringsforslagImporterTest
 
 		runImporter();
 
-		CompleteDataset<DosageStructure> structures = persister.getDataset(DosageStructure.class);
+		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) AS count FROM DosageStructure"); 
 
-		assertThat(structures.size(), equalTo(587));
+		rs.next();
+		
+		assertThat(rs.getInt("count"), is(587));
 	}
 
 	@Test
 	public void Should_import_the_structures_correctly() throws Exception
 	{
 		runImporter();
-
-		DosageStructure structure = getFirst(DosageStructure.class);
-
-		assertThat(structure.getReleaseNumber(), equalTo(125L));
-		assertThat(structure.getCode(), equalTo(3L));
-		assertThat(structure.getType(), equalTo("M+M+A+N"));
-		assertThat(structure.getSimpleString(), equalTo("0.5"));
-		assertThat(structure.getShortTranslation(), equalTo("1/2 tablet morgen"));
-		assertThat(structure.getXml(), equalTo("<b:DosageStructure\n   xsi:schemaLocation=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01 DKMA_DosageStructure.xsd\"\n   xmlns:a=\"http://www.dkma.dk/medicinecard/xml.schema/2008/06/01\"\n   xmlns:b=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n   <b:DosageTimesStructure>\n      <a:DosageTimesIterationIntervalQuantity>1</a:DosageTimesIterationIntervalQuantity>\n      <a:DosageTimesStartDate>2000-01-01</a:DosageTimesStartDate>\n      <b:DosageQuantityUnitText>tablet</b:DosageQuantityUnitText>\n      <b:DosageDayElementStructure>\n         <a:DosageDayIdentifier>1</a:DosageDayIdentifier>\n         <b:MorningDosageTimeElementStructure>\n            <a:DosageQuantityValue>0.5</a:DosageQuantityValue>\n         </b:MorningDosageTimeElementStructure>\n      </b:DosageDayElementStructure>\n   </b:DosageTimesStructure>\n</b:DosageStructure>"));
-		assertThat(structure.getLongTranslation(), equalTo("Daglig 1/2 tablet morgen"));
-		assertThat(structure.getSupplementaryText(), nullValue());
+		
+		ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM DosageStructure");
+		assertTrue(rs.next());
+		
+		assertThat(rs.getLong("releaseNumber"), equalTo(125L));
+		assertThat(rs.getLong("code"), equalTo(3L));
+		assertThat(rs.getString("type"), equalTo("M+M+A+N"));
+		assertThat(rs.getString("simpleString"), equalTo("0.5"));
+		assertThat(rs.getString("shortTranslation"), equalTo("1/2 tablet morgen"));
+		assertThat(rs.getString("xml"), equalTo("<b:DosageStructure\n   xsi:schemaLocation=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01 DKMA_DosageStructure.xsd\"\n   xmlns:a=\"http://www.dkma.dk/medicinecard/xml.schema/2008/06/01\"\n   xmlns:b=\"http://www.dkma.dk/medicinecard/xml.schema/2009/01/01\"\n   xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n   <b:DosageTimesStructure>\n      <a:DosageTimesIterationIntervalQuantity>1</a:DosageTimesIterationIntervalQuantity>\n      <a:DosageTimesStartDate>2000-01-01</a:DosageTimesStartDate>\n      <b:DosageQuantityUnitText>tablet</b:DosageQuantityUnitText>\n      <b:DosageDayElementStructure>\n         <a:DosageDayIdentifier>1</a:DosageDayIdentifier>\n         <b:MorningDosageTimeElementStructure>\n            <a:DosageQuantityValue>0.5</a:DosageQuantityValue>\n         </b:MorningDosageTimeElementStructure>\n      </b:DosageDayElementStructure>\n   </b:DosageTimesStructure>\n</b:DosageStructure>"));
+		assertThat(rs.getString("longTranslation"), equalTo("Daglig 1/2 tablet morgen"));
+		assertThat(rs.getString("supplementaryText"), nullValue());
 	}
 
 	@Test
@@ -135,22 +137,23 @@ public class DoseringsforslagImporterTest
 
 		runImporter();
 
-		CompleteDataset<DosageUnit> units = persister.getDataset(DosageUnit.class);
-
-		assertThat(units.size(), equalTo(21));
+		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) as count FROM DosageUnit");
+		assertTrue(rs.next());
+		
+		assertThat(rs.getInt("count"), equalTo(21));
 	}
 
 	@Test
 	public void Should_import_dosage_units_correctly() throws Exception
 	{
 		runImporter();
+		
+		ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM DosageUnit");
 
-		DosageUnit unit = getFirst(DosageUnit.class);
-
-		assertThat(unit.getReleaseNumber(), equalTo(125L));
-		assertThat(unit.getCode(), equalTo(8));
-		assertThat(unit.getTextSingular(), equalTo("brusetablet"));
-		assertThat(unit.getTextPlural(), equalTo("brusetabletter"));
+		assertThat(rs.getLong("releaseNumber"), equalTo(125L));
+		assertThat(rs.getInt("code"), equalTo(8));
+		assertThat(rs.getString("textSingular"), equalTo("brusetablet"));
+		assertThat(rs.getString("textPlural"), equalTo("brusetabletter"));
 	}
 
 	@Test
@@ -160,9 +163,10 @@ public class DoseringsforslagImporterTest
 
 		runImporter();
 
-		CompleteDataset<?> records = persister.getDataset(Drug.class);
-
-		assertThat(records.size(), equalTo(3710));
+		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) AS count FROM DosageDrug");
+		rs.next();
+		
+		assertThat(rs.getInt("count"), equalTo(3710));
 	}
 
 	// HELPER METHODS
@@ -182,47 +186,6 @@ public class DoseringsforslagImporterTest
 		importer = new DoseringsforslagParser(FAKE_TIME_GAP);
 		File[] files = new File[] { versionFile, drugsFile, dosageStructureFile, unitsFile, relationFile };
 
-		importer.run(files, persister);
-	}
-
-	public <T extends Record> T getFirst(Class<T> type)
-	{
-		CompleteDataset<T> structures = persister.getDataset(type);
-		return structures.getEntities().iterator().next();
-	}
-	
-	
-	private class MockPersister implements Persister
-	{
-		Map<Class<? extends Record>, CompleteDataset<? extends Record>> results;
-
-		@Override
-		public void persistCompleteDataset(CompleteDataset<? extends Record>... datasets) throws Exception
-		{
-			results = new HashMap<Class<? extends Record>, CompleteDataset<? extends Record>>();
-
-			for (CompleteDataset<? extends Record> dataset : datasets)
-			{
-				results.put(dataset.getType(), dataset);
-			}
-		}
-
-		@Override
-		public <T extends Record> void persist(Dataset<T> dataset) throws Exception
-		{
-			// Don't use this.
-		}
-
-		@SuppressWarnings("unchecked")
-		public <T extends Record> CompleteDataset<T> getDataset(Class<T> type)
-		{
-			return (CompleteDataset<T>) results.get(type);
-		}
-		
-		@Override
-		public Connection getConnection()
-		{
-			return connection;
-		}
+		importer.run(files, null, connection, 0);
 	}
 }

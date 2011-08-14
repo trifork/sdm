@@ -30,9 +30,9 @@ import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
 public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
 {
-	private final Takst takst;
+	private final TakstVersion takst;
 
-	public TakstDataset(Takst takst, List<T> entities, Class<T> type)
+	public TakstDataset(TakstVersion takst, List<T> entities, Class<T> type)
 	{
 		super(type, entities, takst.getValidFrom(), takst.getValidTo());
 

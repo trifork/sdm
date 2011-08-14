@@ -82,7 +82,7 @@ public class TakstImporterTest
 		Date from = Dates.newDateDK(2008, 01, 01);
 		Date to = Dates.newDateDK(2009, 01, 01);
 		
-		Takst takst = new Takst(from, to);
+		TakstVersion takst = new TakstVersion(from, to);
 
 		Doseringskode d = new Doseringskode();
 		d.setDoseringskode(1l);

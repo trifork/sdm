@@ -23,7 +23,7 @@
 
 package com.trifork.stamdata.importer;
 
-import java.util.*;
+import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 
@@ -35,8 +35,6 @@ import com.google.inject.name.Names;
 import com.google.inject.servlet.*;
 import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.importer.jobs.*;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.*;
-import com.trifork.stamdata.importer.jobs.cpr.CPRParser;
 import com.trifork.stamdata.importer.jobs.doseringsforslag.DoseringsforslagParser;
 import com.trifork.stamdata.importer.persistence.ConnectionPool;
 import com.trifork.stamdata.importer.webinterface.*;
@@ -107,7 +105,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		
 		// Bind the dependencies.
 		
-		return Guice.createInjector(Stage.PRODUCTION, new ServletModule()
+		injector = Guice.createInjector(Stage.PRODUCTION, new ServletModule()
 		{			
 			@Override
 			protected void configureServlets()
@@ -130,10 +128,16 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				// Bind the file parsers.
 				
 				Multibinder<FileParserJob> parsers = Multibinder.newSetBinder(binder(), FileParserJob.class);
-				parsers.addBinding().to(AutorisationsregisterParser.class);
-				parsers.addBinding().to(CPRParser.class);
+				//parsers.addBinding().to(AutorisationsregisterParser.class);
+				//parsers.addBinding().to(CPRParser.class);
 				parsers.addBinding().to(DoseringsforslagParser.class);
+				//parsers.addBinding().to(SikredeParser.class);
+				//parsers.addBinding().to(SKSParser.class);
+				//parsers.addBinding().to(SORParser.class);
+				//parsers.addBinding().to(YderregisterParser.class);
 			}
 		});
+		
+		return injector;
 	}
 }

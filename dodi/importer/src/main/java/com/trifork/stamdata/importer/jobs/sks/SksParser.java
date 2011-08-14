@@ -24,6 +24,7 @@
 package com.trifork.stamdata.importer.jobs.sks;
 
 import java.io.File;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.io.*;
@@ -111,7 +112,7 @@ public class SKSParser implements FileParserJob
 	}
 
 	@Override
-	public void run(File[] files, Persister persister) throws Exception
+	public void run(File[] files, Persister persister, Connection connection, long changeset) throws Exception
 	{
 		for (File file : files)
 		{

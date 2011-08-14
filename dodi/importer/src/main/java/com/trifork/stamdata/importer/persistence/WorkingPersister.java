@@ -82,7 +82,7 @@ public class WorkingPersister<T extends Record>
 		deleteEventWithTypeFOUND = connection.prepareStatement("DELETE FROM VersionEvent WHERE EventType = 'FOUND'");
 	}
 
-	public void persist(T record) throws SQLException, NoSuchAlgorithmException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+	public void persist(T record) throws Exception
 	{
 		checkNotNull(record, "record");
 		checkState(!finishHasBeenCalled, "persist must not be called after the finish method has been called.");
@@ -137,9 +137,7 @@ public class WorkingPersister<T extends Record>
 
 			// Now we have to figure out if the record is new or an update.
 
-			String s = (String) record.getKey();
-
-			fetchLatestEventForEntity.setObject(1, s);
+			fetchLatestEventForEntity.setObject(1, record.getKey());
 			ResultSet latestEvent = fetchLatestEventForEntity.executeQuery();
 
 			// If no previous version exists or it has

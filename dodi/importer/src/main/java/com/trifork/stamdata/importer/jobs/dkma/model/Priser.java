@@ -116,7 +116,7 @@ public class Priser extends TakstEntity
 		this.registerpris = registerpris;
 	}
 
-	public void setTakst(Takst takst)
+	public void setTakst(TakstVersion takst)
 	{
 		this.takst = takst;
 	}
