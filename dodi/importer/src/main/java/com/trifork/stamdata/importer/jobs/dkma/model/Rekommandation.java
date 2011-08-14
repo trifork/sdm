@@ -28,37 +28,61 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class Styrkeenhed extends TakstEntity
+public class Rekommandation extends TakstEntity
 {
-	private final DivEnheder enheder;
-
-	public Styrkeenhed(DivEnheder enheder)
-	{
-		this.enheder = enheder;
-	}
-
-	@Override
-	public String getKey()
-	{
-		return enheder.getKode();
-	}
+	private Long drugID; // Ref. t. LMS01
+	private Long varenummer; // Ref. t. LMS02
+	private Long rekommandationsgruppe;
+	private String rekommandationsniveau;
 
 	@Id
 	@Output
-	public String getStyrkeenhedKode()
+	public Long getVarenummer()
 	{
-		return enheder.getKode();
+		return varenummer;
+	}
+
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
+	}
+	
+	@Output
+	public Long getDrugID()
+	{
+		return drugID;
+	}
+	
+	public void setDrugID(Long drugID)
+	{
+		this.drugID = drugID;
+	}
+
+	@Override
+	public Long getKey()
+	{
+		return varenummer;
 	}
 
 	@Output
-	public String getStyrkeenhedKortTekst()
+	public Long getRekommandationsgruppe()
 	{
-		return enheder.getKortTekst();
+		return rekommandationsgruppe;
 	}
 
-	@Output
-	public String getStyrkeenhedTekst()
+	public void setRekommandationsgruppe(Long rekommandationsgruppe)
 	{
-		return enheder.getTekst();
+		this.rekommandationsgruppe = rekommandationsgruppe;
+	}
+	
+	@Output
+	public String getRekommandationsniveau()
+	{
+		return rekommandationsniveau;
+	}
+
+	public void setRekommandationsniveau(String rekommandationsniveau)
+	{
+		this.rekommandationsniveau = rekommandationsniveau;
 	}
 }

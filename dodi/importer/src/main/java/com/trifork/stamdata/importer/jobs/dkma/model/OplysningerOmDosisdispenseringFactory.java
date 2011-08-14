@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class OplysningerOmDosisdispenseringFactory implements FixedLengthParserConfiguration<OplysningerOmDosisdispensering>
+public class OplysningerOmDosisdispenseringFactory implements FixedLengthParserConfiguration<Dosisdispensering>
 {
 	@Override
 	public String getFilename()
@@ -96,7 +96,7 @@ public class OplysningerOmDosisdispenseringFactory implements FixedLengthParserC
 	}
 
 	@Override
-	public void setFieldValue(OplysningerOmDosisdispensering obj, int fieldNo, String value)
+	public void setFieldValue(Dosisdispensering obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

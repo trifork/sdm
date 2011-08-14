@@ -28,7 +28,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
-public class IndholdsstofferFactory implements FixedLengthParserConfiguration<Indholdsstoffer>
+public class IndholdsstofferFactory implements FixedLengthParserConfiguration<Indholdsstof>
 {
 	@Override
 	public String getFilename()
@@ -83,7 +83,7 @@ public class IndholdsstofferFactory implements FixedLengthParserConfiguration<In
 	}
 
 	@Override
-	public void setFieldValue(Indholdsstoffer obj, int fieldNo, String value)
+	public void setFieldValue(Indholdsstof obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

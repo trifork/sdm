@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.importer.jobs.sor;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.io.File;
 
 import javax.xml.parsers.*;
@@ -76,6 +78,8 @@ public class SORParser implements FileParserJob
 	@Override
 	public boolean checkFileSet(File[] input)
 	{
+		checkNotNull(input, "input");
+		
 		if (input.length == 0)
 		{
 			return false;
@@ -98,6 +102,9 @@ public class SORParser implements FileParserJob
 	@SuppressWarnings("unchecked")
 	public void run(File[] files, Persister persister) throws Exception
 	{
+		checkNotNull(files, "file");
+		checkNotNull(persister, "persister");
+		
 		for (File file : files)
 		{
 			SORDataSets dataSets = parse(file);
@@ -111,6 +118,8 @@ public class SORParser implements FileParserJob
 
 	public static SORDataSets parse(File file) throws Exception
 	{
+		checkNotNull(file, "file");
+		
 		SORDataSets dataSets = new SORDataSets();
 		SOREventHandler handler = new SOREventHandler(dataSets);
 		SAXParserFactory factory = SAXParserFactory.newInstance();

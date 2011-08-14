@@ -49,12 +49,12 @@ public interface Persister
 	 * another version exist.
 	 * 
 	 */
-	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... dataset) throws Exception;
+	public void persistCompleteDataset(CompleteDataset<? extends Record>... dataset) throws Exception;
 
 	/**
 	 * Persist the records in the dataset.
 	 */
-	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception;
+	public <T extends Record> void persist(Dataset<T> dataset) throws Exception;
 
 	/**
 	 * HACK: This method returns the connection used by the persister.

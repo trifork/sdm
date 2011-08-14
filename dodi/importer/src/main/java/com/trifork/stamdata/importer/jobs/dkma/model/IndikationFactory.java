@@ -91,22 +91,14 @@ public class IndikationFactory implements FixedLengthParserConfiguration<Indikat
 		switch (fieldNo)
 		{
 		case 0:
-			obj.setIndikationskode(NumberUtils.createLong(value));
+			obj.setKode(NumberUtils.createLong(value));
 			break;
 		case 1:
-			obj.setIndikationstekstTotal(value);
+			obj.setTekst(value);
 			break;
-		case 2:
-			obj.setIndikationstekstLinie1(value);
-			break;
-		case 3:
-			obj.setIndikationstekstLinie2(value);
-			break;
-		case 4:
-			obj.setIndikationstekstLinie3(value);
-			break;
+		// case 2 - 4 are contained in 1. So they are ignored.
 		case 5:
-			obj.setAktivInaktiv(value);
+			obj.setAktiv(value);
 			break;
 		}
 	}

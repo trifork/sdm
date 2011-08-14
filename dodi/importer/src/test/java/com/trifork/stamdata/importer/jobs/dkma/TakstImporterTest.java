@@ -34,6 +34,7 @@ import java.util.Date;
 import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
+import com.google.common.collect.Lists;
 import com.trifork.stamdata.Helpers;
 import com.trifork.stamdata.importer.jobs.dkma.model.Doseringskode;
 import com.trifork.stamdata.importer.persistence.*;
@@ -45,13 +46,9 @@ public class TakstImporterTest
 	private Connection connection;
 
 	@Before
-	public void cleanup() throws Exception
+	public void setUp() throws Exception
 	{
 		connection = Helpers.getConnection();
-		Statement stmt = connection.createStatement();
-
-		stmt.executeQuery("TRUNCATE TABLE LaegemiddelDoseringRef");
-		stmt.executeQuery("TRUNCATE TABLE TakstVersion");
 	}
 
 	@After
@@ -80,18 +77,18 @@ public class TakstImporterTest
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testLaegemiddelDoseringRef() throws Exception
+	public void testDoseringskode() throws Exception
 	{
-		Date from = Dates.toCETDate(2008, 01, 01);
-		Date to = Dates.toCETDate(2009, 01, 01);
-
+		Date from = Dates.newDateDK(2008, 01, 01);
+		Date to = Dates.newDateDK(2009, 01, 01);
+		
 		Takst takst = new Takst(from, to);
 
 		Doseringskode d = new Doseringskode();
 		d.setDoseringskode(1l);
 		d.setDrugid(2l);
 
-		List<Doseringskode> dk = new ArrayList<Doseringskode>();
+		List<Doseringskode> dk = Lists.newArrayList();
 		dk.add(d);
 
 		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
@@ -102,13 +99,13 @@ public class TakstImporterTest
 		AuditingPersister persister = new AuditingPersister(connection);
 
 		persister.persistCompleteDataset(dataset);
-		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM LaegemiddelDoseringRef");
+		ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM Doseringskode");
 		rs.next();
 
 		assertEquals(1, rs.getInt(1));
 
 		persister.persistCompleteDataset(dataset);
-		rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM LaegemiddelDoseringRef");
+		rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM Doseringskode");
 		rs.next();
 
 		assertEquals(1, rs.getInt(1));

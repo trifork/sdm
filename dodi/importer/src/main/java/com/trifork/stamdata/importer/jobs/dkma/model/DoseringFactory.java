@@ -100,28 +100,24 @@ public class DoseringFactory implements FixedLengthParserConfiguration<Dosering>
 		switch (fieldNo)
 		{
 		case 0:
-			obj.setDoseringskode(NumberUtils.createLong(value));
+			obj.setKode(NumberUtils.createLong(value));
 			break;
 		case 1:
-			obj.setDoseringKortTekst(value);
+			obj.setKortTekst(value);
 			break;
 		case 2:
-			obj.setDoseringstekstTotal(value);
+			obj.setTekst(value);
 			break;
 		case 3:
 			obj.setAntalEnhDoegn(NumberUtils.createLong(value));
 			break;
 		case 4:
-			obj.setDoseringstekstLinie1(value);
-			break;
 		case 5:
-			obj.setDoseringstekstLinie2(value);
-			break;
 		case 6:
-			obj.setDoseringstekstLinie3(value);
+			// 4 - 6 are ignored since they are contained in 2.
 			break;
 		case 7:
-			obj.setAktivInaktiv(value);
+			obj.setAktiv(value);
 			break;
 		}
 	}

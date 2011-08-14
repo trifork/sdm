@@ -56,18 +56,17 @@ public class Laegemiddel extends TakstEntity
 	private Long repraesentantDistributoer; // Ref. t. LMS09
 	private String atc; // Ref. t. LMS12
 	private String administrationsvej; // 4 x 2 kar. (Ref. t. LMS11)
-	private boolean trafikadvarsel; // 2 muligh.: J eller blank
+	private String trafikadvarsel; // 2 muligh.: J eller blank
 	private String substitution; // 2 muligh.: G eller blank
 	private String laegemidletsSubstitutionsgruppe; // Substitutionsgruppenr. på
 	
-	// Drugid-niveau
-	private boolean egnetTilDosisdispensering;
+	private String egnetTilDosisdispensering;
 	
 	private Date datoForAfregistrAfLaegemiddel; // Format: ååååmmdd
 	private Date karantaenedato; // Format: ååååmmdd
 
 	@Output
-	public String getAdministrationsvejKode()
+	public String getAdministrationsvej()
 	{
 		return administrationsvej;
 	}
@@ -78,22 +77,10 @@ public class Laegemiddel extends TakstEntity
 		return alfabetSekvensplads;
 	}
 
-	@Output(name = "ATCKode")
+	@Output(name = "ATC")
 	public String getATC()
 	{
 		return atc;
-	}
-
-	@Output(name = "ATCTekst")
-	public String getATCTekst()
-	{
-		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, atc);
-		if (atcObj == null)
-		{
-			return null;
-		}
-		
-		return atcObj.getTekst();
 	}
 
 	@Output
@@ -110,22 +97,9 @@ public class Laegemiddel extends TakstEntity
 	}
 
 	@Output(name = "Dosisdispenserbar")
-	public boolean getEgnetTilDosisdispensering()
+	public String getEgnetTilDosisdispensering()
 	{
 		return egnetTilDosisdispensering;
-	}
-
-	@Output(name = "FormTekst")
-	public String getForm()
-	{
-		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
-		
-		if (lmfb == null)
-		{
-			return null;
-		}
-		
-		return lmfb.getTekst();
 	}
 
 	@Output(name = "FormKode")
@@ -223,7 +197,7 @@ public class Laegemiddel extends TakstEntity
 	}
 
 	@Output
-	public boolean getTrafikadvarsel()
+	public String getTrafikadvarsel()
 	{
 		return trafikadvarsel;
 	}
@@ -240,6 +214,7 @@ public class Laegemiddel extends TakstEntity
 		return varetype;
 	}
 
+	@Deprecated
 	public Boolean isTilHumanAnvendelse()
 	{
 		if (atc == null)
@@ -269,12 +244,12 @@ public class Laegemiddel extends TakstEntity
 		this.datoForAfregistrAfLaegemiddel = datoForAfregistrAfLaegemiddel;
 	}
 
-	public void setDrugid(Long drugid)
+	public void setDrugID(Long drugid)
 	{
 		this.drugid = drugid;
 	}
 
-	public void setEgnetTilDosisdispensering(boolean egnetTilDosisdispensering)
+	public void setEgnetTilDosisdispensering(String egnetTilDosisdispensering)
 	{
 		this.egnetTilDosisdispensering = egnetTilDosisdispensering;
 	}
@@ -344,7 +319,7 @@ public class Laegemiddel extends TakstEntity
 		this.substitution = substitution;
 	}
 
-	public void setTrafikadvarsel(boolean trafikadvarsel)
+	public void setTrafikadvarsel(String trafikadvarsel)
 	{
 		this.trafikadvarsel = trafikadvarsel;
 	}

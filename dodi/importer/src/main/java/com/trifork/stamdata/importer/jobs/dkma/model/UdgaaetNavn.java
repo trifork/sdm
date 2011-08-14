@@ -23,65 +23,65 @@
 
 package com.trifork.stamdata.importer.jobs.dkma.model;
 
-import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
+import java.util.Date;
+
+import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
+import com.trifork.stamdata.importer.persistence.*;
+import com.trifork.stamdata.importer.util.Dates;
 
 
-
-public class ATCKoderOgTekstFactory implements FixedLengthParserConfiguration<ATCKoderOgTekst>
+/**
+ * LMS10
+ */
+@Output
+public class UdgaaetNavn extends TakstEntity
 {
-	@Override
-	public String getFilename()
+	private Long drugID;
+	private Date datoForAendringen;
+	private String tidligereNavn;
+
+	@Output
+	public Date getDatoForAendringen()
 	{
-		return "lms12.txt";
+		return datoForAendringen;
 	}
 
-	@Override
-	public int getLength(int fieldNo)
+	public void setDatoForAendringen(Date datoForAendringen)
 	{
-		switch (fieldNo)
-		{
-		case 0:
-			return 8;
-		case 1:
-			return 72;
-		default:
-			return -1;
-		}
+		this.datoForAendringen = datoForAendringen;
 	}
 
-	@Override
-	public int getNumberOfFields()
+	@Output
+	@Length(11)
+	public Long getDrugID()
 	{
-		return 2;
+		return drugID;
 	}
 
-	@Override
-	public int getOffset(int fieldNo)
+	public void setDrugID(Long drugid)
 	{
-		switch (fieldNo)
-		{
-		case 0:
-			return 0;
-		case 1:
-			return 8;
-		default:
-			return -1;
-		}
+		this.drugID = drugid;
 	}
 
+	@Id
 	@Override
-	public void setFieldValue(ATCKoderOgTekst obj, int fieldNo, String value)
+	@Output(name = "CID")
+	@Length(71)
+	public String getKey()
 	{
-		switch (fieldNo)
-		{
-		case 0:
-			obj.setATC(value);
-			break;
-		case 1:
-			obj.setTekst(value);
-			break;
-		default:
-			break;
-		}
+		String dateString = Dates.DK_yyyyMMdd.print(datoForAendringen.getTime());
+		return dateString + '-' + tidligereNavn + '-' + drugID;
+	}
+
+	@Output
+	@Length(50)
+	public String getTidligereNavn()
+	{
+		return tidligereNavn;
+	}
+
+	public void setTidligereNavn(String tidligereNavn)
+	{
+		this.tidligereNavn = tidligereNavn;
 	}
 }

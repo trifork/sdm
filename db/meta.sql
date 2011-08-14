@@ -1,0 +1,72 @@
+-- ADMINISTRATION TABLES (USERS ETC.)
+
+CREATE TABLE Client (
+	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	name VARCHAR(200) NOT NULL,
+	subjectSerialNumber CHAR(200) NOT NULL
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE Client_permissions (
+	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	client_id BIGINT NOT NULL,
+	permissions TEXT NOT NULL,
+	FOREIGN KEY (client_id) REFERENCES Client(id) ON DELETE CASCADE
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE LogEntry (
+	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	message VARCHAR(500),
+	createdAt DATETIME NOT NULL
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE Authorization (
+	id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+	cvr CHAR(8) NOT NULL,
+	viewName VARCHAR(200) NOT NULL,
+	token BLOB(512) NOT NULL,
+	expiresAt DATETIME NOT NULL
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+-- STAMDATA Import times
+
+CREATE TABLE Import (
+	importtime DATETIME,
+	spoolername VARCHAR(200)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+/*
+CREATE TABLE Version (
+	TabelName VARCHAR(100) NOT NULL,
+	
+	InternalVersion BIGINT UNSIGNED NOT NULL,
+	ExternalVersion VARCHAR(100) NOT NULL,
+	
+	PRIMARY KEY (TabelName, InternalVersion),
+	UNIQUE KEY (TabelName, ExternalVersion)
+) ENGINE = InnoDB;
+*/
+
+CREATE TABLE VersionEvent (
+	EventID SERIAL,
+	
+	TableName VARCHAR(100) NOT NULL,
+	Changeset BIGINT UNSIGNED NOT NULL,
+	
+	EventType ENUM('CREATE', 'UPDATE', 'DELETE', 'FOUND') NOT NULL,
+	EntityID BIGINT UNSIGNED NOT NULL,
+	
+	EntitySHA1 CHAR(40) NOT NULL, 
+	
+	CreatedDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	
+	UNIQUE KEY (TableName, Changeset, EntitySHA1)
+) ENGINE = InnoDB;
+
+CREATE TABLE PersonEntity (
+	PID SERIAL,
+	
+	Name VARCHAR(100) NOT NULL,
+	Address VARCHAR(100) NOT NULL,
+	
+	KEY (Name)
+) ENGINE = InnoDB;

@@ -25,7 +25,7 @@ package com.trifork.stamdata.importer.jobs.dkma.model;
 
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
-public class OpbevaringsbetingelserFactory implements FixedLengthParserConfiguration<Opbevaringsbetingelser>
+public class OpbevaringsbetingelserFactory implements FixedLengthParserConfiguration<Opbevaringsbetingelse>
 {
 	@Override
 	public String getFilename()
@@ -72,7 +72,7 @@ public class OpbevaringsbetingelserFactory implements FixedLengthParserConfigura
 	}
 
 	@Override
-	public void setFieldValue(Opbevaringsbetingelser obj, int fieldNo, String value)
+	public void setFieldValue(Opbevaringsbetingelse obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class TilskudsintervallerFactory implements FixedLengthParserConfiguration<Tilskudsintervaller>
+public class TilskudsintervallerFactory implements FixedLengthParserConfiguration<Tilskudsinterval>
 {
 	@Override
 	public String getFilename()
@@ -84,7 +84,7 @@ public class TilskudsintervallerFactory implements FixedLengthParserConfiguratio
 	}
 
 	@Override
-	public void setFieldValue(Tilskudsintervaller obj, int fieldNo, String value)
+	public void setFieldValue(Tilskudsinterval obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

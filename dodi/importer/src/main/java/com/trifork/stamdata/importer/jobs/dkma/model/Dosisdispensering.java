@@ -28,9 +28,8 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class OplysningerOmDosisdispensering extends TakstEntity
+public class Dosisdispensering extends TakstEntity
 {
-
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer; // Ref. t. LMS02, felt 02
 	private String laegemidletsSubstitutionsgruppe; // Ref. t. LMS01, felt 22.
@@ -50,7 +49,7 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 	}
 
 	@Output
-	public Long getDrugid()
+	public Long getDrugID()
 	{
 		return drugid;
 	}

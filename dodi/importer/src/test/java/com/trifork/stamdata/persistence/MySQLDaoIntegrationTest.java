@@ -56,7 +56,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		Connection con = Helpers.getConnection();
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
-		DatabaseTableWrapper<SDE> table = dao.getTable(SDE.class);
+		TableWrapper<SDE> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), Dates.THE_END_OF_TIME);
@@ -74,7 +74,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset);
 		dao.persistCompleteDataset(dataset);
-		DatabaseTableWrapper<?> table = dao.getTable(SDE.class);
+		TableWrapper<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), Dates.THE_END_OF_TIME);
@@ -94,7 +94,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		DatabaseTableWrapper<?> table = dao.getTable(SDE.class);
+		TableWrapper<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(Dates.THE_END_OF_TIME, table.getCurrentRowValidTo());
@@ -115,7 +115,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		DatabaseTableWrapper<?> table = dao.getTable(SDE.class);
+		TableWrapper<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t1));
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(Dates.THE_END_OF_TIME, table.getCurrentRowValidTo());
@@ -136,7 +136,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
 		dao.persistCompleteDataset(dataset2);
-		DatabaseTableWrapper<?> table = dao.getTable(SDE.class);
+		TableWrapper<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, t0)); // Get the old version
 		assertEquals(t0, table.getCurrentRowValidFrom());
 		assertEquals(t1, table.getCurrentRowValidTo());
@@ -173,7 +173,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 		AuditingPersister dao = new AuditingPersister(con);
 		dao.persistCompleteDataset(dataset1);
-		DatabaseTableWrapper<?> table = dao.getTable(SDE.class);
+		TableWrapper<?> table = dao.getTable(SDE.class);
 		assertTrue(table.fetchEntityVersions(t0, Dates.THE_END_OF_TIME));
 		assertEquals(t0, table.getCurrentRowValidFrom());
 		assertEquals(Dates.THE_END_OF_TIME, table.getCurrentRowValidTo());
@@ -199,12 +199,12 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 	}
 
 	@Output
-	public static class SDE implements StamdataEntity
+	public static class SDE implements Record
 	{
 		Date validfrom, validto;
 		String id = "1"; // default value
 		String data = "a"; // default value
-		Date date = Dates.toCETDate(2001, 1, 1, 1, 2, 3);
+		Date date = Dates.newDateDK(2001, 1, 1, 1, 2, 3);
 
 		public SDE(Date validFrom, Date validTo)
 		{

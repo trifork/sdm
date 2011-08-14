@@ -23,8 +23,10 @@
 
 package com.trifork.stamdata.importer.jobs.dkma;
 
+import static com.google.common.base.Preconditions.*;
+
 import java.io.*;
-import java.text.*;
+import java.text.ParseException;
 import java.util.*;
 
 import org.joda.time.Period;
@@ -42,7 +44,9 @@ import com.trifork.stamdata.importer.util.Dates;
 /**
  * Parser for the DKMA register. Also known as 'Taksten'.
  * 
- * DKMA is an acroynm for 'Danish Medicines Agency'.
+ * DKMA is an acronym for 'Danish Medicines Agency'.
+ * 
+ * @author Rune Skov Larsen <rsl@trifork.com>
  */
 public class DKMAParser implements FileParserJob
 {
@@ -62,13 +66,13 @@ public class DKMAParser implements FileParserJob
 	@Override
 	public String getIdentifier()
 	{
-		return "dkma";
+		return JOB_IDENTIFIER;
 	}
 
 	@Override
 	public String getHumanName()
 	{
-		return "DKMA";
+		return "DKMA Parser (Taksten)";
 	}
 
 	@Override
@@ -131,6 +135,8 @@ public class DKMAParser implements FileParserJob
 
 	public Takst parseFiles(File[] input) throws Exception
 	{
+		checkNotNull(input, "input");
+		
 		// Parse required meta information first.
 
 		String systemline = getSystemLine(input);
@@ -163,22 +169,22 @@ public class DKMAParser implements FileParserJob
 		add(takst, parser, new PakningFactory(), Pakning.class);
 		add(takst, parser, new PriserFactory(), Priser.class);
 		add(takst, parser, new SubstitutionFactory(), Substitution.class);
-		add(takst, parser, new SubstitutionAfLaegemidlerUdenFastPrisFactory(), SubstitutionAfLaegemidlerUdenFastPris.class);
-		add(takst, parser, new TilskudsprisgrupperPakningsniveauFactory(), TilskudsprisgrupperPakningsniveau.class);
+		add(takst, parser, new SubstitutionAfLaegemidlerUdenFastPrisFactory(), SubstitutionAfLegemiddelUdenFastPris.class);
+		add(takst, parser, new TilskudsprisgrupperPakningsniveauFactory(), TilskudsprisgruppePaaPakningsniveau.class);
 		add(takst, parser, new FirmaFactory(), Firma.class);
-		add(takst, parser, new UdgaaedeNavneFactory(), UdgaaedeNavne.class);
+		add(takst, parser, new UdgaaedeNavneFactory(), UdgaaetNavn.class);
 		add(takst, parser, new AdministrationsvejFactory(), Administrationsvej.class);
-		add(takst, parser, new ATCKoderOgTekstFactory(), ATCKoderOgTekst.class);
+		add(takst, parser, new LMS12Parser(), ATC.class);
 		add(takst, parser, new BeregningsreglerFactory(), Beregningsregler.class);
 		add(takst, parser, new EmballagetypeKoderFactory(), EmballagetypeKoder.class);
-		add(takst, parser, new DivEnhederFactory(), DivEnheder.class);
+		add(takst, parser, new DivEnhederFactory(), Enhed.class);
 		add(takst, parser, new MedicintilskudFactory(), Medicintilskud.class);
 		add(takst, parser, new KlausuleringFactory(), Klausulering.class);
 		add(takst, parser, new UdleveringsbestemmelserFactory(), Udleveringsbestemmelser.class);
 		add(takst, parser, new SpecialeForNBSFactory(), SpecialeForNBS.class);
-		add(takst, parser, new OpbevaringsbetingelserFactory(), Opbevaringsbetingelser.class);
-		add(takst, parser, new TilskudsintervallerFactory(), Tilskudsintervaller.class);
-		add(takst, parser, new OplysningerOmDosisdispenseringFactory(), OplysningerOmDosisdispensering.class);
+		add(takst, parser, new OpbevaringsbetingelserFactory(), Opbevaringsbetingelse.class);
+		add(takst, parser, new TilskudsintervallerFactory(), Tilskudsinterval.class);
+		add(takst, parser, new OplysningerOmDosisdispenseringFactory(), Dosisdispensering.class);
 		add(takst, parser, new IndikationskodeFactory(), Indikationskode.class);
 		add(takst, parser, new IndikationFactory(), Indikation.class);
 		add(takst, parser, new DoseringskodeFactory(), Doseringskode.class);
@@ -189,16 +195,14 @@ public class DKMAParser implements FileParserJob
 
 		addOptional(input, takst, parser, new LaegemiddelnavnFactory(), Laegemiddelnavn.class);
 		addOptional(input, takst, parser, new LaegemiddelformBetegnelserFactory(), LaegemiddelformBetegnelser.class);
-		addOptional(input, takst, parser, new RekommandationerFactory(), Rekommandationer.class);
-		addOptional(input, takst, parser, new IndholdsstofferFactory(), Indholdsstoffer.class);
+		addOptional(input, takst, parser, new RekommandationerFactory(), Rekommandation.class);
+		addOptional(input, takst, parser, new IndholdsstofferFactory(), Indholdsstof.class);
 		addOptional(input, takst, parser, new EnhedspriserFactory(), Enhedspriser.class);
-		addOptional(input, takst, parser, new PakningskombinationerFactory(), Pakningskombinationer.class);
-		addOptional(input, takst, parser, new PakningskombinationerUdenPriserFactory(), PakningskombinationerUdenPriser.class);
+		addOptional(input, takst, parser, new PakningskombinationerFactory(), Pakningskombination.class);
+		addOptional(input, takst, parser, new PakningskombinationerUdenPriserFactory(), PakningskombinationUdenPris.class);
 
 		// Post process the data.
-
-		addTypedDivEnheder(takst);
-		addLaegemiddelAdministrationsvejRefs(takst);
+		
 		filterOutVetDrugs(takst);
 
 		return takst;
@@ -210,85 +214,14 @@ public class DKMAParser implements FileParserJob
 	}
 
 	/**
-	 * Extracts the routes of administration and adds them to the takst.
-	 */
-	private void addLaegemiddelAdministrationsvejRefs(Takst takst)
-	{
-		TakstDataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
-		List<LaegemiddelAdministrationsvejRef> lars = new ArrayList<LaegemiddelAdministrationsvejRef>();
-
-		for (Laegemiddel lm : lmr.getEntities())
-		{
-			for (Administrationsvej av : getAdministrationsveje(lm, takst))
-			{
-				lars.add(new LaegemiddelAdministrationsvejRef(lm, av));
-			}
-		}
-
-		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class));
-	}
-
-	private List<Administrationsvej> getAdministrationsveje(Laegemiddel drug, Takst takst)
-	{
-		List<Administrationsvej> adminveje = Lists.newArrayList();
-
-		for (int idx = 0; idx < drug.getAdministrationsvejKode().length(); idx += 2)
-		{
-			String avKode = drug.getAdministrationsvejKode().substring(idx, idx + 2);
-			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
-
-			if (adminVej == null)
-			{
-				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
-			}
-			else
-			{
-				adminveje.add(adminVej);
-			}
-		}
-
-		return adminveje;
-	}
-
-	/**
-	 * Sorterer DivEnheder ud på stærke(re) typede entiteter for at matche fmk
-	 * stamtabel skemaet.
-	 */
-	private void addTypedDivEnheder(Takst takst)
-	{
-		List<Tidsenhed> tidsenhed = new ArrayList<Tidsenhed>();
-		List<Pakningsstoerrelsesenhed> pakEnheder = new ArrayList<Pakningsstoerrelsesenhed>();
-		List<Styrkeenhed> styrkeEnheder = new ArrayList<Styrkeenhed>();
-		Dataset<DivEnheder> divEnheder = takst.getDatasetOfType(DivEnheder.class);
-
-		for (DivEnheder enhed : divEnheder.getEntities())
-		{
-			if (enhed.isEnhedstypeTid())
-			{
-				tidsenhed.add(new Tidsenhed(enhed));
-			}
-			else if (enhed.isEnhedstypePakning())
-			{
-				pakEnheder.add(new Pakningsstoerrelsesenhed(enhed));
-			}
-			else if (enhed.isEnhedstypeStyrke())
-			{
-				styrkeEnheder.add(new Styrkeenhed(enhed));
-			}
-		}
-
-		takst.addDataset(new TakstDataset<Tidsenhed>(takst, tidsenhed, Tidsenhed.class));
-		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, pakEnheder, Pakningsstoerrelsesenhed.class));
-		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, styrkeEnheder, Styrkeenhed.class));
-	}
-
-	/**
 	 * Filtes out veterinary medicin from a dataset.
 	 * 
 	 * @param takst
 	 */
 	public static void filterOutVetDrugs(Takst takst)
 	{
+		// TODO: Do this while parsing instead.
+		
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
 
 		if (pakninger != null)
@@ -323,13 +256,13 @@ public class DKMAParser implements FileParserJob
 			lmr.removeEntities(laegemidlerToBeRemoved);
 		}
 
-		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
+		Dataset<ATC> atckoder = takst.getDatasetOfType(ATC.class);
 
 		if (atckoder != null)
 		{
-			List<ATCKoderOgTekst> atcToBeRemoved = Lists.newArrayList();
+			List<ATC> atcToBeRemoved = Lists.newArrayList();
 
-			for (ATCKoderOgTekst atc : atckoder.getEntities())
+			for (ATC atc : atckoder.getEntities())
 			{
 				if (!atc.isTilHumanAnvendelse())
 				{
@@ -353,11 +286,8 @@ public class DKMAParser implements FileParserJob
 
 	public Date getValidFromDate(String line) throws ParseException
 	{
-		String dateline = line.substring(47, 55);
-		DateFormat df = new SimpleDateFormat("yyyyMMdd");
-
-		return df.parse(dateline);
-
+		String dateSegment = line.substring(47, 55);
+		return Dates.DK_yyyyMMdd.parseDateTime(dateSegment).toDate();
 	}
 
 	private String getSystemLine(File[] input) throws Exception

@@ -28,7 +28,7 @@ import org.apache.commons.lang.math.NumberUtils;
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
-public class RekommandationerFactory implements FixedLengthParserConfiguration<Rekommandationer>
+public class RekommandationerFactory implements FixedLengthParserConfiguration<Rekommandation>
 {
 	@Override
 	public String getFilename()
@@ -79,7 +79,7 @@ public class RekommandationerFactory implements FixedLengthParserConfiguration<R
 	}
 
 	@Override
-	public void setFieldValue(Rekommandationer obj, int fieldNo, String value)
+	public void setFieldValue(Rekommandation obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

@@ -27,11 +27,12 @@ import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
 
-@Output(name = "IndikationATCRef")
+// LMS25
+@Output
 public class Indikationskode extends TakstEntity
 {
 	private String atc; // Ref. t. LMS01
-	private Long indikationskode; // Ref. t. LMS26
+	private Long kode; // Ref. t. LMS26
 	private Long drugID; // Ref. t. LMS01, felt 01
 
 	@Output
@@ -40,13 +41,16 @@ public class Indikationskode extends TakstEntity
 		return atc;
 	}
 
+	public void setATC(String atc)
+	{
+		this.atc = atc;
+	}
+
 	@Id
 	@Output
 	public String getCID()
 	{
-		// A calculated ID.
-		// Necessary because the DAO implementation needs a single key.
-		return atc + "-" + indikationskode;
+		return atc + "-" + kode;
 	}
 
 	@Output
@@ -55,24 +59,19 @@ public class Indikationskode extends TakstEntity
 		return drugID;
 	}
 
-	@Output(name = "IndikationKode")
-	public Long getIndikationskode()
-	{
-		return indikationskode;
-	}
-
-	public void setATC(String atc)
-	{
-		this.atc = atc;
-	}
-
 	public void setDrugID(Long drugID)
 	{
 		this.drugID = drugID;
 	}
 
-	public void setIndikationskode(Long indikationskode)
+	@Output
+	public Long getKode()
 	{
-		this.indikationskode = indikationskode;
+		return kode;
+	}
+
+	public void setKode(Long value)
+	{
+		this.kode = value;
 	}
 }

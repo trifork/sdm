@@ -28,7 +28,7 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class PakningskombinationerUdenPriser extends TakstEntity
+public class PakningskombinationUdenPris extends TakstEntity
 {
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
 	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan

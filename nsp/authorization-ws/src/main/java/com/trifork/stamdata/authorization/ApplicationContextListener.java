@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 
 import com.google.common.collect.Sets;
 import com.google.inject.*;
+import com.google.inject.name.Names;
 import com.google.inject.servlet.*;
 import com.trifork.stamdata.ConfigurationLoader;
 
@@ -111,6 +112,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				@Override
 				protected void configureServlets()
 				{
+					Names.bindProperties(binder(), properties);
+					
 					install(new DatabaseModule(properties.getProperty("db.connection.jdbcURL"), properties.getProperty("db.connection.username"), properties.getProperty("db.connection.password", "")));
 					install(new MonitoringModule());
 					
@@ -119,7 +122,6 @@ public class ApplicationContextListener extends GuiceServletContextListener
 					bind(AuthorizationDao.class);
 
 					serve("/").with(WebService.class);
-					filter("/*").through(PersistenceFilter.class);
 
 					logger.info("Done configuring the stamdata authorization web-service.");
 				}

@@ -27,87 +27,50 @@ import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
 
-@Output(name = "Indikation")
+@Output
 public class Indikation extends TakstEntity
 {
-	private Long indikationskode; // Ref. t. LMS25
-	private String indikationstekstTotal; // Felt 03 + 04 + 05
-	private String indikationstekstLinie1;
-	private String indikationstekstLinie2;
-	private String indikationstekstLinie3;
-	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke anvendes)
-	// TODO: Hvorfor står denne som "bør ikke anvendes"?
+	private Long kode; // Ref. t. LMS25
+	private String text; // Felt 03 + 04 + 05
+	private String aktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke anvendes)
 
-	@Output(name = "aktiv")
-	public boolean isActive()
+	@Output
+	public String getAktiv()
 	{
-		return "A".equalsIgnoreCase(aktivInaktiv);
+		return aktiv;
 	}
 
 	@Id
-	@Output(name = "IndikationKode")
-	public Long getIndikationskode()
+	@Output
+	public Long getKode()
 	{
-		return indikationskode;
+		return kode;
 	}
 
 	@Output
-	public String getIndikationstekstLinie1()
+	public String getTekst()
 	{
-		return indikationstekstLinie1;
-	}
-
-	@Output
-	public String getIndikationstekstLinie2()
-	{
-		return indikationstekstLinie2;
-	}
-
-	@Output
-	public String getIndikationstekstLinie3()
-	{
-		return indikationstekstLinie3;
-	}
-
-	@Output(name = "IndikationTekst")
-	public String getIndikationstekstTotal()
-	{
-		return indikationstekstTotal;
+		return text;
 	}
 
 	@Override
 	public Long getKey()
 	{
-		return indikationskode;
+		return kode;
 	}
 
-	public void setAktivInaktiv(String aktivInaktiv)
+	public void setAktiv(String value)
 	{
-		this.aktivInaktiv = aktivInaktiv;
+		this.aktiv = value;
 	}
 
-	public void setIndikationskode(Long indikationskode)
+	public void setKode(Long value)
 	{
-		this.indikationskode = indikationskode;
+		this.kode = value;
 	}
 
-	public void setIndikationstekstLinie1(String indikationstekstLinie1)
+	public void setTekst(String value)
 	{
-		this.indikationstekstLinie1 = indikationstekstLinie1;
-	}
-
-	public void setIndikationstekstLinie2(String indikationstekstLinie2)
-	{
-		this.indikationstekstLinie2 = indikationstekstLinie2;
-	}
-
-	public void setIndikationstekstLinie3(String indikationstekstLinie3)
-	{
-		this.indikationstekstLinie3 = indikationstekstLinie3;
-	}
-
-	public void setIndikationstekstTotal(String indikationstekstTotal)
-	{
-		this.indikationstekstTotal = indikationstekstTotal;
+		this.text = value;
 	}
 }

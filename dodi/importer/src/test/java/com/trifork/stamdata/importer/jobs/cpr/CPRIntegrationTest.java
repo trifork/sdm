@@ -80,16 +80,23 @@ public class CPRIntegrationTest
 		parseFile("data/cpr/D100315.L431101");
 
 		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
+		
+		// Persist the first set.
+		
+		ResultSet rs = stmt.executeQuery("SELECT Fornavn, ValidFrom, ValidTo FROM Person WHERE CPR='1312095098'");
+		
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
 		assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
 		assertFalse(rs.next());
 
+		// Persist the next set.
+		
 		parseFile("data/cpr/D100317.L431101");
 
-		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo FROM Person WHERE cpr='1312095098' ORDER BY validFrom");
+		rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo FROM Person WHERE cpr='1312095098' ORDER BY ValidFrom");
+		
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
 		assertEquals("2010-03-15 00:00:00.0", rs.getString("validFrom"));
@@ -107,12 +114,12 @@ public class CPRIntegrationTest
 		parseFile("data/cpr/testSequence1/D100314.L431101");
 
 		Date latestIkraft = CPRParser.getLatestVersion(connection);
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), latestIkraft);
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), latestIkraft);
 
 		parseFile("data/cpr/testSequence2/D100314.L431101");
 
 		latestIkraft = CPRParser.getLatestVersion(connection);
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), latestIkraft);
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), latestIkraft);
 
 		parseFile("data/cpr/testOutOfSequence/D100314.L431101");
 	}
@@ -153,15 +160,15 @@ public class CPRIntegrationTest
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
@@ -191,16 +198,16 @@ public class CPRIntegrationTest
 		assertEquals("0003", rs.getString("TypeKode"));
 		assertEquals("Mor", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		rs.next();
 
 		assertEquals("0004", rs.getString("TypeKode"));
 		assertEquals("Far", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		assertTrue(rs.last());
 	}
@@ -218,7 +225,7 @@ public class CPRIntegrationTest
 		assertEquals("0001", rs.getString("TypeKode"));
 		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
 		assertEquals("0904414131", rs.getString("RelationCpr"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
 		assertEquals("", rs.getString("VaergesNavn"));
 		assertEquals(null, rs.getDate("VaergesNavnStartDato"));
 		assertEquals("", rs.getString("RelationsTekst1"));
@@ -226,8 +233,8 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst3"));
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), rs.getDate("ValidFrom"));
-		assertEquals(CET_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2001-11-19").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(DK_yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 

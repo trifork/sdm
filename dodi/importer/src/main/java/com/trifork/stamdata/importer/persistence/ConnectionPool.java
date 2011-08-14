@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.importer.persistence;
 
+import static org.slf4j.helpers.MessageFormatter.*;
+
 import java.sql.*;
 
 import com.google.inject.Inject;
@@ -35,6 +37,8 @@ import com.trifork.stamdata.Nullable;
  */
 public class ConnectionPool
 {
+	private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+	
 	private final String jdbcURL;
 	private final String username;
 	private final String password;
@@ -51,7 +55,7 @@ public class ConnectionPool
 	{
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Class.forName(JDBC_DRIVER).newInstance();
 			
 			Connection connection = DriverManager.getConnection(jdbcURL, username, password);
 			connection.setAutoCommit(false);
@@ -60,7 +64,7 @@ public class ConnectionPool
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException("Could not load the database driver. class_name=com.mysql.jdbc.Driver", e);
+			throw new RuntimeException(format("Problem creating a database connection. class_name={}", JDBC_DRIVER), e);
 		}
 	}
 }

@@ -27,7 +27,7 @@ import com.trifork.stamdata.importer.jobs.dkma.*;
 import com.trifork.stamdata.importer.persistence.*;
 
 
-public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
+public class NumeriskMedEnhed extends TakstEntity implements Record
 {
 	private final String klartekst;
 	private final double numerisk;
@@ -44,9 +44,9 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 	@Output(name = "StyrkeEnhed")
 	public String getEnhed()
 	{
-		if (enhed instanceof DivEnheder)
+		if (enhed instanceof Enhed)
 		{
-			return ((DivEnheder) enhed).getTekst();
+			return ((Enhed) enhed).getTekst();
 		}
 		return null;
 	}

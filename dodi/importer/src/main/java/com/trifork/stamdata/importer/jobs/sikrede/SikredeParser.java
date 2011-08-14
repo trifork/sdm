@@ -118,7 +118,7 @@ public class SikredeParser implements FileParserJob
 
 			for (Dataset<? extends CPREntity> dataset : sikrede.getDatasets())
 			{
-				persister.persistDeltaDataset(dataset);
+				persister.persist(dataset);
 			}
 		}
 	}

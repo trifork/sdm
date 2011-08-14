@@ -33,7 +33,7 @@ import java.util.*;
  * 
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class CompleteDataset<T extends StamdataEntity> extends Dataset<T>
+public class CompleteDataset<T extends Record> extends Dataset<T>
 {
 	private final Date ValidFrom;
 	private final Date ValidTo;

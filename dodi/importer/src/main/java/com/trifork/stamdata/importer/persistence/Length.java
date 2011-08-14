@@ -21,44 +21,21 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.dkma.model;
+package com.trifork.stamdata.importer.persistence;
 
-import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
-import com.trifork.stamdata.importer.persistence.*;
+import java.lang.annotation.*;
 
 
-@Output(name = "ATC")
-public class ATCKoderOgTekst extends TakstEntity
+/**
+ * Used to designate that a field is the id. For a point in validtime, each id
+ * must be unique. But an entity can keep its id across changes, so there can be
+ * more database records with the same id representing the entity at different
+ * times.
+ * 
+ * @author Rune Skou Larsen <rsj@trifork.com>
+ */
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Length
 {
-	private String atc;
-	private String tekst;
-
-	@Override
-	@Id
-	@Output(name = "ATC")
-	public String getKey()
-	{
-		return atc;
-	}
-
-	@Output(name = "ATCTekst")
-	public String getTekst()
-	{
-		return tekst;
-	}
-
-	public void setATC(String atc)
-	{
-		this.atc = atc;
-	}
-
-	public void setTekst(String tekst)
-	{
-		this.tekst = tekst;
-	}
-
-	public boolean isTilHumanAnvendelse()
-	{
-		return !atc.startsWith("Q");
-	}
+	int value();
 }

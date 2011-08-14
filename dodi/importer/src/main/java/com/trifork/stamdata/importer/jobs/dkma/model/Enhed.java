@@ -28,37 +28,62 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
+public class Enhed extends TakstEntity
 {
-	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
-	private Long varenummer;
-
-	@Override
-	public Long getKey()
-	{
-		return varenummer;
-	}
-
-	@Output
-	public Long getSubstitutionsgruppenummer()
-	{
-		return substitutionsgruppenummer;
-	}
+	private Long type; // Styrke=3, pakning=4, tid=1
+	private String kode; // LMS01, felt 12 og LMS02, felt 08 og 16
+	private String kortTekst;
+	private String tekst;
 
 	@Id
+	@Output(name = "CID")
+	@Override
+	public String getKey()
+	{
+		return type + kode;
+	}
+
 	@Output
-	public Long getVarenummer()
+	public String getKode()
 	{
-		return varenummer;
+		return kode;
+	}
+	
+	public void setKode(String kode)
+	{
+		this.kode = kode;
 	}
 
-	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	@Output
+	public String getKortTekst()
 	{
-		this.substitutionsgruppenummer = substitutionsgruppenummer;
+		return kortTekst;
 	}
 
-	public void setVarenummer(Long varenummer)
+	@Output
+	public String getTekst()
 	{
-		this.varenummer = varenummer;
+		return tekst;
+	}
+	
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
+	}
+	
+	@Output
+	public Long getType()
+	{
+		return type;
+	}
+
+	public void setType(Long type)
+	{
+		this.type = type;
+	}
+
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
 	}
 }

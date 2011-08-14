@@ -68,7 +68,7 @@ public class CPRDataset
 	public <T extends CPREntity> void addEntity(T entity)
 	{
 		entity.setDataset(this);
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends Record> dataset : datasets)
 		{
 			if (dataset.getType().equals(entity.getClass()))
 			{
@@ -85,9 +85,9 @@ public class CPRDataset
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends StamdataEntity> Dataset<T> getDataset(Class<T> entityClass)
+	public <T extends Record> Dataset<T> getDataset(Class<T> entityClass)
 	{
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends Record> dataset : datasets)
 		{
 			if (dataset.getType().equals(entityClass))
 			{

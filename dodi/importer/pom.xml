@@ -29,19 +29,12 @@
 			<version>1.4</version>
 			<scope>compile</scope>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>commons-configuration</groupId>
-			<artifactId>commons-configuration</artifactId>
-			<version>1.6</version>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.4</version>
 			<scope>compile</scope>
-			<exclusions>
-				<!-- WE USE THE 'jcl-over-slf4j' ADAPTER FOR SLF4J -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<!-- Logging -->

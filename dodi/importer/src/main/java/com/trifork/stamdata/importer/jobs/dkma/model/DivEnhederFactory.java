@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class DivEnhederFactory implements FixedLengthParserConfiguration<DivEnheder>
+public class DivEnhederFactory implements FixedLengthParserConfiguration<Enhed>
 {
 	@Override
 	public String getFilename()
@@ -80,12 +80,12 @@ public class DivEnhederFactory implements FixedLengthParserConfiguration<DivEnhe
 	}
 
 	@Override
-	public void setFieldValue(DivEnheder obj, int fieldNo, String value)
+	public void setFieldValue(Enhed obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{
 		case 0:
-			obj.setEnhedstype(NumberUtils.createLong(value));
+			obj.setType(NumberUtils.createLong(value));
 			break;
 		case 1:
 			obj.setKode(value);

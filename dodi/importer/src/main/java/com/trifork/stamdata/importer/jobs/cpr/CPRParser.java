@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
+import static com.google.common.base.Preconditions.*;
 import static com.trifork.stamdata.importer.util.Dates.*;
 import static org.slf4j.helpers.MessageFormatter.*;
 
@@ -118,9 +119,9 @@ public class CPRParser implements FileParserJob
 				throw new Exception("CPR file out of sequence. file_date=" + cpr.getPreviousFileValidFrom() + " database_date=" + previousVersion);
 			}
 
-			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
+			for (Dataset<? extends Record> dataset : cpr.getDatasets())
 			{
-				persister.persistDeltaDataset(dataset);
+				persister.persist(dataset);
 			}
 
 			// Add the new 'version' date to database,
@@ -252,14 +253,14 @@ public class CPRParser implements FileParserJob
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
 
 		u.setCpr(cut(line, 3, 13));
-		u.setUmyndigStartDato(parseDate(CET_yyyy_MM_dd, line, 13, 23));
+		u.setUmyndigStartDato(parseDate(DK_yyyy_MM_dd, line, 13, 23));
 		u.setUmyndigStartDatoMarkering(cut(line, 23, 24));
-		u.setUmyndigSletteDato(parseDate(CET_yyyy_MM_dd, line, 24, 34));
+		u.setUmyndigSletteDato(parseDate(DK_yyyy_MM_dd, line, 24, 34));
 		u.setType(cut(line, 34, 38));
 		u.setRelationCpr(cut(line, 38, 48));
-		u.setRelationCprStartDato(parseDate(CET_yyyy_MM_dd, line, 48, 58));
+		u.setRelationCprStartDato(parseDate(DK_yyyy_MM_dd, line, 48, 58));
 		u.setVaergesNavn(cut(line, 58, 92).trim());
-		u.setVaergesNavnStartDato(parseDate(CET_yyyy_MM_dd, line, 92, 102));
+		u.setVaergesNavnStartDato(parseDate(DK_yyyy_MM_dd, line, 92, 102));
 		u.setRelationsTekst1(cut(line, 102, 136).trim());
 		u.setRelationsTekst2(cut(line, 136, 170).trim());
 		u.setRelationsTekst3(cut(line, 170, 204).trim());
@@ -275,11 +276,11 @@ public class CPRParser implements FileParserJob
 
 		f.setCpr(cut(line, 3, 13));
 		f.setType(cut(line, 13, 17));
-		f.setForaeldreMyndighedStartDato(parseDate(CET_yyyy_MM_dd, line, 17, 27));
+		f.setForaeldreMyndighedStartDato(parseDate(DK_yyyy_MM_dd, line, 17, 27));
 		f.setForaeldreMyndighedMarkering(cut(line, 27, 28));
-		f.setForaeldreMyndighedSlettedato(parseDate(CET_yyyy_MM_dd, line, 28, 38));
+		f.setForaeldreMyndighedSlettedato(parseDate(DK_yyyy_MM_dd, line, 28, 38));
 		f.setRelationCpr(cut(line, 38, 48));
-		f.setRelationCprStartDato(parseDate(CET_yyyy_MM_dd, line, 48, 58));
+		f.setRelationCprStartDato(parseDate(DK_yyyy_MM_dd, line, 48, 58));
 
 		return f;
 	}
@@ -303,7 +304,7 @@ public class CPRParser implements FileParserJob
 		n.setMellemnavnMarkering(cut(line, 104, 105));
 		n.setEfternavn(cut(line, 105, 145).trim());
 		n.setEfternavnMarkering(cut(line, 145, 146));
-		n.setStartDato(parseDate(CET_yyyyMMddHHmm, line, 146, 158));
+		n.setStartDato(parseDate(DK_yyyyMMddHHmm, line, 146, 158));
 		n.setStartDatoMarkering(cut(line, 158, 159));
 		n.setAdresseringsNavn(cut(line, 159, 193).trim());
 		return n;
@@ -313,13 +314,15 @@ public class CPRParser implements FileParserJob
 	{
 		NavneBeskyttelse n = new NavneBeskyttelse();
 		n.setCpr(cut(line, 3, 13));
-		n.setNavneBeskyttelseStartDato(parseDate(CET_yyyy_MM_dd, line, 17, 27));
-		n.setNavneBeskyttelseSletteDato(parseDate(CET_yyyy_MM_dd, line, 27, 37));
+		n.setNavneBeskyttelseStartDato(parseDate(DK_yyyy_MM_dd, line, 17, 27));
+		n.setNavneBeskyttelseSletteDato(parseDate(DK_yyyy_MM_dd, line, 27, 37));
 		return n;
 	}
 
 	static Klarskriftadresse klarskriftadresse(String line) throws Exception
 	{
+		checkNotNull(line);
+		
 		Klarskriftadresse k = new Klarskriftadresse();
 		k.setCpr(cut(line, 3, 13));
 		k.setAdresseringsNavn(cut(line, 13, 47).trim());
@@ -346,19 +349,21 @@ public class CPRParser implements FileParserJob
 
 	static Personoplysninger personoplysninger(String line) throws Exception
 	{
+		checkNotNull(line);
+		
 		Personoplysninger person = new Personoplysninger();
 
 		person.setCpr(cut(line, 3, 13));
 		person.setGaeldendeCpr(cut(line, 13, 23).trim());
 		person.setStatus(cut(line, 23, 25));
-		person.setStatusDato(parseDate(CET_yyyyMMddHHmm, line, 25, 37));
+		person.setStatusDato(parseDate(DK_yyyyMMddHHmm, line, 25, 37));
 		person.setStatusMakering(cut(line, 37, 38));
 		person.setKoen(cut(line, 38, 39));
-		person.setFoedselsdato(parseDate(CET_yyyy_MM_dd, line, 39, 49));
+		person.setFoedselsdato(parseDate(DK_yyyy_MM_dd, line, 39, 49));
 		person.setFoedselsdatoMarkering(cut(line, 49, 50));
-		person.setStartDato(parseDate(CET_yyyy_MM_dd, line, 50, 60));
+		person.setStartDato(parseDate(DK_yyyy_MM_dd, line, 50, 60));
 		person.setStartDatoMarkering(cut(line, 60, 61));
-		person.setSlutdato(parseDate(CET_yyyy_MM_dd, line, 61, 71));
+		person.setSlutdato(parseDate(DK_yyyy_MM_dd, line, 61, 71));
 		person.setSlutDatoMarkering(cut(line, 71, 72));
 		person.setStilling(cut(line, 72, 106).trim());
 
@@ -422,7 +427,7 @@ public class CPRParser implements FileParserJob
 
 	private static Date getValidFrom(String line) throws Exception
 	{
-		return CET_yyyyMMdd.parseDateTime(cut(line, 19, 27)).toDate();
+		return DK_yyyyMMdd.parseDateTime(cut(line, 19, 27)).toDate();
 	}
 
 	private static Date getForrigeIkraftDato(String line) throws Exception
@@ -432,7 +437,7 @@ public class CPRParser implements FileParserJob
 
 		if (line.length() >= 25)
 		{
-			return CET_yyyyMMdd.parseDateTime(cut(line, 27, 35)).toDate();
+			return DK_yyyyMMdd.parseDateTime(cut(line, 27, 35)).toDate();
 		}
 
 		return null;

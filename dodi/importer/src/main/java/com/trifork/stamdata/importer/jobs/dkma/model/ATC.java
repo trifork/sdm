@@ -23,58 +23,50 @@
 
 package com.trifork.stamdata.importer.jobs.dkma.model;
 
-import java.util.Date;
-
 import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
-
-@Output
-public class UdgaaedeNavne extends TakstEntity
+// LMS12 
+@Output(name = "ATC")
+public class ATC extends TakstEntity
 {
-	private Long drugid; // Ref. t. LMS01
-	private Date datoForAendringen;
-	private String tidligereNavn;
+	private String atc;
+	private String tekst;
 
-	@Output
-	public Date getDatoForAendringen()
-	{
-		return datoForAendringen;
-	}
-
-	@Output
-	public Long getDrugid()
-	{
-		return drugid;
-	}
-
-	@SuppressWarnings("deprecation")
 	@Override
-	@Id
-	@Output(name = "CID")
 	public String getKey()
 	{
-		return datoForAendringen.toGMTString() + '-' + tidligereNavn + '-' + drugid;
+		return atc;
 	}
-
+	
+	@Id
 	@Output
-	public String getTidligereNavn()
+	public String getKode()
 	{
-		return tidligereNavn;
+		return atc;
 	}
 
-	public void setDatoForAendringen(Date datoForAendringen)
+	public void setKode(String atc)
 	{
-		this.datoForAendringen = datoForAendringen;
+		this.atc = atc;
+	}
+	
+	@Output
+	public String getTekst()
+	{
+		return tekst;
 	}
 
-	public void setDrugid(Long drugid)
+	public void setTekst(String tekst)
 	{
-		this.drugid = drugid;
+		this.tekst = tekst;
 	}
 
-	public void setTidligereNavn(String tidligereNavn)
+	@Deprecated
+	public boolean isTilHumanAnvendelse()
 	{
-		this.tidligereNavn = tidligereNavn;
+		return !atc.startsWith("Q");
 	}
+	
+	// TODO: ATC-niveau seem to be missing
 }

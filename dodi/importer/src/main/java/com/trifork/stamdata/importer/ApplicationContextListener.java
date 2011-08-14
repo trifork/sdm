@@ -41,13 +41,21 @@ import com.trifork.stamdata.importer.jobs.doseringsforslag.DoseringsforslagParse
 import com.trifork.stamdata.importer.persistence.ConnectionPool;
 import com.trifork.stamdata.importer.webinterface.*;
 
-
+/**
+ * Entry point for the application.
+ * 
+ * Configures the whole system using Guice reading properties form the
+ * configuration files etc.
+ * 
+ * Also starts up any services that need to run.
+ */
 public class ApplicationContextListener extends GuiceServletContextListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
 
 	public static final String COMPONENT_NAME = "stamdata-data-manager";
 
+	/** A stored reference to the injector so have access to the services. */
 	private Injector injector;
 
 	@Override
@@ -55,7 +63,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	{
 		// We have to call the super method to allow Guice to initialize
 		// itself.
-
+		
 		super.contextInitialized(servletContextEvent);
 
 		// Start the jobs.
@@ -116,8 +124,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				// Bind the service dependencies.
 
 				bind(JobManager.class).in(Scopes.SINGLETON);
-				bind(DatabaseStatus.class).in(Scopes.SINGLETON);
-				bind(ConnectionPool.class).in(Scopes.SINGLETON);
+				bind(DatabaseStatus.class);
+				bind(ConnectionPool.class);
 				
 				// Bind the file parsers.
 				
@@ -125,11 +133,6 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				parsers.addBinding().to(AutorisationsregisterParser.class);
 				parsers.addBinding().to(CPRParser.class);
 				parsers.addBinding().to(DoseringsforslagParser.class);
-				
-				// Bind the batch jobs.
-				
-				Multibinder<BatchJob> batchJobs = Multibinder.newSetBinder(binder(), BatchJob.class);
-				batchJobs.addBinding().to(AutorisationsregisterUpdater.class);
 			}
 		});
 	}

@@ -40,15 +40,13 @@ public class JobManager
 
 	private Scheduler scheduler;
 
-	private final Set<BatchJob> batchJobs;
 	private final Set<FileParserJob> parsers;
-	private Set<Executer> jobs;
+	private Set<Executer> executers;
 	private final ConnectionPool connectionPool;
 
 	@Inject
-	JobManager(Set<BatchJob> batchJobs, Set<FileParserJob> parsers, ConnectionPool connectionPool)
+	JobManager(Set<FileParserJob> parsers, ConnectionPool connectionPool)
 	{
-		this.batchJobs = batchJobs;
 		this.parsers = parsers;
 		this.connectionPool = connectionPool;
 	}
@@ -71,31 +69,16 @@ public class JobManager
 
 			Set<Executer> jobs = Sets.newHashSet();
 
-			CronScheduleBuilder everyFewSeconds = CronScheduleBuilder.cronSchedule("0/5 * * * * ?");
+			CronScheduleBuilder everyFiveSeconds = CronScheduleBuilder.cronSchedule("0/5 * * * * ?");
 
 			for (FileParserJob job : parsers)
 			{
 				Executer executer = new FileParserJobExecuter(job, connectionPool);
 
-				Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(everyFewSeconds).build();
+				Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(everyFiveSeconds).build();
 				JobDataMap jobDataMap = initDataMap(job.getIdentifier(), executer);
 				JobDetail jobDetail = createJobDetail(job.getIdentifier(), jobDataMap);
 				scheduler.scheduleJob(jobDetail, trigger);
-
-				jobs.add(executer);
-			}
-
-			for (BatchJob job : batchJobs)
-			{
-				Executer executer = new BatchJobExecuter(job, connectionPool);
-
-				CronScheduleBuilder configuredSchedule = CronScheduleBuilder.cronSchedule(job.getCronExpression());
-				Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(configuredSchedule).build();
-
-				JobDataMap jobDataMap = initDataMap(job.getIdentifier(), executer);
-				JobDetail detail = createJobDetail(job.getIdentifier(), jobDataMap);
-
-				scheduler.scheduleJob(detail, trigger);
 
 				jobs.add(executer);
 			}
@@ -106,7 +89,7 @@ public class JobManager
 
 	public void stop() throws Exception
 	{
-		jobs.clear();
+		executers.clear();
 		scheduler.shutdown(WAIT_FOR_JOBS_TO_COMPLETE);
 	}
 
@@ -136,7 +119,7 @@ public class JobManager
 
 	public boolean areAllJobsRunning()
 	{
-		for (Executer job : jobs)
+		for (Executer job : executers)
 		{
 			if (!job.isOK())
 			{
@@ -149,7 +132,7 @@ public class JobManager
 
 	public boolean areAnyJobsOverdue()
 	{
-		for (Executer job : jobs)
+		for (Executer job : executers)
 		{
 			if (job.isOverdue())
 			{
@@ -162,6 +145,6 @@ public class JobManager
 
 	public Iterator<Executer> getJobIterator()
 	{
-		return jobs.iterator();
+		return executers.iterator();
 	}
 }

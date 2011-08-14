@@ -22,11 +22,6 @@ public class SikredeIntegrationTest
 	public void cleanDatabase() throws Exception
 	{
 		connection = Helpers.getConnection();
-
-		Statement statement = connection.createStatement();
-		statement.execute("truncate table Sikrede");
-		statement.execute("truncate table SikredeYderRelation");
-		statement.execute("truncate table SaerligSundhedskort");
 	}
 
 	@After
@@ -42,6 +37,7 @@ public class SikredeIntegrationTest
 		importFile("data/sikrede/20110701.SIKREDE");
 
 		Statement stmt = connection.createStatement();
+		
 		ResultSet rs = stmt.executeQuery("SELECT * FROM Sikrede WHERE CPR='1607769871'");
 		assertTrue("No 'Sikrede' row found for CPR 1607769871", rs.next());
 		assertEquals("ValidFrom matcher ikke", new DateTime(2011, 7, 13, 0, 0, 0, 0), new DateTime(rs.getTimestamp("ValidFrom")));
@@ -59,7 +55,7 @@ public class SikredeIntegrationTest
 		assertEquals("socialLandKode matcher ikke", "DK", rs.getString("socialLandKode"));
 		rs.close();
 
-		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
+		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND Type='C'");
 		int ydernummer = 4294;
 		DateTime ydernummerIkraftDato = new DateTime(2009, 1, 1, 0, 0, 0, 0);
 		DateTime gruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
@@ -69,7 +65,7 @@ public class SikredeIntegrationTest
 		assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
 		rs.close();
 
-		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='F'");
+		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND Type='F'");
 		ydernummer = 4296;
 		ydernummerIkraftDato = new DateTime(2007, 1, 1, 0, 0, 0, 0);
 		ydernummerRegistreringsDato = new DateTime(2006, 12, 1, 0, 0, 0, 0);
@@ -79,7 +75,7 @@ public class SikredeIntegrationTest
 		assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
 		rs.close();
 
-		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='P'");
+		rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND Type='P'");
 		ydernummer = 4295;
 		ydernummerIkraftDato = new DateTime(2008, 1, 1, 0, 0, 0, 0);
 		ydernummerRegistreringsDato = new DateTime(2007, 12, 1, 0, 0, 0, 0);
@@ -110,7 +106,7 @@ public class SikredeIntegrationTest
 		importFile("data/sikrede/20110701.SIKREDE_SSK");
 
 		Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery("Select * from Sikrede where cpr='1607769871'");
+		ResultSet rs = stmt.executeQuery("SELECT * FROM Sikrede WHERE cpr='1607769871'");
 		assertTrue("Der forventes en sygesikret oprettet efter import", rs.next());
 		assertEquals("ValidFrom matcher ikke", new DateTime(2011, 7, 13, 0, 0, 0, 0), new DateTime(rs.getTimestamp("ValidFrom")));
 		assertNull("foelgeskabsPersonCpr skal være null", rs.getString("foelgeskabsPersonCpr"));
@@ -192,6 +188,5 @@ public class SikredeIntegrationTest
 		SikredeParser parser = new SikredeParser(FAKE_TIME_GAP);
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
 		parser.run(new File[] { file }, new AuditingPersister(connection));
-		// con.commit();
 	}
 }

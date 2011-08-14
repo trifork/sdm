@@ -26,8 +26,8 @@ package com.trifork.stamdata.importer.jobs.dkma.model;
 import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
-
-@Output(name = "LaegemiddelDoseringRef")
+// LMS27
+@Output
 public class Doseringskode extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01

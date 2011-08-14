@@ -31,7 +31,6 @@ import com.trifork.stamdata.importer.persistence.*;
 @Output(name = "Person")
 public class Navneoplysninger extends CPREntity
 {
-
 	String cpr;
 	String fornavn;
 	String fornavnMarkering;
@@ -43,9 +42,9 @@ public class Navneoplysninger extends CPREntity
 	String startDatoMarkering;
 	String adresseringsNavn;
 
-	@Override
 	@Id
 	@Output
+	@Override
 	public String getCpr()
 	{
 		return cpr;

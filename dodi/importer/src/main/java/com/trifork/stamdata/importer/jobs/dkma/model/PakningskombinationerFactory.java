@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class PakningskombinationerFactory implements FixedLengthParserConfiguration<Pakningskombinationer>
+public class PakningskombinationerFactory implements FixedLengthParserConfiguration<Pakningskombination>
 {
 	@Override
 	public String getFilename()
@@ -88,7 +88,7 @@ public class PakningskombinationerFactory implements FixedLengthParserConfigurat
 	}
 
 	@Override
-	public void setFieldValue(Pakningskombinationer obj, int fieldNo, String value)
+	public void setFieldValue(Pakningskombination obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

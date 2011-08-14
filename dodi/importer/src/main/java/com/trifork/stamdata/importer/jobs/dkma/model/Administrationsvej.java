@@ -30,7 +30,7 @@ import com.trifork.stamdata.importer.persistence.*;
 @Output
 public class Administrationsvej extends TakstEntity
 {
-	private String kode; // Ref. t. LMS01, felt 16
+	private String kode;
 	private String kortTekst;
 	private String tekst;
 
@@ -41,22 +41,10 @@ public class Administrationsvej extends TakstEntity
 	}
 
 	@Id
-	@Output(name = "AdministrationsvejKode")
+	@Output
 	public String getKode()
 	{
 		return kode;
-	}
-
-	@Output(name = "AdministrationsvejKortTekst")
-	public String getKortTekst()
-	{
-		return kortTekst;
-	}
-
-	@Output(name = "AdministrationsvejTekst")
-	public String getTekst()
-	{
-		return tekst;
 	}
 
 	public void setKode(String kode)
@@ -64,9 +52,21 @@ public class Administrationsvej extends TakstEntity
 		this.kode = kode;
 	}
 
+	@Output
+	public String getKortTekst()
+	{
+		return kortTekst;
+	}
+
 	public void setKortTekst(String kortTekst)
 	{
 		this.kortTekst = kortTekst;
+	}
+
+	@Output
+	public String getTekst()
+	{
+		return tekst;
 	}
 
 	public void setTekst(String tekst)

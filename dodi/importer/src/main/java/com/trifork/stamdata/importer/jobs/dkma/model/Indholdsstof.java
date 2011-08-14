@@ -26,16 +26,15 @@ package com.trifork.stamdata.importer.jobs.dkma.model;
 import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
-
+// LMS30
 @Output
-public class Rekommandationer extends TakstEntity
+public class Indholdsstof extends TakstEntity
 {
-	private Long rekommandationsgruppe;
 	private Long drugID; // Ref. t. LMS01
 	private Long varenummer; // Ref. t. LMS02
-	
-	// Værdier: Anbefales med forbehold / Anbefales ikke
-	private String rekommandationsniveau;
+	private String stofklasse;
+	private String substansgruppe;
+	private String substans; // Kun aktive substanser.
 
 	@Output
 	public Long getDrugID()
@@ -43,25 +42,32 @@ public class Rekommandationer extends TakstEntity
 		return drugID;
 	}
 
-	@Override
-	public Long getKey()
-	{
-		return varenummer;
-	}
-
-	@Output
-	public Long getRekommandationsgruppe()
-	{
-		return rekommandationsgruppe;
-	}
-
-	@Output
-	public String getRekommandationsniveau()
-	{
-		return rekommandationsniveau;
-	}
-
 	@Id
+	@Output(name = "CID")
+	@Override
+	public String getKey()
+	{
+		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
+	}
+
+	@Output
+	public String getStofklasse()
+	{
+		return stofklasse;
+	}
+
+	@Output
+	public String getSubstans()
+	{
+		return substans;
+	}
+
+	@Output
+	public String getSubstansgruppe()
+	{
+		return substansgruppe;
+	}
+
 	@Output
 	public Long getVarenummer()
 	{
@@ -73,14 +79,19 @@ public class Rekommandationer extends TakstEntity
 		this.drugID = drugID;
 	}
 
-	public void setRekommandationsgruppe(Long rekommandationsgruppe)
+	public void setStofklasse(String stofklasse)
 	{
-		this.rekommandationsgruppe = rekommandationsgruppe;
+		this.stofklasse = stofklasse;
 	}
 
-	public void setRekommandationsniveau(String rekommandationsniveau)
+	public void setSubstans(String substans)
 	{
-		this.rekommandationsniveau = rekommandationsniveau;
+		this.substans = substans;
+	}
+
+	public void setSubstansgruppe(String substansgruppe)
+	{
+		this.substansgruppe = substansgruppe;
 	}
 
 	public void setVarenummer(Long varenummer)

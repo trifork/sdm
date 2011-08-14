@@ -70,7 +70,6 @@ public class RequestProcessor
 
 	public Reply process(Request request) throws JAXBException, ParserConfigurationException
 	{
-
 		// AUTHENTICATE THE REQUEST
 
 		if (!(request.getIDCard() instanceof SystemIDCard))

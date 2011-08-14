@@ -27,7 +27,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
-public class SubstitutionAfLaegemidlerUdenFastPrisFactory implements FixedLengthParserConfiguration<SubstitutionAfLaegemidlerUdenFastPris>
+public class SubstitutionAfLaegemidlerUdenFastPrisFactory implements FixedLengthParserConfiguration<SubstitutionAfLegemiddelUdenFastPris>
 {
 	@Override
 	public String getFilename()
@@ -70,7 +70,7 @@ public class SubstitutionAfLaegemidlerUdenFastPrisFactory implements FixedLength
 	}
 
 	@Override
-	public void setFieldValue(SubstitutionAfLaegemidlerUdenFastPris obj, int fieldNo, String value)
+	public void setFieldValue(SubstitutionAfLegemiddelUdenFastPris obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

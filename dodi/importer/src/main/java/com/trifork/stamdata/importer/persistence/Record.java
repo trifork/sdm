@@ -29,7 +29,7 @@ import java.util.Date;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public interface StamdataEntity
+public interface Record
 {
 	public Object getKey();
 

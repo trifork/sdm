@@ -1,0 +1,68 @@
+CREATE TABLE DosageStructure (
+	DosageStructurePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	releaseNumber BIGINT(15) NOT NULL,
+	code VARCHAR(11) NOT NULL,
+	type VARCHAR(100) NOT NULL,
+	simpleString VARCHAR(100), -- OPTIONAL
+	supplementaryText VARCHAR(200), -- OPTIONAL
+	xml VARCHAR(10000) NOT NULL,
+	shortTranslation VARCHAR(70),
+	longTranslation VARCHAR(10000), -- OPTIONAL (The specs say it cannot be NULL. See comment in DosageStructure.java)
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE DosageUnit (
+	DosageUnitPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	releaseNumber BIGINT(15) NOT NULL,
+	code INT(4),
+	textSingular VARCHAR(100) NOT NULL,
+	textPlural VARCHAR(100) NOT NULL,
+	ModifiedDate DATETIME,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE DosageVersion (
+	DosageVersionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	daDate DATE NOT NULL,
+	lmsDate DATE NOT NULL,
+	releaseDate DATE NOT NULL,
+	releaseNumber BIGINT(15) NOT NULL,
+	ModifiedDate DATETIME,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE DrugDosageStructureRelation (
+	DrugDosageStructureRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	id VARCHAR(200) NOT NULL,
+	drugId BIGINT(11) NOT NULL,
+	dosageStructureCode BIGINT(11) NOT NULL,
+	releaseNumber BIGINT(15) NOT NULL,
+	ModifiedDate DATETIME,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+CREATE TABLE DosageDrug (
+	DosageDrugPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	releaseNumber BIGINT(15) NOT NULL,
+	drugId BIGINT(11) NOT NULL,
+	dosageUnitCode BIGINT(11) NOT NULL,
+	drugName VARCHAR(200) NOT NULL,
+	ModifiedDate DATETIME,
+	ValidFrom DATETIME,
+	ValidTo DATETIME,
+	CreatedDate DATETIME,
+	INDEX (releaseNumber)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;

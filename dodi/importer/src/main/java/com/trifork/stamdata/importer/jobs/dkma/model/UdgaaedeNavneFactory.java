@@ -32,7 +32,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class UdgaaedeNavneFactory implements FixedLengthParserConfiguration<UdgaaedeNavne>
+public class UdgaaedeNavneFactory implements FixedLengthParserConfiguration<UdgaaetNavn>
 {
 	@Override
 	public String getFilename()
@@ -79,12 +79,12 @@ public class UdgaaedeNavneFactory implements FixedLengthParserConfiguration<Udga
 	}
 
 	@Override
-	public void setFieldValue(UdgaaedeNavne obj, int fieldNo, String value) throws ParseException
+	public void setFieldValue(UdgaaetNavn obj, int fieldNo, String value) throws ParseException
 	{
 		switch (fieldNo)
 		{
 		case 0:
-			obj.setDrugid(NumberUtils.createLong(value));
+			obj.setDrugID(NumberUtils.createLong(value));
 			break;
 		case 1:
 			if (value != null)

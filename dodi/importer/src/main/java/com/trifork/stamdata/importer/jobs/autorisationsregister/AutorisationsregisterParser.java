@@ -41,7 +41,7 @@ import com.trifork.stamdata.importer.util.Dates;
 
 public class AutorisationsregisterParser implements FileParserJob
 {
-	private static final DateTimeFormatter FILENAME_DATE_FORMAT = Dates.CET_yyyyMMdd;
+	private static final DateTimeFormatter FILENAME_DATE_FORMAT = Dates.DK_yyyyMMdd;
 	
 	private static final String FILE_ENCODING = "ISO8859-15";
 	private static final String JOB_IDENTIFIER = "autorisationsregister_parser";

@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
 import com.trifork.stamdata.importer.persistence.*;
 
 
-@Output(name = "Pakning")
+@Output
 public class Pakning extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01, felt 01
@@ -46,8 +46,11 @@ public class Pakning extends TakstEntity
 	private String medicintilskudskode; // Ref. t. LMS16
 	private String klausulForMedicintilskud; // Ref. t. LMS17
 	private Long antalDDDPrPakning;
+	
 	private Long opbevaringstidNumerisk; // Hos distributør
+	private String opbevaringstidEnhed;
 	private String opbevaringsbetingelser; // Ref. t. LMS20
+	
 	private Date oprettelsesdato; // Format: ååååmmdd
 	private Date datoForSenestePrisaendring; // Format: ååååmmdd
 	private Date udgaaetDato; // Format: ååååmmdd
@@ -63,9 +66,9 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output
-	public Double getAntalDDDPrPakning()
+	public Long getAntalDDDPrPakning()
 	{
-		return (antalDDDPrPakning) / 1000.0;
+		return antalDDDPrPakning;
 	}
 
 	@Output
@@ -75,7 +78,7 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output
-	public String getBeregningskodeAIRegpris()
+	public String getBeregningskodeFraAIPTilRegPris()
 	{
 		return beregningskodeAIPRegpris;
 	}
@@ -86,14 +89,8 @@ public class Pakning extends TakstEntity
 		return datoForSenestePrisaendring;
 	}
 
-	@Output
-	public boolean getDosisdispenserbar()
-	{
-		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
-	}
-
 	@Output(name = "DrugID")
-	public Long getDrugid()
+	public Long getDrugID()
 	{
 		return drugid;
 	}
@@ -105,9 +102,9 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output
-	public boolean getFaerdigfremstillingsgebyr()
+	public String getFaerdigfremstillingsgebyr()
 	{
-		return "B".equalsIgnoreCase(faerdigfremstillingsgebyr);
+		return faerdigfremstillingsgebyr;
 	}
 
 	@Output(name = "KlausuleringsKode")
@@ -127,10 +124,16 @@ public class Pakning extends TakstEntity
 	{
 		return opbevaringsbetingelser;
 	}
+
 	@Output
-	public Long getOpbevaringstid()
+	public String getOpbevaringstidEnhed()
 	{
-		return opbevaringstidNumerisk;
+		return opbevaringstidEnhed;
+	}
+	
+	public void setOpbevaringstidEnhed(String value)
+	{
+		opbevaringstidEnhed = value;
 	}
 
 	@Output
@@ -146,20 +149,15 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output
-	public boolean getPakningOptagetITilskudsgruppe()
+	public String getPakningOptagetITilskudsgruppe()
 	{
-		return "F".equalsIgnoreCase(pakningOptagetITilskudsgruppe);
+		return pakningOptagetITilskudsgruppe;
 	}
 
 	@Output
 	public Long getPakningsdistributoer()
 	{
 		return pakningsdistributoer;
-	}
-
-	public Firma getPakningsdistributoerRef()
-	{
-		return takst.getEntity(Firma.class, pakningsdistributoer);
 	}
 
 	@Output(name = "PakningsstoerrelseTekst")
@@ -169,70 +167,20 @@ public class Pakning extends TakstEntity
 	}
 
 	@Output(name = "PakningsstoerrelseNumerisk")
-	public Double getPakningsstoerrelseNumerisk()
+	public Long getPakningsstoerrelseNumerisk()
 	{
-		if (pakningsstoerrelseNumerisk == 0)
-		{
-			return null;
-		}
-		return pakningsstoerrelseNumerisk / 100.0;
+		return pakningsstoerrelseNumerisk;
 	}
 
 	@Output(name = "Pakningsstoerrelsesenhed")
 	public String getPakningsstorrelseEnhed()
 	{
-		if (pakningsstoerrelseNumerisk == 0)
-		{
-			return null;
-		}
 		return pakningsstoerrelseEnhed;
 	}
 
 	public Priser getPriser()
 	{
 		return takst.getEntity(Priser.class, varenummer);
-	}
-
-	public List<Pakning> getSubstitutioner()
-	{
-		Dataset<Substitution> subst = takst.getDatasetOfType(Substitution.class);
-		Dataset<SubstitutionAfLaegemidlerUdenFastPris> substufp = takst.getDatasetOfType(SubstitutionAfLaegemidlerUdenFastPris.class);
-		List<Long> substitutionsgrupper = new ArrayList<Long>();
-		for (Substitution substitution : subst.getEntities())
-		{
-			if (substitution.getReceptensVarenummer().equals(varenummer))
-			{
-				substitutionsgrupper.add(substitution.getSubstitutionsgruppenummer());
-			}
-		}
-		for (SubstitutionAfLaegemidlerUdenFastPris substitutionufp : substufp.getEntities())
-		{
-			if (substitutionufp.getVarenummer().equals(varenummer))
-			{
-				substitutionsgrupper.add(substitutionufp.getSubstitutionsgruppenummer());
-			}
-		}
-
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-		List<Pakning> substitutioner = new ArrayList<Pakning>();
-		for (Long substgruppe : substitutionsgrupper)
-		{
-			for (Substitution substitution : subst.getEntities())
-			{
-				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe) && !substitution.getReceptensVarenummer().equals(varenummer))
-				{
-					substitutioner.add(pakninger.getEntityById(substitution.getReceptensVarenummer()));
-				}
-			}
-			for (SubstitutionAfLaegemidlerUdenFastPris substitution : substufp.getEntities())
-			{
-				if (substitution.getSubstitutionsgruppenummer().equals(substgruppe) && !substitution.getVarenummer().equals(varenummer))
-				{
-					substitutioner.add(pakninger.getEntityById(substitution.getVarenummer()));
-				}
-			}
-		}
-		return substitutioner;
 	}
 
 	@Output
@@ -247,20 +195,10 @@ public class Pakning extends TakstEntity
 		return udleveringsbestemmelse;
 	}
 
-	public Udleveringsbestemmelser getUdleveringsbestemmelseRef()
-	{
-		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
-	}
-
 	@Output
 	public String getUdleveringSpeciale()
 	{
 		return udleveringSpeciale;
-	}
-
-	public SpecialeForNBS getUdleveringSpecialeRef()
-	{
-		return takst.getEntity(SpecialeForNBS.class, udleveringSpeciale);
 	}
 
 	@Id
@@ -276,15 +214,16 @@ public class Pakning extends TakstEntity
 		return varenummerForDelpakning;
 	}
 
+	@Deprecated
 	public boolean isTilHumanAnvendelse()
 	{
 		Laegemiddel lm = takst.getEntity(Laegemiddel.class, drugid);
-		
+
 		if (lm == null)
 		{
 			return true;
 		}
-		
+
 		return lm.isTilHumanAnvendelse();
 	}
 

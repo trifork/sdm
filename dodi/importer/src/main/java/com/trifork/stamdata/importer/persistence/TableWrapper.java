@@ -23,7 +23,9 @@
 
 package com.trifork.stamdata.importer.persistence;
 
+import static com.trifork.stamdata.Preconditions.*;
 import static com.trifork.stamdata.importer.util.Dates.*;
+import static org.slf4j.helpers.MessageFormatter.*;
 
 import java.lang.reflect.*;
 import java.sql.*;
@@ -32,13 +34,15 @@ import java.util.Date;
 
 import org.slf4j.*;
 
+import com.google.common.collect.Lists;
+
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class DatabaseTableWrapper<T extends StamdataEntity>
+public class TableWrapper<T extends Record>
 {
-	private static Logger logger = LoggerFactory.getLogger(DatabaseTableWrapper.class);
+	private static Logger logger = LoggerFactory.getLogger(TableWrapper.class);
 
 	private PreparedStatement insertRecordStmt;
 	private PreparedStatement insertAndUpdateRecordStmt;
@@ -59,19 +63,19 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	private List<String> notUpdatedColumns;
 	private int insertedRecords, updatedRecords, deletedRecords = 0;
 
-	public DatabaseTableWrapper(Connection connnection, Class<T> type) throws SQLException
+	public TableWrapper(Connection connnection, Class<T> type) throws SQLException
 	{
 		this(connnection, type, Dataset.getEntityTypeDisplayName(type));
 	}
 
-	protected DatabaseTableWrapper(Connection con, Class<T> clazz, String tableName) throws SQLException
+	protected TableWrapper(Connection con, Class<T> clazz, String tableName) throws SQLException
 	{
-		this.tablename = tableName;
-		this.type = clazz;
-		this.connection = con;
+		this.tablename = checkNotNull(tableName);
+		this.type = checkNotNull(clazz);
+		this.connection = checkNotNull(con);
 		this.idMethod = AbstractStamdataEntity.getIdMethod(clazz);
 
-		outputMethods = AbstractStamdataEntity.getOutputMethods(clazz);
+		outputMethods = Records.getOrderedColumnList(clazz);
 		notUpdatedColumns = locateNotUpdatedColumns();
 		insertRecordStmt = prepareInsertStatement();
 		insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
@@ -84,14 +88,15 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	private PreparedStatement prepareInsertStatement() throws SQLException
 	{
-
 		String sql = "INSERT INTO " + tablename + " (" + "ModifiedDate, CreatedDate, ValidFrom, ValidTo";
+		
 		for (Method method : outputMethods)
 		{
 			sql += ", ";
-			String name = AbstractStamdataEntity.getOutputFieldName(method);
+			String name = Records.getColumnName(method);
 			sql += name;
 		}
+		
 		sql += ") values (";
 		sql += "?,"; // modifieddate
 		sql += "?,"; // createddate
@@ -115,7 +120,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		for (Method method : outputMethods)
 		{
 			sql += ", ";
-			String name = AbstractStamdataEntity.getOutputFieldName(method);
+			String name = Records.getColumnName(method);
 			sql += name;
 		}
 
@@ -151,7 +156,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		for (Method method : outputMethods)
 		{
-			sql += ", " + AbstractStamdataEntity.getOutputFieldName(method) + " = ?";
+			sql += ", " + Records.getColumnName(method) + " = ?";
 		}
 
 		sql += " WHERE " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ? and ValidTo = ?";
@@ -167,7 +172,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return connection.prepareStatement(pstmtString);
 	}
 
-	public void insertRow(StamdataEntity sde, Date transactionTime)
+	public void insertRow(Record sde, Date transactionTime)
 	{
 		applyParamsToInsertStatement(insertRecordStmt, sde, transactionTime, transactionTime);
 
@@ -178,6 +183,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		catch (SQLException sqle)
 		{
 			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
+			
 			try
 			{
 				message += " entityid=" + sde.getKey();
@@ -190,7 +196,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 	}
 
-	public void insertAndUpdateRow(StamdataEntity sde, Date transactionTime)
+	public void insertAndUpdateRow(Record sde, Date transactionTime)
 	{
 		applyParamsToInsertAndUpdateStatement(insertAndUpdateRecordStmt, sde, transactionTime, transactionTime);
 
@@ -200,7 +206,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		catch (SQLException sqle)
 		{
-			throw new RuntimeException("Could not insert record.", sqle);
+			throw new RuntimeException(format("Could not insert record. record_type={}", sde.getClass()), sqle);
 		}
 	}
 
@@ -214,7 +220,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		catch (SQLException sqle)
 		{
-			throw new RuntimeException("Could not update record.", sqle);
+			throw new RuntimeException(format("Could not update record. record_type={}", sde.getClass()), sqle);
 		}
 	}
 
@@ -225,34 +231,34 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	private PreparedStatement prepareUpdateValidtoStatement() throws SQLException
 	{
-		String pstmtString = "update " + tablename + " set ValidTo = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ?";
+		String pstmtString = "UPDATE " + tablename + " SET ValidTo = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? and ValidFrom = ?";
 
 		return connection.prepareStatement(pstmtString);
 	}
 
 	private PreparedStatement prepareUpdateValidFromStatement() throws SQLException
 	{
-		String pstmtString = "update " + tablename + " set ValidFrom = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? AND ValidFrom = ?";
+		String pstmtString = "UPDATE " + tablename + " SET ValidFrom = ?, " + "ModifiedDate = ? WHERE " + Dataset.getIdOutputName(type) + " = ? AND ValidFrom = ?";
 
 		return connection.prepareStatement(pstmtString);
 	}
 
 	public PreparedStatement prepareDeleteStatement() throws SQLException
 	{
-		String sql = "delete from " + tablename + " where " + Dataset.getIdOutputName(type) + " = " + "? and ValidFrom = ?";
+		String sql = "DELETE FROM " + tablename + " WHERE " + Dataset.getIdOutputName(type) + " = " + "? AND ValidFrom = ?";
 		return connection.prepareStatement(sql);
 	}
 
-	public int applyParamsToInsertStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime)
+	public int applyParamsToInsertStatement(PreparedStatement pstmt, Record sde, Date transactionTime, Date createdTime)
 	{
 		int idx = 1;
 
 		try
 		{
-			pstmt.setTimestamp(idx++, new Timestamp(transactionTime.getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(createdTime.getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidFrom().getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidTo().getTime()));
+			pstmt.setTimestamp(idx++, new Timestamp(transactionTime.getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(createdTime.getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidFrom().getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidTo().getTime()), DK_CALENDAR);
 		}
 		catch (SQLException sqle)
 		{
@@ -292,7 +298,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return idx;
 	}
 
-	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime)
+	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, Record sde, Date transactionTime, Date createdTime)
 	{
 		int idx = applyParamsToInsertStatement(pstmt, sde, transactionTime, createdTime);
 
@@ -322,14 +328,15 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return idx;
 	}
 
-	public void applyParamsToUpdateStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime, Date existingValidFrom, Date existingValidTo)
+	public void applyParamsToUpdateStatement(PreparedStatement pstmt, Record sde, Date transactionTime, Date createdTime, Date existingValidFrom, Date existingValidTo)
 	{
 		int idx = 1;
+
 		try
 		{
-			pstmt.setTimestamp(idx++, new Timestamp(transactionTime.getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidFrom().getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidTo().getTime()));
+			pstmt.setTimestamp(idx++, new Timestamp(transactionTime.getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidFrom().getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(sde.getValidTo().getTime()), DK_CALENDAR);
 		}
 		catch (SQLException sqle)
 		{
@@ -370,8 +377,8 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		{
 			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
 			setObjectOnPreparedStatement(pstmt, idx++, sde.getKey());
-			pstmt.setTimestamp(idx++, new Timestamp(existingValidFrom.getTime()));
-			pstmt.setTimestamp(idx++, new Timestamp(existingValidTo.getTime()));
+			pstmt.setTimestamp(idx++, new Timestamp(existingValidFrom.getTime()), DK_CALENDAR);
+			pstmt.setTimestamp(idx++, new Timestamp(existingValidTo.getTime()), DK_CALENDAR);
 		}
 		catch (SQLException sqle)
 		{
@@ -404,7 +411,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		else if (o instanceof Date)
 		{
-			pstmt.setTimestamp(idx++, new Timestamp(((Date) o).getTime()));
+			pstmt.setTimestamp(idx++, new Timestamp(((Date) o).getTime()), DK_CALENDAR);
 		}
 		else if (o == null)
 		{
@@ -428,9 +435,9 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	 */
 	public boolean fetchEntityVersions(Object id, Date validFrom, Date validTo) throws SQLException
 	{
-		this.selectByIdStmt.setObject(1, id);
-		this.selectByIdStmt.setTimestamp(2, new Timestamp(validFrom.getTime()));
-		this.selectByIdStmt.setTimestamp(3, new Timestamp(validTo.getTime()));
+		selectByIdStmt.setObject(1, id);
+		selectByIdStmt.setTimestamp(2, new Timestamp(validFrom.getTime()), DK_CALENDAR);
+		selectByIdStmt.setTimestamp(3, new Timestamp(validTo.getTime()), DK_CALENDAR);
 		currentRS = selectByIdStmt.executeQuery();
 
 		return currentRS.next();
@@ -438,7 +445,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public boolean fetchEntityVersions(Date validFrom, Date validTo) throws SQLException
 	{
-		String sql = "SELECT * FROM " + tablename + " WHERE NOT (ValidTo < '" + toMySQLdate(validFrom) + "' OR ValidFrom > '" + toMySQLdate(validTo) + "')";
+		String sql = "SELECT * FROM " + tablename + " WHERE NOT (ValidTo < '" + toMySQLDateDK(validFrom) + "' OR ValidFrom > '" + toMySQLDateDK(validTo) + "')";
 		currentRS = connection.createStatement().executeQuery(sql);
 		return currentRS.next();
 	}
@@ -448,12 +455,12 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		// We do the conversion from timestamp to date because
 		// the two types cannot be compared easily otherwise.
 
-		return new Date(currentRS.getTimestamp("ValidFrom").getTime());
+		return new Date(currentRS.getTimestamp("ValidFrom", DK_CALENDAR).getTime());
 	}
 
 	public Date getCurrentRowValidTo() throws SQLException
 	{
-		return new Date(currentRS.getTimestamp("ValidTo").getTime());
+		return new Date(currentRS.getTimestamp("ValidTo", DK_CALENDAR).getTime());
 	}
 
 	public boolean nextRow() throws SQLException
@@ -467,7 +474,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		for (Method method : outputMethods)
 		{
 			sql += ", ";
-			String name = AbstractStamdataEntity.getOutputFieldName(method);
+			String name = Records.getColumnName(method);
 			sql += name;
 		}
 		for (String notUpdateName : notUpdatedColumns)
@@ -476,10 +483,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 
 		sql += ") values (";
-		sql += "'" + toMySQLdate(transactionTime) + "',"; // modifieddate
-		sql += "'" + toMySQLdate(transactionTime) + "',"; // createddate
-		sql += "'" + toMySQLdate(validFrom) + "',"; // validfrom
-		sql += "'" + toMySQLdate(currentRS.getTimestamp("ValidTo")) + "'"; // validTo
+		sql += "'" + toMySQLDateDK(transactionTime) + "',"; // modifieddate
+		sql += "'" + toMySQLDateDK(transactionTime) + "',"; // createddate
+		sql += "'" + toMySQLDateDK(validFrom) + "',"; // validfrom
+		sql += "'" + toMySQLDateDK(currentRS.getTimestamp("ValidTo", DK_CALENDAR)) + "'"; // validTo
 
 		for (int i = 0; i < outputMethods.size(); i++)
 		{
@@ -499,7 +506,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 		for (Method method : outputMethods)
 		{
-			stmt.setObject(idx++, currentRS.getObject(AbstractStamdataEntity.getOutputFieldName(method)));
+			stmt.setObject(idx++, currentRS.getObject(Records.getColumnName(method)));
 		}
 
 		for (String notUpdateName : notUpdatedColumns)
@@ -513,10 +520,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public void updateValidToOnCurrentRow(Date validTo, Date transactionTime) throws SQLException
 	{
-		updateValidToStmt.setTimestamp(1, new Timestamp(validTo.getTime()));
-		updateValidToStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
+		updateValidToStmt.setTimestamp(1, new Timestamp(validTo.getTime()), DK_CALENDAR);
+		updateValidToStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()), DK_CALENDAR);
 		updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
-		updateValidToStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"));
+		updateValidToStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom", DK_CALENDAR), DK_CALENDAR);
 
 		int rowsAffected = updateValidToStmt.executeUpdate();
 
@@ -545,10 +552,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public void updateValidFromOnCurrentRow(Date validFrom, Date transactionTime) throws SQLException
 	{
-		updateValidFromStmt.setTimestamp(1, new Timestamp(validFrom.getTime()));
-		updateValidFromStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
+		updateValidFromStmt.setTimestamp(1, new Timestamp(validFrom.getTime()), DK_CALENDAR);
+		updateValidFromStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()), DK_CALENDAR);
 		updateValidFromStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
-		updateValidFromStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"));
+		updateValidFromStmt.setTimestamp(4, currentRS.getTimestamp("ValidFrom"), DK_CALENDAR);
 
 		int rowsAffected = updateValidFromStmt.executeUpdate();
 		if (rowsAffected != 1)
@@ -559,7 +566,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		updatedRecords += rowsAffected;
 	}
 
-	public boolean dataInCurrentRowEquals(StamdataEntity sde) throws Exception
+	public boolean dataInCurrentRowEquals(Record sde) throws Exception
 	{
 		for (Method method : outputMethods)
 		{
@@ -572,11 +579,11 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return true;
 	}
 
-	private boolean fieldEqualsCurrentRow(Method method, StamdataEntity sde) throws Exception
+	private boolean fieldEqualsCurrentRow(Method method, Record entity) throws Exception
 	{
-		String fieldname = AbstractStamdataEntity.getOutputFieldName(method);
+		String fieldname = Records.getColumnName(method);
 
-		Object o = method.invoke(sde);
+		Object o = method.invoke(entity);
 
 		if (o instanceof String)
 		{
@@ -625,7 +632,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 		else if (o instanceof Date)
 		{
-			Timestamp ts = currentRS.getTimestamp(fieldname);
+			Timestamp ts = currentRS.getTimestamp(fieldname, DK_CALENDAR);
 			if (ts == null)
 			{
 				return false;
@@ -665,7 +672,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public List<StamdataEntityVersion> getEntityVersions(Date validFrom, Date validTo) throws SQLException
 	{
-		String sql = "select " + AbstractStamdataEntity.getOutputFieldName(idMethod) + ", validFrom from " + tablename + " where not (ValidTo < '" + toMySQLdate(validFrom) + "' or ValidFrom > '" + toMySQLdate(validTo) + "')";
+		String sql = "select " + Records.getColumnName(idMethod) + ", validFrom from " + tablename + " where not (ValidTo < '" + toMySQLDateDK(validFrom) + "' or ValidFrom > '" + toMySQLDateDK(validTo) + "')";
 		currentRS = connection.createStatement().executeQuery(sql);
 
 		List<StamdataEntityVersion> evs = new ArrayList<StamdataEntityVersion>();
@@ -674,7 +681,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		{
 			StamdataEntityVersion ev = new StamdataEntityVersion();
 			ev.id = currentRS.getObject(1);
-			ev.validFrom = currentRS.getTimestamp(2);
+			ev.validFrom = currentRS.getTimestamp(2, DK_CALENDAR);
 			evs.add(ev);
 		}
 
@@ -694,10 +701,10 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	public void updateValidToOnEntityVersion(Date validTo, StamdataEntityVersion evs, Date transactionTime) throws SQLException
 	{
-		updateValidToStmt.setTimestamp(1, new Timestamp(validTo.getTime()));
-		updateValidToStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
+		updateValidToStmt.setTimestamp(1, new Timestamp(validTo.getTime()), DK_CALENDAR);
+		updateValidToStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()), DK_CALENDAR);
 		updateValidToStmt.setObject(3, evs.id);
-		updateValidToStmt.setTimestamp(4, new Timestamp(evs.validFrom.getTime()));
+		updateValidToStmt.setTimestamp(4, new Timestamp(evs.validFrom.getTime()), DK_CALENDAR);
 
 		int rowsAffected = updateValidToStmt.executeUpdate();
 		if (rowsAffected != 1)
@@ -720,11 +727,11 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	 */
 	public List<String> locateNotUpdatedColumns() throws SQLException
 	{
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> res = Lists.newArrayList();
 		Statement stm = null;
 
 		stm = connection.createStatement();
-		stm.execute("desc " + tablename);
+		stm.execute("DESC " + tablename);
 		ResultSet rs = stm.getResultSet();
 
 		while (rs.next())
@@ -733,23 +740,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 			// Ignore all system columns
 
-			if (colName.toUpperCase().indexOf("PID") > 0)
-			{
-				continue;
-			}
-			if (colName.equalsIgnoreCase("ModifiedDate"))
-			{
-				continue;
-			}
-			if (colName.equalsIgnoreCase("CreatedDate"))
-			{
-				continue;
-			}
-			if (colName.equalsIgnoreCase("ValidFrom"))
-			{
-				continue;
-			}
-			if (colName.equalsIgnoreCase("ValidTo"))
+			if (colName.equals("PID") || colName.equalsIgnoreCase("ModifiedDate") || colName.equalsIgnoreCase("CreatedDate") || colName.equalsIgnoreCase("ValidFrom") || colName.equalsIgnoreCase("ValidTo"))
 			{
 				continue;
 			}
@@ -759,7 +750,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			{
 				// Ignore the columns that are updated by the entity
 
-				String name = AbstractStamdataEntity.getOutputFieldName(method);
+				String name = Records.getColumnName(method);
 				if (colName.equalsIgnoreCase(name))
 				{
 					found = true;

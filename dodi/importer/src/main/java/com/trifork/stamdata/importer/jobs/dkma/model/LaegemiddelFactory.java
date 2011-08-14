@@ -29,6 +29,7 @@ import java.util.Date;
 import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
+import com.trifork.stamdata.importer.util.Dates;
 
 public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegemiddel>
 {
@@ -158,7 +159,7 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 		switch (fieldNo)
 		{
 		case 0:
-			obj.setDrugid(NumberUtils.createLong(value));
+			obj.setDrugID(NumberUtils.createLong(value));
 			break;
 		case 1:
 			obj.setVaretype(value);
@@ -206,8 +207,7 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 			obj.setAdministrationsvej(value);
 			break;
 		case 16:
-			boolean hasWarning = "J".equalsIgnoreCase(value);
-			obj.setTrafikadvarsel(hasWarning);
+			obj.setTrafikadvarsel(value);
 			break;
 		case 17:
 			obj.setSubstitution(value);
@@ -216,13 +216,12 @@ public class LaegemiddelFactory implements FixedLengthParserConfiguration<Laegem
 			obj.setLaegemidletsSubstitutionsgruppe(value);
 			break;
 		case 22:
-			boolean suitedForDosageDispensation = "D".equalsIgnoreCase(value);
-			obj.setEgnetTilDosisdispensering(suitedForDosageDispensation);
+			obj.setEgnetTilDosisdispensering(value);
 			break;
 		case 23:
 			if (value != null)
 			{
-				Date date = new SimpleDateFormat("yyyyMMdd").parse(value);
+				Date date = Dates.DK_yyyyMMdd.parseDateTime(value).toDate();
 				obj.setDatoForAfregistrAfLaegemiddel(date);
 			}
 			break;

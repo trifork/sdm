@@ -34,12 +34,12 @@ import com.trifork.stamdata.importer.util.Dates;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public abstract class AbstractStamdataEntity implements StamdataEntity
+public abstract class AbstractStamdataEntity implements Record
 {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
-	private static final Map<Class<? extends StamdataEntity>, Method> idMethodCache = new HashMap<Class<? extends StamdataEntity>, Method>();
-	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
+	private static final Map<Class<? extends Record>, Method> idMethodCache = new HashMap<Class<? extends Record>, Method>();
+	static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 
 	@Override
 	public Object getKey()
@@ -61,18 +61,13 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	 * @return the getter method that contains the unique id for the given
 	 *         StamdataEntity type
 	 */
-	public static Method getIdMethod(Class<? extends StamdataEntity> type)
+	public static Method getIdMethod(Class<? extends Record> type)
 	{
 		Method m = idMethodCache.get(type);
 
-		if (m != null)
-		{
-			return m;
-		}
-
-		Method[] allMethods = type.getMethods();
-
-		for (Method method : allMethods)
+		if (m != null) return m;
+		
+		for (Method method : type.getMethods())
 		{
 			if (method.isAnnotationPresent(Id.class))
 			{
@@ -81,50 +76,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 			}
 		}
 
-		// TODO: This should be an precondition exception.
-
-		logger.error("Could not find idmethod for class: " + type + " A getter must be annotated with @Id!");
-
-		return null;
-	}
-
-	/**
-	 * @param method A getter method, that is used for serialization.
-	 * @return The name used to designate this field when serializing
-	 */
-	public static String getOutputFieldName(Method method)
-	{
-		String name = outputFieldNames.get(method);
-
-		if (name == null)
-		{
-			Output output = method.getAnnotation(Output.class);
-			name = method.getName().substring(3); // Strip "get"
-
-			if (output != null && output.name().length() > 0)
-			{
-				name = output.name();
-			}
-
-			outputFieldNames.put(method, name);
-		}
-		return name;
-	}
-
-	public static List<Method> getOutputMethods(Class<? extends StamdataEntity> type)
-	{
-		Method[] methods = type.getMethods();
-		List<Method> outputMethods = new ArrayList<Method>();
-
-		for (Method method : methods)
-		{
-			if (method.isAnnotationPresent(Output.class))
-			{
-				outputMethods.add(method);
-			}
-		}
-
-		return outputMethods;
+		throw new RuntimeException("Could not find idmethod for class: " + type + " A getter must be annotated with @Id!");
 	}
 
 	@Override

@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.importer.util;
 
+import java.sql.Timestamp;
 import java.text.*;
 import java.util.*;
 
@@ -32,40 +33,58 @@ import org.joda.time.format.*;
 import com.trifork.stamdata.Preconditions;
 
 
+/* Helpers for handling dates and time.
+ * 
+ * These date formatters and converters should be used when managing data
+ * in the registries.
+ * 
+ * Is is not safe to assume that all registries will use Danish time (CET),
+ * though this is mostly the case.
+ * 
+ * WARNING! DO NOT SET THE DEFAULT TIME ZONE. It is not always clear what the
+ * default time zone is set to and setting the TimeZone.setDefault() could
+ * change the default for the entire JVM! (depending on JVM version)
+ * Other applications might do the same, so always specify your timezone or
+ * use these helpers.
+ */
 public class Dates
 {
-	// Is is safe to assume that most registries will note time in CET as it is
-	// the Danish time zone.
-	// You do have to be careful through. It is not always clear what the
-	// default time zone it set to and setting the TimeZone.setDefault() could
-	// change the default for the entire JVM! (depending on JVM version)
+	public static final DateTimeZone DK_TIMEZONE = DateTimeZone.forID("Europe/Copenhagen");
+	public static final Calendar DK_CALENDAR = Calendar.getInstance(DK_TIMEZONE.toTimeZone());
 
-	public static final DateTimeZone CET_TIMEZONE = DateTimeZone.forID("Europe/Copenhagen");
+	public static final Date THE_END_OF_TIME = new DateTime(2999, 12, 31, 0, 0, 0, 0, DK_TIMEZONE).toDate();
 
-	public static final DateTimeFormatter CET_yyyyMMdd = ISODateTimeFormat.basicDate().withZone(CET_TIMEZONE);
-	public static final DateTimeFormatter CET_yyyyMMddHHmm = DateTimeFormat.forPattern("yyyyMMddHHmm").withZone(CET_TIMEZONE);
-	public static final DateTimeFormatter CET_yyyy_MM_dd = ISODateTimeFormat.date().withZone(CET_TIMEZONE);
+	public static final DateTimeFormatter DK_yyyyMMdd = ISODateTimeFormat.basicDate().withZone(DK_TIMEZONE);
+	public static final DateTimeFormatter DK_yyyyMMddHHmm = DateTimeFormat.forPattern("yyyyMMddHHmm").withZone(DK_TIMEZONE);
+	public static final DateTimeFormatter DK_yyyy_MM_dd = ISODateTimeFormat.date().withZone(DK_TIMEZONE);
 
-	public static final Date THE_END_OF_TIME = new DateTime(2999, 12, 31, 0, 0, 0, 0, DateTimeZone.UTC).toDate();
-
-	@Deprecated
-	public static Date toCETDate(int year, int month, int date)
+	public static Date newDateDK(int year, int month, int date)
 	{
-		return new DateTime().withDate(year, month, date).withZone(CET_TIMEZONE).toDate();
+		return newDateDK(year, month, date, 0, 0, 0);
+	}
+
+	public static Timestamp newTimestampDK(int year, int month, int date)
+	{
+		return new Timestamp(newDateDK(year, month, date).getTime());
+	}
+
+	public static Date newDateDK(int year, int month, int date, int hours, int minutes, int secs)
+	{
+		return new DateTime(year, month, date, hours, minutes, secs, 0, DK_TIMEZONE).toDate();
+	}
+
+	public static Timestamp newTimestampDK(int year, int month, int date, int hours, int minutes, int secs)
+	{
+		return new Timestamp(newDateDK(year, month, date, hours, minutes, secs).getTime());
 	}
 
 	@Deprecated
-	public static Date toCETDate(int year, int month, int date, int hours, int minutes, int secs)
-	{
-		return new DateTime(year, month, date, hours, minutes, secs, 0, CET_TIMEZONE).toDate();
-	}
-
-	@Deprecated
-	public static String toMySQLdate(Date date)
+	public static String toMySQLDateDK(Date date)
 	{
 		Preconditions.checkNotNull(date);
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		sdf.setTimeZone(DK_TIMEZONE.toTimeZone());
 		return sdf.format(date);
 	}
 }

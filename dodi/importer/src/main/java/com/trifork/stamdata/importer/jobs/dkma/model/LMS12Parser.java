@@ -21,18 +21,67 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.util;
+package com.trifork.stamdata.importer.jobs.dkma.model;
 
-import static org.junit.Assert.*;
-
-import java.util.Calendar;
-
-import org.junit.Test;
-
-import com.trifork.stamdata.importer.util.Dates;
+import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
-public class DateUtilsTest
+
+public class LMS12Parser implements FixedLengthParserConfiguration<ATC>
 {
+	@Override
+	public String getFilename()
+	{
+		return "lms12.txt";
+	}
 
+	@Override
+	public int getLength(int fieldNo)
+	{
+		switch (fieldNo)
+		{
+		case 0:
+			return 8;
+		case 1:
+			return 72;
+		default:
+			return -1;
+		}
+	}
+
+	@Override
+	public int getNumberOfFields()
+	{
+		return 2;
+	}
+
+	@Override
+	public int getOffset(int fieldNo)
+	{
+		switch (fieldNo)
+		{
+		case 0:
+			return 0;
+		case 1:
+			return 8;
+		default:
+			return -1;
+		}
+	}
+
+	@Override
+	public void setFieldValue(ATC obj, int fieldNo, String value)
+	{
+		switch (fieldNo)
+		{
+		case 0:
+			obj.setKode(value);
+			break;
+		case 1:
+			obj.setTekst(value);
+			break;
+		default:
+			break;
+		}
+	}
 }

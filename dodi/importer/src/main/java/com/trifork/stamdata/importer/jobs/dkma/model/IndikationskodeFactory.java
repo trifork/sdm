@@ -86,7 +86,7 @@ public class IndikationskodeFactory implements FixedLengthParserConfiguration<In
 			obj.setATC(value);
 			break;
 		case 1:
-			obj.setIndikationskode(NumberUtils.createLong(value));
+			obj.setKode(NumberUtils.createLong(value));
 			break;
 		case 2:
 			obj.setDrugID(NumberUtils.createLong(value));

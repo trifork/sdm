@@ -36,7 +36,7 @@ import com.trifork.stamdata.importer.persistence.*;
 @Output(name = "TakstVersion")
 public class Takst extends TakstEntity
 {
-	private final List<CompleteDataset<? extends StamdataEntity>> datasets = new ArrayList<CompleteDataset<? extends StamdataEntity>>();
+	private final List<CompleteDataset<? extends Record>> datasets = new ArrayList<CompleteDataset<? extends Record>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
 	// for a subset of this takst. (The stable subset excludes pricing and
@@ -63,7 +63,7 @@ public class Takst extends TakstEntity
 	@SuppressWarnings("unchecked")
 	public <A extends TakstEntity> TakstDataset<A> getDatasetOfType(Class<A> clazz)
 	{
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends Record> dataset : datasets)
 		{
 			if (clazz.equals(dataset.getType()))
 			{
@@ -74,7 +74,7 @@ public class Takst extends TakstEntity
 		return null;
 	}
 
-	public List<CompleteDataset<? extends StamdataEntity>> getDatasets()
+	public List<CompleteDataset<? extends Record>> getDatasets()
 	{
 		return datasets;
 	}

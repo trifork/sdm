@@ -31,7 +31,7 @@ import java.util.*;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class Dataset<T extends StamdataEntity>
+public class Dataset<T extends Record>
 {
 	private final Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
 	private final Class<T> type;
@@ -106,7 +106,7 @@ public class Dataset<T extends StamdataEntity>
 		return type.getSimpleName();
 	}
 
-	public static String getEntityTypeDisplayName(Class<? extends StamdataEntity> type)
+	public static String getEntityTypeDisplayName(Class<? extends Record> type)
 	{
 		Output output = type.getAnnotation(Output.class);
 		if (output != null && !"".equals(output.name()))
@@ -139,8 +139,8 @@ public class Dataset<T extends StamdataEntity>
 		ents.add(entity);
 	}
 
-	public static String getIdOutputName(Class<? extends StamdataEntity> clazz)
+	public static String getIdOutputName(Class<? extends Record> clazz)
 	{
-		return getOutputFieldName(getIdMethod(clazz));
+		return Records.getColumnName(getIdMethod(clazz));
 	}
 }

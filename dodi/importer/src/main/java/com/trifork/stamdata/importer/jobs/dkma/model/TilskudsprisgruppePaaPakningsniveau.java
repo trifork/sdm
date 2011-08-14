@@ -28,44 +28,37 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class LaegemiddelAdministrationsvejRef extends TakstEntity
+public class TilskudsprisgruppePaaPakningsniveau extends TakstEntity
 {
-	private long drugId;
-	private String AdministrationsvejKode;
+	private Long tilskudsprisGruppe;
+	private Long varenummer; // Ref. t. LMS02
 
-	public LaegemiddelAdministrationsvejRef(Laegemiddel lm, Administrationsvej av)
+	@Override
+	public Long getKey()
 	{
-		drugId = lm.getDrugid();
-		AdministrationsvejKode = av.getKode();
+		return varenummer;
 	}
 
 	@Output
-	public String getAdministrationsvejKode()
+	public Long getTilskudsprisGruppe()
 	{
-		return AdministrationsvejKode;
+		return tilskudsprisGruppe;
 	}
 
 	@Id
 	@Output
-	public String getCID()
+	public Long getVarenummer()
 	{
-		return drugId + "-" + AdministrationsvejKode;
+		return varenummer;
 	}
 
-	@Output
-	public long getDrugId()
+	public void setTilskudsprisGruppe(Long tilskudsprisGruppe)
 	{
-		return drugId;
+		this.tilskudsprisGruppe = tilskudsprisGruppe;
 	}
 
-	public void setAdministrationsvejKode(String administrationsvejKode)
+	public void setVarenummer(Long varenummer)
 	{
-		AdministrationsvejKode = administrationsvejKode;
+		this.varenummer = varenummer;
 	}
-
-	public void setDrugId(long drugId)
-	{
-		this.drugId = drugId;
-	}
-
 }

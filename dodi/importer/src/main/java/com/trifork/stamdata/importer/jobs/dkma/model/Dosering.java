@@ -30,108 +30,74 @@ import com.trifork.stamdata.importer.persistence.*;
 @Output
 public class Dosering extends TakstEntity
 {
-	private Long doseringKode; // Ref. t. LMS27
-	private String doseringKortTekst;
-	private String doseringstekstTotal; // Felt 05 + 06 + 07
+	private Long kode; // Ref. t. LMS27
+	private String kortTekst;
+	private String tekst; // Felt 05 + 06 + 07
 	private Long antalEnhDoegn;
-	private String doseringstekstLinie1;
-	private String doseringstekstLinie2;
-	private String doseringstekstLinie3;
-	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
-									// anvendes)
+	
+	// TODO: What is meant by this?
+	// A = Aktiv kode. I = Inaktiv kode (bør ikke anvendes)
+	private String aktivInaktiv; 
 
-	@Output(name = "Aktiv")
-	public Boolean getAktivInaktiv()
+	@Output
+	public String getAktiv()
 	{
-		return "A".equalsIgnoreCase(aktivInaktiv);
+		return aktivInaktiv;
 	}
 
-	@Output(name = "AntalEnhederPrDoegn")
-	public Double getAntalEnhDoegn()
+	@Output
+	public Long getAntalEnhederPrDoegn()
 	{
-		return antalEnhDoegn / 1000.0;
+		return antalEnhDoegn;
 	}
 
 	@Id
 	@Output
-	public Long getDoseringKode()
+	public Long getKode()
 	{
-		return doseringKode;
+		return kode;
 	}
 
 	@Output
-	public String getDoseringKortTekst()
+	public String getKortTekst()
 	{
-		return doseringKortTekst;
+		return kortTekst;
 	}
 
 	@Output
-	public String getDoseringstekstLinie1()
+	public String getTekst()
 	{
-		return doseringstekstLinie1;
-	}
-
-	@Output
-	public String getDoseringstekstLinie2()
-	{
-		return doseringstekstLinie2;
-	}
-
-	@Output
-	public String getDoseringstekstLinie3()
-	{
-		return doseringstekstLinie3;
-	}
-
-	@Output(name = "DoseringTekst")
-	public String getDoseringstekstTotal()
-	{
-		return doseringstekstTotal;
+		return tekst;
 	}
 
 	@Override
 	public Long getKey()
 	{
-		return doseringKode;
+		return kode;
 	}
 
-	public void setAktivInaktiv(String aktivInaktiv)
+	public void setAktiv(String value)
 	{
-		this.aktivInaktiv = aktivInaktiv;
+		this.aktivInaktiv = value;
 	}
 
-	public void setAntalEnhDoegn(Long antalEnhDoegn)
+	public void setAntalEnhDoegn(Long value)
 	{
-		this.antalEnhDoegn = antalEnhDoegn;
+		this.antalEnhDoegn = value;
 	}
 
-	public void setDoseringKortTekst(String doseringKortTekst)
+	public void setKortTekst(String value)
 	{
-		this.doseringKortTekst = doseringKortTekst;
+		this.kortTekst = value;
 	}
 
-	public void setDoseringskode(Long doseringskode)
+	public void setKode(Long value)
 	{
-		doseringKode = doseringskode;
+		this.kode = value;
 	}
 
-	public void setDoseringstekstLinie1(String doseringstekstLinie1)
+	public void setTekst(String doseringstekstTotal)
 	{
-		this.doseringstekstLinie1 = doseringstekstLinie1;
-	}
-
-	public void setDoseringstekstLinie2(String doseringstekstLinie2)
-	{
-		this.doseringstekstLinie2 = doseringstekstLinie2;
-	}
-
-	public void setDoseringstekstLinie3(String doseringstekstLinie3)
-	{
-		this.doseringstekstLinie3 = doseringstekstLinie3;
-	}
-
-	public void setDoseringstekstTotal(String doseringstekstTotal)
-	{
-		this.doseringstekstTotal = doseringstekstTotal;
+		this.tekst = doseringstekstTotal;
 	}
 }

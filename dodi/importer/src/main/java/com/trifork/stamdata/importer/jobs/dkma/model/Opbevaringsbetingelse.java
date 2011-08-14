@@ -28,37 +28,50 @@ import com.trifork.stamdata.importer.persistence.*;
 
 
 @Output
-public class Pakningsstoerrelsesenhed extends TakstEntity
+public class Opbevaringsbetingelse extends TakstEntity
 {
-	private final DivEnheder enheder;
-
-	public Pakningsstoerrelsesenhed(DivEnheder enheder)
-	{
-		this.enheder = enheder;
-	}
+	private String kode; // Ref. t. LMS02, felt 17
+	private String kortTekst;
+	private String tekst;
 
 	@Override
 	public String getKey()
 	{
-		return enheder.getKode();
+		return "" + kode;
 	}
 
 	@Id
 	@Output
-	public String getPakningsstoerrelsesenhedKode()
+	public String getKode()
 	{
-		return enheder.getKode();
+		return kode;
 	}
 
 	@Output
-	public String getPakningsstoerrelsesenhedKortTekst()
+	public String getKortTekst()
 	{
-		return enheder.getKortTekst();
+		return kortTekst;
 	}
 
 	@Output
-	public String getPakningsstoerrelsesenhedTekst()
+	public String getTekst()
 	{
-		return enheder.getTekst();
+		return tekst;
 	}
+
+	public void setKode(String kode)
+	{
+		this.kode = kode;
+	}
+
+	public void setKortTekst(String kortTekst)
+	{
+		this.kortTekst = kortTekst;
+	}
+
+	public void setTekst(String tekst)
+	{
+		this.tekst = tekst;
+	}
+
 }

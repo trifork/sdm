@@ -21,27 +21,44 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.dkma;
+package com.trifork.stamdata.importer.jobs.dkma.model;
 
-import java.util.*;
-
-import junit.framework.TestCase;
-
-import org.junit.Test;
-
-import com.trifork.stamdata.importer.jobs.dkma.model.ATCKoderOgTekst;
-import com.trifork.stamdata.importer.util.Dates;
+import com.trifork.stamdata.importer.jobs.dkma.TakstEntity;
+import com.trifork.stamdata.importer.persistence.*;
 
 
-public class TakstModelTest extends TestCase
+@Output
+public class SubstitutionAfLegemiddelUdenFastPris extends TakstEntity
 {
-	@Test
-	public void testManyToMany() throws Exception
+	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
+	private Long varenummer;
+
+	@Override
+	public Long getKey()
 	{
-		Date from = Dates.toCETDate(2000, 1, 1);
-		Date to = Dates.toCETDate(2000, 12, 1);
-		Takst takst = new Takst(from, to);
-		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst, new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);
-		takst.addDataset(atckoder);
+		return varenummer;
+	}
+
+	@Output
+	public Long getSubstitutionsgruppenummer()
+	{
+		return substitutionsgruppenummer;
+	}
+
+	@Id
+	@Output
+	public Long getVarenummer()
+	{
+		return varenummer;
+	}
+
+	public void setSubstitutionsgruppenummer(Long substitutionsgruppenummer)
+	{
+		this.substitutionsgruppenummer = substitutionsgruppenummer;
+	}
+
+	public void setVarenummer(Long varenummer)
+	{
+		this.varenummer = varenummer;
 	}
 }

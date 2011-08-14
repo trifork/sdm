@@ -70,7 +70,7 @@ public class DoseringsforslagImporterTest
 		// it is a lot faster.
 		//
 		// The other files contain several records and are
-		// used to count the number of records importet.
+		// used to count the number of records imported.
 
 		versionFile = getFile("single/DosageVersion.json");
 		drugsFile = getFile("single/Drugs.json");
@@ -185,7 +185,7 @@ public class DoseringsforslagImporterTest
 		importer.run(files, persister);
 	}
 
-	public <T extends StamdataEntity> T getFirst(Class<T> type)
+	public <T extends Record> T getFirst(Class<T> type)
 	{
 		CompleteDataset<T> structures = persister.getDataset(type);
 		return structures.getEntities().iterator().next();
@@ -194,27 +194,27 @@ public class DoseringsforslagImporterTest
 	
 	private class MockPersister implements Persister
 	{
-		Map<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>> results;
+		Map<Class<? extends Record>, CompleteDataset<? extends Record>> results;
 
 		@Override
-		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
+		public void persistCompleteDataset(CompleteDataset<? extends Record>... datasets) throws Exception
 		{
-			results = new HashMap<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>>();
+			results = new HashMap<Class<? extends Record>, CompleteDataset<? extends Record>>();
 
-			for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
+			for (CompleteDataset<? extends Record> dataset : datasets)
 			{
 				results.put(dataset.getType(), dataset);
 			}
 		}
 
 		@Override
-		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
+		public <T extends Record> void persist(Dataset<T> dataset) throws Exception
 		{
 			// Don't use this.
 		}
 
 		@SuppressWarnings("unchecked")
-		public <T extends StamdataEntity> CompleteDataset<T> getDataset(Class<T> type)
+		public <T extends Record> CompleteDataset<T> getDataset(Class<T> type)
 		{
 			return (CompleteDataset<T>) results.get(type);
 		}

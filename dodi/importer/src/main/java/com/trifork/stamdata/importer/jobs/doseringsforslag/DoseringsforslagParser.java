@@ -175,7 +175,7 @@ public class DoseringsforslagParser implements FileParserJob
 	/**
 	 * Parses other data files.
 	 */
-	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
+	private <T extends Record> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
 	{
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 

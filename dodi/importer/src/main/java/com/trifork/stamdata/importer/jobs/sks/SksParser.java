@@ -136,7 +136,7 @@ public class SKSParser implements FileParserJob
 					}
 				}
 
-				persister.persistDeltaDataset(dataset);
+				persister.persist(dataset);
 
 				logger.info("SKS file parsed. num_records={}, file={}", dataset.getEntities().size(), file.getAbsolutePath());
 			}

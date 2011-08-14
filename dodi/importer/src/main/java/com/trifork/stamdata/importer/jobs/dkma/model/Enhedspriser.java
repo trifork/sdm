@@ -30,12 +30,19 @@ import com.trifork.stamdata.importer.persistence.*;
 @Output
 public class Enhedspriser extends TakstEntity
 {
-	private Long drugID; // Ref. t. LMS01
-	private Long varenummer; // Ref. t. LMS02
-	private Long prisPrEnhed; // Pris = Ekspeditionens samlede pris (ESP)
-	private Long prisPrDDD; // Pris = ESP
-	private String billigstePakning; // Markering af billigste pakning pr. enhed
-										// for DrugID
+	// Ref. t. LMS01
+	private Long drugID;
+	
+	// Ref. t. LMS02
+	private Long varenummer;
+	
+	// Pris = Ekspeditionens samlede pris (ESP)
+	private Long prisPrEnhed;
+
+	private Long prisPrDDD;
+	
+	// Markering af billigste pakning pr. enhed for DrugID.
+	private String billigstePakning;
 
 	@Output
 	public String getBilligstePakning()

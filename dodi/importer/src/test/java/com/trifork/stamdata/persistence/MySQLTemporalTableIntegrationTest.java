@@ -44,7 +44,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	{
 
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t2, t3);
@@ -56,7 +56,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBbeforeA() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t1);
@@ -68,7 +68,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBinA() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t2);
@@ -80,7 +80,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsAinB() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t3);
@@ -93,7 +93,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	{
 
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t1, t3);
@@ -105,7 +105,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchVersionsBoverlapsA() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
 		table.insertRow(a, new Date());
 		boolean found = table.fetchEntityVersions(a.getKey(), t0, t2);
@@ -117,7 +117,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testGetValidFromAndTo() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
@@ -133,7 +133,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertRow(a, new Date());
 
@@ -155,7 +155,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidToOnCurrentRow1() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1); // Find the row we just
@@ -175,7 +175,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	{
 
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, new Date());
@@ -199,7 +199,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testDeleteCurrentRow() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t0, t1);
@@ -212,7 +212,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testUpdateValidFromOnCurrentRow() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertRow(a, new Date());
 		table.fetchEntityVersions(a.getKey(), t1, t2); // Find the row we just
@@ -231,7 +231,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testdataInCurrentRowEquals() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, new Date());
@@ -245,7 +245,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testdataInCurrentRowEquals2() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3)
 		{
@@ -270,7 +270,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	public void testFetchEntityVersions() throws Exception
 	{
 		Connection con = Helpers.getConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+		TableWrapper<SDE> table = new TableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
 		table.insertRow(a, new Date());
@@ -282,7 +282,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 	}
 
 	@Output(name = "TakstVersion")
-	public static class SDE implements StamdataEntity
+	public static class SDE implements Record
 	{
 		Date validfrom, validto;
 

@@ -11,11 +11,15 @@ public class ConfigurationLoader
 	private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
 
 	public static final String BUILDIN_CONFIG_FILE = "config.properties";
+	public static final String TEST_CONFIGURATION_FILE = "test-config.properties";
 
 	public static Properties getForComponent(String componentName)
 	{
 		try
 		{
+			// Load the build in configuration. These values will be overriden
+			// by any properties in the production configuration file.
+			
 			ClassLoader classLoader = ConfigurationLoader.class.getClassLoader();
 
 			InputStream buildInConfig = classLoader.getResourceAsStream(BUILDIN_CONFIG_FILE);
@@ -27,6 +31,17 @@ public class ConfigurationLoader
 
 			buildInConfig.close();
 
+			// If the file test-config.properties is included we don't warn
+			// about the missing production configuration file.
+			
+			if (classLoader.getResource(TEST_CONFIGURATION_FILE) != null)
+			{
+				logger.info("Found {} will not load production configuration unless this file is removed.", TEST_CONFIGURATION_FILE);
+				return config;
+			}
+			
+			// Otherwise we try to load the production configuration.
+			
 			Preconditions.checkArgument(componentName != null && !componentName.isEmpty(), "componentName");
 			InputStream deploymentConfig = classLoader.getResourceAsStream(componentName + ".properties");
 

@@ -30,7 +30,7 @@ import com.trifork.stamdata.importer.util.Dates;
 
 
 @Output(name = "Yder")
-public class Yder extends AbstractStamdataEntity implements StamdataEntity
+public class Yder extends AbstractStamdataEntity implements Record
 {
 	private String nummer;
 	private Long eanLokationsnummer;

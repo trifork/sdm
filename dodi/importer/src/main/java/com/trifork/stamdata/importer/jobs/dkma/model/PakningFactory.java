@@ -23,19 +23,17 @@
 
 package com.trifork.stamdata.importer.jobs.dkma.model;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 
 public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 {
-	private static final String YYYYMMDD_DATE_FORMAT = "yyyyMMdd";
-
 	@Override
 	public String getFilename()
 	{
@@ -92,6 +90,8 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 		case 21:
 			return 1;
 		case 22:
+			return 1;
+		case 23:
 			return 1;
 		case 24:
 			return 6;
@@ -157,10 +157,12 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 			return 128;
 		case 22:
 			return 129;
+		case 23:
+			return 130;
 		case 24:
 			return 131;
 		default:
-			return -1;
+			throw new RuntimeException("Unknown field offset.");
 		}
 	}
 
@@ -215,7 +217,7 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 			obj.setOpbevaringstidNumerisk(NumberUtils.createLong(value));
 			break;
 		case 15:
-			// Ignored
+			obj.setOpbevaringstidEnhed(value);
 			break;
 		case 16:
 			obj.setOpbevaringsbetingelser(value);
@@ -223,21 +225,21 @@ public class PakningFactory implements FixedLengthParserConfiguration<Pakning>
 		case 17:
 			if (value != null)
 			{
-				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				Date date = Dates.DK_yyyyMMdd.parseDateTime(value).toDate();
 				obj.setOprettelsesdato(date);
 			}
 			break;
 		case 18:
 			if (value != null)
 			{
-				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				Date date = Dates.DK_yyyyMMdd.parseDateTime(value).toDate();
 				obj.setDatoForSenestePrisaendring(date);
 			}
 			break;
 		case 19:
 			if (value != null)
 			{
-				Date date = new SimpleDateFormat(YYYYMMDD_DATE_FORMAT).parse(value);
+				Date date = Dates.DK_yyyyMMdd.parseDateTime(value).toDate();
 				obj.setUdgaaetDato(date);
 			}
 			break;

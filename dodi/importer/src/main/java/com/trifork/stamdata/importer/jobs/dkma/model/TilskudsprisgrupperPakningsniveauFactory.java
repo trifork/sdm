@@ -29,7 +29,7 @@ import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
 
 
-public class TilskudsprisgrupperPakningsniveauFactory implements FixedLengthParserConfiguration<TilskudsprisgrupperPakningsniveau>
+public class TilskudsprisgrupperPakningsniveauFactory implements FixedLengthParserConfiguration<TilskudsprisgruppePaaPakningsniveau>
 {
 	@Override
 	public String getFilename()
@@ -72,7 +72,7 @@ public class TilskudsprisgrupperPakningsniveauFactory implements FixedLengthPars
 	}
 
 	@Override
-	public void setFieldValue(TilskudsprisgrupperPakningsniveau obj, int fieldNo, String value)
+	public void setFieldValue(TilskudsprisgruppePaaPakningsniveau obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{

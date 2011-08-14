@@ -27,7 +27,7 @@ import org.apache.commons.lang.math.NumberUtils;
 
 import com.trifork.stamdata.importer.jobs.dkma.FixedLengthParserConfiguration;
 
-public class PakningskombinationerUdenPriserFactory implements FixedLengthParserConfiguration<PakningskombinationerUdenPriser>
+public class PakningskombinationerUdenPriserFactory implements FixedLengthParserConfiguration<PakningskombinationUdenPris>
 {
 	@Override
 	public String getFilename()
@@ -82,7 +82,7 @@ public class PakningskombinationerUdenPriserFactory implements FixedLengthParser
 	}
 
 	@Override
-	public void setFieldValue(PakningskombinationerUdenPriser obj, int fieldNo, String value)
+	public void setFieldValue(PakningskombinationUdenPris obj, int fieldNo, String value)
 	{
 		switch (fieldNo)
 		{
