@@ -27,9 +27,7 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -98,6 +96,15 @@ public class AutorisationImporter implements FileParser
 			Autorisationsregisterudtraek dataset = parse(file, currentVersion);
 			persister.persistCompleteDataset(dataset);
 		}
+		
+		// Update the table for the STS.
+		
+		Statement statement = connection.createStatement();
+
+		statement.executeUpdate("TRUNCATE TABLE autreg");
+		statement.executeUpdate("INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) SELECT cpr, Fornavn, Efternavn, Autorisationsnummer, UddannelsesKode FROM Autorisation WHERE ValidFrom <= NOW() AND ValidTo > NOW();");
+
+		statement.close();
 	}
 
 	protected DateTime getDateFromFilename(String filename)
