@@ -16,42 +16,45 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.persistence.*;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class SikredeParser implements FileParserJob
 {
 	private static final Logger logger = LoggerFactory.getLogger(SikredeParser.class);
-	
+
 	private static final String FILE_ENCODING = "ISO-8859-1";
-	
+
 	private static final int SSK_FIELD_OFFSET = 452;
 	private static final int SSK_FIELD_LENGTH = 272;
 	private static final int CPR_LENGTH = 10;
 	private static final int YDERNUMMER_LENGTH = 6;
-	private static final int DATEFORMAT_LENGTH = 8;
+	private static final int DATE_FORMAT_LENGTH = 8;
 	private static final int KODE_LENGTH = 1;
 	private static final int CURRENT_YDER_RELATION_OFFSET = 13;
-	
+
 	private static final String JOB_IDENTIFIER = "sikrede_parser";
-	
+
 	private final Period maxTimeGap;
-	
+
 	@Inject
 	SikredeParser(@Named(JOB_IDENTIFIER + "." + MAX_TIME_GAP) String maxTimeGap)
 	{
 		this.maxTimeGap = Period.minutes(Integer.parseInt(maxTimeGap));
 	}
-	
-	/* TODO: Check actual encoding for file with CSC. Also change the encoding of the test files to match. */
+
+	/*
+	 * TODO: Check actual encoding for file with CSC. Also change the encoding
+	 * of the test files to match.
+	 */
 
 	private static final String FILENAME_DATE_FORMAT = "yyyyMMdd";
 
 	private static final String PATTERN_DATE = "yyyyMMdd";
 	private final SimpleDateFormat dateFormatter = new SimpleDateFormat(PATTERN_DATE);
-	
+
 	private static final String PATTERN_DATE_WITH_SEPARATORS = "yyyy-MM-dd";
 	private final SimpleDateFormat dateFormatterWithSeparators = new SimpleDateFormat(PATTERN_DATE_WITH_SEPARATORS);
-
 
 	@Override
 	public String getIdentifier()
@@ -64,7 +67,7 @@ public class SikredeParser implements FileParserJob
 	{
 		return "\"Sikrede\" Parser";
 	}
-	
+
 	@Override
 	public Period getMaxTimeGap()
 	{
@@ -93,7 +96,7 @@ public class SikredeParser implements FileParserJob
 		// version.
 		// The versions should be in sequence.
 
-		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ValidFrom) AS version FROM Sikrede");
+		ResultSet rows = connection.createStatement().executeQuery("SELECT MAX(ReleaseDate) AS version FROM SikredeVersion");
 
 		// There will always be a next here, but it might be null.
 		rows.next();
@@ -111,26 +114,20 @@ public class SikredeParser implements FileParserJob
 		// Put each data type in to a dataset and let the persister
 		// store theme in the database.
 
-		for (File file : files)
-		{
-			SikredeDataset sikrede = parse(file, currentVersion);
-
-			for (Dataset<? extends CPREntity> dataset : sikrede.getDatasets())
-			{
-				persister.persist(dataset);
-			}
-		}
+		parse(files[0], connection, changeset);
 	}
 
-	private SikredeDataset parse(File file, DateTime version) throws Exception
+	private void parse(File file, Connection connection, long changeset) throws Exception
 	{
-		SikredeDataset dataset = new SikredeDataset();
-		
+		WorkingPersister<Sikrede> sikredePersister = new WorkingPersister<Sikrede>(changeset, false, connection, Sikrede.class);
+		WorkingPersister<SikredeYderRelation> relationPersister = new WorkingPersister<SikredeYderRelation>(changeset, false, connection, SikredeYderRelation.class);
+		WorkingPersister<SaerligSundhedskort> sundhedskortPersister = new WorkingPersister<SaerligSundhedskort>(changeset, false, connection, SaerligSundhedskort.class);
+
 		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
 
 		final int PREVIOUS_YDER_RELATION_OFFSET = 63;
 		final int FUTURE_YDER_RELATION_OFFSET = 102;
-		
+
 		final String START_POST_TYPE = "00";
 		final String SIKRET_POST_TYPE = "10";
 		final String END_POST_TYPE = "99";
@@ -138,20 +135,22 @@ public class SikredeParser implements FileParserJob
 		while (lineIterator.hasNext())
 		{
 			String line = lineIterator.nextLine();
-			
+
 			String postType = cut(line, 1, 2);
-			
+
 			// There are 3 types of posts in a "Sikrede" file.
-			
+
 			if (START_POST_TYPE.equals(postType))
 			{
 				// From the start post we can grab the valid from date.
-				
-				DateTimeFormatter dateFormat = DateTimeFormat.forPattern("yyyyMMdd");
-				
+
+				DateTimeFormatter dateFormat = Dates.DK_yyyyMMdd;
+
 				String dateString = cut(line, 3, 8);
 				DateTime validFrom = dateFormat.parseDateTime(dateString);
-				dataset.setValidFrom(validFrom.toDate());
+
+				// TODO: Check that files are not imported before they are
+				// valid.
 			}
 			else if (SIKRET_POST_TYPE.equals(postType))
 			{
@@ -159,26 +158,26 @@ public class SikredeParser implements FileParserJob
 				// Each line can contain information about the current,
 				// and potentially information about previous and future
 				// assigned doctors.
-				
+
 				Sikrede sikrede = parseSikrede(line);
-				dataset.addEntity(sikrede);
-				
-				dataset.addEntity(parsePatientYderRelation(line, CURRENT_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.current));
+				sikredePersister.persist(sikrede);
+
+				relationPersister.persist(parsePatientYderRelation(line, CURRENT_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.current));
 
 				if (hasYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET))
 				{
-					dataset.addEntity(parsePatientYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.previous));
+					relationPersister.persist(parsePatientYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.previous));
 				}
-				
+
 				if (hasYderRelation(line, FUTURE_YDER_RELATION_OFFSET))
 				{
-					dataset.addEntity(parsePatientYderRelation(line, FUTURE_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.future));
+					relationPersister.persist(parsePatientYderRelation(line, FUTURE_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.future));
 				}
-				
+
 				if (hasSaerligSundhedskort(line))
 				{
 					SaerligSundhedskort saerligSundhedskort = parseSaerligSundhedsKort(line, sikrede.getCpr());
-					dataset.addEntity(saerligSundhedskort);
+					sundhedskortPersister.persist(saerligSundhedskort);
 				}
 			}
 			else if (END_POST_TYPE.equals(postType))
@@ -191,7 +190,9 @@ public class SikredeParser implements FileParserJob
 			}
 		}
 
-		return dataset;
+		sikredePersister.finish();
+		sundhedskortPersister.finish();
+		relationPersister.finish();
 	}
 
 	/**
@@ -200,8 +201,8 @@ public class SikredeParser implements FileParserJob
 	 * 
 	 * @param line
 	 * @param offset
-	 * @return true if the YderRelation record does not contain all zeros, false
-	 *         otherwise.
+	 * @return true if the YderRelation record does not contain all zeros,
+	 *         false otherwise.
 	 */
 	private boolean hasYderRelation(String line, int offset)
 	{
@@ -227,7 +228,8 @@ public class SikredeParser implements FileParserJob
 	 * format specification.
 	 * 
 	 * @param line
-	 * @param offset First character offset is 1
+	 * @param offset
+	 *            First character offset is 1
 	 * @param length
 	 * @return null if the line parameter is null, or a trimmed string starting
 	 *         from the offset character of input parameter line. The resulting
@@ -265,7 +267,7 @@ public class SikredeParser implements FileParserJob
 		{
 			logger.debug(sikrede.toString());
 		}
-		
+
 		return sikrede;
 	}
 
@@ -277,35 +279,35 @@ public class SikredeParser implements FileParserJob
 	private SikredeYderRelation parsePatientYderRelation(String line, int offset, String cpr, SikredeYderRelation.YderType type) throws ParseException
 	{
 		SikredeYderRelation yderRelation = new SikredeYderRelation();
-		
+
 		yderRelation.setCpr(cpr);
-		
+
 		yderRelation.setType(type);
-		
+
 		yderRelation.setYdernummer(cut(line, offset, YDERNUMMER_LENGTH));
-		
+
 		int position = 0;
-		
+
 		position = position + YDERNUMMER_LENGTH;
 		yderRelation.setYdernummerIkraftDato(yearMonthDayDate(line, offset + position));
-		
-		position = position + DATEFORMAT_LENGTH;
+
+		position = position + DATE_FORMAT_LENGTH;
 		yderRelation.setYdernummerRegistreringDato(yearMonthDayDate(line, offset + position));
-		
-		position = position + DATEFORMAT_LENGTH;
+
+		position = position + DATE_FORMAT_LENGTH;
 		yderRelation.setSikringsgruppeKode(cut(line, offset + position, KODE_LENGTH));
-		
+
 		position = position + KODE_LENGTH;
 		yderRelation.setGruppeKodeIkraftDato(yearMonthDayDate(line, offset + position));
-		
-		position = position + DATEFORMAT_LENGTH;
+
+		position = position + DATE_FORMAT_LENGTH;
 		yderRelation.setGruppekodeRegistreringDato(yearMonthDayDate(line, offset + position));
 
 		if (logger.isDebugEnabled())
 		{
 			logger.debug(yderRelation.toString());
 		}
-		
+
 		return yderRelation;
 	}
 
@@ -329,19 +331,20 @@ public class SikredeParser implements FileParserJob
 		{
 			logger.debug(sundhedskort.toString());
 		}
-		
+
 		return sundhedskort;
 	}
 
 	private Date yearMonthDayDate(String line, int offset) throws ParseException
 	{
-		String dateString = cut(line, offset, DATEFORMAT_LENGTH);
+		String dateString = cut(line, offset, DATE_FORMAT_LENGTH);
 		if (!isZeroPaddedDate(dateString))
 		{
 			return dateFormatter.parse(dateString);
 		}
-		
-		// TODO (thb): Flemming when does this happen and should we not throw an exception?
+
+		// TODO (thb): Flemming when does this happen and should we not throw
+		// an exception?
 
 		return null;
 	}
@@ -349,14 +352,15 @@ public class SikredeParser implements FileParserJob
 	private Date yearMonthDayWithSeparatorsDate(String line, int offset) throws ParseException
 	{
 		String dateString = cut(line, offset, PATTERN_DATE_WITH_SEPARATORS.length());
-		
+
 		if (dateString != null)
 		{
 			return dateFormatterWithSeparators.parse(dateString);
 		}
-		
-		// TODO (thb): Flemming when does this happen and should we not throw an exception?
-		
+
+		// TODO (thb): Flemming when does this happen and should we not throw
+		// an exception?
+
 		return null;
 	}
 
@@ -364,13 +368,14 @@ public class SikredeParser implements FileParserJob
 	 * 00000000 is when date (only dates with format yyyyMMdd can be 0-padded -
 	 * so null should be stored in the database.
 	 * 
-	 * @param dateString a yyyyMMdd formatted String
+	 * @param dateString
+	 *            a yyyyMMdd formatted String
 	 * @return true if the value of dateString equals dateFormatLength-zeroes.
 	 *         False otherwise.
 	 */
 	private boolean isZeroPaddedDate(String dateString)
 	{
-		return StringUtils.repeat("0", DATEFORMAT_LENGTH).equals(dateString);
+		return StringUtils.repeat("0", DATE_FORMAT_LENGTH).equals(dateString);
 	}
 
 	protected DateTime getDateFromFilename(String filename)

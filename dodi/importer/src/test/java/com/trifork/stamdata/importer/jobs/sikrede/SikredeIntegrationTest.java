@@ -187,6 +187,6 @@ public class SikredeIntegrationTest
 	{
 		SikredeParser parser = new SikredeParser(FAKE_TIME_GAP);
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		parser.run(new File[] { file }, new AuditingPersister(connection), null, 0);
+		parser.run(new File[] { file }, null, connection, 0);
 	}
 }

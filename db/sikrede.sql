@@ -1,6 +1,15 @@
+CREATE TABLE Sikrede (
+	PID SERIAL,
+
+	ReleaseDate DATE NOT NULL,
+	
+	UNIQUE KEY (ReleaseDate)
+) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
 /* "Sikrede" type 10  */
 CREATE TABLE Sikrede (
-	SikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	PID SERIAL,
+	
 	CPR CHAR(10) NOT NULL,
     kommunekode CHAR(3) NOT NULL, /* Person.KommuneKode  */
     kommunekodeIkraftDato DATE, /* KommuneKode validFrom for person */
@@ -16,20 +25,14 @@ CREATE TABLE Sikrede (
     sslGyldigFra DATE NOT NULL,
     sslGyldigTil DATE NOT NULL,
     socialLand VARCHAR(47) NOT NULL,
-    socialLandKode CHAR(2) NOT NULL,
-
-    ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (ModifiedDate, SikredePID)
+    socialLandKode CHAR(2) NOT NULL
+    
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  YderRelation (For each Sikrede, there are three sikredeyderrelation-records - 'current', 'old', 'future') */
 CREATE TABLE SikredeYderRelation (
-	SikredeYderRelationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	PID SERIAL,
+	
 	Id CHAR(12) NOT NULL,
 	CPR CHAR(10) NOT NULL,
 	
@@ -41,20 +44,14 @@ CREATE TABLE SikredeYderRelation (
 	sikringsgruppeKode CHAR(1) NOT NULL,
 	gruppeKodeIkraftDato DATE NOT NULL,
 	gruppekodeRegistreringDato DATE NOT NULL,
-    ydernummerRegistreringDato DATE NOT NULL,
-
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (id, ValidFrom),
-	INDEX (ModifiedDate, SikredeYderRelationPID)
+    ydernummerRegistreringDato DATE NOT NULL
+    
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  SSK */
 CREATE TABLE SaerligSundhedskort (
-	SaerligSundhedskortPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	PID SERIAL,
+	
 	CPR CHAR(10) NOT NULL,
 
     adresseLinje1 VARCHAR(40),
@@ -67,13 +64,6 @@ CREATE TABLE SaerligSundhedskort (
     sskGyldigFra DATE,
     sskGyldigTil DATE,
     mobilNummer VARCHAR(20),
-    postnummerBy VARCHAR(40),
-
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (ModifiedDate, SaerligSundhedskortPID)
+    postnummerBy VARCHAR(40)
+    
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
