@@ -91,9 +91,9 @@ public class SOSICard extends AbstractJavaSamplerClient {
 
 		// Send the request.
 
-		String r = send(SOSITestConstants.TEST_STS_URL, stsRequest.serialize2DOMDocument());
+		String response = send(SOSITestConstants.TEST_STS_URL, stsRequest.serialize2DOMDocument());
 		
-		SecurityTokenResponse deserializeSecurityTokenResponse = factory.deserializeSecurityTokenResponse(r);
+		SecurityTokenResponse deserializeSecurityTokenResponse = factory.deserializeSecurityTokenResponse(response);
 		
 		Request createNewRequest = factory.createNewRequest(false, "flowId");
 		createNewRequest.setIDCard(deserializeSecurityTokenResponse.getIDCard());

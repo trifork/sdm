@@ -80,9 +80,7 @@
 
 	</dependencies>
 
-	<profiles>
-		<profile>
-			<id>stamdata-load-test</id>
+	
 			<build>
 				<plugins>
 				  
@@ -91,6 +89,7 @@
 						<artifactId>chronos-maven-plugin</artifactId>
 						<version>1.0-SNAPSHOT</version>
 						<configuration>
+                            <input>${basedir}/src/main/resources/</input>
 							<heap>768m</heap>
 							<permsize>256m</permsize>
 							<sysproperties>
@@ -103,19 +102,7 @@
 									<value>false</value>
 								</property>
 							</sysproperties>
-						</configuration>
-						<executions>
-														
-							<!-- Authorization WS Test -->
-							<execution>
-								<id>authorization-ws-test</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>authorization-ws-data</dataid>
-									<jmeterVariables>
+                            <jmeterVariables>
 										<property>
 											<name>hostname</name>
 											<value>${hostname}</value>
@@ -125,6 +112,17 @@
 											<value>${port}</value>
 										</property>
 									</jmeterVariables>
+						</configuration>
+						<executions>
+							<!-- Authorization WS Test -->
+							<execution>
+								<id>authorization-ws-test</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>authorization-ws-data</dataid>
 									<input>${basedir}/src/main/resources/AuthorizationWS.jmx</input>
 								</configuration>
 							</execution>
@@ -149,6 +147,5 @@
 					</plugin>
 				</plugins>
 			</build>
-		</profile>
-	</profiles>
+
 </project>
