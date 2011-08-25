@@ -25,10 +25,10 @@ package com.trifork.stamdata.replication.webservice;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.xml.bind.JAXBException;
 
+import com.google.common.collect.Maps;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.replication.webservice.annotations.Registry;
@@ -39,7 +39,6 @@ import com.trifork.stamdata.views.Views;
 
 public class RegistryModule extends ServletModule {
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected final void configureServlets() {
 
@@ -49,7 +48,9 @@ public class RegistryModule extends ServletModule {
 		// Because the war can be deployed in many ways we may
 		// have to search in several places.
 
-		Set<Class<?>> views = Views.findAllViews();
+		Set<Class<? extends View>> views = Views.findAllViews();
+		
+		System.out.println("Configured Views: " + views);
 
 		// MAP VIEWS TO THEIR PATHS
 		//
@@ -58,12 +59,12 @@ public class RegistryModule extends ServletModule {
 		//
 		// A tree map is used so the entries are lexically sorted.
 
-		Map<String, Class<? extends View>> registry = new TreeMap<String, Class<? extends View>>();
+		Map<String, Class<? extends View>> registry = Maps.newTreeMap();
 
-		for (Class<?> entity : views)
+		for (Class<? extends View> entity : views)
 		{
 			ViewPath annotation = entity.getAnnotation(ViewPath.class);
-			registry.put(annotation.value(), (Class<? extends View>) entity);
+			registry.put(annotation.value(), entity);
 		}
 
 		bind(new TypeLiteral<Map<String, Class<? extends View>>>() {}).annotatedWith(Registry.class).toInstance(registry);

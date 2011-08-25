@@ -69,6 +69,7 @@ public class DatabaseModule extends ServletModule {
 		Set<Class<?>> classes = Sets.newHashSet();
 		classes.addAll(Views.findAllViews());
 		classes.add(Authorization.class);
+		classes.add(Client.class);
 
 		try {
 			Configuration config = new Configuration();
@@ -96,7 +97,7 @@ public class DatabaseModule extends ServletModule {
 
 			// Do not set "hibernate.c3p0.max_statements" it to anything above 0.
 			// This might cause deadlocks. If you do set it set it to a very high
-			// number, this will cost memory but give better performence.
+			// number, this will cost memory but give better performance.
 			
 			// The following two properties can be used to debug c3p0's connections.
 			// They are commented out since they are quite expensive.
@@ -110,8 +111,6 @@ public class DatabaseModule extends ServletModule {
 			for (Class<?> c : classes) {
 				config.addAnnotatedClass(c);
 			}
-			
-			config.addAnnotatedClass(Client.class);
 
 			sessionFactory = config.buildSessionFactory();
 		}

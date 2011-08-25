@@ -81,7 +81,6 @@ import dk.sosi.seal.xml.XmlUtil;
 @Singleton
 public class AuthorizationServlet extends HttpServlet
 {
-
 	private static final Logger logger = LoggerFactory.getLogger(AuthorizationServlet.class);
 
 	private static final long serialVersionUID = 8476350912985820545L;
@@ -97,7 +96,6 @@ public class AuthorizationServlet extends HttpServlet
 	@Inject
 	AuthorizationServlet(Provider<RequestProcessor> processors, Provider<SOSIFactory> factories) throws JAXBException
 	{
-
 		// ALL DEPENDENCIES MUST BE THREAD SAFE
 		//
 		// I doubt that the SOSI factory is thread safe to it is added
@@ -147,7 +145,6 @@ public class AuthorizationServlet extends HttpServlet
 	 */
 	static class RequestProcessor
 	{
-
 		private static final String SERVER_SIDE_ERROR = "Server";
 		private static final String CLIENT_SIDE_ERROR = "Client";
 

@@ -21,40 +21,11 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.views;
+@XmlSchema(namespace = STAMDATA_3_0 + "/doseringsforslag", elementFormDefault = XmlNsForm.QUALIFIED)
+package com.trifork.stamdata.views.doseringsforslag;
 
-import static com.trifork.stamdata.Namespace.STAMDATA_3_0;
+import javax.xml.bind.annotation.XmlNsForm;
+import javax.xml.bind.annotation.XmlSchema;
 
-import java.math.BigInteger;
-import java.util.Date;
+import static com.trifork.stamdata.Namespace.*;
 
-import javax.xml.bind.annotation.XmlAccessOrder;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorOrder;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
-
-import com.trifork.stamdata.HistoryOffset;
-
-
-@XmlType(namespace=STAMDATA_3_0 + "/common")
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
-public abstract class View {
-
-	public abstract String getId();
-
-	public abstract BigInteger getRecordID();
-
-	public abstract Date getUpdated();
-
-	/**
-	 * Gets the offset (revision) for the record.
-	 *
-	 * @see HistoryOffset
-	 */
-	public String getOffset() {
-
-		return new HistoryOffset(getRecordID().toString(), getUpdated()).toString();
-	}
-}

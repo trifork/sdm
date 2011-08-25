@@ -7,7 +7,6 @@
 		<relativePath>../../config/webservice-pom.xml</relativePath>
 	</parent>
 
-	<groupId>dk.nsi.stamdata</groupId>
 	<artifactId>stamdata-data-manager</artifactId>
 	<packaging>war</packaging>
 	<name>Stamdata Data Manager</name>

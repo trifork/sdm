@@ -26,12 +26,12 @@ package com.trifork.stamdata.replication;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -49,6 +49,7 @@ import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.pki.Federation;
 import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
+import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 
@@ -86,7 +87,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			// they must be placed in the right order, e.i. some of
 			// the filters depend on settings from previous filters.
 
-			List<Module> modules = new ArrayList<Module>();
+			List<Module> modules = Lists.newArrayList();
 
 			// CONFIGURE DATA ACCESS
 			
@@ -102,7 +103,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			//
 			// NB. The monitoring module must be placed before
 			// the registry module. Else the 'status' URL will be
-			// inturpreded as a registry.
+			// interpreted as a registry.
 
 			modules.add(new MonitoringModule());
 
@@ -118,6 +119,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			else if ("dgwsTest".equalsIgnoreCase(security))
 			{
 				logger.warn("Service running in test mode. This will allow ID Cards signed by the test STS!");
+				
 				modules.add(new DGWSModule() {
 					
 					@Provides
@@ -143,7 +145,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 					public SOSIFactory provideSOSIFactory()
 					{
 						Properties encryption = SignatureUtil.setupCryptoProviderForJVM();
-						Federation federation = new SOSITestFederation(encryption, new InMemoryIntermediateCertificateCache());
+						Federation federation = new SOSIFederation(encryption, new InMemoryIntermediateCertificateCache());
 						return new SOSIFactory(federation, new EmptyCredentialVault(), encryption);
 					}
 				});

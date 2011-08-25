@@ -26,4 +26,6 @@ package com.trifork.stamdata.views.sikrede;
 
 import javax.xml.bind.annotation.XmlNsForm;
 import javax.xml.bind.annotation.XmlSchema;
+
 import static com.trifork.stamdata.Namespace.*;
+

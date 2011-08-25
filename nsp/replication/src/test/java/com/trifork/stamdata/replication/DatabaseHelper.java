@@ -62,7 +62,7 @@ public class DatabaseHelper {
 			config.addAnnotatedClass(entity);
 		}
 
-		sessionFactory = config.buildSessionFactory();
+		sessionFactory = config.buildSessionFactory();		
 	}
 
 	public Session openSession() {

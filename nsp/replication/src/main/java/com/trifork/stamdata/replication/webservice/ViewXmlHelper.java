@@ -24,39 +24,31 @@
 package com.trifork.stamdata.replication.webservice;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
+import com.google.common.collect.Maps;
+import com.trifork.stamdata.views.View;
+
 /**
- * Creates separate JAXB contexts for each class,
- * to avoid unneccessary namespace declarations.
+ * Creates separate JAXB contexts for each class, to avoid unneccessary
+ * namespace declarations.
  * 
  * @author Anders H. Jensen (ahj@trifork.com)
  */
 public class ViewXmlHelper
 {
-	private Map<Class<?>, JAXBContext> jaxbContexts = new HashMap<Class<?>, JAXBContext>();
+	private Map<Class<? extends View>, JAXBContext> jaxbContexts = Maps.newHashMap();
 
-	
-	public ViewXmlHelper(Collection<Class<?>> classes) throws JAXBException
+	public ViewXmlHelper(Collection<Class<? extends View>> classes) throws JAXBException
 	{
-		this(classes.toArray(new Class<?>[0]));
-	}
-	
-	
-	public ViewXmlHelper(Class<?>... classes) throws JAXBException
-	{
-		for (Class<?> cls : classes)
-		{
+		for (Class<? extends View> cls : classes)
 			jaxbContexts.put(cls, JAXBContext.newInstance(cls));
-		}
 	}
 
-	
 	public Marshaller createMarshaller(Class<?> classToBeMarshalled)
 	{
 		try

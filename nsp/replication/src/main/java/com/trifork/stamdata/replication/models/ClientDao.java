@@ -27,14 +27,14 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.metadata.ClassMetadata;
 
 import com.google.inject.Inject;
-
 
 /**
  * Data access layer for the Client Model.
  * 
- * @author Thomas Børlum <thb@trofork.com>
+ * @author Thomas Borlum <thb@trifork.com>
  */
 public class ClientDao
 {
@@ -51,14 +51,13 @@ public class ClientDao
 		return (Client) session.load(Client.class, id);
 	}
 
-	// TODO: This method will throw a NonUniqueException if there are more than
-	// one client with the given CVR.
-	// Therefore: Do not add multiple clients with same CVR when using DGWS
 	public Client findByCvr(String cvr)
 	{
+		ClassMetadata classMetadata = session.getSessionFactory().getClassMetadata(Client.class);
+		System.out.println("Client STILL bound: " + classMetadata.getEntityName());
 		String ssnlike = "CVR:" + cvr + "-%";
-		Query query = session.createQuery("From Client WHERE subjectSerialNumber LIKE :ssnlike");
-		query.setParameter("ssnlike", ssnlike);
+		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber LIKE :subjectSerialNumber");
+		query.setParameter("subjectSerialNumber", ssnlike);
 		return (Client) query.uniqueResult();
 	}
 

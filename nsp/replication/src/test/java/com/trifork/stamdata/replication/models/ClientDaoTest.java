@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.classic.Session;
 import org.junit.After;
@@ -14,7 +15,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.common.collect.Sets;
 import com.trifork.stamdata.replication.DatabaseHelper;
+import com.trifork.stamdata.replication.security.dgws.Authorization;
+import com.trifork.stamdata.views.Views;
 
 public class ClientDaoTest {
 	private Session session;
@@ -24,7 +28,12 @@ public class ClientDaoTest {
 
 	@BeforeClass
 	public static void init() throws Exception {
-		db = new DatabaseHelper(Client.class);
+		Set<Class<?>> classes = Sets.newHashSet();
+		classes.addAll(Views.findAllViews());
+		classes.add(Authorization.class);
+		classes.add(Client.class);
+		db = new DatabaseHelper(classes.toArray(new Class[] {}));
+		
 		Session session = db.openSession();
 		session.beginTransaction();
 		session.createQuery("delete from Client").executeUpdate();

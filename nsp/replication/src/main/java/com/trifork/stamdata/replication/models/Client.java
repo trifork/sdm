@@ -1,4 +1,3 @@
-
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -25,19 +24,20 @@
 package com.trifork.stamdata.replication.models;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
+
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import com.google.common.collect.Sets;
 
-
 @Entity
-public class Client {
-
+@Table(name = "Client")
+public class Client
+{
 	@Id
 	@GeneratedValue
 	private String id;
@@ -47,56 +47,56 @@ public class Client {
 
 	@ElementCollection
 	private Set<String> permissions = Sets.newHashSet();
-	
-	protected Client() {
+
+	protected Client()
+	{
 
 	}
 
-	public Client(String name, String subjectSerialNumber) {
-
+	public Client(String name, String subjectSerialNumber)
+	{
 		this.name = name;
 		this.subjectSerialNumber = subjectSerialNumber;
-		this.permissions = new HashSet<String>();
 	}
 
-	public String getId() {
-
+	public String getId()
+	{
 		return id;
 	}
 
-	public String getName() {
-
+	public String getName()
+	{
 		return name;
 	}
 
-	public String getSubjectSerialNumber() {
-
+	public String getSubjectSerialNumber()
+	{
 		return subjectSerialNumber;
 	}
 
-	public boolean addPermission(String viewName) {
-
+	public boolean addPermission(String viewName)
+	{
 		return permissions.add(viewName);
 	}
 
-	public boolean removePermission(String viewName) {
-
+	public boolean removePermission(String viewName)
+	{
 		return permissions.remove(viewName);
 	}
 
-	public boolean isAuthorizedFor(String viewName) {
-
+	public boolean isAuthorizedFor(String viewName)
+	{
 		return permissions.contains(viewName);
 	}
 
-	public Set<String> getPermissions() {
-
+	public Set<String> getPermissions()
+	{
 		return Collections.unmodifiableSet(permissions);
 	}
-	
+
 	@Override
-	public String toString() {
-	
+	public String toString()
+	{
 		return String.format("%s (subjectSerialNumber=%s)", name, subjectSerialNumber);
 	}
 }

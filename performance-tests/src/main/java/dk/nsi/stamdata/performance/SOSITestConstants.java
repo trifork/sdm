@@ -1,3 +1,4 @@
+package dk.nsi.stamdata.performance;
 public interface SOSITestConstants
 {
 	String KEY_STORE_PASSWORD = "Test1234";
@@ -5,3 +6,5 @@ public interface SOSITestConstants
 	String TEST_CVR = "19343634";
 	String TEST_STS_URL = "http://pan.certifikat.dk/sts/services/SecurityTokenService";
 }
+
+

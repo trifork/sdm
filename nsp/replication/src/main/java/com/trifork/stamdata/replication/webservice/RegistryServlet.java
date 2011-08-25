@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.trifork.stamdata.HistoryOffset;
+import com.trifork.stamdata.replication.HistoryOffset;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.replication.webservice.annotations.Registry;
 import com.trifork.stamdata.views.View;
