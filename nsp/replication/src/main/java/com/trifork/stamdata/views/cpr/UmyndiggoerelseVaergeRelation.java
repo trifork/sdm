@@ -23,6 +23,9 @@
 
 package com.trifork.stamdata.views.cpr;
 
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,7 +34,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -39,91 +41,68 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("cpr/umyndiggoerelsevaergerelation/v1")
-public class UmyndiggoerelseVaergeRelation extends View {
-
+public class UmyndiggoerelseVaergeRelation extends View
+{
 	@Id
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "UmyndiggoerelseVaergeRelationPID")
 	private BigInteger recordID;
 
-	@Column(name = "Id")
 	@XmlElement(required = true)
 	protected String id;
 
 	@XmlElement(required = true)
-	@Column(name = "CPR")
 	protected String cpr;
 
-	@Column(name = "TypeKode")
 	protected String typeKode;
 
-	@Column(name = "TypeTekst")
 	protected String typeTekst;
 
-	@Column(name = "RelationCpr")
 	protected String relationCpr;
 
-	@Column(name = "RelationCprStartDato")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(DATE)
 	protected Date relationCprStartDato;
 
-	@Column(name = "VaergesNavn")
 	protected String vaergesNavn;
 
-	@Column(name = "VaergesNavnStartDato")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(DATE)
 	protected Date vaergesNavnStartDato;
 
-	@Column(name = "relationsTekst1")
-	protected String RelationsTekst1;
-
-	@Column(name = "relationsTekst2")
-	protected String RelationsTekst2;
-
-	@Column(name = "relationsTekst3")
-	protected String RelationsTekst3;
-
-	@Column(name = "relationsTekst4")
-	protected String RelationsTekst4;
-
-	@Column(name = "relationsTekst5")
-	protected String RelationsTekst5;
+	protected String relationsTekst1;
+	protected String relationsTekst2;
+	protected String relationsTekst3;
+	protected String relationsTekst4;
+	protected String relationsTekst5;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override
-	public BigInteger getRecordID() {
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
 
 	@Override
-	public Date getUpdated() {
+	public Date getUpdated()
+	{
 		return modifiedDate;
-	}
-
-	@Override
-	public String toString() {
-		return "Umynddiggørelse-værge-relation[cpr=" + cpr + ", type=" + typeKode + ", tekst=" + typeTekst + ", relations-cpr=" + relationCpr + "]";
 	}
 }

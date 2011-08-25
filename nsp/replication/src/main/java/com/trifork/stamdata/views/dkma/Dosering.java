@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.views.dkma;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,19 +33,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("dkma/dosering/v1")
-public class Dosering extends View {
-
+public class Dosering extends View
+{
 	@Id
 	@GeneratedValue
 	@XmlTransient
@@ -68,39 +68,36 @@ public class Dosering extends View {
 	@Column(name = "DoseringstekstLinie3")
 	protected String beskrivelseLinje3;
 
-	@Column(name = "AntalEnhederPrDoegn")
 	protected Float antalEnhederPrDoegn;
 
-	@Column(name = "Aktiv")
 	protected Boolean aktiv;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
 	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String getId() {
-
+	public String getId()
+	{
 		return kode.toString();
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 }

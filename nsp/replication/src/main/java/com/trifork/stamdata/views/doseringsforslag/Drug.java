@@ -39,11 +39,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
-@Entity(name="DosageDrug")
+@Entity(name = "DosageDrug")
 @XmlRootElement
 @ViewPath("doseringsforslag/drug/v1")
-public class Drug extends View {
+public class Drug extends View
+{
 
 	@Id
 	@GeneratedValue
@@ -67,25 +67,27 @@ public class Drug extends View {
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@Override
-	public String getId() {
+	@Temporal(TIMESTAMP)
+	protected Date validTo;
 
+	@Override
+	public String getId()
+	{
 		return Long.toString(drugId);
 	}
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 }

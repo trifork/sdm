@@ -25,7 +25,6 @@ package com.trifork.stamdata.replication;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -38,6 +37,7 @@ import com.google.inject.Module;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.replication.db.DatabaseModule;
 import com.trifork.stamdata.replication.logging.LoggingModule;
 import com.trifork.stamdata.replication.monitoring.MonitoringModule;
@@ -57,29 +57,18 @@ import dk.sosi.seal.vault.EmptyCredentialVault;
 public class ApplicationContextListener extends GuiceServletContextListener
 {
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
+	
+	private static final String COMPONENT_NAME = "stamdata-batch-copy-ws";
 
 	@Override
 	protected Injector getInjector()
 	{
 		Injector injector = null;
+		
+		Properties configuration = ConfigurationLoader.loadForName(COMPONENT_NAME);
 
 		try
-		{
-			logger.info("Loading configuration.");
-			
-			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream("config.properties");
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream("stamdata-replication.properties");
-
-			Properties config = new Properties();
-			config.load(buildInConfig);
-			buildInConfig.close();
-
-			if (deploymentConfig != null)
-			{
-				config.load(deploymentConfig);
-				deploymentConfig.close();
-			}
-			
+		{	
 			logger.info("Configuring Stamdata WebService.");
 
 			// The order these modules are added is not unimportant.
@@ -92,11 +81,11 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			// CONFIGURE DATA ACCESS
 			
 			modules.add(new DatabaseModule(
-				config.getProperty("db.connection.driverClass"),
-				config.getProperty("db.connection.sqlDialect"),
-				config.getProperty("db.connection.jdbcURL"),
-				config.getProperty("db.connection.username"),
-				config.getProperty("db.connection.password", null)
+				configuration.getProperty("db.connection.driverClass"),
+				configuration.getProperty("db.connection.sqlDialect"),
+				configuration.getProperty("db.connection.jdbcURL"),
+				configuration.getProperty("db.connection.username"),
+				configuration.getProperty("db.connection.password", null)
 			));
 
 			// CONFIGURE PROFILING & MONITORING
@@ -109,7 +98,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 			// CONFIGURE AUTHENTICATION & AUTHORIZATION
 
-			String security = config.getProperty("security");
+			String security = configuration.getProperty("security");
 			
 			if ("none".equalsIgnoreCase(security))
 			{

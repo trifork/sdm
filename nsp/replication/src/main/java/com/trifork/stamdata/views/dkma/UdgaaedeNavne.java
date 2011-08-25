@@ -67,6 +67,7 @@ public class UdgaaedeNavne extends View {
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
 
 	@Column(name = "ValidFrom")

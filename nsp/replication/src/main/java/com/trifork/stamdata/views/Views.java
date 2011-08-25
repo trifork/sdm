@@ -81,6 +81,7 @@ import com.trifork.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
 import com.trifork.stamdata.views.sikrede.SaerligSundhedskort;
 import com.trifork.stamdata.views.sikrede.Sikrede;
 import com.trifork.stamdata.views.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.views.sks.Institution;
 import com.trifork.stamdata.views.sor.Apotek;
 import com.trifork.stamdata.views.sor.Praksis;
 import com.trifork.stamdata.views.sor.Sygehus;
@@ -203,7 +204,9 @@ public final class Views {
 		views.add(SygehusAfdeling.class);
 		views.add(Yder.class);
 		
-		// TODO: SKS?
+		// SKS
+		
+		views.add(Institution.class);
 		
 		// Yderregisteret
 		

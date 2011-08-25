@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.views.doseringsforslag;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -65,9 +67,11 @@ public class DosageUnit extends View {
 	@Column(length = 100)
 	protected String textPlural;
 
-	@Column(name="ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
+
+	@Temporal(TIMESTAMP)
+	protected Date validTo;
 
 	@Column(name="ModifiedDate")
 	@Temporal(TemporalType.TIMESTAMP)

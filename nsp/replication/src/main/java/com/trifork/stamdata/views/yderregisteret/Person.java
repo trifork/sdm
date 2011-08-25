@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.views.yderregisteret;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,18 +33,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
-@Entity(name="YderregisterPerson")
+@Entity(name = "YderregisterPerson")
 @XmlRootElement
 @ViewPath("yderegisteret/yder/v1")
-public class Person extends View {
+public class Person extends View
+{
 
 	@Id
 	@GeneratedValue
@@ -50,16 +51,12 @@ public class Person extends View {
 	@Column(name = "YderregisterPersonPID")
 	private BigInteger recordID;
 
-	@Column(name = "Nummer")
 	protected String nummer;
 
-	@Column(name = "Id")
 	protected String id;
 
-	@Column(name = "CPR")
 	protected String cpr;
 
-	@Column(name = "personrolleKode")
 	protected BigInteger personrolleKode;
 
 	@Column(name = "personrolleTxt")
@@ -69,35 +66,30 @@ public class Person extends View {
 	protected String histId;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@XmlTransient
-	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@XmlTransient
-	@Column(name = "ValidTo")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String getId() {
-
+	public String getId()
+	{
 		return id.toString();
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 }

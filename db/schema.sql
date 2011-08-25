@@ -484,7 +484,7 @@ CREATE TABLE OplysningerOmDosisdispensering (
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Organisation (
-	organisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	OrganisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Nummer VARCHAR(30) NOT NULL,
 	Navn VARCHAR(256),
 	Organisationstype VARCHAR(30) NOT NULL,

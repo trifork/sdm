@@ -41,7 +41,7 @@ public class AtomDate
 	 * @param date A java.util.Date
 	 * @return The serialized string form of the date
 	 */
-	public static String format(Date date)
+	public static String toString(Date date)
 	{
 		StringBuilder sb = new StringBuilder();
 		Calendar c = Calendar.getInstance(TimeZone.getTimeZone("UTC"));

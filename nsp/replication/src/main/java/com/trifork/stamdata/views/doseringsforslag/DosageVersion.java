@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.views.doseringsforslag;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,7 +33,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -64,12 +65,13 @@ public class DosageVersion extends View
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
 
-	@Column(name = "ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@Column(name = "ModifiedDate")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
+	protected Date validTo;
+
+	@Temporal(TIMESTAMP)
 	@XmlTransient
 	protected Date modifiedDate;
 

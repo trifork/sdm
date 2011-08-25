@@ -38,11 +38,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("dkma/indholdsstoffer/v1")
-public class Indholdsstoffer extends View {
+public class Indholdsstoffer extends View
+{
 
 	@Id
 	@GeneratedValue
@@ -83,20 +83,20 @@ public class Indholdsstoffer extends View {
 	protected Date validTo;
 
 	@Override
-	public String getId() {
-
+	public String getId()
+	{
 		return id;
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 }

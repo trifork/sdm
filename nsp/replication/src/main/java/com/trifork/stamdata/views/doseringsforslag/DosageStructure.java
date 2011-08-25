@@ -94,6 +94,9 @@ public class DosageStructure extends View
 	@Column(name = "ValidFrom")
 	protected Date validFrom;
 
+	@Temporal(TIMESTAMP)
+	protected Date validTo;
+
 	@XmlTransient
 	@Temporal(TIMESTAMP)
 	@Column(name = "ModifiedDate")

@@ -51,30 +51,21 @@ public class Praksis extends View {
 	@Column(name = "praksisPID")
 	private BigInteger recordID;
 
-	@Column(name = "SorNummer")
 	protected BigInteger sorNummer;
 
-	@Column(name = "EanLokationsnummer")
 	protected BigInteger eanLokationsnummer;
 
-	@Column(name = "RegionCode")
 	protected BigInteger regionCode;
 
-	@Column(name = "Navn")
 	protected String navn;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@XmlTransient
-	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@XmlTransient
-	@Column(name = "ValidTo")
 	@Temporal(TIMESTAMP)
 	protected Date validTo;
 

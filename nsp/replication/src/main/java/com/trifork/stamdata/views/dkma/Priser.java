@@ -33,6 +33,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -76,6 +77,7 @@ public class Priser extends View {
 
 	@XmlTransient
 	@Column(name = "ModifiedDate")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date modifiedDate;
 
 	@Column(name = "ValidFrom")

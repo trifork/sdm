@@ -23,6 +23,7 @@
 
 package com.trifork.stamdata.views.cpr;
 
+import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
 import java.math.BigInteger;
@@ -33,7 +34,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -41,29 +41,27 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("cpr/person/v1")
-public class Person extends View {
-	
+public class Person extends View
+{
 	@XmlTransient
 	public Date createdDate;
-	
+
 	@XmlTransient
 	public static int i = 100;
 
-	protected Person() {
-		
+	protected Person()
+	{
+
 	}
-	
+
 	/**
 	 * WARNING: For testing purpose only!
 	 */
-	public Person(String cpr, String koen, String fornavn, String mellemnavn, String efternavn, String coNavn, String lokalitet,String vejnavn,	String bygningsnummer, String husnummer, String etage, 
-			String sideDoerNummer, String bynavn, BigInteger postnummer, String postdistrikt, String status, String gaeldendeCPR, 
-			Date foedselsdato, String stilling, BigInteger vejKode, BigInteger kommuneKode,
-			Date modifiedDate, Date navnebeskyttelseslettedato, Date navnebeskyttelsestartdato, Date validFrom, Date validTo) {
+	public Person(String cpr, String koen, String fornavn, String mellemnavn, String efternavn, String coNavn, String lokalitet, String vejnavn, String bygningsnummer, String husnummer, String etage, String sideDoerNummer, String bynavn, BigInteger postnummer, String postdistrikt, String status, String gaeldendeCPR, Date foedselsdato, String stilling, BigInteger vejKode, BigInteger kommuneKode, Date modifiedDate, Date navnebeskyttelseslettedato, Date navnebeskyttelsestartdato, Date validFrom, Date validTo)
+	{
 
 		this.cpr = cpr;
 		this.koen = koen;
@@ -95,115 +93,90 @@ public class Person extends View {
 		i += 10000;
 		this.validFrom = new Date(new Date().getTime() + i);
 	}
-	
+
 	@Id
 	@GeneratedValue
 	@XmlTransient
 	@Column(name = "PersonPID")
 	private BigInteger recordID;
 
-	@Column(name = "CPR")
 	@XmlElement(required = true)
 	public String cpr;
 
-	@Column(name = "Koen")
 	public String koen;
 
-	@Column(name = "Fornavn")
 	public String fornavn;
 
-	@Column(name = "Mellemnavn")
 	public String mellemnavn;
 
-	@Column(name = "Efternavn")
 	public String efternavn;
 
-	@Column(name = "CoNavn")
 	public String coNavn;
 
-	@Column(name = "Lokalitet")
 	public String lokalitet;
 
-	@Column(name = "Vejnavn")
 	public String vejnavn;
 
-	@Column(name = "Bygningsnummer")
 	public String bygningsnummer;
 
-	@Column(name = "Husnummer")
 	public String husnummer;
 
-	@Column(name = "Etage")
 	public String etage;
 
-	@Column(name = "SideDoerNummer")
 	public String sideDoerNummer;
 
-	@Column(name = "Bynavn")
 	public String bynavn;
 
-	@Column(name = "Postnummer")
 	public BigInteger postnummer;
 
-	@Column(name = "PostDistrikt")
 	public String postdistrikt;
 
-	@Column(name = "Status")
 	public String status;
 
-	@Column(name = "GaeldendeCPR")
 	public String gaeldendeCPR;
 
-	@Column(name = "Foedselsdato")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(DATE)
 	public Date foedselsdato;
 
-	@Column(name = "Stilling")
 	public String stilling;
 
-	@Column(name = "VejKode")
 	public BigInteger vejKode;
 
-	@Column(name = "KommuneKode")
 	public BigInteger kommuneKode;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
 	@Temporal(TIMESTAMP)
 	public Date modifiedDate;
 
 	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelseslettedato;
-	
+
 	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelsestartdato;
 
-	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	@XmlElement(required = true)
 	public Date validFrom;
 
-	@Column(name = "ValidTo")
 	@Temporal(TIMESTAMP)
+	@XmlElement(required = true)
 	public Date validTo;
 
 	@Override
-	public BigInteger getRecordID() {
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 		return cpr;
 	}
 
 	@Override
-	public Date getUpdated() {
+	public Date getUpdated()
+	{
 		return modifiedDate;
-	}
-
-	@Override
-	public String toString() {
-		return "Person[" + cpr + ", fornavn=" + fornavn + ", efternavn=" + efternavn + ", køn=" + koen + "], validFrom=" + validFrom + ", validTo=" + validTo;
 	}
 }

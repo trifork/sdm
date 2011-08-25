@@ -39,94 +39,71 @@ import static javax.persistence.TemporalType.TIMESTAMP;
 @Entity
 @XmlRootElement
 @ViewPath("sikrede/sikrede/v1")
-@Table(name = "Sikrede")
-public class Sikrede extends View {
-	
-	public Sikrede() {}
-	
-    @Id
-    @GeneratedValue
-    @XmlTransient
-    @Column(name = "SikredePID")
-    protected BigInteger recordID;
+public class Sikrede extends View
+{
+	protected Sikrede()
+	{
+	}
 
-    @XmlElement(required = true)
-    @Column(name = "CPR")
-    protected String cpr;
+	@Id
+	@GeneratedValue
+	@XmlTransient
+	@Column(name = "SikredePID")
+	protected BigInteger recordID;
 
-    @XmlElement
-    @Column(name = "kommunekode")
-    protected String kommunekode;
+	@XmlElement(required = true)
+	protected String cpr;
 
-    @XmlElement
-    @Temporal(DATE)
-    @Column(name = "kommunekodeIkraftDato")
-    protected Date kommunekodeIkraftDato;
+	protected String kommunekode;
 
-    @Temporal(TIMESTAMP)
-    @Column(name = "ValidFrom")
-    protected Date validFrom;
+	@Temporal(DATE)
+	protected Date kommunekodeIkraftDato;
 
-    @XmlTransient
-    @Temporal(TIMESTAMP)
-    @Column(name = "ModifiedDate")
-    protected Date modifiedDate;
+	@Temporal(TIMESTAMP)
+	protected Date validFrom;
 
-    @XmlElement(required = false)
-    @Column(name = "foelgeskabsPersonCpr")
-    protected String foelgeskabsPersonCpr;
+	@XmlTransient
+	@Temporal(TIMESTAMP)
+	protected Date modifiedDate;
 
-    @XmlElement(required = false)
-    @Column(name = "status")
-    protected String status;
+	protected String foelgeskabsPersonCpr;
 
-    @XmlElement
-    @Temporal(DATE)
-    @Column(name = "bevisIkraftDato")
-    protected Date bevisIkraftDato;
+	protected String status;
 
-    @XmlElement
-    @Column(name = "forsikringsinstans")
-    protected String forsikringsinstans;
+	@Temporal(DATE)
+	protected Date bevisIkraftDato;
 
-    @XmlElement
-    @Column(name = "forsikringsinstansKode")
-    protected String forsikringsinstansKode;
+	protected String forsikringsinstans;
 
-    @XmlElement
-    @Column(name = "forsikringsnummer")
-    protected String forsikringsnummer;
+	protected String forsikringsinstansKode;
 
-    @XmlElement
-    @Temporal(DATE)
-    @Column(name = "sslGyldigFra")
-    protected Date sslGyldigFra;
+	protected String forsikringsnummer;
 
-    @XmlElement // TODO (thb): Bør denne ikke undlades for alle hvor der ikke er en slut dato?
-    @Temporal(DATE)
-    @Column(name = "sslGyldigTil")
-    protected Date sslGyldigTil;
+	@Temporal(DATE)
+	protected Date sslGyldigFra;
 
-    @XmlElement
-    @Column(name = "socialLand")
-    protected String socialLand;
+	@Temporal(DATE)
+	protected Date sslGyldigTil;
 
-    @XmlElement
-    @Column(name = "socialLandKode")
-    protected String socialLandKode;
+	protected String socialLand;
 
-    @Override
-    public String getId() {
-        return cpr;
-    }
+	protected String socialLandKode;
 
-    @Override
-    public BigInteger getRecordID() {
-        return recordID;
-    }
+	@Override
+	public String getId()
+	{
+		return cpr;
+	}
 
-    @Override
-    public Date getUpdated() {
-        return modifiedDate;
-    }
+	@Override
+	public BigInteger getRecordID()
+	{
+		return recordID;
+	}
+
+	@Override
+	public Date getUpdated()
+	{
+		return modifiedDate;
+	}
 }

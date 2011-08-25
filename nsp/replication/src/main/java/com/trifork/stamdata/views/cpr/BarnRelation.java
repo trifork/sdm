@@ -40,11 +40,11 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("cpr/barnrelation/v1")
-public class BarnRelation extends View {
+public class BarnRelation extends View
+{
 
 	@Id
 	@GeneratedValue
@@ -53,49 +53,44 @@ public class BarnRelation extends View {
 	private BigInteger recordID;
 
 	@XmlElement(required = true)
-	@Column(name = "Id")
 	protected String id;
 
 	@XmlElement(required = true)
-	@Column(name = "CPR")
 	protected String cpr;
 
-	@Column(name = "BarnCPR")
 	protected String barnCPR;
 
 	@XmlTransient
-	@Column(name = "ModifiedDate")
 	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
-	@XmlTransient
-	@Column(name = "ValidFrom")
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@XmlTransient
-	@Column(name = "ValidTo")
 	@Temporal(TIMESTAMP)
 	protected Date validTo;
 
 	@Override
-	public BigInteger getRecordID() {
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "Barnrelation[cpr=" + cpr + ", barncpr=" + barnCPR + "]";
 	}
 }

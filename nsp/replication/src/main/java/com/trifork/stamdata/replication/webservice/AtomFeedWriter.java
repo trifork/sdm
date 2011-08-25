@@ -137,7 +137,7 @@ public class AtomFeedWriter
 		feed.writeEmptyElement("title");
 
 		feed.writeStartElement("updated");
-		feed.writeCharacters(AtomDate.format(record.getUpdated()));
+		feed.writeCharacters(AtomDate.toString(record.getUpdated()));
 		feed.writeEndElement(); // Updated
 
 		// Write the actual entity inside the content tag.
@@ -166,7 +166,7 @@ public class AtomFeedWriter
 		feed.writeEndElement(); // Id
 
 		feed.writeStartElement("updated");
-		feed.writeCharacters(AtomDate.format(new Date()));
+		feed.writeCharacters(AtomDate.toString(new Date()));
 		feed.writeEndElement(); // Updated
 
 		// Write the feed meta data.

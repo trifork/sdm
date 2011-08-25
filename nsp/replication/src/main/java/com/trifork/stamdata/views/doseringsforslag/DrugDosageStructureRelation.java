@@ -23,6 +23,8 @@
 
 package com.trifork.stamdata.views.doseringsforslag;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -31,18 +33,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
-
 @Entity
 @XmlRootElement
 @ViewPath("doseringsforslag/drugdosagestructurerelation/v1")
-public class DrugDosageStructureRelation extends View {
+public class DrugDosageStructureRelation extends View
+{
 
 	@Id
 	@Column(name = "DrugDosageStructureRelationPID")
@@ -64,32 +65,31 @@ public class DrugDosageStructureRelation extends View {
 	@Column(length = 11)
 	protected long dosageStructureCode;
 
-	@Column(name="ValidFrom")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@Column(name="ModifiedDate")
+	@Temporal(TIMESTAMP)
+	protected Date validTo;
+
 	@XmlTransient
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TIMESTAMP)
 	protected Date modifiedDate;
 
 	@Override
-	public String getId() {
-
-		// TODO (thb): Are these id elements even needed?
-
+	public String getId()
+	{
 		return id;
 	}
 
 	@Override
-	public BigInteger getRecordID() {
-
+	public BigInteger getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public Date getUpdated() {
-
+	public Date getUpdated()
+	{
 		return modifiedDate;
 	}
 }
