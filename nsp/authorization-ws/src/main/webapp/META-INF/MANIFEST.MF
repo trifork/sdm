@@ -1,2 +1,11 @@
 Manifest-Version: 1.0
+Class-Path: stamdata-common-3.0-SNAPSHOT.jar hibernate-jpa-2.0-api-1.0
+ .0.Final.jar commons-lang-2.5.jar reflections-0.9.5.jar guava-r09.jar
+  javassist-3.12.0.GA.jar dom4j-1.6.1.jar commons-configuration-1.6.ja
+ r commons-collections-3.2.1.jar commons-digester-1.8.jar commons-bean
+ utils-1.7.0.jar commons-beanutils-core-1.8.0.jar guice-3.0.jar javax.
+ inject-1.jar aopalliance-1.0.jar seal-2.0.0.jar xercesImpl-2.8.0.jar 
+ xmlsec-1.4.4.jar xalan-2.7.0.jar bcprov-jdk14-1.46.jar commons-httpcl
+ ient-3.1.jar commons-codec-1.2.jar jcl-over-slf4j-1.5.3.jar hibernate
+ -c3p0-3.6.0.Final.jar c3p0-0.9.1.jar guice-servlet-3.0.jar
 
