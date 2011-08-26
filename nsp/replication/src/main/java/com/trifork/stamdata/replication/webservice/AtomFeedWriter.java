@@ -43,15 +43,14 @@ import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.Views;
 
-
 /**
  * Writes a set of records into an output Atom 1.0 output feed.
  * 
- * @author Thomas Børlum (thb@trifork.com)
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class AtomFeedWriter
 {
-	/* This string must be lower case */
+	/* This string must be lower case for it to be valid XML. */
 	private static final String XML_DOC_ENCODING = "utf-8";
 	private static final String STREAM_ENCODING = "UTF-8";
 
@@ -68,16 +67,15 @@ public class AtomFeedWriter
 	@Inject
 	AtomFeedWriter(ViewXmlHelper viewXmlHelper)
 	{
-
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
 	public int write(Class<? extends View> viewClass, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException
 	{
-
 		checkNotNull(viewClass);
 		checkNotNull(records);
 		checkNotNull(outputStream);
+		
 		records.beforeFirst();
 
 		String entityName = Views.getViewPath(viewClass);
@@ -85,9 +83,7 @@ public class AtomFeedWriter
 
 		try
 		{
-			XMLStreamWriter writer;
-
-			writer = (useFastInfoset) ? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING) : XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING);
+			XMLStreamWriter writer = (useFastInfoset) ? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING) : XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING);
 
 			// Start the feed.
 
@@ -119,7 +115,7 @@ public class AtomFeedWriter
 		}
 		catch (Exception e)
 		{
-			throw new IOException(e);
+			throw new IOException("Failed while writing ATOM feed.", e);
 		}
 	}
 
@@ -178,7 +174,7 @@ public class AtomFeedWriter
 		feed.writeStartElement("author");
 
 		feed.writeStartElement("name");
-		feed.writeCharacters("Trifork Public A/S");
+		feed.writeCharacters("NSI");
 		feed.writeEndElement(); // Name
 
 		feed.writeEndElement(); // Author

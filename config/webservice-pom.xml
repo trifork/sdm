@@ -15,27 +15,6 @@
   
   <name>WebService POM</name>
   
-  <build>
-    <pluginManagement>
-      <plugins>
-        <!-- WE'RE USING SERVLET 3.0, SO DON'T REQUIRE WEB.XML -->
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.1.1</version>
-					<configuration>
-						<failOnMissingWebXml>false</failOnMissingWebXml>
-						<archive>
-  						<manifest>
-  							<addClasspath>true</addClasspath>
-  						</manifest>
-  					</archive>
-					</configuration>
-				</plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
-  
   <!-- DEPENDENCIES -->
   
   <dependencies>

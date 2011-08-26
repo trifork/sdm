@@ -38,7 +38,6 @@ import dk.sosi.seal.xml.XmlUtilException;
 @RunWith(MockitoJUnitRunner.class)
 public class TestAuthorizationServlet
 {
-
 	@Mock
 	HttpServletRequest in;
 
@@ -78,7 +77,6 @@ public class TestAuthorizationServlet
 	@Test
 	public void should_deserialize_the_request_and_pass_it_to_the_request_processor() throws Exception
 	{
-
 		when(sosiFactory.deserializeRequest(Mockito.anyString())).thenReturn(request);
 		when(processor.process(request)).thenReturn(sosiHelper.createNewReply(DGWSConstants.VERSION_1_0_1, "1", "2", FlowStatusValues.FLOW_FINALIZED_SUCCESFULLY));
 		when(out.getWriter()).thenReturn(writer);

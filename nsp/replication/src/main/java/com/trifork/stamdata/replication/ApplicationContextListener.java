@@ -152,7 +152,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 			injector = Guice.createInjector(modules);
 
-			logger.info("Service configured.");
+			logger.info("Stamdata Batch Copy Service has been initialized.");
 		}
 		catch (Exception e)
 		{

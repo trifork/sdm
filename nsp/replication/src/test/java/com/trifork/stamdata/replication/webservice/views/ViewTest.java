@@ -29,7 +29,6 @@ import org.hibernate.Session;
 import org.junit.Test;
 
 import com.trifork.stamdata.replication.DatabaseHelper;
-import com.trifork.stamdata.replication.mocks.MockEntity;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.Views;
 
@@ -45,8 +44,6 @@ public class ViewTest
 		
 		for (Class<?> viewClass : views)
 		{
-			if (viewClass == MockEntity.class) continue;
-			
 			System.out.println(viewClass.getCanonicalName());
 			Session session = db.openSession();
 			session.beginTransaction();

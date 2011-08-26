@@ -42,7 +42,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.Persister;
 

@@ -40,7 +40,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
 import com.trifork.stamdata.importer.jobs.takst.model.LaegemiddelFactory;

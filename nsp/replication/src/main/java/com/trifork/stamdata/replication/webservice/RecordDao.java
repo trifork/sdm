@@ -37,10 +37,8 @@ import org.hibernate.StatelessSession;
 import com.google.inject.Inject;
 import com.trifork.stamdata.views.View;
 
-
 public class RecordDao
 {
-
 	private final StatelessSession em;
 
 	@Inject

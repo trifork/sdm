@@ -78,7 +78,7 @@ public class RegistryServlet extends HttpServlet
 		if (isNotAuthorized(request))
 		{
 			// TODO: Improve this log entry. Add IP etc.
-			logger.warn("Authorization denied.");
+			logger.warn("Authorization denied. {}", request);
 			
 			setUnauthorizedHeaders(response);
 			return;

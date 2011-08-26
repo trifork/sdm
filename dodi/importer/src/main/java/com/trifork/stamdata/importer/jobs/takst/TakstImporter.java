@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.autorisationsregister.TakstParser;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Persister;
 

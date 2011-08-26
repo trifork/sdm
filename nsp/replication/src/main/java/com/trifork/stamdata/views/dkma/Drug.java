@@ -65,6 +65,7 @@ public class Drug extends View
 
 	protected String styrkeTekst;
 
+	@Column(name = "StyrkeNumerisk")
 	protected Double styrke;
 
 	protected String styrkeenhed;

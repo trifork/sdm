@@ -26,7 +26,6 @@ package com.trifork.stamdata.authorization;
 import static dk.sosi.seal.model.SignatureUtil.setupCryptoProviderForJVM;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.InputStream;
 import java.util.Properties;
 import java.util.Set;
 
@@ -44,6 +43,7 @@ import com.google.inject.Provides;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.ConfigurationLoader;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.pki.Federation;
@@ -57,8 +57,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 {
 	private static final Logger logger = getLogger(ApplicationContextListener.class);
 
-	private static final String CONFIG_FILENAME_BUILDIN = "config.properties";
-	private static final String CONFIG_FILENAME_DEPLOYMENT = "stamdata-authorization-lookup-ws.properties";
+	private static final String COMPONENT_NAME = "stamdata-authorization-lookup-ws";
 
 	private static final String DGWS_TEST_SECURITY = "dgwsTest";
 
@@ -73,24 +72,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		{
 			// LOAD CONFIGURATION FILES
 
-			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_BUILDIN);
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(CONFIG_FILENAME_DEPLOYMENT);
-
-			final Properties config = new Properties();
-			config.load(buildInConfig);
-			buildInConfig.close();
-
-			if (deploymentConfig != null)
-			{
-				logger.info("Configuration file 'stamdata-authorization-lookup-ws.properties' found.");
-				
-				config.load(deploymentConfig);
-				deploymentConfig.close();
-			}
-			else
-			{
-				logger.warn("Could not find stamdata-authorization-lookup-ws.properties. Using default configuration.");
-			}
+			final Properties config = ConfigurationLoader.loadForName(COMPONENT_NAME);
 
 			// READ THE SUBJECT SERIAL NUMBERS OF CLIENTS
 			//
@@ -143,7 +125,8 @@ public class ApplicationContextListener extends GuiceServletContextListener
 				protected void configureServlets()
 				{
 					install(new DatabaseModule(config.getProperty("db.connection.jdbcURL"), config.getProperty("db.connection.username"), config.getProperty("db.connection.password", "")));
-					install(new MonitoringModule());
+					
+					serve("/status").with(StatusServlet.class);
 					
 					bind(SOSIFactory.class).toInstance(sosiFactory);
 					bind(new TypeLiteral<Set<String>>() {}).toInstance(whitelist);

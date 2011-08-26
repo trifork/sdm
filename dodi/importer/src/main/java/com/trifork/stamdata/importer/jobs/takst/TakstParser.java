@@ -21,7 +21,7 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.autorisationsregister;
+package com.trifork.stamdata.importer.jobs.takst;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,11 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
-import com.trifork.stamdata.importer.jobs.takst.FixedLengthFileParser;
-import com.trifork.stamdata.importer.jobs.takst.FixedLengthParserConfiguration;
-import com.trifork.stamdata.importer.jobs.takst.Takst;
-import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
-import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekstFactory;
 import com.trifork.stamdata.importer.jobs.takst.model.Administrationsvej;
