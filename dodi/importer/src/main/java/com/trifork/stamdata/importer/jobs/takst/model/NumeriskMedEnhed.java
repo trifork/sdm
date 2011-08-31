@@ -23,9 +23,10 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+
 import com.trifork.stamdata.importer.jobs.takst.Takst;
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
@@ -43,7 +44,7 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 		this.enhed = enhed;
 	}
 
-	@Output(name = "StyrkeEnhed")
+	@Column(name = "StyrkeEnhed")
 	public String getEnhed()
 	{
 		if (enhed instanceof DivEnheder) return ((DivEnheder) enhed).getTekst();
@@ -53,7 +54,7 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 	/**
 	 * Only used when enhed is a String
 	 */
-	@Output(name = "StyrkeEnhed")
+	@Column(name = "StyrkeEnhed")
 	public String getEnhedString()
 	{
 		if (enhed instanceof String) return (String) enhed;
@@ -63,7 +64,8 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 	public String getEntityTypeDisplayName()
 	{
 		// Should probably never be used as objects of this class are always
-		// nested
+		// nested.
+		
 		return getClass().getSimpleName();
 	}
 
@@ -73,13 +75,13 @@ public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
 		return null;
 	}
 
-	@Output(name = "StyrkeTekst")
+	@Column(name = "StyrkeTekst")
 	public String getKlartekst()
 	{
 		return klartekst;
 	}
 
-	@Output(name = "StyrkeNumerisk")
+	@Column(name = "StyrkeNumerisk")
 	public double getNumerisk()
 	{
 		return numerisk;

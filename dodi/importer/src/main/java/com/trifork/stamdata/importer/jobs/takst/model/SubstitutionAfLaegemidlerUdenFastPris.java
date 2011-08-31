@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
 {
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
@@ -40,14 +41,14 @@ public class SubstitutionAfLaegemidlerUdenFastPris extends TakstEntity
 		return varenummer;
 	}
 
-	@Output
+	@Column
 	public Long getSubstitutionsgruppenummer()
 	{
 		return substitutionsgruppenummer;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return varenummer;

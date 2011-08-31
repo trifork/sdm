@@ -27,13 +27,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output(name = "Pakning")
+@Entity(name = "Pakning")
 public class Pakning extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01, felt 01
@@ -60,102 +62,102 @@ public class Pakning extends TakstEntity
 	private String faerdigfremstillingsgebyr; // 2 muligh.: B eller blank
 	private Long pakningsdistributoer; // Ref. t. LMS09
 
-	@Output
+	@Column
 	public Long getAlfabetSekvensnr()
 	{
 		return this.alfabetSekvensnr;
 	}
 
-	@Output
+	@Column
 	public Double getAntalDDDPrPakning()
 	{
 		return (this.antalDDDPrPakning) / 1000.0;
 	}
 
-	@Output
+	@Column
 	public Long getAntalDelpakninger()
 	{
 		return this.antalDelpakninger;
 	}
 
-	@Output
+	@Column
 	public String getBeregningskodeAIRegpris()
 	{
 		return this.beregningskodeAIPRegpris;
 	}
 
-	@Output
+	@Column
 	public Date getDatoForSenestePrisaendring()
 	{
 		return datoForSenestePrisaendring;
 	}
 
-	@Output
+	@Column
 	public boolean getDosisdispenserbar()
 	{
 		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
 	}
 
-	@Output(name = "DrugID")
+	@Column(name = "DrugID")
 	public Long getDrugid()
 	{
 		return this.drugid;
 	}
 
-	@Output(name = "EmballageTypeKode")
+	@Column(name = "EmballageTypeKode")
 	public String getEmballagetype()
 	{
 		return emballagetype;
 	}
 
-	@Output
+	@Column
 	public boolean getFaerdigfremstillingsgebyr()
 	{
 		return "B".equalsIgnoreCase(this.faerdigfremstillingsgebyr);
 	}
 
-	@Output(name = "KlausuleringsKode")
+	@Column(name = "KlausuleringsKode")
 	public String getKlausulForMedicintilskud()
 	{
 		return klausulForMedicintilskud;
 	}
 
-	@Output(name = "MedicintilskudsKode")
+	@Column(name = "MedicintilskudsKode")
 	public String getMedicintilskudskode()
 	{
 		return this.medicintilskudskode;
 	}
 
-	@Output
+	@Column
 	public String getOpbevaringsbetingelser()
 	{
 		return this.opbevaringsbetingelser;
 	}
-	@Output
+	@Column
 	public Long getOpbevaringstid()
 	{
 		return this.opbevaringstidNumerisk;
 	}
 
-	@Output
+	@Column
 	public Long getOpbevaringstidNumerisk()
 	{
 		return this.opbevaringstidNumerisk;
 	}
 
-	@Output
+	@Column
 	public Date getOprettelsesdato()
 	{
 		return oprettelsesdato;
 	}
 
-	@Output
+	@Column
 	public boolean getPakningOptagetITilskudsgruppe()
 	{
 		return "F".equalsIgnoreCase(this.pakningOptagetITilskudsgruppe);
 	}
 
-	@Output
+	@Column
 	public Long getPakningsdistributoer()
 	{
 		return this.pakningsdistributoer;
@@ -166,13 +168,13 @@ public class Pakning extends TakstEntity
 		return takst.getEntity(Firma.class, pakningsdistributoer);
 	}
 
-	@Output(name = "PakningsstoerrelseTekst")
+	@Column(name = "PakningsstoerrelseTekst")
 	public String getPakningsstoerrelseKlartekst()
 	{
 		return this.pakningsstoerrelseKlartekst;
 	}
 
-	@Output(name = "PakningsstoerrelseNumerisk")
+	@Column(name = "PakningsstoerrelseNumerisk")
 	public Double getPakningsstoerrelseNumerisk()
 	{
 		if (this.pakningsstoerrelseNumerisk == 0)
@@ -182,7 +184,7 @@ public class Pakning extends TakstEntity
 		return this.pakningsstoerrelseNumerisk / 100.0;
 	}
 
-	@Output(name = "Pakningsstoerrelsesenhed")
+	@Column(name = "Pakningsstoerrelsesenhed")
 	public String getPakningsstorrelseEnhed()
 	{
 		if (this.pakningsstoerrelseNumerisk == 0)
@@ -227,13 +229,13 @@ public class Pakning extends TakstEntity
 		return substitutioner;
 	}
 
-	@Output
+	@Column
 	public Date getUdgaaetDato()
 	{
 		return udgaaetDato;
 	}
 
-	@Output
+	@Column
 	public String getUdleveringsbestemmelse()
 	{
 		return this.udleveringsbestemmelse;
@@ -244,7 +246,7 @@ public class Pakning extends TakstEntity
 		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
 	}
 
-	@Output
+	@Column
 	public String getUdleveringSpeciale()
 	{
 		return this.udleveringSpeciale;
@@ -256,13 +258,13 @@ public class Pakning extends TakstEntity
 	}
 
 	@Id
-	@Output(name = "Varenummer")
+	@Column(name = "Varenummer")
 	public Long getVarenummer()
 	{
 		return this.varenummer;
 	}
 
-	@Output(name = "VarenummerDelpakning")
+	@Column(name = "VarenummerDelpakning")
 	public Long getVarenummerForDelpakning()
 	{
 		return this.varenummerForDelpakning;

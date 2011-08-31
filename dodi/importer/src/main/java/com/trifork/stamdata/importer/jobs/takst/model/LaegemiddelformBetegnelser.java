@@ -23,21 +23,21 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output(name = "Formbetegnelse")
+@Entity(name = "Formbetegnelse")
 public class LaegemiddelformBetegnelser extends TakstEntity
 {
-
 	private String kode; // Ref. t. LMS01, felt 08
 	private String tekst;
 	private String aktivInaktiv; // A (Aktiv)=DLS o.l.-I (inaktiv)=Ikke
 									// anerkendt term
 
-	@Output(name = "Aktiv")
+	@Column(name = "Aktiv")
 	public Boolean getAktivInaktiv()
 	{
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
@@ -46,20 +46,20 @@ public class LaegemiddelformBetegnelser extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return this.kode;
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getKode()
 	{
 		return this.kode;
 	}
 
-	@Output
+	@Column
 	public String getTekst()
 	{
-		return this.tekst;
+		return tekst;
 	}
 
 	public void setAktivInaktiv(String aktivInaktiv)

@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 {
 	private Long tilskudsprisGruppe;
@@ -40,14 +42,14 @@ public class TilskudsprisgrupperPakningsniveau extends TakstEntity
 		return varenummer;
 	}
 
-	@Output
+	@Column
 	public Long getTilskudsprisGruppe()
 	{
 		return tilskudsprisGruppe;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return varenummer;

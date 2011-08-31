@@ -23,34 +23,32 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class OplysningerOmDosisdispensering extends TakstEntity
 {
-
 	private Long drugid; // Ref. t. LMS01, felt 01
 	private Long varenummer; // Ref. t. LMS02, felt 02
-	private String laegemidletsSubstitutionsgruppe; // Ref. t. LMS01, felt 22.
-													// Kan være blank
-	private Long mindsteAIPPrEnhed; // Mindste AIP for alle aktive pakn. pr.
-									// Drugid
-	private Long mindsteRegisterprisEnh; // Mindste reg.pris for alle aktive
-											// pakn. pr. Drugid
+	private String laegemidletsSubstitutionsgruppe; // Ref. t. LMS01, felt 22. Kan være blank.
+	private Long mindsteAIPPrEnhed; // Mindste AIP for alle aktive pakn. pr. Drugid
+	private Long mindsteRegisterprisEnh; // Mindste reg.pris for alle aktive pakn. pr. Drugid
 	private Long tSPPrEnhed; // Tilskudspris pr. enhed
 	private String kodeForBilligsteDrugid; // Værdier = A - B - C
 	private Long billigsteDrugid; // Henvisning til billigste Drugid
 
-	@Output
+	@Column
 	public Long getBilligsteDrugid()
 	{
 		return this.billigsteDrugid;
 	}
 
-	@Output
+	@Column
 	public Long getDrugid()
 	{
 		return this.drugid;
@@ -62,38 +60,38 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 		return varenummer;
 	}
 
-	@Output
+	@Column
 	public String getKodeForBilligsteDrugid()
 	{
 		return this.kodeForBilligsteDrugid;
 	}
 
-	@Output
+	@Column
 	public String getLaegemidletsSubstitutionsgruppe()
 	{
 		return this.laegemidletsSubstitutionsgruppe;
 	}
 
-	@Output
+	@Column
 	public Long getMindsteAIPPrEnhed()
 	{
 		return this.mindsteAIPPrEnhed;
 	}
 
-	@Output
+	@Column
 	public Long getMindsteRegisterprisEnh()
 	{
 		return this.mindsteRegisterprisEnh;
 	}
 
-	@Output
+	@Column
 	public Long getTSPPrEnhed()
 	{
 		return this.tSPPrEnhed;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return this.varenummer;

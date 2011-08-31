@@ -23,13 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.Takst;
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Priser extends TakstEntity
 {
 	private Long varenummer; // Ref. t. LMS02, felt 02
@@ -44,19 +45,20 @@ public class Priser extends TakstEntity
 												// § 2, stk. 3, 4, 5, 9 og 10
 	private Long ikkeTilskudsberettigetDel; // Fx utensilie eller del af
 											// kombinationspakn.
-	@Output(name = "apoteketsIndkoebspris")
+
+	@Column(name = "apoteketsIndkoebspris")
 	public Long getAIP()
 	{
 		return grosePrise;
 	}
 
-	@Output(name = "ekspeditionensSamledePris")
+	@Column(name = "ekspeditionensSamledePris")
 	public Long getEkspeditionensSamlPrisESP()
 	{
 		return ekspeditionensSamlPrisESP;
 	}
 
-	@Output
+	@Column
 	public Long getIkkeTilskudsberettigetDel()
 	{
 		return ikkeTilskudsberettigetDel;
@@ -68,26 +70,26 @@ public class Priser extends TakstEntity
 		return varenummer;
 	}
 
-	@Output
+	@Column
 	public Long getLeveranceprisTilHospitaler()
 	{
 		return leveranceprisTilHospitaler;
 	}
 
-	@Output
+	@Column
 	public Long getRegisterpris()
 	{
 		return registerpris;
 	}
 
-	@Output(name = "tilskudspris")
+	@Column(name = "tilskudspris")
 	public Long getTilskudsprisTSP()
 	{
 		return tilskudsprisTSP;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return this.varenummer;

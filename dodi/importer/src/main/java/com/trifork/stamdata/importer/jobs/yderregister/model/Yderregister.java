@@ -25,13 +25,14 @@ package com.trifork.stamdata.importer.jobs.yderregister.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
-
-@Output
+@Entity
 public class Yderregister extends AbstractStamdataEntity
 {
 	private String nummer;
@@ -50,7 +51,7 @@ public class Yderregister extends AbstractStamdataEntity
 	private Date afgangDato;
 
 	@Id
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -61,7 +62,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public String getTelefon()
 	{
 		return telefon;
@@ -72,7 +73,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.telefon = telefon;
 	}
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -83,7 +84,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -94,7 +95,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.vejnavn = vejnavn;
 	}
 
-	@Output
+	@Column
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -105,7 +106,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.postnummer = postnummer;
 	}
 
-	@Output
+	@Column
 	public String getBynavn()
 	{
 		return bynavn;
@@ -116,7 +117,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.bynavn = bynavn;
 	}
 
-	@Output
+	@Column
 	public int getAmtNummer()
 	{
 		return amtNummer;
@@ -127,7 +128,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.amtNummer = amtNummer;
 	}
 
-	@Output
+	@Column
 	public String getEmail()
 	{
 		return email;
@@ -138,7 +139,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.email = email;
 	}
 
-	@Output
+	@Column
 	public String getWww()
 	{
 		return www;
@@ -149,7 +150,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.www = www;
 	}
 
-	@Output
+	@Column
 	public String getHovedSpecialeKode()
 	{
 		return hovedSpecialeKode;
@@ -160,7 +161,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
-	@Output
+	@Column
 	public String getHovedSpecialeTekst()
 	{
 		return hovedSpecialeTekst;
@@ -171,7 +172,7 @@ public class Yderregister extends AbstractStamdataEntity
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
-	@Output
+	@Column
 	public String getHistID()
 	{
 		return histID;

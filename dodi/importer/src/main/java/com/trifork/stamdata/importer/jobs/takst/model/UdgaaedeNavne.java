@@ -25,40 +25,40 @@ package com.trifork.stamdata.importer.jobs.takst.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class UdgaaedeNavne extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01
 	private Date datoForAendringen;
 	private String tidligereNavn;
 
-	@Output
+	@Column
 	public Date getDatoForAendringen()
 	{
 		return datoForAendringen;
 	}
 
-	@Output
+	@Column
 	public Long getDrugid()
 	{
 		return drugid;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	@Id
-	@Output(name = "CID")
+	@Column(name = "CID")
 	public String getKey()
 	{
 		return datoForAendringen.toGMTString() + '-' + tidligereNavn + '-' + drugid;
 	}
 
-	@Output
+	@Column
 	public String getTidligereNavn()
 	{
 		return this.tidligereNavn;

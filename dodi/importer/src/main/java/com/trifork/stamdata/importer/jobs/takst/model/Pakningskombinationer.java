@@ -23,37 +23,36 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Pakningskombinationer extends TakstEntity
 {
 	private Long varenummerOrdineret; // Vnr. på pakningen anført på recepten
-	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan
-											// substitueres til
+	private Long varenummerSubstitueret; // Vnr. på en pakning der evt. kan substitueres til
 	private Long varenummerAlternativt; // Vnr. for en mindre, billigere pakning
 	private Long antalPakninger; // Antal af den alternative pakning
-	private Long ekspeditionensSamledePris; // ESP for den alternative
-											// pakningskombination
-	private String informationspligtMarkering; // Markering (stjerne *) for
-												// informationspligt
+	private Long ekspeditionensSamledePris; // ESP for den alternative  pakningskombination
+	private String informationspligtMarkering; // Markering (stjerne *) for informationspligt
 
-	@Output
+	@Column
 	public Long getAntalPakninger()
 	{
 		return antalPakninger;
 	}
 
-	@Output
+	@Column
 	public Long getEkspeditionensSamledePris()
 	{
 		return ekspeditionensSamledePris;
 	}
 
-	@Output
+	@Column
 	public String getInformationspligtMarkering()
 	{
 		return informationspligtMarkering;
@@ -61,25 +60,25 @@ public class Pakningskombinationer extends TakstEntity
 
 	@Override
 	@Id
-	@Output(name = "CID")
+	@Column(name = "CID")
 	public String getKey()
 	{
 		return "" + varenummerOrdineret + '-' + varenummerSubstitueret + '-' + varenummerAlternativt + '-' + antalPakninger;
 	}
 
-	@Output
+	@Column
 	public Long getVarenummerAlternativt()
 	{
 		return varenummerAlternativt;
 	}
 
-	@Output
+	@Column
 	public Long getVarenummerOrdineret()
 	{
 		return varenummerOrdineret;
 	}
 
-	@Output
+	@Column
 	public Long getVarenummerSubstitueret()
 	{
 		return varenummerSubstitueret;

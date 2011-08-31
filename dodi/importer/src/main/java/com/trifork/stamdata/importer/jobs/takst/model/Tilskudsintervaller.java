@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Tilskudsintervaller extends TakstEntity
 {
 	private Long type; // Patienttype: almen, barn, kroniker, terminal
@@ -37,39 +38,38 @@ public class Tilskudsintervaller extends TakstEntity
 	private Long oevreGraense; // Øvre beløbsgrænse for niveauet (i øre)
 	private Double procent; // Tilskudsprocent
 
-	@Override
 	@Id
-	@Output(name = "CID")
+	@Column(name = "CID")
 	public String getKey()
 	{
 		return type + "-" + niveau;
 	}
 
-	@Output
+	@Column
 	public Long getNedreGraense()
 	{
 		return nedreGraense;
 	}
 
-	@Output
+	@Column
 	public Long getNiveau()
 	{
 		return niveau;
 	}
 
-	@Output
+	@Column
 	public Long getOevreGraense()
 	{
 		return this.oevreGraense;
 	}
 
-	@Output
+	@Column
 	public Double getProcent()
 	{
 		return this.procent;
 	}
 
-	@Output
+	@Column
 	public Long getType()
 	{
 		return type;

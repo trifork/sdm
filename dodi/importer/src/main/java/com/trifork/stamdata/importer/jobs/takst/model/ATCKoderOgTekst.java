@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output(name = "ATC")
+@Entity(name = "ATC")
 public class ATCKoderOgTekst extends TakstEntity
 {
 	private String atc;
@@ -36,13 +38,13 @@ public class ATCKoderOgTekst extends TakstEntity
 
 	@Override
 	@Id
-	@Output(name = "ATC")
+	@Column(name = "ATC")
 	public String getKey()
 	{
 		return atc;
 	}
 
-	@Output(name = "ATCTekst")
+	@Column(name = "ATCTekst")
 	public String getTekst()
 	{
 		return this.tekst;

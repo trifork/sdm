@@ -25,18 +25,20 @@ package com.trifork.stamdata.importer.jobs.sks;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@Output(name="Organisation")
+import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
+
+@Entity(name = "Organisation")
 public class Institution extends AbstractStamdataEntity
 {
 	private Date validFrom;
 	private Date validTo;
 	private String navn;
 	private String nummer;
-	
+
 	private final InstitutionType type;
 
 	public enum InstitutionType
@@ -59,7 +61,7 @@ public class Institution extends AbstractStamdataEntity
 		this.validTo = validTo;
 	}
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -71,7 +73,7 @@ public class Institution extends AbstractStamdataEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -82,7 +84,7 @@ public class Institution extends AbstractStamdataEntity
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public String getOrganisationstype()
 	{
 		if (type == InstitutionType.HOSPITAL_DEPARTMENT)

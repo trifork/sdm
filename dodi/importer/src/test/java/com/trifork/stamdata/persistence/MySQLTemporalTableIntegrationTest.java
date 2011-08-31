@@ -30,14 +30,15 @@ import static org.junit.Assert.assertTrue;
 import java.sql.Connection;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
-
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest
 {
@@ -262,7 +263,7 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		{
 
 			@Id
-			@Output
+			@Column
 			public String getTakstuge()
 			{
 
@@ -292,16 +293,13 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		con.close();
 	}
 
-
-	@Output(name = "TakstVersion")
+	@Entity(name = "TakstVersion")
 	public static class SDE implements StamdataEntity
 	{
-
 		Date validfrom, validto;
 
 		public SDE(Date validFrom, Date validTo)
 		{
-
 			this.validfrom = validFrom;
 			this.validto = validTo;
 		}
@@ -309,29 +307,25 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTe
 		@Override
 		public Object getKey()
 		{
-
 			return getTakstuge();
 		}
 
 		@Override
 		public Date getValidFrom()
 		{
-
 			return validfrom;
 		}
 
 		@Override
 		public Date getValidTo()
 		{
-
 			return validto;
 		}
 
 		@Id
-		@Output
+		@Column
 		public String getTakstuge()
 		{
-
 			return "1999-11";
 		}
 	}

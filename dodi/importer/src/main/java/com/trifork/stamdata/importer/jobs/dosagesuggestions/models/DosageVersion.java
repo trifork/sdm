@@ -25,14 +25,14 @@ package com.trifork.stamdata.importer.jobs.dosagesuggestions.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class DosageVersion extends DosageRecord
 {
-
 	// daDate: Dato for Apotekerforeningens mærkevaretakst, som datasættet er
 	// udarbejdet på baggrund af. Obligatorisk. Dato, yyyy-MM-dd.
 	protected Date daDate;
@@ -47,14 +47,14 @@ public class DosageVersion extends DosageRecord
 	// Unikt release nummer. Obligatorisk. Heltal, 15 cifre.
 	protected long releaseNumber;
 
-	@Output
+	@Column
 	public Date getDaDate()
 	{
 
 		return daDate;
 	}
 
-	@Output
+	@Column
 	public Date getLmsDate()
 	{
 
@@ -62,17 +62,15 @@ public class DosageVersion extends DosageRecord
 	}
 
 	@Id
-	@Output
+	@Column
 	public Date getReleaseDate()
 	{
-
 		return releaseDate;
 	}
 
-	@Output
+	@Column
 	public long getReleaseNumber()
 	{
-
 		return releaseNumber;
 	}
 }

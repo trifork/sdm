@@ -2,11 +2,12 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class SaerligSundhedskort extends CPREntity
 {
 	private String adresseLinje1;
@@ -22,13 +23,13 @@ public class SaerligSundhedskort extends CPREntity
 	private Date sskGyldigFra;
 
 	@Id
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	@Output
+	@Column
 	public String getAdresseLinje1()
 	{
 		return adresseLinje1;
@@ -39,7 +40,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.adresseLinje1 = adresseLinje1;
 	}
 
-	@Output
+	@Column
 	public String getAdresseLinje2()
 	{
 		return adresseLinje2;
@@ -50,7 +51,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.adresseLinje2 = adresseLinje2;
 	}
 
-	@Output
+	@Column
 	public String getBopelsLand()
 	{
 		return bopelsLand;
@@ -61,7 +62,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.bopelsLand = bopelsLand;
 	}
 
-	@Output
+	@Column
 	public String getBopelsLandKode()
 	{
 		return bopelsLandKode;
@@ -72,7 +73,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.bopelsLandKode = bopelsLandKode;
 	}
 
-	@Output
+	@Column
 	public String getEmailAdresse()
 	{
 		return emailAdresse;
@@ -83,7 +84,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.emailAdresse = emailAdresse;
 	}
 
-	@Output
+	@Column
 	public String getFamilieRelationCpr()
 	{
 		return familieRelationCpr;
@@ -94,7 +95,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.familieRelationCpr = familieRelationCpr;
 	}
 
-	@Output
+	@Column
 	public Date getFoedselsDato()
 	{
 		return foedselsDato;
@@ -105,7 +106,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.foedselsDato = foedselsDato;
 	}
 
-	@Output
+	@Column
 	public String getMobilNummer()
 	{
 		return mobilNummer;
@@ -116,7 +117,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.mobilNummer = mobilNummer;
 	}
 
-	@Output
+	@Column
 	public String getPostnummerBy()
 	{
 		return postnummerBy;
@@ -127,7 +128,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.postnummerBy = postNummerBy;
 	}
 
-	@Output
+	@Column
 	public Date getSskGyldigFra()
 	{
 		return sskGyldigFra;
@@ -138,7 +139,7 @@ public class SaerligSundhedskort extends CPREntity
 		this.sskGyldigFra = sskGyldigFra;
 	}
 
-	@Output
+	@Column
 	public Date getSskGyldigTil()
 	{
 		return sskGyldigTil;

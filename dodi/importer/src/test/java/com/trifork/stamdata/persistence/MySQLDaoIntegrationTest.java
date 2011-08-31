@@ -32,6 +32,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,8 +43,6 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
@@ -222,7 +224,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 	}
 
 
-	@Output
+	@Entity
 	public static class SDE implements StamdataEntity
 	{
 		Date validfrom, validto;
@@ -265,7 +267,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 			return validto;
 		}
 
-		@Output
+		@Column
 		public String getData()
 		{
 			return data;
@@ -273,13 +275,13 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 		@Id
 		@Override
-		@Output(name = "id")
+		@Column(name = "id")
 		public Object getKey()
 		{
 			return id;
 		}
 
-		@Output
+		@Column
 		public Date getDate()
 		{
 			return date;

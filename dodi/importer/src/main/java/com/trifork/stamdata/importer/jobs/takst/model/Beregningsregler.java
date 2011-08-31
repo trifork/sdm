@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Beregningsregler extends TakstEntity
 {
 	private String kode; // Ref. t. LMS02, felt 21
@@ -41,13 +43,13 @@ public class Beregningsregler extends TakstEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getKode()
 	{
 		return kode;
 	}
 
-	@Output
+	@Column
 	public String getTekst()
 	{
 		return tekst;

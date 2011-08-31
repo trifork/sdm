@@ -25,13 +25,15 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output
+@Entity
 public class SygehusAfdeling extends AbstractStamdataEntity
 {
 	private String navn;
@@ -54,7 +56,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 	private Date validFrom;
 	private Date validTo;
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -65,7 +67,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer()
 	{
 		return eanLokationsnummer;
@@ -76,7 +78,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -87,7 +89,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public String getTelefon()
 	{
 		return telefon;
@@ -98,7 +100,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.telefon = telefon;
 	}
 
-	@Output
+	@Column
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -109,7 +111,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.vejnavn = vejnavn;
 	}
 
-	@Output
+	@Column
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -120,7 +122,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.postnummer = postnummer;
 	}
 
-	@Output
+	@Column
 	public String getBynavn()
 	{
 		return bynavn;
@@ -131,7 +133,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.bynavn = bynavn;
 	}
 
-	@Output
+	@Column
 	public String getEmail()
 	{
 		return email;
@@ -142,7 +144,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.email = email;
 	}
 
-	@Output
+	@Column
 	public String getWww()
 	{
 		return www;
@@ -153,7 +155,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.www = www;
 	}
 
-	@Output
+	@Column
 	public Long getAfdelingTypeKode()
 	{
 		return afdelingTypeKode;
@@ -164,7 +166,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.afdelingTypeKode = afdelingTypeKode;
 	}
 
-	@Output
+	@Column
 	public Long getHovedSpecialeKode()
 	{
 		return hovedSpecialeKode;
@@ -175,7 +177,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
-	@Output
+	@Column
 	public String getHovedSpecialeTekst()
 	{
 		return hovedSpecialeTekst;
@@ -186,7 +188,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.hovedSpecialeTekst = hovedSpecialeTekst;
 	}
 
-	@Output
+	@Column
 	public String getAfdelingTypeTekst()
 	{
 		return afdelingTypeTekst;
@@ -198,7 +200,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer()
 	{
 		return sorNummer;
@@ -209,7 +211,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.sorNummer = sorNummer;
 	}
 
-	@Output
+	@Column
 	public Long getSygehusSorNummer()
 	{
 		return sygehusSorNummer;
@@ -220,7 +222,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.sygehusSorNummer = sygehusSorNummer;
 	}
 
-	@Output
+	@Column
 	public Long getOverAfdelingSorNummer()
 	{
 
@@ -232,7 +234,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 		this.overAfdelingSorNummer = overAfdelingSorNummer;
 	}
 
-	@Output
+	@Column
 	public Long getUnderlagtSygehusSorNummer()
 	{
 		return underlagtSygehusSorNummer;

@@ -23,11 +23,11 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions.models;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output(name = "DosageDrug")
+@Entity(name = "DosageDrug")
 public class Drug extends DosageRecord
 {
 
@@ -38,35 +38,30 @@ public class Drug extends DosageRecord
 
 	protected Drug()
 	{
-
 	}
 
 	@Id
-	@Output
+	@Column
 	public long getDrugId()
 	{
-
 		return drugId;
 	}
 
-	@Output
+	@Column
 	public int getReleaseNumber()
 	{
-
 		return releaseNumber;
 	}
 
-	@Output
+	@Column
 	public String getDrugName()
 	{
-
 		return drugName;
 	}
 
-	@Output
+	@Column
 	public int getDosageUnitCode()
 	{
-
 		return dosageUnitCode;
 	}
 }

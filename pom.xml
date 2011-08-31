@@ -16,7 +16,7 @@
 		<module>dodi/shared</module>
 		<module>nsp/replication</module>
 		<module>nsp/authorization-ws</module>
-		<!-- <module>nsp/cpr-ws</module> -->
+		<module>nsp/cpr-ws</module>
 	</modules>
 
 	<build>

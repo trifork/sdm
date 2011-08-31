@@ -1,121 +1,132 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-
 import java.util.Date;
 
-@Output(name = "SikredeYderRelation")
-public class SikredeYderRelation extends CPREntity {
-    protected String ydernummer;
-    protected Date ydernummerIkraftDato;
-    protected Date ydernummerRegistreringDato;
-    protected String sikringsgruppeKode;
-    protected Date gruppeKodeIkraftDato;
-    protected Date gruppekodeRegistreringDato;
-    private YderType type;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-    public enum YderType {
-        current("C"),
-        future("F"),
-        previous("P");
-        
-        private final String code;
-        
-        private YderType(String code) {
-            this.code = code;
-        }
+@Entity(name = "SikredeYderRelation")
+public class SikredeYderRelation extends CPREntity
+{
+	protected String ydernummer;
+	protected Date ydernummerIkraftDato;
+	protected Date ydernummerRegistreringDato;
+	protected String sikringsgruppeKode;
+	protected Date gruppeKodeIkraftDato;
+	protected Date gruppekodeRegistreringDato;
+	private YderType type;
 
-        public String getCode() {
-            return code;
-        }
-    }
+	public enum YderType
+	{
+		current("C"), future("F"), previous("P");
 
-    @Id
-    @Output
-    public String getId() {
-        return cpr + "-" + type.getCode();
-    }
+		private final String code;
 
-    @Output
-    public String getCpr() {
-        return cpr;
-    }
+		private YderType(String code)
+		{
+			this.code = code;
+		}
 
-    @Output
-    public Date getGruppeKodeIkraftDato() {
-        return gruppeKodeIkraftDato;
-    }
+		public String getCode()
+		{
+			return code;
+		}
+	}
 
-    public void setGruppeKodeIkraftDato(Date gruppeKodeIkraftDato) {
-        this.gruppeKodeIkraftDato = gruppeKodeIkraftDato;
-    }
+	@Id
+	@Column
+	public String getId()
+	{
+		return cpr + "-" + type.getCode();
+	}
 
-    @Output
-    public Date getGruppekodeRegistreringDato() {
-        return gruppekodeRegistreringDato;
-    }
+	@Column
+	public String getCpr()
+	{
+		return cpr;
+	}
 
-    public void setGruppekodeRegistreringDato(Date gruppekodeRegistreringDato) {
-        this.gruppekodeRegistreringDato = gruppekodeRegistreringDato;
-    }
+	@Column
+	public Date getGruppeKodeIkraftDato()
+	{
+		return gruppeKodeIkraftDato;
+	}
 
-    @Output
-    public String getSikringsgruppeKode() {
-        return sikringsgruppeKode;
-    }
+	public void setGruppeKodeIkraftDato(Date gruppeKodeIkraftDato)
+	{
+		this.gruppeKodeIkraftDato = gruppeKodeIkraftDato;
+	}
 
-    public void setSikringsgruppeKode(String sikringsgruppeKode) {
-        this.sikringsgruppeKode = sikringsgruppeKode;
-    }
+	@Column
+	public Date getGruppekodeRegistreringDato()
+	{
+		return gruppekodeRegistreringDato;
+	}
 
-    @Output
-    public String getYdernummer() {
-        return ydernummer;
-    }
+	public void setGruppekodeRegistreringDato(Date gruppekodeRegistreringDato)
+	{
+		this.gruppekodeRegistreringDato = gruppekodeRegistreringDato;
+	}
 
-    public void setYdernummer(String ydernummer) {
-        this.ydernummer = ydernummer;
-    }
+	@Column
+	public String getSikringsgruppeKode()
+	{
+		return sikringsgruppeKode;
+	}
 
-    @Output
-    public Date getYdernummerIkraftDato() {
-        return ydernummerIkraftDato;
-    }
+	public void setSikringsgruppeKode(String sikringsgruppeKode)
+	{
+		this.sikringsgruppeKode = sikringsgruppeKode;
+	}
 
-    public void setYdernummerIkraftDato(Date ydernummerIkraftDato) {
-        this.ydernummerIkraftDato = ydernummerIkraftDato;
-    }
+	@Column
+	public String getYdernummer()
+	{
+		return ydernummer;
+	}
 
-    @Output
-    public Date getYdernummerRegistreringDato() {
-        return ydernummerRegistreringDato;
-    }
+	public void setYdernummer(String ydernummer)
+	{
+		this.ydernummer = ydernummer;
+	}
 
-    public void setYdernummerRegistreringDato(Date ydernummerRegistreringDato) {
-        this.ydernummerRegistreringDato = ydernummerRegistreringDato;
-    }
+	@Column
+	public Date getYdernummerIkraftDato()
+	{
+		return ydernummerIkraftDato;
+	}
 
-    public void setType(YderType type) {
-        this.type = type;
-    }
-    
-    @Output
-    public String getType()
-    {
-    	return type.getCode();
-    }
+	public void setYdernummerIkraftDato(Date ydernummerIkraftDato)
+	{
+		this.ydernummerIkraftDato = ydernummerIkraftDato;
+	}
 
-    @Override
-    public String toString() {
-        return "SikredeYderRelation{" +
-                "gruppeKodeIkraftDato=" + gruppeKodeIkraftDato +
-                ", ydernummer='" + ydernummer + '\'' +
-                ", ydernummerIkraftDato=" + ydernummerIkraftDato +
-                ", ydernummerRegistreringDato=" + ydernummerRegistreringDato +
-                ", sikringsgruppeKode='" + sikringsgruppeKode + '\'' +
-                ", gruppekodeRegistreringDato=" + gruppekodeRegistreringDato +
-                ", type=" + type +
-                '}';
-    }
+	@Column
+	public Date getYdernummerRegistreringDato()
+	{
+		return ydernummerRegistreringDato;
+	}
+
+	public void setYdernummerRegistreringDato(Date ydernummerRegistreringDato)
+	{
+		this.ydernummerRegistreringDato = ydernummerRegistreringDato;
+	}
+
+	public void setType(YderType type)
+	{
+		this.type = type;
+	}
+
+	@Column
+	public String getType()
+	{
+		return type.getCode();
+	}
+
+	@Override
+	public String toString()
+	{
+		return "SikredeYderRelation{" + "gruppeKodeIkraftDato=" + gruppeKodeIkraftDato + ", ydernummer='" + ydernummer + '\'' + ", ydernummerIkraftDato=" + ydernummerIkraftDato + ", ydernummerRegistreringDato=" + ydernummerRegistreringDato + ", sikringsgruppeKode='" + sikringsgruppeKode + '\'' + ", gruppekodeRegistreringDato=" + gruppekodeRegistreringDato + ", type=" + type + '}';
+	}
 }

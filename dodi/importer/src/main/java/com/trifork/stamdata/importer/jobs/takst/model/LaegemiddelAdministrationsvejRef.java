@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class LaegemiddelAdministrationsvejRef extends TakstEntity
 {
 	private long drugId;
@@ -40,20 +41,20 @@ public class LaegemiddelAdministrationsvejRef extends TakstEntity
 		this.AdministrationsvejKode = av.getKode();
 	}
 
-	@Output
+	@Column
 	public String getAdministrationsvejKode()
 	{
 		return AdministrationsvejKode;
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getCID()
 	{
 		return drugId + "-" + AdministrationsvejKode;
 	}
 
-	@Output
+	@Column
 	public long getDrugId()
 	{
 		return drugId;
@@ -68,5 +69,4 @@ public class LaegemiddelAdministrationsvejRef extends TakstEntity
 	{
 		this.drugId = drugId;
 	}
-
 }

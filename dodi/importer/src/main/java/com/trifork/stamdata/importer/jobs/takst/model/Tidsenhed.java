@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Tidsenhed extends TakstEntity
 {
 	private final DivEnheder enheder;
@@ -45,19 +47,19 @@ public class Tidsenhed extends TakstEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getTidsenhedKode()
 	{
 		return enheder.getKode();
 	}
 
-	@Output
+	@Column
 	public String getTidsenhedKortTekst()
 	{
 		return enheder.getKortTekst();
 	}
 
-	@Output
+	@Column
 	public String getTidsenhedTekst()
 	{
 		return enheder.getTekst();

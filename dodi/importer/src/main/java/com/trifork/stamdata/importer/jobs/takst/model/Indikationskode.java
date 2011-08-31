@@ -23,26 +23,27 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output(name = "IndikationATCRef")
+@Entity(name = "IndikationATCRef")
 public class Indikationskode extends TakstEntity
 {
 	private String atc; // Ref. t. LMS01
 	private Long indikationskode; // Ref. t. LMS26
 	private Long drugID; // Ref. t. LMS01, felt 01
 
-	@Output
+	@Column
 	public String getATC()
 	{
 		return atc;
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getCID()
 	{
 		// A calculated ID.
@@ -50,13 +51,13 @@ public class Indikationskode extends TakstEntity
 		return atc + "-" + indikationskode;
 	}
 
-	@Output
+	@Column
 	public Long getDrugID()
 	{
 		return drugID;
 	}
 
-	@Output(name = "IndikationKode")
+	@Column(name = "IndikationKode")
 	public Long getIndikationskode()
 	{
 		return indikationskode;

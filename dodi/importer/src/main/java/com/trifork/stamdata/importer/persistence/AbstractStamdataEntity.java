@@ -30,6 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,7 +103,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 
 		if (name == null)
 		{
-			Output output = method.getAnnotation(Output.class);
+			Column output = method.getAnnotation(Column.class);
 			name = method.getName().substring(3); // Strip "get"
 
 			if (output != null && output.name().length() > 0)
@@ -120,7 +123,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 
 		for (Method method : methods)
 		{
-			if (method.isAnnotationPresent(Output.class)) outputMethods.add(method);
+			if (method.isAnnotationPresent(Column.class)) outputMethods.add(method);
 		}
 
 		return outputMethods;

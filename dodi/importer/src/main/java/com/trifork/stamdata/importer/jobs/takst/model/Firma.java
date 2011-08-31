@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Firma extends TakstEntity
 {
 	private Long firmanummer; // Ref. t. LMS01, felt 13 - 14
@@ -36,20 +37,20 @@ public class Firma extends TakstEntity
 	private String firmamaerkeLangtNavn;
 	private String parallelimportoerKode;
 
-	@Output
+	@Column
 	public String getFirmamaerkeKort()
 	{
 		return firmamaerkeKort;
 	}
 
-	@Output
+	@Column
 	public String getFirmamaerkeLangtNavn()
 	{
 		return firmamaerkeLangtNavn;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getFirmanummer()
 	{
 		return firmanummer;
@@ -61,7 +62,7 @@ public class Firma extends TakstEntity
 		return firmanummer;
 	}
 
-	@Output
+	@Column
 	public String getParallelimportoerKode()
 	{
 		return parallelimportoerKode;

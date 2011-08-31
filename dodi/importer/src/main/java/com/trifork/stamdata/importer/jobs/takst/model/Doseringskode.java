@@ -23,31 +23,32 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output(name = "LaegemiddelDoseringRef")
+@Entity(name = "LaegemiddelDoseringRef")
 public class Doseringskode extends TakstEntity
 {
 	private Long drugid; // Ref. t. LMS01
 	private Long doseringskode; // Ref. t. LMS28
 
 	@Id
-	@Output
+	@Column
 	public String getCID()
 	{
 		return drugid + "-" + doseringskode;
 	}
 
-	@Output(name = "DoseringKode")
+	@Column(name = "DoseringKode")
 	public long getDoseringskode()
 	{
 		return this.doseringskode;
 	}
 
-	@Output(name = "DrugID")
+	@Column(name = "DrugID")
 	public long getDrugid()
 	{
 		return this.drugid;

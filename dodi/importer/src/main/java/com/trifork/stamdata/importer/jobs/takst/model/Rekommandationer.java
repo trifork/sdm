@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Rekommandationer extends TakstEntity
 {
 	private Long rekommandationsgruppe;
@@ -38,7 +40,7 @@ public class Rekommandationer extends TakstEntity
 	// Værdier: Anbefales med forbehold / Anbefales ikke
 	private String rekommandationsniveau;
 
-	@Output
+	@Column
 	public Long getDrugID()
 	{
 		return drugID;
@@ -50,20 +52,20 @@ public class Rekommandationer extends TakstEntity
 		return varenummer;
 	}
 
-	@Output
+	@Column
 	public Long getRekommandationsgruppe()
 	{
 		return rekommandationsgruppe;
 	}
 
-	@Output
+	@Column
 	public String getRekommandationsniveau()
 	{
 		return rekommandationsniveau;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return varenummer;

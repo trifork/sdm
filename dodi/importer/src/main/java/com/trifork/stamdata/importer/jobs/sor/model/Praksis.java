@@ -25,13 +25,14 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
-
-@Output
+@Entity
 public class Praksis extends AbstractStamdataEntity
 {
 	private String navn;
@@ -43,10 +44,9 @@ public class Praksis extends AbstractStamdataEntity
 
 	public Praksis()
 	{
-
 	}
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -57,7 +57,7 @@ public class Praksis extends AbstractStamdataEntity
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer()
 	{
 		return eanLokationsnummer;
@@ -68,7 +68,7 @@ public class Praksis extends AbstractStamdataEntity
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
-	@Output
+	@Column
 	public Long getRegionCode()
 	{
 		return regionCode;
@@ -80,7 +80,7 @@ public class Praksis extends AbstractStamdataEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer()
 	{
 		return sorNummer;

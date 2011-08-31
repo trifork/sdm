@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Dosering extends TakstEntity
 {
 	private Long doseringKode; // Ref. t. LMS27
@@ -41,50 +43,50 @@ public class Dosering extends TakstEntity
 	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke
 									// anvendes)
 
-	@Output(name = "Aktiv")
+	@Column(name = "Aktiv")
 	public Boolean getAktivInaktiv()
 	{
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
 	}
 
-	@Output(name = "AntalEnhederPrDoegn")
+	@Column(name = "AntalEnhederPrDoegn")
 	public Double getAntalEnhDoegn()
 	{
 		return this.antalEnhDoegn / 1000.0;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getDoseringKode()
 	{
 		return this.doseringKode;
 	}
 
-	@Output
+	@Column
 	public String getDoseringKortTekst()
 	{
 		return this.doseringKortTekst;
 	}
 
-	@Output
+	@Column
 	public String getDoseringstekstLinie1()
 	{
 		return this.doseringstekstLinie1;
 	}
 
-	@Output
+	@Column
 	public String getDoseringstekstLinie2()
 	{
 		return this.doseringstekstLinie2;
 	}
 
-	@Output
+	@Column
 	public String getDoseringstekstLinie3()
 	{
 		return this.doseringstekstLinie3;
 	}
 
-	@Output(name = "DoseringTekst")
+	@Column(name = "DoseringTekst")
 	public String getDoseringstekstTotal()
 	{
 		return this.doseringstekstTotal;

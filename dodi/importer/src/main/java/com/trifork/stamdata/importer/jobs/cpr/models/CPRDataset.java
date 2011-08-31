@@ -37,7 +37,7 @@ public class CPRDataset
 	private final List<Dataset<? extends CPREntity>> datasets = Lists.newArrayList(
 			new Dataset<Personoplysninger>(Personoplysninger.class),
 			new Dataset<Klarskriftadresse>(Klarskriftadresse.class),
-			new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class),
+			new Dataset<Navnebeskyttelse>(Navnebeskyttelse.class),
 			new Dataset<Navneoplysninger>(Navneoplysninger.class),
 			new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class),
 			new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class),

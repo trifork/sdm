@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Entity;
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
@@ -97,15 +98,13 @@ public class Dataset<T extends StamdataEntity>
 	 */
 	public String getEntityTypeDisplayName()
 	{
-		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
-		return type.getSimpleName();
+		return getEntityTypeDisplayName(type);
 	}
 
 	public static String getEntityTypeDisplayName(Class<? extends StamdataEntity> type)
 	{
-		Output output = type.getAnnotation(Output.class);
-		if (output != null && !"".equals(output.name())) return output.name();
+		Entity output = type.getAnnotation(Entity.class);
+		if (output != null && !output.name().isEmpty()) return output.name();
 		return type.getSimpleName();
 	}
 

@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Indholdsstoffer extends TakstEntity
 {
 	private Long drugID; // Ref. t. LMS01
@@ -40,13 +41,12 @@ public class Indholdsstoffer extends TakstEntity
 	@Override
 	public boolean equals(Object o)
 	{
-		if (o.getClass() != Indholdsstoffer.class) return false;
+		if (o instanceof Indholdsstoffer) return false;
 		Indholdsstoffer stof = (Indholdsstoffer) o;
 		return getKey().equals(stof.getKey());
-
 	}
 
-	@Output
+	@Column
 	public Long getDrugID()
 	{
 		return this.drugID;
@@ -54,31 +54,31 @@ public class Indholdsstoffer extends TakstEntity
 
 	@Override
 	@Id
-	@Output(name = "CID")
+	@Column(name = "CID")
 	public String getKey()
 	{
 		return substans + "-" + substansgruppe + "-" + stofklasse + "-" + drugID;
 	}
 
-	@Output
+	@Column
 	public String getStofklasse()
 	{
 		return stofklasse;
 	}
 
-	@Output
+	@Column
 	public String getSubstans()
 	{
 		return substans;
 	}
 
-	@Output
+	@Column
 	public String getSubstansgruppe()
 	{
 		return substansgruppe;
 	}
 
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return varenummer;

@@ -23,12 +23,14 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output(name = "Indikation")
+@Entity(name = "Indikation")
 public class Indikation extends TakstEntity
 {
 	private Long indikationskode; // Ref. t. LMS25
@@ -39,38 +41,38 @@ public class Indikation extends TakstEntity
 	private String aktivInaktiv; // A = Aktiv kode. I = Inaktiv kode (bør ikke anvendes)
 	// TODO: Hvorfor står denne som "bør ikke anvendes"?
 
-	@Output(name = "aktiv")
+	@Column(name = "aktiv")
 	public boolean isActive()
 	{
 		return "A".equalsIgnoreCase(this.aktivInaktiv);
 	}
 
 	@Id
-	@Output(name = "IndikationKode")
+	@Column(name = "IndikationKode")
 	public Long getIndikationskode()
 	{
 		return indikationskode;
 	}
 
-	@Output
+	@Column
 	public String getIndikationstekstLinie1()
 	{
 		return indikationstekstLinie1;
 	}
 
-	@Output
+	@Column
 	public String getIndikationstekstLinie2()
 	{
 		return indikationstekstLinie2;
 	}
 
-	@Output
+	@Column
 	public String getIndikationstekstLinie3()
 	{
 		return indikationstekstLinie3;
 	}
 
-	@Output(name = "IndikationTekst")
+	@Column(name = "IndikationTekst")
 	public String getIndikationstekstTotal()
 	{
 		return indikationstekstTotal;

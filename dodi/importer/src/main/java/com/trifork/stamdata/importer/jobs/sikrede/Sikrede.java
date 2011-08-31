@@ -1,12 +1,13 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
-
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-@Output
+
+@Entity
 public class Sikrede extends CPREntity
 {
 	private String kommunekode;
@@ -27,19 +28,19 @@ public class Sikrede extends CPREntity
 	private String socialLandKode;
 
 	@Id
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	@Output
+	@Column
 	public String getKommunekode()
 	{
 		return kommunekode;
 	}
 
-	@Output
+	@Column
 	public String getStatus()
 	{
 		return status;
@@ -50,7 +51,7 @@ public class Sikrede extends CPREntity
 		this.kommunekode = kommunekode;
 	}
 
-	@Output
+	@Column
 	public Date getKommunekodeIkraftDato()
 	{
 		return kommunekodeIkraftDato;
@@ -106,7 +107,7 @@ public class Sikrede extends CPREntity
 		this.socialLandKode = landekode;
 	}
 
-	@Output
+	@Column
 	public String getSocialLand()
 	{
 		return socialLand;
@@ -117,7 +118,7 @@ public class Sikrede extends CPREntity
 		this.socialLand = socialLand;
 	}
 
-	@Output
+	@Column
 	public String getSocialLandKode()
 	{
 		return socialLandKode;
@@ -128,7 +129,7 @@ public class Sikrede extends CPREntity
 		this.socialLandKode = socialLandKode;
 	}
 
-	@Output
+	@Column
 	public Date getSslGyldigFra()
 	{
 		return sslGyldigFra;
@@ -139,7 +140,7 @@ public class Sikrede extends CPREntity
 		this.sslGyldigFra = gyldigFra;
 	}
 
-	@Output
+	@Column
 	public Date getSslGyldigTil()
 	{
 		return SslGyldigTil;
@@ -150,7 +151,7 @@ public class Sikrede extends CPREntity
 		this.SslGyldigTil = gyldigTil;
 	}
 
-	@Output
+	@Column
 	public Date getBevisIkraftDato()
 	{
 		return bevisIkraftDato;
@@ -161,25 +162,25 @@ public class Sikrede extends CPREntity
 		this.bevisIkraftDato = bevisIkraftDato;
 	}
 
-	@Output
+	@Column
 	public String getFoelgeskabsPersonCpr()
 	{
 		return foelgeskabsPersonCpr;
 	}
 
-	@Output
+	@Column
 	public String getForsikringsinstans()
 	{
 		return forsikringsinstans;
 	}
 
-	@Output
+	@Column
 	public String getForsikringsinstansKode()
 	{
 		return forsikringsinstansKode;
 	}
 
-	@Output
+	@Column
 	public String getForsikringsnummer()
 	{
 		return forsikringsnummer;

@@ -25,26 +25,25 @@ package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output(name = "Person")
-public class NavneBeskyttelse extends CPREntity
+@Entity(name = "Person")
+public class Navnebeskyttelse extends CPREntity
 {
-
 	Date navneBeskyttelseStartDato;
 	Date navneBeskyttelseSletteDato;
 
 	@Id
-	@Output
+	@Column
 	@Override
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	@Output
+	@Column
 	public Date getNavneBeskyttelseStartDato()
 	{
 		return navneBeskyttelseStartDato;
@@ -55,7 +54,7 @@ public class NavneBeskyttelse extends CPREntity
 		this.navneBeskyttelseStartDato = startDato;
 	}
 
-	@Output
+	@Column
 	public Date getNavneBeskyttelseSletteDato()
 	{
 		return navneBeskyttelseSletteDato;

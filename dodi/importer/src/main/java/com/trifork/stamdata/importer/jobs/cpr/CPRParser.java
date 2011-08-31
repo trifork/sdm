@@ -46,7 +46,7 @@ import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
@@ -223,9 +223,9 @@ public class CPRParser
 		return n;
 	}
 
-	static NavneBeskyttelse navneBeskyttelse(String line) throws Exception
+	static Navnebeskyttelse navneBeskyttelse(String line) throws Exception
 	{
-		NavneBeskyttelse n = new NavneBeskyttelse();
+		Navnebeskyttelse n = new Navnebeskyttelse();
 		n.setCpr(cut(line, 3, 13));
 		n.setNavneBeskyttelseStartDato(parseDate(yyyy_MM_dd, line, 17, 27));
 		n.setNavneBeskyttelseSletteDato(parseDate(yyyy_MM_dd, line, 27, 37));

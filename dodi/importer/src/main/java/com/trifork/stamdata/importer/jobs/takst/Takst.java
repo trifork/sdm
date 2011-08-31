@@ -27,10 +27,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 
 
@@ -39,14 +41,14 @@ import com.trifork.stamdata.importer.persistence.StamdataEntity;
  *
  * @author Rune
  */
-@Output(name = "TakstVersion")
+@Entity(name = "TakstVersion")
 public class Takst extends TakstEntity
 {
 	private final List<CompleteDataset<? extends StamdataEntity>> datasets = new ArrayList<CompleteDataset<? extends StamdataEntity>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
 	// for a subset of this takst. (The stable subset excludes pricing and
-	// substitions and possibly more)
+	// substitions and possibly more).
 	private int validityYear, validityWeekNumber;
 
 	private Date validFrom, validTo;
@@ -99,7 +101,7 @@ public class Takst extends TakstEntity
 		return (T)avds.getEntityById(entityId);
 	}
 
-	@Output(name = "TakstUge")
+	@Column(name = "TakstUge")
 	public String getStableWeek()
 	{
 		return "" + validityYear + validityWeekNumber;

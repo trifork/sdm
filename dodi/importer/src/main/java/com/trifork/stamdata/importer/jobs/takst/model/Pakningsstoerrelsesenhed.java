@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Pakningsstoerrelsesenhed extends TakstEntity
 {
 	private final DivEnheder enheder;
@@ -45,19 +46,19 @@ public class Pakningsstoerrelsesenhed extends TakstEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getPakningsstoerrelsesenhedKode()
 	{
 		return enheder.getKode();
 	}
 
-	@Output
+	@Column
 	public String getPakningsstoerrelsesenhedKortTekst()
 	{
 		return enheder.getKortTekst();
 	}
 
-	@Output
+	@Column
 	public String getPakningsstoerrelsesenhedTekst()
 	{
 		return enheder.getTekst();

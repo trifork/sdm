@@ -28,6 +28,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Entity;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,14 +61,10 @@ public class AuditingPersister implements Persister
 	}
 
 	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
-	{
-		int i = 1;
-		
+	{		
 		for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
 		{
-			if (!dataset.getType().isAnnotationPresent(Output.class)) continue;
-
-			logger.info("Dataset {}/{}", i++, datasets.length);
+			if (!dataset.getType().isAnnotationPresent(Entity.class)) continue;
 			
 			updateValidToOnRecordsNotInDataset(dataset);
 			persistDeltaDataset(dataset);
@@ -88,8 +86,6 @@ public class AuditingPersister implements Persister
 		Date transactionTime = new Date();
 
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
-
-		if (logger.isDebugEnabled()) logger.debug("persistDeltaDataset dataset: " + dataset.getEntityTypeDisplayName() + " with: " + dataset.getEntities().size() + " entities...");
 
 		int processedEntities = 0;
 

@@ -23,14 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions.models;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output
+@Entity
 public class DosageUnit extends DosageRecord
 {
-
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
 
@@ -44,31 +43,27 @@ public class DosageUnit extends DosageRecord
 	private String textPlural;
 
 	@Id
-	@Output
+	@Column
 	public int getCode()
 	{
-
 		return code;
 	}
 
-	@Output
+	@Column
 	public long getReleaseNumber()
 	{
-
 		return releaseNumber;
 	}
 
-	@Output
+	@Column
 	public String getTextSingular()
 	{
-
 		return textSingular;
 	}
 
-	@Output
+	@Column
 	public String getTextPlural()
 	{
-
 		return textPlural;
 	}
 }

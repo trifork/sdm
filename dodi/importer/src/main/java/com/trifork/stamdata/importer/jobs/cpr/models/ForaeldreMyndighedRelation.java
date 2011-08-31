@@ -25,14 +25,13 @@ package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output
+@Entity
 public class ForaeldreMyndighedRelation extends CPREntity
 {
-
 	public enum ForaeldreMyndighedRelationsType
 	{
 		mor, far, andenIndehaver1, andenIndehaver2
@@ -48,7 +47,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 	Date relationCprStartDato;
 
 	@Id
-	@Output
+	@Column
 	public String getId()
 	{
 
@@ -58,7 +57,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		return cpr + "-" + relationCpr;
 	}
 
-	@Output
+	@Column
 	public String getCpr()
 	{
 
@@ -71,7 +70,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		this.cpr = cpr;
 	}
 
-	@Output
+	@Column
 	public String getTypeTekst()
 	{
 
@@ -87,7 +86,7 @@ public class ForaeldreMyndighedRelation extends CPREntity
 		return null;
 	}
 
-	@Output
+	@Column
 	public String getTypeKode()
 	{
 
@@ -113,56 +112,47 @@ public class ForaeldreMyndighedRelation extends CPREntity
 
 	public Date getForaeldreMyndighedStartDato()
 	{
-
 		return foraeldreMyndighedStartDato;
 	}
 
 	public void setForaeldreMyndighedStartDato(Date foraeldreMyndighedStartDato)
 	{
-
 		this.foraeldreMyndighedStartDato = foraeldreMyndighedStartDato;
 	}
 
 	public String getForaeldreMyndighedMarkering()
 	{
-
 		return foraeldreMyndighedMarkering;
 	}
 
 	public void setForaeldreMyndighedMarkering(String foraeldreMyndighedMarkering)
 	{
-
 		this.foraeldreMyndighedMarkering = foraeldreMyndighedMarkering;
 	}
 
 	public Date getForaeldreMyndighedSlettedato()
 	{
-
 		return foraeldreMyndighedSlettedato;
 	}
 
 	public void setForaeldreMyndighedSlettedato(Date foraeldreMyndighedSlettedato)
 	{
-
 		this.foraeldreMyndighedSlettedato = foraeldreMyndighedSlettedato;
 	}
 
-	@Output
+	@Column
 	public String getRelationCpr()
 	{
-
 		return relationCpr;
 	}
 
 	public void setRelationCpr(String relationCpr)
 	{
-
 		this.relationCpr = relationCpr;
 	}
 
 	public Date getRelationCprStartDato()
 	{
-
 		return relationCprStartDato;
 	}
 

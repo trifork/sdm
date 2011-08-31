@@ -25,11 +25,15 @@ package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output
+@Entity
 public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
 {
 	private String nummer;
@@ -49,32 +53,32 @@ public class Autorisation extends AbstractStamdataEntity implements StamdataEnti
 		this.educationCode = educationCode;
 	}
 
-	@Output
 	@Id
+	@Column
 	public String getAutorisationsnummer()
 	{
 		return nummer;
 	}
 
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
 	}
 
-	@Output
+	@Column
 	public String getEfternavn()
 	{
 		return efternavn;
 	}
 
-	@Output
+	@Column
 	public String getFornavn()
 	{
 		return fornavn;
 	}
 
-	@Output
+	@Column
 	public String getUddannelsesKode()
 	{
 		return educationCode;

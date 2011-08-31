@@ -23,12 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Enhedspriser extends TakstEntity
 {
 	private Long drugID; // Ref. t. LMS01
@@ -38,13 +39,13 @@ public class Enhedspriser extends TakstEntity
 	private String billigstePakning; // Markering af billigste pakning pr. enhed
 										// for DrugID
 
-	@Output
+	@Column
 	public String getBilligstePakning()
 	{
 		return billigstePakning;
 	}
 
-	@Output
+	@Column
 	public Long getDrugID()
 	{
 		return drugID;
@@ -56,20 +57,20 @@ public class Enhedspriser extends TakstEntity
 		return varenummer.toString();
 	}
 
-	@Output
+	@Column
 	public Long getPrisPrDDD()
 	{
 		return prisPrDDD;
 	}
 
-	@Output
+	@Column
 	public Long getPrisPrEnhed()
 	{
 		return prisPrEnhed;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getVarenummer()
 	{
 		return varenummer;

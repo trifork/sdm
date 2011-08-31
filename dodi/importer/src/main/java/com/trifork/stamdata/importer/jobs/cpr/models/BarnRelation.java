@@ -23,11 +23,12 @@
 
 package com.trifork.stamdata.importer.jobs.cpr.models;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class BarnRelation extends CPREntity
 {
 
@@ -35,13 +36,13 @@ public class BarnRelation extends CPREntity
 	String barnCpr;
 
 	@Id
-	@Output
+	@Column
 	public String getId()
 	{
 		return cpr + "-" + barnCpr;
 	}
 
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -52,7 +53,7 @@ public class BarnRelation extends CPREntity
 		this.cpr = cpr;
 	}
 
-	@Output
+	@Column
 	public String getBarnCpr()
 	{
 		return barnCpr;

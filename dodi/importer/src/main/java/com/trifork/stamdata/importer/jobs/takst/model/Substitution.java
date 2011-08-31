@@ -23,24 +23,24 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output
+@Entity
 public class Substitution extends TakstEntity
 {
 	private Long substitutionsgruppenummer; // Substitutionsgruppe for pakningen
-	private Long receptensVarenummer; // Varenr. hvis substitutionsmuligheder
-										// skal findes
+	private Long receptensVarenummer; // Varenr. hvis substitutionsmuligheder skal findes.
 	private Long numeriskPakningsstoerrelse; // Felt 07 i LMS02
 	private String prodAlfabetiskeSekvensplads; // Felt 04 i LMS01
-	private String substitutionskodeForPakning; // Værdier=A-B-C (for varenr. i
-												// felt 02)
+	private String substitutionskodeForPakning; // Værdier=A-B-C (for varenr. i felt 02)
 	private Long billigsteVarenummer; // Henvisning til billigste pakning
 
-	@Output
+	@Column
 	public Long getBilligsteVarenummer()
 	{
 		return this.billigsteVarenummer;
@@ -52,32 +52,32 @@ public class Substitution extends TakstEntity
 		return receptensVarenummer;
 	}
 
-	@Output
+	@Column
 	public Long getNumeriskPakningsstoerrelse()
 	{
 		return numeriskPakningsstoerrelse;
 	}
 
-	@Output
+	@Column
 	public String getProdAlfabetiskeSekvensplads()
 	{
 		return prodAlfabetiskeSekvensplads;
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getReceptensVarenummer()
 	{
 		return receptensVarenummer;
 	}
 
-	@Output
+	@Column
 	public Long getSubstitutionsgruppenummer()
 	{
 		return substitutionsgruppenummer;
 	}
 
-	@Output
+	@Column
 	public String getSubstitutionskodeForPakning()
 	{
 		return substitutionskodeForPakning;

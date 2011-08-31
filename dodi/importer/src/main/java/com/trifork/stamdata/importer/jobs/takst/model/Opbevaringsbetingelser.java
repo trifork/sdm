@@ -23,15 +23,15 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
-
-@Output
+@Entity
 public class Opbevaringsbetingelser extends TakstEntity
 {
-
 	private String kode; // Ref. t. LMS02, felt 17
 	private String kortTekst;
 	private String tekst;
@@ -39,23 +39,23 @@ public class Opbevaringsbetingelser extends TakstEntity
 	@Override
 	public String getKey()
 	{
-		return "" + this.kode;
+		return kode;
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getKode()
 	{
 		return this.kode;
 	}
 
-	@Output
+	@Column
 	public String getKortTekst()
 	{
 		return this.kortTekst;
 	}
 
-	@Output
+	@Column
 	public String getTekst()
 	{
 		return this.tekst;
@@ -75,5 +75,4 @@ public class Opbevaringsbetingelser extends TakstEntity
 	{
 		this.tekst = tekst;
 	}
-
 }

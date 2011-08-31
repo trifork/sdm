@@ -25,11 +25,12 @@ package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output
+@Entity
 public class UmyndiggoerelseVaergeRelation extends CPREntity
 {
 	public enum VaergeRelationType
@@ -54,14 +55,13 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 	String relationsTekst5;
 
 	@Id
-	@Output
+	@Column
 	public String getId()
 	{
-
 		return cpr + "-" + typeKode;
 	}
 
-	@Output
+	@Column
 	public String getCpr()
 	{
 
@@ -70,50 +70,42 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 
 	public void setCpr(String cpr)
 	{
-
 		this.cpr = cpr;
 	}
 
 	public Date getUmyndigStartDato()
 	{
-
 		return umyndigStartDato;
 	}
 
 	public void setUmyndigStartDato(Date umyndigStartDato)
 	{
-
 		this.umyndigStartDato = umyndigStartDato;
 	}
 
 	public String getUmyndigStartDatoMarkering()
 	{
-
 		return umyndigStartDatoMarkering;
 	}
 
 	public void setUmyndigStartDatoMarkering(String umyndigStartDatoMarkering)
 	{
-
 		this.umyndigStartDatoMarkering = umyndigStartDatoMarkering;
 	}
 
 	public Date getUmyndigSletteDato()
 	{
-
 		return umyndigSletteDato;
 	}
 
 	public void setUmyndigSletteDato(Date umyndigSletteDato)
 	{
-
 		this.umyndigSletteDato = umyndigSletteDato;
 	}
 
-	@Output
+	@Column
 	public String getTypeTekst()
 	{
-
 		if (type == null)
 			return "Ukendt værge relation";
 		else if (type == VaergeRelationType.ikkeICPR)
@@ -121,19 +113,18 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		else if (type == VaergeRelationType.CPRFindes)
 			return "Værges CPR findes";
 		else if (type == VaergeRelationType.adresseFindes) return "Værges adresse findes";
+		
 		return null;
 	}
 
-	@Output
+	@Column
 	public String getTypeKode()
 	{
-
 		return typeKode;
 	}
 
 	public void setType(String type)
 	{
-
 		if (type.equals("0000"))
 			this.type = VaergeRelationType.ikkeICPR;
 		else if (type.equals("0001"))
@@ -146,10 +137,9 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.typeKode = type;
 	}
 
-	@Output
+	@Column
 	public String getRelationCpr()
 	{
-
 		return relationCpr;
 	}
 
@@ -159,46 +149,40 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationCpr = relationCpr;
 	}
 
-	@Output
+	@Column
 	public Date getRelationCprStartDato()
 	{
-
 		return relationCprStartDato;
 	}
 
 	public void setRelationCprStartDato(Date relationCprStartDato)
 	{
-
 		this.relationCprStartDato = relationCprStartDato;
 	}
 
-	@Output
+	@Column
 	public String getVaergesNavn()
 	{
-
 		return vaergesNavn;
 	}
 
 	public void setVaergesNavn(String vaergesNavn)
 	{
-
 		this.vaergesNavn = vaergesNavn;
 	}
 
-	@Output
+	@Column
 	public Date getVaergesNavnStartDato()
 	{
-
 		return vaergesNavnStartDato;
 	}
 
 	public void setVaergesNavnStartDato(Date vaergesNavnStartDato)
 	{
-
 		this.vaergesNavnStartDato = vaergesNavnStartDato;
 	}
 
-	@Output
+	@Column
 	public String getRelationsTekst1()
 	{
 
@@ -211,33 +195,29 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst1 = relationsTekst1;
 	}
 
-	@Output
+	@Column
 	public String getRelationsTekst2()
 	{
-
 		return relationsTekst2;
 	}
 
 	public void setRelationsTekst2(String relationsTekst2)
 	{
-
 		this.relationsTekst2 = relationsTekst2;
 	}
 
-	@Output
+	@Column
 	public String getRelationsTekst3()
 	{
-
 		return relationsTekst3;
 	}
 
 	public void setRelationsTekst3(String relationsTekst3)
 	{
-
 		this.relationsTekst3 = relationsTekst3;
 	}
 
-	@Output
+	@Column
 	public String getRelationsTekst4()
 	{
 		return relationsTekst4;
@@ -248,7 +228,7 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 		this.relationsTekst4 = relationsTekst4;
 	}
 
-	@Output
+	@Column
 	public String getRelationsTekst5()
 	{
 		return relationsTekst5;
@@ -261,11 +241,8 @@ public class UmyndiggoerelseVaergeRelation extends CPREntity
 
 	@Override
 	public Date getValidFrom()
-	{
-		// Hvis umyndiggørelses start dato er sat til senere end
-		// produktionsdatoen for udtrækket brug det ellers brug
-		// produktionsdatoen.
-		return (umyndigStartDato == null) ? super.getValidFrom() : (umyndigStartDato.after(super.getValidFrom())) ? umyndigStartDato : super.getValidFrom();
+	{		
+		return (umyndigStartDato == null) ? super.getValidFrom() : umyndigStartDato;
 	}
 
 	@Override

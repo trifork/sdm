@@ -25,14 +25,15 @@ package com.trifork.stamdata.importer.jobs.yderregister.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
-
-@Output
+@Entity
 public class YderregisterPerson extends AbstractStamdataEntity implements StamdataEntity
 {
 	private String nummer;
@@ -44,13 +45,13 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 	private Date afgangDato;
 
 	@Id
-	@Output
+	@Column
 	public String getId()
 	{
 		return nummer + "-" + cpr;
 	}
 
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -61,7 +62,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public String getHistIdPerson()
 	{
 		return histIdPerson;
@@ -72,7 +73,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 		this.histIdPerson = histIdPerson;
 	}
 
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -83,7 +84,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 		this.cpr = cpr;
 	}
 
-	@Output
+	@Column
 	public Long getPersonrolleKode()
 	{
 		return personrolleKode;
@@ -94,7 +95,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Stamda
 		this.personrolleKode = personrolleKode;
 	}
 
-	@Output
+	@Column
 	public String getPersonrolleTxt()
 	{
 		return personrolleTxt;

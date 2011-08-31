@@ -32,7 +32,6 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.util.DateUtils;
 
-
 public class DateUtilsTest
 {
 	@Test

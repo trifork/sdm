@@ -23,11 +23,11 @@
 
 package com.trifork.stamdata.importer.jobs.cpr.models;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output(name = "Person")
+@Entity(name = "Person")
 public class Klarskriftadresse extends CPREntity
 {
 	String cpr;
@@ -47,7 +47,7 @@ public class Klarskriftadresse extends CPREntity
 	String vejNavn;
 
 	@Id
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -68,7 +68,7 @@ public class Klarskriftadresse extends CPREntity
 		this.adresseringsNavn = adresseringsNavn;
 	}
 
-	@Output
+	@Column
 	public String getCoNavn()
 	{
 		return coNavn;
@@ -79,7 +79,7 @@ public class Klarskriftadresse extends CPREntity
 		this.coNavn = coNavn;
 	}
 
-	@Output
+	@Column
 	public String getLokalitet()
 	{
 		return lokalitet;
@@ -100,7 +100,7 @@ public class Klarskriftadresse extends CPREntity
 		this.adresseringsVejnavn = adresse;
 	}
 
-	@Output
+	@Column
 	public String getByNavn()
 	{
 		return byNavn;
@@ -111,7 +111,7 @@ public class Klarskriftadresse extends CPREntity
 		this.byNavn = byNavn;
 	}
 
-	@Output
+	@Column
 	public Long getPostNummer()
 	{
 		return postNummer;
@@ -122,7 +122,7 @@ public class Klarskriftadresse extends CPREntity
 		this.postNummer = postNummer;
 	}
 
-	@Output
+	@Column
 	public String getPostDistrikt()
 	{
 		return postDistrikt;
@@ -133,7 +133,7 @@ public class Klarskriftadresse extends CPREntity
 		this.postDistrikt = postDistrikt;
 	}
 
-	@Output
+	@Column
 	public Long getKommuneKode()
 	{
 		return kommuneKode;
@@ -144,7 +144,7 @@ public class Klarskriftadresse extends CPREntity
 		this.kommuneKode = kommuneKode;
 	}
 
-	@Output
+	@Column
 	public Long getVejKode()
 	{
 		return vejKode;
@@ -155,7 +155,7 @@ public class Klarskriftadresse extends CPREntity
 		this.vejKode = vejKode;
 	}
 
-	@Output
+	@Column
 	public String getHusNummer()
 	{
 		return husNummer;
@@ -166,7 +166,7 @@ public class Klarskriftadresse extends CPREntity
 		this.husNummer = husNummer;
 	}
 
-	@Output
+	@Column
 	public String getEtage()
 	{
 		return etage;
@@ -177,7 +177,7 @@ public class Klarskriftadresse extends CPREntity
 		this.etage = etage;
 	}
 
-	@Output
+	@Column
 	public String getSideDoerNummer()
 	{
 		return sideDoerNummer;
@@ -188,7 +188,7 @@ public class Klarskriftadresse extends CPREntity
 		this.sideDoerNummer = sideDoerNummer;
 	}
 
-	@Output
+	@Column
 	public String getBygningsNummer()
 	{
 		return bygningsNummer;
@@ -199,7 +199,7 @@ public class Klarskriftadresse extends CPREntity
 		this.bygningsNummer = bygningsNummer;
 	}
 
-	@Output
+	@Column
 	public String getVejNavn()
 	{
 		return vejNavn;

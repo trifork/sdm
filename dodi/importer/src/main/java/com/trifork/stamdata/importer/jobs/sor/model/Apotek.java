@@ -25,13 +25,14 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
-
-@Output(name = "Apotek")
+@Entity(name = "Apotek")
 public class Apotek extends AbstractStamdataEntity
 {
 
@@ -53,176 +54,149 @@ public class Apotek extends AbstractStamdataEntity
 
 	public Apotek()
 	{
-
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer()
 	{
-
 		return sorNummer;
 	}
 
 	public void setSorNummer(Long sorNummer)
 	{
-
 		this.sorNummer = sorNummer;
 	}
 
-	@Output
+	@Column
 	public Long getApotekNummer()
 	{
-
 		return apotekNummer;
 	}
 
 	public void setApotekNummer(Long apotekNummer)
 	{
-
 		this.apotekNummer = apotekNummer;
 	}
 
-	@Output
+	@Column
 	public Long getFilialNummer()
 	{
-
 		return filialNummer;
 	}
 
 	public void setFilialNummer(Long filialNummer)
 	{
-
 		this.filialNummer = filialNummer;
 	}
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer()
 	{
-
 		return eanLokationsnummer;
 	}
 
 	public void setEanLokationsnummer(Long eanLokationsnummer)
 	{
-
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
-	@Output
+	@Column
 	public Long getCvr()
 	{
-
 		return cvr;
 	}
 
 	public void setCvr(Long cvr)
 	{
-
 		this.cvr = cvr;
 	}
 
-	@Output
+	@Column
 	public Long getPcvr()
 	{
-
 		return pcvr;
 	}
 
 	public void setPcvr(Long pcvr)
 	{
-
 		this.pcvr = pcvr;
 	}
 
-	@Output
+	@Column
 	public String getNavn()
 	{
-
 		return navn;
 	}
 
 	public void setNavn(String navn)
 	{
-
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public String getTelefon()
 	{
-
 		return telefon;
 	}
 
 	public void setTelefon(String telefon)
 	{
-
 		this.telefon = telefon;
 	}
 
-	@Output
+	@Column
 	public String getVejnavn()
 	{
-
 		return vejnavn;
 	}
 
 	public void setVejnavn(String vejnavn)
 	{
-
 		this.vejnavn = vejnavn;
 	}
 
-	@Output
+	@Column
 	public String getPostnummer()
 	{
-
 		return postnummer;
 	}
 
 	public void setPostnummer(String postnummer)
 	{
-
 		this.postnummer = postnummer;
 	}
 
-	@Output
+	@Column
 	public String getBynavn()
 	{
-
 		return bynavn;
 	}
 
 	public void setBynavn(String bynavn)
 	{
-
 		this.bynavn = bynavn;
 	}
 
-	@Output
+	@Column
 	public String getEmail()
 	{
-
 		return email;
 	}
 
 	public void setEmail(String email)
 	{
-
 		this.email = email;
 	}
 
-	@Output
+	@Column
 	public String getWww()
 	{
-
 		return www;
 	}
 
 	public void setWww(String www)
 	{
-
 		this.www = www;
 	}
 

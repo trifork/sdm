@@ -23,14 +23,13 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions.models;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
-
-@Output
+@Entity
 public class DrugDosageStructureRelation extends DosageRecord
 {
-
 	// Reference til releaseNumber i Version. Obligatorisk. Heltal, 15 cifre.
 	private long releaseNumber;
 
@@ -48,43 +47,37 @@ public class DrugDosageStructureRelation extends DosageRecord
 	}
 
 	@Id
-	@Output
+	@Column
 	public String getId()
 	{
-
 		return Long.toString(drugId) + Long.toString(dosageStructureCode);
 	}
 
-	@Output
+	@Column
 	public long getReleaseNumber()
 	{
-
 		return releaseNumber;
 	}
 
 	public void setDrugId(long drugId)
 	{
-
 		this.drugId = drugId;
 	}
 
-	@Output
+	@Column
 	public long getDrugId()
 	{
-
 		return drugId;
 	}
 
 	public void setDosageStructureCode(long dosageStructureCode)
 	{
-
 		this.dosageStructureCode = dosageStructureCode;
 	}
 
-	@Output
+	@Column
 	public long getDosageStructureCode()
 	{
-
 		return dosageStructureCode;
 	}
 }

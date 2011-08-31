@@ -42,18 +42,19 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
 public class CPRIntegrationTest
 {
-	private Connection con;
+	private Connection connection;
 
 	@Before
 	public void cleanDatabase() throws Exception
 	{
-		con = MySQLConnectionManager.getConnection();
+		connection = MySQLConnectionManager.getConnection();
 
-		Statement statement = con.createStatement();
+		Statement statement = connection.createStatement();
 		statement.execute("truncate table Person");
 		statement.execute("truncate table BarnRelation");
 		statement.execute("truncate table ForaeldreMyndighedRelation");
@@ -69,8 +70,8 @@ public class CPRIntegrationTest
 	@After
 	public void tearDown() throws Exception
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
@@ -81,7 +82,7 @@ public class CPRIntegrationTest
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
 
-		Date latestIkraft = CPRImporter.getLatestVersion(con);
+		Date latestIkraft = CPRImporter.getLatestVersion(connection);
 		assertNull(latestIkraft);
 	}
 
@@ -90,7 +91,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100315.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT Fornavn, validFrom, validTo from Person WHERE cpr='1312095098'");
 		assertTrue(rs.next());
 		assertEquals("Hjalte", rs.getString("Fornavn"));
@@ -117,12 +118,12 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testSequence1/D100314.L431101");
 
-		Date latestIkraft = CPRImporter.getLatestVersion(con);
+		Date latestIkraft = CPRImporter.getLatestVersion(connection);
 		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
 
 		importFile("data/cpr/testSequence2/D100314.L431101");
 
-		latestIkraft = CPRImporter.getLatestVersion(con);
+		latestIkraft = CPRImporter.getLatestVersion(connection);
 		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
 
 		importFile("data/cpr/testOutOfSequence/D100314.L431101");
@@ -145,7 +146,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testCPR1/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM Person WHERE CPR = '0101965058'");
 		rs.next();
 
@@ -181,7 +182,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testForaeldremyndighed/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select * from Person where CPR='3112970028'");
 
 		rs.next();
@@ -221,7 +222,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/testUmyndigVaerge/D100314.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM UmyndiggoerelseVaergeRelation WHERE CPR='0709614126'");
 
 		rs.next();
@@ -237,8 +238,8 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst3"));
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
-		assertEquals(yyyy_MM_dd.parse("2001-11-19"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("ValidFrom"));
+		assertEquals(DateUtils.THE_END_OF_TIME, rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
@@ -247,7 +248,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100312.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(100, rs.getInt(1));
@@ -276,7 +277,7 @@ public class CPRIntegrationTest
 	{
 		importFile("data/cpr/D100313.L431101");
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Person");
 		rs.next();
 		assertEquals(80, rs.getInt(1));
@@ -302,6 +303,6 @@ public class CPRIntegrationTest
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().importFiles(new File[] {file}, new AuditingPersister(con));
+		new CPRImporter().importFiles(new File[] {file}, new AuditingPersister(connection));
 	}
 }

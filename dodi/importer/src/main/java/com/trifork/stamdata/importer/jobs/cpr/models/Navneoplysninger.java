@@ -25,14 +25,14 @@ package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
-@Output(name = "Person")
+@Entity(name = "Person")
 public class Navneoplysninger extends CPREntity
 {
-
 	String cpr;
 	String fornavn;
 	String fornavnMarkering;
@@ -45,7 +45,7 @@ public class Navneoplysninger extends CPREntity
 	String adresseringsNavn;
 
 	@Id
-	@Output
+	@Column
 	public String getCpr()
 	{
 		return cpr;
@@ -56,7 +56,7 @@ public class Navneoplysninger extends CPREntity
 		this.cpr = cpr;
 	}
 
-	@Output
+	@Column
 	public String getFornavn()
 	{
 		return fornavn;
@@ -77,7 +77,7 @@ public class Navneoplysninger extends CPREntity
 		this.fornavnMarkering = fornavnMarkering;
 	}
 
-	@Output
+	@Column
 	public String getMellemnavn()
 	{
 		return mellemnavn;
@@ -98,7 +98,7 @@ public class Navneoplysninger extends CPREntity
 		this.mellemnavnMarkering = mellemnavnMarkering;
 	}
 
-	@Output
+	@Column
 	public String getEfternavn()
 	{
 		return efternavn;

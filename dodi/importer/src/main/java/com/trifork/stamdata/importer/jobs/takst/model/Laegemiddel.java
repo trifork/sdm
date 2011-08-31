@@ -25,12 +25,14 @@ package com.trifork.stamdata.importer.jobs.takst.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 
 
-@Output(name = "Laegemiddel")
+@Entity(name = "Laegemiddel")
 public class Laegemiddel extends TakstEntity
 {
 	private Long drugid;
@@ -67,25 +69,25 @@ public class Laegemiddel extends TakstEntity
 	private Date datoForAfregistrAfLaegemiddel; // Format: ååååmmdd
 	private Date karantaenedato; // Format: ååååmmdd
 
-	@Output
+	@Column
 	public String getAdministrationsvejKode()
 	{
 		return administrationsvej;
 	}
 
-	@Output
+	@Column
 	public String getAlfabetSekvensplads()
 	{
 		return this.alfabetSekvensplads;
 	}
 
-	@Output(name = "ATCKode")
+	@Column(name = "ATCKode")
 	public String getATC()
 	{
 		return atc;
 	}
 
-	@Output(name = "ATCTekst")
+	@Column(name = "ATCTekst")
 	public String getATCTekst()
 	{
 		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, atc);
@@ -94,26 +96,26 @@ public class Laegemiddel extends TakstEntity
 		return atcObj.getTekst();
 	}
 
-	@Output
+	@Column
 	public Date getDatoForAfregistrAfLaegemiddel()
 	{
 		return datoForAfregistrAfLaegemiddel;
 	}
 
 	@Id
-	@Output(name = "DrugID")
+	@Column(name = "DrugID")
 	public Long getDrugid()
 	{
 		return drugid;
 	}
 
-	@Output(name = "Dosisdispenserbar")
+	@Column(name = "Dosisdispenserbar")
 	public boolean getEgnetTilDosisdispensering()
 	{
 		return egnetTilDosisdispensering;
 	}
 
-	@Output(name = "FormTekst")
+	@Column(name = "FormTekst")
 	public String getForm()
 	{
 		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
@@ -123,61 +125,61 @@ public class Laegemiddel extends TakstEntity
 		return lmfb.getTekst();
 	}
 
-	@Output(name = "FormKode")
+	@Column(name = "FormKode")
 	public String getFormKode()
 	{
 		return formKode;
 	}
 
-	@Output
+	@Column
 	public Date getKarantaenedato()
 	{
 		return karantaenedato;
 	}
 
-	@Output
+	@Column
 	public String getKodeForYderligereFormOplysn()
 	{
 		return kodeForYderligereFormOplysn;
 	}
 
-	@Output
+	@Column
 	public String getLaegemiddelformTekst()
 	{
 		return laegemiddelformTekst;
 	}
 
-	@Output
+	@Column
 	public String getLaegemidletsSubstitutionsgruppe()
 	{
 		return laegemidletsSubstitutionsgruppe;
 	}
 
-	@Output
+	@Column
 	public Long getMTIndehaverKode()
 	{
 		return mTIndehaver;
 	}
 
-	@Output(name = "DrugName")
+	@Column(name = "DrugName")
 	public String getNavn()
 	{
 		return navn;
 	}
 
-	@Output
+	@Column
 	public Long getRepraesentantDistributoerKode()
 	{
 		return repraesentantDistributoer;
 	}
 
-	@Output
+	@Column
 	public Long getSpecNummer()
 	{
 		return specNummer;
 	}
 
-	@Output(name = "StyrkeEnhed")
+	@Column(name = "StyrkeEnhed")
 	public String getStyrke()
 	{
 		// TODO: This seems strange. Logic is misplaced here.
@@ -191,13 +193,13 @@ public class Laegemiddel extends TakstEntity
 		return styrkeEnhed;
 	}
 
-	@Output(name = "StyrkeTekst")
+	@Column(name = "StyrkeTekst")
 	public String getStyrkeKlarTekst()
 	{
 		return styrkeKlarTekst;
 	}
 
-	@Output(name = "StyrkeNumerisk")
+	@Column(name = "StyrkeNumerisk")
 	public Double getStyrkeNumerisk()
 	{
 		// TODO: This seems strange. Logic is misplaced here.
@@ -211,25 +213,25 @@ public class Laegemiddel extends TakstEntity
 		return this.styrkeNumerisk / 1000.0;
 	}
 
-	@Output
+	@Column
 	public String getSubstitution()
 	{
 		return substitution;
 	}
 
-	@Output
+	@Column
 	public boolean getTrafikadvarsel()
 	{
 		return trafikadvarsel;
 	}
 
-	@Output
+	@Column
 	public String getVaredeltype()
 	{
 		return varedeltype;
 	}
 
-	@Output
+	@Column
 	public String getVaretype()
 	{
 		return varetype;

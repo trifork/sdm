@@ -25,13 +25,15 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output
+@Entity
 public class Sygehus extends AbstractStamdataEntity
 {
 	private String navn;
@@ -47,7 +49,7 @@ public class Sygehus extends AbstractStamdataEntity
 	private Date validFrom;
 	private Date validTo;
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -58,7 +60,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer()
 	{
 		return eanLokationsnummer;
@@ -69,7 +71,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -80,7 +82,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public String getTelefon()
 	{
 		return telefon;
@@ -91,7 +93,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.telefon = telefon;
 	}
 
-	@Output
+	@Column
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -102,7 +104,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.vejnavn = vejnavn;
 	}
 
-	@Output
+	@Column
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -113,7 +115,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.postnummer = postnummer;
 	}
 
-	@Output
+	@Column
 	public String getBynavn()
 	{
 		return bynavn;
@@ -124,7 +126,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.bynavn = bynavn;
 	}
 
-	@Output
+	@Column
 	public String getEmail()
 	{
 		return email;
@@ -135,7 +137,7 @@ public class Sygehus extends AbstractStamdataEntity
 		this.email = email;
 	}
 
-	@Output
+	@Column
 	public String getWww()
 	{
 		return www;
@@ -147,7 +149,7 @@ public class Sygehus extends AbstractStamdataEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer()
 	{
 		return sorNummer;

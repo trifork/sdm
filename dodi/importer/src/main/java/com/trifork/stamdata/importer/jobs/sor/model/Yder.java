@@ -25,14 +25,16 @@ package com.trifork.stamdata.importer.jobs.sor.model;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.Id;
-import com.trifork.stamdata.importer.persistence.Output;
 import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-@Output(name = "Yder")
+@Entity(name = "Yder")
 public class Yder extends AbstractStamdataEntity implements StamdataEntity
 {
 	private String nummer;
@@ -51,7 +53,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 	private Date validFrom;
 	private Date validTo;
 
-	@Output
+	@Column
 	public String getNummer()
 	{
 		return nummer;
@@ -62,7 +64,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.nummer = nummer;
 	}
 
-	@Output
+	@Column
 	public Long getEanLokationsnummer()
 	{
 		return eanLokationsnummer;
@@ -73,7 +75,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.eanLokationsnummer = eanLokationsnummer;
 	}
 
-	@Output
+	@Column
 	public String getTelefon()
 	{
 		return telefon;
@@ -84,7 +86,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.telefon = telefon;
 	}
 
-	@Output
+	@Column
 	public String getNavn()
 	{
 		return navn;
@@ -95,7 +97,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.navn = navn;
 	}
 
-	@Output
+	@Column
 	public String getVejnavn()
 	{
 		return vejnavn;
@@ -106,7 +108,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.vejnavn = vejnavn;
 	}
 
-	@Output
+	@Column
 	public String getPostnummer()
 	{
 		return postnummer;
@@ -117,7 +119,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.postnummer = postnummer;
 	}
 
-	@Output
+	@Column
 	public String getBynavn()
 	{
 		return bynavn;
@@ -128,7 +130,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.bynavn = bynavn;
 	}
 
-	@Output
+	@Column
 	public String getEmail()
 	{
 		return email;
@@ -139,7 +141,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.email = email;
 	}
 
-	@Output
+	@Column
 	public String getWww()
 	{
 		return www;
@@ -150,7 +152,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.www = www;
 	}
 
-	@Output
+	@Column
 	public Long getHovedSpecialeKode()
 	{
 		return hovedSpecialeKode;
@@ -161,7 +163,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.hovedSpecialeKode = hovedSpecialeKode;
 	}
 
-	@Output
+	@Column
 	public String getHovedSpecialeTekst()
 	{
 		return hovedSpecialeTekst;
@@ -173,7 +175,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 	}
 
 	@Id
-	@Output
+	@Column
 	public Long getSorNummer()
 	{
 		return sorNummer;
@@ -184,7 +186,7 @@ public class Yder extends AbstractStamdataEntity implements StamdataEntity
 		this.sorNummer = sorNummer;
 	}
 
-	@Output
+	@Column
 	public Long getPraksisSorNummer()
 	{
 		return praktisSorNummer;
