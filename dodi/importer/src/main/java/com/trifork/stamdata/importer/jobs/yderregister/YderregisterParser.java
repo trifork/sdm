@@ -89,7 +89,6 @@ public class YderregisterParser
 		protected static final String END_QNAME = "Slut";
 		protected static final String YDER_QNAME = "Yder";
 		protected static final String PERSON_QNAME = "Person";
-		protected static final String OVRIGESPECIALER_QNAME = "OvrigeSpecialer";
 
 		protected String opgDato;
 
