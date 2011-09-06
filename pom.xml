@@ -8,7 +8,7 @@
 	<groupId>dk.nsi.stamdata</groupId>
 	<artifactId>stamdata-root</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0-SNAPSHOT</version>
+	<version>3.0.2</version>
 
 	<modules>
 		<module>performance-tests</module>
@@ -97,6 +97,4 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-</project>
-
 </project>
