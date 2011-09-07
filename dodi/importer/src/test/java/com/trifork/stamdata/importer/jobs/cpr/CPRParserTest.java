@@ -30,7 +30,6 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;

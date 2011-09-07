@@ -40,11 +40,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.Entities;
+import com.trifork.stamdata.models.TemporalEntity;
+
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class DatabaseTableWrapper<T extends StamdataEntity>
+public class DatabaseTableWrapper<T extends TemporalEntity>
 {
 	private static Logger logger = LoggerFactory.getLogger(DatabaseTableWrapper.class);
 
@@ -92,7 +95,6 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 
 	private PreparedStatement prepareInsertStatement() throws SQLException
 	{
-
 		String sql = "INSERT INTO " + tablename + " (" + "ModifiedDate, CreatedDate, ValidFrom, ValidTo";
 		for (Method method : outputMethods)
 		{
@@ -175,7 +177,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return connection.prepareStatement(pstmtString);
 	}
 
-	public void insertRow(StamdataEntity sde, Date transactionTime)
+	public void insertRow(TemporalEntity sde, Date transactionTime)
 	{
 		applyParamsToInsertStatement(insertRecordStmt, sde, transactionTime, transactionTime);
 
@@ -188,7 +190,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			String message = "An error occured while inserting new entity of type: " + Dataset.getEntityTypeDisplayName(type);
 			try
 			{
-				message += " entityid=" + sde.getKey();
+				message += " entityid=" + Entities.getEntityID(sde);
 			}
 			catch (Exception e)
 			{}
@@ -197,7 +199,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		}
 	}
 
-	public void insertAndUpdateRow(StamdataEntity sde, Date transactionTime)
+	public void insertAndUpdateRow(TemporalEntity sde, Date transactionTime)
 	{
 		applyParamsToInsertAndUpdateStatement(insertAndUpdateRecordStmt, sde, transactionTime, transactionTime);
 
@@ -250,7 +252,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return connection.prepareStatement(sql);
 	}
 
-	public int applyParamsToInsertStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime)
+	public int applyParamsToInsertStatement(PreparedStatement pstmt, TemporalEntity sde, Date transactionTime, Date createdTime)
 	{
 		int idx = 1;
 
@@ -269,6 +271,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		for (Method method : outputMethods)
 		{
 			Object o;
+			Object key = Entities.getEntityID(sde);
 
 			try
 			{
@@ -276,40 +279,41 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			}
 			catch (InvocationTargetException ite)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not invoke target method: [" + method.getName() + "]", ite);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not invoke target method: [" + method.getName() + "]", ite);
 			}
 			catch (IllegalAccessException iae)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not access method: [" + method.getName() + "]", iae);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not access method: [" + method.getName() + "]", iae);
 			}
 
 			try
 			{
 				if (!setObjectOnPreparedStatement(pstmt, idx++, o))
 				{
-					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. There was an error setting value for method: [" + method.getName() + "]. The type is not supported");
+					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. There was an error setting value for method: [" + method.getName() + "]. The type is not supported");
 				}
 			}
 			catch (SQLException sqle)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not set field for method name: [" + method.getName() + "].", sqle);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not set field for method name: [" + method.getName() + "].", sqle);
 			}
 		}
 
 		return idx;
 	}
 
-	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime)
+	public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, TemporalEntity sde, Date transactionTime, Date createdTime)
 	{
 		int idx = applyParamsToInsertStatement(pstmt, sde, transactionTime, createdTime);
-
+		Object key = Entities.getEntityID(sde);
+		
 		try
 		{
 			currentRS.last();
 		}
 		catch (SQLException e)
 		{
-			throw new RuntimeException("An error occured during application of parameters to a prepared statement. " + "The database contained no records for entity id [" + sde.getKey() + "]");
+			throw new RuntimeException("An error occured during application of parameters to a prepared statement. The database contained no records for entity id [" + key + "]");
 		}
 		for (String notUpdateName : notUpdatedColumns)
 		{
@@ -318,20 +322,22 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 				Object o = currentRS.getObject(notUpdateName);
 				if (!setObjectOnPreparedStatement(pstmt, idx++, o))
 				{
-					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. There was an error setting value for record: [" + notUpdateName + "]. The type is not supported");
+					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. There was an error setting value for record: [" + notUpdateName + "]. The type is not supported");
 				}
 			}
 			catch (SQLException sqle)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not set field for record name: [" + notUpdateName + "].", sqle);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not set field for record name: [" + notUpdateName + "].", sqle);
 			}
 		}
 		return idx;
 	}
 
-	public void applyParamsToUpdateStatement(PreparedStatement pstmt, StamdataEntity sde, Date transactionTime, Date createdTime, Date existingValidFrom, Date existingValidTo)
+	public void applyParamsToUpdateStatement(PreparedStatement pstmt, TemporalEntity sde, Date transactionTime, Date createdTime, Date existingValidFrom, Date existingValidTo)
 	{
 		int idx = 1;
+		Object key = Entities.getEntityID(sde);
+		
 		try
 		{
 			pstmt.setTimestamp(idx++, new Timestamp(transactionTime.getTime()));
@@ -353,30 +359,30 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 			}
 			catch (InvocationTargetException ite)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not invoke target method: [" + method.getName() + "]", ite);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not invoke target method: [" + method.getName() + "]", ite);
 			}
 			catch (IllegalAccessException iae)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not access method: [" + method.getName() + "]", iae);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not access method: [" + method.getName() + "]", iae);
 			}
 
 			try
 			{
 				if (!setObjectOnPreparedStatement(pstmt, idx++, o))
 				{
-					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. There was an error setting value for method: [" + method.getName() + "]. The type is not supported");
+					throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type: [" + sde.getClass() + "]. The entity id was: [" + key + "]. There was an error setting value for method: [" + method.getName() + "]. The type is not supported");
 				}
 			}
 			catch (SQLException sqle)
 			{
-				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + sde.getKey() + "]. Could not set field for method name: [" + method.getName() + "].", sqle);
+				throw new RuntimeException("An error occured during application of parameters to a prepared statement. Entity type:[" + sde.getClass() + "]. The entity id was: [" + key + "]. Could not set field for method name: [" + method.getName() + "].", sqle);
 			}
 		}
 
 		try
 		{
 			updateValidToStmt.setObject(3, currentRS.getObject(Dataset.getIdOutputName(type)));
-			setObjectOnPreparedStatement(pstmt, idx++, sde.getKey());
+			setObjectOnPreparedStatement(pstmt, idx++, key);
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidFrom.getTime()));
 			pstmt.setTimestamp(idx++, new Timestamp(existingValidTo.getTime()));
 		}
@@ -430,7 +436,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 	 * @param validFrom
 	 * @param validTo
 	 * @return If at least one version of the entity was found with the
-	 *         specified id in the specified validfrom-validto range
+	 *         specified id in the specified [validfrom;validto[ range
 	 * @throws SQLException
 	 */
 	public boolean fetchEntityVersions(Object id, Date validFrom, Date validTo) throws SQLException
@@ -566,7 +572,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		updatedRecords += rowsAffected;
 	}
 
-	public boolean dataInCurrentRowEquals(StamdataEntity sde) throws Exception
+	public boolean dataInCurrentRowEquals(TemporalEntity sde) throws Exception
 	{
 		for (Method method : outputMethods)
 		{
@@ -576,7 +582,7 @@ public class DatabaseTableWrapper<T extends StamdataEntity>
 		return true;
 	}
 
-	private boolean fieldEqualsCurrentRow(Method method, StamdataEntity sde) throws Exception
+	private boolean fieldEqualsCurrentRow(Method method, TemporalEntity sde) throws Exception
 	{
 		String fieldname = AbstractStamdataEntity.getOutputFieldName(method);
 

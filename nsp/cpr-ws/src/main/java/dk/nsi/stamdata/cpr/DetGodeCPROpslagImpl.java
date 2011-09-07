@@ -1,63 +1,141 @@
 package dk.nsi.stamdata.cpr;
 
+import java.util.Set;
+
+import javax.annotation.PostConstruct;
+import javax.jws.WebService;
+import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPFactory;
+import javax.xml.soap.SOAPFault;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.models.cpr.Person;
+
+import dk.nsi.stamdata.cpr.annotations.Whitelist;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
 import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
 import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
 import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.RegularCPRPersonType;
 
+@WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
-{
+{	
+	private static final String INTERNAL_SERVER_ERROR = "Internal Server Error.";
+	private static final String NO_DATA_FOUND_FAULT_MSG = "Ingen data fundet";
+
+	@Inject
+	@Whitelist
+	private Set<String> whitelist;
+	
+	@Inject
+	private Provider<Fetcher> fetcherPool;
+	
+	@PostConstruct
+	protected void init()
+	{
+		// This is a bit of a hack allowing Guice to inject
+		// the dependencies without having to jump through
+		// hoops to get it to do so automatically.
+		
+		ApplicationController.injector.injectMembers(this);
+	}
+
 	@Override
 	public GetPersonInformationOut getPersonInformation(GetPersonInformationIn input)
 	{
-		// Look for a record in the database with the given CPR.
+		// 1. Check the white list to see if the client is authorized.
+		
+		String clientCVR = "12345678";
+		
+		if (!whitelist.contains(clientCVR))
+		{
+			// TODO: Check the specification on what to do. I'm thinking a fault.
+		}
+		
+		
+		// 2. Fetch the person from the database.
+		//
+		// NOTE: Unfortunately the specification is defined so that we have to return a
+		// fault if no person is found. We cannot change this to return nil which would
+		// be a nicer protocol.
+		
 		
 		String pnr = input.getPersonCivilRegistrationIdentifier();
+		Person person = fetchPersonWithPnr(pnr);
 		
-		// TODO: Fetch from the database.
+		if (person == null)
+		{
+			returnSOAPFault(NO_DATA_FOUND_FAULT_MSG);
+		}
+		
+		// We now have the requested person. Use it to fill in
+		// the response.
 		
 		GetPersonInformationOut output = new GetPersonInformationOut();
 		
-		// If no record is found return a SOAP Fault: "Ingen data fundet",
-		// as defined in the specification.
+		PersonInformationStructureType personInformation = new PersonInformationStructureType();
+		personInformation.setCurrentPersonCivilRegistrationIdentifier(pnr);
+
+		output.setPersonInformationStructure(personInformation);
 		
-		if (false)
-		throw new RuntimeException("Ingen data fundet");
-		
-		// Serialize the record to the output format.
-		
-		PersonInformationStructureType person = new PersonStructureWrapper(person);
-		
-		return null;
+		return output;
 	}
 
 	@Override
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(GetPersonWithHealthCareInformationIn parameters)
 	{
-		// TODO Auto-generated method stub
-		
 		return null;
 	}
 	
-	// Helpers
+	// HELPERS
 	
-	public PersonGenderCodeType mapGenderCode(String value)
+	private Person fetchPersonWithPnr(String pnr)
 	{
-		if ("M".equals(value))
+		try
 		{
-			return PersonGenderCodeType.MALE;
+			Fetcher fetcher = fetcherPool.get();
+			return fetcher.fetch(Person.class, pnr);
 		}
-		else if ("K".equals(value))
+		catch (Exception e)
 		{
-			return PersonGenderCodeType.FEMALE;
+			throw new RuntimeException(INTERNAL_SERVER_ERROR, e);
 		}
-		else
+	}
+	
+	private void returnSOAPFault(String message)
+	{		
+		SOAPFault fault = null;
+		
+		try
 		{
-			return PersonGenderCodeType.UNKNOWN;
+			// We have to make sure to use the same protocol version
+			// as defined in the WSDL.
+			
+			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+			
+			fault = factory.createFault();
+			fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
+			
+			// TODO: For some reason the xml:lang att. is always "en"
+			// even when the locale is set in this next call.
+			
+			fault.setFaultString(message);
 		}
+		catch (Exception e)
+		{
+			returnServerErrorFault(e);
+		}
+		
+		throw new SOAPFaultException(fault);
+	}
+	
+	private void returnServerErrorFault(Exception e)
+	{
+		throw new RuntimeException(INTERNAL_SERVER_ERROR, e);
 	}
 }

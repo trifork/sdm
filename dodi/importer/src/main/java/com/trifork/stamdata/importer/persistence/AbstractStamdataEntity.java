@@ -36,32 +36,24 @@ import javax.persistence.Id;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public abstract class AbstractStamdataEntity implements StamdataEntity
+public abstract class AbstractStamdataEntity implements TemporalEntity
 {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
-	private static final Map<Class<? extends StamdataEntity>, Method> idMethodCache = new HashMap<Class<? extends StamdataEntity>, Method>();
+	private static final Map<Class<? extends TemporalEntity>, Method> idMethodCache = new HashMap<Class<? extends TemporalEntity>, Method>();
 	private static final Map<Method, String> outputFieldNames = new HashMap<Method, String>();
 
-	@Override
 	public Object getKey()
 	{
-		Method idMethod = getIdMethod(getClass());
-		try
-		{
-			return idMethod.invoke(this);
-		}
-		catch (Exception e)
-		{
-			logger.error("Error getting id for object of class: " + getClass());
-			return null;
-		}
+		return Entities.getEntityID(this);
 	}
 
 	/**
@@ -69,7 +61,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 	 * @return the getter method that contains the unique id for the given
 	 *         StamdataEntity type
 	 */
-	public static Method getIdMethod(Class<? extends StamdataEntity> type)
+	public static Method getIdMethod(Class<? extends TemporalEntity> type)
 	{
 		Method m = idMethodCache.get(type);
 
@@ -116,7 +108,7 @@ public abstract class AbstractStamdataEntity implements StamdataEntity
 		return name;
 	}
 
-	public static List<Method> getOutputMethods(Class<? extends StamdataEntity> type)
+	public static List<Method> getOutputMethods(Class<? extends TemporalEntity> type)
 	{
 		Method[] methods = type.getMethods();
 		List<Method> outputMethods = new ArrayList<Method>();

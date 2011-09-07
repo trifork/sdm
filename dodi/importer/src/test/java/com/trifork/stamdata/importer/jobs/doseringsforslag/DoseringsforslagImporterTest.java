@@ -49,7 +49,7 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 /**
@@ -197,7 +197,7 @@ public class DoseringsforslagImporterTest
 		importer.importFiles(files, persister);
 	}
 
-	public <T extends StamdataEntity> T getFirst(Class<T> type)
+	public <T extends TemporalEntity> T getFirst(Class<T> type)
 	{
 		CompleteDataset<T> structures = persister.getDataset(type);
 		return structures.getEntities().iterator().next();
@@ -206,27 +206,27 @@ public class DoseringsforslagImporterTest
 	
 	private class MockPersister implements Persister
 	{
-		Map<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>> results;
+		Map<Class<? extends TemporalEntity>, CompleteDataset<? extends TemporalEntity>> results;
 
 		@Override
-		public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
+		public void persistCompleteDataset(CompleteDataset<? extends TemporalEntity>... datasets) throws Exception
 		{
-			results = new HashMap<Class<? extends StamdataEntity>, CompleteDataset<? extends StamdataEntity>>();
+			results = new HashMap<Class<? extends TemporalEntity>, CompleteDataset<? extends TemporalEntity>>();
 
-			for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
+			for (CompleteDataset<? extends TemporalEntity> dataset : datasets)
 			{
 				results.put(dataset.getType(), dataset);
 			}
 		}
 
 		@Override
-		public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
+		public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 		{
 			// Don't use this.
 		}
 
 		@SuppressWarnings("unchecked")
-		public <T extends StamdataEntity> CompleteDataset<T> getDataset(Class<T> type)
+		public <T extends TemporalEntity> CompleteDataset<T> getDataset(Class<T> type)
 		{
 			return (CompleteDataset<T>) results.get(type);
 		}

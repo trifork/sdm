@@ -25,6 +25,8 @@ package com.trifork.stamdata.importer.persistence;
 
 import java.sql.Connection;
 
+import com.trifork.stamdata.models.TemporalEntity;
+
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
@@ -49,12 +51,12 @@ public interface Persister
 	 * another version exist.
 	 * 
 	 */
-	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... dataset) throws Exception;
+	public void persistCompleteDataset(CompleteDataset<? extends TemporalEntity>... dataset) throws Exception;
 
 	/**
 	 * Persist the records in the dataset.
 	 */
-	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception;
+	public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception;
 
 	/**
 	 * HACK: This method returns the connection used by the persister.

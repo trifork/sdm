@@ -25,6 +25,7 @@ package com.trifork.stamdata.importer.jobs.cpr.models;
 
 import java.util.Date;
 
+import com.trifork.stamdata.importer.jobs.cpr.CPRDataset;
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 

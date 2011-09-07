@@ -30,6 +30,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 
+
 @Entity(name = "Person")
 public class Navneoplysninger extends CPREntity
 {

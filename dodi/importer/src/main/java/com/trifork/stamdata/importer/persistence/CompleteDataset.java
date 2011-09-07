@@ -26,6 +26,8 @@ package com.trifork.stamdata.importer.persistence;
 import java.util.Date;
 import java.util.List;
 
+import com.trifork.stamdata.models.TemporalEntity;
+
 
 /**
  * A Dataset that is the complete truth within the given validfrom-validto
@@ -34,7 +36,7 @@ import java.util.List;
  * 
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class CompleteDataset<T extends StamdataEntity> extends Dataset<T>
+public class CompleteDataset<T extends TemporalEntity> extends Dataset<T>
 {
 	private final Date ValidFrom;
 	private final Date ValidTo;

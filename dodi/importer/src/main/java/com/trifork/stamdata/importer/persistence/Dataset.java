@@ -28,18 +28,22 @@ import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.g
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.trifork.stamdata.Entities;
+import com.trifork.stamdata.models.TemporalEntity;
+
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
-public class Dataset<T extends StamdataEntity>
+public class Dataset<T extends TemporalEntity>
 {
-	private Map<Object, List<T>> entities = new HashMap<Object, List<T>>();
+	private Map<Object, List<T>> entities = Maps.newHashMap();
 	private Class<T> type;
 
 	public Dataset(Class<T> type)
@@ -53,9 +57,12 @@ public class Dataset<T extends StamdataEntity>
 
 		for (T entity : entities)
 		{
-			List<T> ents = new ArrayList<T>();
-			ents.add(entity);
-			this.entities.put(entity.getKey(), ents);
+			List<T> entityList = Lists.newArrayList();
+			entityList.add(entity);
+			
+			Object key = Entities.getEntityID(entity);
+			
+			this.entities.put(key, entityList);
 		}
 	}
 
@@ -101,7 +108,7 @@ public class Dataset<T extends StamdataEntity>
 		return getEntityTypeDisplayName(type);
 	}
 
-	public static String getEntityTypeDisplayName(Class<? extends StamdataEntity> type)
+	public static String getEntityTypeDisplayName(Class<? extends TemporalEntity> type)
 	{
 		Entity output = type.getAnnotation(Entity.class);
 		if (output != null && !output.name().isEmpty()) return output.name();
@@ -112,13 +119,14 @@ public class Dataset<T extends StamdataEntity>
 	{
 		for (T entity : entities)
 		{
-			this.entities.remove(entity.getKey());
+			Object key = Entities.getEntityID(entity);
+			this.entities.remove(key);
 		}
 	}
 
 	public void addEntity(T entity)
 	{
-		Object id = entity.getKey();
+		Object id = Entities.getEntityID(entity);
 
 		List<T> ents = entities.get(id);
 
@@ -131,7 +139,7 @@ public class Dataset<T extends StamdataEntity>
 		ents.add(entity);
 	}
 
-	public static String getIdOutputName(Class<? extends StamdataEntity> clazz)
+	public static String getIdOutputName(Class<? extends TemporalEntity> clazz)
 	{
 		return getOutputFieldName(getIdMethod(clazz));
 	}

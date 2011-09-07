@@ -80,7 +80,7 @@ public class DGWSSecurityHandler implements SOAPHandler<SOAPMessageContext>
 		// If the NIST Level is 3 we know that the ID Card is a
 		// System Card and can safely cast it to a SystemIDCard.
 
-		SystemIDCard idCard = (SystemIDCard)request.getIDCard();
+		SystemIDCard idCard = (SystemIDCard) request.getIDCard();
 		String cvr = idCard.getSystemInfo().getCareProvider().getID();
 
 		// Check if the CVR is authorized to call this service.

@@ -21,14 +21,22 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.cpr.models;
+package com.trifork.stamdata.importer.jobs.cpr;
 
 import java.util.Date;
 import java.util.List;
 
 import com.google.common.collect.Lists;
+import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
+import com.trifork.stamdata.importer.jobs.cpr.models.CPREntity;
+import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
+import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
+import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
+import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 public class CPRDataset
@@ -44,7 +52,7 @@ public class CPRDataset
 			new Dataset<BarnRelation>(BarnRelation.class)
 	);
 
-	private Date validFrom, previousFileValidFrom;
+	private Date validFrom;
 
 	public Date getValidFrom()
 	{
@@ -56,21 +64,10 @@ public class CPRDataset
 		this.validFrom = validFrom;
 	}
 
-	public Date getPreviousFileValidFrom()
-	{
-
-		return previousFileValidFrom;
-	}
-
-	public void setPreviousFileValidFrom(Date previousFileValidFrom)
-	{
-		this.previousFileValidFrom = previousFileValidFrom;
-	}
-
 	public <T extends CPREntity> void addEntity(T entity)
 	{
 		entity.setDataset(this);
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (dataset.getType().equals(entity.getClass()))
 			{
@@ -87,9 +84,9 @@ public class CPRDataset
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends StamdataEntity> Dataset<T> getDataset(Class<T> entityClass)
+	public <T extends TemporalEntity> Dataset<T> getDataset(Class<T> entityClass)
 	{
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (dataset.getType().equals(entityClass))
 			{

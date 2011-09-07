@@ -21,43 +21,33 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.jobs.autorisationsregister;
-
-import java.util.Date;
+package com.trifork.stamdata.models.cpr;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
-
+import com.trifork.stamdata.models.BaseTemporalEntity;
 
 @Entity
-public class Autorisation extends AbstractStamdataEntity implements StamdataEntity
+public class ForaeldreMyndighedRelation extends BaseTemporalEntity
 {
-	private String nummer;
+	private String id;
 	private String cpr;
-	private String efternavn;
-	private String fornavn;
-	private String educationCode;
-
-	Autorisationsregisterudtraek dataset;
-
-	public Autorisation(String number, String cpr, String firstName, String lastName, String educationCode)
-	{
-		this.nummer = number;
-		this.cpr = cpr;
-		this.fornavn = firstName;
-		this.efternavn = lastName;
-		this.educationCode = educationCode;
-	}
+	private String typeKode;
+	private String typeTekst;
+	private String relationCpr; // This is included if the guardian is not the mother or farther.
 
 	@Id
 	@Column
-	public String getAutorisationsnummer()
+	public String getId()
 	{
-		return nummer;
+		return id;
+	}
+	
+	public void setId(String id)
+	{
+		this.id = id;
 	}
 
 	@Column
@@ -66,33 +56,36 @@ public class Autorisation extends AbstractStamdataEntity implements StamdataEnti
 		return cpr;
 	}
 
-	@Column
-	public String getEfternavn()
+	public void setCpr(String cpr)
 	{
-		return efternavn;
+		this.cpr = cpr;
 	}
 
 	@Column
-	public String getFornavn()
+	public String getTypeTekst()
 	{
-		return fornavn;
+		return typeTekst;
 	}
 
 	@Column
-	public String getUddannelsesKode()
+	public String getTypeKode()
 	{
-		return educationCode;
+		return typeKode;
 	}
 
-	@Override
-	public Date getValidFrom()
+	public void setType(String type)
 	{
-		return dataset.getValidFrom();
+		this.typeKode = type;
 	}
 
-	@Override
-	public Date getValidTo()
+	@Column
+	public String getRelationCpr()
 	{
-		return DateUtils.THE_END_OF_TIME;
+		return relationCpr;
+	}
+
+	public void setRelationCpr(String relationCpr)
+	{
+		this.relationCpr = relationCpr;
 	}
 }

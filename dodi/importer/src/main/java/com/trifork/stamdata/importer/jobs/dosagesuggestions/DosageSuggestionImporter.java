@@ -53,7 +53,7 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DrugDosageStructureRelation;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 /**
@@ -165,7 +165,7 @@ public class DosageSuggestionImporter implements FileParser
 	/**
 	 * Parses other data files.
 	 */
-	private <T extends StamdataEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
+	private <T extends TemporalEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
 	{
 		Reader reader = new InputStreamReader(new FileInputStream(file));
 

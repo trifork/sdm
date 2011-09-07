@@ -31,7 +31,6 @@ import javax.persistence.Id;
 @Entity
 public class BarnRelation extends CPREntity
 {
-
 	String cpr;
 	String barnCpr;
 

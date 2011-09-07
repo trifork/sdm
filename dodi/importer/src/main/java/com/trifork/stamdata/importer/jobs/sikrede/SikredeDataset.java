@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 public class SikredeDataset
@@ -39,7 +39,7 @@ public class SikredeDataset
 	public <T extends CPREntity> void addEntity(T entity)
 	{
 		entity.setDataset(this);
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (dataset.getType().equals(entity.getClass()))
 			{
@@ -56,9 +56,9 @@ public class SikredeDataset
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends StamdataEntity> Dataset<T> getDataset(Class<T> entityClass)
+	public <T extends TemporalEntity> Dataset<T> getDataset(Class<T> entityClass)
 	{
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (dataset.getType().equals(entityClass))
 			{

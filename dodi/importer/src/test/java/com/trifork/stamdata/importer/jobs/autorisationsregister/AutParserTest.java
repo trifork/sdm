@@ -34,6 +34,8 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.trifork.stamdata.models.autorisationsregister.Autorisation;
+
 
 
 public class AutParserTest

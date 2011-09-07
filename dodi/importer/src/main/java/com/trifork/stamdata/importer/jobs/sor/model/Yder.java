@@ -30,12 +30,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 @Entity(name = "Yder")
-public class Yder extends AbstractStamdataEntity implements StamdataEntity
+public class Yder extends AbstractStamdataEntity implements TemporalEntity
 {
 	private String nummer;
 	private Long eanLokationsnummer;

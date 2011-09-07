@@ -34,6 +34,8 @@ import org.junit.*;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.*;
+import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
 
 public class AutIntegrationTest
@@ -44,14 +46,33 @@ public class AutIntegrationTest
 
 	private Connection connection;
 
-	private static Autorisationsregisterudtraek initialCompares = new Autorisationsregisterudtraek(new Date());
+	private static Autorisationsregisterudtraek initialCompares;
 	
 	static
 	{
-		initialCompares.addEntity(new Autorisation("0013F", "0101251489", "Jørgen", "Bondo", "7170"));
-		initialCompares.addEntity(new Autorisation("0013H", "0101280063", "Tage Søgaard", "Johnsen", "7170"));
-		initialCompares.addEntity(new Autorisation("0013J", "0101280551", "Svend Christian", "Bertelsen", "7170"));
-		initialCompares.addEntity(new Autorisation("0013K", "0101280896", "Lilian", "Frederiksen", "7170"));
+		Date now = new Date();
+		
+		initialCompares = new Autorisationsregisterudtraek(now);
+		
+		initialCompares.addEntity(createAutorisation("0013F", "0101251489", "Jørgen", "Bondo", "7170", now));
+		initialCompares.addEntity(createAutorisation("0013H", "0101280063", "Tage Søgaard", "Johnsen", "7170", now));
+		initialCompares.addEntity(createAutorisation("0013J", "0101280551", "Svend Christian", "Bertelsen", "7170", now));
+		initialCompares.addEntity(createAutorisation("0013K", "0101280896", "Lilian", "Frederiksen", "7170", now));
+	}
+	
+	public static Autorisation createAutorisation(String nummer, String cpr, String fornavn, String efternavn, String uddKode, Date validFrom)
+	{
+		Autorisation a = new Autorisation();
+		
+		a.setAutorisationnummer(nummer);
+		a.setCpr(cpr);
+		a.setFornavn(fornavn);
+		a.setEfternavn(efternavn);
+		a.setUddannelsesKode(uddKode);
+		a.setValidFrom(validFrom);
+		a.setValidTo(DateUtils.THE_END_OF_TIME);
+		
+		return a;
 	}
 
 	@BeforeClass
@@ -125,12 +146,14 @@ public class AutIntegrationTest
 		importer.importFiles(new File[] { initial }, persister);
 		importer.importFiles(new File[] { next }, persister);
 
+		Date now = new Date();
+		
 		Dataset<Autorisation> nextCompares = new Dataset<Autorisation>(Autorisation.class);
-		nextCompares.addEntity(new Autorisation("0013H", "0101280063", "Tage Søgaard", "Johnsen", "7170"));
-		nextCompares.addEntity(new Autorisation("0013M", "0101340074", "Ester Ruth", "Østerby", "7170"));
-		nextCompares.addEntity(new Autorisation("0013J", "0101280551", "Svend Christian", "Bertelsen", "7170"));
-		nextCompares.addEntity(new Autorisation("0013K", "0101280896", "Lilian", "Frederiksen", "7170"));
-		nextCompares.addEntity(new Autorisation("0013L", "0101290565", "Eli", "Heering","7170"));
+		nextCompares.addEntity(createAutorisation("0013H", "0101280063", "Tage Søgaard", "Johnsen", "7170", now));
+		nextCompares.addEntity(createAutorisation("0013M", "0101340074", "Ester Ruth", "Østerby", "7170", now));
+		nextCompares.addEntity(createAutorisation("0013J", "0101280551", "Svend Christian", "Bertelsen", "7170", now));
+		nextCompares.addEntity(createAutorisation("0013K", "0101280896", "Lilian", "Frederiksen", "7170", now));
+		nextCompares.addEntity(createAutorisation("0013L", "0101290565", "Eli", "Heering","7170", now));
 
 		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM " + Dataset.getEntityTypeDisplayName(Autorisation.class) + " WHERE validfrom < '2009-09-19' and validto > '2009-09-19'");

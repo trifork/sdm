@@ -27,7 +27,10 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.FileUtils;
@@ -38,6 +41,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
 
 public class AutorisationImporter implements FileParser
@@ -119,21 +124,24 @@ public class AutorisationImporter implements FileParser
 
 		LineIterator lineIterator = FileUtils.lineIterator(file, FILE_ENCODING);
 
-		// TODO (thb): The parsing should not be handled in a constructor. That
-		// is bad design.
-
 		while (lineIterator.hasNext())
 		{
 			String line = lineIterator.nextLine();
 			
 			StringTokenizer st = new StringTokenizer(line, ";");
-			String nummer = st.nextToken();
-			String cpr = st.nextToken();
-			String efternavn = st.nextToken();
-			String fornavn = st.nextToken();
-			String educationCode = st.nextToken();
 			
-			dataset.addEntity(new Autorisation(nummer, cpr, fornavn, efternavn, educationCode));
+			Autorisation autorisation = new Autorisation();
+			
+			autorisation.setAutorisationnummer(st.nextToken());
+			autorisation.setCpr(st.nextToken());
+			autorisation.setEfternavn(st.nextToken());
+			autorisation.setFornavn(st.nextToken());
+			autorisation.setUddannelsesKode(st.nextToken());
+			
+			autorisation.setValidFrom(validFrom.toDate());
+			autorisation.setValidTo(DateUtils.THE_END_OF_TIME);
+			
+			dataset.addEntity(autorisation);
 		}
 
 		return dataset;

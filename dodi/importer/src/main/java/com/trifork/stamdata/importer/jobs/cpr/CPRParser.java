@@ -43,14 +43,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
-import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
-
 
 public class CPRParser
 {
@@ -62,33 +60,21 @@ public class CPRParser
 	private static final String EMPTY_DATE_STRING = "000000000000";
 
 	static boolean haltOnDateErrors = true;
-	
+
 	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
 	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
 
-
 	public static CPRDataset parse(File f) throws Exception
 	{
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), FILE_ENCODING));
+
 		try
 		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), FILE_ENCODING));
-
-			try
-			{
-				return parseFileContents(reader);
-			}
-			finally
-			{
-				reader.close();
-			}
+			return parseFileContents(reader);
 		}
-		catch (IOException ioe)
+		finally
 		{
-			throw new Exception("Der opstod en IO-fejl under læsning af cpr-person-fil.", ioe);
-		}
-		catch (ParseException pe)
-		{
-			throw new Exception("Der opstod en parsningsfejl under læsning af cpr-person-fil.", pe);
+			reader.close();
 		}
 	}
 
@@ -96,7 +82,7 @@ public class CPRParser
 	{
 		boolean endRecordReached = false;
 		CPRDataset cpr = new CPRDataset();
-		
+
 		while (reader.ready())
 		{
 			String line = reader.readLine();
@@ -117,29 +103,26 @@ public class CPRParser
 				}
 			}
 		}
-		
+
 		if (!endRecordReached)
 		{
 			throw new Exception("Slut-record mangler i cpr-filen");
 		}
-		
+
 		return cpr;
 	}
 
 	static void parseLine(int recordType, String line, CPRDataset cpr) throws Exception, ParseException
 	{
+		// TODO: Make constants for these magic numbers.
+		
 		switch (recordType)
 		{
 		case 0:
 			cpr.setValidFrom(getValidFrom(line));
-			Date forrigeIKraftdato = getForrigeIkraftDato(line);
-			if (forrigeIKraftdato != null) cpr.setPreviousFileValidFrom(forrigeIKraftdato);
 			break;
 		case 1:
 			cpr.addEntity(personoplysninger(line));
-			break;
-		case 2:
-			// Ignored
 			break;
 		case 3:
 			cpr.addEntity(klarskriftadresse(line));
@@ -275,7 +258,6 @@ public class CPRParser
 		p.setStilling(cut(line, 72, 106).trim());
 		return p;
 	}
-
 
 	/**
 	 * Gets the record type of a line in the CPR file.

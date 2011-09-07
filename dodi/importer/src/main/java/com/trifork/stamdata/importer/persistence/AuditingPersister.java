@@ -33,7 +33,9 @@ import javax.persistence.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 /**
@@ -50,19 +52,19 @@ public class AuditingPersister implements Persister
 		this.connection = connection;
 	}
 
-	public void persistCompleteDataset(List<CompleteDataset<? extends StamdataEntity>> datasets) throws Exception
+	public void persistCompleteDataset(List<CompleteDataset<? extends TemporalEntity>> datasets) throws Exception
 	{
 		// TODO: Remove this method. We should use the version below.
 
 		@SuppressWarnings("unchecked")
-		CompleteDataset<? extends StamdataEntity>[] array = datasets.toArray(new CompleteDataset[] {});
+		CompleteDataset<? extends TemporalEntity>[] array = datasets.toArray(new CompleteDataset[] {});
 
 		persistCompleteDataset(array);
 	}
 
-	public void persistCompleteDataset(CompleteDataset<? extends StamdataEntity>... datasets) throws Exception
+	public void persistCompleteDataset(CompleteDataset<? extends TemporalEntity>... datasets) throws Exception
 	{		
-		for (CompleteDataset<? extends StamdataEntity> dataset : datasets)
+		for (CompleteDataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (!dataset.getType().isAnnotationPresent(Entity.class)) continue;
 			
@@ -81,7 +83,7 @@ public class AuditingPersister implements Persister
 	 * in this dataset. If an entity is no longer in the dataset, its record
 	 * will be "closed" in mysql by assigning validto.
 	 */
-	public <T extends StamdataEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
+	public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 	{
 		Date transactionTime = new Date();
 
@@ -95,7 +97,8 @@ public class AuditingPersister implements Persister
 			
 			Date validFrom = record.getValidFrom();
 
-			boolean exists = table.fetchEntityVersions(record.getKey(), validFrom, record.getValidTo());
+			Object key = Entities.getEntityID(record);
+			boolean exists = table.fetchEntityVersions(key, validFrom, record.getValidTo());
 
 			if (!exists)
 			{
@@ -275,7 +278,7 @@ public class AuditingPersister implements Persister
 
 	}
 
-	public <T extends StamdataEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException
+	public <T extends TemporalEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException
 	{
 		return new DatabaseTableWrapper<T>(connection, clazz);
 	}
@@ -285,7 +288,7 @@ public class AuditingPersister implements Persister
 	 * @throws SQLException 
 	 * @throws FilePersistException
 	 */
-	private <T extends StamdataEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws SQLException
+	private <T extends TemporalEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws SQLException
 	{
 		if (logger.isDebugEnabled())
 		{
@@ -301,7 +304,7 @@ public class AuditingPersister implements Persister
 
 		for (StamdataEntityVersion ev : evs)
 		{
-			List<? extends StamdataEntity> entitiesWithId = dataset.getEntitiesById(ev.id);
+			List<? extends TemporalEntity> entitiesWithId = dataset.getEntitiesById(ev.id);
 
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
 

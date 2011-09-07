@@ -62,7 +62,6 @@ public class Person extends View
 	 */
 	public Person(String cpr, String koen, String fornavn, String mellemnavn, String efternavn, String coNavn, String lokalitet, String vejnavn, String bygningsnummer, String husnummer, String etage, String sideDoerNummer, String bynavn, BigInteger postnummer, String postdistrikt, String status, String gaeldendeCPR, Date foedselsdato, String stilling, BigInteger vejKode, BigInteger kommuneKode, Date modifiedDate, Date navnebeskyttelseslettedato, Date navnebeskyttelsestartdato, Date validFrom, Date validTo)
 	{
-
 		this.cpr = cpr;
 		this.koen = koen;
 		this.fornavn = fornavn;

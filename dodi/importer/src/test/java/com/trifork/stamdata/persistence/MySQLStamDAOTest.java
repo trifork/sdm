@@ -47,9 +47,9 @@ import com.trifork.stamdata.importer.jobs.takst.model.DivEnheder;
 import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
 import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 public class MySQLStamDAOTest
@@ -122,7 +122,7 @@ public class MySQLStamDAOTest
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
 
 		// Simulate that the entity has changed.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(false);
+		when(laegemiddeltableMock.dataInCurrentRowEquals(any(TemporalEntity.class))).thenReturn(false);
 
 		dao.persistCompleteDataset(takst.getDatasets());
 
@@ -144,7 +144,7 @@ public class MySQLStamDAOTest
 		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
 
 		// Simulate that the entity is unchanged.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(StamdataEntity.class))).thenReturn(true);
+		when(laegemiddeltableMock.dataInCurrentRowEquals(any(TemporalEntity.class))).thenReturn(true);
 
 		dao.persistCompleteDataset(takst.getDatasets());
 

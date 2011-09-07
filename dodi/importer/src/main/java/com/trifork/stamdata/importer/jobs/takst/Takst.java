@@ -33,7 +33,7 @@ import javax.persistence.Id;
 
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 /**
@@ -44,7 +44,7 @@ import com.trifork.stamdata.importer.persistence.StamdataEntity;
 @Entity(name = "TakstVersion")
 public class Takst extends TakstEntity
 {
-	private final List<CompleteDataset<? extends StamdataEntity>> datasets = new ArrayList<CompleteDataset<? extends StamdataEntity>>();
+	private final List<CompleteDataset<? extends TemporalEntity>> datasets = new ArrayList<CompleteDataset<? extends TemporalEntity>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
 	// for a subset of this takst. (The stable subset excludes pricing and
@@ -71,7 +71,7 @@ public class Takst extends TakstEntity
 	@SuppressWarnings("unchecked")
 	public <A extends TakstEntity> TakstDataset<A> getDatasetOfType(Class<A> clazz)
 	{
-		for (Dataset<? extends StamdataEntity> dataset : datasets)
+		for (Dataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (clazz.equals(dataset.getType())) return (TakstDataset<A>) dataset;
 		}
@@ -79,7 +79,7 @@ public class Takst extends TakstEntity
 		return null;
 	}
 
-	public List<CompleteDataset<? extends StamdataEntity>> getDatasets()
+	public List<CompleteDataset<? extends TemporalEntity>> getDatasets()
 	{
 		return datasets;
 	}

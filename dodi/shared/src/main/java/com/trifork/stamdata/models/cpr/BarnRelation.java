@@ -21,19 +21,55 @@
 // Portions created for the FMKi Project are Copyright 2011,
 // National Board of e-Health (NSI). All Rights Reserved.
 
-package com.trifork.stamdata.importer.persistence;
+package com.trifork.stamdata.models.cpr;
 
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+import com.trifork.stamdata.models.BaseTemporalEntity;
 
 
-/**
- * @author Rune Skou Larsen <rsj@trifork.com>
- */
-public interface StamdataEntity
+@Entity
+public class BarnRelation extends BaseTemporalEntity
 {
-	public Object getKey();
+	private String cpr;
+	private String barnCpr;
+	private String id;
 
-	public Date getValidFrom();
+	@Id
+	@Column
+	public String getId()
+	{
+		return id;
+	}
+	
+	// TODO: The ID Column is constructed by the data manager's entity class.
+	// Actual construction of the id should be moved to the CPR parser.
+	public void setId(String id)
+	{
+		this.id = id;
+	}
 
-	public Date getValidTo();
+	@Column
+	public String getCpr()
+	{
+		return cpr;
+	}
+
+	public void setCpr(String cpr)
+	{
+		this.cpr = cpr;
+	}
+
+	@Column
+	public String getBarnCpr()
+	{
+		return barnCpr;
+	}
+
+	public void setBarnCpr(String barnCpr)
+	{
+		this.barnCpr = barnCpr;
+	}
 }

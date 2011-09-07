@@ -24,7 +24,6 @@
 package com.trifork.stamdata.importer.jobs.cpr;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
 
 import java.io.File;
 import java.sql.Connection;
@@ -39,11 +38,10 @@ import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.Configuration;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.cpr.models.CPRDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 public class CPRImporter implements FileParser
@@ -76,8 +74,6 @@ public class CPRImporter implements FileParser
 	{
 		checkNotNull(input);
 		checkNotNull(persister);
-		
-		logger.info("Starting to parse CPR file ");
 
 		for (File personFile : input)
 		{
@@ -93,13 +89,13 @@ public class CPRImporter implements FileParser
 
 		for (File personFile : input)
 		{
-			logger.info("Starting parsing 'CPR person' file " + personFile.getAbsolutePath());
+			logger.info("Started parsing CPR file. file={}", personFile.getAbsolutePath());
 
 			CPRDataset cpr = CPRParser.parse(personFile);
 
 			if (isDeltaFile(personFile))
 			{
-				// HACK: Don't use the connection this way. @see
+				// TODO: Don't use the connection this way. @see
 				// Persister#getConnection()
 
 				Date previousVersion = getLatestVersion(connection);
@@ -108,13 +104,9 @@ public class CPRImporter implements FileParser
 				{
 					logger.debug("Find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
 				}
-				else if (!cpr.getPreviousFileValidFrom().equals(previousVersion))
-				{
-					throw new Exception("Forrige ikrafttrædelsesdato i personregisterfilen stemmer ikke overens med forrige ikrafttrædelsesdato i databasen. Dato i fil: [" + yyyy_MM_dd.format(cpr.getPreviousFileValidFrom().getTime()) + "]. Dato i database: " + yyyy_MM_dd.format(previousVersion.getTime()));
-				}
 			}
 
-			for (Dataset<? extends StamdataEntity> dataset : cpr.getDatasets())
+			for (Dataset<? extends TemporalEntity> dataset : cpr.getDatasets())
 			{
 				persister.persistDeltaDataset(dataset);
 			}

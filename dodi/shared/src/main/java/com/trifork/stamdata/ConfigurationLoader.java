@@ -1,6 +1,6 @@
 package com.trifork.stamdata;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.io.InputStream;

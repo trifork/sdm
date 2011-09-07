@@ -27,10 +27,10 @@ import javax.persistence.Column;
 
 import com.trifork.stamdata.importer.jobs.takst.Takst;
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
-public class NumeriskMedEnhed extends TakstEntity implements StamdataEntity
+public class NumeriskMedEnhed extends TakstEntity implements TemporalEntity
 {
 	private String klartekst;
 	private double numerisk;

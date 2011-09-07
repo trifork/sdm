@@ -43,8 +43,8 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
-import com.trifork.stamdata.importer.persistence.StamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.models.TemporalEntity;
 
 
 public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
@@ -225,7 +225,7 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 
 
 	@Entity
-	public static class SDE implements StamdataEntity
+	public static class SDE implements TemporalEntity
 	{
 		Date validfrom, validto;
 		String id = "1"; // default value
@@ -274,9 +274,8 @@ public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
 		}
 
 		@Id
-		@Override
 		@Column(name = "id")
-		public Object getKey()
+		public Object getID()
 		{
 			return id;
 		}
