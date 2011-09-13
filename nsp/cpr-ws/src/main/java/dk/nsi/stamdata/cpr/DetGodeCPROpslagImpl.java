@@ -26,9 +26,8 @@ import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
 	private static final String INTERNAL_SERVER_ERROR = "Internal Server Error.";
-	private static final String NO_DATA_FOUND_FAULT_MSG = "Ingen data fundet";
 
-	@Inject
+    @Inject
 	@Whitelist
 	private Set<String> whitelist;
 	
@@ -64,13 +63,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// fault if no person is found. We cannot change this to return nil which would
 		// be a nicer protocol.
 		
-		
+	    if (input.getPersonCivilRegistrationIdentifier() == null) {
+            returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+        }
+
+
 		String pnr = input.getPersonCivilRegistrationIdentifier();
 		Person person = fetchPersonWithPnr(pnr);
 		
 		if (person == null)
 		{
-			returnSOAPFault(NO_DATA_FOUND_FAULT_MSG);
+			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		// We now have the requested person. Use it to fill in
@@ -108,7 +111,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 	}
 	
-	private void returnSOAPFault(String message)
+	private void returnSOAPSenderFault(String message)
 	{		
 		SOAPFault fault = null;
 		
