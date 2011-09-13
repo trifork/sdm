@@ -18,6 +18,8 @@ import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.trifork.stamdata.Fetcher;
@@ -37,6 +39,8 @@ import org.w3c.dom.Element;
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
+	private static Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
+	
 	private static final String NS_TNS = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/";
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"; // TODO: Shouldn't this be 1.0.1?
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
@@ -83,10 +87,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// 1. Check the white list to see if the client is authorized.
 
         String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
+        String pnr = input.getPersonCivilRegistrationIdentifier();
 
 		if (!whitelist.contains(clientCVR))
 		{
+			logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, pnr);
+			
 			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+		}
+		else
+		{
+			logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, pnr);
 		}
 		
 		// 2. Fetch the person from the database.
@@ -95,12 +106,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// fault if no person is found. We cannot change this to return nil which would
 		// be a nicer protocol.
 		
-	    if (input.getPersonCivilRegistrationIdentifier() == null)
+	    if (pnr == null)
 	    {
             returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.", null);
 	    }
 
-		String pnr = input.getPersonCivilRegistrationIdentifier();
 		Person person = fetchPersonWithPnr(pnr);
 		
 		if (person == null)
