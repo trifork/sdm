@@ -1,5 +1,8 @@
 package dk.nsi.stamdata.cpr;
 
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkState;
+
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -54,6 +57,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// This is a bit of a hack allowing Guice to inject
 		// the dependencies without having to jump through
 		// hoops to get it to do so automatically.
+		
+		checkState(ApplicationController.injector != null, "The application controller must be instanciated before jax-ws.");
 		
 		ApplicationController.injector.injectMembers(this);
 	}
@@ -142,7 +147,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	private Person fetchPersonWithPnr(String pnr)
 	{
-		Preconditions.checkNotNull(pnr, "pnr");
+		checkNotNull(pnr, "pnr");
 		
 		try
 		{
@@ -157,6 +162,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	private void returnSOAPSenderFault(String message, @Nullable String medcomFaultcode)
 	{
+		checkNotNull(message, "message");
+		
 		SOAPFault fault = null;
 		
 		try
@@ -192,6 +199,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	private void returnServerErrorFault(Exception e)
 	{
+		checkNotNull(e, "e");
+		
 		throw new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
 	}
 }
