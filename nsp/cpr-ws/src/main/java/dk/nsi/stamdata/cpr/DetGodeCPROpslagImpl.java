@@ -72,7 +72,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		{
 			returnSOAPFault(NO_DATA_FOUND_FAULT_MSG);
 		}
-		
+
 		// We now have the requested person. Use it to fill in
 		// the response.
 		
@@ -90,6 +90,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(GetPersonWithHealthCareInformationIn parameters)
 	{
 		return null;
+        // TODO: Add sikrede information to the response
 	}
 	
 	// HELPERS
