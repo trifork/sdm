@@ -17,6 +17,7 @@
 		<module>nsp/replication</module>
 		<module>nsp/authorization-ws</module>
 		<module>nsp/cpr-ws</module>
+		<module>common/sosifilter</module>
 	</modules>
 
 	<build>

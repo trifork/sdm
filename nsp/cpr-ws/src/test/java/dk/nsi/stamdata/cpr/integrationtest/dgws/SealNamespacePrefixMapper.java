@@ -26,24 +26,36 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Security;
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
-public class SecurityWrapper {
+import java.util.HashMap;
+import java.util.Map;
 
-	private Security security = null;
-	private Header medcomHeader = null;
+/**
+ * This class is used for deserializing DGWS headers. DGWS require that the
+ * namespaces saml and ds be present.
+ * 
+ */
+public class SealNamespacePrefixMapper extends NamespacePrefixMapper {
 
-	public SecurityWrapper(Security security, Header medcomHeader) {
-		this.security = security;
-		this.medcomHeader = medcomHeader;
+	private Map<String, String> prefixMap = new HashMap<String, String>();
+
+	{
+		// Essential for seal validation
+		prefixMap.put("urn:oasis:names:tc:SAML:2.0:assertion", "saml");
+		prefixMap.put("http://www.w3.org/2000/09/xmldsig#", "ds");
+
+		// Non essential but pretty.
+		prefixMap.put("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", "wsse");
+		prefixMap.put("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd", "wsu");
+		prefixMap.put("http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", "medcom");
 	}
 
-	public Security getSecurity() {
-		return security;
-	}
-
-	public Header getMedcomHeader() {
-		return medcomHeader;
+	@Override
+	public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requiredPrefix) {
+		if (prefixMap.containsKey(namespaceUri)) {
+			return prefixMap.get(namespaceUri);
+		}
+		return suggestion;
 	}
 }

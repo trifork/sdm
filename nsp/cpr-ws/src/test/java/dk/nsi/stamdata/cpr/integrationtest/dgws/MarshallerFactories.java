@@ -26,35 +26,24 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.Security;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.PropertyException;
 
-import org.apache.commons.pool.BasePoolableObjectFactory;
-import org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_secext_1_0.Security;
-
-import dk.medcom.dgws._2006._04.dgws_1_0.Header;
-
 public class MarshallerFactories {
-
 	private static final String MARSHALLER_PROP = "com.sun.xml.bind.namespacePrefixMapper";
 
-	public static class SecurityMarshallerFactory extends BasePoolableObjectFactory {
-		@Override
+	public static class SecurityMarshallerFactory {
 		public Object makeObject() throws Exception {
 			return MarshallerFactories.getMarshaller(Security.class);
 		}
 	}
 
-	public static class MedcomMarshallerFactory extends BasePoolableObjectFactory {
-		@Override
-		public Object makeObject() throws Exception {
-			return MarshallerFactories.getMarshaller(Header.class);
-		}
-	}
-
-	private static Marshaller getMarshaller(Class<?> clazz) throws JAXBException, PropertyException {
+	private static Marshaller getMarshaller(Class<?> clazz) throws JAXBException {
 		JAXBContext context = JAXBContext.newInstance(clazz);
 		Marshaller marshaller = context.createMarshaller();
 		marshaller.setProperty(MARSHALLER_PROP, new SealNamespacePrefixMapper());

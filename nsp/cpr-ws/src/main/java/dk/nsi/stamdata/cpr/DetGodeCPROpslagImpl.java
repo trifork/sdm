@@ -3,24 +3,32 @@ package dk.nsi.stamdata.cpr;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
+import javax.xml.ws.Holder;
+import javax.xml.ws.WebServiceContext;
+import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.models.cpr.Person;
 
+import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.annotations.Whitelist;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.*;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.FaultCodeValues;
+import dk.sosi.seal.model.constants.MedComTags;
+import dk.sosi.seal.model.constants.NameSpaces;
+import org.w3c.dom.Element;
 
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
@@ -33,6 +41,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	@Inject
 	private Provider<Fetcher> fetcherPool;
+
+    @Resource
+    private WebServiceContext context;
 	
 	@PostConstruct
 	protected void init()
@@ -45,15 +56,28 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 
 	@Override
-	public GetPersonInformationOut getPersonInformation(GetPersonInformationIn input)
-	{
+    public GetPersonInformationOut getPersonInformation(
+            @WebParam(name = "Security",
+                      targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
+                      mode = WebParam.Mode.INOUT,
+                      partName = "wsseHeader")
+                      Holder<Security> wsseHeader,
+            @WebParam(name = "Header",
+                      targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd",
+                      mode = WebParam.Mode.INOUT,
+                      partName = "medcomHeader")
+                      Holder<Header> medcomHeader,
+            @WebParam(name = "getPersonInformationIn",
+                      targetNamespace = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/",
+                      partName = "parameters")
+                      GetPersonInformationIn input) {
 		// 1. Check the white list to see if the client is authorized.
-		
-		String clientCVR = "12345678";
-		
+
+        String clientCVR = findIdcardInRequest().getSystemInfo().getCareProvider().getID();
+
 		if (!whitelist.contains(clientCVR))
 		{
-			// TODO: Check the specification on what to do. I'm thinking a fault.
+			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
 		}
 		
 		
@@ -64,7 +88,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// be a nicer protocol.
 		
 	    if (input.getPersonCivilRegistrationIdentifier() == null) {
-            returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+            returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.", null);
         }
 
 
@@ -73,7 +97,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		
 		if (person == null)
 		{
-			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG, null);
 		}
 
 		// We now have the requested person. Use it to fill in
@@ -89,9 +113,15 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return output;
 	}
 
-	@Override
-	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(GetPersonWithHealthCareInformationIn parameters)
-	{
+    private SystemIDCard findIdcardInRequest() {
+        HttpServletRequest servletRequest = (HttpServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+        SystemIDCard idcard = (SystemIDCard)servletRequest.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
+
+        return idcard;
+    }
+
+    @Override
+    public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/", partName = "parameters") GetPersonWithHealthCareInformationIn parameters) {
 		return null;
         // TODO: Add sikrede information to the response
 	}
@@ -111,7 +141,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 	}
 	
-	private void returnSOAPSenderFault(String message)
+	private void returnSOAPSenderFault(String message, @Nullable String medcomFaultcode)
 	{		
 		SOAPFault fault = null;
 		
@@ -120,7 +150,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			// We have to make sure to use the same protocol version
 			// as defined in the WSDL.
 			
-			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_2_PROTOCOL);
+			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 			
 			fault = factory.createFault();
 			fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
@@ -129,6 +159,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			// even when the locale is set in this next call.
 			
 			fault.setFaultString(message);
+
+            if (medcomFaultcode != null) {
+                Element detail = factory.createDetail();
+                Element medcomFaultCode = detail.getOwnerDocument().createElementNS(NameSpaces.MEDCOM_SCHEMA, MedComTags.FAULT_CODE_PREFIXED);
+                medcomFaultCode.appendChild(detail.getOwnerDocument().createTextNode(medcomFaultcode));
+                detail.appendChild(medcomFaultCode);
+                fault.appendChild(detail);
+            }
 		}
 		catch (Exception e)
 		{

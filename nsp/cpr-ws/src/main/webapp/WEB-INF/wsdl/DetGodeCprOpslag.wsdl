@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema"
-                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
-                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
                   xmlns:tns="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
-                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                  xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"
                   targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
     <wsdl:types>
@@ -61,15 +61,23 @@
         </s:schema>
     </wsdl:types>
     <wsdl:message name="getPersonWithHealthCareInformationIn">
+        <wsdl:part name="wsseHeader" element="wsse:Security" />
+        <wsdl:part name="medcomHeader" element="dgws:Header" />
         <wsdl:part name="parameters" element="tns:getPersonWithHealthCareInformationIn"/>
     </wsdl:message>
     <wsdl:message name="getPersonInformationIn">
+        <wsdl:part name="wsseHeader" element="wsse:Security" />
+        <wsdl:part name="medcomHeader" element="dgws:Header" />
         <wsdl:part name="parameters" element="tns:getPersonInformationIn"/>
     </wsdl:message>
     <wsdl:message name="getPersonWithHealthCareInformationOut">
+        <wsdl:part name="wsseHeader" element="wsse:Security" />
+        <wsdl:part name="medcomHeader" element="dgws:Header" />
         <wsdl:part name="parameters" element="tns:getPersonWithHealthCareInformationOut"/>
     </wsdl:message>
     <wsdl:message name="getPersonInformationOut">
+        <wsdl:part name="wsseHeader" element="wsse:Security" />
+        <wsdl:part name="medcomHeader" element="dgws:Header" />
         <wsdl:part name="parameters" element="tns:getPersonInformationOut"/>
     </wsdl:message>
     <wsdl:portType name="DetGodeCPROpslag">
@@ -89,9 +97,13 @@
                             style="document"/>
             <wsdl:input>
                 <soap:body use="literal" parts="parameters"/>
+                <soap:header message="getPersonInformationIn" part="wsseHeader" use="literal" />
+                <soap:header message="getPersonInformationIn" part="medcomHeader" use="literal" />
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal" parts="parameters"/>
+                <soap:header message="getPersonInformationOut" part="wsseHeader" use="literal" />
+                <soap:header message="getPersonInformationOut" part="medcomHeader" use="literal" />
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getPersonWithHealthCareInformation">
@@ -100,9 +112,13 @@
                     style="document"/>
             <wsdl:input>
                 <soap:body use="literal" parts="parameters"/>
+                <soap:header message="getPersonWithHealthCareInformationIn" part="wsseHeader" use="literal" />
+                <soap:header message="getPersonWithHealthCareInformationIn" part="medcomHeader" use="literal" />
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal" parts="parameters"/>
+                <soap:header message="getPersonWithHealthCareInformationOut" part="wsseHeader" use="literal" />
+                <soap:header message="getPersonWithHealthCareInformationOut" part="medcomHeader" use="literal" />
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
@@ -111,5 +127,4 @@
            <soap:address location="http://localhost:8080/DetGodeCPROpslagService" />
         </wsdl:port>
     </wsdl:service>
-
 </wsdl:definitions>

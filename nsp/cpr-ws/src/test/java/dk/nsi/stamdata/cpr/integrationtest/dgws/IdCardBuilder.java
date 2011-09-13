@@ -26,44 +26,35 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.security.KeyStore;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Calendar;
-import java.util.Properties;
-import java.util.TimeZone;
-import java.util.UUID;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.commons.io.IOUtils;
-import org.bouncycastle.util.encoders.Base64;
-import org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_secext_1_0.Security;
-import org.oasis_open.docs.wss._2004._01.oasis_200401_wss_wssecurity_utility_1_0.Timestamp;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import dk.medcom.dgws._2006._04.dgws_1_0.Header;
-import dk.medcom.dgws._2006._04.dgws_1_0.Linking;
-import dk.nsi.common.jaxb.convert.MarshallerFactories.SecurityMarshallerFactory;
-import dk.nsi.common.ws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.Linking;
+import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.cpr.ws.Timestamp;
 import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.AuthenticationLevel;
-import dk.sosi.seal.model.CareProvider;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.SignatureUtil;
-import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.*;
 import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
 import dk.sosi.seal.pki.Federation;
 import dk.sosi.seal.vault.CredentialVault;
 import dk.sosi.seal.vault.GenericCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
+import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Base64;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.*;
 
 public class IdCardBuilder {
 
@@ -127,19 +118,23 @@ public class IdCardBuilder {
 	private static Properties properties;
 	private static CredentialVault vault;
 
-	static {
+    private static X509Certificate certificate;
+
+    static {
 		try {
 			properties = SignatureUtil.setupCryptoProviderForJVM();
 			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(Base64.decode(stsKeystoreAsBase64));
 			keystore.load(byteStream, "Test1234".toCharArray());
 			vault = new GenericCredentialVault(properties, keystore, "Test1234");
-		} catch (Exception e) {
+
+            certificate = (X509Certificate)keystore.getCertificate((String)keystore.aliases().nextElement());
+        } catch (Exception e) {
 			throw new AssertionError(e);
 		}
 	}
 
-	private IdCardBuilderForTestPurposes() {
+	private IdCardBuilder() {
 	}
 
 	public static SecurityWrapper getVocesTrustedSecurityWrapper(String careProviderId, String careProviderName,
@@ -164,7 +159,7 @@ public class IdCardBuilder {
 		DocumentBuilder builder = domFactory.newDocumentBuilder();
 
 		// Marshalling security container
-		SecurityMarshallerFactory marshallerFactory = new SecurityMarshallerFactory();
+		MarshallerFactories.SecurityMarshallerFactory marshallerFactory = new MarshallerFactories.SecurityMarshallerFactory();
 		Marshaller marshaller = (Marshaller) marshallerFactory.makeObject();
 		JAXBContext context = JAXBContext.newInstance(Security.class);
 		StringWriter writer = new StringWriter();
@@ -188,9 +183,10 @@ public class IdCardBuilder {
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
 		cal.setTime(request.getCreationDate());
 		cal.set(Calendar.MILLISECOND, 0);
-		timeStamp.setCreated(cal);
+		timeStamp.setCreated(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)cal));
 		securityResult.setTimestamp(timeStamp);
 		SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
+
 		return wrap;
 	}
 
@@ -219,8 +215,6 @@ public class IdCardBuilder {
 				careProviderName);
 		String username = null; // Only used for level 2
 		String password = null; // Only used for level 2
-		X509Certificate certificate = null; // Certificate not used as
-											// validation is on CVR numbers only
 		SystemIDCard idCard = factory.createNewSystemIDCard(itSystemName, careProvider, auth, username, password,
 				certificate, "Trifork");
 		return idCard;
