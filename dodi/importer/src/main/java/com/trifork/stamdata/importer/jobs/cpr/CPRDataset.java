@@ -31,7 +31,7 @@ import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.CPREntity;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
@@ -45,7 +45,7 @@ public class CPRDataset
 	private final List<Dataset<? extends CPREntity>> datasets = Lists.newArrayList(
 			new Dataset<Personoplysninger>(Personoplysninger.class),
 			new Dataset<Klarskriftadresse>(Klarskriftadresse.class),
-			new Dataset<Navnebeskyttelse>(Navnebeskyttelse.class),
+			new Dataset<NavneBeskyttelse>(NavneBeskyttelse.class),
 			new Dataset<Navneoplysninger>(Navneoplysninger.class),
 			new Dataset<UmyndiggoerelseVaergeRelation>(UmyndiggoerelseVaergeRelation.class),
 			new Dataset<ForaeldreMyndighedRelation>(ForaeldreMyndighedRelation.class),

@@ -32,7 +32,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
-import com.trifork.stamdata.importer.jobs.cpr.models.Navnebeskyttelse;
+import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
@@ -91,7 +91,7 @@ public class CPRParserTest
 	{
 		String LINE = "004280236303900011997-09-092001-02-20";
 
-		Navnebeskyttelse record = CPRParser.navneBeskyttelse(LINE);
+		NavneBeskyttelse record = CPRParser.navneBeskyttelse(LINE);
 
 		assertEquals("2802363039", record.getCpr());
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
