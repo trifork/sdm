@@ -4,13 +4,15 @@
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>java-pom</artifactId>
-		<version>3.0-SNAPSHOT</version>
+		<version>3.1.0</version>
 		<relativePath>../config/java-pom.xml</relativePath>
 	</parent>
 
-	<artifactId>stamdata-performance-tests</artifactId>
+	<artifactId>stamdata-performance</artifactId>
+	<version>3.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<name>Stamdata Performace Tests</name>
+	
+	<name>Stamdata Performace Test Suite</name>
 
 	<properties>
 		<hostname>localhost</hostname>

@@ -6,13 +6,15 @@
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>webservice-pom</artifactId>
-		<version>3.0-SNAPSHOT</version>
+		<version>3.1.0</version>
 		<relativePath>../../config/webservice-pom.xml</relativePath>
 	</parent>
 
 	<groupId>com.trifork.stamdata</groupId>
 	<artifactId>stamdata-batch-copy-ws</artifactId>
+	<version>3.1.0-SNAPSHOT</version>
 	<packaging>war</packaging>
+	
 	<name>Stamdata Batch Copy WebService</name>
 
 	<dependencies>

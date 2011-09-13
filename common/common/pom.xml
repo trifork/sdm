@@ -4,11 +4,12 @@
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>java-pom</artifactId>
-		<version>3.0-SNAPSHOT</version>
+		<version>3.1.0</version>
 		<relativePath>../../config/java-pom.xml</relativePath>
 	</parent>
 
 	<artifactId>stamdata-common</artifactId>
+	<version>3.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Stamdata Common Lib</name>
