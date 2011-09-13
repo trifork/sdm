@@ -33,6 +33,10 @@ import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.DateUtils;
 import com.trifork.stamdata.models.TemporalEntity;
 
+/**
+ * This entity represents Posttype 30 – Person
+ * in the Yderregister specification.
+ */
 @Entity
 public class YderregisterPerson extends AbstractStamdataEntity implements TemporalEntity
 {
