@@ -114,22 +114,6 @@ public class CPRIntegrationTest
 	}
 
 	@Test(expected = Exception.class)
-	public void failsWhenDatesAreNotInSequence() throws Exception
-	{
-		importFile("data/cpr/testSequence1/D100314.L431101");
-
-		Date latestIkraft = CPRImporter.getLatestVersion(connection);
-		assertEquals(yyyy_MM_dd.parse("2001-11-16"), latestIkraft);
-
-		importFile("data/cpr/testSequence2/D100314.L431101");
-
-		latestIkraft = CPRImporter.getLatestVersion(connection);
-		assertEquals(yyyy_MM_dd.parse("2001-11-19"), latestIkraft);
-
-		importFile("data/cpr/testOutOfSequence/D100314.L431101");
-	}
-
-	@Test(expected = Exception.class)
 	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception
 	{
 		importFile("data/cpr/endRecords/D100314.L431101");
