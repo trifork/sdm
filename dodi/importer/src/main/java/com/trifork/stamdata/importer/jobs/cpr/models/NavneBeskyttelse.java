@@ -31,7 +31,7 @@ import javax.persistence.Id;
 
 
 @Entity(name = "Person")
-public class Navnebeskyttelse extends CPREntity
+public class NavneBeskyttelse extends CPREntity
 {
 	Date navneBeskyttelseStartDato;
 	Date navneBeskyttelseSletteDato;
