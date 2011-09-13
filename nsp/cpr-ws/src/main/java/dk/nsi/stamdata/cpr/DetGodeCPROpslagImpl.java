@@ -33,8 +33,6 @@ import org.w3c.dom.Element;
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
-	private static final String INTERNAL_SERVER_ERROR = "Internal Server Error.";
-
     @Inject
 	@Whitelist
 	private Set<String> whitelist;
@@ -137,7 +135,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw new RuntimeException(INTERNAL_SERVER_ERROR, e);
+			throw new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
 		}
 	}
 	
@@ -178,6 +176,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	private void returnServerErrorFault(Exception e)
 	{
-		throw new RuntimeException(INTERNAL_SERVER_ERROR, e);
+		throw new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
 	}
 }
