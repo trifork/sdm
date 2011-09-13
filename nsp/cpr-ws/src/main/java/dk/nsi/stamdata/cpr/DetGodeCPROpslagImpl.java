@@ -191,7 +191,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			
 			fault.setFaultString(message);
 
-            if (medcomFaultcode != null) {
+            if (medcomFaultcode != null)
+            {
                 Element detail = factory.createDetail();
                 Element medcomFaultCode = detail.getOwnerDocument().createElementNS(NameSpaces.MEDCOM_SCHEMA, MedComTags.FAULT_CODE_PREFIXED);
                 medcomFaultCode.appendChild(detail.getOwnerDocument().createTextNode(medcomFaultcode));
