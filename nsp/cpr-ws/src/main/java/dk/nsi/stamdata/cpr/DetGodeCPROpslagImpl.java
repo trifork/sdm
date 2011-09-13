@@ -19,6 +19,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.dgws.DgwsIdcardFilter;
@@ -33,6 +34,10 @@ import org.w3c.dom.Element;
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
+	private static final String NS_TNS = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/";
+	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"; // TODO: Shouldn't this be 1.0.1?
+	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+	
     @Inject
 	@Whitelist
 	private Set<String> whitelist;
@@ -56,28 +61,28 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Override
     public GetPersonInformationOut getPersonInformation(
             @WebParam(name = "Security",
-                      targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
+                      targetNamespace = NS_WS_SECURITY,
                       mode = WebParam.Mode.INOUT,
                       partName = "wsseHeader")
                       Holder<Security> wsseHeader,
             @WebParam(name = "Header",
-                      targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd",
+                      targetNamespace = NS_DGWS_1_0,
                       mode = WebParam.Mode.INOUT,
                       partName = "medcomHeader")
                       Holder<Header> medcomHeader,
             @WebParam(name = "getPersonInformationIn",
-                      targetNamespace = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/",
+                      targetNamespace = NS_TNS,
                       partName = "parameters")
-                      GetPersonInformationIn input) {
+                      GetPersonInformationIn input)
+	{
 		// 1. Check the white list to see if the client is authorized.
 
-        String clientCVR = findIdcardInRequest().getSystemInfo().getCareProvider().getID();
+        String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
 
 		if (!whitelist.contains(clientCVR))
 		{
 			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
 		}
-		
 		
 		// 2. Fetch the person from the database.
 		//
@@ -85,10 +90,10 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// fault if no person is found. We cannot change this to return nil which would
 		// be a nicer protocol.
 		
-	    if (input.getPersonCivilRegistrationIdentifier() == null) {
+	    if (input.getPersonCivilRegistrationIdentifier() == null)
+	    {
             returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.", null);
-        }
-
+	    }
 
 		String pnr = input.getPersonCivilRegistrationIdentifier();
 		Person person = fetchPersonWithPnr(pnr);
@@ -111,23 +116,34 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return output;
 	}
 
-    private SystemIDCard findIdcardInRequest() {
-        HttpServletRequest servletRequest = (HttpServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
-        SystemIDCard idcard = (SystemIDCard)servletRequest.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
-
-        return idcard;
-    }
-
     @Override
-    public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/", partName = "parameters") GetPersonWithHealthCareInformationIn parameters) {
+    public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonWithHealthCareInformationIn parameters)
+    {
 		return null;
         // TODO: Add sikrede information to the response
 	}
 	
 	// HELPERS
+    
+    private SystemIDCard fetchIDCardFromRequestContext()
+    {
+        HttpServletRequest servletRequest = (HttpServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+        SystemIDCard idcard = (SystemIDCard)servletRequest.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
+        
+        // We are counting on the DGWS filter to inject the ID Card
+        // into the request context. In fact we can never get to this
+        // point if the request did not have a ID-card. Therefore if
+        // the id card is null, the service is in an inconsistent state.
+        
+        Preconditions.checkState(idcard != null, "The SOSI ID Card was not injected to the request context.");
+        
+        return idcard;
+    }
 	
 	private Person fetchPersonWithPnr(String pnr)
 	{
+		Preconditions.checkNotNull(pnr, "pnr");
+		
 		try
 		{
 			Fetcher fetcher = fetcherPool.get();
@@ -140,7 +156,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 	
 	private void returnSOAPSenderFault(String message, @Nullable String medcomFaultcode)
-	{		
+	{
 		SOAPFault fault = null;
 		
 		try
