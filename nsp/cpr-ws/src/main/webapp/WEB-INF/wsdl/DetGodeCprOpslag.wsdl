@@ -7,6 +7,15 @@
                   targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
                   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
     <wsdl:types>
+    	<s:schema
+			targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+			<s:include schemaLocation="wsse.xsd" />
+		</s:schema>
+
+		<s:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+			<s:include schemaLocation="medcom.xsd" />
+		</s:schema>
+		
         <s:schema
                 xmlns:tns="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"

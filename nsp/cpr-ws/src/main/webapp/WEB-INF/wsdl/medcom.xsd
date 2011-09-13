@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  elementFormDefault="qualified" 
+  targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" 
+  xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+  <xs:element name="Linking">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="medcom:FlowID" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:MessageID" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="medcom:InResponseToMessageID" minOccurs="0" maxOccurs="1" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FlowID" type="xs:string"/>
+  <xs:element name="MessageID" type="xs:string"/>
+  <xs:element name="InResponseToMessageID" type="xs:string"/>
+  <xs:element name="Priority">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="AKUT"/>
+        <xs:enumeration value="HASTER"/>
+        <xs:enumeration value="RUTINE"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="RequireNonRepudiationReceipt">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="yes"/>
+        <xs:enumeration value="no"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="FlowStatus">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="flow_running"/>
+        <xs:enumeration value="flow_finalized_succesfully"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="SecurityLevel">
+    <xs:simpleType>
+      <xs:restriction base="xs:int">
+        <xs:enumeration value="1"/>
+        <xs:enumeration value="2"/>
+        <xs:enumeration value="3"/>
+        <xs:enumeration value="4"/>
+        <xs:enumeration value="5"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="TimeOut">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="5"/>
+        <xs:enumeration value="30"/>
+        <xs:enumeration value="480"/>
+        <xs:enumeration value="1440"/>
+        <xs:enumeration value="unbound"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="Header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="medcom:SecurityLevel" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:TimeOut" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:Linking" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="medcom:FlowStatus" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:Priority" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:RequireNonRepudiationReceipt" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <!-- Added by SEAL -->
+	  <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FaultCode">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="sosigw_no_valid_idcard_in_request"/>
+        <xs:enumeration value="sosigw_missing_signinginfo_in_request"/>
+        <xs:enumeration value="sosigw_syntax_error_in_request"/>
+        <xs:enumeration value="sosigw_awaiting_signing"/>
+        <xs:enumeration value="sosigw_no_valid_idcard_in_cache"/>
+        <xs:enumeration value="sosigw_access_denied"/>
+        <xs:enumeration value="sosigw_internal_error"/>
+        <xs:enumeration value="sosigw_proxy_error"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+</xs:schema>
