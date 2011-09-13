@@ -8,6 +8,7 @@ import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
 import org.hisrc.hifaces20.testing.webappenvironment.annotations.PropertiesWebAppEnvironmentConfig;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.WebAppEnvironmentRule;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
@@ -15,6 +16,7 @@ import org.junit.rules.MethodRule;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +29,7 @@ public class CprWebserviceIntegrationTest {
 
     @Rule
 	public MethodRule webAppEnvironmentRule = WebAppEnvironmentRule.INSTANCE;
+    private DetGodeCPROpslag opslag;
 
 
     @PropertiesWebAppEnvironmentConfig
@@ -34,11 +37,14 @@ public class CprWebserviceIntegrationTest {
         webAppEnvironment = env;
     }
 
+    @Before
+    public void setupClient() throws MalformedURLException {
+        URL wsdlLocation = new URL("http://localhost:8100/service/opslag");
+        opslag = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE).getDetGodeCPROpslag();
+    }
+
 	@Test
 	public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception {
-        URL wsdlLocation = new URL("http://localhost:8100/service/opslag");
-        DetGodeCPROpslag opslag = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE).getDetGodeCPROpslag();
-
         GetPersonInformationIn request = new GetPersonInformationIn();
 
         try {
@@ -51,11 +57,7 @@ public class CprWebserviceIntegrationTest {
 
     @Test
     public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception {
-        URL wsdlLocation = new URL("http://localhost:8100/service/opslag");
-        DetGodeCPROpslag opslag = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE).getDetGodeCPROpslag();
-
         GetPersonInformationIn request = new GetPersonInformationIn();
-
         request.setPersonCivilRegistrationIdentifier("1111111111");
 
         try {
@@ -66,4 +68,9 @@ public class CprWebserviceIntegrationTest {
             assertEquals(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
         }
     }
+
+//    @Test
+//    public void requestWithCvrNotWhitelistedGivesSenderSoapFault() throw Exception {
+//
+//    }
 }
