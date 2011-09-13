@@ -121,7 +121,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl/)</wsdlDirectory>
+					<wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl/</wsdlDirectory>
 					<sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
 					<packageName>dk.nsi.stamdata.cpr.ws</packageName>
 					<extension>true</extension>
