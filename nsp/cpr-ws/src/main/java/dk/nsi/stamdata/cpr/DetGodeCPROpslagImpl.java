@@ -193,6 +193,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
             if (medcomFaultcode != null)
             {
+            	// If this is a medcom fault (e.g. the user's id card does not authorize him to use the service).
+            	// Need to return the appropriate fault details.
+            	
                 Element detail = factory.createDetail();
                 Element medcomFaultCode = detail.getOwnerDocument().createElementNS(NameSpaces.MEDCOM_SCHEMA, MedComTags.FAULT_CODE_PREFIXED);
                 medcomFaultCode.appendChild(detail.getOwnerDocument().createTextNode(medcomFaultcode));
