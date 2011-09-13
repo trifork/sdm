@@ -69,8 +69,19 @@ public class CprWebserviceIntegrationTest {
         }
     }
 
-//    @Test
-//    public void requestWithCvrNotWhitelistedGivesSenderSoapFault() throw Exception {
-//
-//    }
+    @Test
+    public void requestWithCvrNotWhitelistedGivesSenderSoapFault() throws Exception {
+        GetPersonInformationIn request = new GetPersonInformationIn();
+        request.setPersonCivilRegistrationIdentifier("1111111111");
+
+
+
+        try {
+            opslag.getPersonInformation(request);
+            fail("Expected SOAPFault");
+        } catch (SOAPFaultException fault) {
+            assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
+            assertEquals(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
+        }
+    }
 }
