@@ -102,7 +102,7 @@ public class CPRImporter implements FileParser
 
 				if (previousVersion == null)
 				{
-					logger.debug("Find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
+					logger.debug("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
 				}
 			}
 
