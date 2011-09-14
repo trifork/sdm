@@ -86,13 +86,24 @@ public class DgwsIdcardFilter implements Filter
 		{
 		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
 		{
+		// To allow the JAX-WS client to access the WSDL without
+		// having to send DGWS stuff along with the call we
+		// make a little hack that pass these called through.
+		
 		if ("wsdl".equals(httpRequest.getQueryString()))
 		{
 		try
 		{
+			// Rip out the ID Card and cram it into the request context.
+			
 		}
 		catch (Exception e)
 		{
+			// TODO: There should be two catch clauses here.
+			// one for when the client has messed up and made
+			// some sort of bad request (e.g. bad XML).
+			// And one here the server crashes for some reason. (This is bad, and will likely be a bug.)
+			
 	public void destroy()
 	{
 }
