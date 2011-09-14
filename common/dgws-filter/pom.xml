@@ -23,18 +23,8 @@
         </dependency>
         <dependency>
             <groupId>dk.sosi.seal</groupId>
-            <artifactId>seal</artifactId>
-            <version>2.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xerces</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>seal-jboss6</artifactId>
+            <version>2.1.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>

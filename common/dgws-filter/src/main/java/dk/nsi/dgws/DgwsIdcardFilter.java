@@ -1,21 +1,5 @@
 package dk.nsi.dgws;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.util.Properties;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.Reply;
 import dk.sosi.seal.model.Request;
@@ -23,12 +7,19 @@ import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.model.constants.DGWSConstants;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.IntermediateCertificateCache;
 import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.Properties;
 
 /**
  * Extracts IdCard instances from the request and places them in the servlet request
@@ -45,17 +36,15 @@ public class DgwsIdcardFilter implements Filter
 		boolean useTestFederation = Boolean.valueOf(filterConfig.getInitParameter(USE_TESTFEDERATION_INIT_PARAM_KEY));
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
-		IntermediateCertificateCache imCertCache = new InMemoryIntermediateCertificateCache();
-
 		Federation federation;
 		
 		if (useTestFederation)
 		{
-			federation = new SOSITestFederation(properties, imCertCache);
+			federation = new SOSITestFederation(properties);
 		}
 		else
 		{
-			federation = new SOSIFederation(properties, imCertCache);
+			federation = new SOSIFederation(properties);
 		}
 
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
@@ -84,8 +73,7 @@ public class DgwsIdcardFilter implements Filter
 			return;
 		}
 
-		Reply reply;
-		try
+        try
 		{
 			// Rip out the ID Card and cram it into the request context.
 			
@@ -106,8 +94,8 @@ public class DgwsIdcardFilter implements Filter
 			
 			e.printStackTrace(); // FIXME remove
 
-			reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-			httpResponse.setStatus(500);
+            Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+            httpResponse.setStatus(500);
 
 			httpResponse.setContentType("text/xml");
 
