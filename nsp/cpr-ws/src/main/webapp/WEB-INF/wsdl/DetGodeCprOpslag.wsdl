@@ -93,32 +93,29 @@
     <wsdl:binding name="DetGodeCPROpslagBinding" type="tns:DetGodeCPROpslag">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="getPersonInformation">
-            <soap:operation soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonInformation"
-                            style="document"/>
+            <soap:operation soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonInformation" style="document"/>
             <wsdl:input>
-                <soap:body use="literal" parts="parameters"/>
-                <soap:header message="getPersonInformationIn" part="wsseHeader" use="literal" />
-                <soap:header message="getPersonInformationIn" part="medcomHeader" use="literal" />
+                <soap:body use="literal" parts="parameters" />
+                <soap:header message="tns:getPersonInformationIn" part="wsseHeader" use="literal" />
+                <soap:header message="tns:getPersonInformationIn" part="medcomHeader" use="literal" />
             </wsdl:input>
             <wsdl:output>
-                <soap:body use="literal" parts="parameters"/>
-                <soap:header message="getPersonInformationOut" part="wsseHeader" use="literal" />
-                <soap:header message="getPersonInformationOut" part="medcomHeader" use="literal" />
+                <soap:body use="literal" parts="parameters" />
+                <soap:header message="tns:getPersonInformationOut" part="wsseHeader" use="literal" />
+                <soap:header message="tns:getPersonInformationOut" part="medcomHeader" use="literal" />
             </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="getPersonWithHealthCareInformation">
-            <soap:operation
-                    soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonWithHealthCareInformation"
-                    style="document"/>
+            <soap:operation soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonWithHealthCareInformation" style="document"/>
             <wsdl:input>
                 <soap:body use="literal" parts="parameters"/>
-                <soap:header message="getPersonWithHealthCareInformationIn" part="wsseHeader" use="literal" />
-                <soap:header message="getPersonWithHealthCareInformationIn" part="medcomHeader" use="literal" />
+                <soap:header message="tns:getPersonWithHealthCareInformationIn" part="wsseHeader" use="literal" />
+                <soap:header message="tns:getPersonWithHealthCareInformationIn" part="medcomHeader" use="literal" />
             </wsdl:input>
             <wsdl:output>
                 <soap:body use="literal" parts="parameters"/>
-                <soap:header message="getPersonWithHealthCareInformationOut" part="wsseHeader" use="literal" />
-                <soap:header message="getPersonWithHealthCareInformationOut" part="medcomHeader" use="literal" />
+                <soap:header message="tns:getPersonWithHealthCareInformationOut" part="wsseHeader" use="literal" />
+                <soap:header message="tns:getPersonWithHealthCareInformationOut" part="medcomHeader" use="literal" />
             </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>

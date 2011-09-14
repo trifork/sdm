@@ -1,0 +1,106 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>dk.nsi.stamdata</groupId>
+		<artifactId>webservice-pom</artifactId>
+		<version>3.1.0</version>
+		<relativePath>../../config/webservice-pom.xml</relativePath>
+	</parent>
+
+	<artifactId>stamdata-data-manager</artifactId>
+	<version>3.1.0-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>Stamdata Data Manager</name>
+	
+	<!-- Dependencies -->
+
+	<dependencies>
+		<dependency>
+			<groupId>dk.nsi.stamdata</groupId>
+			<artifactId>stamdata-common</artifactId>
+			<version>${project.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.16</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.6</version>
+			<scope>compile</scope>
+			<exclusions>
+				<!-- WE USE THE 'jcl-over-slf4j' ADAPTER FOR SLF4J -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>${jboss6.hibernate.version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Logging -->
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${jboss6.slf4j.version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${jboss6.slf4j.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Scheduler -->
+		
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.0.2</version>
+			<scope>compile</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.slf4j</groupId>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.6</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.0</version>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+</project>
