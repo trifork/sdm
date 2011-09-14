@@ -79,10 +79,12 @@ public class DetGodeCPROpslagIntegrationTest {
 
     @Test
     public void requestWithCvrNotWhitelistedGivesSoapFaultWithDGWSNotAuthorizedFaultCode() throws Exception {
+    	
         GetPersonInformationIn request = new GetPersonInformationIn();
         request.setPersonCivilRegistrationIdentifier("1111111111");
+        
         try {
-            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper("123", "foo", "bar");
+            SecurityWrapper securityHeaders = IdCardBuilder.issueVOCESIdCard();
 
             Assert.assertNotNull(securityHeaders.getSecurity());
             Assert.assertNotNull(securityHeaders.getMedcomHeader());

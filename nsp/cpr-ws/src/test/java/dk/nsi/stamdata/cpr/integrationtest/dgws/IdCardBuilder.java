@@ -26,35 +26,52 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Linking;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.Timestamp;
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.*;
-import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
-import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.vault.CredentialVault;
-import dk.sosi.seal.vault.GenericCredentialVault;
-import dk.sosi.seal.xml.XmlUtil;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.*;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.Linking;
+import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.cpr.ws.Timestamp;
+import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.AuthenticationLevel;
+import dk.sosi.seal.model.CareProvider;
+import dk.sosi.seal.model.Request;
+import dk.sosi.seal.model.SignatureUtil;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
+import dk.sosi.seal.pki.Federation;
+import dk.sosi.seal.vault.CredentialVault;
+import dk.sosi.seal.vault.GenericCredentialVault;
+import dk.sosi.seal.xml.XmlUtil;
 
 public class IdCardBuilder {
 
@@ -151,6 +168,8 @@ public class IdCardBuilder {
 	private static SecurityWrapper getSecurityWrapper(AuthenticationLevel auth, String careProviderId,
 			String careProviderName, String itSystemName) throws Exception {
 
+		issueVOCESIdCard();
+		
 		Federation federation = null; // Not used for issuing ID cards
 		SOSIFactory factory = new SOSIFactory(federation, vault, properties);
 
@@ -171,7 +190,7 @@ public class IdCardBuilder {
 		Request request = getRequest(auth, factory, careProviderId, careProviderName, itSystemName);
 
 		Node node = request.getIDCard().serialize2DOMDocument(factory, request.serialize2DOMDocument());
-
+		
 		// Adding generic "version" of idCard to the security Document
 		Node importNode = doc.importNode(node, true);
 		doc.getDocumentElement().appendChild(importNode);
@@ -189,6 +208,60 @@ public class IdCardBuilder {
 
 		return wrap;
 	}
+	
+	public static SecurityWrapper issueVOCESIdCard() throws ParserConfigurationException, XPathExpressionException, JAXBException
+	{
+		Federation federation = null; // Not used for issuing ID cards
+		SOSIFactory factory = new SOSIFactory(federation, vault, properties);
+		
+		SystemIDCard idCard = factory.createNewSystemIDCard("Thomas", new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, "12345678", "Trifork"), AuthenticationLevel.VOCES_TRUSTED_SYSTEM, null, null, certificate, "not used");
+		
+		Request request = factory.createNewRequest(false, "flowID");
+		request.setIDCard(idCard);
+		
+		Document e = request.serialize2DOMDocument();
+		
+		boolean prettyPrint = true;
+		boolean includeXMLHeader = true;
+		String xml = XmlUtil.node2String(e, prettyPrint, includeXMLHeader);
+		
+		XPathFactory xpathFactory = XPathFactory.newInstance();
+		XPath xpath = xpathFactory.newXPath();
+		
+		NamespaceContext ctx = new NamespaceContext()
+		{
+            public String getNamespaceURI(String prefix)
+            {
+                String uri = null;
+                
+                if (prefix.equals("wsse"))
+                    uri = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+                else if (prefix.equals("medcom"))
+                    uri = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd";
+
+                return uri;
+            }
+           
+            // Dummy implementation - not used!
+            public Iterator getPrefixes(String val) { return null; }
+           
+            public String getPrefix(String uri) { return null; }
+        };
+        
+        xpath.setNamespaceContext(ctx);
+        
+		Node wsseNode = (Node)xpath.compile("//wsse:Security").evaluate(e, XPathConstants.NODE);
+		Node medcomNode = (Node)xpath.compile("//medcom:Header").evaluate(e, XPathConstants.NODE);
+		
+		JAXBContext jaxb = JAXBContext.newInstance(Security.class, Header.class);
+		Security security = jaxb.createUnmarshaller().unmarshal(wsseNode, Security.class).getValue();
+		Header medcomHeader = jaxb.createUnmarshaller().unmarshal(medcomNode, Header.class).getValue();
+		
+		jaxb.createMarshaller().marshal(security, System.out);
+		
+		return new SecurityWrapper(security, medcomHeader);
+	}
+
 
 	private static Header getMedComHeader(String messageId) {
 		Header medcomHeader = new Header();
