@@ -50,8 +50,6 @@ public class RegistryModule extends ServletModule {
 
 		Set<Class<? extends View>> views = Views.findAllViews();
 		
-		System.out.println("Configured Views: " + views);
-
 		// MAP VIEWS TO THEIR PATHS
 		//
 		// Map the view classes to their respective registry/view/version.

@@ -54,63 +54,17 @@ public class DetGodeCPROpslagIntegrationTest {
     public void setupClient() throws MalformedURLException {
         URL wsdlLocation = new URL("http://localhost:8100/service/opslag?wsdl");
         DetGodeCPROpslagService service = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
+
         HandlerResolver handlerResolver = new HandlerResolver() {
             @Override
             public List<Handler> getHandlerChain(PortInfo portInfo) {
-                List<Handler> handlers = new ArrayList<Handler>(1);
-                handlers.add(new SOAPHandler<SOAPMessageContext>() {
-                    private Map<String,String> prefixMap = SealNamespacePrefixMapper.prefixMap;
-
-                    @Override
-                    public Set<QName> getHeaders() {
-                        return null;
-                    }
-
-                    @Override
-                    public boolean handleMessage(SOAPMessageContext context) {
-                        try {
-                            SOAPHeader soapHeader = context.getMessage().getSOAPHeader();
-
-                            for (Map.Entry<String, String> prefixMapEntry: prefixMap.entrySet()) {
-                                soapHeader.addNamespaceDeclaration(prefixMapEntry.getValue(), prefixMapEntry.getKey());
-                            }
-
-                            Iterator iterator = soapHeader.examineAllHeaderElements();
-                            while (iterator.hasNext()) {
-                                SOAPHeaderElement element = (SOAPHeaderElement)iterator.next();
-                                changePrefix(element.getChildNodes());
-                            }
-                        } catch (SOAPException e) {
-                            throw new RuntimeException(e);
-                        }
-
-                        return true;
-                    }
-
-                    private void changePrefix(NodeList elementsToProcess) {
-                        for (int i = 0; i < elementsToProcess.getLength(); i++) {
-                            Node node = elementsToProcess.item(i);
-                            String nodeNS = node.getNamespaceURI();
-                            if (prefixMap.containsKey(nodeNS)) {
-                                node.setPrefix(prefixMap.get(nodeNS));
-                            }
-
-                            changePrefix(node.getChildNodes());
-                        }
-                    }
-
-                    @Override
-                    public boolean handleFault(SOAPMessageContext context) {
-                        return true;
-                    }
-
-                    @Override
-                    public void close(MessageContext context) { }
-                });
+                List<Handler> handlers = new ArrayList(1);
+                handlers.add(new SealNamespacePrefixSoapHandler());
                 return handlers;
             }
         };
         service.setHandlerResolver(handlerResolver);
+
         opslag = service.getDetGodeCPROpslag();
     }
 

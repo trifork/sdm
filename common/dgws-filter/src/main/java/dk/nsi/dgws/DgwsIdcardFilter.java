@@ -80,8 +80,6 @@ public class DgwsIdcardFilter implements Filter
 			Reader input = request.getReader();
 			final String xml = IOUtils.toString(input);
 
-            System.out.println("requestXml=" + xml);
-
 			Request sealRequest = factory.deserializeRequest(xml);
 			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, sealRequest.getIDCard());
 

@@ -54,7 +54,6 @@ public class ClientDao
 	public Client findByCvr(String cvr)
 	{
 		ClassMetadata classMetadata = session.getSessionFactory().getClassMetadata(Client.class);
-		System.out.println("Client STILL bound: " + classMetadata.getEntityName());
 		String ssnlike = "CVR:" + cvr + "-%";
 		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber LIKE :subjectSerialNumber");
 		query.setParameter("subjectSerialNumber", ssnlike);

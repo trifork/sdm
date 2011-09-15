@@ -180,7 +180,6 @@ public class IdCardBuilder {
 		// Unmarshall the new security object including the idCard
 		Unmarshaller unmarshaller = context.createUnmarshaller();
         String securityHeaderSerialized = XmlUtil.node2String(doc);
-        System.out.println("securityHeaderSerialized=" + securityHeaderSerialized);
         Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(securityHeaderSerialized));
         Timestamp timeStamp = new Timestamp();
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));

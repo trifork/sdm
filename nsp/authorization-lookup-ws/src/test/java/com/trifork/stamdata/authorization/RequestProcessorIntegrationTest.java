@@ -175,7 +175,6 @@ public class RequestProcessorIntegrationTest {
 
 		// Do the transformation and output
 		transformer.transform(source, result);
-		System.out.println(sw.toString());
 	}
 
 	public static String send(String urlString, Node node) throws Exception {

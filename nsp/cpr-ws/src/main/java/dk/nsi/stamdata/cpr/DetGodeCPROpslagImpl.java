@@ -1,18 +1,25 @@
 package dk.nsi.stamdata.cpr;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-import static com.trifork.stamdata.Preconditions.checkState;
-
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.Set;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.dgws.DgwsIdcardFilter;
+import dk.nsi.stamdata.cpr.annotations.Whitelist;
+import dk.nsi.stamdata.cpr.ws.*;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -23,45 +30,12 @@ import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Element;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.models.cpr.Person;
-
-import dk.nsi.dgws.DgwsIdcardFilter;
-import dk.nsi.stamdata.cpr.annotations.Whitelist;
-import dk.nsi.stamdata.cpr.ws.AddressAccessType;
-import dk.nsi.stamdata.cpr.ws.AddressCompleteType;
-import dk.nsi.stamdata.cpr.ws.AddressPostalType;
-import dk.nsi.stamdata.cpr.ws.CountryIdentificationCodeType;
-import dk.nsi.stamdata.cpr.ws.CountryIdentificationSchemeType;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.PersonAddressStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonBirthDateStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonCivilRegistrationStatusStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonNameStructureType;
-import dk.nsi.stamdata.cpr.ws.RegularCPRPersonType;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.SimpleCPRPersonType;
-import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.model.constants.FaultCodeValues;
-import dk.sosi.seal.model.constants.MedComTags;
-import dk.sosi.seal.model.constants.NameSpaces;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static com.trifork.stamdata.Preconditions.checkState;
 
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
@@ -94,7 +68,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		ApplicationController.injector.injectMembers(this);
 	}
 
-
 	@Override
     public GetPersonInformationOut getPersonInformation(
             @WebParam(name = "Security",
@@ -110,11 +83,18 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
             @WebParam(name = "getPersonInformationIn",
                       targetNamespace = NS_TNS,
                       partName = "parameters")
-                      GetPersonInformationIn parameters) throws DGWSFault
-	{
+                      GetPersonInformationIn input) throws DGWSFault {
 		// 1. Check the white list to see if the client is authorized.
 
-		String pnr = parameters.getPersonCivilRegistrationIdentifier();        
+        String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
+        String pnr = input.getPersonCivilRegistrationIdentifier();
+
+        if (!whitelist.contains(clientCVR)) {
+            logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, pnr);
+            throwDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+        } else {
+            logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, pnr);
+        }
 
         // 2. Fetch the person from the database.
 
@@ -158,8 +138,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			@WebParam(	name = "getPersonWithHealthCareInformationIn",
 						targetNamespace = NS_TNS,
 						partName = "parameters")
-						GetPersonWithHealthCareInformationIn parameters)
-	{
+						GetPersonWithHealthCareInformationIn parameters) throws DGWSFault {
 		// 1. Check the white list to see if the client is authorized.
 
 		String pnr = parameters.getPersonCivilRegistrationIdentifier();
@@ -183,11 +162,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return output;
 	}
 	
-
-	//
 	// HELPERS
-	//
-
+    
     private SystemIDCard fetchIDCardFromRequestContext()
     {
         ServletRequest servletRequest = (ServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
@@ -203,7 +179,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         return idcard;
     }
 	
-
 	private Person fetchPersonWithPnr(String pnr)
 	{
 		checkNotNull(pnr, "pnr");
@@ -219,11 +194,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		{
 			throw returnServerErrorFault(e);
 		}
-		
+
 		if (person == null)
 		{
 			throw returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
+	}
 
 		return person;
 	}
@@ -239,7 +214,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	{
 		checkNotNull(message, "message");
 		
-		SOAPFault fault = null;
+		SOAPFault fault;
 		
 		try
 		{
@@ -442,8 +417,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 
 
-	private void checkClientAuthorization(String requestedPNR, Holder<Security> wsseHeader, Holder<Header> medcomHeader)
-	{
+	private void checkClientAuthorization(String requestedPNR, Holder<Security> wsseHeader, Holder<Header> medcomHeader) throws DGWSFault
+    {
 		String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
 
 		if (!whitelist.contains(clientCVR))

@@ -44,7 +44,6 @@ public class ViewTest
 		
 		for (Class<?> viewClass : views)
 		{
-			System.out.println(viewClass.getCanonicalName());
 			Session session = db.openSession();
 			session.beginTransaction();
 			
