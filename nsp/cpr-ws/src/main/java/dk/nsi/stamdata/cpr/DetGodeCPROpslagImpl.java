@@ -5,6 +5,8 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.Sikrede;
+
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.annotations.Whitelist;
 import dk.nsi.stamdata.cpr.ws.*;
@@ -50,6 +52,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
     @Inject
     private PersonMapper personMapper;
+    
+    @Inject
+    private PersonWithHealthCareMapper personWithHealthCareMapper;
 
     @Resource
     private WebServiceContext context;
@@ -82,20 +87,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
                       targetNamespace = NS_TNS,
                       partName = "parameters")
                       GetPersonInformationIn input) throws DGWSFault {
+		
 		// 1. Check the white list to see if the client is authorized.
 
-        String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
-        String pnr = input.getPersonCivilRegistrationIdentifier();
-
-        if (!whitelist.contains(clientCVR)) {
-            logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, pnr);
-            throwDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
-        } else {
-            logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, pnr);
-        }
-
-        // 2. Fetch the person from the database.
-
+		String pnr = input.getPersonCivilRegistrationIdentifier();
+		
 		checkClientAuthorization(pnr, wsseHeader, medcomHeader);
 
 		// 2. Validate the input parameters.
@@ -115,13 +111,18 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		
 		GetPersonInformationOut output = new GetPersonInformationOut();
         PersonInformationStructureType personInformation;
-        try {
-            personInformation = personMapper.mapPersonInformation(person);
-        } catch (DatatypeConfigurationException e) {
-            throw returnServerErrorFault(e);
+        
+        try
+        {
+            personInformation = personMapper.map(person);
         }
+        catch (DatatypeConfigurationException e)
+        {
+            throw newServerErrorFault(e);
+        }
+        
         output.setPersonInformationStructure(personInformation);
-		
+        
 		return output;
 	}
 
@@ -157,11 +158,21 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		// NOTE: Unfortunately the specification is defined so that we have to
 		// return a fault if no person is found. We cannot change this to return nil
 		// which would be a nicer protocol.
-
+		
 		Person person = fetchPersonWithPnr(pnr);
-
+		Sikrede sikrede = null; // TODO: Fetch the "sikrede" record for the pnr.
+		
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
-
+		
+		try
+		{
+			output.setPersonWithHealthCareInformationStructure(personWithHealthCareMapper.map(person, sikrede));
+		}
+		catch (DatatypeConfigurationException e)
+		{
+			throw newServerErrorFault(e);
+		}
+		
 		return output;
 	}
 	
@@ -195,25 +206,26 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw returnServerErrorFault(e);
+			throw newServerErrorFault(e);
 		}
 
 		if (person == null)
 		{
-			throw returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
-	}
+			throw newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+		}
 
 		return person;
 	}
 
-    private void throwDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
+	private DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
 	{
-        DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
-        medcomHeaderHolder.value.setFlowStatus(status);
-        throw new DGWSFault(errorMsg, "DGWS error");
-    }
+		DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
+		medcomHeaderHolder.value.setFlowStatus(status);
+		
+		return new DGWSFault(errorMsg, DGWSHeaderUtil.DGWS_ERROR_MSG);
+	}
 
-	private SOAPFaultException returnSOAPSenderFault(String message)
+	private SOAPFaultException newSOAPSenderFault(String message)
 	{
 		checkNotNull(message, "message");
 		
@@ -236,14 +248,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw returnServerErrorFault(e);
+			throw newServerErrorFault(e);
 		}
 		
 		return new SOAPFaultException(fault);
 	}
 	
 
-	private RuntimeException returnServerErrorFault(Exception e)
+	private RuntimeException newServerErrorFault(Exception e)
 	{
 		checkNotNull(e, "e");
 		
@@ -255,7 +267,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	{
 		if (StringUtils.isBlank(pnr))
 		{
-			throw returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+			throw newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 		}
 	}
 
@@ -267,7 +279,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		if (!whitelist.contains(clientCVR))
 		{
             logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-            throwDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+            throw newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
         }
 		else
 		{
