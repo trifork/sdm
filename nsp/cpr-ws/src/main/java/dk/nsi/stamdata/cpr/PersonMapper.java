@@ -11,8 +11,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 import java.util.Date;
 
-public class PersonMapper {
-    public PersonInformationStructureType mapPersonInformation(Person person) throws DatatypeConfigurationException {
+public class PersonMapper
+{
+    public PersonInformationStructureType map(Person person) throws DatatypeConfigurationException
+    {
         PersonInformationStructureType personInformation = new PersonInformationStructureType();
         personInformation.setCurrentPersonCivilRegistrationIdentifier(person.cpr);
 
@@ -158,7 +160,8 @@ public class PersonMapper {
     }
 
 
-    private XMLGregorianCalendar newXMLGregorianCalendar(Date date) throws DatatypeConfigurationException {
+    private XMLGregorianCalendar newXMLGregorianCalendar(Date date) throws DatatypeConfigurationException
+    {
         DatatypeFactory factory = DatatypeFactory.newInstance();
         return factory.newXMLGregorianCalendar(new DateTime(date).toGregorianCalendar());
     }
