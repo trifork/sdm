@@ -60,7 +60,7 @@ public class Person extends BaseTemporalEntity
 
 	public String bynavn;
 
-	public BigInteger postnummer;
+	public String postnummer;
 
 	public String postdistrikt;
 
@@ -73,9 +73,9 @@ public class Person extends BaseTemporalEntity
 
 	public String stilling;
 
-	public BigInteger vejKode;
+	public String vejKode;
 
-	public BigInteger kommuneKode;
+	public String kommuneKode;
 
 	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelseslettedato;
