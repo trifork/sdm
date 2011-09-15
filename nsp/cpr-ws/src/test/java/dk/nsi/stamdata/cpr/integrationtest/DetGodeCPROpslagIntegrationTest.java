@@ -1,19 +1,30 @@
 package dk.nsi.stamdata.cpr.integrationtest;
 
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.name.Names;
+import com.trifork.stamdata.ConfigurationLoader;
+import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.stamdata.cpr.ApplicationController;
 import dk.nsi.stamdata.cpr.DetGodeCPROpslagFaultMessages;
+import dk.nsi.stamdata.cpr.SessionProvider;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
 import org.hisrc.hifaces20.testing.webappenvironment.annotations.PropertiesWebAppEnvironmentConfig;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.WebAppEnvironmentRule;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
+import org.mockito.asm.tree.JumpInsnNode;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 
@@ -43,11 +54,26 @@ public class DetGodeCPROpslagIntegrationTest {
     @Rule
 	public MethodRule webAppEnvironmentRule = WebAppEnvironmentRule.INSTANCE;
     private DetGodeCPROpslag opslag;
+    private Session session;
 
 
     @PropertiesWebAppEnvironmentConfig
     public void setWebAppEnvironment(WebAppEnvironment env) {
         webAppEnvironment = env;
+    }
+
+    @Before
+    public void setupSession() {
+        Injector injector = Guice.createInjector(new AbstractModule() {
+            @Override
+            protected void configure() {
+                Properties properties = ConfigurationLoader.loadForName(ApplicationController.COMPONENT_NAME);
+                bind(Session.class).toProvider(SessionProvider.class);
+                Names.bindProperties(binder(), properties);
+            }
+        });
+
+        session = injector.getInstance(Session.class);
     }
 
     @Before
@@ -68,7 +94,11 @@ public class DetGodeCPROpslagIntegrationTest {
         opslag = service.getDetGodeCPROpslag();
     }
 
-	@Test
+    private void purgePersontable() {
+        session.createSQLQuery("TRUNCATE Person").executeUpdate();
+    }
+
+    @Test
 	public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception {
         GetPersonInformationIn request = new GetPersonInformationIn();
 
@@ -110,5 +140,35 @@ public class DetGodeCPROpslagIntegrationTest {
         } catch (DGWSFault fault) {
             Assert.assertEquals(FaultCodeValues.NOT_AUTHORIZED, fault.getMessage());
         }
+    }
+
+    @Test
+    public void requestWithWhitelistedCvrAndExistingPersonGivesPersonInformation() throws Exception {
+        purgePersontable();
+
+        Person person = new Person();
+        person.cpr="1111111111";
+        person.koen="M";
+        person.vejKode = "8464";
+        person.foedselsdato = new Date();
+        person.setModifiedDate(new Date());
+        person.setCreatedDate(new Date());
+        person.setValidFrom(DateTime.now().minusDays(1).toDate());
+        person.setValidTo(DateTime.now().plusDays(1).toDate());
+
+        session.getTransaction().begin();
+        session.save(person);
+        session.flush();
+        session.getTransaction().commit();
+
+        GetPersonInformationIn request = new GetPersonInformationIn();
+        request.setPersonCivilRegistrationIdentifier("1111111111");
+        SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+
+        GetPersonInformationOut personInformation = opslag.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+
+        PersonInformationStructureType information = personInformation.getPersonInformationStructure();
+        Assert.assertEquals("1111111111", information.getCurrentPersonCivilRegistrationIdentifier());
+        Assert.assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
     }
 }

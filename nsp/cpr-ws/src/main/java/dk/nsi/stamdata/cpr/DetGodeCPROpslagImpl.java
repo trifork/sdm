@@ -265,7 +265,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private PersonInformationStructureType mapPersonInformation(Person person)
 	{
 		PersonInformationStructureType personInformation = new PersonInformationStructureType();
-		personInformation.setCurrentPersonCivilRegistrationIdentifier(person.getCPR());
+		personInformation.setCurrentPersonCivilRegistrationIdentifier(person.cpr);
 
 		RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();
 		SimpleCPRPersonType simpleCprPerson = new SimpleCPRPersonType();
@@ -286,7 +286,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		personName.setPersonSurnameName(person.efternavn);
 
-		simpleCprPerson.setPersonCivilRegistrationIdentifier(person.getCPR());
+		simpleCprPerson.setPersonCivilRegistrationIdentifier(person.cpr);
 
 		regularCprPerson.setSimpleCPRPerson(simpleCprPerson);
 
@@ -402,6 +402,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 
 		personAddress.setAddressComplete(addressComplete);
+        personInformation.setPersonAddressStructure(personAddress);
 
 		personInformation.setRegularCPRPerson(regularCprPerson);
 		return personInformation;

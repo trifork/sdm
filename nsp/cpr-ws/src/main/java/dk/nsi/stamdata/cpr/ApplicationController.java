@@ -23,7 +23,7 @@ public class ApplicationController extends GuiceServletContextListener
 {
 	private static final TypeLiteral<Set<String>> A_SET_OF_STRINGS = new TypeLiteral<Set<String>>() {};
 	private static final String DISPLAY_SOAP_FAULT_STACK_TRACE = "com.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace";
-	private static final String COMPONENT_NAME = "stamdata-cpr-ws";
+	public static final String COMPONENT_NAME = "stamdata-cpr-ws";
 	
 	public static Injector injector;
 	

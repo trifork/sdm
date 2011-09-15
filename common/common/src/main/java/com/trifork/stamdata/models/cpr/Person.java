@@ -18,27 +18,25 @@ import com.trifork.stamdata.models.BaseTemporalEntity;
 @Entity
 public class Person extends BaseTemporalEntity
 {
-	protected Person()
+	public Person()
 	{
 	}
 
-	private String cpr;
-	
-	@Id
-	@Column
-	public String getCPR()
-	{
-		return cpr;
-	}
-	
-	public void setCPR(String cpr)
-	{
-		this.cpr = cpr;
-	}
+    public String cpr;
 
-	public String koen;
+    @Id
+    @Column
+    public String getCpr() {
+        return cpr;
+    }
 
-	public String fornavn;
+    public void setCpr(String cpr) {
+        this.cpr = cpr;
+    }
+
+    public String koen;
+
+    public String fornavn;
 
 	public String mellemnavn;
 
@@ -82,4 +80,180 @@ public class Person extends BaseTemporalEntity
 
 	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelsestartdato;
+
+    public String getKoen() {
+        return koen;
+    }
+
+    public void setKoen(String koen) {
+        this.koen = koen;
+    }
+
+    public String getFornavn() {
+        return fornavn;
+    }
+
+    public void setFornavn(String fornavn) {
+        this.fornavn = fornavn;
+    }
+
+    public String getMellemnavn() {
+        return mellemnavn;
+    }
+
+    public void setMellemnavn(String mellemnavn) {
+        this.mellemnavn = mellemnavn;
+    }
+
+    public String getEfternavn() {
+        return efternavn;
+    }
+
+    public void setEfternavn(String efternavn) {
+        this.efternavn = efternavn;
+    }
+
+    public String getCoNavn() {
+        return coNavn;
+    }
+
+    public void setCoNavn(String coNavn) {
+        this.coNavn = coNavn;
+    }
+
+    public String getLokalitet() {
+        return lokalitet;
+    }
+
+    public void setLokalitet(String lokalitet) {
+        this.lokalitet = lokalitet;
+    }
+
+    public String getVejnavn() {
+        return vejnavn;
+    }
+
+    public void setVejnavn(String vejnavn) {
+        this.vejnavn = vejnavn;
+    }
+
+    public String getBygningsnummer() {
+        return bygningsnummer;
+    }
+
+    public void setBygningsnummer(String bygningsnummer) {
+        this.bygningsnummer = bygningsnummer;
+    }
+
+    public String getHusnummer() {
+        return husnummer;
+    }
+
+    public void setHusnummer(String husnummer) {
+        this.husnummer = husnummer;
+    }
+
+    public String getEtage() {
+        return etage;
+    }
+
+    public void setEtage(String etage) {
+        this.etage = etage;
+    }
+
+    public String getSideDoerNummer() {
+        return sideDoerNummer;
+    }
+
+    public void setSideDoerNummer(String sideDoerNummer) {
+        this.sideDoerNummer = sideDoerNummer;
+    }
+
+    public String getBynavn() {
+        return bynavn;
+    }
+
+    public void setBynavn(String bynavn) {
+        this.bynavn = bynavn;
+    }
+
+    public String getPostnummer() {
+        return postnummer;
+    }
+
+    public void setPostnummer(String postnummer) {
+        this.postnummer = postnummer;
+    }
+
+    public String getPostdistrikt() {
+        return postdistrikt;
+    }
+
+    public void setPostdistrikt(String postdistrikt) {
+        this.postdistrikt = postdistrikt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getGaeldendeCPR() {
+        return gaeldendeCPR;
+    }
+
+    public void setGaeldendeCPR(String gaeldendeCPR) {
+        this.gaeldendeCPR = gaeldendeCPR;
+    }
+
+    public Date getFoedselsdato() {
+        return foedselsdato;
+    }
+
+    public void setFoedselsdato(Date foedselsdato) {
+        this.foedselsdato = foedselsdato;
+    }
+
+    public String getStilling() {
+        return stilling;
+    }
+
+    public void setStilling(String stilling) {
+        this.stilling = stilling;
+    }
+
+    public String getVejKode() {
+        return vejKode;
+    }
+
+    public void setVejKode(String vejKode) {
+        this.vejKode = vejKode;
+    }
+
+    public String getKommuneKode() {
+        return kommuneKode;
+    }
+
+    public void setKommuneKode(String kommuneKode) {
+        this.kommuneKode = kommuneKode;
+    }
+
+    public Date getNavnebeskyttelseslettedato() {
+        return navnebeskyttelseslettedato;
+    }
+
+    public void setNavnebeskyttelseslettedato(Date navnebeskyttelseslettedato) {
+        this.navnebeskyttelseslettedato = navnebeskyttelseslettedato;
+    }
+
+    public Date getNavnebeskyttelsestartdato() {
+        return navnebeskyttelsestartdato;
+    }
+
+    public void setNavnebeskyttelsestartdato(Date navnebeskyttelsestartdato) {
+        this.navnebeskyttelsestartdato = navnebeskyttelsestartdato;
+    }
 }

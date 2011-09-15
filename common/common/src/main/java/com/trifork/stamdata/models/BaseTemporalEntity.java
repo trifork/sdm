@@ -11,7 +11,7 @@ import javax.persistence.Temporal;
 @MappedSuperclass
 public abstract class BaseTemporalEntity implements TemporalEntity
 {
-	private Date validFrom, validTo;
+	private Date validFrom, validTo, modifiedDate, createdDate;
 
 	@Column
 	@Temporal(TIMESTAMP)
@@ -36,4 +36,29 @@ public abstract class BaseTemporalEntity implements TemporalEntity
 	{
 		this.validTo = validTo;
 	}
+
+
+    @Column
+    @Temporal(TIMESTAMP)
+    public Date getModifiedDate()
+    {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate)
+    {
+        this.modifiedDate = modifiedDate;
+    }
+
+    @Column
+    @Temporal(TIMESTAMP)
+    public Date getCreatedDate()
+    {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate)
+    {
+        this.createdDate = createdDate;
+    }
 }
