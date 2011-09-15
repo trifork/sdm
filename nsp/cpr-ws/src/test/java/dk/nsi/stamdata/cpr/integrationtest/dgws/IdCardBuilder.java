@@ -26,36 +26,42 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Linking;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.Timestamp;
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.*;
-import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
-import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.vault.CredentialVault;
-import dk.sosi.seal.vault.GenericCredentialVault;
-import dk.sosi.seal.xml.XmlUtil;
+import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Calendar;
+import java.util.Properties;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.*;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.Linking;
+import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.cpr.ws.Timestamp;
+import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.AuthenticationLevel;
+import dk.sosi.seal.model.CareProvider;
+import dk.sosi.seal.model.Request;
+import dk.sosi.seal.model.SignatureUtil;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
+import dk.sosi.seal.pki.Federation;
+import dk.sosi.seal.vault.CredentialVault;
+import dk.sosi.seal.vault.GenericCredentialVault;
+import dk.sosi.seal.xml.XmlUtil;
 
 public class IdCardBuilder {
 
