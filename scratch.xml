@@ -1,0 +1,151 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+    <S:Header xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"
+              xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+              xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+              xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <ns18:Security xmlns="http://www.w3.org/2000/09/xmldsig#"
+                       xmlns:ns10="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+                       xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+                       xmlns:ns12="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+                       xmlns:ns13="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+                       xmlns:ns14="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+                       xmlns:ns15="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+                       xmlns:ns16="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+                       xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/"
+                       xmlns:ns18="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                       xmlns:ns19="urn:oasis:names:tc:SAML:2.0:assertion"
+                       xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+                       xmlns:ns20="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                       xmlns:ns21="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                       xmlns:ns3="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+                       xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+                       xmlns:ns5="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+                       xmlns:ns6="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+                       xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+                       xmlns:ns8="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+                       xmlns:ns9="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+            <wsu:Timestamp>
+                <wsu:Created>2011-09-15T08:16:39Z</wsu:Created>
+            </wsu:Timestamp>
+            <saml:Assertion IssueInstant="2011-09-15T08:11:39Z" Version="2.0" id="IDCard">
+                <saml:Issuer>TheSOSILibrary</saml:Issuer>
+                <saml:Subject>
+                    <saml:NameID Format="medcom:other">Trifork</saml:NameID>
+                    <saml:SubjectConfirmation>
+                        <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:2.0:cm:holder-of-key</saml:ConfirmationMethod>
+                        <saml:SubjectConfirmationData>
+                            <ds:KeyInfo>
+                                <ds:KeyName>OCESSignature</ds:KeyName>
+                            </ds:KeyInfo>
+                        </saml:SubjectConfirmationData>
+                    </saml:SubjectConfirmation>
+                </saml:Subject>
+                <saml:Conditions NotBefore="2011-09-15T08:11:39Z" NotOnOrAfter="2011-09-16T08:11:39Z"/>
+                <saml:AttributeStatement id="IDCardData">
+                    <saml:Attribute Name="sosi:IDCardID">
+                        <saml:AttributeValue>0wAQ+EgA8JXoAQIoh9Z/aw==</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="sosi:IDCardVersion">
+                        <saml:AttributeValue>1.0.1</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="sosi:IDCardType">
+                        <saml:AttributeValue>system</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="sosi:AuthenticationLevel">
+                        <saml:AttributeValue>3</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="sosi:OCESCertHash">
+                        <saml:AttributeValue>pFQXTvhBFAsCwPy2VkYI6GDTnFQ=</saml:AttributeValue>
+                    </saml:Attribute>
+                </saml:AttributeStatement>
+                <saml:AttributeStatement id="SystemLog">
+                    <saml:Attribute Name="medcom:ITSystemName">
+                        <saml:AttributeValue>bar</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="medcom:CareProviderID" NameFormat="medcom:cvrnumber">
+                        <saml:AttributeValue>123</saml:AttributeValue>
+                    </saml:Attribute>
+                    <saml:Attribute Name="medcom:CareProviderName">
+                        <saml:AttributeValue>foo</saml:AttributeValue>
+                    </saml:Attribute>
+                </saml:AttributeStatement>
+                <ds:Signature id="OCESSignature">
+                    <ds:SignedInfo>
+                        <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                        <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                        <ds:Reference URI="#IDCard">
+                            <ds:Transforms>
+                                <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                            </ds:Transforms>
+                            <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                            <ds:DigestValue>aTdxd6V8y2rEcan4dgJdnSl/Pbc=</ds:DigestValue>
+                        </ds:Reference>
+                    </ds:SignedInfo>
+                    <ds:SignatureValue>
+                        FL6f6EOqmX081G0tyu8NO1TkgWITAqDITW+FYMJha7jM7qRhrKLuD9HaUZiKFl+MPY2WjwMvrNqCrQCi0qWRfwQqIVj9UNNy97HTc0SCG5l1q0ESOF1KWM7XH685ySk1PSDO+3aP1h3SX6Vbyf60nPyKQhgr7w7N7CzT6qXZKvc=
+                    </ds:SignatureValue>
+                    <ds:KeyInfo>
+                        <ds:X509Data>
+                            <ds:X509Certificate>
+                                MIIFBjCCBG+gAwIBAgIEQDeviTANBgkqhkiG9w0BAQUFADA/MQswCQYDVQQGEwJESzEMMAoGA1UEChMDVERDMSIwIAYDVQQDExlUREMgT0NFUyBTeXN0ZW10ZXN0IENBIElJMB4XDTEwMTExMDEzMjUwMFoXDTEyMTExMDEzNTUwMFowgYMxCzAJBgNVBAYTAkRLMSgwJgYDVQQKEx9EYW5za2UgUmVnaW9uZXIgLy8gQ1ZSOjU1ODMyMjE4MUowIQYDVQQDExpEYW5za2UgUmVnaW9uZXIgLSBTT1NJIFNUUzAlBgNVBAUTHkNWUjo1NTgzMjIxOC1VSUQ6MTE2MzQ0NzM2ODYyNzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAuw7xSHEdBuhZZDhpPrW3OZ1qEXSf5GHC/Q/mYguyd+pFmUwPico+dLOTroKlTem3LsNgkIJRbKidTaEamyrt/VSg3sH3rVsYh3Cs9jgpMs2N6BJzIkRcmpiFWhMZcej++mZsntxiG2QyVKXj+bYPPV/El4xzeTqwyAYOgAIwn+sCAwEAAaOCAsgwggLEMA4GA1UdDwEB/wQEAwIDuDArBgNVHRAEJDAigA8yMDEwMTExMDEzMjUwMFqBDzIwMTIxMTEwMTM1NTAwWjBGBggrBgEFBQcBAQQ6MDgwNgYIKwYBBQUHMAGGKmh0dHA6Ly90ZXN0Lm9jc3AuY2VydGlmaWthdC5kay9vY3NwL3N0YXR1czCCAQMGA1UdIASB+zCB+DCB9QYJKQEBAQEBAQEDMIHnMC8GCCsGAQUFBwIBFiNodHRwOi8vd3d3LmNlcnRpZmlrYXQuZGsvcmVwb3NpdG9yeTCBswYIKwYBBQUHAgIwgaYwChYDVERDMAMCAQEagZdUREMgVGVzdCBDZXJ0aWZpa2F0ZXIgZnJhIGRlbm5lIENBIHVkc3RlZGVzIHVuZGVyIE9JRCAxLjEuMS4xLjEuMS4xLjEuMS4zLiBUREMgVGVzdCBDZXJ0aWZpY2F0ZXMgZnJvbSB0aGlzIENBIGFyZSBpc3N1ZWQgdW5kZXIgT0lEIDEuMS4xLjEuMS4xLjEuMS4xLjMuMBcGCWCGSAGG+EIBDQQKFghvcmdhbldlYjAdBgNVHREEFjAUgRJkcmlmdHZhZ3RAZGFuaWQuZGswgZcGA1UdHwSBjzCBjDBXoFWgU6RRME8xCzAJBgNVBAYTAkRLMQwwCgYDVQQKEwNUREMxIjAgBgNVBAMTGVREQyBPQ0VTIFN5c3RlbXRlc3QgQ0EgSUkxDjAMBgNVBAMTBUNSTDI1MDGgL6AthitodHRwOi8vdGVzdC5jcmwub2Nlcy5jZXJ0aWZpa2F0LmRrL29jZXMuY3JsMB8GA1UdIwQYMBaAFByYCUcaTDi5EMUEKVvx9E6Aasx+MB0GA1UdDgQWBBSNZVo8u8hK4bUxiYRFXitISMp4GDAJBgNVHRMEAjAAMBkGCSqGSIb2fQdBAAQMMAobBFY3LjEDAgOoMA0GCSqGSIb3DQEBBQUAA4GBACcHdr74A1eDrbIyoAfuRdIkMZ183sxlcsONxUz9q5kOS97vOdwzWIgCqWD3L2C/+Bd9uFw2krcVwsN9IS++FiRPiswOWBUDAt6gR649sKWtlDF9mEscCizBh5F5oZdVGXMiFfXucbEU4tB4JwltbQva6+8FdPzgtgB+3+vgYxpc
+                            </ds:X509Certificate>
+                        </ds:X509Data>
+                    </ds:KeyInfo>
+                </ds:Signature>
+            </saml:Assertion>
+        </ns18:Security>
+        <ns9:Header xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:ns10="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+                    xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+                    xmlns:ns12="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+                    xmlns:ns13="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+                    xmlns:ns14="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+                    xmlns:ns15="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+                    xmlns:ns16="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+                    xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/"
+                    xmlns:ns18="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                    xmlns:ns19="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+                    xmlns:ns20="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                    xmlns:ns21="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                    xmlns:ns3="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+                    xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+                    xmlns:ns5="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+                    xmlns:ns6="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+                    xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+                    xmlns:ns8="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+                    xmlns:ns9="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+            <medcom:SecurityLevel>3</medcom:SecurityLevel>
+            <medcom:Linking>
+                <medcom:FlowID>b5643cb7-d84f-415c-90f6-f1b76ee2e300</medcom:FlowID>
+                <medcom:MessageID>AAABMmwosv62O53Yy4Z3BlNPU0k=</medcom:MessageID>
+            </medcom:Linking>
+            <medcom:RequireNonRepudiationReceipt>no</medcom:RequireNonRepudiationReceipt>
+        </ns9:Header>
+    </S:Header>
+    <S:Body>
+        <ns21:getPersonInformationIn xmlns="http://www.w3.org/2000/09/xmldsig#"
+                                     xmlns:ns10="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+                                     xmlns:ns11="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+                                     xmlns:ns12="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+                                     xmlns:ns13="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+                                     xmlns:ns14="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+                                     xmlns:ns15="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+                                     xmlns:ns16="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+                                     xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/"
+                                     xmlns:ns18="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+                                     xmlns:ns19="urn:oasis:names:tc:SAML:2.0:assertion"
+                                     xmlns:ns2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+                                     xmlns:ns20="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+                                     xmlns:ns21="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
+                                     xmlns:ns3="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+                                     xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+                                     xmlns:ns5="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/"
+                                     xmlns:ns6="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+                                     xmlns:ns7="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+                                     xmlns:ns8="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+                                     xmlns:ns9="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+            <ns6:PersonCivilRegistrationIdentifier>1111111111</ns6:PersonCivilRegistrationIdentifier>
+        </ns21:getPersonInformationIn>
+    </S:Body>
+</S:Envelope>

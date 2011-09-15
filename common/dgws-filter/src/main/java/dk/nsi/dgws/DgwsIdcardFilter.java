@@ -16,9 +16,9 @@ import org.w3c.dom.Document;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -51,7 +51,7 @@ public class DgwsIdcardFilter implements Filter
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
 		// We only accept HTTP requests.
 		
@@ -78,12 +78,14 @@ public class DgwsIdcardFilter implements Filter
 			// Rip out the ID Card and cram it into the request context.
 			
 			Reader input = request.getReader();
-			String xml = IOUtils.toString(input);
+			final String xml = IOUtils.toString(input);
+
+            System.out.println("requestXml=" + xml);
 
 			Request sealRequest = factory.deserializeRequest(xml);
 			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, sealRequest.getIDCard());
 
-			chain.doFilter(request, response);
+            chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
 		}
 		catch (Exception e)
 		{
@@ -110,3 +112,28 @@ public class DgwsIdcardFilter implements Filter
 	{
 	}
 }
+
+class RequestWrapperWithSavedBody extends HttpServletRequestWrapper {
+ private final String body;
+ public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException {
+   super(request);
+   body = requestBody;
+ }
+
+ @Override
+ public ServletInputStream getInputStream() throws IOException {
+   final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+   ServletInputStream servletInputStream = new ServletInputStream() {
+     public int read() throws IOException {
+       return byteArrayInputStream.read();
+     }
+   };
+   return servletInputStream;
+ }
+
+ @Override
+ public BufferedReader getReader() throws IOException {
+   return new BufferedReader(new InputStreamReader(this.getInputStream()));
+ }
+}
+

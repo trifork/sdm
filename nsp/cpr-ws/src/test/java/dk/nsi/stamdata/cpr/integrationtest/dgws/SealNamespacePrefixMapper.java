@@ -37,10 +37,10 @@ import java.util.Map;
  * 
  */
 public class SealNamespacePrefixMapper extends NamespacePrefixMapper {
+	public static Map<String, String> prefixMap = new HashMap<String, String>();
 
-	private Map<String, String> prefixMap = new HashMap<String, String>();
-
-	{
+	static
+    {
 		// Essential for seal validation
 		prefixMap.put("urn:oasis:names:tc:SAML:2.0:assertion", "saml");
 		prefixMap.put("http://www.w3.org/2000/09/xmldsig#", "ds");

@@ -46,6 +46,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
@@ -155,8 +156,6 @@ public class IdCardBuilder {
 		SOSIFactory factory = new SOSIFactory(federation, vault, properties);
 
 		Security security = new Security();
-		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = domFactory.newDocumentBuilder();
 
 		// Marshalling security container
 		MarshallerFactories.SecurityMarshallerFactory marshallerFactory = new MarshallerFactories.SecurityMarshallerFactory();
@@ -166,6 +165,8 @@ public class IdCardBuilder {
 		marshaller.marshal(security, writer);
 
 		// Parsing security container to generic Document
+        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = domFactory.newDocumentBuilder();
 		Document doc = builder.parse(IOUtils.toInputStream(writer.toString()));
 
 		Request request = getRequest(auth, factory, careProviderId, careProviderName, itSystemName);
@@ -178,14 +179,16 @@ public class IdCardBuilder {
 
 		// Unmarshall the new security object including the idCard
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-		Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(XmlUtil.node2String(doc)));
-		Timestamp timeStamp = new Timestamp();
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-		cal.setTime(request.getCreationDate());
-		cal.set(Calendar.MILLISECOND, 0);
-		timeStamp.setCreated(DatatypeFactory.newInstance().newXMLGregorianCalendar((GregorianCalendar)cal));
-		securityResult.setTimestamp(timeStamp);
-		SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
+        String securityHeaderSerialized = XmlUtil.node2String(doc);
+        System.out.println("securityHeaderSerialized=" + securityHeaderSerialized);
+        Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(securityHeaderSerialized));
+        Timestamp timeStamp = new Timestamp();
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.setTime(request.getCreationDate());
+        cal.set(Calendar.MILLISECOND, 0);
+        timeStamp.setCreated(cal);
+        securityResult.setTimestamp(timeStamp);
+        SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
 
 		return wrap;
 	}

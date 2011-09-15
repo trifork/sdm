@@ -2,6 +2,7 @@ package dk.nsi.stamdata.cpr.integrationtest;
 
 import dk.nsi.stamdata.cpr.DetGodeCPROpslagFaultMessages;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.ws.*;
 import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
@@ -12,17 +13,24 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.MethodRule;
+import org.w3c.dom.*;
+import org.w3c.dom.Node;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.DetailEntry;
-import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.*;
 import javax.xml.ws.Holder;
+import javax.xml.ws.handler.Handler;
+import javax.xml.ws.handler.HandlerResolver;
+import javax.xml.ws.handler.MessageContext;
+import javax.xml.ws.handler.PortInfo;
+import javax.xml.ws.handler.soap.SOAPHandler;
+import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.SOAPFaultException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class DetGodeCPROpslagIntegrationTest {
@@ -42,7 +50,65 @@ public class DetGodeCPROpslagIntegrationTest {
     @Before
     public void setupClient() throws MalformedURLException {
         URL wsdlLocation = new URL("http://localhost:8100/service/opslag?wsdl");
-        opslag = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE).getDetGodeCPROpslag();
+        DetGodeCPROpslagService service = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
+        HandlerResolver handlerResolver = new HandlerResolver() {
+            @Override
+            public List<Handler> getHandlerChain(PortInfo portInfo) {
+                List<Handler> handlers = new ArrayList<Handler>(1);
+                handlers.add(new SOAPHandler<SOAPMessageContext>() {
+                    private Map<String,String> prefixMap = SealNamespacePrefixMapper.prefixMap;
+
+                    @Override
+                    public Set<QName> getHeaders() {
+                        return null;
+                    }
+
+                    @Override
+                    public boolean handleMessage(SOAPMessageContext context) {
+                        try {
+                            SOAPHeader soapHeader = context.getMessage().getSOAPHeader();
+
+                            for (Map.Entry<String, String> prefixMapEntry: prefixMap.entrySet()) {
+                                soapHeader.addNamespaceDeclaration(prefixMapEntry.getValue(), prefixMapEntry.getKey());
+                            }
+
+                            Iterator iterator = soapHeader.examineAllHeaderElements();
+                            while (iterator.hasNext()) {
+                                SOAPHeaderElement element = (SOAPHeaderElement)iterator.next();
+                                changePrefix(element.getChildNodes());
+                            }
+                        } catch (SOAPException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        return true;
+                    }
+
+                    private void changePrefix(NodeList elementsToProcess) {
+                        for (int i = 0; i < elementsToProcess.getLength(); i++) {
+                            Node node = elementsToProcess.item(i);
+                            String nodeNS = node.getNamespaceURI();
+                            if (prefixMap.containsKey(nodeNS)) {
+                                node.setPrefix(prefixMap.get(nodeNS));
+                            }
+
+                            changePrefix(node.getChildNodes());
+                        }
+                    }
+
+                    @Override
+                    public boolean handleFault(SOAPMessageContext context) {
+                        return true;
+                    }
+
+                    @Override
+                    public void close(MessageContext context) { }
+                });
+                return handlers;
+            }
+        };
+        service.setHandlerResolver(handlerResolver);
+        opslag = service.getDetGodeCPROpslag();
     }
 
 	@Test
