@@ -50,7 +50,7 @@ public class ApplicationController extends GuiceServletContextListener
 				
 				bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class);
 				bind(Session.class).toProvider(SessionProvider.class);
-				
+
 				bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
 				install(new MonitoringModule());
 			}

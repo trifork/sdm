@@ -1,5 +1,6 @@
 package dk.nsi.stamdata.cpr.integrationtest;
 
+import com.google.common.collect.Lists;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -14,6 +15,7 @@ import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+import javassist.bytecode.stackmap.MapMaker;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
 import org.hisrc.hifaces20.testing.webappenvironment.annotations.PropertiesWebAppEnvironmentConfig;
@@ -74,6 +76,8 @@ public class DetGodeCPROpslagIntegrationTest {
         });
 
         session = injector.getInstance(Session.class);
+
+        purgePersontable();
     }
 
     @Before
@@ -115,7 +119,7 @@ public class DetGodeCPROpslagIntegrationTest {
     @Test
     public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception {
         GetPersonInformationIn request = new GetPersonInformationIn();
-        request.setPersonCivilRegistrationIdentifier("1111111111");
+        request.setPersonCivilRegistrationIdentifier("7777777777");
 
         try {
             SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
@@ -144,8 +148,7 @@ public class DetGodeCPROpslagIntegrationTest {
 
     @Test
     public void requestWithWhitelistedCvrAndExistingPersonGivesPersonInformation() throws Exception {
-        purgePersontable();
-
+        session.getTransaction().begin();
         Person person = new Person();
         person.cpr="1111111111";
         person.koen="M";
@@ -156,7 +159,6 @@ public class DetGodeCPROpslagIntegrationTest {
         person.setValidFrom(DateTime.now().minusDays(1).toDate());
         person.setValidTo(DateTime.now().plusDays(1).toDate());
 
-        session.getTransaction().begin();
         session.save(person);
         session.flush();
         session.getTransaction().commit();
