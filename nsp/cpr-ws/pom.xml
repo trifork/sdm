@@ -21,13 +21,13 @@
           <artifactId>seal-jboss6</artifactId>
           <version>2.1.0</version>
         </dependency>
-		<dependency>
-			<groupId>com.sun.xml.ws</groupId>
-			<artifactId>jaxws-rt</artifactId>
-			<version>2.2.3</version>
-			<scope>runtime</scope>
-		</dependency>
-		
+
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-rt</artifactId>
+            <version>2.1.7</version>
+        </dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -137,9 +137,6 @@
 					<wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl/</wsdlDirectory>
 					<sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
 					<packageName>dk.nsi.stamdata.cpr.ws</packageName>
-                    <args>
-                        <arg>-Xendorsed</arg>
-                    </args>
 				</configuration>
                 <dependencies>
                     <dependency>

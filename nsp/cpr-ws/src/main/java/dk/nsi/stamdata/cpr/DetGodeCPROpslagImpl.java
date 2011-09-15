@@ -9,6 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
@@ -23,7 +24,6 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
 
@@ -32,9 +32,6 @@ import dk.nsi.stamdata.cpr.annotations.Whitelist;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import dk.sosi.seal.model.constants.MedComTags;
-import dk.sosi.seal.model.constants.NameSpaces;
-import org.w3c.dom.Element;
 
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
@@ -82,25 +79,20 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
             @WebParam(name = "getPersonInformationIn",
                       targetNamespace = NS_TNS,
                       partName = "parameters")
-                      GetPersonInformationIn input)
-	{
+                      GetPersonInformationIn input) throws DGWSFault {
 		// 1. Check the white list to see if the client is authorized.
 
         String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
         String pnr = input.getPersonCivilRegistrationIdentifier();
 
-		if (!whitelist.contains(clientCVR))
-		{
-			logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, pnr);
-			
-			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
-		}
-		else
-		{
-			logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, pnr);
-		}
-		
-		// 2. Fetch the person from the database.
+        if (!whitelist.contains(clientCVR)) {
+            logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, pnr);
+            throwDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+        } else {
+            logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, pnr);
+        }
+
+        // 2. Fetch the person from the database.
 		//
 		// NOTE: Unfortunately the specification is defined so that we have to return a
 		// fault if no person is found. We cannot change this to return nil which would
@@ -108,14 +100,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		
 	    if (pnr == null)
 	    {
-            returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.", null);
+            returnSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 	    }
 
 		Person person = fetchPersonWithPnr(pnr);
 		
 		if (person == null)
 		{
-			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG, null);
+			returnSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		// We now have the requested person. Use it to fill in
@@ -142,7 +134,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     
     private SystemIDCard fetchIDCardFromRequestContext()
     {
-        HttpServletRequest servletRequest = (HttpServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
+        ServletRequest servletRequest = (ServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
         SystemIDCard idcard = (SystemIDCard)servletRequest.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
         
         // We are counting on the DGWS filter to inject the ID Card
@@ -169,8 +161,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			throw new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
 		}
 	}
-	
-	private void returnSOAPSenderFault(String message, @Nullable String medcomFaultcode)
+
+    private void throwDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault {
+        DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
+        medcomHeaderHolder.value.setFlowStatus(status);
+        throw new DGWSFault(errorMsg, "DGWS error");
+    }
+
+	private void returnSOAPSenderFault(String message)
 	{
 		checkNotNull(message, "message");
 		
@@ -190,18 +188,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			// even when the locale is set in this next call.
 			
 			fault.setFaultString(message);
-
-            if (medcomFaultcode != null)
-            {
-            	// If this is a medcom fault (e.g. the user's id card does not authorize him to use the service).
-            	// Need to return the appropriate fault details.
-            	
-                Element detail = factory.createDetail();
-                Element medcomFaultCode = detail.getOwnerDocument().createElementNS(NameSpaces.MEDCOM_SCHEMA, MedComTags.FAULT_CODE_PREFIXED);
-                medcomFaultCode.appendChild(detail.getOwnerDocument().createTextNode(medcomFaultcode));
-                detail.appendChild(medcomFaultCode);
-                fault.appendChild(detail);
-            }
 		}
 		catch (Exception e)
 		{

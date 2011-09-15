@@ -5,6 +5,7 @@ import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.ws.*;
+import dk.sosi.seal.model.constants.FaultCodeValues;
 import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
 import org.hisrc.hifaces20.testing.webappenvironment.annotations.PropertiesWebAppEnvironmentConfig;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.WebAppEnvironmentRule;
@@ -35,6 +36,8 @@ import static org.junit.Assert.fail;
 
 public class DetGodeCPROpslagIntegrationTest {
     public static final QName DET_GODE_CPR_OPSLAG_SERVICE = new QName("http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/", "DetGodeCPROpslagService");
+    public static final String CVR_WHITELISTED = "12345678";
+    public static final String CVR_NOT_WHITELISTED = "87654321";
     private WebAppEnvironment webAppEnvironment;
 
     @Rule
@@ -116,10 +119,9 @@ public class DetGodeCPROpslagIntegrationTest {
         GetPersonInformationIn request = new GetPersonInformationIn();
 
         try {
-            Header medcomHeader = null;
-            Security wsseHeader = new Security();
+            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-            opslag.getPersonInformation(new Holder<Security>(wsseHeader), new Holder<Header>(medcomHeader), request);
+            opslag.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
             fail("Expected SOAPFault");
         } catch (SOAPFaultException fault) {
             assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
@@ -132,10 +134,9 @@ public class DetGodeCPROpslagIntegrationTest {
         request.setPersonCivilRegistrationIdentifier("1111111111");
 
         try {
-            Header medcomHeader = null;
-            Security wsseHeader = new Security();
+            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-            opslag.getPersonInformation(new Holder<Security>(wsseHeader), new Holder<Header>(medcomHeader), request);
+            opslag.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
             fail("Expected SOAPFault");
         } catch (SOAPFaultException fault) {
             assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
@@ -148,16 +149,12 @@ public class DetGodeCPROpslagIntegrationTest {
         GetPersonInformationIn request = new GetPersonInformationIn();
         request.setPersonCivilRegistrationIdentifier("1111111111");
         try {
-            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper("123", "foo", "bar");
-
-            Assert.assertNotNull(securityHeaders.getSecurity());
-            Assert.assertNotNull(securityHeaders.getMedcomHeader());
+            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
 
             opslag.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-            fail("Expected SOAPFault");
-        } catch (SOAPFaultException fault) {
-            assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-            DetailEntry next = (DetailEntry)fault.getFault().getDetail().getDetailEntries().next();
+            fail("Expected DGWS");
+        } catch (DGWSFault fault) {
+            Assert.assertEquals(FaultCodeValues.NOT_AUTHORIZED, fault.getMessage());
         }
     }
 }
