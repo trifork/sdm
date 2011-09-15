@@ -37,19 +37,23 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
 
-public class DGWSHeaderUtil {
-
+public class DGWSHeaderUtil
+{
+	public static final String DGWS_ERROR_MSG = "DGWS error";
 	private static final String TIMEZONE = "UTC";
 
-	private DGWSHeaderUtil() {
+	private DGWSHeaderUtil()
+	{
 	}
 
-	public static void setHeadersToOutgoing(Holder<Security> wsseHeader, Holder<Header> medcomHeader) {
+	public static void setHeadersToOutgoing(Holder<Security> wsseHeader, Holder<Header> medcomHeader)
+	{
 		setSecurityHeaderToOutgoing(wsseHeader);
 		setMedcomHeaderToOutgoing(medcomHeader);
 	}
 
-	private static void setSecurityHeaderToOutgoing(Holder<Security> wsseHeader) {
+	private static void setSecurityHeaderToOutgoing(Holder<Security> wsseHeader)
+	{
 		Security sec = new Security();
 		Timestamp timestamp = new Timestamp();
 		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(TIMEZONE));
@@ -59,7 +63,8 @@ public class DGWSHeaderUtil {
 		wsseHeader.value = sec;
 	}
 
-	private static void setMedcomHeaderToOutgoing(Holder<Header> medcomHeader) {
+	private static void setMedcomHeaderToOutgoing(Holder<Header> medcomHeader)
+	{
 		Header medcom = new Header();
 		medcom.setFlowStatus(FlowStatusValues.FLOW_FINALIZED_SUCCESFULLY);
 
