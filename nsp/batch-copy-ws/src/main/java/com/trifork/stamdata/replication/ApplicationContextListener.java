@@ -23,19 +23,8 @@
 
 package com.trifork.stamdata.replication;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.util.List;
-import java.util.Properties;
-
-import org.slf4j.Logger;
-
 import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import com.google.inject.*;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.replication.db.DatabaseModule;
@@ -44,14 +33,18 @@ import com.trifork.stamdata.replication.monitoring.MonitoringModule;
 import com.trifork.stamdata.replication.security.UnrestrictedSecurityModule;
 import com.trifork.stamdata.replication.security.dgws.DGWSModule;
 import com.trifork.stamdata.replication.webservice.RegistryModule;
-
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
 import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
+import org.slf4j.Logger;
+
+import java.util.List;
+import java.util.Properties;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener
@@ -63,7 +56,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	@Override
 	protected Injector getInjector()
 	{
-		Injector injector = null;
+		Injector injector;
 		
 		Properties configuration = ConfigurationLoader.loadForName(COMPONENT_NAME);
 
@@ -117,7 +110,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 					public SOSIFactory provideSOSIFactory()
 					{
 						Properties encryption = SignatureUtil.setupCryptoProviderForJVM();
-						Federation federation = new SOSITestFederation(encryption, new InMemoryIntermediateCertificateCache());
+						Federation federation = new SOSITestFederation(encryption);
 						return new SOSIFactory(federation, new EmptyCredentialVault(), encryption);
 					}
 				});
@@ -134,7 +127,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 					public SOSIFactory provideSOSIFactory()
 					{
 						Properties encryption = SignatureUtil.setupCryptoProviderForJVM();
-						Federation federation = new SOSIFederation(encryption, new InMemoryIntermediateCertificateCache());
+						Federation federation = new SOSIFederation(encryption);
 						return new SOSIFactory(federation, new EmptyCredentialVault(), encryption);
 					}
 				});

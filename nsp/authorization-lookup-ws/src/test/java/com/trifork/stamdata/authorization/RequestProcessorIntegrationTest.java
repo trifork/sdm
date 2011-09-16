@@ -1,33 +1,10 @@
 package com.trifork.stamdata.authorization;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static com.trifork.stamdata.authorization.SOSITestConstants.TEST_CVR;
-import static com.trifork.stamdata.authorization.SOSITestConstants.TEST_IT_SYSTEM_NAME;
-import static com.trifork.stamdata.authorization.SOSITestConstants.TEST_STS_URL;
-import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
-import static java.lang.String.format;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Scanner;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import com.google.common.collect.ImmutableSet;
+import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.*;
+import dk.sosi.seal.pki.SOSITestFederation;
+import dk.sosi.seal.vault.ClasspathCredentialVault;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,19 +14,28 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.google.common.collect.ImmutableSet;
+import javax.xml.bind.JAXBContext;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
 
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.CareProvider;
-import dk.sosi.seal.model.IDCard;
-import dk.sosi.seal.model.Reply;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.SecurityTokenRequest;
-import dk.sosi.seal.model.SecurityTokenResponse;
-import dk.sosi.seal.model.SignatureUtil;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.SOSITestFederation;
-import dk.sosi.seal.vault.ClasspathCredentialVault;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.trifork.stamdata.authorization.SOSITestConstants.*;
+import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
+import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
+import static java.lang.String.format;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -68,7 +54,7 @@ public class RequestProcessorIntegrationTest {
 		context = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
 
 		Properties sosiProps = SignatureUtil.setupCryptoProviderForJVM();
-		SOSITestFederation federation = new SOSITestFederation(sosiProps, new InMemoryIntermediateCertificateCache());
+		SOSITestFederation federation = new SOSITestFederation(sosiProps);
 		factory = new SOSIFactory(federation, new ClasspathCredentialVault(sosiProps, SOSITestConstants.KEY_STORE_PASSWORD), sosiProps);
 
 		// Create a SEAL ID card.
@@ -87,7 +73,7 @@ public class RequestProcessorIntegrationTest {
 		// Check for errors.
 
 		if (response.isFault()) {
-			throw new Exception(format("STS Error: %s %s", response.getFaultCode(), response.getFaultString()));
+			throw new RuntimeException(format("STS Error: %s %s", response.getFaultCode(), response.getFaultString()));
 		}
 
 		// If all has gone well,
@@ -169,9 +155,9 @@ public class RequestProcessorIntegrationTest {
 		Transformer transformer = tFactory.newTransformer();
 		transformer.setOutputProperty("indent", "yes");
 		StringWriter sw = new StringWriter();
-		StreamResult result = new StreamResult(sw);
+		Result result = new StreamResult(sw);
 
-		DOMSource source = new DOMSource(doc);
+		Source source = new DOMSource(doc);
 
 		// Do the transformation and output
 		transformer.transform(source, result);
@@ -202,7 +188,7 @@ public class RequestProcessorIntegrationTest {
 			return streamToString(connection.getInputStream());
 		}
 		else {
-			throw new Exception(streamToString(connection.getErrorStream()));
+			throw new RuntimeException(streamToString(connection.getErrorStream()));
 		}
 	}
 

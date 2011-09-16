@@ -29,6 +29,7 @@ import static com.trifork.stamdata.views.Views.checkViewIntegrity;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.MULTILINE;
 
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -43,9 +44,7 @@ import com.trifork.stamdata.replication.models.ClientDao;
 import com.trifork.stamdata.replication.security.SecurityManager;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.Views;
-
-import dk.sosi.seal.xml.Base64;
-
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Manage all aspects of authentication and authorization for DGWS Token.
@@ -101,13 +100,23 @@ public class DGWSSecurityManager implements SecurityManager
 
 			authorizationDao.save(new Authorization(viewClass, cvr, expiryDate, token));
 
-			authorization = Base64.encode(token);
-		}
+            authorization = asString(new Base64().encode(token));
+        }
 		
 		return authorization;
 	}
 
-	@Override
+    private String asString(byte[] tokenInBase64) {
+        String authorization;
+        try {
+            authorization = new String(tokenInBase64, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("utf-8 not support", e);
+        }
+        return authorization;
+    }
+
+    @Override
 	public boolean isAuthorized(HttpServletRequest request) {
 
 		checkNotNull(request);
@@ -137,6 +146,6 @@ public class DGWSSecurityManager implements SecurityManager
 		if (header == null) return null;
 
 		Matcher matcher = authenticationRegex.matcher(header);
-		return matcher.find() ? Base64.decode(matcher.group(1)) : null;
+		return matcher.find() ? new Base64().decode(matcher.group(1)) : null;
 	}
 }

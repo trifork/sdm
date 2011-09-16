@@ -1,35 +1,27 @@
 package dk.nsi.stamdata.performance;
 
-import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
-
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Scanner;
+import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.*;
+import dk.sosi.seal.pki.SOSITestFederation;
+import dk.sosi.seal.vault.ClasspathCredentialVault;
+import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
+import org.apache.jmeter.samplers.SampleResult;
+import org.w3c.dom.Node;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Properties;
+import java.util.Scanner;
 
-import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
-import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
-import org.apache.jmeter.samplers.SampleResult;
-import org.w3c.dom.Node;
-
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.CareProvider;
-import dk.sosi.seal.model.IDCard;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.SecurityTokenRequest;
-import dk.sosi.seal.model.SecurityTokenResponse;
-import dk.sosi.seal.model.SignatureUtil;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
-import dk.sosi.seal.pki.SOSITestFederation;
-import dk.sosi.seal.vault.ClasspathCredentialVault;
+import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
+import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
 /**
  * This class is a JMeter plugin that contacts the STS and gets a valid IDCard.
@@ -60,7 +52,7 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 			result.setBytes(idCard.length());
 			result.setSuccessful(true);
 		}
-		catch (Exception e)
+		catch (Exception ignored)
 		{
 			result.setSuccessful(false);
 			result.setResponseCode("500");
@@ -74,7 +66,7 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 	private String createIdCard() throws Exception
 	{
 		Properties sosiProps = SignatureUtil.setupCryptoProviderForJVM();
-		SOSITestFederation federation = new SOSITestFederation(sosiProps, new InMemoryIntermediateCertificateCache());
+		SOSITestFederation federation = new SOSITestFederation(sosiProps);
 		SOSIFactory factory = new SOSIFactory(federation, new ClasspathCredentialVault(sosiProps, SOSITestConstants.KEY_STORE_PASSWORD), sosiProps);
 
 		// Create a SEAL ID card.
@@ -126,7 +118,7 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 
 		if (connection.getResponseCode() > 400)
 		{
-			throw new Exception(new Scanner(connection.getErrorStream()).useDelimiter("\\A").next());
+			throw new RuntimeException(new Scanner(connection.getErrorStream()).useDelimiter("\\A").next());
 		}
 
 		return new Scanner(connection.getInputStream()).useDelimiter("\\A").next();

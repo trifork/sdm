@@ -23,19 +23,6 @@
 
 package com.trifork.stamdata.authorization;
 
-import static dk.sosi.seal.model.SignatureUtil.setupCryptoProviderForJVM;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-
-import org.slf4j.Logger;
-
 import com.google.common.collect.Sets;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -44,13 +31,22 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.ConfigurationLoader;
-
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.pki.Federation;
-import dk.sosi.seal.pki.InMemoryIntermediateCertificateCache;
 import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
+import org.slf4j.Logger;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import java.util.Properties;
+import java.util.Set;
+
+import static dk.sosi.seal.model.SignatureUtil.setupCryptoProviderForJVM;
+import static org.slf4j.LoggerFactory.getLogger;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener
@@ -101,11 +97,11 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			{
 				logger.warn("Allowing ID Cards from the Test STS!");
 
-				federation = new SOSITestFederation(cryptoSettings, new InMemoryIntermediateCertificateCache());
+				federation = new SOSITestFederation(cryptoSettings);
 			}
 			else
 			{
-				federation = new SOSIFederation(cryptoSettings, new InMemoryIntermediateCertificateCache());
+				federation = new SOSIFederation(cryptoSettings);
 			}
 
 			final SOSIFactory sosiFactory = new SOSIFactory(federation, new EmptyCredentialVault(), cryptoSettings);
