@@ -50,7 +50,7 @@ import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.DateUtils;
 
 
-public class TakstImporterTest
+public class TakstImporterIntegrationTest
 {
 	@Before
 	@After

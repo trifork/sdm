@@ -41,7 +41,7 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.models.TemporalEntity;
 
-public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegationTest
+public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationTest
 {
 	@Test
 	public void testFetchVersionsAbeforeB() throws Exception

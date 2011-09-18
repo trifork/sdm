@@ -53,8 +53,6 @@ public class SorParserTest
 	public static File onePraksis;
 	public static File oneSygehus;
 	public static File oneApotek;
-	public static File fullSor;
-	public static File fullSor2;
 
 	public File getFile(String path)
 	{
@@ -67,10 +65,8 @@ public class SorParserTest
 		onePraksis = getFile("data/sor/ONE_PRAKSIS.xml");
 		oneSygehus = getFile("data/sor/ONE_SYGEHUS.xml");
 		oneApotek = getFile("data/sor/ONE_APOTEK.xml");
-		fullSor = getFile("data/sor/SOR_FULL.xml");
-		fullSor2 = getFile("data/sor/SOR_FULL2.xml");
-	}
-
+    }
+    
 	@Test
 	public void testSinglePraksis() throws Exception
 	{
@@ -212,37 +208,5 @@ public class SorParserTest
 
 		assertEquals(SOREventHandler.parseXSDDate("1995-02-20"), a.getValidFrom());
 		assertEquals(DateUtils.THE_END_OF_TIME, a.getValidTo());
-	}
-
-	@Test
-	public void testFullTest() throws Exception
-	{
-		SORDataSets dataSets = SORImporter.parse(fullSor);
-
-		Collection<Praksis> praksis = dataSets.getPraksisDS().getEntities();
-		Collection<Yder> yder = dataSets.getYderDS().getEntities();
-		Collection<Sygehus> sygehus = dataSets.getSygehusDS().getEntities();
-		Collection<SygehusAfdeling> sygehusAfdeling = dataSets.getSygehusAfdelingDS().getEntities();
-		Collection<Apotek> apotek = dataSets.getApotekDS().getEntities();
-
-		assertEquals(3148, praksis.size());
-		assertEquals(5434, yder.size());
-		assertEquals(469, sygehus.size());
-		assertEquals(2890, sygehusAfdeling.size());
-		assertEquals(328, apotek.size());
-
-		dataSets = SORImporter.parse(fullSor2);
-
-		praksis = dataSets.getPraksisDS().getEntities();
-		yder = dataSets.getYderDS().getEntities();
-		sygehus = dataSets.getSygehusDS().getEntities();
-		sygehusAfdeling = dataSets.getSygehusAfdelingDS().getEntities();
-		apotek = dataSets.getApotekDS().getEntities();
-
-		assertEquals(3159, praksis.size());
-		assertEquals(5456, yder.size());
-		assertEquals(475, sygehus.size());
-		assertEquals(2922, sygehusAfdeling.size());
-		assertEquals(329, apotek.size());
 	}
 }

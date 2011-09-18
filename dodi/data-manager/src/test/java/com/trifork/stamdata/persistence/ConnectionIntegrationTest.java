@@ -23,49 +23,19 @@
 
 package com.trifork.stamdata.persistence;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.Date;
+import junit.framework.TestCase;
 
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Test;
+import java.sql.Connection;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import org.junit.Test;
 
+public class ConnectionIntegrationTest {
 
-public class AbstractMySQLIntegationTest
-{
-	protected Date t0;
-	protected Date t1;
-	protected Date t2;
-	protected Date t3;
-	protected Date t4;
-	protected Date t1000;
-
-	@Before
-	public void setup() throws Exception
-	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate("truncate table TakstVersion");
-		stmt.close();
+    @Test
+	public void testConnection() throws Exception{
+		Connection con = MySQLConnectionManager.getConnection();
 		con.close();
 	}
 
-	@Before
-	public void initDates()
-	{
-		t0 = new DateTime(2000, 1, 1, 1, 2, 3, 0).toDate();
-		t1 = new DateTime(2001, 1, 1, 1, 2, 3, 0).toDate();
-		t2 = new DateTime(2002, 1, 1, 1, 2, 3, 0).toDate();
-		t3 = new DateTime(2003, 1, 1, 1, 2, 3, 0).toDate();
-		t4 = new DateTime(2003, 1, 1, 1, 2, 3, 0).toDate();
-		t1000 = new DateTime(3003, 1, 1, 1, 2, 3, 0).toDate();
-	}
-
-	@Test
-	public void dummyTest()
-	{
-	}
 }

@@ -47,7 +47,7 @@ import com.trifork.stamdata.importer.util.DateUtils;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
-public class MySQLDaoIntegrationTest extends AbstractMySQLIntegationTest
+public class MySQLDaoIntegrationTest extends AbstractMySQLIntegrationTest
 {
 	@Before
 	public void setupTable() throws SQLException

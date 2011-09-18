@@ -57,7 +57,7 @@ import com.trifork.stamdata.models.TemporalEntity;
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
-public class DoseringsforslagImporterTest
+public class DoseringsforslagImporterIntegrationTest
 {
 	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

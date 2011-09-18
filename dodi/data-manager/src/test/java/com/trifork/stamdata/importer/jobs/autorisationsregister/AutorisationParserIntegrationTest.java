@@ -41,9 +41,9 @@ import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
 
-public class AutorisationParserTest
+public class AutorisationParserIntegrationTest
 {
-	private static final File valid = FileUtils.toFile(AutorisationParserTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
+	private static final File valid = FileUtils.toFile(AutorisationParserIntegrationTest.class.getClassLoader().getResource("data/aut/valid/20090915AutDK.csv"));
 
 	private AutorisationImporter importer = new AutorisationImporter();
 
