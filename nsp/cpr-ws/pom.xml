@@ -72,6 +72,12 @@
             <artifactId>commons-lang</artifactId>
             <version>2.6</version>
         </dependency>
+
+        <dependency>
+            <groupId>dk.sdsd.nsp</groupId>
+            <artifactId>nsp-util</artifactId>
+            <version>1.0.5</version>
+        </dependency>
     </dependencies>
 
     <build>

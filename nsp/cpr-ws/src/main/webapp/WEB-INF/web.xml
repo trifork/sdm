@@ -18,11 +18,23 @@
 		<url-pattern>/status</url-pattern>
 	</filter-mapping>
 
-
-	<servlet>
-		<servlet-name>Det Gode CPR Opslag</servlet-name>
-		<servlet-class>dk.nsi.stamdata.cpr.DetGodeCPROpslagImpl</servlet-class>
-	</servlet>
+    <filter>
+        <filter-name>SlaLogFilter</filter-name>
+        <filter-class>dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter</filter-class>
+        <init-param>
+            <param-name>appName</param-name>
+            <param-value>Stamdata CPR service</param-value>
+        </init-param>
+        <init-param>
+            <param-name>shortAppName</param-name>
+            <param-value>stamdata-cpr</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>SlaLogFilter</filter-name>
+        <servlet-name>JAXWSServlet</servlet-name>
+    </filter-mapping>
 
 	<!-- JAX-WS -->
     <filter>
