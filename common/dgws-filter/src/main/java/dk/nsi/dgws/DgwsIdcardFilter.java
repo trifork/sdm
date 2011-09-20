@@ -33,7 +33,7 @@ public class DgwsIdcardFilter implements Filter
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
-		boolean useTestFederation = Boolean.valueOf(filterConfig.getInitParameter(USE_TESTFEDERATION_INIT_PARAM_KEY));
+		boolean useTestFederation = shouldWeUseTestFederation(filterConfig);
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
 		Federation federation;
@@ -50,7 +50,18 @@ public class DgwsIdcardFilter implements Filter
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
 	}
 
-	@Override
+    private Boolean shouldWeUseTestFederation(FilterConfig filterConfig) {
+        String initParameter = filterConfig.getInitParameter(USE_TESTFEDERATION_INIT_PARAM_KEY);
+        String sysProp = System.getProperty(USE_TESTFEDERATION_INIT_PARAM_KEY);
+        if (sysProp != null) {
+            return Boolean.valueOf(sysProp);
+        } else {
+            return Boolean.valueOf(initParameter);
+        }
+    }
+
+
+    @Override
 	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
 		// We only accept HTTP requests.
