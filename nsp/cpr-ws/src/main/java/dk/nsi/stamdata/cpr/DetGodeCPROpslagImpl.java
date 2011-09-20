@@ -6,7 +6,6 @@ import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
-
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.annotations.Whitelist;
 import dk.nsi.stamdata.cpr.ws.*;
@@ -161,7 +160,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		Sikrede sikrede = null; // TODO: Fetch the "sikrede" record for the pnr.
 		
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
-		
+
 		try
 		{
 			output.setPersonWithHealthCareInformationStructure(personWithHealthCareMapper.map(person, sikrede));
@@ -251,12 +250,12 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		if (!whitelist.contains(clientCVR))
 		{
-            logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+            logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
             throw DGWSFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
         }
 		else
 		{
-            logger.info("Access granted. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+            logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
         }
 	}
 }
