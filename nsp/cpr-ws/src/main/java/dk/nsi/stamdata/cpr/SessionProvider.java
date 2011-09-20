@@ -1,5 +1,6 @@
 package dk.nsi.stamdata.cpr;
 
+import com.trifork.stamdata.models.sikrede.Yderregister;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -36,7 +37,8 @@ public class SessionProvider implements Provider<Session>
 		config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
 
 		config.addAnnotatedClass(Person.class);
-		
+		config.addAnnotatedClass(Yderregister.class);
+
 		sessionFactory = config.buildSessionFactory();
 		sessionFactory.openSession().isConnected();
 	}

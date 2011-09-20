@@ -13,6 +13,7 @@ import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.engine.profile.Fetch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,13 +23,9 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.ServletRequest;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.soap.SOAPFactory;
-import javax.xml.soap.SOAPFault;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
-import javax.xml.ws.soap.SOAPFaultException;
 import java.util.Set;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
@@ -58,8 +55,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
     @Resource
     private WebServiceContext context;
-	
-	@PostConstruct
+    private final DGWSFaultUtil DGWSFaultUtil = new DGWSFaultUtil();
+
+    @PostConstruct
 	protected void init()
 	{
 		// This is a bit of a hack allowing Guice to inject
@@ -118,7 +116,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         }
         catch (DatatypeConfigurationException e)
         {
-            throw newServerErrorFault(e);
+            throw DGWSFaultUtil.newServerErrorFault(e);
         }
         
         output.setPersonInformationStructure(personInformation);
@@ -170,7 +168,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (DatatypeConfigurationException e)
 		{
-			throw newServerErrorFault(e);
+			throw DGWSFaultUtil.newServerErrorFault(e);
 		}
 		
 		return output;
@@ -206,68 +204,43 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw newServerErrorFault(e);
+			throw DGWSFaultUtil.newServerErrorFault(e);
 		}
 
 		if (person == null)
 		{
-			throw newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+
+            throw DGWSFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		return person;
 	}
 
-	private DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
-	{
-		DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
-		medcomHeaderHolder.value.setFlowStatus(status);
-		
-		return new DGWSFault(errorMsg, DGWSHeaderUtil.DGWS_ERROR_MSG);
-	}
+    private Sikrede fetchSikredeWithPnr(String pnr) {
+        checkNotNull(pnr);
 
-	private SOAPFaultException newSOAPSenderFault(String message)
-	{
-		checkNotNull(message, "message");
-		
-		SOAPFault fault;
-		
-		try
+        Sikrede sikrede = null;
+
+        try {
+            Fetcher fetcher = fetcherPool.get();
+            sikrede = fetcher.fetch(Sikrede.class, pnr);
+        } catch (Exception e) {
+            throw DGWSFaultUtil.newServerErrorFault(e);
+        }
+
+        if (sikrede == null)
 		{
-			// We have to make sure to use the same protocol version
-			// as defined in the WSDL.
-			
-			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
-			
-			fault = factory.createFault();
-			fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
-			
-			// TODO: For some reason the xml:lang att. is always "en"
-			// even when the locale is set in this next call.
-			
-			fault.setFaultString(message);
+            throw DGWSFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
-		catch (Exception e)
-		{
-			throw newServerErrorFault(e);
-		}
-		
-		return new SOAPFaultException(fault);
-	}
-	
-
-	private RuntimeException newServerErrorFault(Exception e)
-	{
-		checkNotNull(e, "e");
-		
-		return new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
-	}
-
+        
+        return sikrede;
+    }
 
 	private void checkInputParameters(String pnr)
 	{
 		if (StringUtils.isBlank(pnr))
 		{
-			throw newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+			throw DGWSFaultUtil.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 		}
 	}
 
@@ -279,7 +252,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		if (!whitelist.contains(clientCVR))
 		{
             logger.warn("Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-            throw newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+            throw DGWSFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
         }
 		else
 		{

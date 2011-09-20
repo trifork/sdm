@@ -57,6 +57,8 @@
                           </excludes>
                           <includes>
                               <include>**/*IntegrationTest*</include>
+                              <include>**/*DaoTest*</include>
+                              <include>**/*ViewTest*</include>
                           </includes>
                       </configuration>
                   </execution>
