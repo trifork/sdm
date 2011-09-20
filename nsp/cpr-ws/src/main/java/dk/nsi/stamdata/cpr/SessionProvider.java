@@ -1,5 +1,6 @@
 package dk.nsi.stamdata.cpr;
 
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,6 +39,7 @@ public class SessionProvider implements Provider<Session>
 
 		config.addAnnotatedClass(Person.class);
 		config.addAnnotatedClass(Yderregister.class);
+		config.addAnnotatedClass(SikredeYderRelation.class);
 
 		sessionFactory = config.buildSessionFactory();
 		sessionFactory.openSession().isConnected();

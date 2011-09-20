@@ -223,7 +223,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
         try {
             Fetcher fetcher = fetcherPool.get();
-            sikrede = fetcher.fetch(Sikrede.class, pnr);
+            //sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO 
         } catch (Exception e) {
             throw DGWSFaultUtil.newServerErrorFault(e);
         }

@@ -30,30 +30,13 @@ import static org.junit.Assert.assertTrue;
  * @Author frj
  */
 
-public class YderregisterDaoTest {
-    private Session session;
-    private Fetcher fetcher;
-    private Yderregister yderregister;
-
+public class YderregisterDaoTest extends AbstractDaoTest {
     @Before
-    public void setupSession() {
-        Injector injector = Guice.createInjector(new AbstractModule() {
-            @Override
-            protected void configure() {
-                Properties properties = ConfigurationLoader.loadForName(ApplicationController.COMPONENT_NAME);
-                bind(Session.class).toProvider(SessionProvider.class);
-                Names.bindProperties(binder(), properties);
-            }
-        });
-
-        session = injector.getInstance(Session.class);
-        fetcher = injector.getInstance(Fetcher.class);
-
-        purgeYderregistertable();
+    public void init() {
+        purgeTable("Yderregister");
     }
 
     private void insertInYderregistertable() {
-        session.getTransaction().begin();
         Yderregister yderregister = new Yderregister();
         yderregister.setNummer(1234);
         yderregister.setBynavn("test");
@@ -62,17 +45,11 @@ public class YderregisterDaoTest {
         yderregister.setValidFrom(DateTime.now().minusDays(1).toDate());
         yderregister.setValidTo(DateTime.now().plusDays(1).toDate());
 
-        session.save(yderregister);
-        session.flush();
-        session.getTransaction().commit();
-    }
-
-    private void purgeYderregistertable() {
-        session.createSQLQuery("TRUNCATE Yderregister").executeUpdate();
+        insertInTable(yderregister);
     }
 
     @Test
-    public void assertTheTruth() throws SQLException {
+    public void verifyMapping() throws SQLException {
         assertTrue(true);
         insertInYderregistertable();
 
