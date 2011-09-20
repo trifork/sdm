@@ -9,13 +9,9 @@ import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.BaseTemporalEntity;
 import dk.nsi.stamdata.cpr.ApplicationController;
 import dk.nsi.stamdata.cpr.SessionProvider;
-import org.bouncycastle.asn1.cmp.ProtectedPart;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.CORBA.TRANSACTION_MODE;
 
 import java.sql.SQLException;
 import java.util.Properties;
@@ -46,25 +42,18 @@ public abstract class AbstractDaoTest {
 
         session = injector.getInstance(Session.class);
         fetcher = injector.getInstance(Fetcher.class);
-
-        Transaction transaction = session.getTransaction();
-        
-        session.getTransaction().begin();
     }
 
     protected void purgeTable(String table) {
         assertNotNull(table);
-        session.createSQLQuery("TRUNCATE "+table).executeUpdate();
+        session.createSQLQuery("TRUNCATE " + table).executeUpdate();
     }
 
     protected void insertInTable(BaseTemporalEntity entity) {
+        session.getTransaction().begin();
         session.save(entity);
         session.flush();
-    }
-
-    @AfterClass
-    public static void rollback() {
-        session.getTransaction().rollback();
+        session.getTransaction().commit();
     }
 
     @Test
