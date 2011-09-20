@@ -6,6 +6,7 @@ import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ApplicationController;
 import dk.nsi.stamdata.cpr.DetGodeCPROpslagFaultMessages;
 import dk.nsi.stamdata.cpr.SessionProvider;
@@ -13,16 +14,12 @@ import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.apache.commons.io.FileUtils;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.WebAppEnvironment;
 import org.hisrc.hifaces20.testing.webappenvironment.annotations.PropertiesWebAppEnvironmentConfig;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.WebAppEnvironmentRule;
 import org.joda.time.DateTime;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.MethodRule;
 
 import javax.xml.namespace.QName;
@@ -32,7 +29,6 @@ import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -53,6 +49,11 @@ public class DetGodeCPROpslagIntegrationTest {
     private DetGodeCPROpslag opslag;
     private Session session;
 
+
+    @BeforeClass
+    public static void setIdcardFilterInTestMode() {
+        System.setProperty(DgwsIdcardFilter.USE_TESTFEDERATION_INIT_PARAM_KEY, Boolean.TRUE.toString());
+    }
 
     @PropertiesWebAppEnvironmentConfig
     public void setWebAppEnvironment(WebAppEnvironment env) {
@@ -91,13 +92,6 @@ public class DetGodeCPROpslagIntegrationTest {
         service.setHandlerResolver(handlerResolver);
 
         opslag = service.getDetGodeCPROpslag();
-    }
-
-    public void setupSlalogging() {
-        File tempFolder = FileUtils.getTempDirectory();
-        final String logFolder = new File(tempFolder, ("logs")).getAbsolutePath();
-        System.setProperty("test.log.dir", logFolder); // referenced in log4j-nspslalog.properties
-        System.setProperty("dk.sdsd.nsp.slalog.config.dir", new File(this.getClass().getResource("/log4j-nspslalog.properties").getFile()).getParent());
     }
 
     private void purgePersontable() {
