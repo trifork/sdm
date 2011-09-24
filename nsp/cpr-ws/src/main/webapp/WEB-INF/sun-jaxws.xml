@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
 
-	<!-- This binding is for SOAP 1.1 -->
+	<!-- This binding is for DetGodeCPROpslag SOAP 1.1 -->
 	<endpoint name="DetGodeCprOpslag" wsdl="WEB-INF/wsdl/DetGodeCprOpslag.wsdl"
 		service="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslagService"
 		port="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslag"
-		implementation="dk.nsi.stamdata.cpr.DetGodeCPROpslagImpl" url-pattern="/service/opslag" />
+		implementation="dk.nsi.stamdata.cpr.DetGodeCPROpslagImpl" url-pattern="/service/DetGodeCprOpslag" />
+		
+	<!-- This binding is for PersonLookupService SOAP 1.2 -->
+	<endpoint name="PersonLookup" wsdl="WEB-INF/wsdl/DetGodeCprOpslag.wsdl"
+		service="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslagService"
+		port="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslag"
+		implementation="dk.nsi.stamdata.cpr.DetGodeCPROpslagImpl" url-pattern="/service/DetGodeCprOpslag" />
+		
 </endpoints>
