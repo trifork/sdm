@@ -10,7 +10,7 @@ import javax.persistence.Id;
 public class SikredeYderRelation extends CPREntity
 {
 	protected String ydernummer;
-	protected Date ydernummerIkraftDato;
+	protected Date ydernummerIkraftDato; // assigned from.
 	protected Date ydernummerRegistreringDato;
 	protected String sikringsgruppeKode;
 	protected Date gruppeKodeIkraftDato;
