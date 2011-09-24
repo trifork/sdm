@@ -12,7 +12,6 @@ import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.engine.profile.Fetch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
