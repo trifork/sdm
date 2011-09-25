@@ -14,6 +14,9 @@ import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 
 public class PersonMapperTest
 {
+	private final boolean PROTECTION_DISABLED = false;
+	private final boolean PROTECTION_ENABLED = true;
+	
 	private PersonMapper mapper;
 	private Person person;
 
@@ -29,7 +32,7 @@ public class PersonMapperTest
 	@Test
 	public void mapsFirstname() throws DatatypeConfigurationException
 	{
-		PersonInformationStructureType jaxbPerson = mapper.map(person);
+		PersonInformationStructureType jaxbPerson = mapper.map(person, PROTECTION_DISABLED);
 		assertEquals(person.getFornavn(), jaxbPerson.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName());
 	}
 }

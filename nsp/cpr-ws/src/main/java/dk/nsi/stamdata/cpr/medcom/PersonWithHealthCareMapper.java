@@ -25,7 +25,7 @@ public class PersonWithHealthCareMapper
 	{
 		PersonWithHealthCareInformationStructureType personWithHealthCare = new PersonWithHealthCareInformationStructureType();
 
-		PersonInformationStructureType personInformation = personMapper.map(person);
+		PersonInformationStructureType personInformation = personMapper.map(person, false); // FIXME: Protect data when we need to.
 
 		personWithHealthCare.setPersonInformationStructure(personInformation);
 

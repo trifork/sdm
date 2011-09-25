@@ -32,11 +32,11 @@ import com.google.inject.Stage;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.dgws.DgwsIdcardFilter;
-import dk.nsi.stamdata.cpr.ApplicationController.ComponentModule;
+import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagFaultMessages;
+import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;
@@ -143,7 +143,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		catch (SOAPFaultException fault)
 		{
 			assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-			assertEquals(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
+			assertEquals(FaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
 		}
 	}
 

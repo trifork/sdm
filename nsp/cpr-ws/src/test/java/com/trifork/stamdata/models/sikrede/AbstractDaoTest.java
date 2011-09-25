@@ -14,7 +14,7 @@ import com.google.inject.Stage;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.BaseTemporalEntity;
 
-import dk.nsi.stamdata.cpr.ApplicationController;
+import dk.nsi.stamdata.cpr.ComponentController;
 
 public abstract class AbstractDaoTest
 {
@@ -24,7 +24,7 @@ public abstract class AbstractDaoTest
 	@Before
 	public void setupSession()
 	{
-		Injector injector = Guice.createInjector(Stage.DEVELOPMENT, new ApplicationController.ComponentModule());
+		Injector injector = Guice.createInjector(Stage.DEVELOPMENT, new ComponentController.ComponentModule());
 
 		session = injector.getInstance(Session.class);
 		fetcher = injector.getInstance(Fetcher.class);

@@ -1,16 +1,20 @@
 package dk.nsi.dgws;
 
 import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.IDCard;
 import dk.sosi.seal.model.Reply;
 import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.model.constants.DGWSConstants;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+import dk.sosi.seal.modelbuilders.SignatureInvalidModelBuildException;
 import dk.sosi.seal.pki.Federation;
 import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
+import dk.sosi.seal.xml.XmlUtilException;
+
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 
@@ -79,7 +83,7 @@ public class DgwsIdcardFilter implements Filter
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-		// To allow the JAX-WS client to access the WSDL without
+		// HACK: To allow the JAX-WS client to access the WSDL without
 		// having to send DGWS stuff along with the call we
 		// make a little hack that pass these called through.
 
@@ -93,33 +97,61 @@ public class DgwsIdcardFilter implements Filter
 		{
 			// Rip out the ID Card and cram it into the request context.
 
-			Reader input = request.getReader();
-			final String xml = IOUtils.toString(input);
+			final String xml = IOUtils.toString(request.getReader());
+			
+			// NB. SEAL throws an exception if the id card is not valid in time
+			// or invalid in some other way.
 
-			Request sealRequest = factory.deserializeRequest(xml);
-			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, sealRequest.getIDCard());
+			IDCard idCard = factory.deserializeRequest(xml).getIDCard();
+			
+			// We have to make sure ourselves that the ID Cards NIST level etc.
+			// is as expected.
+			
+			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 
 			chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
 		}
+		catch (SignatureInvalidModelBuildException e)
+		{
+			// The signature was invalid. This sender is to blame.
+			
+			// Unfortunately SEAL's API is not made with the user in mind and
+			// we cannot access e.g. the flow ID without reparsing the XML
+			// again ourselves. Therefore we simply return "0".
+			
+			// FIXME: To enable protection against replay attacks,
+			// the response embeds the ID of the corresponding request (see the inResponseToID).
+			// We do not set this, because it is difficult to get because using SEAL's API is
+			// up hill.
+			
+			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.INVALID_SIGNATURE, "The signature used to sign the message was incorrectly signed or no longer valid.");
+			writeFaultToResponse(httpResponse, reply);
+		}
+		catch (XmlUtilException e)
+		{
+			// The message could not be read. The sender is to blame.
+			
+			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+			writeFaultToResponse(httpResponse, reply);
+		}
 		catch (Exception e)
 		{
-			// TODO: There should be two catch clauses here.
-			// one for when the client has messed up and made
-			// some sort of bad request (e.g. bad XML).
-			// And one here the server crashes for some reason. (This is bad,
-			// and will likely be a bug.)
-
-			e.printStackTrace(); // FIXME remove
+			// This is bad and will likely be a bug.
 
 			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-			httpResponse.setStatus(500);
-
-			httpResponse.setContentType("text/xml");
-
-			Document replyXml = reply.serialize2DOMDocument();
-			String xml = XmlUtil.node2String(replyXml);
-			httpResponse.getWriter().write(xml);
+			writeFaultToResponse(httpResponse, reply);
 		}
+	}
+
+	private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException
+	{
+		httpResponse.setStatus(500);
+
+		httpResponse.setContentType("text/xml"); // TODO: Shouldn't this depend on it being SOAP 1.1 or 1.2?
+
+		Document replyXml = reply.serialize2DOMDocument();
+		String xml = XmlUtil.node2String(replyXml);
+		httpResponse.getWriter().write(xml);
 	}
 
 	@Override
@@ -128,6 +160,7 @@ public class DgwsIdcardFilter implements Filter
 	}
 }
 
+// TODO: Comment what is this class for?
 class RequestWrapperWithSavedBody extends HttpServletRequestWrapper
 {
 	private final String body;

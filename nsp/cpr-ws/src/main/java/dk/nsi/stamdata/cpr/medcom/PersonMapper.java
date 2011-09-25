@@ -29,7 +29,7 @@ import dk.nsi.stamdata.cpr.ws.SimpleCPRPersonType;
 
 public class PersonMapper
 {
-    public PersonInformationStructureType map(Person person) throws DatatypeConfigurationException
+    public PersonInformationStructureType map(Person person, boolean useInformationProtection) throws DatatypeConfigurationException
     {
         PersonInformationStructureType personInformation = new ObjectFactory().createPersonInformationStructureType();
         personInformation.setCurrentPersonCivilRegistrationIdentifier(person.cpr);

@@ -52,7 +52,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private final SystemIDCard idCard;
 	
 	@Inject
-	public DetGodeCPROpslagImpl(@Whitelist Set<String> whitelist, Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard idCard)
+	DetGodeCPROpslagImpl(@Whitelist Set<String> whitelist, Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard idCard)
 	{
 		this.whitelist = whitelist;
 		this.fetcher = fetcher;
@@ -75,10 +75,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		checkInputParameters(pnr);
 		
 		// 3. Fetch the person from the database.
-		//
-		// NOTE: Unfortunately the specification is defined so that we have to return a
-		// fault if no person is found. We cannot change this to return nil which would
-		// be a nicer protocol.
 
 		Person person = fetchPersonWithPnr(pnr);
 
@@ -90,7 +86,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         
         try
         {
-            personInformation = personMapper.map(person);
+            personInformation = personMapper.map(person, false); // FIXME: Protect data when we need to.
         }
         catch (DatatypeConfigurationException e)
         {
@@ -156,10 +152,13 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			throw SoapFaultUtil.newServerErrorFault(e);
 		}
 
+		// NOTE: Unfortunately the specification is defined so that we have to return a
+		// fault if no person is found. We cannot change this to return nil which would
+		// be a nicer protocol.
+
 		if (person == null)
 		{
-
-            throw SoapFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+			throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		return person;
@@ -168,7 +167,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     @SuppressWarnings("unused")
 	private Sikrede fetchSikredeWithPnr(String pnr)
     {
-        checkNotNull(pnr);
+        checkNotNull(pnr, "pnr");
 
         Sikrede sikrede = null;
 
@@ -183,7 +182,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
         if (sikrede == null)
 		{
-            throw SoapFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+            throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
         
         return sikrede;
@@ -204,12 +203,12 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		if (!whitelist.contains(clientCVR))
 		{
-			logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+			logger.warn("type=auditlog, service=stamdata-cpr, access=denied, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
 		}
 		else
 		{
-			logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+			logger.info("type=auditlog, service=stamdata-cpr, access=granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
 		}
 	}
 }

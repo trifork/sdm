@@ -12,7 +12,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagFaultMessages;
+import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Linking;
@@ -96,6 +96,6 @@ public final class SoapFaultUtil
 	{
 		checkNotNull(e, "e");
 
-		return new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
+		return new RuntimeException(FaultMessages.INTERNAL_SERVER_ERROR, e);
 	}
 }

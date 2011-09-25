@@ -5,7 +5,7 @@
 	<display-name>Stamdata CPR Service</display-name>
 
 	<listener>
-		<listener-class>dk.nsi.stamdata.cpr.ApplicationController</listener-class>
+		<listener-class>dk.nsi.stamdata.cpr.ComponentController</listener-class>
 	</listener>
 
 	<filter>

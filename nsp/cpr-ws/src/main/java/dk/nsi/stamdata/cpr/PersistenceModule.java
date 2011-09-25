@@ -48,18 +48,27 @@ public class PersistenceModule extends ServletModule
 		{
 			Configuration config = new Configuration();
 
-			config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-			config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
 			config.setProperty("hibernate.connection.url", jdbcURL);
-
 			config.setProperty("hibernate.connection.username", username);
 			config.setProperty("hibernate.connection.password", password);
 
+			config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+			config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
+			
 			config.setProperty("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
 			config.setProperty("hibernate.connection.characterEncoding", "utf8");
 
 			config.setProperty("hibernate.current_session_context_class", "thread");
 			config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
+			
+			// Use a C3P0 connection pool.
+			// The default connection pool is not meant for production use.
+			
+			config.setProperty("hibernate.c3p0.min_size", "5");
+			config.setProperty("hibernate.c3p0.max_size", "20");
+			config.setProperty("hibernate.c3p0.timeout", "200");
+			
+			// Add annotated classes to track.
 
 			config.addAnnotatedClass(Person.class);
 			config.addAnnotatedClass(Yderregister.class);
@@ -80,24 +89,17 @@ public class PersistenceModule extends ServletModule
 				// not used. You have to manage the transaction manually.
 				
 				session = sessionFactory.openSession();
+				this.session.set(session);
 			}
 			
 			return session;
 		}
 		
 		@Override
-		public void init(FilterConfig config) throws ServletException
-		{
-		}
-		
-		@Override
-		public void destroy()
-		{
-		}
-		
-		@Override
 		public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 		{
+			// Each request is wrapped in a transaction.
+			
 			Session session = null;
 			
 			try
@@ -138,5 +140,11 @@ public class PersistenceModule extends ServletModule
 				this.session.remove();
 			}
 		}
+		
+		@Override
+		public void init(FilterConfig config) throws ServletException { }
+		
+		@Override
+		public void destroy() { }
 	}
 }

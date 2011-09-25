@@ -1,6 +1,6 @@
 package dk.nsi.stamdata.cpr.medcom;
 
-public interface DetGodeCPROpslagFaultMessages
+public interface FaultMessages
 {
 	String INTERNAL_SERVER_ERROR = "Internal Server Error";
     String NO_DATA_FOUND_FAULT_MSG = "Ingen data fundet";
