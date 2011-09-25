@@ -8,6 +8,7 @@ import javax.xml.ws.Holder;
 import com.google.inject.Inject;
 
 import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
+import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
@@ -16,6 +17,7 @@ import dk.nsi.stamdata.cpr.ws.Security;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 
+@GuiceWebservice
 @WebService(serviceName = "StamdataPersonLookup", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookup")
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
 {
