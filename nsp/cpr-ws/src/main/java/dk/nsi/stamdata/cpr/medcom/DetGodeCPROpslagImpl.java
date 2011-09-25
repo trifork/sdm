@@ -19,8 +19,8 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
 
-import dk.nsi.stamdata.cpr.DGWSFaultUtil;
-import dk.nsi.stamdata.cpr.annotations.Whitelist;
+import dk.nsi.stamdata.cpr.SoapFaultUtil;
+import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
@@ -37,7 +37,7 @@ import dk.sosi.seal.model.constants.FaultCodeValues;
 @GuiceWebservice
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
-{	
+{
 	private static Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
 	
 	private static final String NS_TNS = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/";
@@ -94,7 +94,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         }
         catch (DatatypeConfigurationException e)
         {
-            throw DGWSFaultUtil.newServerErrorFault(e);
+            throw SoapFaultUtil.newServerErrorFault(e);
         }
         
         output.setPersonInformationStructure(personInformation);
@@ -133,7 +133,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (DatatypeConfigurationException e)
 		{
-			throw DGWSFaultUtil.newServerErrorFault(e);
+			throw SoapFaultUtil.newServerErrorFault(e);
 		}
 		
 		return output;
@@ -153,13 +153,13 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw DGWSFaultUtil.newServerErrorFault(e);
+			throw SoapFaultUtil.newServerErrorFault(e);
 		}
 
 		if (person == null)
 		{
 
-            throw DGWSFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+            throw SoapFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		return person;
@@ -178,12 +178,12 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         }
         catch (Exception e)
         {
-            throw DGWSFaultUtil.newServerErrorFault(e);
+            throw SoapFaultUtil.newServerErrorFault(e);
         }
 
         if (sikrede == null)
 		{
-            throw DGWSFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
+            throw SoapFaultUtil.newSOAPSenderFault(DetGodeCPROpslagFaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
         
         return sikrede;
@@ -193,23 +193,23 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	{
 		if (StringUtils.isBlank(pnr))
 		{
-			throw DGWSFaultUtil.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+			throw SoapFaultUtil.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 		}
 	}
 
 
 	private void checkClientAuthorization(String requestedPNR, Holder<Security> wsseHeader, Holder<Header> medcomHeader) throws DGWSFault
-    {
+	{
 		String clientCVR = idCard.getSystemInfo().getCareProvider().getID();
 
 		if (!whitelist.contains(clientCVR))
 		{
-            logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-            throw DGWSFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
-        }
+			logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
+		}
 		else
 		{
-            logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-        }
+			logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+		}
 	}
 }
