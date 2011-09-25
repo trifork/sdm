@@ -22,12 +22,13 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * Extracts IdCard instances from the request and places them in the servlet request
+ * Extracts IdCard instances from the request and places them in the servlet
+ * request
  */
 public class DgwsIdcardFilter implements Filter
 {
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
-	public static final String USE_TESTFEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
+	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
 	private SOSIFactory factory;
 
 	@Override
@@ -37,7 +38,7 @@ public class DgwsIdcardFilter implements Filter
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
 		Federation federation;
-		
+
 		if (useTestFederation)
 		{
 			federation = new SOSITestFederation(properties);
@@ -50,22 +51,26 @@ public class DgwsIdcardFilter implements Filter
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
 	}
 
-    private Boolean shouldWeUseTestFederation(FilterConfig filterConfig) {
-        String initParameter = filterConfig.getInitParameter(USE_TESTFEDERATION_INIT_PARAM_KEY);
-        String sysProp = System.getProperty(USE_TESTFEDERATION_INIT_PARAM_KEY);
-        if (sysProp != null) {
-            return Boolean.valueOf(sysProp);
-        } else {
-            return Boolean.valueOf(initParameter);
-        }
-    }
+	private Boolean shouldWeUseTestFederation(FilterConfig filterConfig)
+	{
+		String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
+		String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
+		
+		if (sysProp != null)
+		{
+			return Boolean.valueOf(sysProp);
+		}
+		else
+		{
+			return Boolean.valueOf(initParameter);
+		}
+	}
 
-
-    @Override
+	@Override
 	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
 		// We only accept HTTP requests.
-		
+
 		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
 		{
 			return;
@@ -77,36 +82,37 @@ public class DgwsIdcardFilter implements Filter
 		// To allow the JAX-WS client to access the WSDL without
 		// having to send DGWS stuff along with the call we
 		// make a little hack that pass these called through.
-		
+
 		if ("wsdl".equals(httpRequest.getQueryString()))
 		{
 			chain.doFilter(request, response);
 			return;
 		}
 
-        try
+		try
 		{
 			// Rip out the ID Card and cram it into the request context.
-			
+
 			Reader input = request.getReader();
 			final String xml = IOUtils.toString(input);
 
 			Request sealRequest = factory.deserializeRequest(xml);
 			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, sealRequest.getIDCard());
 
-            chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
+			chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
 		}
 		catch (Exception e)
 		{
 			// TODO: There should be two catch clauses here.
 			// one for when the client has messed up and made
 			// some sort of bad request (e.g. bad XML).
-			// And one here the server crashes for some reason. (This is bad, and will likely be a bug.)
-			
+			// And one here the server crashes for some reason. (This is bad,
+			// and will likely be a bug.)
+
 			e.printStackTrace(); // FIXME remove
 
-            Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-            httpResponse.setStatus(500);
+			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+			httpResponse.setStatus(500);
 
 			httpResponse.setContentType("text/xml");
 
@@ -122,27 +128,33 @@ public class DgwsIdcardFilter implements Filter
 	}
 }
 
-class RequestWrapperWithSavedBody extends HttpServletRequestWrapper {
- private final String body;
- public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException {
-   super(request);
-   body = requestBody;
- }
+class RequestWrapperWithSavedBody extends HttpServletRequestWrapper
+{
+	private final String body;
 
- @Override
- public ServletInputStream getInputStream() throws IOException {
-   final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
-   ServletInputStream servletInputStream = new ServletInputStream() {
-     public int read() throws IOException {
-       return byteArrayInputStream.read();
-     }
-   };
-   return servletInputStream;
- }
+	public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException
+	{
+		super(request);
+		body = requestBody;
+	}
 
- @Override
- public BufferedReader getReader() throws IOException {
-   return new BufferedReader(new InputStreamReader(this.getInputStream()));
- }
+	@Override
+	public ServletInputStream getInputStream() throws IOException
+	{
+		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+		ServletInputStream servletInputStream = new ServletInputStream()
+		{
+			public int read() throws IOException
+			{
+				return byteArrayInputStream.read();
+			}
+		};
+		return servletInputStream;
+	}
+
+	@Override
+	public BufferedReader getReader() throws IOException
+	{
+		return new BufferedReader(new InputStreamReader(this.getInputStream()));
+	}
 }
-

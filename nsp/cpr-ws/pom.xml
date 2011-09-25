@@ -78,6 +78,12 @@
             <artifactId>nsp-util</artifactId>
             <version>1.0.5</version>
         </dependency>
+        
+        <dependency>
+        	<groupId>com.google.inject.extensions</groupId>
+        	<artifactId>guice-persist</artifactId>
+        	<version>3.0</version>
+        </dependency>
     </dependencies>
 
     <build>

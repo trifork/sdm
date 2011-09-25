@@ -1,21 +1,37 @@
 package dk.nsi.stamdata.cpr;
 
-import com.trifork.stamdata.models.cpr.Person;
-import dk.nsi.stamdata.cpr.ws.*;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
+import java.math.BigInteger;
+import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
-import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+
+import com.trifork.stamdata.models.cpr.Person;
+
+import dk.nsi.stamdata.cpr.ws.AddressAccessType;
+import dk.nsi.stamdata.cpr.ws.AddressCompleteType;
+import dk.nsi.stamdata.cpr.ws.AddressPostalType;
+import dk.nsi.stamdata.cpr.ws.CountryIdentificationCodeType;
+import dk.nsi.stamdata.cpr.ws.CountryIdentificationSchemeType;
+import dk.nsi.stamdata.cpr.ws.ObjectFactory;
+import dk.nsi.stamdata.cpr.ws.PersonAddressStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonBirthDateStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonCivilRegistrationStatusStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonNameStructureType;
+import dk.nsi.stamdata.cpr.ws.RegularCPRPersonType;
+import dk.nsi.stamdata.cpr.ws.SimpleCPRPersonType;
 
 public class PersonMapper
 {
     public PersonInformationStructureType map(Person person) throws DatatypeConfigurationException
     {
-        PersonInformationStructureType personInformation = new PersonInformationStructureType();
+        PersonInformationStructureType personInformation = new ObjectFactory().createPersonInformationStructureType();
         personInformation.setCurrentPersonCivilRegistrationIdentifier(person.cpr);
 
         RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();

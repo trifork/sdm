@@ -31,7 +31,7 @@ public class ComponentMonitorImpl implements ComponentMonitor
 			
 			Session session = sessions.get();
 			session.createQuery("SELECT 1 FROM Person").setCacheable(false).uniqueResult();
-			session.close();
+			session.disconnect().close();
 			
 			return true;
 		}

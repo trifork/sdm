@@ -26,13 +26,11 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Security;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.PropertyException;
+
+import dk.nsi.stamdata.cpr.ws.Security;
 
 public class MarshallerFactories {
 	private static final String MARSHALLER_PROP = "com.sun.xml.bind.namespacePrefixMapper";

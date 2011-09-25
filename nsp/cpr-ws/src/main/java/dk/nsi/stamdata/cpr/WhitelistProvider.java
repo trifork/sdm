@@ -20,7 +20,7 @@ public class WhitelistProvider implements Provider<Set<String>>
 		Iterable<String> values = Splitter.on(",").omitEmptyStrings().trimResults().split(whitelistProperty);
 		entries = Sets.newHashSet(values);
 	}
-
+	
 	@Override
 	public Set<String> get()
 	{

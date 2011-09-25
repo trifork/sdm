@@ -27,7 +27,7 @@ public final class ConfigurationLoader
 		ClassLoader classLoader = ConfigurationLoader.class.getClassLoader();
 
 		InputStream buildInConfig = classLoader.getResourceAsStream("config.properties");
-		InputStream testConfig = classLoader.getResourceAsStream("test-" + componentName + ".properties");
+		InputStream testConfig = classLoader.getResourceAsStream("test-config.properties");
 		InputStream deploymentConfig = classLoader.getResourceAsStream(componentName + ".properties");
 
 		final Properties config = new Properties();
@@ -39,7 +39,7 @@ public final class ConfigurationLoader
 
 			if (testConfig != null)
 			{
-				logger.info("Test Configuration file 'test-{}.properties' found.", componentName);
+				logger.info("Test Configuration file 'test-config.properties' found.", componentName);
 
 				config.load(testConfig);
 			}

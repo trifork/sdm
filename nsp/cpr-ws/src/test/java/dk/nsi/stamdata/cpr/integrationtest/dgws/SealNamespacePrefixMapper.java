@@ -26,10 +26,10 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * This class is used for deserializing DGWS headers. DGWS require that the

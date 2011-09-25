@@ -26,18 +26,19 @@
  */
 package dk.nsi.stamdata.cpr;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.UUID;
+
+import javax.xml.ws.Holder;
+
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Linking;
 import dk.nsi.stamdata.cpr.ws.Security;
 import dk.nsi.stamdata.cpr.ws.Timestamp;
 import dk.sosi.seal.model.constants.FlowStatusValues;
 
-import javax.xml.ws.Holder;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.UUID;
-
-public class DGWSHeaderUtil
+public final class DGWSHeaderUtil
 {
 	public static final String DGWS_ERROR_MSG = "DGWS error";
 	private static final String TIMEZONE = "UTC";

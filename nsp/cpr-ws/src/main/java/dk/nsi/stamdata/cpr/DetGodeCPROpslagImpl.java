@@ -1,34 +1,39 @@
 package dk.nsi.stamdata.cpr;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.Sikrede;
-import dk.nsi.dgws.DgwsIdcardFilter;
-import dk.nsi.stamdata.cpr.annotations.Whitelist;
-import dk.nsi.stamdata.cpr.ws.*;
-import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.model.constants.FaultCodeValues;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+
+import java.util.Set;
+
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.ws.Holder;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.jws.WebParam;
-import javax.jws.WebService;
-import javax.servlet.ServletRequest;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.ws.Holder;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
-import java.util.Set;
+import com.google.inject.Inject;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.Sikrede;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-import static com.trifork.stamdata.Preconditions.checkState;
+import dk.nsi.stamdata.cpr.annotations.Whitelist;
+import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.Guicy;
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.Security;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.FaultCodeValues;
 
+@Guicy
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
@@ -38,52 +43,26 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"; // TODO: Shouldn't this be 1.0.1?
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 	
-    @Inject
-	@Whitelist
-	private Set<String> whitelist;
+	private final Set<String> whitelist;
+	private final Fetcher fetcher;
+	private final PersonMapper personMapper;
+	private final PersonWithHealthCareMapper personWithHealthCareMapper;
+
+	private final SystemIDCard idCard;
 	
 	@Inject
-	private Provider<Fetcher> fetcherPool;
-
-    @Inject
-    private PersonMapper personMapper;
-    
-    @Inject
-    private PersonWithHealthCareMapper personWithHealthCareMapper;
-
-    @Resource
-    private WebServiceContext context;
-    private final DGWSFaultUtil DGWSFaultUtil = new DGWSFaultUtil();
-
-    @PostConstruct
-	protected void init()
+	public DetGodeCPROpslagImpl(@Whitelist Set<String> whitelist, Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard idCard)
 	{
-		// This is a bit of a hack allowing Guice to inject
-		// the dependencies without having to jump through
-		// hoops to get it to do so automatically.
-		
-		checkState(ApplicationController.injector != null, "The application controller must be instanciated before jax-ws.");
-		
-		ApplicationController.injector.injectMembers(this);
+		this.whitelist = whitelist;
+		this.fetcher = fetcher;
+		this.personMapper = personMapper;
+		this.personWithHealthCareMapper = personWithHealthCareMapper;
+		this.idCard = idCard;
 	}
 
 	@Override
-    public GetPersonInformationOut getPersonInformation(
-            @WebParam(name = "Security",
-                      targetNamespace = NS_WS_SECURITY,
-                      mode = WebParam.Mode.INOUT,
-                      partName = "wsseHeader")
-                      Holder<Security> wsseHeader,
-            @WebParam(name = "Header",
-                      targetNamespace = NS_DGWS_1_0,
-                      mode = WebParam.Mode.INOUT,
-                      partName = "medcomHeader")
-                      Holder<Header> medcomHeader,
-            @WebParam(name = "getPersonInformationIn",
-                      targetNamespace = NS_TNS,
-                      partName = "parameters")
-                      GetPersonInformationIn input) throws DGWSFault {
-		
+	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
+	{
 		// 1. Check the white list to see if the client is authorized.
 
 		String pnr = input.getPersonCivilRegistrationIdentifier();
@@ -94,7 +73,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		checkInputParameters(pnr);
 		
-		// 2. Fetch the person from the database.
+		// 3. Fetch the person from the database.
 		//
 		// NOTE: Unfortunately the specification is defined so that we have to return a
 		// fault if no person is found. We cannot change this to return nil which would
@@ -124,21 +103,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 
 	@Override
-	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(
-			@WebParam(	name = "Security",
-						targetNamespace = NS_WS_SECURITY,
-						mode = WebParam.Mode.INOUT,
-						partName = "wsseHeader")
-						Holder<Security> wsseHeader,
-			@WebParam(	name = "Header",
-						targetNamespace = NS_DGWS_1_0,
-						mode = WebParam.Mode.INOUT,
-						partName = "medcomHeader")
-						Holder<Header> medcomHeader,
-			@WebParam(	name = "getPersonWithHealthCareInformationIn",
-						targetNamespace = NS_TNS,
-						partName = "parameters")
-						GetPersonWithHealthCareInformationIn parameters) throws DGWSFault {
+	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(	name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
+	{
 		// 1. Check the white list to see if the client is authorized.
 
 		String pnr = parameters.getPersonCivilRegistrationIdentifier();
@@ -173,21 +139,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 	
 	// HELPERS
-    
-    private SystemIDCard fetchIDCardFromRequestContext()
-    {
-        ServletRequest servletRequest = (ServletRequest)context.getMessageContext().get(MessageContext.SERVLET_REQUEST);
-        SystemIDCard idcard = (SystemIDCard)servletRequest.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
-        
-        // We are counting on the DGWS filter to inject the ID Card
-        // into the request context. In fact we can never get to this
-        // point if the request did not have a ID-card. Therefore if
-        // the id card is null, the service is in an inconsistent state.
-        
-        Preconditions.checkState(idcard != null, "The SOSI ID Card was not injected to the request context.");
-        
-        return idcard;
-    }
 	
 	private Person fetchPersonWithPnr(String pnr)
 	{
@@ -197,7 +148,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		try
 		{
-			Fetcher fetcher = fetcherPool.get();
 			person = fetcher.fetch(Person.class, pnr);
 		}
 		catch (Exception e)
@@ -214,15 +164,18 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return person;
 	}
 
-    private Sikrede fetchSikredeWithPnr(String pnr) {
+    private Sikrede fetchSikredeWithPnr(String pnr)
+    {
         checkNotNull(pnr);
 
         Sikrede sikrede = null;
 
-        try {
-            Fetcher fetcher = fetcherPool.get();
+        try
+        {
             //sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO 
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw DGWSFaultUtil.newServerErrorFault(e);
         }
 
@@ -234,7 +187,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         return sikrede;
     }
 
-	private void checkInputParameters(String pnr)
+	private void checkInputParameters(@Nullable String pnr)
 	{
 		if (StringUtils.isBlank(pnr))
 		{
@@ -245,16 +198,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 	private void checkClientAuthorization(String requestedPNR, Holder<Security> wsseHeader, Holder<Header> medcomHeader) throws DGWSFault
     {
-		String clientCVR = fetchIDCardFromRequestContext().getSystemInfo().getCareProvider().getID();
+		String clientCVR = idCard.getSystemInfo().getCareProvider().getID();
 
 		if (!whitelist.contains(clientCVR))
 		{
-            logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+            logger.warn("type=auditlog, service=stamdata-cpr, msg=Unauthorized access attempt, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
             throw DGWSFaultUtil.newDGWSFault(wsseHeader, medcomHeader, DetGodeCPROpslagFaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
         }
 		else
 		{
-            logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted. client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
+            logger.info("type=auditlog, service=stamdata-cpr, msg=Access granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
         }
 	}
 }

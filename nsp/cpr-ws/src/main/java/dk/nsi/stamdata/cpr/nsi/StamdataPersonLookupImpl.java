@@ -1,5 +1,6 @@
 package dk.nsi.stamdata.cpr.nsi;
 
+import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
@@ -9,6 +10,7 @@ import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
 import dk.nsi.stamdata.cpr.ws.Security;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
 
+@WebService(serviceName = "StamdataPersonLookup", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookup")
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
 {
 	@Override

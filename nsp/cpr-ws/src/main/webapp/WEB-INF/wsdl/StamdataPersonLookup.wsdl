@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <wsdl:definitions
-  targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr"
-  xmlns:tns="http://nsi.dk/2011/09/23/StamdataCpr"
+  targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/"
+  xmlns:tns="http://nsi.dk/2011/09/23/StamdataCpr/"
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
   xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
@@ -19,7 +19,7 @@
 	</xs:schema>
 	
     <!-- The request and response schemas. -->
-    <xs:schema targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr">
+    <xs:schema targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/">
     	<xs:include schemaLocation="stamdata_cpr_request_response.xsd" />
     </xs:schema>
     
@@ -82,8 +82,8 @@
   </wsdl:binding>
  
   <wsdl:service name="StamdataPersonLookupService">
-    <wsdl:port name="StamdataPersonLookupSoap12" binding="tns:StamdataPersonLookupSoap12Binding">
-      <soap:address location="http://localhost/cpr" />
+    <wsdl:port name="StamdataPersonLookup" binding="tns:StamdataPersonLookupSoap12Binding">
+      <soap:address location="http://localhost/StamdataPersonLookupService" />
     </wsdl:port>
   </wsdl:service>
  

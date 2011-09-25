@@ -1,12 +1,14 @@
 package dk.nsi.stamdata.cpr;
 
-import com.trifork.stamdata.models.cpr.Person;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import javax.xml.datatype.DatatypeConfigurationException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.datatype.DatatypeConfigurationException;
+import com.trifork.stamdata.models.cpr.Person;
+
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 
 public class PersonMapperTest {
     private PersonMapper mapper;

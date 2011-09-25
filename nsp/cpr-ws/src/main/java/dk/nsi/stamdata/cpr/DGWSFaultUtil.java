@@ -1,9 +1,6 @@
 package dk.nsi.stamdata.cpr;
 
-import com.trifork.stamdata.Preconditions;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Security;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPFactory;
@@ -11,45 +8,57 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
-public class DGWSFaultUtil {
-    public DGWSFaultUtil() {
-    }
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.Security;
 
-    DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault {
-        DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
-        medcomHeaderHolder.value.setFlowStatus(status);
+public final class DGWSFaultUtil
+{
+	private DGWSFaultUtil()
+	{
+	}
 
-        return new DGWSFault(errorMsg, DGWSHeaderUtil.DGWS_ERROR_MSG);
-    }
+	static DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
+	{
+		DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
+		medcomHeaderHolder.value.setFlowStatus(status);
 
-    SOAPFaultException newSOAPSenderFault(String message) {
-        Preconditions.checkNotNull(message, "message");
+		return new DGWSFault(errorMsg, DGWSHeaderUtil.DGWS_ERROR_MSG);
+	}
 
-        SOAPFault fault;
+	static SOAPFaultException newSOAPSenderFault(String message)
+	{
+		checkNotNull(message, "message");
 
-        try {
-            // We have to make sure to use the same protocol version
-            // as defined in the WSDL.
+		SOAPFault fault;
 
-            SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
+		try
+		{
+			// We have to make sure to use the same protocol version
+			// as defined in the WSDL.
 
-            fault = factory.createFault();
-            fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
+			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 
-            // TODO: For some reason the xml:lang att. is always "en"
-            // even when the locale is set in this next call.
+			fault = factory.createFault();
+			fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
 
-            fault.setFaultString(message);
-        } catch (Exception e) {
-            throw newServerErrorFault(e);
-        }
+			// TODO: For some reason the xml:lang att. is always "en"
+			// even when the locale is set in this next call.
 
-        return new SOAPFaultException(fault);
-    }
+			fault.setFaultString(message);
+		}
+		catch (Exception e)
+		{
+			throw newServerErrorFault(e);
+		}
 
-    RuntimeException newServerErrorFault(Exception e) {
-        Preconditions.checkNotNull(e, "e");
+		return new SOAPFaultException(fault);
+	}
 
-        return new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
-    }
+	static RuntimeException newServerErrorFault(Exception e)
+	{
+		checkNotNull(e, "e");
+
+		return new RuntimeException(DetGodeCPROpslagFaultMessages.INTERNAL_SERVER_ERROR, e);
+	}
 }
