@@ -1,9 +1,14 @@
 package dk.nsi.stamdata.cpr;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Set;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Sets;
+import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -26,4 +31,9 @@ public class WhitelistProvider implements Provider<Set<String>>
 	{
 		return entries;
 	}
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+	@BindingAnnotation
+	public static @interface Whitelist { }
 }
