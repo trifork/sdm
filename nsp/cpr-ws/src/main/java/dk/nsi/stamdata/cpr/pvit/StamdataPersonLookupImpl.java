@@ -7,7 +7,7 @@ import javax.xml.ws.Holder;
 
 import com.google.inject.Inject;
 
-import dk.nsi.stamdata.cpr.annotations.Whitelist;
+import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
