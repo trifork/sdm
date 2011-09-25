@@ -1,4 +1,4 @@
-package dk.nsi.stamdata.cpr.nsi;
+package dk.nsi.stamdata.cpr.pvit;
 
 import javax.jws.WebService;
 import javax.xml.ws.Holder;

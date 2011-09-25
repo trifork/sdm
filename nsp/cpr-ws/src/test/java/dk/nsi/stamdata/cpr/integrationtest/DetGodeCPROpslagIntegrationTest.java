@@ -33,9 +33,10 @@ import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ApplicationController.ComponentModule;
-import dk.nsi.stamdata.cpr.DetGodeCPROpslagFaultMessages;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagFaultMessages;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;

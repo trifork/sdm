@@ -63,7 +63,7 @@ import dk.sosi.seal.vault.CredentialVault;
 import dk.sosi.seal.vault.GenericCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 
-public class IdCardBuilder {
+public final class IdCardBuilder {
 
 	private static final String stsKeystoreAsBase64 = "/u3+7QAAAAIAAAABAAAAAQARc29zaTphbGlhc19zeXN0ZW0AAAEsNhFwqgAAArswggK3MA4GCisG"
 			+ "AQQBKgIRAQEFAASCAqOu+XECVO5mg3cbXCWmHoE+hhNGmHtoGrhAn5hoOzUGhyw6rrXjN8FNB78S"
@@ -125,38 +125,42 @@ public class IdCardBuilder {
 	private static Properties properties;
 	private static CredentialVault vault;
 
-    private static X509Certificate certificate;
+	private static X509Certificate certificate;
 
-    static {
-		try {
+	static
+	{
+		try
+		{
 			properties = SignatureUtil.setupCryptoProviderForJVM();
 			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
 			ByteArrayInputStream byteStream = new ByteArrayInputStream(Base64.decode(stsKeystoreAsBase64));
 			keystore.load(byteStream, "Test1234".toCharArray());
 			vault = new GenericCredentialVault(properties, keystore, "Test1234");
 
-            certificate = (X509Certificate)keystore.getCertificate((String)keystore.aliases().nextElement());
-        } catch (Exception e) {
+			certificate = (X509Certificate) keystore.getCertificate((String) keystore.aliases().nextElement());
+		}
+		catch (Exception e)
+		{
 			throw new AssertionError(e);
 		}
 	}
 
-	private IdCardBuilder() {
+	private IdCardBuilder()
+	{
 	}
 
-	public static SecurityWrapper getVocesTrustedSecurityWrapper(String careProviderId, String careProviderName,
-			String itSystemName) throws Exception {
-		return getSecurityWrapper(AuthenticationLevel.VOCES_TRUSTED_SYSTEM, careProviderId, careProviderName,
-				itSystemName);
+	public static SecurityWrapper getVocesTrustedSecurityWrapper(String careProviderId, String careProviderName, String itSystemName) throws Exception
+	{
+		return getSecurityWrapper(AuthenticationLevel.VOCES_TRUSTED_SYSTEM, careProviderId, careProviderName, itSystemName);
 	}
 
-	public static SecurityWrapper getNoAuthenticationSecurityWrapper(String careProviderId, String careProviderName,
-			String itSystemName) throws Exception {
+	public static SecurityWrapper getNoAuthenticationSecurityWrapper(String careProviderId, String careProviderName, String itSystemName) throws Exception
+	{
 		return getSecurityWrapper(AuthenticationLevel.NO_AUTHENTICATION, careProviderId, careProviderName, itSystemName);
 	}
 
-	private static SecurityWrapper getSecurityWrapper(AuthenticationLevel auth, String careProviderId,
-			String careProviderName, String itSystemName) throws Exception {
+	private static SecurityWrapper getSecurityWrapper(AuthenticationLevel auth, String careProviderId, String careProviderName, String itSystemName) throws Exception
+	{
 
 		Federation federation = null; // Not used for issuing ID cards
 		SOSIFactory factory = new SOSIFactory(federation, vault, properties);
@@ -171,8 +175,8 @@ public class IdCardBuilder {
 		marshaller.marshal(security, writer);
 
 		// Parsing security container to generic Document
-        DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = domFactory.newDocumentBuilder();
+		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = domFactory.newDocumentBuilder();
 		Document doc = builder.parse(IOUtils.toInputStream(writer.toString()));
 
 		Request request = getRequest(auth, factory, careProviderId, careProviderName, itSystemName);
@@ -185,20 +189,21 @@ public class IdCardBuilder {
 
 		// Unmarshall the new security object including the idCard
 		Unmarshaller unmarshaller = context.createUnmarshaller();
-        String securityHeaderSerialized = XmlUtil.node2String(doc);
-        Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(securityHeaderSerialized));
-        Timestamp timeStamp = new Timestamp();
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        cal.setTime(request.getCreationDate());
-        cal.set(Calendar.MILLISECOND, 0);
-        timeStamp.setCreated(cal);
-        securityResult.setTimestamp(timeStamp);
-        SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
+		String securityHeaderSerialized = XmlUtil.node2String(doc);
+		Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(securityHeaderSerialized));
+		Timestamp timeStamp = new Timestamp();
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+		cal.setTime(request.getCreationDate());
+		cal.set(Calendar.MILLISECOND, 0);
+		timeStamp.setCreated(cal);
+		securityResult.setTimestamp(timeStamp);
+		SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
 
 		return wrap;
 	}
 
-	private static Header getMedComHeader(String messageId) {
+	private static Header getMedComHeader(String messageId)
+	{
 		Header medcomHeader = new Header();
 		medcomHeader.setSecurityLevel(3);
 		medcomHeader.setRequireNonRepudiationReceipt("no");
@@ -209,22 +214,20 @@ public class IdCardBuilder {
 		return medcomHeader;
 	}
 
-	private static Request getRequest(AuthenticationLevel auth, SOSIFactory factory, String careProviderId,
-			String careProviderName, String itSystemName) throws CertificateException {
+	private static Request getRequest(AuthenticationLevel auth, SOSIFactory factory, String careProviderId, String careProviderName, String itSystemName) throws CertificateException
+	{
 		Request request = factory.createNewRequest(false, null);
 		SystemIDCard idCard = getIdCard(auth, factory, careProviderId, careProviderName, itSystemName);
 		request.setIDCard(idCard);
 		return request;
 	}
 
-	private static SystemIDCard getIdCard(AuthenticationLevel auth, SOSIFactory factory, String careProviderId,
-			String careProviderName, String itSystemName) {
-		CareProvider careProvider = new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, careProviderId,
-				careProviderName);
+	private static SystemIDCard getIdCard(AuthenticationLevel auth, SOSIFactory factory, String careProviderId, String careProviderName, String itSystemName)
+	{
+		CareProvider careProvider = new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, careProviderId, careProviderName);
 		String username = null; // Only used for level 2
 		String password = null; // Only used for level 2
-		SystemIDCard idCard = factory.createNewSystemIDCard(itSystemName, careProvider, auth, username, password,
-				certificate, "Trifork");
+		SystemIDCard idCard = factory.createNewSystemIDCard(itSystemName, careProvider, auth, username, password, certificate, "Trifork");
 		return idCard;
 	}
 }

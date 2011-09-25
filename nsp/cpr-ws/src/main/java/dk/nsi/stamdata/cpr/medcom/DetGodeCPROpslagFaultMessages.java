@@ -1,4 +1,4 @@
-package dk.nsi.stamdata.cpr;
+package dk.nsi.stamdata.cpr.medcom;
 
 public interface DetGodeCPROpslagFaultMessages
 {

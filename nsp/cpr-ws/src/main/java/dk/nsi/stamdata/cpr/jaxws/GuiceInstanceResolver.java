@@ -14,54 +14,42 @@ import com.sun.istack.NotNull;
 import com.sun.xml.ws.api.FeatureConstructor;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.server.InstanceResolverAnnotation;
-import com.sun.xml.ws.api.server.ResourceInjector;
-import com.sun.xml.ws.api.server.WSEndpoint;
-import com.sun.xml.ws.api.server.WSWebServiceContext;
 import com.sun.xml.ws.server.AbstractMultiInstanceResolver;
 
 import dk.nsi.stamdata.cpr.ApplicationController;
 
 /**
- * The instance resolver
+ * The instance resolver.
  * 
  * Looks at the end-point class and gets the annotation in order to know what
  * Guice module to use when injecting the dependencies into the end-point.
  */
 public class GuiceInstanceResolver<T> extends AbstractMultiInstanceResolver<T>
 {
-	private ResourceInjector resourceInjector;
-
-	private WSWebServiceContext webServiceContext;
-
 	public GuiceInstanceResolver(@NotNull final Class<T> clazz) throws IllegalAccessException, InstantiationException
 	{
 		super(clazz);
 	}
 
 	@Override
-	public void start(final WSWebServiceContext wsc, @SuppressWarnings("rawtypes") final WSEndpoint endpoint)
-	{
-		super.start(wsc, endpoint);
-
-		this.resourceInjector = GuiceInstanceResolver.getResourceInjector(endpoint);
-		this.webServiceContext = wsc;
-	}
-
-	@Override
 	public T resolve(@NotNull final Packet packet)
 	{
+		// This is the meat of the class, lets Guice create the dependencies,
+		// while still supporting @Resource injection.
+		
 		final T instance = ApplicationController.injector.getInstance(this.clazz);
-		resourceInjector.inject(webServiceContext, instance);
-
+		
+		prepare(instance);
+		
 		return instance;
 	}
 
 	@Retention(RUNTIME)
 	@Target(TYPE)
 	@Documented
-	@WebServiceFeatureAnnotation(id = GuiceJaxWsFeature.ID, bean = GuiceJaxWsFeature.class)
+	@WebServiceFeatureAnnotation(id = GuiceJaxWsFeature.JAXWS_FEATURE_ID, bean = GuiceJaxWsFeature.class)
 	@InstanceResolverAnnotation(GuiceInstanceResolver.class)
-	public static @interface Guicy
+	public static @interface GuiceWebservice
 	{
 	}
 
@@ -70,7 +58,7 @@ public class GuiceInstanceResolver<T> extends AbstractMultiInstanceResolver<T>
 	 */
 	public static class GuiceJaxWsFeature extends WebServiceFeature
 	{
-		public static final String ID = "dk.nsi.guice.jaxws.feature";
+		public static final String JAXWS_FEATURE_ID = "dk.nsi.guice.jaxws.feature";
 
 		@FeatureConstructor
 		public GuiceJaxWsFeature()
@@ -80,7 +68,7 @@ public class GuiceInstanceResolver<T> extends AbstractMultiInstanceResolver<T>
 
 		public String getID()
 		{
-			return ID;
+			return JAXWS_FEATURE_ID;
 		}
 	}
 }

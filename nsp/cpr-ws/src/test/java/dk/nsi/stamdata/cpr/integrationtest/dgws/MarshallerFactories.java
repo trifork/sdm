@@ -32,16 +32,20 @@ import javax.xml.bind.Marshaller;
 
 import dk.nsi.stamdata.cpr.ws.Security;
 
-public class MarshallerFactories {
+public class MarshallerFactories
+{
 	private static final String MARSHALLER_PROP = "com.sun.xml.bind.namespacePrefixMapper";
 
-	public static class SecurityMarshallerFactory {
-		public Object makeObject() throws Exception {
+	public static class SecurityMarshallerFactory
+	{
+		public Object makeObject() throws Exception
+		{
 			return MarshallerFactories.getMarshaller(Security.class);
 		}
 	}
 
-	private static Marshaller getMarshaller(Class<?> clazz) throws JAXBException {
+	private static Marshaller getMarshaller(Class<?> clazz) throws JAXBException
+	{
 		JAXBContext context = JAXBContext.newInstance(clazz);
 		Marshaller marshaller = context.createMarshaller();
 		marshaller.setProperty(MARSHALLER_PROP, new SealNamespacePrefixMapper());

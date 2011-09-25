@@ -8,6 +8,7 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagFaultMessages;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Security;
@@ -18,7 +19,7 @@ public final class DGWSFaultUtil
 	{
 	}
 
-	static DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
+	public static DGWSFault newDGWSFault(Holder<Security> securityHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
 	{
 		DGWSHeaderUtil.setHeadersToOutgoing(securityHolder, medcomHeaderHolder);
 		medcomHeaderHolder.value.setFlowStatus(status);
@@ -26,7 +27,7 @@ public final class DGWSFaultUtil
 		return new DGWSFault(errorMsg, DGWSHeaderUtil.DGWS_ERROR_MSG);
 	}
 
-	static SOAPFaultException newSOAPSenderFault(String message)
+	public static SOAPFaultException newSOAPSenderFault(String message)
 	{
 		checkNotNull(message, "message");
 
@@ -55,7 +56,7 @@ public final class DGWSFaultUtil
 		return new SOAPFaultException(fault);
 	}
 
-	static RuntimeException newServerErrorFault(Exception e)
+	public static RuntimeException newServerErrorFault(Exception e)
 	{
 		checkNotNull(e, "e");
 

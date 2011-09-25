@@ -1,4 +1,4 @@
-package dk.nsi.stamdata.cpr;
+package dk.nsi.stamdata.cpr.medcom;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
@@ -19,8 +19,9 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
 
+import dk.nsi.stamdata.cpr.DGWSFaultUtil;
 import dk.nsi.stamdata.cpr.annotations.Whitelist;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.Guicy;
+import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
 import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
@@ -33,7 +34,7 @@ import dk.nsi.stamdata.cpr.ws.Security;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
-@Guicy
+@GuiceWebservice
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {	
@@ -164,7 +165,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return person;
 	}
 
-    private Sikrede fetchSikredeWithPnr(String pnr)
+    @SuppressWarnings("unused")
+	private Sikrede fetchSikredeWithPnr(String pnr)
     {
         checkNotNull(pnr);
 
