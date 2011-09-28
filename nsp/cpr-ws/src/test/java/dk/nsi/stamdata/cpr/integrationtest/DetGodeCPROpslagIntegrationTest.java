@@ -93,7 +93,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
     private void purgeSikrede() {
         session.createSQLQuery("TRUNCATE SikredeYderRelation").executeUpdate();
-        session.createSQLQuery("TRUNCATE YderRegister").executeUpdate();
+        session.createSQLQuery("TRUNCATE Yderregister").executeUpdate();
     }
 
     @Test
