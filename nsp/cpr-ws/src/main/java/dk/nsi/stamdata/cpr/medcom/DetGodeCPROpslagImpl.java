@@ -104,7 +104,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag {
         // which would be a nicer protocol.
 
         Person person = fetchPersonWithPnr(pnr);
-        Sikrede sikrede = null; // TODO: Fetch the "sikrede" record for the pnr.
+
         SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr+"-C");
         Yderregister yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
 
