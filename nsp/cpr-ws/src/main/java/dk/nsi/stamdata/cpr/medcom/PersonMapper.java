@@ -176,7 +176,7 @@ public class PersonMapper
     }
 
 
-    private XMLGregorianCalendar newXMLGregorianCalendar(Date date) throws DatatypeConfigurationException
+    public XMLGregorianCalendar newXMLGregorianCalendar(Date date) throws DatatypeConfigurationException
     {
         DatatypeFactory factory = DatatypeFactory.newInstance();
         return factory.newXMLGregorianCalendar(new DateTime(date).toGregorianCalendar());
