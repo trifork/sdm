@@ -1,3 +1,5 @@
+USE sdm_warehouse;
+
 -- ADMINISTRATION TABLES (USERS ETC.)
 
 CREATE TABLE Client (
