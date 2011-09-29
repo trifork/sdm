@@ -21,6 +21,7 @@ import com.trifork.stamdata.models.sikrede.Sikrede;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
 
+import dk.nsi.stamdata.cpr.DgwsHeadersUtils;
 import dk.nsi.stamdata.cpr.SoapFaultUtil;
 import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
@@ -96,6 +97,10 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
         output.setPersonInformationStructure(personInformation);
 
+        // TODO: This should be done in the filter
+        // This has to be done according to the DGWS specifications
+        DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+        
         return output;
     }
 

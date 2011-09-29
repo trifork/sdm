@@ -87,6 +87,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup {
                     FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
         }
         
+        // TODO: This should be done in the filter
         // This has to be done according to the DGWS specifications
         DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
         
