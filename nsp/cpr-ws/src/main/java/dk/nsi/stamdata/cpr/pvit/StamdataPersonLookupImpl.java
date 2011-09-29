@@ -63,7 +63,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		
 		// TODO: This should be done in the filter
 		// This has to be done according to the DGWS specifications
-
 		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 		
 		try
@@ -98,10 +97,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 			logger.error(e.getMessage(), e); // TODO: Log medcom flow id
 			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
 		}
-
-		// TODO: This should be done in the filter
-		// This has to be done according to the DGWS specifications
-		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
 	}
