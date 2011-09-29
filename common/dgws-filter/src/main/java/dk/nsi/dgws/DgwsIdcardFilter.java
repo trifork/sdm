@@ -91,7 +91,7 @@ public class DgwsIdcardFilter implements Filter
 	@Override
 	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
-		// We only accept HTTP requests.
+		// Guard: We only accept HTTP requests.
 
 		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
 		{
