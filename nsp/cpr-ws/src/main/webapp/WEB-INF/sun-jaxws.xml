@@ -7,11 +7,10 @@
 		port="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslag"
 		implementation="dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagImpl" url-pattern="/service/DetGodeCPROpslag" />
 		
-	<!-- This binding is for PersonLookupService SOAP 1.2 -->
+	<!-- This binding is for PersonLookupService SOAP 1.1, not using SOAP 1.2 due to SEAL limitations -->
 	<endpoint name="StamdataPersonLookup" wsdl="WEB-INF/wsdl/StamdataPersonLookup.wsdl"
 		service="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookupService"
 		port="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookup"
-		binding="http://java.sun.com/xml/ns/jaxws/2003/05/soap/bindings/HTTP/"
 		implementation="dk.nsi.stamdata.cpr.pvit.StamdataPersonLookupImpl" url-pattern="/service/StamdataPersonLookup" />
-		
+
 </endpoints>

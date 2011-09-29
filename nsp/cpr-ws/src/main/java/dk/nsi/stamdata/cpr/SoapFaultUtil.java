@@ -26,7 +26,7 @@ public final class SoapFaultUtil
 	{
 	}
 
-	public static DGWSFault newDGWSFault(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg) throws DGWSFault
+	public static DGWSFault newDGWSFault(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg)
 	{
 		checkNotNull(securityHeaderHolder, "securityHeaderHolder");
 		checkNotNull(medcomHeaderHolder, "medcomHeaderHolder");

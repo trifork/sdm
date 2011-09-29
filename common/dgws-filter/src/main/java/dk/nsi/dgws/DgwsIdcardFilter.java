@@ -1,9 +1,28 @@
 package dk.nsi.dgws;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Properties;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.IDCard;
 import dk.sosi.seal.model.Reply;
-import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.model.constants.DGWSConstants;
 import dk.sosi.seal.model.constants.FaultCodeValues;
@@ -15,179 +34,155 @@ import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 import dk.sosi.seal.xml.XmlUtilException;
 
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Properties;
-
 /**
  * Extracts IdCard instances from the request and places them in the servlet
- * request
+ * request.
+ * 
+ * This module does not support soap 1.2.
+ * To add support for soap 1.2, seal would have to support soap 1.2, and some of the 
+ * code below would have to be rewritten.
  */
-public class DgwsIdcardFilter implements Filter
-{
-	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
-	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
-	private SOSIFactory factory;
+public class DgwsIdcardFilter implements Filter {
+    public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
+    public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
+    private SOSIFactory factory;
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException
-	{
-		boolean useTestFederation = shouldWeUseTestFederation(filterConfig);
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        boolean useTestFederation = shouldWeUseTestFederation(filterConfig);
 
-		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
-		Federation federation;
+        Properties properties = SignatureUtil.setupCryptoProviderForJVM();
+        Federation federation;
 
-		if (useTestFederation)
-		{
-			federation = new SOSITestFederation(properties);
-		}
-		else
-		{
-			federation = new SOSIFederation(properties);
-		}
+        if (useTestFederation) {
+            federation = new SOSITestFederation(properties);
+        } else {
+            federation = new SOSIFederation(properties);
+        }
 
-		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
-	}
+        factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
+    }
 
-	private Boolean shouldWeUseTestFederation(FilterConfig filterConfig)
-	{
-		String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
-		String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
-		
-		if (sysProp != null)
-		{
-			return Boolean.valueOf(sysProp);
-		}
-		else
-		{
-			return Boolean.valueOf(initParameter);
-		}
-	}
+    private Boolean shouldWeUseTestFederation(FilterConfig filterConfig) {
+        String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
+        String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
 
-	@Override
-	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
-	{
-		// We only accept HTTP requests.
+        if (sysProp != null) {
+            return Boolean.valueOf(sysProp);
+        } else {
+            return Boolean.valueOf(initParameter);
+        }
+    }
 
-		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
-		{
-			return;
-		}
+    @Override
+    public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain)
+            throws IOException, ServletException {
+        // We only accept HTTP requests.
 
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse)) {
+            return;
+        }
 
-		// HACK: To allow the JAX-WS client to access the WSDL without
-		// having to send DGWS stuff along with the call we
-		// make a little hack that pass these called through.
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-		if ("wsdl".equals(httpRequest.getQueryString()))
-		{
-			chain.doFilter(request, response);
-			return;
-		}
+        // HACK: To allow the JAX-WS client to access the WSDL without
+        // having to send DGWS stuff along with the call we
+        // make a little hack that pass these called through.
 
-		try
-		{
-			// Rip out the ID Card and cram it into the request context.
+        if ("wsdl".equals(httpRequest.getQueryString())) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-			final String xml = IOUtils.toString(request.getReader());
-			
-			// NB. SEAL throws an exception if the id card is not valid in time
-			// or invalid in some other way.
+        try {
+            // Rip out the ID Card and cram it into the request context.
 
-			IDCard idCard = factory.deserializeRequest(xml).getIDCard();
-			
-			// We have to make sure ourselves that the ID Cards NIST level etc.
-			// is as expected.
-			
-			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
+            final String xml = IOUtils.toString(request.getReader());
 
-			chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
-		}
-		catch (SignatureInvalidModelBuildException e)
-		{
-			// The signature was invalid. This sender is to blame.
-			
-			// Unfortunately SEAL's API is not made with the user in mind and
-			// we cannot access e.g. the flow ID without reparsing the XML
-			// again ourselves. Therefore we simply return "0".
-			
-			// FIXME: To enable protection against replay attacks,
-			// the response embeds the ID of the corresponding request (see the inResponseToID).
-			// We do not set this, because it is difficult to get because using SEAL's API is
-			// up hill.
-			
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.INVALID_SIGNATURE, "The signature used to sign the message was incorrectly signed or no longer valid.");
-			writeFaultToResponse(httpResponse, reply);
-		}
-		catch (XmlUtilException e)
-		{
-			// The message could not be read. The sender is to blame.
-			
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-			writeFaultToResponse(httpResponse, reply);
-		}
-		catch (Exception e)
-		{
-			// This is bad and will likely be a bug.
+            // NB. SEAL throws an exception if the id card is not valid in time
+            // or invalid in some other way.
 
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-			writeFaultToResponse(httpResponse, reply);
-		}
-	}
+            IDCard idCard = factory.deserializeRequest(xml).getIDCard();
 
-	private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException
-	{
-		httpResponse.setStatus(500);
+            // We have to make sure ourselves that the ID Cards NIST level etc.
+            // is as expected.
 
-		httpResponse.setContentType("text/xml"); // TODO: Shouldn't this depend on it being SOAP 1.1 or 1.2?
+            request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 
-		Document replyXml = reply.serialize2DOMDocument();
-		String xml = XmlUtil.node2String(replyXml);
-		httpResponse.getWriter().write(xml);
-	}
+            chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
+        } catch (SignatureInvalidModelBuildException e) {
+            // The signature was invalid. This sender is to blame.
 
-	@Override
-	public void destroy()
-	{
-	}
+            // Unfortunately SEAL's API is not made with the user in mind and
+            // we cannot access e.g. the flow ID without reparsing the XML
+            // again ourselves. Therefore we simply return "0".
+
+            // FIXME: To enable protection against replay attacks,
+            // the response embeds the ID of the corresponding request (see the
+            // inResponseToID).
+            // We do not set this, because it is difficult to get because using
+            // SEAL's API is
+            // up hill.
+
+            Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0",
+                    FaultCodeValues.INVALID_SIGNATURE,
+                    "The signature used to sign the message was incorrectly signed or no longer valid.");
+            writeFaultToResponse(httpResponse, reply);
+        } catch (XmlUtilException e) {
+            // The message could not be read. The sender is to blame.
+
+            Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0",
+                    FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+            writeFaultToResponse(httpResponse, reply);
+        } catch (Exception e) {
+            // This is bad and will likely be a bug.
+
+            Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0",
+                    FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+            writeFaultToResponse(httpResponse, reply);
+        }
+    }
+
+    private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException {
+        httpResponse.setStatus(500);
+
+        httpResponse.setContentType("text/xml"); // TODO: Shouldn't this depend
+                                                 // on it being SOAP 1.1 or 1.2?
+
+        Document replyXml = reply.serialize2DOMDocument();
+        String xml = XmlUtil.node2String(replyXml);
+
+        httpResponse.getWriter().write(xml);
+    }
+
+    @Override
+    public void destroy() {
+    }
 }
 
 // TODO: Comment what is this class for?
-class RequestWrapperWithSavedBody extends HttpServletRequestWrapper
-{
-	private final String body;
+class RequestWrapperWithSavedBody extends HttpServletRequestWrapper {
+    private final String body;
 
-	public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException
-	{
-		super(request);
-		body = requestBody;
-	}
+    public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException {
+        super(request);
+        body = requestBody;
+    }
 
-	@Override
-	public ServletInputStream getInputStream() throws IOException
-	{
-		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
-		ServletInputStream servletInputStream = new ServletInputStream()
-		{
-			public int read() throws IOException
-			{
-				return byteArrayInputStream.read();
-			}
-		};
-		return servletInputStream;
-	}
+    @Override
+    public ServletInputStream getInputStream() throws IOException {
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
+        ServletInputStream servletInputStream = new ServletInputStream() {
+            public int read() throws IOException {
+                return byteArrayInputStream.read();
+            }
+        };
+        return servletInputStream;
+    }
 
-	@Override
-	public BufferedReader getReader() throws IOException
-	{
-		return new BufferedReader(new InputStreamReader(this.getInputStream()));
-	}
+    @Override
+    public BufferedReader getReader() throws IOException {
+        return new BufferedReader(new InputStreamReader(this.getInputStream()));
+    }
 }

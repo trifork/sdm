@@ -61,6 +61,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		this.idCard = idCard;
 	}
 
+	// TODO: Headers should be set to outgoing. See BRS for correct way of setting these.
 	@Override
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
@@ -192,6 +193,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	{
 		if (StringUtils.isBlank(pnr))
 		{
+		    // This service should match functionality from a service that was not DGWS protected.
+		    // Callers expect to be met with a SOAP sender fault.
+		    // Callers to the PVIT service should expect DGWS faults instead.
 			throw SoapFaultUtil.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 		}
 	}
