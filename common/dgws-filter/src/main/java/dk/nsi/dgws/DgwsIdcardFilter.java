@@ -7,6 +7,7 @@ import java.util.Properties;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -42,6 +43,7 @@ import dk.sosi.seal.xml.XmlUtilException;
  * To add support for soap 1.2, seal would have to support soap 1.2, and some of the 
  * code below would have to be rewritten.
  */
+@Singleton
 public class DgwsIdcardFilter implements Filter
 {
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
