@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -14,7 +15,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
@@ -35,6 +35,7 @@ import dk.nsi.stamdata.cpr.ws.Security;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+
 
 @GuiceWebservice
 @WebService(serviceName = "StamdataPersonLookup", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookup")
@@ -58,9 +59,12 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 	@Override
 	public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader, Holder<Header> medcomHeader, PersonLookupRequestType request) throws DGWSFault
 	{
-		printPersonLookupRequest(request);
-
 		verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
+		
+		// TODO: This should be done in the filter
+		// This has to be done according to the DGWS specifications
+
+		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 		
 		try
 		{
@@ -100,15 +104,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
-	}
-
-	private void printPersonLookupRequest(PersonLookupRequestType request)
-	{
-		System.out.println("Content of request: ");
-		System.out.println(" - CPR: " + request.getCivilRegistrationNumberPersonQuery());
-		System.out.println(" - Birth date person query: " + request.getBirthDatePersonQuery());
-		System.out.println(" - Civil registration number list person: " + request.getCivilRegistrationNumberListPersonQuery());
-		System.out.println(" - Name person query: " + request.getNamePersonQuery());
 	}
 
 	private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault
