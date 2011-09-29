@@ -127,7 +127,8 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		if (nonNullParameters != 1)
 		{
 			// TODO: This way of throwing faults was taken from DGCPROpslag and
-			// doe not contain any meaningfull information for the caller
+			// does not contain any meaningful information for the caller.
+
 			throw SoapFaultUtil.newDGWSFault(securityHeaderHolder, medcomHeaderHolder, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
 		}
 	}
