@@ -3,7 +3,6 @@ package com.trifork.stamdata.models.cpr;
 import static javax.persistence.TemporalType.DATE;
 import static javax.persistence.TemporalType.TIMESTAMP;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -66,7 +65,6 @@ public class Person extends BaseTemporalEntity
 
 	public String gaeldendeCPR;
 
-	@Temporal(DATE)
 	public Date foedselsdato;
 
 	public String stilling;
@@ -75,10 +73,7 @@ public class Person extends BaseTemporalEntity
 
 	public String kommuneKode;
 
-	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelseslettedato;
-
-	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelsestartdato;
 
     public String getKoen() {
@@ -209,6 +204,7 @@ public class Person extends BaseTemporalEntity
         this.gaeldendeCPR = gaeldendeCPR;
     }
 
+    @Temporal(DATE)
     public Date getFoedselsdato() {
         return foedselsdato;
     }
@@ -241,14 +237,16 @@ public class Person extends BaseTemporalEntity
         this.kommuneKode = kommuneKode;
     }
 
+    @Temporal(TIMESTAMP)
     public Date getNavnebeskyttelseslettedato() {
         return navnebeskyttelseslettedato;
     }
-
+    
     public void setNavnebeskyttelseslettedato(Date navnebeskyttelseslettedato) {
         this.navnebeskyttelseslettedato = navnebeskyttelseslettedato;
     }
 
+    @Temporal(TIMESTAMP)
     public Date getNavnebeskyttelsestartdato() {
         return navnebeskyttelsestartdato;
     }

@@ -15,7 +15,8 @@ import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.MonitoringModule;
 
 import dk.nsi.dgws.DgwsModule;
-import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
+import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
+import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 
 public class ComponentController extends GuiceServletContextListener
 {

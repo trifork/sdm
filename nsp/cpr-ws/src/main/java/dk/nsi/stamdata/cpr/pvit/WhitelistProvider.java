@@ -1,4 +1,4 @@
-package dk.nsi.stamdata.cpr;
+package dk.nsi.stamdata.cpr.pvit;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

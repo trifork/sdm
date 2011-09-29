@@ -1,36 +1,39 @@
 package dk.nsi.stamdata.cpr.medcom;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
 
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
 
 public class PersonWithHealthCareMapper
 {
-	private PersonMapper personMapper;
+	private final PersonMapper personMapper;
 
 	@Inject
 	PersonWithHealthCareMapper(PersonMapper personMapper)
 	{
-		this.personMapper = checkNotNull(personMapper, "personMapper");
+		this.personMapper = personMapper;
 	}
 
-	public PersonWithHealthCareInformationStructureType map(Person person, Sikrede sikrede) throws DatatypeConfigurationException
+	public PersonWithHealthCareInformationStructureType map(Person person, Sikrede sikrede, ServiceProtectionLevel protectionLevel) throws DatatypeConfigurationException
 	{
+		PersonHealthCareInformationStructureType output = createOutputWithRealDate(person);
+		
 		PersonWithHealthCareInformationStructureType personWithHealthCare = new PersonWithHealthCareInformationStructureType();
+		personWithHealthCare.setPersonInformationStructure(personMapper.map(person, protectionLevel));
+		personWithHealthCare.setPersonHealthCareInformationStructure(output);
 
-		PersonInformationStructureType personInformation = personMapper.map(person, false); // FIXME: Protect data when we need to.
+		return personWithHealthCare;
+	}
 
-		personWithHealthCare.setPersonInformationStructure(personInformation);
-
-		// TODO: Map the person information.
-
+	private PersonHealthCareInformationStructureType createOutputWithRealDate(Person person) throws DatatypeConfigurationException
+	{
 		return null;
 	}
 }

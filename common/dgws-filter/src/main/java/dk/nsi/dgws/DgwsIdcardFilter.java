@@ -1,9 +1,27 @@
 package dk.nsi.dgws;
 
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Properties;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.IDCard;
 import dk.sosi.seal.model.Reply;
-import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SignatureUtil;
 import dk.sosi.seal.model.constants.DGWSConstants;
 import dk.sosi.seal.model.constants.FaultCodeValues;
@@ -15,16 +33,6 @@ import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 import dk.sosi.seal.xml.XmlUtilException;
 
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Properties;
-
 /**
  * Extracts IdCard instances from the request and places them in the servlet
  * request
@@ -33,29 +41,30 @@ public class DgwsIdcardFilter implements Filter
 {
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
 	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
+	public static final String USE_TEST_FEDERATION_PARAMETER = "useSOSITestFederation";
+	
+	private Boolean useTestFederation;
 	private SOSIFactory factory;
+	
+	public DgwsIdcardFilter() { }
 
+	@Inject
+	DgwsIdcardFilter(@Named(USE_TEST_FEDERATION_PARAMETER) @Nullable String useTestFederation)
+	{
+		this.useTestFederation = Boolean.valueOf(useTestFederation);
+	}
+	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
 		boolean useTestFederation = shouldWeUseTestFederation(filterConfig);
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
-		Federation federation;
-
-		if (useTestFederation)
-		{
-			federation = new SOSITestFederation(properties);
-		}
-		else
-		{
-			federation = new SOSIFederation(properties);
-		}
-
+		Federation federation = useTestFederation ? new SOSITestFederation(properties) : new SOSIFederation(properties);
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
 	}
 
-	private Boolean shouldWeUseTestFederation(FilterConfig filterConfig)
+	private boolean shouldWeUseTestFederation(FilterConfig filterConfig)
 	{
 		String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
 		String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
@@ -64,9 +73,13 @@ public class DgwsIdcardFilter implements Filter
 		{
 			return Boolean.valueOf(sysProp);
 		}
-		else
+		else if (initParameter != null)
 		{
 			return Boolean.valueOf(initParameter);
+		}
+		else
+		{
+			return useTestFederation;
 		}
 	}
 
@@ -81,7 +94,7 @@ public class DgwsIdcardFilter implements Filter
 		}
 
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		HttpServletRequest httpRequest = new BufferedInputRequestWrapper((HttpServletRequest) request);
 
 		// HACK: To allow the JAX-WS client to access the WSDL without
 		// having to send DGWS stuff along with the call we
@@ -97,7 +110,7 @@ public class DgwsIdcardFilter implements Filter
 		{
 			// Rip out the ID Card and cram it into the request context.
 
-			final String xml = IOUtils.toString(request.getReader());
+			final String xml = IOUtils.toString(httpRequest.getReader());
 			
 			// NB. SEAL throws an exception if the id card is not valid in time
 			// or invalid in some other way.
@@ -109,14 +122,16 @@ public class DgwsIdcardFilter implements Filter
 			
 			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 
-			chain.doFilter(new RequestWrapperWithSavedBody(httpRequest, xml), response);
+			// Since w
+			
+			chain.doFilter(httpRequest, response);
 		}
 		catch (SignatureInvalidModelBuildException e)
 		{
 			// The signature was invalid. This sender is to blame.
 			
 			// Unfortunately SEAL's API is not made with the user in mind and
-			// we cannot access e.g. the flow ID without reparsing the XML
+			// we cannot access e.g. the flow ID without re-parsing the XML
 			// again ourselves. Therefore we simply return "0".
 			
 			// FIXME: To enable protection against replay attacks,
@@ -145,7 +160,7 @@ public class DgwsIdcardFilter implements Filter
 
 	private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException
 	{
-		httpResponse.setStatus(500);
+		httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		httpResponse.setContentType("text/xml"); // TODO: Shouldn't this depend on it being SOAP 1.1 or 1.2?
 
@@ -155,39 +170,12 @@ public class DgwsIdcardFilter implements Filter
 	}
 
 	@Override
-	public void destroy()
-	{
-	}
-}
-
-// TODO: Comment what is this class for?
-class RequestWrapperWithSavedBody extends HttpServletRequestWrapper
-{
-	private final String body;
-
-	public RequestWrapperWithSavedBody(HttpServletRequest request, String requestBody) throws IOException
-	{
-		super(request);
-		body = requestBody;
-	}
-
-	@Override
-	public ServletInputStream getInputStream() throws IOException
-	{
-		final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes());
-		ServletInputStream servletInputStream = new ServletInputStream()
-		{
-			public int read() throws IOException
-			{
-				return byteArrayInputStream.read();
-			}
-		};
-		return servletInputStream;
-	}
-
-	@Override
-	public BufferedReader getReader() throws IOException
-	{
-		return new BufferedReader(new InputStreamReader(this.getInputStream()));
-	}
+	public void destroy() { }
+	
+	/**
+	 * This annotation allows dependency injectors know
+	 * that the annotated element can be null.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface Nullable { }
 }

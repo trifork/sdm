@@ -1,7 +1,9 @@
 package dk.nsi.stamdata.cpr.medcom;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.jws.WebParam;
@@ -16,12 +18,15 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
 
+import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.SoapFaultUtil;
-import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
 import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
@@ -32,33 +37,30 @@ import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.Security;
 import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.model.constants.FaultCodeValues;
 
 @GuiceWebservice
 @WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {
-	private static Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
 	
 	private static final String NS_TNS = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/";
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"; // TODO: Shouldn't this be 1.0.1?
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 	
-	private final Set<String> whitelist;
 	private final Fetcher fetcher;
 	private final PersonMapper personMapper;
 	private final PersonWithHealthCareMapper personWithHealthCareMapper;
+	private final String clientCVR;
 
-	private final SystemIDCard idCard;
 	
 	@Inject
-	DetGodeCPROpslagImpl(@Whitelist Set<String> whitelist, Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard idCard)
+	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard card)
 	{
-		this.whitelist = whitelist;
 		this.fetcher = fetcher;
 		this.personMapper = personMapper;
 		this.personWithHealthCareMapper = personWithHealthCareMapper;
-		this.idCard = idCard;
+		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
 	}
 
 	@Override
@@ -68,7 +70,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		String pnr = input.getPersonCivilRegistrationIdentifier();
 		
-		checkClientAuthorization(pnr, wsseHeader, medcomHeader);
+		logAccess(pnr);
 
 		// 2. Validate the input parameters.
 
@@ -86,7 +88,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         
         try
         {
-            personInformation = personMapper.map(person, false); // FIXME: Protect data when we need to.
+            personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
         }
         catch (DatatypeConfigurationException e)
         {
@@ -106,7 +108,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		String pnr = parameters.getPersonCivilRegistrationIdentifier();
 
-		checkClientAuthorization(pnr, wsseHeader, medcomHeader);
+		logAccess(pnr);
 
 		// 2. Validate the input parameters.
 
@@ -125,7 +127,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		try
 		{
-			output.setPersonWithHealthCareInformationStructure(personWithHealthCareMapper.map(person, sikrede));
+			output.setPersonWithHealthCareInformationStructure(personWithHealthCareMapper.map(person, sikrede, ServiceProtectionLevel.AlwaysCensorProtectedData));
 		}
 		catch (DatatypeConfigurationException e)
 		{
@@ -137,15 +139,15 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	
 	// HELPERS
 	
-	private Person fetchPersonWithPnr(String pnr)
+	private Person fetchPersonWithPnr(String cpr)
 	{
-		checkNotNull(pnr, "pnr");
+		checkNotNull(cpr, "cpr");
 		
 		Person person;
 
 		try
 		{
-			person = fetcher.fetch(Person.class, pnr);
+			person = fetcher.fetch(Person.class, cpr);
 		}
 		catch (Exception e)
 		{
@@ -165,9 +167,9 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 
     @SuppressWarnings("unused")
-	private Sikrede fetchSikredeWithPnr(String pnr)
+	private Sikrede fetchSikredeWithPnr(String cpr)
     {
-        checkNotNull(pnr, "pnr");
+        checkNotNull(cpr, "cpr");
 
         Sikrede sikrede = null;
 
@@ -196,19 +198,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 	}
 
-
-	private void checkClientAuthorization(String requestedPNR, Holder<Security> wsseHeader, Holder<Header> medcomHeader) throws DGWSFault
+	private void logAccess(String requestedCPR) throws DGWSFault
 	{
-		String clientCVR = idCard.getSystemInfo().getCareProvider().getID();
-
-		if (!whitelist.contains(clientCVR))
-		{
-			logger.warn("type=auditlog, service=stamdata-cpr, access=denied, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.CALLER_NOT_AUTHORIZED, FaultCodeValues.NOT_AUTHORIZED);
-		}
-		else
-		{
-			logger.info("type=auditlog, service=stamdata-cpr, access=granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
-		}
+		logger.info("type=auditlog, service=stamdata-cpr, client_cvr={}, requested_cpr={}", clientCVR, requestedCPR);
 	}
 }
