@@ -18,6 +18,8 @@ import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.models.sikrede.Yderregister;
 
 import dk.nsi.stamdata.cpr.SoapFaultUtil;
 import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
@@ -30,6 +32,7 @@ import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.Security;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
@@ -84,108 +87,118 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		
 		GetPersonInformationOut output = new GetPersonInformationOut();
         PersonInformationStructureType personInformation;
-        
-        try
-        {
+
+        try {
             personInformation = personMapper.map(person, false); // FIXME: Protect data when we need to.
-        }
-        catch (DatatypeConfigurationException e)
-        {
+        } catch (DatatypeConfigurationException e) {
             throw SoapFaultUtil.newServerErrorFault(e);
         }
-        
+
         output.setPersonInformationStructure(personInformation);
-        
-		return output;
-	}
+
+        return output;
+    }
 
 
-	@Override
-	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(	name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
-	{
-		// 1. Check the white list to see if the client is authorized.
+    @Override
+    public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_TNS, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault {
+        // 1. Check the white list to see if the client is authorized.
 
-		String pnr = parameters.getPersonCivilRegistrationIdentifier();
+        String pnr = parameters.getPersonCivilRegistrationIdentifier();
 
-		checkClientAuthorization(pnr, wsseHeader, medcomHeader);
+        checkClientAuthorization(pnr, wsseHeader, medcomHeader);
 
-		// 2. Validate the input parameters.
+        // 2. Validate the input parameters.
 
-		checkInputParameters(pnr);
+        checkInputParameters(pnr);
 
-		// 2. Fetch the person from the database.
-		//
-		// NOTE: Unfortunately the specification is defined so that we have to
-		// return a fault if no person is found. We cannot change this to return nil
-		// which would be a nicer protocol.
-		
-		Person person = fetchPersonWithPnr(pnr);
-		Sikrede sikrede = null; // TODO: Fetch the "sikrede" record for the pnr.
-		
-		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
+        // 2. Fetch the person from the database.
+        //
+        // NOTE: Unfortunately the specification is defined so that we have to
+        // return a fault if no person is found. We cannot change this to return nil
+        // which would be a nicer protocol.
 
-		try
-		{
-			output.setPersonWithHealthCareInformationStructure(personWithHealthCareMapper.map(person, sikrede));
-		}
-		catch (DatatypeConfigurationException e)
-		{
-			throw SoapFaultUtil.newServerErrorFault(e);
-		}
-		
-		return output;
-	}
-	
-	// HELPERS
-	
-	private Person fetchPersonWithPnr(String pnr)
-	{
-		checkNotNull(pnr, "pnr");
-		
-		Person person;
+        Person person = fetchPersonWithPnr(pnr);
 
-		try
-		{
-			person = fetcher.fetch(Person.class, pnr);
-		}
-		catch (Exception e)
-		{
-			throw SoapFaultUtil.newServerErrorFault(e);
-		}
+        SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr+"-C");
+        Yderregister yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
 
-		// NOTE: Unfortunately the specification is defined so that we have to return a
-		// fault if no person is found. We cannot change this to return nil which would
-		// be a nicer protocol.
+        GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
+        PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
+        try {
+            personWithHealthCareInformation = personWithHealthCareMapper.map(person, sikredeYderRelation, yderregister);
+        } catch (DatatypeConfigurationException e) {
+            throw SoapFaultUtil.newServerErrorFault(e);
+        }
+        output.setPersonWithHealthCareInformationStructure(personWithHealthCareInformation);
 
-		if (person == null)
-		{
-			throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
+        return output;
+    }
 
-		return person;
-	}
+    // HELPERS
+
+    private Person fetchPersonWithPnr(String pnr) {
+        checkNotNull(pnr, "pnr");
+
+        Person person;
+
+        try {
+            person = fetcher.fetch(Person.class, pnr);
+        } catch (Exception e) {
+            throw SoapFaultUtil.newServerErrorFault(e);
+        }
+
+        // NOTE: Unfortunately the specification is defined so that we have to return a
+        // fault if no person is found. We cannot change this to return nil which would
+        // be a nicer protocol.
+
+        if (person == null) {
+            throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
+        }
+
+        return person;
+    }
+
+    private SikredeYderRelation fetchSikredeYderRelationWithPnr(String pnr) {
+        checkNotNull(pnr, "pnr");
+        SikredeYderRelation sikredeYderRelation = null;
+
+        try {
+            sikredeYderRelation = fetcher.fetch(SikredeYderRelation.class, pnr);
+        } catch (Exception e) {
+            throw SoapFaultUtil.newServerErrorFault(e);
+        }
+
+        return sikredeYderRelation;
+
+    }
+
+    private Yderregister fetchYderregisterForPnr(int ydernummer) {
+        Yderregister yderregister = null;
+        try {
+            yderregister = fetcher.fetch(Yderregister.class, ydernummer);
+        } catch (Exception e) {
+            throw SoapFaultUtil.newServerErrorFault(e);
+        }
+        return yderregister;
+    }
 
     @SuppressWarnings("unused")
-	private Sikrede fetchSikredeWithPnr(String pnr)
-    {
+    private Sikrede fetchSikredeWithPnr(String pnr) {
         checkNotNull(pnr, "pnr");
 
         Sikrede sikrede = null;
 
-        try
-        {
+        try {
             //sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw SoapFaultUtil.newServerErrorFault(e);
         }
 
-        if (sikrede == null)
-		{
+        if (sikrede == null) {
             throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
-        
+        }
+
         return sikrede;
     }
 
@@ -215,4 +228,5 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			logger.info("type=auditlog, service=stamdata-cpr, access=granted, client_cvr={}, requested_pnr={}", clientCVR, requestedPNR);
 		}
 	}
+
 }
