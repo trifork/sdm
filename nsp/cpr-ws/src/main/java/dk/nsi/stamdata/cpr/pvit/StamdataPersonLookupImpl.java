@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
-import com.mchange.util.AssertException;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
@@ -89,7 +88,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup {
                     FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
         }
         
-        throw new AssertException("Unreachable point: exactly one of the previous clauses is true");
+        throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
     }
 
     private void printPersonLookupRequest(PersonLookupRequestType request) {
