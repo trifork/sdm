@@ -199,7 +199,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
         try
         {
-            //sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO 
+            //sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO
         }
         catch (Exception e)
         {
