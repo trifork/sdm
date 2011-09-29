@@ -64,19 +64,19 @@
   <wsdl:binding name="StamdataPersonLookupSoap12Binding" type="tns:StamdataPersonLookup">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
     <wsdl:operation name="getPersonDetails">
-        <soap:operation soapAction="http://nsi.dk/2011/09/23/StamdataCpr/getPersonDetails" style="document"/>
+        <soap:operation soapAction="http://nsi.dk/2011/09/23/StamdataCpr/getPersonDetails" style="document"/> 
         <wsdl:input>
-            <soap:body use="literal" parts="parameters" />
-            <soap:header message="tns:PersonLookupIn" part="wsseHeader" use="literal" />
-            <soap:header message="tns:PersonLookupIn" part="medcomHeader" use="literal" />
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:PersonLookupIn" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:PersonLookupIn" part="medcomHeader" use="literal"/>
         </wsdl:input>
         <wsdl:output>
-            <soap:body use="literal" parts="parameters" />
-            <soap:header message="tns:PersonLookupOut" part="wsseHeader" use="literal" />
-            <soap:header message="tns:PersonLookupOut" part="medcomHeader" use="literal" />
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:PersonLookupOut" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:PersonLookupOut" part="medcomHeader" use="literal"/>
         </wsdl:output>
         <wsdl:fault name="DGWSFault">
-            <soap:fault name="DGWSFault" use="literal" />
+            <soap:fault name="DGWSFault" use="literal"/>
         </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>

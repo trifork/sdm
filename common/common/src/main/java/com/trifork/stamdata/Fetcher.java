@@ -4,9 +4,12 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.type.Type;
 import org.joda.time.Instant;
 
 import com.google.inject.Inject;
@@ -27,6 +30,22 @@ public class Fetcher
 		return fetch(Instant.now(), type, id);
 	}
 
+   public <T extends TemporalEntity> List<T> fetch(Class<T> type, String column, Object value, Type sqlType ) throws SQLException
+    {
+        return fetch(Instant.now(), type, column, value, sqlType);
+    }
+
+   public <T extends TemporalEntity> List<T> fetch(Class<T> type, String column, Object value) throws SQLException
+   {
+       return fetch(Instant.now(), type, column, value);
+   }
+
+   public <T extends TemporalEntity> List<T> fetch(Class<T> type, Map<String, Object> columnAndValue) throws SQLException
+   {
+       return fetch(Instant.now(), type, columnAndValue);
+   }
+
+	
 	@SuppressWarnings("unchecked")
 	public <T extends TemporalEntity> T fetch(Instant instant, Class<T> type, Object id) throws SQLException
 	{
@@ -52,4 +71,66 @@ public class Fetcher
 		
 		return (T) query.uniqueResult();
 	}
+	
+	@SuppressWarnings("unchecked")
+    public <T extends TemporalEntity> List<T> fetch(Instant instant, Class<T> type, String column, Object value, Type sqlType) {
+	    checkNotNull(instant, "instant");
+        checkNotNull(type, "type");
+	    checkNotNull(column, "column");
+	    checkNotNull(value, "value");
+
+	    String entityName = type.getCanonicalName();
+        Query query = session.createQuery(format("FROM %s WHERE %s = :value AND ValidFrom <= :instant AND :instant < ValidTo", entityName, column));
+
+        query.setParameter("value", value, sqlType);
+        query.setTimestamp("instant", instant.toDate());
+                
+        return (List<T>) query.list();
+	}
+
+	   @SuppressWarnings("unchecked")
+	    public <T extends TemporalEntity> List<T> fetch(Instant instant, Class<T> type, String column, Object value) {
+	        checkNotNull(instant, "instant");
+	        checkNotNull(type, "type");
+	        checkNotNull(column, "column");
+	        checkNotNull(value, "value");
+
+	        String entityName = type.getCanonicalName();
+	        Query query = session.createQuery(format("FROM %s WHERE %s = :value AND ValidFrom <= :instant AND :instant < ValidTo", entityName, column));
+
+	        query.setParameter("value", value);
+	        query.setTimestamp("instant", instant.toDate());
+	                
+	        return (List<T>) query.list();
+	    }
+	
+    @SuppressWarnings("unchecked")
+    public <T extends TemporalEntity> List<T> fetch(Instant instant, Class<T> type, Map<String, Object> columnAndValue) {
+        checkNotNull(instant, "instant");
+        checkNotNull(type, "type");
+        checkNotNull(columnAndValue, "columnAndValue");
+        Preconditions.checkArgument(!columnAndValue.isEmpty(), "You must specify a map containing column name -> value pairs");
+
+        StringBuffer whereClause = new StringBuffer();
+        for (String columnName : columnAndValue.keySet()) {
+            if (whereClause.length() > 0) {
+                whereClause.append(" AND ");
+            }
+            whereClause.append(columnName + " = :"+columnName);
+        }
+        whereClause.append(" AND ValidFrom <= :instant AND :instant < ValidTo");
+        
+        String entityName = type.getCanonicalName();
+        Query query = session.createQuery(format("FROM %s WHERE " + whereClause.toString(), entityName));
+        query.setTimestamp("instant", instant.toDate());
+
+        //Set remaining variables on query
+        for (String columnName : columnAndValue.keySet()) {
+            query.setParameter(columnName, columnAndValue.get(columnName));
+        }
+        
+
+                
+        return (List<T>) query.list();
+    }
 }

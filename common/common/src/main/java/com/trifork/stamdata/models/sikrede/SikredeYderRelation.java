@@ -3,7 +3,6 @@ package com.trifork.stamdata.models.sikrede;
 import com.trifork.stamdata.models.BaseTemporalEntity;
 
 import static javax.persistence.TemporalType.DATE;
-import static javax.persistence.TemporalType.TIMESTAMP;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,16 +20,25 @@ import java.util.Date;
 @Entity
 public class SikredeYderRelation extends BaseTemporalEntity {
 
+    private String id;
     private String cpr;
+    private String type;
     private int ydernummer;
     private char sikringsgruppeKode;
 
     @Temporal(DATE)
+    private Date ydernummerIkraftDato;
+
+    @Temporal(DATE)
+    private Date ydernummerRegistreringDato;
+
+    @Temporal(DATE)
     private Date gruppeKodeIkraftDato;
 
+    @Temporal(DATE)
+    private Date gruppekodeRegistreringDato;
 
-    @Id
-    @Column
+
     public String getCpr() {
         return cpr;
     }
@@ -39,12 +47,54 @@ public class SikredeYderRelation extends BaseTemporalEntity {
         this.cpr = cpr;
     }
 
+    @Id
+    @Column
+    public String getId() {
+        return this.id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Date getYdernummerIkraftDato() {
+        return ydernummerIkraftDato;
+    }
+
+    public void setYdernummerIkraftDato(Date ydernummerIkraftDato) {
+        this.ydernummerIkraftDato = ydernummerIkraftDato;
+    }
+
+    public Date getYdernummerRegistreringDato() {
+        return ydernummerRegistreringDato;
+    }
+
+    public void setYdernummerRegistreringDato(Date ydernummerRegistreringDato) {
+        this.ydernummerRegistreringDato = ydernummerRegistreringDato;
+    }
+
     public Date getGruppeKodeIkraftDato() {
         return gruppeKodeIkraftDato;
     }
 
     public void setGruppeKodeIkraftDato(Date gruppeKodeIkraftDato) {
         this.gruppeKodeIkraftDato = gruppeKodeIkraftDato;
+    }
+
+    public Date getGruppekodeRegistreringDato() {
+        return gruppekodeRegistreringDato;
+    }
+
+    public void setGruppekodeRegistreringDato(Date gruppekodeRegistreringDato) {
+        this.gruppekodeRegistreringDato = gruppekodeRegistreringDato;
     }
 
     public char getSikringsgruppeKode() {

@@ -10,10 +10,7 @@ import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,13 +19,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PersonMapperTest
+public class PersonMapperProtectionTest
 {
 	private final boolean FOR_AUTORITY_CLIENT = true;
 	private final boolean FOR_NON_AUTORITY_CLIENT = false;

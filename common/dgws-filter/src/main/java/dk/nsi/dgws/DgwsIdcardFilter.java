@@ -33,9 +33,14 @@ import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 import dk.sosi.seal.xml.XmlUtilException;
 
+
 /**
  * Extracts IdCard instances from the request and places them in the servlet
- * request
+ * request.
+ * 
+ * This module does not support soap 1.2.
+ * To add support for soap 1.2, seal would have to support soap 1.2, and some of the 
+ * code below would have to be rewritten.
  */
 public class DgwsIdcardFilter implements Filter
 {
