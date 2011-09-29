@@ -20,6 +20,7 @@ import com.google.inject.Inject;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
+import dk.nsi.stamdata.cpr.DgwsHeadersUtils;
 import dk.nsi.stamdata.cpr.SoapFaultUtil;
 import dk.nsi.stamdata.cpr.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
@@ -62,8 +63,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup {
 
         printPersonLookupRequest(request);
 
-        // TODO: Set headers to outgoing
-        
         verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
         try {
         if (request.getCivilRegistrationNumberPersonQuery() != null) {
@@ -87,6 +86,9 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup {
             throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader,
                     FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
         }
+        
+        // This has to be done according to the DGWS specifications
+        DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
         
         throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
     }
