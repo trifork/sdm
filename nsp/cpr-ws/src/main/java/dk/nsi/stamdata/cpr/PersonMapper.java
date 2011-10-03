@@ -1,40 +1,24 @@
 package dk.nsi.stamdata.cpr;
 
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
-
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.Set;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
-
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
-import dk.nsi.stamdata.cpr.ws.AddressAccessType;
-import dk.nsi.stamdata.cpr.ws.AddressCompleteType;
-import dk.nsi.stamdata.cpr.ws.AddressPostalType;
-import dk.nsi.stamdata.cpr.ws.CountryIdentificationCodeType;
-import dk.nsi.stamdata.cpr.ws.CountryIdentificationSchemeType;
-import dk.nsi.stamdata.cpr.ws.ObjectFactory;
-import dk.nsi.stamdata.cpr.ws.PersonAddressStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonBirthDateStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonCivilRegistrationStatusStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonNameStructureType;
-import dk.nsi.stamdata.cpr.ws.RegularCPRPersonType;
-import dk.nsi.stamdata.cpr.ws.SimpleCPRPersonType;
+import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Set;
+
+import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
 @RequestScoped
 public class PersonMapper
@@ -245,7 +229,7 @@ public class PersonMapper
 
 		addressAccess.setMunicipalityCode(person.kommuneKode);
 		addressAccess.setStreetCode(person.vejKode);
-		addressAccess.setStreetBuildingIdentifier(person.bygningsnummer);
+		addressAccess.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 
 		addressComplete.setAddressAccess(addressAccess);
 
@@ -270,7 +254,7 @@ public class PersonMapper
 			addressPostal.setStreetNameForAddressingName(person.getVejnavnTilAdressering());
 		}
 
-		addressPostal.setStreetBuildingIdentifier(person.bygningsnummer);
+		addressPostal.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 
 		if (StringUtils.isNotBlank(person.getEtage()))
 		{
@@ -324,7 +308,11 @@ public class PersonMapper
 
 		return output;
 	}
-	
+
+	private String getBuildingIdentifier(Person person) {
+		return person.husnummer + person.bygningsnummer;
+	}
+
 	private boolean isClientAnAuthority()
 	{
 		String careProviderType = idCard.getSystemInfo().getCareProvider().getType();
