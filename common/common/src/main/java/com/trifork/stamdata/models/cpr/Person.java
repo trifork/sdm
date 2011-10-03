@@ -1,16 +1,16 @@
 package com.trifork.stamdata.models.cpr;
 
-import static javax.persistence.TemporalType.DATE;
-import static javax.persistence.TemporalType.TIMESTAMP;
-
-import java.util.Date;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.models.BaseTemporalEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import java.util.Date;
 
-import com.trifork.stamdata.models.BaseTemporalEntity;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 // Use the split of different parts that the person table is made up of instead.
 // The person table is unstable and its behavior is not well-defined.
@@ -251,7 +251,7 @@ public class Person extends BaseTemporalEntity
         return navnebeskyttelsestartdato;
     }
 
-    public void setNavnebeskyttelsestartdato(Date navnebeskyttelsestartdato) {
+    public void setNavnebeskyttelsestartdato(@Nullable Date navnebeskyttelsestartdato) {
         this.navnebeskyttelsestartdato = navnebeskyttelsestartdato;
     }
 }
