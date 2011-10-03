@@ -11,9 +11,13 @@
 	<version>3.1.0-SNAPSHOT</version>
 
 	<modules>
+		<module>config/java-pom.xml</module>
+		<module>config/webservice-pom.xml</module>
+
 		<module>common/common</module>
 		<module>common/dgws-filter</module>
-		
+		<module>common/build-tools</module>
+
 		<module>dodi/data-manager</module>
 		
 		<module>nsp/batch-copy-ws</module>
