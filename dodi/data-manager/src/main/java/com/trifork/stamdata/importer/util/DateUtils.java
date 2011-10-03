@@ -34,6 +34,7 @@ import com.trifork.stamdata.Preconditions;
 
 public class DateUtils
 {
+	public static final Date THE_BEGINNING_OF_TIME = toDate(0,0,0);
 	public static final Date THE_END_OF_TIME = toDate(2999, 12, 31);
 
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");

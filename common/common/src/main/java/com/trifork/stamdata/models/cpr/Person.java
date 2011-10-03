@@ -62,6 +62,7 @@ public class Person extends BaseTemporalEntity
 	public String postdistrikt;
 
 	public String status;
+	private Date statusDato;
 
 	public String gaeldendeCPR;
 
@@ -75,6 +76,7 @@ public class Person extends BaseTemporalEntity
 
 	public Date navnebeskyttelseslettedato;
 	public Date navnebeskyttelsestartdato;
+
 
     public String getKoen() {
         return koen;
@@ -195,6 +197,17 @@ public class Person extends BaseTemporalEntity
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    @Temporal(TIMESTAMP)
+    public void setStatusDato(Date statusDato)
+    {
+    	this.statusDato = statusDato;
+    }
+    
+    public Date getStatusDato()
+    {
+    	return statusDato;
+    }
 
     public String getGaeldendeCPR() {
         return gaeldendeCPR;
@@ -253,5 +266,41 @@ public class Person extends BaseTemporalEntity
 
     public void setNavnebeskyttelsestartdato(@Nullable Date navnebeskyttelsestartdato) {
         this.navnebeskyttelsestartdato = navnebeskyttelsestartdato;
+    }
+    
+    private String navnTilAdressering;
+    
+    public void setNavnTilAdressering(String navnTilAdressering)
+    {
+    	this.navnTilAdressering = navnTilAdressering;
+    }
+    
+    public String getNavnTilAdressering()
+    {
+    	return navnTilAdressering;
+    }
+    
+    private String vejnavnTilAdressering;
+    
+    public void setVejnavnTilAdressering(String vejnavnTilAdressering)
+    {
+    	this.vejnavnTilAdressering = vejnavnTilAdressering;
+    }
+    
+    public String getVejnavnTilAdressering()
+    {
+    	return vejnavnTilAdressering;
+    }
+    
+    private boolean foedselsdatoMarkering;
+    
+    public boolean getFoedselsdatoMarkering()
+    {
+    	return foedselsdatoMarkering;
+    }
+    
+    public void setFoedselsdatoMarkering(boolean foedselsdatoMarkering)
+    {
+    	this.foedselsdatoMarkering = foedselsdatoMarkering;
     }
 }

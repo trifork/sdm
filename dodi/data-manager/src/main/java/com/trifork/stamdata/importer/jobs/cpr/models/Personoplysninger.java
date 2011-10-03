@@ -41,7 +41,7 @@ public class Personoplysninger extends CPREntity
 	String statusMakering;
 	String koen;
 	Date foedselsdato;
-	String foedselsdatoMarkering;
+	boolean foedselsdatoMarkering;
 	Date startDato;
 	String startDatoMarkering;
 	Date slutDato;
@@ -82,6 +82,7 @@ public class Personoplysninger extends CPREntity
 		this.status = status;
 	}
 
+	@Column
 	public Date getStatusDato()
 	{
 		return statusDato;
@@ -124,14 +125,15 @@ public class Personoplysninger extends CPREntity
 		this.foedselsdato = foedselsdato;
 	}
 
-	public String getFoedselsdatoMarkering()
+	@Column
+	public boolean getFoedselsdatoMarkering()
 	{
 		return foedselsdatoMarkering;
 	}
 
-	public void setFoedselsdatoMarkering(String foedselsdatoMarkering)
+	public void setFoedselsdatoMarkering(boolean isUncertain)
 	{
-		this.foedselsdatoMarkering = foedselsdatoMarkering;
+		this.foedselsdatoMarkering = isUncertain;
 	}
 
 	public Date getStartDato()

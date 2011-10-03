@@ -152,7 +152,8 @@ public class PersonMapper
 	{
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
 		
-		if (StringUtils.isNotBlank(person.getGaeldendeCPR())) {
+		if (StringUtils.isNotBlank(person.getGaeldendeCPR()))
+		{
 			output.setCurrentPersonCivilRegistrationIdentifier(person.getGaeldendeCPR());
 		}
 
@@ -179,7 +180,7 @@ public class PersonMapper
 
 		regularCprPerson.setSimpleCPRPerson(simpleCprPerson);
 
-		regularCprPerson.setPersonNameForAddressingName("Fake Value"); // FIXME: Is this correct. This might be missing for the importer.
+		regularCprPerson.setPersonNameForAddressingName(person.getNavnTilAdressering());
 
 		regularCprPerson.setPersonGenderCode(mapGenderToGenderCode(person.koen));
 
@@ -190,7 +191,7 @@ public class PersonMapper
 		PersonBirthDateStructureType personBirthDate = new PersonBirthDateStructureType();
 
 		personBirthDate.setBirthDate(newXMLGregorianCalendar(person.foedselsdato));
-		personBirthDate.setBirthDateUncertaintyIndicator(false); // FIXME: This is not stored by the importer. Requires updated sql schema and importer update.
+		personBirthDate.setBirthDateUncertaintyIndicator(person.getFoedselsdatoMarkering()); 
 
 		regularCprPerson.setPersonBirthDateStructure(personBirthDate);
 
@@ -198,9 +199,9 @@ public class PersonMapper
 
 		PersonCivilRegistrationStatusStructureType personCivil = new PersonCivilRegistrationStatusStructureType();
 
-		personCivil.setPersonCivilRegistrationStatusCode(BigInteger.ONE); // FIXME: This information comes from another CPR Posttype and needs to get a new SQL table and extention to the importer.
-		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(new Date())); // FIXME: This is fake data.
-
+		personCivil.setPersonCivilRegistrationStatusCode(new BigInteger(person.getStatus()));
+		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(person.getStatusDato()));
+		
 		regularCprPerson.setPersonCivilRegistrationStatusStructure(personCivil);
 
 		//
@@ -214,6 +215,7 @@ public class PersonMapper
 			personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.navnebeskyttelsestartdato));
 		}
 
+		// FIXME: This we can calculate based on the Kummunekode.
 		personAddress.setCountyCode("Fake Value"); // FIXME: We don't import this value. Amt or Region.
 
 		if (StringUtils.isNotBlank(person.coNavn))
@@ -234,23 +236,29 @@ public class PersonMapper
 		AddressPostalType addressPostal = new AddressPostalType();
 		addressComplete.setAddressPostal(addressPostal);
 
-		if (StringUtils.isNotBlank(""))
-		{
-			addressPostal.setMailDeliverySublocationIdentifier("Fake Value"); // FIXME: The importer does not import this field.
-		}
+		// The following field is not included in the source "CPR Registeret"
+		// therefore we cannot fill the element.
+		//
+		// if (StringUtils.isNotBlank(""))
+		// {
+		//	 This is:
+		//	 The given name of a farm, estate, building or dwelling, which is used as a additional postal address identifier.
+		//	
+		//	addressPostal.setMailDeliverySublocationIdentifier("Fake Value"); // FIXME: The importer does not import this field.
+		// }
 
 		addressPostal.setStreetName(person.vejnavn);
 
-		if (StringUtils.isNotBlank(""))
+		if (StringUtils.isNotBlank(person.getVejnavnTilAdressering()))
 		{
-			addressPostal.setStreetNameForAddressingName("Fake Value"); // FIXME: The importer does not import this field.
+			addressPostal.setStreetNameForAddressingName(person.getVejnavnTilAdressering());
 		}
 
 		addressPostal.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 
-		if (StringUtils.isNotBlank(""))
+		if (StringUtils.isNotBlank(person.getEtage()))
 		{
-			addressPostal.setFloorIdentifier("Fake Value"); // FIXME: The importer does not import this field.
+			addressPostal.setFloorIdentifier(person.getEtage());
 		}
 
 		if (StringUtils.isNotBlank(person.sideDoerNummer))
@@ -260,23 +268,37 @@ public class PersonMapper
 
 		if (StringUtils.isNotBlank(person.lokalitet)) // TODO: We are not sure this is the correct field.
 		{
+			// Documentation says:
+			//
+			// Name of a village, city or subdivision of a city or district, which is determined as a part of the official address specification for a certain street 
+			// or specific parts of a street, defined by intervals of street building identifiers (da: house numbers). 
+			//
+			// We believe that the CPR term for this is 'Lokalitet'.
+			
 			addressPostal.setDistrictSubdivisionIdentifier(person.lokalitet);
 		}
 
-		if (StringUtils.isNotBlank(""))
-		{
-			addressPostal.setPostOfficeBoxIdentifier(-1); // FIXME: The importer does not import this field.
-		}
+		// Post Box is excluded since a persons address cannot be a Post Box.
+		//
+		// if (StringUtils.isNotBlank(""))
+		// {
+		//    addressPostal.setPostOfficeBoxIdentifier(-1); // FIXME: The importer does not import this field.
+		// }
 
 		addressPostal.setPostCodeIdentifier(person.postnummer);
 		addressPostal.setDistrictName(person.postdistrikt);
 
-		if (StringUtils.isNotBlank("")) // FIXME: The importer does not import this field.
+		// FIXME: The importer does not import this field.
+		// Maybe we cannot 
+		
+		if (StringUtils.isNotBlank(""))
 		{
 			CountryIdentificationCodeType country = new CountryIdentificationCodeType();
-			country.setScheme(CountryIdentificationSchemeType.ISO_3166_ALPHA_2); // Two alpha-numerical characters.
+			
+			// Two alpha-numerical characters.
+			country.setScheme(CountryIdentificationSchemeType.ISO_3166_ALPHA_2);
 			country.setValue("DK");
-			addressPostal.setCountryIdentificationCode(country); // FIXME: The importer does not import this field.
+			addressPostal.setCountryIdentificationCode(country);
 		}
 
 		personAddress.setAddressComplete(addressComplete);

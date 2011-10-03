@@ -50,6 +50,7 @@ import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
 
+
 public class CPRParser
 {
 	private static final String FILE_ENCODING = "ISO-8859-1";
@@ -64,6 +65,7 @@ public class CPRParser
 	private static final Pattern datePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})");
 	private static final Pattern timestampPattern = Pattern.compile("([\\d]{4})([\\d]{2})([\\d]{2})([\\d]{2})([\\d]{2})");
 
+
 	public static CPRDataset parse(File f) throws Exception
 	{
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(f), FILE_ENCODING));
@@ -77,6 +79,7 @@ public class CPRParser
 			reader.close();
 		}
 	}
+
 
 	private static CPRDataset parseFileContents(BufferedReader reader) throws IOException, Exception, ParseException
 	{
@@ -112,10 +115,11 @@ public class CPRParser
 		return cpr;
 	}
 
+
 	static void parseLine(int recordType, String line, CPRDataset cpr) throws Exception, ParseException
 	{
 		// TODO: Make constants for these magic numbers.
-		
+
 		switch (recordType)
 		{
 		case 0:
@@ -149,6 +153,7 @@ public class CPRParser
 		}
 	}
 
+
 	static UmyndiggoerelseVaergeRelation umyndiggoerelseVaergeRelation(String line) throws Exception
 	{
 		UmyndiggoerelseVaergeRelation u = new UmyndiggoerelseVaergeRelation();
@@ -169,6 +174,7 @@ public class CPRParser
 		return u;
 	}
 
+
 	static ForaeldreMyndighedRelation foraeldreMyndighedRelation(String line) throws Exception
 	{
 		ForaeldreMyndighedRelation f = new ForaeldreMyndighedRelation();
@@ -182,6 +188,7 @@ public class CPRParser
 		return f;
 	}
 
+
 	static BarnRelation barnRelation(String line)
 	{
 		BarnRelation b = new BarnRelation();
@@ -189,6 +196,7 @@ public class CPRParser
 		b.setBarnCpr(cut(line, 13, 23));
 		return b;
 	}
+
 
 	static Navneoplysninger navneoplysninger(String line) throws Exception
 	{
@@ -206,6 +214,7 @@ public class CPRParser
 		return n;
 	}
 
+
 	static NavneBeskyttelse navneBeskyttelse(String line) throws Exception
 	{
 		NavneBeskyttelse n = new NavneBeskyttelse();
@@ -215,18 +224,15 @@ public class CPRParser
 		return n;
 	}
 
+
 	static Klarskriftadresse klarskriftadresse(String line) throws Exception
 	{
 		Klarskriftadresse k = new Klarskriftadresse();
+
 		k.setCpr(cut(line, 3, 13));
-		k.setAdresseringsNavn(cut(line, 13, 47).trim());
+		k.setNavnTilAdressering(cut(line, 13, 47).trim());
 		k.setCoNavn(cut(line, 47, 81).trim());
 		k.setLokalitet(cut(line, 81, 115).trim());
-
-		// FIXME (thb): Is this the correct field?
-
-		k.setVejnavnTilAdresseringsNavn(cut(line, 115, 149).trim());
-
 		k.setByNavn(cut(line, 149, 183).trim());
 		k.setPostNummer(parseLong(line, 183, 187));
 		k.setPostDistrikt(cut(line, 187, 207).trim());
@@ -236,13 +242,25 @@ public class CPRParser
 		k.setEtage(removeLeadingZeros(cut(line, 219, 221).trim()));
 		k.setSideDoerNummer(cut(line, 221, 225).trim());
 		k.setBygningsNummer(cut(line, 225, 229).trim());
+		
+		// This is a duplicate of the address field.
+		
+		k.setVejnavnTilAdressering(cut(line, 229, 249).trim()); 
+		
+		// FIXME: This is not actually the complete street name,
+		// rather it is a shortened version. The complete address is not included
+		// in this record type.
+		
 		k.setVejNavn(cut(line, 229, 249).trim());
+
 		return k;
 	}
+
 
 	static Personoplysninger personoplysninger(String line) throws Exception
 	{
 		Personoplysninger p = new Personoplysninger();
+
 		p.setCpr(cut(line, 3, 13));
 		p.setGaeldendeCpr(cut(line, 13, 23).trim());
 		p.setStatus(cut(line, 23, 25));
@@ -250,14 +268,16 @@ public class CPRParser
 		p.setStatusMakering(cut(line, 37, 38));
 		p.setKoen(cut(line, 38, 39));
 		p.setFoedselsdato(parseDate(yyyy_MM_dd, line, 39, 49));
-		p.setFoedselsdatoMarkering(cut(line, 49, 50));
+		p.setFoedselsdatoMarkering("*".equals(cut(line, 49, 50)));
 		p.setStartDato(parseDate(yyyy_MM_dd, line, 50, 60));
 		p.setStartDatoMarkering(cut(line, 60, 61));
 		p.setSlutdato(parseDate(yyyy_MM_dd, line, 61, 71));
 		p.setSlutDatoMarkering(cut(line, 71, 72));
 		p.setStilling(cut(line, 72, 106).trim());
+
 		return p;
 	}
+
 
 	/**
 	 * Gets the record type of a line in the CPR file.
@@ -266,6 +286,7 @@ public class CPRParser
 	{
 		return readInt(line, 0, 3);
 	}
+
 
 	private static String cut(String line, int beginIndex, int endIndex)
 	{
@@ -280,6 +301,7 @@ public class CPRParser
 		return res;
 	}
 
+
 	private static int readInt(String line, int from, int to) throws Exception
 	{
 		try
@@ -291,6 +313,7 @@ public class CPRParser
 			throw new Exception("Der opstod en fejl under parsning af heltal i linien: [" + line + "], på positionen from: " + from + ", to: " + to, e);
 		}
 	}
+
 
 	private static Long parseLong(String line, int from, int to) throws Exception
 	{
@@ -304,6 +327,7 @@ public class CPRParser
 		}
 	}
 
+
 	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, Exception
 	{
 		String dateString = cut(line, from, to);
@@ -314,11 +338,13 @@ public class CPRParser
 		return null;
 	}
 
+
 	private static Date getValidFrom(String line) throws Exception
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		return sdf.parse(cut(line, 19, 27));
 	}
+
 
 	private static Date getForrigeIkraftDato(String line) throws Exception
 	{
@@ -335,6 +361,7 @@ public class CPRParser
 		return null;
 	}
 
+
 	private static String removeLeadingZeros(String str)
 	{
 		if (str == null) return null;
@@ -346,6 +373,7 @@ public class CPRParser
 
 		return "";
 	}
+
 
 	static String fixWeirdDate(String date)
 	{
@@ -377,6 +405,7 @@ public class CPRParser
 
 		return fixedDate;
 	}
+
 
 	private static String fixTime(Matcher timeMatcher)
 	{
@@ -410,6 +439,7 @@ public class CPRParser
 		return result.toString();
 	}
 
+
 	private static String fixDate(Matcher dateMatcher)
 	{
 		int year, month, day;
@@ -429,6 +459,7 @@ public class CPRParser
 		formatter.format("%04d-%02d-%02d", year, month, day);
 		return result.toString();
 	}
+
 
 	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, Exception
 	{

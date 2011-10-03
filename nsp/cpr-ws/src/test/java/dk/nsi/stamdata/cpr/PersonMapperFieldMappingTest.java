@@ -1,32 +1,41 @@
 package dk.nsi.stamdata.cpr;
 
+import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
+import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import java.math.BigInteger;
+import java.util.Set;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
+
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
 
 public class PersonMapperFieldMappingTest
 {
 	private SystemIDCard idCard;
-
-
-	Person person;
-	PersonInformationStructureType output;
+	private Person person;
+	private PersonInformationStructureType output;
 	
 	@Before
 	public void setUp() throws Exception
 	{
-		person = createPerson();
+		person = Factories.createPerson();
+		
+		Set<String> whiteList = Sets.newHashSet();
+		output = new PersonMapper(whiteList, idCard).map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
 		
 		idCard = TestSTSMock.createTestSTSSignedIDCard("12345678");
 	}
@@ -35,6 +44,30 @@ public class PersonMapperFieldMappingTest
 	public void mapsGaeldendeToCprCurrentPersonCivilRegistrationIdentifier() throws Exception {
 		doMap();
 		assertEquals(person.getGaeldendeCPR(), output.getCurrentPersonCivilRegistrationIdentifier());
+	}
+	
+	@Test
+	public void mapCivilRegistrationCode()
+	{
+		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("02")));
+	}
+	
+	@Test
+	public void mapCivilRegistrationCodeStartDate() throws DatatypeConfigurationException
+	{
+		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusStartDate(), is(newXMLGregorianCalendar(YESTERDAY)));
+	}
+	
+	@Test
+	public void mapNameForAddressingName() throws DatatypeConfigurationException
+	{
+		assertThat(output.getRegularCPRPerson().getPersonNameForAddressingName(), is("Peter,Andersen"));
+	}
+	
+	@Test
+	public void mapStreetNameForAddressingName() throws DatatypeConfigurationException
+	{
+		assertThat(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName(), is("Østergd."));
 	}
 
 	@Test
@@ -108,12 +141,6 @@ public class PersonMapperFieldMappingTest
 
 		assertEquals(person.getFoedselsdato(), output.getRegularCPRPerson().getPersonBirthDateStructure().getBirthDate().toGregorianCalendar().getTime());
 	}
-	
-	@Test
-	@Ignore("birth date uncertainty is neither modelled or imported")
-	public void mapsSomethingToBirthdateUncertainty() {
-		throw new UnsupportedOperationException("birth date uncertainty is neither modelled or imported");
-	}
 
 	@Test
 	public void mapsCoNavnToCareOfName() throws Exception {
@@ -128,7 +155,6 @@ public class PersonMapperFieldMappingTest
 
 		assertEquals(person.getKommuneKode(), output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getMunicipalityCode());
 	}
-
 
 	@Test
 	public void mapsVejkodeToStreetCode() throws Exception {
@@ -149,41 +175,6 @@ public class PersonMapperFieldMappingTest
 		doMap();
 
 		assertEquals(person.getHusnummer() + person.getBygningsnummer(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
-	}
-
-	private Person createPerson() {
-		Person newPerson = new Person();
-
-		newPerson.setGaeldendeCPR("2345678901");
-
-		newPerson.setFornavn("Peter");
-		newPerson.setMellemnavn("Sigurd");
-		newPerson.setEfternavn("Andersen");
-
-		newPerson.setCpr("1234567890");
-
-		newPerson.setKoen("M");
-
-		newPerson.setFoedselsdato(new Date());
-
-		newPerson.setCoNavn("Søren Petersen");
-
-		newPerson.setKommuneKode("123");
-		newPerson.setVejKode("234");
-		newPerson.setHusnummer("10");
-		newPerson.setBygningsnummer("A");
-		newPerson.setLokalitet("Birkely");
-		newPerson.setVejnavn("Ørstedgade");
-		newPerson.setEtage("12");
-		newPerson.setSideDoerNummer("tv");
-
-		newPerson.setPostnummer("6666");
-		newPerson.setPostdistrikt("Überwald");
-
-		newPerson.setNavnebeskyttelsestartdato(null);
-		newPerson.setNavnebeskyttelseslettedato(null);
-
-		return newPerson;
 	}
 
 	private void doMap() throws Exception {
