@@ -59,12 +59,13 @@ public class Klarskriftadresse extends CPREntity
 		this.cpr = cpr;
 	}
 
-	public String getAdresseringsNavn()
+	@Column
+	public String getNavnTilAdressering()
 	{
 		return adresseringsNavn;
 	}
 
-	public void setAdresseringsNavn(String adresseringsNavn)
+	public void setNavnTilAdressering(String adresseringsNavn)
 	{
 		this.adresseringsNavn = adresseringsNavn;
 	}
@@ -91,12 +92,13 @@ public class Klarskriftadresse extends CPREntity
 		this.lokalitet = lokalitet;
 	}
 
-	public String getVejnavnTilAdresseringsNavn()
+	@Column
+	public String getVejnavnTilAdressering()
 	{
 		return adresseringsVejnavn;
 	}
 
-	public void setVejnavnTilAdresseringsNavn(String adresse)
+	public void setVejnavnTilAdressering(String adresse)
 	{
 		this.adresseringsVejnavn = adresse;
 	}

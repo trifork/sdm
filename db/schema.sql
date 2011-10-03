@@ -580,29 +580,36 @@ CREATE TABLE Pakningsstoerrelsesenhed (
 
 CREATE TABLE Person (
 	PersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	CPR VARCHAR(10) NOT NULL,
-	Koen VARCHAR(1) NOT NULL,
-	Fornavn VARCHAR(60),
-	Mellemnavn VARCHAR(60),
-	Efternavn VARCHAR(60),
-	CoNavn VARCHAR(50),
-	Lokalitet VARCHAR(50),
+	CPR CHAR(10) NOT NULL,
+	Koen CHAR(1) NOT NULL,
+	Fornavn VARCHAR(50),
+	Mellemnavn VARCHAR(40),
+	Efternavn VARCHAR(40),
+	CoNavn VARCHAR(34),
+	Lokalitet VARCHAR(34),
 	Vejnavn VARCHAR(30),
 	Bygningsnummer VARCHAR(10),
-	Husnummer VARCHAR(10),
-	Etage VARCHAR(10),
-	SideDoerNummer VARCHAR(10),
-	Bynavn VARCHAR(30),
-	Postnummer BIGINT(12),
-	PostDistrikt VARCHAR(30),
-	Status VARCHAR(2),
+	Husnummer VARCHAR(4),
+	Etage VARCHAR(2),
+	SideDoerNummer VARCHAR(4),
+	Bynavn VARCHAR(34),
+	Postnummer INT(4),
+	PostDistrikt VARCHAR(20),
+	Status CHAR(2),
 	NavneBeskyttelseStartDato DATETIME,
 	NavneBeskyttelseSletteDato DATETIME,
-	GaeldendeCPR VARCHAR(10),
+	GaeldendeCPR CHAR(10),
 	Foedselsdato DATE NOT NULL,
 	Stilling VARCHAR(50),
-	VejKode BIGINT(12), 
-	KommuneKode BIGINT(12),
+	VejKode INT(4), 
+	KommuneKode INT(4),
+	
+	# Additions for CPR Service
+	
+	NavnTilAdressering VARCHAR(34),
+	VejnavnTilAdressering VARCHAR(20),
+	FoedselsdatoMarkering CHAR,
+	StatusDato DATETIME,
 
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
@@ -612,6 +619,19 @@ CREATE TABLE Person (
 	INDEX(modifiedDate, PersonPID),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+
+# This table is used by the GOS/CPR subscription service
+# to know when there are changes to the CPR registry.
+#
+# NB. The modified date might not be identical to the modified
+# date in the original table. (This is not important for our use.)
+
+CREATE TABLE ChangesToCPR (
+	CPR CHAR(10) PRIMARY KEY,
+	ModifiedDate TIMESTAMP NOT NULL
+);
+
 
 CREATE TABLE PersonIkraft (
 	PersonIkraftPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,

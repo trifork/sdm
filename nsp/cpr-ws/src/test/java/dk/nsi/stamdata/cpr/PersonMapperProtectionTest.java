@@ -46,8 +46,6 @@ public class PersonMapperProtectionTest
 	private static final Date TOMORROW = DateTime.now().plusDays(1).toDate();
 	private static final Date IN_TWO_DAYS = DateTime.now().plusDays(2).toDate();
 	
-	private static final String FIRSTNAME = "Peter";
-	
 	@Before
 	public void setUp()
 	{
@@ -56,8 +54,7 @@ public class PersonMapperProtectionTest
 		nonWhitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(NON_WHITELISTED_CVR);
 		whitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(WHITELISTED_CVR);
 		
-		person = new Person();
-		person.setFornavn(FIRSTNAME);
+		person = Factories.createPerson();
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)
@@ -123,7 +120,7 @@ public class PersonMapperProtectionTest
 	
 	private void assertThatPersonIsNotProtected(PersonInformationStructureType output)
 	{
-		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(FIRSTNAME));
+		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
 	}
 	
 	private void assertThatPersonIsProtected(PersonInformationStructureType output)

@@ -54,7 +54,7 @@ public class CPRParserTest
 		assertEquals("*", record.getStatusMakering());
 		assertEquals("K", record.getKoen());
 		assertEquals(yyyy_MM_dd.parse("1896-01-01"), record.getFoedselsdato());
-		assertEquals("*", record.getFoedselsdatoMarkering());
+		assertEquals(true, record.getFoedselsdatoMarkering());
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getStartDato());
 		assertEquals("*", record.getStartDatoMarkering());
 		assertEquals(yyyy_MM_dd.parse("2007-09-09"), record.getSlutDato());
@@ -70,10 +70,8 @@ public class CPRParserTest
 		Klarskriftadresse record = CPRParser.klarskriftadresse(LINE);
 
 		assertEquals("0712614455", record.getCpr());
-		assertEquals("Henriksen,Klaus", record.getAdresseringsNavn());
 		assertEquals("Buchholdt", record.getCoNavn());
 		assertEquals("Solhavehjemmet", record.getLokalitet());
-		assertEquals("Industrivænget 2,2 mf", record.getVejnavnTilAdresseringsNavn());
 		assertEquals("Hasseris", record.getByNavn());
 		assertEquals(new Long(9000L), record.getPostNummer());
 		assertEquals("Aalborg", record.getPostDistrikt());
@@ -83,7 +81,9 @@ public class CPRParserTest
 		assertEquals("2", record.getEtage());
 		assertEquals("mf", record.getSideDoerNummer());
 		assertEquals("12", record.getBygningsNummer());
-		assertEquals("Industrivænget", record.getVejNavn());
+		assertEquals("Industrivænget", record.getVejNavn()); // TODO: This is not completely right. This is the short version.
+		assertEquals("Henriksen,Klaus", record.getNavnTilAdressering());
+		assertEquals("Industrivænget", record.getVejnavnTilAdressering());
 	}
 
 	@Test
