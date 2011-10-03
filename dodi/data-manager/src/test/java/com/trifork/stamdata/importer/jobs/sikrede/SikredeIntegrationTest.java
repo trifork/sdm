@@ -194,29 +194,6 @@ public class SikredeIntegrationTest
 		assertEquals("current- previous and future YderRelation forventet efter import", 3, rs.getInt(1));
 	}
 
-    @Test
-	public void canImportSikredeAndSetReferenceToTheOriginatingFile() throws Exception
-	{
-		importFile("data/sikrede/20110701.SIKREDE_WITHLONGFILENAME");
-
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery("Select COUNT(*) from Sikrede");
-		rs.next();
-		assertEquals("Én sygesikret forventes oprettet efter import", 1, rs.getInt(1));
-
-        rs = stmt.executeQuery("Select REFERENCE FROM Sikrede");
-        rs.next();
-        assertFalse("Reference to originating file must be set" , rs.getString(1).startsWith("20110701.SIKREDE_WITHLONGFILENAME"));
-
-		rs = stmt.executeQuery("SELECT COUNT(*) FROM SaerligSundhedskort");
-		rs.next();
-		assertEquals("Intet sundhedskort skal oprettes", 0, rs.getInt(1));
-
-		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
-		rs.next();
-		assertEquals("current- previous and future YderRelation forventet efter import", 3, rs.getInt(1));
-	}
-
 	private void importFile(String fileName) throws Exception
 	{
 		SikredeParser parser = new SikredeParser();

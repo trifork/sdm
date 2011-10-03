@@ -27,9 +27,6 @@ public class Sikrede extends CPREntity
 	private String socialLand;
 	private String socialLandKode;
 
-    /* Reference value - required by BRS */
-    private String reference;
-
 	@Id
 	@Column
 	public String getCpr()
@@ -195,12 +192,4 @@ public class Sikrede extends CPREntity
 		return "Sikrede{" + "bevisIkraftDato=" + bevisIkraftDato + ", kommunekode='" + kommunekode + '\'' + ", kommunekodeIkraftDato=" + kommunekodeIkraftDato + ", foelgeskabsPersonCpr='" + foelgeskabsPersonCpr + '\'' + ", status='" + status + '\'' + ", forsikringsinstans='" + forsikringsinstans + '\'' + ", forsikringsinstansKode='" + forsikringsinstansKode + '\'' + ", forsikringsnummer='" + forsikringsnummer + '\'' + ", sslGyldigFra=" + sslGyldigFra + ", SslGyldigTil=" + SslGyldigTil + ", socialLand='" + socialLand + '\'' + ", socialLandKode='" + socialLandKode + '\'' + '}';
 	}
 
-    @Column
-    public String getReference() {
-        return reference;
-    }
-
-    public void setReference(String reference) {
-        this.reference = reference;
-    }
 }

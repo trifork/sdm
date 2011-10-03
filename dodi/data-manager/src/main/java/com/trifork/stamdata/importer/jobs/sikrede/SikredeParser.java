@@ -153,7 +153,7 @@ public class SikredeParser implements FileParser
 				// and potentially information about previous and future
 				// assigned doctors.
 				
-				Sikrede sikrede = parseSikrede(file.getName(), line);
+				Sikrede sikrede = parseSikrede(line);
 				dataset.addEntity(sikrede);
 				
 				dataset.addEntity(parsePatientYderRelation(line, CURRENT_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.current));
@@ -233,7 +233,7 @@ public class SikredeParser implements FileParser
 		return StringUtils.trimToNull(substring);
 	}
 
-	private Sikrede parseSikrede(String fileName, String line) throws Exception
+	private Sikrede parseSikrede(String line) throws Exception
 	{
 		Sikrede sikrede = new Sikrede();
 		sikrede.setCpr(parseCpr(line, 3));
@@ -253,8 +253,6 @@ public class SikredeParser implements FileParser
 		sikrede.setSslGyldigTil(yearMonthDayWithSeparatorsDate(line, 780));
 		sikrede.setSikredesSocialeLand(cut(line, 790, 47));
 		sikrede.setSikredesSocialeLandKode(cut(line, 837, 2));
-        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmssSSS");
-        sikrede.setReference(StringUtils.substring(fileName + "-" + DateTime.now().toString(dateTimeFormatter), 0, 40 ));
 
 		if (logger.isDebugEnabled()) logger.debug(sikrede.toString());
 		
