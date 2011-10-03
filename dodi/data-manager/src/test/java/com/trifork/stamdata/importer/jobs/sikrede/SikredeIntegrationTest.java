@@ -35,7 +35,8 @@ public class SikredeIntegrationTest
 	@After
 	public void tearDown() throws Exception
 	{
-		con.rollback();
+		//con.rollback();
+        con.commit();
 		con.close();
 	}
 

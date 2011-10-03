@@ -1093,6 +1093,8 @@ CREATE TABLE Sikrede (
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+
+	REFERENCE VARCHAR(40) NOT NULL,
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
 	INDEX (ModifiedDate, SikredePID)
