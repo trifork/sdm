@@ -9,10 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static org.junit.Assert.*;
 
@@ -62,45 +59,49 @@ public class SikredeIntegrationTest
         assertEquals("socialLandKode matcher ikke", "DK", rs.getString("socialLandKode"));
         rs.close();
 
-        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
-        int ydernummer = 4294;
-        DateTime ydernummerIkraftDato = new DateTime(2009, 1, 1, 0, 0, 0, 0);
-        DateTime gruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
-        DateTime ydernummerRegistreringsDato = new DateTime(2008, 12, 1, 0, 0, 0, 0);
-        String sikringsgruppekode = "1";
-        DateTime gruppeKodeIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
-        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='F'");
+        int fremtidigYdernummer = 4296;
+        DateTime fremtidigYdernummerIkraftDato = new DateTime(2012,1,1,0,0,0,0);
+        DateTime fremtidigYdernummerUdlobDato = null;
+        DateTime fremtidigYdernummerRegistreringsDato = new DateTime(2006,12,1,0,0,0,0);
+        String fremtidigSikringsgruppekode = "1";
+        DateTime fremtidigGruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
+        DateTime fremtidigGruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
+        assertSikredeYderRelation(rs, fremtidigYdernummer, fremtidigYdernummerIkraftDato, fremtidigYdernummerUdlobDato, fremtidigYdernummerRegistreringsDato, fremtidigSikringsgruppekode, fremtidigGruppeKodeIkraftDato, fremtidigGruppekodeRegistreringDato);
         rs.close();
 
-
-        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='F'");
-        ydernummer = 4296;
-        ydernummerIkraftDato = new DateTime(2007,1,1,0,0,0,0);
-        ydernummerRegistreringsDato = new DateTime(2006,12,1,0,0,0,0);
-        sikringsgruppekode = "1";
-        gruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
-        gruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
-        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
+        int nuvaerendeYdernummer = 4294;
+        DateTime nuvaerendeYdernummerUdlobDato = fremtidigYdernummerIkraftDato;
+        DateTime nuvaerendeYdernummerIkraftDato = new DateTime(2009, 1, 1, 0, 0, 0, 0);
+        DateTime nuvaerendeGruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
+        DateTime nuvaerendeYdernummerRegistreringsDato = new DateTime(2008, 12, 1, 0, 0, 0, 0);
+        String nuvaerendeSikringsgruppekode = "1";
+        DateTime nuvaerendeGruppeKodeIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+        assertSikredeYderRelation(rs, nuvaerendeYdernummer, nuvaerendeYdernummerIkraftDato, nuvaerendeYdernummerUdlobDato, nuvaerendeYdernummerRegistreringsDato, nuvaerendeSikringsgruppekode, nuvaerendeGruppeKodeIkraftDato, nuvaerendeGruppekodeRegistreringDato);
         rs.close();
 
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='P'");
-        ydernummer = 4295;
-        ydernummerIkraftDato = new DateTime(2008, 1, 1, 0, 0, 0, 0);
-        ydernummerRegistreringsDato = new DateTime(2007,12,1,0,0,0,0);
-        sikringsgruppekode = "1";
-        gruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
-        gruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
-        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        int foregaaendeYdernummer = 4295;
+        DateTime foregaaendeYdernummerIkraftDato = new DateTime(2008, 1, 1, 0, 0, 0, 0);
+        DateTime foregaaendeYdernummerUdlobDato = nuvaerendeYdernummerIkraftDato;
+        DateTime foregaaendeYdernummerRegistreringsDato = new DateTime(2007,12,1,0,0,0,0);
+        String foregaaendeSikringsgruppekode = "1";
+        DateTime foregaaendeGruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
+        DateTime foregaaendeGruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
+        assertSikredeYderRelation(rs, foregaaendeYdernummer, foregaaendeYdernummerIkraftDato, foregaaendeYdernummerUdlobDato, foregaaendeYdernummerRegistreringsDato, foregaaendeSikringsgruppekode, foregaaendeGruppeKodeIkraftDato, foregaaendeGruppekodeRegistreringDato);
         rs.close();
 
         stmt.close();
 	}
 
-    private void assertSikredeYderRelation(ResultSet rs, int ydernummer, DateTime ydernummerIkraftDato, DateTime ydernummerRegistreringDato, String sikringsgruppeKode, DateTime gruppeKodeIkraftDato, DateTime gruppekodeRegistreringDato) throws SQLException {
+    private void assertSikredeYderRelation(ResultSet rs, int ydernummer, DateTime ydernummerIkraftDato, DateTime ydernummerUdlobDato, DateTime ydernummerRegistreringDato, String sikringsgruppeKode, DateTime gruppeKodeIkraftDato, DateTime gruppekodeRegistreringDato) throws SQLException {
         assertTrue("No current 'SikredeYderRelation' row found", rs.next());
         String type = rs.getString("type");
         assertEquals("SikredeYderRelation type '"+type+"' ydernummer matcher ikke", ydernummer, rs.getInt("ydernummer"));
         assertEquals("SikredeYderRelation type '"+type+"' ydernummerIkraftDato matcher ikke", ydernummerIkraftDato, new DateTime(rs.getTimestamp("ydernummerIkraftDato")));
+        Timestamp udlobDato = rs.getTimestamp("ydernummerUdlobDato");
+        assertEquals("SikredeYderRelation type '"+type+"' ydernummerUdlobDato matcher ikke", ydernummerUdlobDato,  udlobDato == null ? null : new DateTime(udlobDato));
         assertEquals("SikredeYderRelation type '"+type+"' ydernummerRegistreringDato matcher ikke", ydernummerRegistreringDato, new DateTime(rs.getTimestamp("ydernummerRegistreringDato")));
         assertEquals("SikredeYderRelation type '"+type+"' sikringsgruppeKode matcher ikke", sikringsgruppeKode, rs.getString("sikringsgruppeKode"));
         assertEquals("SikredeYderRelation type '"+type+"' gruppeKodeIkraftDato matcher ikke", gruppeKodeIkraftDato, new DateTime(rs.getTimestamp("gruppeKodeIkraftDato")));
@@ -140,17 +141,16 @@ public class SikredeIntegrationTest
         assertFalse("Der skal ikke være importeret noget fremtidigt valg af ydernummer", rs.next());
         rs.close();
 
-
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
         int ydernummer = 4294;
         DateTime ydernummerIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
+        DateTime ydernummerUdlobDato = null; //Der er ingen fremtidige yderrelationer
         DateTime gruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
         DateTime ydernummerRegistreringsDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
         String sikringsgruppekode = "1";
         DateTime gruppeKodeIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
-        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, null, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
         rs.close();
-
 
 
 		rs = stmt.executeQuery("SELECT * FROM SaerligSundhedskort where cpr='1607769871'");
