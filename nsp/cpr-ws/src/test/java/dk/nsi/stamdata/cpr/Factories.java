@@ -47,7 +47,16 @@ public class Factories
 		person.setPostdistrikt("Überwald");
 		
 		person.setNavnebeskyttelsestartdato(null);
-		person.setNavnebeskyttelseslettedato(FAR_FUTURE); // TODO: Is this how we expect an unprotectedperson to look?
+		person.setNavnebeskyttelseslettedato(FAR_FUTURE); // TODO: Is this how we expect an unprotected person to look?
+
+		return person;
+	}
+
+	public static Person createPersonWithAddressProtection() {
+		Person person = createPersonWithoutAddressProtection();
+
+		person.setNavnebeskyttelsestartdato(YESTERDAY);
+		person.setNavnebeskyttelseslettedato(FAR_FUTURE); // TODO: Is this how we expect an protected person to look?
 
 		return person;
 	}
