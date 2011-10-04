@@ -1,17 +1,17 @@
 package dk.nsi.stamdata.cpr;
 
-import java.util.Date;
-
+import com.trifork.stamdata.models.cpr.Person;
 import org.joda.time.DateTime;
 
-import com.trifork.stamdata.models.cpr.Person;
+import java.util.Date;
 
 public class Factories
 {
 	public static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
 	public static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
-	
-	public static Person createPerson()
+	public static final Date FAR_FUTURE = DateTime.now().plusDays(1000).toDate();
+
+	public static Person createPersonWithoutAddressProtection()
 	{
 		Person person = new Person();
 		
@@ -47,7 +47,7 @@ public class Factories
 		person.setPostdistrikt("Überwald");
 		
 		person.setNavnebeskyttelsestartdato(null);
-		person.setNavnebeskyttelsestartdato(null);
+		person.setNavnebeskyttelseslettedato(FAR_FUTURE); // TODO: Is this how we expect an unprotectedperson to look?
 
 		return person;
 	}

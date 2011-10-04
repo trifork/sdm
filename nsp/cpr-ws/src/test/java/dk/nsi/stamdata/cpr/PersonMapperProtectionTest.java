@@ -1,27 +1,24 @@
 package dk.nsi.stamdata.cpr;
 
-import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData;
-import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
-import java.util.Set;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-
+import com.google.common.collect.Sets;
+import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.sosi.seal.model.SystemIDCard;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.common.collect.Sets;
-import com.trifork.stamdata.models.cpr.Person;
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.util.Date;
+import java.util.Set;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.sosi.seal.model.SystemIDCard;
+import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData;
+import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonMapperProtectionTest
@@ -34,7 +31,7 @@ public class PersonMapperProtectionTest
 	private final static String WHITELISTED_CVR = "12345678";
 	private SystemIDCard whitelistedIDCard;
 	
-	private String NON_WHITELISTED_CVR = "23456789";
+	private static final String NON_WHITELISTED_CVR = "23456789";
 	private SystemIDCard nonWhitelistedIDCard;
 	
 	private static final String CENSORED = "ADRESSEBESKYTTET";
@@ -54,7 +51,7 @@ public class PersonMapperProtectionTest
 		nonWhitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(NON_WHITELISTED_CVR);
 		whitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(WHITELISTED_CVR);
 		
-		person = Factories.createPerson();
+		person = Factories.createPersonWithoutAddressProtection();
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)

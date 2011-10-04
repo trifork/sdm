@@ -1,12 +1,25 @@
 package dk.nsi.stamdata.cpr.integrationtest;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Stage;
+import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.models.sikrede.Yderregister;
+import dk.nsi.dgws.DgwsIdcardFilter;
+import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
+import dk.nsi.stamdata.cpr.Factories;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
+import dk.nsi.stamdata.cpr.medcom.FaultMessages;
+import dk.nsi.stamdata.cpr.ws.*;
+import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.hibernate.Session;
+import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
+import org.joda.time.DateTime;
+import org.junit.*;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPConstants;
@@ -15,45 +28,13 @@ import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.soap.SOAPFaultException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
-import org.hibernate.Session;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
-import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.google.common.collect.Lists;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Stage;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
-
-import dk.nsi.dgws.DgwsIdcardFilter;
-import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
-import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.sosi.seal.model.constants.FaultCodeValues;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -196,7 +177,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 	public void requestForExistingPersonGivesPersonInformation() throws Exception
 	{
 		session.getTransaction().begin();
-		Person person = Factories.createPerson();
+		Person person = Factories.createPersonWithoutAddressProtection();
 		person.cpr = "1111111111";
 		person.koen = "M";
 		person.vejKode = "8464";
@@ -226,7 +207,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 	public void requestPersonWithHealthcareInformation() throws Exception
 	{
 		session.getTransaction().begin();
-		Person person = Factories.createPerson();
+		Person person = Factories.createPersonWithoutAddressProtection();
 		person.cpr = "1111111111";
 		person.koen = "M";
 		person.vejKode = "8464";
