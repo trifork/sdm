@@ -17,6 +17,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
 		<jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
+		<jboss6.xalan.version>2.7.1</jboss6.xalan.version>
 		<guice.version>3.0</guice.version>
 	</properties>
 
