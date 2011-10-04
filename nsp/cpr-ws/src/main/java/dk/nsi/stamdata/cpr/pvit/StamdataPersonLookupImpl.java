@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
@@ -37,6 +38,7 @@ import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
+@SchemaValidation
 @GuiceWebservice
 @WebService(serviceName = "StamdataPersonLookup", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookup")
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
