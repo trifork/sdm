@@ -19,6 +19,7 @@ import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
@@ -37,9 +38,31 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 	public void setUp() throws Exception
 	{
 		person = Factories.createPersonWithoutAddressProtection();
-		person.kommuneKode = VIBORG;
 
 		doMap();
+	}
+	
+	@Test
+	public void mapsUnknownFieldToUkendtString() throws Exception {
+		person.fornavn = null;
+		
+		doMap();
+		
+		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is("UKENDT"));
+		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonSurnameName(), is(person.efternavn));
+	}
+	
+	@Test
+	public void dontOutputAddressesForTheDeadOrPeopleThatAreInOneOfTheOtherNoAddressCatagories() throws Exception
+	{
+		for (String statusCode : CivilRegistrationStatusCodes.STATUSES_WITH_NO_ADDRESS)
+		{
+			person.setStatus(statusCode);
+			
+			doMap();
+			
+			assertThat(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetName(), is("UKENDT"));
+		}
 	}
 
 	@Test
@@ -255,7 +278,11 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 	}
 
 	@Test
-	public void theMunicipalityIsMappedToTheCorrectCounty() {
+	public void theMunicipalityIsMappedToTheCorrectCounty() throws Exception {
+		person.kommuneKode = VIBORG;
+		
+		doMap();
+		
 		assertThat(output.getPersonAddressStructure().getCountyCode(), is(REGION_MIDTJYLLAND));
 	}
 

@@ -23,6 +23,7 @@ import java.util.Scanner;
 import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
 import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
+
 /**
  * This class is a JMeter plugin that contacts the STS and gets a valid IDCard.
  * 
@@ -32,7 +33,6 @@ import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBE
  */
 public class IDCardSampler extends AbstractJavaSamplerClient
 {
-
 	@Override
 	public SampleResult runTest(JavaSamplerContext context)
 	{
@@ -62,6 +62,7 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 
 		return result;
 	}
+
 
 	private String createIdCard() throws Exception
 	{
@@ -95,9 +96,9 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 		return writer.toString();
 	}
 
+
 	public static String send(String urlString, Node node) throws Exception
 	{
-
 		URL url = new URL(urlString);
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();

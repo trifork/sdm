@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.util.Date;
@@ -20,15 +19,11 @@ import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.soap.SOAPFaultException;
 
-import org.hamcrest.Matchers;
 import org.hibernate.Session;
-import org.hibernate.type.YesNoType;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -37,7 +32,6 @@ import com.google.inject.Inject;
 import com.google.inject.Stage;
 import com.trifork.stamdata.models.cpr.Person;
 
-import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.PersonMapper;
@@ -213,8 +207,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue("A person was not expected to exist with this birth date " + dateTime.toString(), response
-				.getPersonInformationStructure().isEmpty());
+		assertTrue(response.getPersonInformationStructure().isEmpty());
 	}
 
 
@@ -227,8 +220,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals("A person was expected to exist with this birth date " + dateTime.toString(), 1, response
-				.getPersonInformationStructure().size());
+		
+		assertEquals(1, response.getPersonInformationStructure().size());
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
 
@@ -244,8 +237,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals("Two people was expected to exist with this birth date " + dateTime.toString(), 2, response
-				.getPersonInformationStructure().size());
+		
+		assertEquals(2, response.getPersonInformationStructure().size());
 	}
 
 
@@ -259,10 +252,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(value);
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue(
-				"A person was NOT expected to exist with this name " + value.getPersonGivenName() + " "
-						+ value.getPersonMiddleName() + " " + value.getPersonSurnameName(), response
-						.getPersonInformationStructure().isEmpty());
+		assertTrue(response.getPersonInformationStructure().isEmpty());
 	}
 
 
@@ -276,10 +266,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(value);
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals(
-				"A person was expected to exist with this name " + value.getPersonGivenName() + " "
-						+ value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 1, response
-						.getPersonInformationStructure().size());
+		assertEquals(1, response.getPersonInformationStructure().size());
+		
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
 

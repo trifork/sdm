@@ -7,6 +7,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import static javax.persistence.TemporalType.DATE;
@@ -191,7 +193,8 @@ public class Person extends BaseTemporalEntity
     }
 
     public String getStatus() {
-        return status;
+    	String s = "00" + status;
+    	return s.substring(s.length() - 2);
     }
 
     public void setStatus(String status) {

@@ -1,25 +1,30 @@
 package dk.nsi.stamdata.cpr;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Set;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
+
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.Set;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 public class PersonMapperFieldMappingForProtectedPersonTest {
 	private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
@@ -131,23 +136,23 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	}
 
 	@Test
-	public void uses9999ForMunicipalityCode() throws Exception {
-		assertEquals("9999", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getMunicipalityCode());
+	public void uses0000ForMunicipalityCode() throws Exception {
+		assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getMunicipalityCode());
 	}
 
 	@Test
-	public void uses9999ForStreetCode() throws Exception {
-		assertEquals("9999", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
+	public void uses0000ForStreetCode() throws Exception {
+		assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
 	}
 
 	@Test
-	public void uses999AForStreetBuildingIdentifierInAddressAccess() throws Exception {
-		assertEquals("999A", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetBuildingIdentifier());
+	public void uses1ForStreetBuildingIdentifierInAddressAccess() throws Exception {
+		assertEquals("1", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetBuildingIdentifier());
 	}
 
 	@Test
-	public void uses999AForStreetBuildingIdentifierInAddressPostal() throws Exception {
-		assertEquals("999A", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
+	public void uses1ForStreetBuildingIdentifierInAddressPostal() throws Exception {
+		assertEquals("1", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
 	}
 
 	@Test
@@ -181,8 +186,8 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	}
 
 	@Test
-	public void uses9999ForPostCodeIdentifier() throws Exception {
-		assertEquals("9999", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostCodeIdentifier());
+	public void uses0000ForPostCodeIdentifier() throws Exception {
+		assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostCodeIdentifier());
 	}
 
 	@Test
@@ -217,7 +222,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 
 	@Test
 	public void omitsCountyCode() {
-		assertThat(output.getPersonAddressStructure().getCountyCode(), is("9999"));
+		assertThat(output.getPersonAddressStructure().getCountyCode(), is("0000"));
 	}
 
 	private void doMap() throws Exception {

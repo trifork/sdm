@@ -1,31 +1,38 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
-		<artifactId>webservice-pom</artifactId>
-		<version>3.1.0</version>
-		<relativePath>../../config/webservice-pom.xml</relativePath>
+		<artifactId>stamdata-parent</artifactId>
+		<version>3.2.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>stamdata-data-manager</artifactId>
-	<version>3.1.0-SNAPSHOT</version>
+
 	<packaging>war</packaging>
 	<name>Stamdata Data Manager</name>
-	
-	<!-- Dependencies -->
 
 	<dependencies>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>dk.nsi.stamdata</groupId>
 			<artifactId>stamdata-common</artifactId>
 			<version>${project.version}</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.16</version>
+			<version>${netic.provided.mysql.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -33,14 +40,12 @@
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.6</version>
-			<scope>compile</scope>
 			<exclusions>
 				<!-- WE USE THE 'jcl-over-slf4j' ADAPTER FOR SLF4J -->
 				<exclusion>
@@ -49,16 +54,15 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>${jboss6.hibernate.version}</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<!-- Logging -->
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -73,8 +77,38 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Test -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${jboss6.slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Scheduler -->
-		
+
 		<dependency>
 			<groupId>org.quartz-scheduler</groupId>
 			<artifactId>quartz</artifactId>
@@ -92,14 +126,12 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>1.6</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.0</version>
-			<scope>compile</scope>
 		</dependency>
 
 	</dependencies>
