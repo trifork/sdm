@@ -155,19 +155,24 @@ public class SikredeParser implements FileParser
 				
 				Sikrede sikrede = parseSikrede(line);
 				dataset.addEntity(sikrede);
-				
-				dataset.addEntity(parsePatientYderRelation(line, CURRENT_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.current));
+
+                SikredeYderRelation nuvaerendeYderRelation = parsePatientYderRelation(line, CURRENT_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.current);
 
 				if (hasYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET))
 				{
-					dataset.addEntity(parsePatientYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.previous));
+                    SikredeYderRelation forrigeYderRelation = parsePatientYderRelation(line, PREVIOUS_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.previous);
+                    forrigeYderRelation.setYdernummerUdlobDato(nuvaerendeYderRelation.getYdernummerIkraftDato());
+                    dataset.addEntity(forrigeYderRelation);
 				}
 				
 				if (hasYderRelation(line, FUTURE_YDER_RELATION_OFFSET))
 				{
-					dataset.addEntity(parsePatientYderRelation(line, FUTURE_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.future));
+                    SikredeYderRelation fremtidigYderRelation = parsePatientYderRelation(line, FUTURE_YDER_RELATION_OFFSET, sikrede.getCpr(), SikredeYderRelation.YderType.future);
+                    nuvaerendeYderRelation.setYdernummerUdlobDato(fremtidigYderRelation.getYdernummerIkraftDato());
+                    dataset.addEntity(fremtidigYderRelation);
 				}
-				
+				dataset.addEntity(nuvaerendeYderRelation);
+
 				if (hasSaerligSundhedskort(line))
 				{
 					SaerligSundhedskort saerligSundhedskort = parseSaerligSundhedsKort(line, sikrede.getCpr());

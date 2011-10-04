@@ -35,7 +35,7 @@ public class PersonMapperProtectionTest
 	private final static String WHITELISTED_CVR = "12345678";
 	private SystemIDCard whitelistedIDCard;
 	
-	private String NON_WHITELISTED_CVR = "23456789";
+	private static final String NON_WHITELISTED_CVR = "23456789";
 	private SystemIDCard nonWhitelistedIDCard;
 	
 	private static final String CENSORED = "ADRESSEBESKYTTET";
@@ -56,9 +56,8 @@ public class PersonMapperProtectionTest
 		nonWhitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(NON_WHITELISTED_CVR);
 		whitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(WHITELISTED_CVR);
 		
-		person = Factories.createPerson();
-		
 		municipalityMapper = new MunicipalityMapper();
+		person = Factories.createPersonWithoutAddressProtection();
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)

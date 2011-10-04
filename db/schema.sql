@@ -1113,6 +1113,7 @@ CREATE TABLE Sikrede (
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
+
 	INDEX (ValidFrom, ValidTo),
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
 	INDEX (ModifiedDate, SikredePID)
@@ -1129,6 +1130,7 @@ CREATE TABLE SikredeYderRelation (
     /* Nuvaerende valg af yder */
 	ydernummer MEDIUMINT(6) NOT NULL, 
 	ydernummerIkraftDato DATE NOT NULL,
+	ydernummerUdlobDato DATE, /* optional field. Always set on type=PREVIOUS, can be set on type=CURRENT and will never be set on type=FUTURE */
 	sikringsgruppeKode CHAR(1) NOT NULL,
 	gruppeKodeIkraftDato DATE NOT NULL,
 	gruppekodeRegistreringDato DATE NOT NULL,

@@ -59,7 +59,7 @@ public class PersonMapper
 	private PersonInformationStructureType createOutputWithCensoredDate(Person person) throws DatatypeConfigurationException
 	{
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
-		output.setCurrentPersonCivilRegistrationIdentifier(person.cpr);
+		mapCurrentPersonCivilRegistrationIdentifier(person, output);
 
 		RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();
 		SimpleCPRPersonType simpleCprPerson = new SimpleCPRPersonType();
@@ -70,7 +70,7 @@ public class PersonMapper
 		simpleCprPerson.setPersonNameStructure(personName);
 
 		personName.setPersonGivenName(ADRESSEBESKYTTET);
-		personName.setPersonMiddleName(ADRESSEBESKYTTET);
+		personName.setPersonMiddleName(null);
 		personName.setPersonSurnameName(ADRESSEBESKYTTET);
 
 		simpleCprPerson.setPersonCivilRegistrationIdentifier(person.cpr);
@@ -100,7 +100,7 @@ public class PersonMapper
 		PersonCivilRegistrationStatusStructureType personCivil = new PersonCivilRegistrationStatusStructureType();
 
 		personCivil.setPersonCivilRegistrationStatusCode(BigInteger.ONE);
-		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(new Date()));
+		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(new Date(0)));
 
 		regularCprPerson.setPersonCivilRegistrationStatusStructure(personCivil);
 
@@ -109,17 +109,17 @@ public class PersonMapper
 		//
 
 		PersonAddressStructureType personAddress = new PersonAddressStructureType();
-		personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.navnebeskyttelsestartdato));
+		personAddress.setPersonInformationProtectionStartDate(null);
 
-		personAddress.setCountyCode("9999");
-		personAddress.setCareOfName(ADRESSEBESKYTTET);
+		personAddress.setCountyCode(null);
+		personAddress.setCareOfName(null);
 
 		AddressCompleteType addressComplete = new AddressCompleteType();
 
 		AddressAccessType addressAccess = new AddressAccessType();
 
 		addressAccess.setMunicipalityCode("9999");
-		addressAccess.setStreetCode("999");
+		addressAccess.setStreetCode("9999");
 		addressAccess.setStreetBuildingIdentifier("999A");
 
 		addressComplete.setAddressAccess(addressAccess);
@@ -127,23 +127,20 @@ public class PersonMapper
 		AddressPostalType addressPostal = new AddressPostalType();
 		addressComplete.setAddressPostal(addressPostal);
 
-		addressPostal.setMailDeliverySublocationIdentifier(ADRESSEBESKYTTET);
+		addressPostal.setMailDeliverySublocationIdentifier(null);
 		addressPostal.setStreetName(ADRESSEBESKYTTET);
-		addressPostal.setStreetNameForAddressingName(ADRESSEBESKYTTET);
+		addressPostal.setStreetNameForAddressingName(null);
 
-		addressPostal.setStreetBuildingIdentifier("99");
-		addressPostal.setFloorIdentifier("99");
-		addressPostal.setSuiteIdentifier("99");
-		addressPostal.setDistrictSubdivisionIdentifier("9999");
-		addressPostal.setPostOfficeBoxIdentifier(0);
+		addressPostal.setStreetBuildingIdentifier("999A");
+		addressPostal.setFloorIdentifier(null);
+		addressPostal.setSuiteIdentifier(null);
+		addressPostal.setDistrictSubdivisionIdentifier(null);
+		addressPostal.setPostOfficeBoxIdentifier(null);
 
 		addressPostal.setPostCodeIdentifier("9999");
 		addressPostal.setDistrictName(ADRESSEBESKYTTET);
 
-		CountryIdentificationCodeType country = new CountryIdentificationCodeType();
-		country.setScheme(CountryIdentificationSchemeType.ISO_3166_ALPHA_2); // Two alpha-numerical characters.
-		country.setValue("XX");
-		addressPostal.setCountryIdentificationCode(country);
+		addressPostal.setCountryIdentificationCode(null);
 
 		personAddress.setAddressComplete(addressComplete);
 		output.setPersonAddressStructure(personAddress);
@@ -156,11 +153,8 @@ public class PersonMapper
 	private PersonInformationStructureType createOutputWithRealDate(Person person) throws DatatypeConfigurationException
 	{
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
-		
-		if (StringUtils.isNotBlank(person.getGaeldendeCPR()))
-		{
-			output.setCurrentPersonCivilRegistrationIdentifier(person.getGaeldendeCPR());
-		}
+
+		mapCurrentPersonCivilRegistrationIdentifier(person, output);
 
 		RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();
 		SimpleCPRPersonType simpleCprPerson = new SimpleCPRPersonType();
@@ -196,7 +190,7 @@ public class PersonMapper
 		PersonBirthDateStructureType personBirthDate = new PersonBirthDateStructureType();
 
 		personBirthDate.setBirthDate(newXMLGregorianCalendar(person.foedselsdato));
-		personBirthDate.setBirthDateUncertaintyIndicator(person.getFoedselsdatoMarkering()); 
+		personBirthDate.setBirthDateUncertaintyIndicator(person.getFoedselsdatoMarkering());
 
 		regularCprPerson.setPersonBirthDateStructure(personBirthDate);
 
@@ -206,7 +200,7 @@ public class PersonMapper
 
 		personCivil.setPersonCivilRegistrationStatusCode(new BigInteger(person.getStatus()));
 		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(person.getStatusDato()));
-		
+
 		regularCprPerson.setPersonCivilRegistrationStatusStructure(personCivil);
 
 		//
@@ -247,7 +241,7 @@ public class PersonMapper
 		// {
 		//	 This is:
 		//	 The given name of a farm, estate, building or dwelling, which is used as a additional postal address identifier.
-		//	
+		//
 		//	addressPostal.setMailDeliverySublocationIdentifier("Fake Value"); // FIXME: The importer does not import this field.
 		// }
 
@@ -274,11 +268,11 @@ public class PersonMapper
 		{
 			// Documentation says:
 			//
-			// Name of a village, city or subdivision of a city or district, which is determined as a part of the official address specification for a certain street 
-			// or specific parts of a street, defined by intervals of street building identifiers (da: house numbers). 
+			// Name of a village, city or subdivision of a city or district, which is determined as a part of the official address specification for a certain street
+			// or specific parts of a street, defined by intervals of street building identifiers (da: house numbers).
 			//
 			// We believe that the CPR term for this is 'Lokalitet'.
-			
+
 			addressPostal.setDistrictSubdivisionIdentifier(person.lokalitet);
 		}
 
@@ -293,12 +287,12 @@ public class PersonMapper
 		addressPostal.setDistrictName(person.postdistrikt);
 
 		// FIXME: The importer does not import this field.
-		// Maybe we cannot 
-		
+		// Maybe we cannot
+
 		if (StringUtils.isNotBlank(""))
 		{
 			CountryIdentificationCodeType country = new CountryIdentificationCodeType();
-			
+
 			// Two alpha-numerical characters.
 			country.setScheme(CountryIdentificationSchemeType.ISO_3166_ALPHA_2);
 			country.setValue("DK");
@@ -311,6 +305,12 @@ public class PersonMapper
 		output.setRegularCPRPerson(regularCprPerson);
 
 		return output;
+	}
+
+	private void mapCurrentPersonCivilRegistrationIdentifier(Person person, PersonInformationStructureType output) {
+		if (StringUtils.isNotBlank(person.getGaeldendeCPR())) {
+			output.setCurrentPersonCivilRegistrationIdentifier(person.getGaeldendeCPR());
+		}
 	}
 
 	private String getBuildingIdentifier(Person person) {
