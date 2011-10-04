@@ -116,20 +116,13 @@ public class HibernatePersistenceFilter implements Provider<Session>, Filter
 			{
 
 			}
+			
+			// Let other filters handle the exception.
+			
+			throw new ServletException(e);
 		}
 		finally
 		{
-			try
-			{
-				session.close();
-			}
-			catch (Exception ex)
-			{
-
-			}
-
-			// Reset the thread local.
-
 			this.session.remove();
 		}
 	}
