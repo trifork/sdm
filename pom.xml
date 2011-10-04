@@ -6,93 +6,209 @@
 	<name>Stamdata Project</name>
 
 	<groupId>dk.nsi.stamdata</groupId>
-	<artifactId>stamdata-root</artifactId>
+	<artifactId>stamdata-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>3.1.0-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+	<properties>
+		<jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
+		<jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
+		<jboss6.xalan.version>2.7.1</jboss6.xalan.version>
+		<guice.version>3.0</guice.version>
+		<guava.version>r09</guava.version>
+		<hamcrest.version>1.1</hamcrest.version>
+		<junit.version>4.8.2</junit.version>
+		<mockito.version>1.8.5</mockito.version>
+		<netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 
-    <modules>
-		<module>config/java-pom.xml</module>
-		<module>config/webservice-pom.xml</module>
-
+	<modules>
 		<module>common/common</module>
 		<module>common/dgws-filter</module>
 		<module>common/build-tools</module>
+		<module>common/performance</module>
 
 		<module>dodi/data-manager</module>
-		
+
 		<module>nsp/batch-copy-ws</module>
 		<module>nsp/authorization-lookup-ws</module>
 		<module>nsp/cpr-ws</module>
-		
-		<module>performance</module>
 	</modules>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.7.2</version>
+					<configuration>
+						<excludes>
+							<exclude>**/*IntegrationTest*</exclude>
+							<exclude>**/*DaoTest*</exclude>
+							<exclude>**/*ViewTest*</exclude>
+						</excludes>
+					</configuration>
+
+					<executions>
+						<execution>
+							<id>surefire-it</id>
+							<phase>integration-test</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<configuration>
+								<excludes>
+									<exclude>none</exclude>
+								</excludes>
+								<includes>
+									<include>**/*IntegrationTest*</include>
+									<include>**/*DaoTest*</include>
+									<include>**/*ViewTest*</include>
+								</includes>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>run</goal>
+							</goals>
+							<configuration>
+								<tasks>
+									<echo>Output dir: ${project.build.directory}</echo>
+									<copy todir="${project.build.directory}/dist" flatten="true"
+										failonerror="false">
+										<fileset dir="${basedir}" includes="**/*.war" />
+									</copy>
+									<zip
+										destfile="${project.build.directory}/${project.build.finalName}.zip">
+										<fileset dir="${project.build.directory}/dist" />
+									</zip>
+								</tasks>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>build-helper-maven-plugin</artifactId>
+					<version>1.7</version>
+					<executions>
+						<execution>
+							<phase>package</phase>
+							<goals>
+								<goal>attach-artifact</goal>
+							</goals>
+							<configuration>
+								<artifacts>
+									<artifact>
+										<file>${project.build.directory}/${project.build.finalName}.zip</file>
+										<type>zip</type>
+									</artifact>
+								</artifacts>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<showDeprecation>true</showDeprecation>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<tasks>
-								<echo>Output dir: ${project.build.directory}</echo>
-								<mkdir dir="${project.build.directory}/dist/documentation" />
-								<copy todir="${project.build.directory}/dist" flatten="true"
-									failonerror="false">
-									<fileset dir="${basedir}" includes="**/*.war" />
-								</copy>
-								<copy todir="${project.build.directory}/dist/documentation"
-									flatten="true" failonerror="false">
-									<fileset dir="${basedir}" includes="**/*.doc,**/*.pdf" />
-								</copy>
-								<zip destfile="${project.build.directory}/${project.build.finalName}.zip">
-									<fileset dir="${project.build.directory}/dist" />
-								</zip>
-							</tasks>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>attach-artifact</goal>
-						</goals>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file>${project.build.directory}/${project.build.finalName}.zip</file>
-									<type>zip</type>
-								</artifact>
-							</artifacts>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.7</version>
+				<dependencies>
+					<dependency>
+						<groupId>dk.nsi.stamdata</groupId>
+						<artifactId>build-tools</artifactId>
+						<version>3.1.0-SNAPSHOT</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<configLocation>sdm/sdm_checkstyle_config.xml</configLocation>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
 
-	<!-- REPOSITORIES -->
+	<profiles>
+		<profile>
+			<id>dropAndCreateDB</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+						<version>1.5</version>
+						<dependencies>
+							<dependency>
+								<groupId>mysql</groupId>
+								<artifactId>mysql-connector-java</artifactId>
+								<version>${netic.provided.mysql.version}</version>
+								<scope>runtime</scope>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<driver>com.mysql.jdbc.Driver</driver>
+							<url>jdbc:mysql:///sdm_warehouse</url>
+							<username>sdm</username>
+							<password>papkasse</password>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<autocommit>true</autocommit>
+									<printResultSet>true</printResultSet>
+									<srcFiles>
+										<srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
+										<srcFile>${basedir}/../../db/schema.sql</srcFile>
+									</srcFiles>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<configLocation>sdm/sdm_checkstyle_config.xml</configLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<repositories>
 		<repository>
 			<id>trifork</id>
-			<name>Trifork new releases</name>
+			<name>Trifork Public Nexus</name>
 			<layout>default</layout>
 			<url>https://nexus.trifork.com/content/groups/public</url>
 			<snapshots>
@@ -100,10 +216,11 @@
 			</snapshots>
 		</repository>
 	</repositories>
+
 	<pluginRepositories>
 		<pluginRepository>
-			<id>Trifork-Nexus-Public-Repository</id>
-			<name>Trifork Nexus Public Repository</name>
+			<id>trifork</id>
+			<name>Trifork Public Nexus</name>
 			<url>https://nexus.trifork.com/content/groups/public</url>
 			<snapshots>
 				<enabled>true</enabled>

@@ -3,23 +3,33 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
-		<artifactId>java-pom</artifactId>
-		<version>3.1.0</version>
-		<relativePath>../../config/java-pom.xml</relativePath>
+		<artifactId>stamdata-parent</artifactId>
+		<version>3.2.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
 	<artifactId>stamdata-common</artifactId>
-	<version>3.1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Stamdata Common Lib</name>
 
 	<dependencies>
 		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.0-api</artifactId>
+			<version>1.0.0.Final</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+	
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.0.1</version>
-			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -30,69 +40,22 @@
 		</dependency>
 		
 		<dependency>
-    		<groupId>joda-time</groupId>
-    		<artifactId>joda-time</artifactId>
-    		<version>2.0</version>
-    		<scope>compile</scope>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.0</version>
 		</dependency>
+
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>servlet-api</artifactId>
+		<version>2.5</version>
+		<scope>provided</scope>
+	</dependency>
 		
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.4</version>
-			<scope>provided</scope>
-		</dependency>
-			<dependency>
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
-			<version>3.0</version>
+			<version>${guice.version}</version>
 		</dependency>
 	</dependencies>
-
-    <profiles>
-        <profile>
-            <id>dropAndCreateDB</id>
-            <build>
-                <plugins>
-                    <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>sql-maven-plugin</artifactId>
-                    <version>1.5</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>mysql</groupId>
-                            <artifactId>mysql-connector-java</artifactId>
-                            <version>5.1.16</version>
-                            <scope>runtime</scope>
-                        </dependency>
-                    </dependencies>
-                    <configuration>
-                          <driver>com.mysql.jdbc.Driver</driver>
-                          <url>jdbc:mysql:///sdm_warehouse</url>
-                          <username>sdm</username>
-                          <password>papkasse</password>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>pre-integration-test</phase>
-                            <goals>
-                                <goal>execute</goal>
-                            </goals>
-                            <configuration>
-                                <autocommit>true</autocommit>
-                                <printResultSet>true</printResultSet>
-                                <srcFiles>
-                                  <srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
-                                  <srcFile>${basedir}/../../db/schema.sql</srcFile>
-                                </srcFiles>
-                            </configuration>
-                        </execution>
-                    </executions>
-
-                </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
-
 </project>

@@ -22,7 +22,7 @@ public class Factories
 		person.setEfternavn("Andersen");
 		person.setNavnTilAdressering("Peter,Andersen");
 		
-		person.setCpr("1234567890");
+		person.setCpr("0204953569");
 		
 		person.setKoen("M");
 		
@@ -31,7 +31,7 @@ public class Factories
 		person.setCoNavn("Søren Petersen");
 		
 		person.setKommuneKode("0461");
-		person.setVejKode("234");
+		person.setVejKode("0234");
 		person.setHusnummer("10");
 		person.setBygningsnummer("A");
 		person.setLokalitet("Birkely");
@@ -48,6 +48,11 @@ public class Factories
 		
 		person.setNavnebeskyttelsestartdato(null);
 		person.setNavnebeskyttelseslettedato(null);
+		
+		person.setModifiedDate(TWO_DAYS_AGO);
+		person.setCreatedDate(TWO_DAYS_AGO);
+		person.setValidFrom(YESTERDAY);
+		person.setValidTo(TOMORROW);
 
 		return person;
 	}

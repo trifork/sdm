@@ -1,8 +1,11 @@
 package dk.nsi.stamdata.cpr.pvit;
 
+import static dk.nsi.stamdata.cpr.Factories.TOMORROW;
+import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.net.URL;
 import java.util.Date;
@@ -21,7 +24,6 @@ import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebA
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
@@ -30,7 +32,6 @@ import com.google.inject.Inject;
 import com.google.inject.Stage;
 import com.trifork.stamdata.models.cpr.Person;
 
-import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.PersonMapper;
@@ -51,7 +52,6 @@ import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
 
 public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
 {
-
 	private static final String EXAMPLE_CPR = "1111111111";
 
 	public static final QName PVIT_SERVICE = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
@@ -63,16 +63,12 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 	@Inject
 	private Session session;
+	
 	private Holder<Security> securityHolder;
 	private Holder<Header> medcomHolder;
-
-
-	@BeforeClass
-	public static void setIdcardFilterInTestMode()
-	{
-		// TODO: Comment why is this needed.
-		System.setProperty(DgwsIdcardFilter.USE_TEST_FEDERATION_INIT_PARAM_KEY, "true");
-	}
+	
+	private Holder<Security> securityHolderNotWhitelisted;
+	private Holder<Header> medcomHolderNotWhitelisted;
 
 
 	@Before
@@ -103,6 +99,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 		securityHolder = new Holder<Security>(securityHeaders.getSecurity());
 		medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
+		
+		SecurityWrapper secutityHeadersNotWhitelisted = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo2", "bar2");
+		securityHolderNotWhitelisted = new Holder<Security>(secutityHeadersNotWhitelisted.getSecurity());
+		medcomHolderNotWhitelisted = new Holder<Header>(secutityHeadersNotWhitelisted.getMedcomHeader());
 	}
 
 
@@ -119,7 +119,6 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		PersonLookupRequestType query = new PersonLookupRequestType();
 		
 		client.getPersonDetails(securityHolder, medcomHolder, query);
-		fail("Expected DGWSFault");
 	}
 
 
@@ -127,7 +126,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 	public void requestWithTwoQueryTypeGivesSenderSoapFault() throws Exception
 	{
 		PersonLookupRequestType query = new PersonLookupRequestType();
-		query.setCivilRegistrationNumberPersonQuery("1234567890");
+		query.setCivilRegistrationNumberPersonQuery("2805842569");
 		NamePersonQueryType namePersonQueryType = new NamePersonQueryType();
 		namePersonQueryType.setPersonGivenName("Thomas");
 		namePersonQueryType.setPersonMiddleName("Greve");
@@ -135,7 +134,6 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(namePersonQueryType);
 
 		client.getPersonDetails(securityHolder, medcomHolder, query);
-		fail("Expected DGWSFault");
 	}
 
 
@@ -209,8 +207,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue("A person was not expected to exist with this birth date " + dateTime.toString(), response
-				.getPersonInformationStructure().isEmpty());
+		assertTrue(response.getPersonInformationStructure().isEmpty());
 	}
 
 
@@ -223,8 +220,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals("A person was expected to exist with this birth date " + dateTime.toString(), 1, response
-				.getPersonInformationStructure().size());
+		
+		assertEquals(1, response.getPersonInformationStructure().size());
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
 
@@ -240,8 +237,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals("Two people was expected to exist with this birth date " + dateTime.toString(), 2, response
-				.getPersonInformationStructure().size());
+		
+		assertEquals(2, response.getPersonInformationStructure().size());
 	}
 
 
@@ -255,10 +252,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(value);
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue(
-				"A person was NOT expected to exist with this name " + value.getPersonGivenName() + " "
-						+ value.getPersonMiddleName() + " " + value.getPersonSurnameName(), response
-						.getPersonInformationStructure().isEmpty());
+		assertTrue(response.getPersonInformationStructure().isEmpty());
 	}
 
 
@@ -272,10 +266,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(value);
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals(
-				"A person was expected to exist with this name " + value.getPersonGivenName() + " "
-						+ value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 1, response
-						.getPersonInformationStructure().size());
+		assertEquals(1, response.getPersonInformationStructure().size());
+		
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
 
@@ -291,12 +283,27 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		query.setNamePersonQuery(value);
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals(
-				"Two people was expected to exist with this name " + value.getPersonGivenName() + " "
-						+ value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 2, response
-						.getPersonInformationStructure().size());
+		assertEquals(2, response.getPersonInformationStructure().size());
 	}
 
+	@Test
+	public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws DGWSFault
+	{
+		Person person = Factories.createPersonWithAddressProtection();
+		
+		person.setNavnebeskyttelsestartdato(YESTERDAY);
+		person.setNavnebeskyttelseslettedato(TOMORROW);
+		
+		savePerson(person);
+		
+		PersonLookupRequestType query = new PersonLookupRequestType();
+		query.setCivilRegistrationNumberPersonQuery(person.getCpr());
+
+		PersonLookupResponseType response = client.getPersonDetails(securityHolderNotWhitelisted, medcomHolderNotWhitelisted, query);
+		
+		String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
+		assertThat(givenName, is("ADRESSEBESKYTTET"));
+	}
 
 	private void purgePersonTable()
 	{
@@ -315,8 +322,6 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 	private Person createPerson(String cpr, String koen, String vejkode, String fornavn, String mellemnavn,
 			String efternavn, DateTime foedselsdato)
 	{
-		session.getTransaction().begin();
-
 		Person person = Factories.createPersonWithoutAddressProtection();
 		person.cpr = cpr;
 		person.koen = koen;
@@ -328,15 +333,25 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		}
 		person.efternavn = efternavn;
 		person.foedselsdato = foedselsdato.toDate();
-		;
+		
 		person.setModifiedDate(new Date());
 		person.setCreatedDate(new Date());
 		person.setValidFrom(DateTime.now().minusDays(1).toDate());
 		person.setValidTo(DateTime.now().plusDays(1).toDate());
-		session.save(person);
-		session.flush();
-		session.getTransaction().commit();
+		
+		savePerson(person);
 
+		return person;
+	}
+	
+	private Person savePerson(Person person)
+	{
+		session.getTransaction().begin();
+
+		session.save(person);
+		
+		session.getTransaction().commit();
+		
 		return person;
 	}
 

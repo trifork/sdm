@@ -1,0 +1,215 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>dk.nsi.stamdata</groupId>
+		<artifactId>stamdata-parent</artifactId>
+		<version>3.2.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>stamdata-performance</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Stamdata Performace Test Suite</name>
+
+	<properties>
+		<hostname>localhost</hostname>
+		<port>8080</port>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>performancetest</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>chronos-maven-plugin</artifactId>
+						<version>1.0-SNAPSHOT</version>
+						<configuration>
+							<heap>768m</heap>
+							<permsize>256m</permsize>
+							<sysproperties>
+								<property>
+									<name>search_paths</name>
+									<value>${basedir}/target</value>
+								</property>
+								<property>
+									<name>java.awt.headless</name>
+									<value>false</value>
+								</property>
+							</sysproperties>
+							<jmeterVariables>
+								<property>
+									<name>hostname</name>
+									<value>${hostname}</value>
+								</property>
+								<property>
+									<name>port</name>
+									<value>${port}</value>
+								</property>
+							</jmeterVariables>
+							<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip
+							</jMeterRemoteLocation>
+						</configuration>
+						<executions>
+							<!-- -->
+							<!-- Authorization Lookup -->
+							<!-- -->
+							<execution>
+								<id>authorization-ws</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>authorization-ws-data</dataid>
+									<input>${basedir}/src/main/resources/AuthorizationWS2.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>authorization-ws-test-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<reportid>authorization-ws-test-report</reportid>
+									<dataid>authorization-ws-data</dataid>
+									<description>Authorization Lookup Service Response Times</description>
+									<title>Load test, 10 req/sec minimum requirement</title>
+								</configuration>
+							</execution>
+							<!-- -->
+							<!-- Replication Token -->
+							<!-- -->
+							<execution>
+								<id>replication-token-ws</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>replication-token-ws-data</dataid>
+									<input>${basedir}/src/main/resources/ReplicationTokenService.jmx</input>
+								</configuration>
+							</execution>
+							<execution>
+								<id>replication-token-ws-report</id>
+								<phase>site</phase>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<reportid>replication-token-ws-report</reportid>
+									<dataid>replication-token-ws-data</dataid>
+									<showgc>false</showgc>
+									<showpercentile99>true</showpercentile99>
+									<description>Authorization Lookup Service Response Times</description>
+									<title>Load test, 10 req/sec minimum requirement</title>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>chronos-maven-plugin</artifactId>
+						<version>1.0-SNAPSHOT</version>
+					</plugin>
+				</plugins>
+			</reporting>
+		</profile>
+	</profiles>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>compile</scope>
+			<!-- Yes compile, we make junit samplers. -->
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${jboss6.slf4j.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>dk.sosi.seal</groupId>
+			<artifactId>seal-jboss6</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>apache</groupId>
+			<artifactId>JMeter-core</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>apache</groupId>
+			<artifactId>JMeter-java</artifactId>
+			<version>2.4</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.jorphan</groupId>
+			<artifactId>jorphan</artifactId>
+			<version>2.4</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>excalibur-logger</groupId>
+			<artifactId>excalibur-logger</artifactId>
+			<version>1.1</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>avalon-logkit</groupId>
+			<artifactId>avalon-logkit</artifactId>
+			<version>2.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.avalon.framework</groupId>
+			<artifactId>avalon-framework-impl</artifactId>
+			<version>4.3.1</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>oro</groupId>
+			<artifactId>oro</artifactId>
+			<version>2.0.8</version>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+</project>
