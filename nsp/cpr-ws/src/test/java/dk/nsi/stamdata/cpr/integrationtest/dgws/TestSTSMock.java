@@ -63,7 +63,7 @@ import dk.sosi.seal.vault.CredentialVault;
 import dk.sosi.seal.vault.GenericCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 
-public final class IdCardBuilder {
+public final class TestSTSMock {
 
 	private static final String stsKeystoreAsBase64 = "/u3+7QAAAAIAAAABAAAAAQARc29zaTphbGlhc19zeXN0ZW0AAAEsNhFwqgAAArswggK3MA4GCisG"
 			+ "AQQBKgIRAQEFAASCAqOu+XECVO5mg3cbXCWmHoE+hhNGmHtoGrhAn5hoOzUGhyw6rrXjN8FNB78S"
@@ -145,7 +145,7 @@ public final class IdCardBuilder {
 		}
 	}
 
-	private IdCardBuilder()
+	private TestSTSMock()
 	{
 	}
 
@@ -227,7 +227,13 @@ public final class IdCardBuilder {
 		CareProvider careProvider = new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, careProviderId, careProviderName);
 		String username = null; // Only used for level 2
 		String password = null; // Only used for level 2
-		SystemIDCard idCard = factory.createNewSystemIDCard(itSystemName, careProvider, auth, username, password, certificate, "Trifork");
+		SystemIDCard idCard = factory.createNewSystemIDCard(itSystemName, careProvider, auth, username, password, certificate, "123");
 		return idCard;
+	}
+	
+	public static SystemIDCard createTestSTSSignedIDCard(String cvr)
+	{
+		SOSIFactory factory = new SOSIFactory(null, vault, properties);
+		return getIdCard(AuthenticationLevel.VOCES_TRUSTED_SYSTEM, factory, cvr, "Fake Value", "Fake System");
 	}
 }

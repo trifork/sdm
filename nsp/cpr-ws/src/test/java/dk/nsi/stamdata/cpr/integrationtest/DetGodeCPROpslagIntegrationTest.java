@@ -9,9 +9,10 @@ import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
+import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.constants.FaultCodeValues;
@@ -35,201 +36,236 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test {
-    public static final QName DET_GODE_CPR_OPSLAG_SERVICE = new QName("http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/", "DetGodeCPROpslagService");
-    public static final String CVR_WHITELISTED = "12345678";
-    public static final String CVR_NOT_WHITELISTED = "87654321";
 
-    private DetGodeCPROpslag client;
+public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
+{
+	public static final QName DET_GODE_CPR_OPSLAG_SERVICE = new QName("http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/", "DetGodeCPROpslagService");
+	public static final String CVR_WHITELISTED = "12345678";
+	public static final String CVR_NOT_WHITELISTED = "87654321";
 
-    @Inject
-    private Session session;
+	private DetGodeCPROpslag client;
 
-    @BeforeClass
-    public static void setIdcardFilterInTestMode() {
-        // TODO: Comment why is this needed.
+	@Inject
+	private Session session;
 
-        System.setProperty(DgwsIdcardFilter.USE_TEST_FEDERATION_INIT_PARAM_KEY, "true");
-    }
 
-    @Before
-    public void setUp() throws MalformedURLException {
-        // Prepare the test,
-        // using Guice to inject dependencies.
+	@BeforeClass
+	public static void setIdcardFilterInTestMode()
+	{
+		// TODO: Comment why is this needed.
 
-        Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
+		System.setProperty(DgwsIdcardFilter.USE_TEST_FEDERATION_INIT_PARAM_KEY, "true");
+	}
 
-        // Clean out any existing data. (Because we don't have an in-memory db.)
 
-        purgePersonTable();
-        purgeSikrede();
+	@Before
+	public void setUp() throws MalformedURLException
+	{
+		// Prepare the test,
+		// using Guice to inject dependencies.
 
-        // This client is used to access the web-service.
+		Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
 
-        URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag?wsdl");
-        DetGodeCPROpslagService serviceCatalog = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
+		// Clean out any existing data. (Because we don't have an in-memory db.)
 
-        // TODO: Comment why this resolver is needed.
+		purgePersonTable();
+		purgeSikrede();
 
-        serviceCatalog.setHandlerResolver(new HandlerResolver() {
-            @Override
-            @SuppressWarnings("rawtypes")
-            public List<Handler> getHandlerChain(PortInfo portInfo) {
-                return Lists.newArrayList((Handler) new SealNamespacePrefixSoapHandler());
-            }
-        });
+		// This client is used to access the web-service.
 
-        client = serviceCatalog.getDetGodeCPROpslag();
-    }
+		URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag?wsdl");
+		DetGodeCPROpslagService serviceCatalog = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
 
-    @After
-    public void tearDown() throws Exception {
-        session.disconnect();
-    }
+		// TODO: Comment why this resolver is needed.
 
-    private void purgePersonTable() {
-        session.createSQLQuery("TRUNCATE Person").executeUpdate();
-    }
+		serviceCatalog.setHandlerResolver(new HandlerResolver()
+		{
+			@Override
+			@SuppressWarnings("rawtypes")
+			public List<Handler> getHandlerChain(PortInfo portInfo)
+			{
+				return Lists.newArrayList((Handler) new SealNamespacePrefixSoapHandler());
+			}
+		});
 
-    private void purgeSikrede() {
-        session.createSQLQuery("TRUNCATE SikredeYderRelation").executeUpdate();
-        session.createSQLQuery("TRUNCATE Yderregister").executeUpdate();
-    }
+		client = serviceCatalog.getDetGodeCPROpslag();
+	}
 
-    @Test
-    public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception {
-        GetPersonInformationIn request = new GetPersonInformationIn();
 
-        try {
-            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+	@After
+	public void tearDown() throws Exception
+	{
+		session.disconnect();
+	}
 
-            client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-            fail("Expected SOAPFault");
-        } catch (SOAPFaultException fault) {
-            assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-        }
-    }
 
-    @Test
-    public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception {
-        GetPersonInformationIn request = new GetPersonInformationIn();
-        request.setPersonCivilRegistrationIdentifier("7777777777");
+	private void purgePersonTable()
+	{
+		session.createSQLQuery("TRUNCATE Person").executeUpdate();
+	}
 
-        try {
-            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-            client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-            fail("Expected SOAPFault");
-        } catch (SOAPFaultException fault) {
-            assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-            assertEquals(FaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
-        }
-    }
+	private void purgeSikrede()
+	{
+		session.createSQLQuery("TRUNCATE SikredeYderRelation").executeUpdate();
+		session.createSQLQuery("TRUNCATE Yderregister").executeUpdate();
+	}
 
-    @Test
-    public void requestWithCvrNotWhitelistedGivesSoapFaultWithDGWSNotAuthorizedFaultCode() throws Exception {
-        GetPersonInformationIn request = new GetPersonInformationIn();
-        request.setPersonCivilRegistrationIdentifier("1111111111");
-        try {
-            SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
 
-            client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-            fail("Expected DGWS");
-        } catch (DGWSFault fault) {
-            Assert.assertEquals(FaultCodeValues.NOT_AUTHORIZED, fault.getMessage());
-        }
-    }
+	@Test
+	public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception
+	{
+		GetPersonInformationIn request = new GetPersonInformationIn();
 
-    @Test
-    public void requestWithWhitelistedCvrAndExistingPersonGivesPersonInformation() throws Exception {
-        session.getTransaction().begin();
-        Person person = new Person();
-        person.cpr = "1111111111";
-        person.koen = "M";
-        person.vejKode = "8464";
-        person.foedselsdato = new Date();
-        person.setModifiedDate(new Date());
-        person.setCreatedDate(new Date());
-        person.setValidFrom(DateTime.now().minusDays(1).toDate());
-        person.setValidTo(DateTime.now().plusDays(1).toDate());
+		try
+		{
+			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-        session.save(person);
-        session.flush();
-        session.getTransaction().commit();
+			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+			fail("Expected SOAPFault");
+		}
+		catch (SOAPFaultException fault)
+		{
+			assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
+		}
+	}
 
-        GetPersonInformationIn request = new GetPersonInformationIn();
-        request.setPersonCivilRegistrationIdentifier("1111111111");
-        SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-        GetPersonInformationOut personInformation = client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+	@Test
+	public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception
+	{
+		GetPersonInformationIn request = new GetPersonInformationIn();
+		request.setPersonCivilRegistrationIdentifier("7777777777");
 
-        PersonInformationStructureType information = personInformation.getPersonInformationStructure();
-        Assert.assertEquals("1111111111", information.getCurrentPersonCivilRegistrationIdentifier());
-        Assert.assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
-    }
+		try
+		{
+			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-    @Test
-    public void requestPersonWithHealthcareInformation() throws Exception {
-        session.getTransaction().begin();
-        Person person = new Person();
-        person.cpr = "1111111111";
-        person.koen = "M";
-        person.vejKode = "8464";
-        person.foedselsdato = new Date();
-        person.setModifiedDate(new Date());
-        person.setCreatedDate(new Date());
-        person.setValidFrom(DateTime.now().minusDays(1).toDate());
-        person.setValidTo(DateTime.now().plusDays(1).toDate());
+			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+			fail("Expected SOAPFault");
+		}
+		catch (SOAPFaultException fault)
+		{
+			assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
+			assertEquals(FaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
+		}
+	}
 
-        SikredeYderRelation sikredeYderRelation = new SikredeYderRelation();
-        sikredeYderRelation.setGruppeKodeIkraftDato(new Date());
-        sikredeYderRelation.setGruppekodeRegistreringDato(new Date());
-        sikredeYderRelation.setYdernummerIkraftDato(new Date());
-        sikredeYderRelation.setYdernummerRegistreringDato(new Date());
-        sikredeYderRelation.setCreatedDate(new Date());
-        sikredeYderRelation.setModifiedDate(new Date());
-        sikredeYderRelation.setSikringsgruppeKode('1');
-        sikredeYderRelation.setYdernummer(1234);
-        sikredeYderRelation.setCpr(person.getCpr());
-        sikredeYderRelation.setType("C");
-        sikredeYderRelation.setId(sikredeYderRelation.getCpr() + "-" + sikredeYderRelation.getType());
-        sikredeYderRelation.setValidFrom(DateTime.now().minusDays(1).toDate());
-        sikredeYderRelation.setValidTo(DateTime.now().plusDays(1).toDate());
 
-        Yderregister yderregister = new Yderregister();
-        yderregister.setBynavn("Randers");
-        yderregister.setCreatedDate(new Date());
-        yderregister.setEmail("hej@verden.dk");
-        yderregister.setModifiedDate(new Date());
-        yderregister.setNavn("Jørgens Klinik");
-        yderregister.setNummer(sikredeYderRelation.getYdernummer());
-        yderregister.setPostnummer("8900");
-        yderregister.setTelefon("89898989");
-        yderregister.setValidFrom(DateTime.now().minusDays(1).toDate());
-        yderregister.setValidTo(DateTime.now().plusDays(1).toDate());
-        yderregister.setVejnavn("Rådhuspladsen 4");
+	@Test
+	@Ignore("Instead test that a person with active protection is protected.")
+	public void requestWithCvrNotWhitelistedGivesSoapFaultWithDGWSNotAuthorizedFaultCode() throws Exception
+	{
+		GetPersonInformationIn request = new GetPersonInformationIn();
+		request.setPersonCivilRegistrationIdentifier("1111111111");
+		
+		try
+		{
+			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
 
-        session.save(person);
-        session.save(sikredeYderRelation);
-        session.save(yderregister);
-        
-        session.flush();
-        session.getTransaction().commit();
+			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+			fail("Expected DGWS");
+		}
+		catch (DGWSFault fault)
+		{
+			Assert.assertEquals(FaultCodeValues.NOT_AUTHORIZED, fault.getMessage());
+		}
+	}
 
-        GetPersonWithHealthCareInformationIn request = new GetPersonWithHealthCareInformationIn();
-        request.setPersonCivilRegistrationIdentifier("1111111111");
-        SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-        GetPersonWithHealthCareInformationOut personWithHealthCareInformation = client.getPersonWithHealthCareInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+	@Test
+	public void requestForExistingPersonGivesPersonInformation() throws Exception
+	{
+		session.getTransaction().begin();
+		Person person = Factories.createPersonWithoutAddressProtection();
+		person.cpr = "1111111111";
+		person.koen = "M";
+		person.vejKode = "8464";
+		person.foedselsdato = new Date();
+		person.setModifiedDate(new Date());
+		person.setCreatedDate(new Date());
+		person.setValidFrom(DateTime.now().minusDays(1).toDate());
+		person.setValidTo(DateTime.now().plusDays(1).toDate());
 
-        PersonWithHealthCareInformationStructureType healthCareInformationStructure = personWithHealthCareInformation.getPersonWithHealthCareInformationStructure();
+		session.save(person);
+		session.flush();
+		session.getTransaction().commit();
 
-        PersonInformationStructureType personInformationStructure = healthCareInformationStructure.getPersonInformationStructure();
-        Assert.assertEquals("1111111111", personInformationStructure.getCurrentPersonCivilRegistrationIdentifier());
-        Assert.assertEquals("8464", personInformationStructure.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
+		GetPersonInformationIn request = new GetPersonInformationIn();
+		request.setPersonCivilRegistrationIdentifier("1111111111");
+		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-        PersonHealthCareInformationStructureType personHealthCareInformationStructure = healthCareInformationStructure.getPersonHealthCareInformationStructure();
-        Assert.assertEquals("Ydernummer på tilknyttet læge matcher ikke", 1234, personHealthCareInformationStructure.getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue());
+		GetPersonInformationOut personInformation = client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 
-    }
+		PersonInformationStructureType information = personInformation.getPersonInformationStructure();
+		Assert.assertEquals("1111111111", information.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
+		Assert.assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
+	}
+
+
+	@Test
+	public void requestPersonWithHealthcareInformation() throws Exception
+	{
+		session.getTransaction().begin();
+		Person person = Factories.createPersonWithoutAddressProtection();
+		person.cpr = "1111111111";
+		person.koen = "M";
+		person.vejKode = "8464";
+		person.foedselsdato = new Date();
+		person.setModifiedDate(new Date());
+		person.setCreatedDate(new Date());
+		person.setValidFrom(DateTime.now().minusDays(1).toDate());
+		person.setValidTo(DateTime.now().plusDays(1).toDate());
+
+		SikredeYderRelation sikredeYderRelation = new SikredeYderRelation();
+		sikredeYderRelation.setGruppeKodeIkraftDato(new Date());
+		sikredeYderRelation.setGruppekodeRegistreringDato(new Date());
+		sikredeYderRelation.setYdernummerIkraftDato(new Date());
+		sikredeYderRelation.setYdernummerRegistreringDato(new Date());
+		sikredeYderRelation.setCreatedDate(new Date());
+		sikredeYderRelation.setModifiedDate(new Date());
+		sikredeYderRelation.setSikringsgruppeKode('1');
+		sikredeYderRelation.setYdernummer(1234);
+		sikredeYderRelation.setCpr(person.getCpr());
+		sikredeYderRelation.setType("C");
+		sikredeYderRelation.setId(sikredeYderRelation.getCpr() + "-" + sikredeYderRelation.getType());
+		sikredeYderRelation.setValidFrom(DateTime.now().minusDays(1).toDate());
+		sikredeYderRelation.setValidTo(DateTime.now().plusDays(1).toDate());
+
+		Yderregister yderregister = new Yderregister();
+		yderregister.setBynavn("Randers");
+		yderregister.setCreatedDate(new Date());
+		yderregister.setEmail("hej@verden.dk");
+		yderregister.setModifiedDate(new Date());
+		yderregister.setNavn("Jørgens Klinik");
+		yderregister.setNummer(sikredeYderRelation.getYdernummer());
+		yderregister.setPostnummer("8900");
+		yderregister.setTelefon("89898989");
+		yderregister.setValidFrom(DateTime.now().minusDays(1).toDate());
+		yderregister.setValidTo(DateTime.now().plusDays(1).toDate());
+		yderregister.setVejnavn("Rådhuspladsen 4");
+
+		session.save(person);
+		session.save(sikredeYderRelation);
+		session.save(yderregister);
+
+		session.flush();
+		session.getTransaction().commit();
+
+		GetPersonWithHealthCareInformationIn request = new GetPersonWithHealthCareInformationIn();
+		request.setPersonCivilRegistrationIdentifier("1111111111");
+		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+
+		GetPersonWithHealthCareInformationOut personWithHealthCareInformation = client.getPersonWithHealthCareInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+
+		PersonWithHealthCareInformationStructureType healthCareInformationStructure = personWithHealthCareInformation.getPersonWithHealthCareInformationStructure();
+
+		PersonInformationStructureType personInformationStructure = healthCareInformationStructure.getPersonInformationStructure();
+		Assert.assertEquals("1111111111", personInformationStructure.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
+		Assert.assertEquals("8464", personInformationStructure.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
+
+		PersonHealthCareInformationStructureType personHealthCareInformationStructure = healthCareInformationStructure.getPersonHealthCareInformationStructure();
+		Assert.assertEquals("Ydernummer på tilknyttet læge matcher ikke", 1234, personHealthCareInformationStructure.getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue());
+
+	}
 }

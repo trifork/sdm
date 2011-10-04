@@ -191,4 +191,5 @@ public class Sikrede extends CPREntity
 	{
 		return "Sikrede{" + "bevisIkraftDato=" + bevisIkraftDato + ", kommunekode='" + kommunekode + '\'' + ", kommunekodeIkraftDato=" + kommunekodeIkraftDato + ", foelgeskabsPersonCpr='" + foelgeskabsPersonCpr + '\'' + ", status='" + status + '\'' + ", forsikringsinstans='" + forsikringsinstans + '\'' + ", forsikringsinstansKode='" + forsikringsinstansKode + '\'' + ", forsikringsnummer='" + forsikringsnummer + '\'' + ", sslGyldigFra=" + sslGyldigFra + ", SslGyldigTil=" + SslGyldigTil + ", socialLand='" + socialLand + '\'' + ", socialLandKode='" + socialLandKode + '\'' + '}';
 	}
+
 }

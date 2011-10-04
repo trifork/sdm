@@ -1,17 +1,16 @@
 package com.trifork.stamdata.models.cpr;
 
-import static javax.persistence.TemporalType.DATE;
-import static javax.persistence.TemporalType.TIMESTAMP;
-
-import java.math.BigInteger;
-import java.util.Date;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.models.BaseTemporalEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
+import java.util.Date;
 
-import com.trifork.stamdata.models.BaseTemporalEntity;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
 
 // Use the split of different parts that the person table is made up of instead.
 // The person table is unstable and its behavior is not well-defined.
@@ -63,10 +62,10 @@ public class Person extends BaseTemporalEntity
 	public String postdistrikt;
 
 	public String status;
+	private Date statusDato;
 
 	public String gaeldendeCPR;
 
-	@Temporal(DATE)
 	public Date foedselsdato;
 
 	public String stilling;
@@ -75,11 +74,9 @@ public class Person extends BaseTemporalEntity
 
 	public String kommuneKode;
 
-	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelseslettedato;
-
-	@Temporal(TIMESTAMP)
 	public Date navnebeskyttelsestartdato;
+
 
     public String getKoen() {
         return koen;
@@ -200,6 +197,17 @@ public class Person extends BaseTemporalEntity
     public void setStatus(String status) {
         this.status = status;
     }
+    
+    @Temporal(TIMESTAMP)
+    public void setStatusDato(Date statusDato)
+    {
+    	this.statusDato = statusDato;
+    }
+    
+    public Date getStatusDato()
+    {
+    	return statusDato;
+    }
 
     public String getGaeldendeCPR() {
         return gaeldendeCPR;
@@ -209,6 +217,7 @@ public class Person extends BaseTemporalEntity
         this.gaeldendeCPR = gaeldendeCPR;
     }
 
+    @Temporal(DATE)
     public Date getFoedselsdato() {
         return foedselsdato;
     }
@@ -241,19 +250,57 @@ public class Person extends BaseTemporalEntity
         this.kommuneKode = kommuneKode;
     }
 
+    @Temporal(TIMESTAMP)
     public Date getNavnebeskyttelseslettedato() {
         return navnebeskyttelseslettedato;
     }
-
+    
     public void setNavnebeskyttelseslettedato(Date navnebeskyttelseslettedato) {
         this.navnebeskyttelseslettedato = navnebeskyttelseslettedato;
     }
 
+    @Temporal(TIMESTAMP)
     public Date getNavnebeskyttelsestartdato() {
         return navnebeskyttelsestartdato;
     }
 
-    public void setNavnebeskyttelsestartdato(Date navnebeskyttelsestartdato) {
+    public void setNavnebeskyttelsestartdato(@Nullable Date navnebeskyttelsestartdato) {
         this.navnebeskyttelsestartdato = navnebeskyttelsestartdato;
+    }
+    
+    private String navnTilAdressering;
+    
+    public void setNavnTilAdressering(String navnTilAdressering)
+    {
+    	this.navnTilAdressering = navnTilAdressering;
+    }
+    
+    public String getNavnTilAdressering()
+    {
+    	return navnTilAdressering;
+    }
+    
+    private String vejnavnTilAdressering;
+    
+    public void setVejnavnTilAdressering(String vejnavnTilAdressering)
+    {
+    	this.vejnavnTilAdressering = vejnavnTilAdressering;
+    }
+    
+    public String getVejnavnTilAdressering()
+    {
+    	return vejnavnTilAdressering;
+    }
+    
+    private boolean foedselsdatoMarkering;
+    
+    public boolean getFoedselsdatoMarkering()
+    {
+    	return foedselsdatoMarkering;
+    }
+    
+    public void setFoedselsdatoMarkering(boolean foedselsdatoMarkering)
+    {
+    	this.foedselsdatoMarkering = foedselsdatoMarkering;
     }
 }

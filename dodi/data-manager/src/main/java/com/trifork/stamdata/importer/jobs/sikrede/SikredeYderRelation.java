@@ -11,6 +11,7 @@ public class SikredeYderRelation extends CPREntity
 {
 	protected String ydernummer;
 	protected Date ydernummerIkraftDato; // assigned from.
+	protected Date ydernummerUdlobDato; // assigned to (optional)
 	protected Date ydernummerRegistreringDato;
 	protected String sikringsgruppeKode;
 	protected Date gruppeKodeIkraftDato;
@@ -102,7 +103,16 @@ public class SikredeYderRelation extends CPREntity
 		this.ydernummerIkraftDato = ydernummerIkraftDato;
 	}
 
-	@Column
+    @Column
+    public Date getYdernummerUdlobDato() {
+        return ydernummerUdlobDato;
+    }
+
+    public void setYdernummerUdlobDato(Date ydernummerUdlobDato) {
+        this.ydernummerUdlobDato = ydernummerUdlobDato;
+    }
+
+    @Column
 	public Date getYdernummerRegistreringDato()
 	{
 		return ydernummerRegistreringDato;
@@ -122,6 +132,18 @@ public class SikredeYderRelation extends CPREntity
 	public String getType()
 	{
 		return type.getCode();
+	}
+
+   	@Override
+	public Date getValidFrom()
+	{
+		return (ydernummerIkraftDato == null) ? super.getValidFrom() : ydernummerIkraftDato;
+	}
+
+	@Override
+	public Date getValidTo()
+	{
+		return (ydernummerUdlobDato == null) ? super.getValidTo() : ydernummerUdlobDato;
 	}
 
 	@Override

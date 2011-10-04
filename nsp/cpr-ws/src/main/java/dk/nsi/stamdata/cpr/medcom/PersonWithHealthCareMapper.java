@@ -1,20 +1,25 @@
 package dk.nsi.stamdata.cpr.medcom;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
+
+import java.math.BigInteger;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.Sikrede;
-
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
-import dk.nsi.stamdata.cpr.SoapFaultUtil;
-import dk.nsi.stamdata.cpr.ws.*;
-import org.apache.commons.io.output.ThresholdingOutputStream;
 
-import java.math.BigInteger;
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.ws.AssociatedGeneralPractitionerStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonPublicHealthInsuranceType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PublicHealthInsuranceGroupIdentifierType;
 
 public class PersonWithHealthCareMapper
 {
@@ -30,7 +35,7 @@ public class PersonWithHealthCareMapper
 	{
 		PersonWithHealthCareInformationStructureType personWithHealthCare = new PersonWithHealthCareInformationStructureType();
 
-		PersonInformationStructureType personInformation = personMapper.map(person, true);
+		PersonInformationStructureType personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
 		personWithHealthCare.setPersonInformationStructure(personInformation);
 
         PersonHealthCareInformationStructureType personHealthCareInformation = new PersonHealthCareInformationStructureType();
@@ -60,7 +65,7 @@ public class PersonWithHealthCareMapper
     public PersonPublicHealthInsuranceType map(SikredeYderRelation sikredeYderRelation) {
         PersonPublicHealthInsuranceType personPublicHealthInsurance = new PersonPublicHealthInsuranceType() ;
         try {
-            personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(personMapper.newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
+            personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
             PublicHealthInsuranceGroupIdentifierType publicHealthInsuranceGroupIdentifier;
             if (sikredeYderRelation.getSikringsgruppeKode() == '1') {
                 publicHealthInsuranceGroupIdentifier =  PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;

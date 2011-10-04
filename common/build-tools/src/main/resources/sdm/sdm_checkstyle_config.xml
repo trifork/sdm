@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
+    "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+
+
+<module name="Checker">
+    <!--<module name="FileTabCharacter">-->
+        <!--<property name="eachLine" value="true"/>-->
+    <!--</module>-->
+
+    <!--<module name="RegexpSingleline">-->
+        <!--&lt;!&ndash; \s matches whitespace character, $ matches end of line. &ndash;&gt;-->
+        <!--<property name="format" value="\s+$"/>-->
+        <!--<property name="message" value="Line has trailing spaces."/>-->
+    <!--</module>-->
+
+    <module name="TreeWalker">
+		<property name="cacheFile" value="${checkstyle.cache.file}"/>
+		
+        <!--<module name="IllegalImport"/> &lt;!&ndash; defaults to sun.* packages &ndash;&gt;-->
+        <!--<module name="RedundantImport"/>-->
+        <!--<module name="UnusedImports"/>-->
+
+	
+        <!--&lt;!&ndash; Checks for blocks. You know, those {}'s         &ndash;&gt;-->
+        <!--&lt;!&ndash; See http://checkstyle.sf.net/config_blocks.html &ndash;&gt;-->
+        <!--<module name="AvoidNestedBlocks"/>-->
+        <!--<module name="EmptyBlock"/>-->
+        <!--<module name="LeftCurly"/>-->
+        <!--<module name="NeedBraces"/>-->
+        <!--<module name="RightCurly"/>-->
+    </module>
+</module>
