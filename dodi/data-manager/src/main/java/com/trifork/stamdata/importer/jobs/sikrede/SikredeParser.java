@@ -119,11 +119,6 @@ public class SikredeParser implements FileParser
                 }
 			}
 		}
-        //TODO - remove this test
-        Random random = new Random();
-        for(int i =0; i< 111; i++) {
-            cprs.add("test-" + random.nextLong());
-        }
 
         syncAssignedDoctorTable(cprs.toArray(new String[cprs.size()]), persister);
 
