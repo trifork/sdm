@@ -31,10 +31,10 @@ import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.IdCardBuilder;
+import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.medcom.PersonMapper;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
@@ -89,7 +89,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         client = serviceCatalog.getStamdataPersonLookup();
 
-        SecurityWrapper securityHeaders = IdCardBuilder.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+        SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
         securityHolder = new Holder<Security>(securityHeaders.getSecurity());
         medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
         
