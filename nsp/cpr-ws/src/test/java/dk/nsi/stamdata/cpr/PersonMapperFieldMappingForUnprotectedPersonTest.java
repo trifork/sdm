@@ -210,9 +210,8 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 	}
 
 	@Test
-	@Ignore("shouldn't this be so?")
-	public void mapsNavnebeskyttelsestartdatoToPersonInformationProtectionStartDate() throws Exception {
-		assertEquals(person.getNavnebeskyttelsestartdato(), output.getPersonAddressStructure().getPersonInformationProtectionStartDate().toGregorianCalendar().getTime());
+	public void omitsNavnebeskyttelsestartdatoToPersonInformationProtectionStartDate() throws Exception {
+		assertNull(output.getPersonAddressStructure().getPersonInformationProtectionStartDate());
 	}
 
 	@Test
