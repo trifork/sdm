@@ -46,7 +46,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 	private final PersonMapper personMapper;
 	private final Fetcher fetcher;
 
-	private final SystemIDCard idCard; // TODO: Use for access logging.
+	private final SystemIDCard idCard; // FIXME: Use for access logging.
 
 	@Inject
 	StamdataPersonLookupImpl(SystemIDCard idCard, Fetcher fetcher, PersonMapper personMapper)
