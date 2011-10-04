@@ -8,6 +8,8 @@ import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -189,8 +191,8 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	}
 
 	@Test
-	public void omitsPersonInformationProtectionStartDate() throws Exception {
-		assertNull(output.getPersonAddressStructure().getPersonInformationProtectionStartDate());
+	public void usesPersonInformationProtectionStartDate() throws Exception {
+		assertThat(output.getPersonAddressStructure().getPersonInformationProtectionStartDate().toGregorianCalendar().getTime(), is(person.getNavnebeskyttelsestartdato()));
 	}
 
 	@Test
@@ -215,7 +217,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 
 	@Test
 	public void omitsCountyCode() {
-		assertNull(output.getPersonAddressStructure().getCountyCode());
+		assertThat(output.getPersonAddressStructure().getCountyCode(), is("9999"));
 	}
 
 	private void doMap() throws Exception {
