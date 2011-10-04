@@ -27,6 +27,7 @@ public class SikredeIntegrationTest
 		statement.execute("truncate table Sikrede");
 		statement.execute("truncate table SikredeYderRelation");
 		statement.execute("truncate table SaerligSundhedskort");
+		statement.execute("truncate table AssignedDoctor");
 	}
 
 	@After
