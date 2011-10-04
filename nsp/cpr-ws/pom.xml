@@ -218,7 +218,7 @@
                                 <wsimport
                                         wsdl="${basedir}/src/main/webapp/WEB-INF/wsdl/StamdataPersonLookup.wsdl"
                                         package="dk.nsi.stamdata.cpr.ws"
-                                        verbose="true"
+                                        verbose="false"
                                         keep="true"
                                         target="2.1"
                                         sourceDestDir="${project.build.directory}/generated-sources/jaxws"
