@@ -50,6 +50,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
 	private final SystemIDCard idCard; // FIXME: Use for access logging.
 
+
 	@Inject
 	StamdataPersonLookupImpl(SystemIDCard idCard, Fetcher fetcher, PersonMapper personMapper)
 	{
@@ -58,32 +59,33 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		this.fetcher = fetcher;
 	}
 
+
 	@Override
 	public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader, Holder<Header> medcomHeader, PersonLookupRequestType request) throws DGWSFault
 	{
 		verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
-		
+
 		// TODO: This should be done in the filter
 		// This has to be done according to the DGWS specifications
 		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
-		
+
 		try
 		{
 			if (request.getCivilRegistrationNumberPersonQuery() != null)
 			{
 				return answerCprRequest(request.getCivilRegistrationNumberPersonQuery());
 			}
-			
+
 			if (request.getCivilRegistrationNumberListPersonQuery() != null)
 			{
 				return answerCivilRegistrationNumberListPersonRequest(request.getCivilRegistrationNumberListPersonQuery());
 			}
-			
+
 			if (request.getBirthDatePersonQuery() != null)
 			{
 				return answerBirthDatePersonRequest(request.getBirthDatePersonQuery());
 			}
-			
+
 			if (request.getNamePersonQuery() != null)
 			{
 				return answerNamePersonRequest(request.getNamePersonQuery());
@@ -102,6 +104,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
 		throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
 	}
+
 
 	private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault
 	{
@@ -130,6 +133,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		}
 	}
 
+
 	private PersonLookupResponseType answerCprRequest(String cpr) throws SQLException, DatatypeConfigurationException
 	{
 
@@ -143,6 +147,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		}
 		return response;
 	}
+
 
 	private PersonLookupResponseType answerCivilRegistrationNumberListPersonRequest(CivilRegistrationNumberListPersonQueryType civilRegistrationNumberList) throws SQLException, DatatypeConfigurationException
 	{
@@ -160,6 +165,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		return response;
 	}
 
+
 	private PersonLookupResponseType answerBirthDatePersonRequest(XMLGregorianCalendar birthDate) throws SQLException, DatatypeConfigurationException
 	{
 		PersonLookupResponseType response = new PersonLookupResponseType();
@@ -174,6 +180,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
 		return response;
 	}
+
 
 	private PersonLookupResponseType answerNamePersonRequest(NamePersonQueryType namePerson) throws SQLException, DatatypeConfigurationException
 	{
