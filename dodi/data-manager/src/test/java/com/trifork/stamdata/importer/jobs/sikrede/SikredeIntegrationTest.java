@@ -27,12 +27,14 @@ public class SikredeIntegrationTest
 		statement.execute("truncate table Sikrede");
 		statement.execute("truncate table SikredeYderRelation");
 		statement.execute("truncate table SaerligSundhedskort");
+		statement.execute("truncate table AssignedDoctor");
 	}
 
 	@After
 	public void tearDown() throws Exception
 	{
 		con.rollback();
+        //con.commit();
 		con.close();
 	}
 
@@ -62,7 +64,7 @@ public class SikredeIntegrationTest
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='F'");
         int fremtidigYdernummer = 4296;
         DateTime fremtidigYdernummerIkraftDato = new DateTime(2012,1,1,0,0,0,0);
-        DateTime fremtidigYdernummerUdlobDato = null;
+        DateTime fremtidigYdernummerUdlobDato = null; // Fremtidigt valg af læge har aldrig udløbsdato
         DateTime fremtidigYdernummerRegistreringsDato = new DateTime(2006,12,1,0,0,0,0);
         String fremtidigSikringsgruppekode = "1";
         DateTime fremtidigGruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
@@ -72,7 +74,7 @@ public class SikredeIntegrationTest
 
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
         int nuvaerendeYdernummer = 4294;
-        DateTime nuvaerendeYdernummerUdlobDato = fremtidigYdernummerIkraftDato;
+        DateTime nuvaerendeYdernummerUdlobDato = fremtidigYdernummerIkraftDato; //Nuværende valg af læge har udløbsdato i dette tilfælde, fordi der er et fremtidigt valg af læge.
         DateTime nuvaerendeYdernummerIkraftDato = new DateTime(2009, 1, 1, 0, 0, 0, 0);
         DateTime nuvaerendeGruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
         DateTime nuvaerendeYdernummerRegistreringsDato = new DateTime(2008, 12, 1, 0, 0, 0, 0);
@@ -82,14 +84,19 @@ public class SikredeIntegrationTest
         rs.close();
 
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='P'");
-        int foregaaendeYdernummer = 4295;
-        DateTime foregaaendeYdernummerIkraftDato = new DateTime(2008, 1, 1, 0, 0, 0, 0);
-        DateTime foregaaendeYdernummerUdlobDato = nuvaerendeYdernummerIkraftDato;
-        DateTime foregaaendeYdernummerRegistreringsDato = new DateTime(2007,12,1,0,0,0,0);
-        String foregaaendeSikringsgruppekode = "1";
-        DateTime foregaaendeGruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
-        DateTime foregaaendeGruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
-        assertSikredeYderRelation(rs, foregaaendeYdernummer, foregaaendeYdernummerIkraftDato, foregaaendeYdernummerUdlobDato, foregaaendeYdernummerRegistreringsDato, foregaaendeSikringsgruppekode, foregaaendeGruppeKodeIkraftDato, foregaaendeGruppekodeRegistreringDato);
+        int tidligereYdernummer = 4295;
+        DateTime tidligereYdernummerIkraftDato = new DateTime(2008, 1, 1, 0, 0, 0, 0);
+        DateTime tidligereYdernummerUdlobDato = nuvaerendeYdernummerIkraftDato; //Tidligere lægevalg har altid udløbsdato = nuværende lægevalgs ikraftdato.
+        DateTime tidligereYdernummerRegistreringsDato = new DateTime(2007,12,1,0,0,0,0);
+        String tidligereSikringsgruppekode = "1";
+        DateTime tidligereGruppeKodeIkraftDato = new DateTime(2001,1,1,0,0,0,0);
+        DateTime tidligereGruppekodeRegistreringDato = new DateTime(2000,12,1,0,0,0,0);
+        assertSikredeYderRelation(rs, tidligereYdernummer, tidligereYdernummerIkraftDato, tidligereYdernummerUdlobDato, tidligereYdernummerRegistreringsDato, tidligereSikringsgruppekode, tidligereGruppeKodeIkraftDato, tidligereGruppekodeRegistreringDato);
+        rs.close();
+
+        rs = stmt.executeQuery("SELECT COUNT(*) FROM AssignedDoctor WHERE patientCpr=UPPER(SHA1('1607769871'))");
+        rs.next();
+        assertEquals("AssignedDoctor rows for CPR '1607769871' should be 3", 3, rs.getInt(1));
         rs.close();
 
         stmt.close();
@@ -141,17 +148,26 @@ public class SikredeIntegrationTest
         assertFalse("Der skal ikke være importeret noget fremtidigt valg af ydernummer", rs.next());
         rs.close();
 
+		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
+		rs.next();
+		assertEquals("Præcis én YderRelation forventes efter import", 1, rs.getInt(1));
+        rs.close();
+
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
         int ydernummer = 4294;
         DateTime ydernummerIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
-        DateTime ydernummerUdlobDato = null; //Der er ingen fremtidige yderrelationer
+        DateTime ydernummerUdlobDato = null; //Der er ingen fremtidige yderrelationer, og derfor ingen udløbsdato for valg af nuværende yder
         DateTime gruppekodeRegistreringDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
         DateTime ydernummerRegistreringsDato = new DateTime(2000, 12, 1, 0, 0, 0, 0);
         String sikringsgruppekode = "1";
         DateTime gruppeKodeIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
-        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, null, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
+        assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerUdlobDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
         rs.close();
 
+        rs = stmt.executeQuery("SELECT COUNT(*) FROM AssignedDoctor WHERE patientCpr=UPPER(SHA1('1607769871'))");
+        rs.next();
+        assertEquals("AssignedDoctor rows for CPR '1607769871' should be 1", 1, rs.getInt(1));
+        rs.close();
 
 		rs = stmt.executeQuery("SELECT * FROM SaerligSundhedskort where cpr='1607769871'");
 		assertTrue("Præcis ét sundhedskort forventes efter import", rs.next());
@@ -166,13 +182,7 @@ public class SikredeIntegrationTest
         assertEquals("sskGyldigTil", new DateTime(9999, 12, 31, 0, 0, 0, 0), new DateTime(rs.getTimestamp("sskGyldigTil")));
         assertEquals("mobilNummer", "0044123456789", rs.getString("mobilNummer"));
         assertEquals("postnummerBy", "21120 MAlMO", rs.getString("postnummerBy"));
-
-
         rs.close();
-
-		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
-		rs.next();
-		assertEquals("Præcis én YderRelation forventes efter import", 1, rs.getInt(1));
 	}
 
 	@Test

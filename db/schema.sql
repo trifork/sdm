@@ -1170,3 +1170,23 @@ CREATE TABLE SaerligSundhedskort (
 	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
 	INDEX (ModifiedDate, SaerligSundhedskortPID)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
+
+-- This table is to be replicated to the BRS db schema. It is populated by stamdata, but not read by stamdata.
+CREATE TABLE AssignedDoctor ( -- Sikrede
+  pk bigint AUTO_INCREMENT NOT NULL,
+
+    -- cpr numre er base64 af hashede numre
+  patientCpr varchar(80) NOT NULL,
+
+  doctorOrganisationIdentifier varchar(6) NOT NULL, -- ydernummer
+
+  assignedFrom datetime NOT NULL,
+  assignedTo datetime,
+
+  reference varchar(40) NOT NULL,
+
+  PRIMARY KEY (pk),
+  -- This unique index is ONLY PRESENT IN STAMDATA - it is used to determine which rows to REPLACE or INSERT
+  UNIQUE INDEX(patientCpr, assignedFrom)
+  
+);
