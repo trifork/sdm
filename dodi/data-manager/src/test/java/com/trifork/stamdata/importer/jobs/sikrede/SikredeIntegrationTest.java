@@ -147,6 +147,11 @@ public class SikredeIntegrationTest
         assertFalse("Der skal ikke være importeret noget fremtidigt valg af ydernummer", rs.next());
         rs.close();
 
+		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
+		rs.next();
+		assertEquals("Præcis én YderRelation forventes efter import", 1, rs.getInt(1));
+        rs.close();
+
         rs = stmt.executeQuery("SELECT * FROM SikredeYderRelation WHERE CPR='1607769871' AND type='C'");
         int ydernummer = 4294;
         DateTime ydernummerIkraftDato = new DateTime(2001, 1, 1, 0, 0, 0, 0);
@@ -158,6 +163,10 @@ public class SikredeIntegrationTest
         assertSikredeYderRelation(rs, ydernummer, ydernummerIkraftDato, ydernummerUdlobDato, ydernummerRegistreringsDato, sikringsgruppekode, gruppeKodeIkraftDato, gruppekodeRegistreringDato);
         rs.close();
 
+        rs = stmt.executeQuery("SELECT COUNT(*) FROM AssignedDoctor WHERE patientCpr=UPPER(SHA1('1607769871'))");
+        rs.next();
+        assertEquals("AssignedDoctor rows for CPR '1607769871' should be 1", 1, rs.getInt(1));
+        rs.close();
 
 		rs = stmt.executeQuery("SELECT * FROM SaerligSundhedskort where cpr='1607769871'");
 		assertTrue("Præcis ét sundhedskort forventes efter import", rs.next());
@@ -173,16 +182,6 @@ public class SikredeIntegrationTest
         assertEquals("mobilNummer", "0044123456789", rs.getString("mobilNummer"));
         assertEquals("postnummerBy", "21120 MAlMO", rs.getString("postnummerBy"));
         rs.close();
-
-		rs = stmt.executeQuery("SELECT COUNT(*) FROM SikredeYderRelation");
-		rs.next();
-		assertEquals("Præcis én YderRelation forventes efter import", 1, rs.getInt(1));
-
-        rs = stmt.executeQuery("SELECT COUNT(*) FROM AssignedDoctor WHERE patientCpr=UPPER(SHA1('1607769871'))");
-        rs.next();
-        assertEquals("AssignedDoctor rows for CPR '1607769871' should be 1", 1, rs.getInt(1));
-        rs.close();
-
 	}
 
 	@Test
