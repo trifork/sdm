@@ -20,6 +20,7 @@ import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
+import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
 
@@ -40,6 +41,7 @@ public class PersonMapperProtectionTest
 	private static final String CENSORED = "ADRESSEBESKYTTET";
 	
 	private Set<String> whitelist;
+	private MunicipalityMapper municipalityMapper;
 	
 	private static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
 	private static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
@@ -55,11 +57,13 @@ public class PersonMapperProtectionTest
 		whitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(WHITELISTED_CVR);
 		
 		person = Factories.createPerson();
+		
+		municipalityMapper = new MunicipalityMapper();
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)
 	{
-		return new PersonMapper(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard);
+		return new PersonMapper(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard, municipalityMapper);
 	}
 	
 	@Test

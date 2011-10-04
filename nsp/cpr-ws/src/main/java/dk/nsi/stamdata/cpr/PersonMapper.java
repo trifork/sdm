@@ -4,6 +4,8 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
+
+import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
@@ -34,14 +36,17 @@ public class PersonMapper
 	private final Set<String> whitelist;
 	private final SystemIDCard idCard;
 
+	private final MunicipalityMapper munucipalityMapper;
+
 	@Inject
-	PersonMapper(@Whitelist Set<String> whitelist, SystemIDCard idCard)
+	PersonMapper(@Whitelist Set<String> whitelist, SystemIDCard idCard, MunicipalityMapper munucipalityMapper)
 	{
 		// Once we get this far the filter should have gotten rid of id cards that
 		// are not CVR authenticated System ID Cards.
 		
 		this.whitelist = whitelist;
 		this.idCard = idCard;
+		this.munucipalityMapper = munucipalityMapper;
 	}
 	
 	public PersonInformationStructureType map(Person person, ServiceProtectionLevel protectionLevel) throws DatatypeConfigurationException
@@ -215,8 +220,7 @@ public class PersonMapper
 			personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.navnebeskyttelsestartdato));
 		}
 
-		// FIXME: This we can calculate based on the Kummunekode.
-		personAddress.setCountyCode("Fake Value"); // FIXME: We don't import this value. Amt or Region.
+		personAddress.setCountyCode(munucipalityMapper.toCountyCode(person.getKommuneKode()));
 
 		if (StringUtils.isNotBlank(person.coNavn))
 		{

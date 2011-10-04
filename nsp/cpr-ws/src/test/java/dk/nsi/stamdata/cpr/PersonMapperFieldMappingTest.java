@@ -9,8 +9,6 @@ import static org.junit.Assert.assertThat;
 import java.math.BigInteger;
 import java.util.Set;
 
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +17,7 @@ import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
+import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
@@ -32,11 +31,7 @@ public class PersonMapperFieldMappingTest
 	@Before
 	public void setUp() throws Exception
 	{
-		person = Factories.createPerson();
-		
-		Set<String> whiteList = Sets.newHashSet();
-		output = new PersonMapper(whiteList, idCard).map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
-		
+		person = Factories.createPerson();		
 		idCard = TestSTSMock.createTestSTSSignedIDCard("12345678");
 	}
 
@@ -47,26 +42,30 @@ public class PersonMapperFieldMappingTest
 	}
 	
 	@Test
-	public void mapCivilRegistrationCode()
+	public void mapCivilRegistrationCode() throws Exception
 	{
+		doMap();
 		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("02")));
 	}
 	
 	@Test
-	public void mapCivilRegistrationCodeStartDate() throws DatatypeConfigurationException
+	public void mapCivilRegistrationCodeStartDate() throws Exception
 	{
+		doMap();
 		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusStartDate(), is(newXMLGregorianCalendar(YESTERDAY)));
 	}
 	
 	@Test
-	public void mapNameForAddressingName() throws DatatypeConfigurationException
+	public void mapNameForAddressingName() throws Exception
 	{
+		doMap();
 		assertThat(output.getRegularCPRPerson().getPersonNameForAddressingName(), is("Peter,Andersen"));
 	}
 	
 	@Test
-	public void mapStreetNameForAddressingName() throws DatatypeConfigurationException
+	public void mapStreetNameForAddressingName() throws Exception
 	{
+		doMap();
 		assertThat(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName(), is("Østergd."));
 	}
 
@@ -178,6 +177,11 @@ public class PersonMapperFieldMappingTest
 	}
 
 	private void doMap() throws Exception {
-		output = new PersonMapper(Sets.<String>newHashSet(), idCard).map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
+		
+		Set<String> whiteList = Sets.newHashSet();
+		MunicipalityMapper municipalityMapper = new MunicipalityMapper();
+		PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);
+		
+		output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
 	}
 }

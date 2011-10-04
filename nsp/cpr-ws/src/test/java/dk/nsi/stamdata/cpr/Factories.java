@@ -30,7 +30,7 @@ public class Factories
 		
 		person.setCoNavn("Søren Petersen");
 		
-		person.setKommuneKode("123");
+		person.setKommuneKode("461");
 		person.setVejKode("234");
 		person.setHusnummer("10");
 		person.setBygningsnummer("A");
