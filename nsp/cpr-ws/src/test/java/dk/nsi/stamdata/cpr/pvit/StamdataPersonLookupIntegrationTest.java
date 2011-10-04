@@ -93,7 +93,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
         securityHolder = new Holder<Security>(securityHeaders.getSecurity());
         medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
-        
+
     }
 
     @After
@@ -186,37 +186,40 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     @Test
     public void requestWithBirthDateNotFoundInDatabase() throws Exception {
         PersonLookupRequestType query = new PersonLookupRequestType();
-        
-        DateTime dateTime = new DateTime(1982, 5, 1, 0,0,0);
+
+        DateTime dateTime = new DateTime(1982, 5, 1, 0, 0, 0);
         XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
         query.setBirthDatePersonQuery(cal);
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertTrue("A person was not expected to exist with this birth date " + dateTime.toString(), response.getPersonInformationStructure().isEmpty());
+        assertTrue("A person was not expected to exist with this birth date " + dateTime.toString(), response
+                .getPersonInformationStructure().isEmpty());
     }
 
     @Test
     public void requestWithBirthDateFoundInDatabase() throws Exception {
         PersonLookupRequestType query = new PersonLookupRequestType();
-        
-        DateTime dateTime = new DateTime(1982, 4, 15, 0,0,0);
+
+        DateTime dateTime = new DateTime(1982, 4, 15, 0, 0, 0);
         XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
         query.setBirthDatePersonQuery(cal);
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertEquals("A person was expected to exist with this birth date " + dateTime.toString(),1, response.getPersonInformationStructure().size());
+        assertEquals("A person was expected to exist with this birth date " + dateTime.toString(), 1, response
+                .getPersonInformationStructure().size());
         assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
     }
 
     @Test
     public void requestWithBirthDateFoundInDatabaseSeveralTimes() throws Exception {
-        createPerson("1504823210", "M", "8484", "Birger", null, "Thomsen", new DateTime(1982, 4, 15, 0,0,0));
-        
+        createPerson("1504823210", "M", "8484", "Birger", null, "Thomsen", new DateTime(1982, 4, 15, 0, 0, 0));
+
         PersonLookupRequestType query = new PersonLookupRequestType();
-        
-        DateTime dateTime = new DateTime(1982, 4, 15, 0,0,0);
+
+        DateTime dateTime = new DateTime(1982, 4, 15, 0, 0, 0);
         XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
         query.setBirthDatePersonQuery(cal);
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertEquals("Two people was expected to exist with this birth date " + dateTime.toString(), 2, response.getPersonInformationStructure().size());
+        assertEquals("Two people was expected to exist with this birth date " + dateTime.toString(), 2, response
+                .getPersonInformationStructure().size());
     }
 
     @Test
@@ -228,7 +231,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         query.setNamePersonQuery(value);
 
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertTrue("A person was NOT expected to exist with this name " + value.getPersonGivenName() + " " + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), response.getPersonInformationStructure().isEmpty());
+        assertTrue(
+                "A person was NOT expected to exist with this name " + value.getPersonGivenName() + " "
+                        + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), response
+                        .getPersonInformationStructure().isEmpty());
     }
 
     @Test
@@ -240,11 +246,13 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         query.setNamePersonQuery(value);
 
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertEquals("A person was expected to exist with this name " + value.getPersonGivenName() + " " + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 1, response.getPersonInformationStructure().size());
+        assertEquals(
+                "A person was expected to exist with this name " + value.getPersonGivenName() + " "
+                        + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 1, response
+                        .getPersonInformationStructure().size());
         assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
     }
 
-    
     @Test
     public void requestWithNameFoundSeveralTimesInDatabase() throws Exception {
         PersonLookupRequestType query = new PersonLookupRequestType();
@@ -254,7 +262,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         query.setNamePersonQuery(value);
 
         PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-        assertEquals("Two people was expected to exist with this name " + value.getPersonGivenName() + " " + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 2, response.getPersonInformationStructure().size());   
+        assertEquals(
+                "Two people was expected to exist with this name " + value.getPersonGivenName() + " "
+                        + value.getPersonMiddleName() + " " + value.getPersonSurnameName(), 2, response
+                        .getPersonInformationStructure().size());
     }
 
     private void purgePersonTable() {
@@ -266,9 +277,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         createPerson("0101821234", "F", "8000", "Margit", "Greve", "Kristensen", new DateTime(1982, 1, 1, 0, 0));
     }
 
-    private Person createPerson(String cpr, String koen, String vejkode, String fornavn, String mellemnavn, String efternavn, DateTime foedselsdato) {
+    private Person createPerson(String cpr, String koen, String vejkode, String fornavn, String mellemnavn,
+            String efternavn, DateTime foedselsdato) {
         session.getTransaction().begin();
-        
+
         Person person = Factories.createPersonWithoutAddressProtection();
         person.cpr = cpr;
         person.koen = koen;
@@ -278,7 +290,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
             person.mellemnavn = mellemnavn;
         }
         person.efternavn = efternavn;
-        person.foedselsdato = foedselsdato.toDate();;
+        person.foedselsdato = foedselsdato.toDate();
+        ;
         person.setModifiedDate(new Date());
         person.setCreatedDate(new Date());
         person.setValidFrom(DateTime.now().minusDays(1).toDate());
@@ -286,12 +299,13 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         session.save(person);
         session.flush();
         session.getTransaction().commit();
-        
+
         return person;
     }
 
     private void assertReturnedResponseMatchesPersonFromDatabase(PersonInformationStructureType information) {
-        assertEquals(EXAMPLE_CPR, information.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
+        assertEquals(EXAMPLE_CPR, information.getRegularCPRPerson().getSimpleCPRPerson()
+                .getPersonCivilRegistrationIdentifier());
         assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess()
                 .getStreetCode());
     }

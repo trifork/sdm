@@ -16,6 +16,13 @@
     <name>Stamdata Det Gode CPR Opslag WS</name>
 
     <dependencies>
+    	<dependency>
+    		<groupId>xalan</groupId>
+    		<artifactId>xalan</artifactId>
+    		<version>${jboss6.xalan.version}</version>
+    		<scope>provided</scope>
+    	</dependency>
+    
         <dependency>
             <groupId>dk.sosi.seal</groupId>
             <artifactId>seal-jboss6</artifactId>
@@ -90,12 +97,6 @@
             <groupId>dk.sdsd.nsp</groupId>
             <artifactId>nsp-util</artifactId>
             <version>1.0.6</version>
-        </dependency>
-        
-        <dependency>
-        	<groupId>com.google.inject.extensions</groupId>
-        	<artifactId>guice-persist</artifactId>
-        	<version>3.0</version>
         </dependency>
     </dependencies>
 
