@@ -25,6 +25,8 @@ import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBE
 @RequestScoped
 public class PersonMapper
 {
+	private static final int AUTHORITY_CODE_LENGTH = 4;
+
 	public static enum ServiceProtectionLevel
 	{
 		AlwaysCensorProtectedData,
@@ -111,7 +113,7 @@ public class PersonMapper
 		PersonAddressStructureType personAddress = new PersonAddressStructureType();
 		personAddress.setPersonInformationProtectionStartDate(null);
 
-		personAddress.setCountyCode(null);
+		personAddress.setCountyCode("9999");
 		personAddress.setCareOfName(null);
 
 		AddressCompleteType addressComplete = new AddressCompleteType();
@@ -141,6 +143,8 @@ public class PersonMapper
 		addressPostal.setDistrictName(ADRESSEBESKYTTET);
 
 		addressPostal.setCountryIdentificationCode(null);
+		
+		personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.getNavnebeskyttelsestartdato()));
 
 		personAddress.setAddressComplete(addressComplete);
 		output.setPersonAddressStructure(personAddress);
@@ -220,7 +224,7 @@ public class PersonMapper
 		AddressCompleteType addressComplete = new AddressCompleteType();
 		AddressAccessType addressAccess = new AddressAccessType();
 		
-		String municipalityCode = StringUtils.leftPad(person.kommuneKode, 4, "0");
+		String municipalityCode = StringUtils.leftPad(person.kommuneKode, AUTHORITY_CODE_LENGTH, "0");
 		
 		addressAccess.setMunicipalityCode(municipalityCode);
 		
@@ -231,7 +235,7 @@ public class PersonMapper
 			personAddress.setCareOfName(person.coNavn);
 		}
 		
-		addressAccess.setStreetCode(person.vejKode);
+		addressAccess.setStreetCode(StringUtils.leftPad(person.vejKode, AUTHORITY_CODE_LENGTH, "0"));
 		addressAccess.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 
 		addressComplete.setAddressAccess(addressAccess);
@@ -247,7 +251,7 @@ public class PersonMapper
 		//	 This is:
 		//	 The given name of a farm, estate, building or dwelling, which is used as a additional postal address identifier.
 		//
-		//	addressPostal.setMailDeliverySublocationIdentifier("Fake Value"); // FIXME: The importer does not import this field.
+		//	addressPostal.setMailDeliverySublocationIdentifier("Fake Value");
 		// }
 
 		addressPostal.setStreetName(person.vejnavn);
