@@ -3,11 +3,10 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
@@ -26,6 +25,9 @@ import com.trifork.stamdata.importer.persistence.Persister;
 
 public class SikredeParser implements FileParser
 {
+    private static final String _ASSIGNED_DOCTOR_QUERY_START = "REPLACE INTO AssignedDoctor (patientCpr, doctorOrganisationIdentifier, assignedFrom, assignedTo, reference) SELECT UPPER(SHA1(cpr)) as patientCpr, ydernummer as doctorOrganisationIdentifier, ydernummerIkraftDato as assignedFrom, ydernummerUdlobDato as assignedTo, CONCAT('Stamdata_Sikrede', ' ', modifieddate) as Reference from SikredeYderRelation WHERE CPR IN (";
+    private static final String ASSIGNED_DOCTOR_QUERY = _ASSIGNED_DOCTOR_QUERY_START + StringUtils.repeat("?,", 19) + "?)"; //Query with 20 parameters
+
 	private static final int CURRENT_YDER_RELATION_OFFSET = 13;
 
 	private static final Logger logger = LoggerFactory.getLogger(SikredeParser.class);
@@ -102,8 +104,8 @@ public class SikredeParser implements FileParser
 		// 2. PARSE THE DATA
 		//
 		// Put each data type in to a dataset and let the persister
-		// store theme in the database.
-
+		// store them in the database.
+        Set<String> cprs = new HashSet<String>();
 		for (File file : files)
 		{
 			SikredeDataset sikrede = parse(file, currentVersion);
@@ -111,11 +113,51 @@ public class SikredeParser implements FileParser
 			for (Dataset<? extends CPREntity> dataset : sikrede.getDatasets())
 			{
 				persister.persistDeltaDataset(dataset);
+                Collection<? extends CPREntity> datasetEntities = dataset.getEntities();
+                for (CPREntity datasetEntity : datasetEntities) {
+                    cprs.add(datasetEntity.getCpr());
+                }
 			}
 		}
+        //TODO - remove this test
+        Random random = new Random();
+        for(int i =0; i< 111; i++) {
+            cprs.add("test-" + random.nextLong());
+        }
+
+        syncAssignedDoctorTable(cprs.toArray(new String[cprs.size()]), persister);
+
 	}
 
-	private SikredeDataset parse(File file, DateTime version) throws Exception
+    private void syncAssignedDoctorTable(String[] cprs, Persister persister) throws SQLException {
+        PreparedStatement preparedStatement = persister.getConnection().prepareStatement(ASSIGNED_DOCTOR_QUERY);
+        int numberOfParams = StringUtils.countMatches(ASSIGNED_DOCTOR_QUERY, "?");
+        int iterations  = cprs.length / numberOfParams;
+
+        int cprIdx = 0;
+
+        //First handle all the CPRs that fits the prepared statement (ASSIGNED_DOCTOR_QUERY) - this way the number of server roundtrips are minimized since we can execute updates for 20 CPRs at a time
+        for (int i = 0; i < iterations; i++) {
+            for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
+                preparedStatement.setString(paramIdx, cprs[cprIdx]);
+            }
+            preparedStatement.executeUpdate();
+        }
+
+        //Handle the remaining CPRs that does not fit into the ASSIGNED_DOCTOR_QUERY prepared statement.
+        //Create new query with the proper number of params (always less than the number of params in ASSIGNED_DOCTOR_QUERY)
+        int remainder = cprs.length % numberOfParams;
+        String remainderQuery = _ASSIGNED_DOCTOR_QUERY_START + StringUtils.repeat("?,", remainder-1) + "?)";
+        preparedStatement = persister.getConnection().prepareStatement(remainderQuery);
+        numberOfParams = StringUtils.countMatches(remainderQuery, "?");
+
+        for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
+            preparedStatement.setString(paramIdx, cprs[cprIdx]);
+        }
+        preparedStatement.executeUpdate();
+    }
+
+    private SikredeDataset parse(File file, DateTime version) throws Exception
 	{
 		SikredeDataset dataset = new SikredeDataset();
 		
