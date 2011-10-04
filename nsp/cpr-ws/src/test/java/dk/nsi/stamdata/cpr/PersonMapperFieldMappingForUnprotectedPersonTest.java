@@ -256,7 +256,6 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 
 	@Test
 	public void theMunicipalityIsMappedToTheCorrectCounty() {
-		// Just to document the fact
 		assertThat(output.getPersonAddressStructure().getCountyCode(), is(REGION_MIDTJYLLAND));
 	}
 
