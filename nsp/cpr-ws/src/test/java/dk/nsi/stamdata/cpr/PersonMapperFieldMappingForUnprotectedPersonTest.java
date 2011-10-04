@@ -29,7 +29,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 	private Person person;
 	private PersonInformationStructureType output;
 	
-	private static final String VIBORG = "791";
+	private static final String VIBORG = "0791";
 	private static final String REGION_MIDTJYLLAND = "1082";
 	
 
@@ -49,7 +49,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 
 	@Test
 	public void mapCivilRegistrationCode() throws Exception {
-		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("02")));
+		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("01")));
 	}
 	
 	@Test
@@ -64,7 +64,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 	
 	@Test
 	public void alwaysUses02ForPersonCivilRegistrationStatusCode() {
-		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("02")));
+		assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("01")));
 	}
 
 	@Test

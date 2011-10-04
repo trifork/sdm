@@ -15,7 +15,7 @@ public class Factories
 	{
 		Person person = new Person();
 		
-		person.setGaeldendeCPR("2345678901");
+		person.setGaeldendeCPR("0102852469");
 		
 		person.setFornavn("Peter");
 		person.setMellemnavn("Sigurd");
@@ -30,7 +30,7 @@ public class Factories
 		
 		person.setCoNavn("Søren Petersen");
 		
-		person.setKommuneKode("461");
+		person.setKommuneKode("0461");
 		person.setVejKode("234");
 		person.setHusnummer("10");
 		person.setBygningsnummer("A");
@@ -40,7 +40,7 @@ public class Factories
 		person.setEtage("12");
 		person.setSideDoerNummer("tv");
 		person.setFoedselsdatoMarkering(false);
-		person.setStatus("02");
+		person.setStatus("01");
 		person.setStatusDato(YESTERDAY);
 		
 		person.setPostnummer("6666");

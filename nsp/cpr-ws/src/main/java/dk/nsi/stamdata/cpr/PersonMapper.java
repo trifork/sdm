@@ -214,18 +214,23 @@ public class PersonMapper
 			personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.navnebeskyttelsestartdato));
 		}
 
-		personAddress.setCountyCode(munucipalityMapper.toCountyCode(person.getKommuneKode()));
+		// The output requires that the authority codes (municipality and county) are
+		// exactly four char long.
+		
+		AddressCompleteType addressComplete = new AddressCompleteType();
+		AddressAccessType addressAccess = new AddressAccessType();
+		
+		String municipalityCode = StringUtils.leftPad(person.kommuneKode, 4, "0");
+		
+		addressAccess.setMunicipalityCode(municipalityCode);
+		
+		personAddress.setCountyCode(munucipalityMapper.toCountyCode(municipalityCode));
 
 		if (StringUtils.isNotBlank(person.coNavn))
 		{
 			personAddress.setCareOfName(person.coNavn);
 		}
-
-		AddressCompleteType addressComplete = new AddressCompleteType();
-
-		AddressAccessType addressAccess = new AddressAccessType();
-
-		addressAccess.setMunicipalityCode(person.kommuneKode);
+		
 		addressAccess.setStreetCode(person.vejKode);
 		addressAccess.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 

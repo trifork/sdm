@@ -112,43 +112,26 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 	}
 
 
-	@Test
+	@Test(expected = SOAPFaultException.class)
 	public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception
 	{
 		GetPersonInformationIn request = new GetPersonInformationIn();
 
-		try
-		{
-			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-			fail("Expected SOAPFault");
-		}
-		catch (SOAPFaultException fault)
-		{
-			assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-		}
+		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 	}
 
 
-	@Test
+	@Test(expected = SOAPFaultException.class)
 	public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception
 	{
 		GetPersonInformationIn request = new GetPersonInformationIn();
 		request.setPersonCivilRegistrationIdentifier("7777777777");
 
-		try
-		{
-			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
-			fail("Expected SOAPFault");
-		}
-		catch (SOAPFaultException fault)
-		{
-			assertEquals(SOAPConstants.SOAP_SENDER_FAULT, fault.getFault().getFaultCodeAsQName());
-			assertEquals(FaultMessages.NO_DATA_FOUND_FAULT_MSG, fault.getFault().getFaultString());
-		}
+		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 	}
 
 
@@ -158,7 +141,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 	{
 		GetPersonInformationIn request = new GetPersonInformationIn();
 		request.setPersonCivilRegistrationIdentifier("1111111111");
-		
+
 		try
 		{
 			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
