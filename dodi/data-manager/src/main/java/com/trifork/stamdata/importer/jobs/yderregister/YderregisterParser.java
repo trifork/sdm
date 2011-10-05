@@ -1,3 +1,4 @@
+
 // The contents of this file are subject to the Mozilla Public
 // License Version 1.1 (the "License"); you may not use this file
 // except in compliance with the License. You may obtain a copy of
@@ -173,7 +174,7 @@ public class YderregisterParser
 				yder.setAmtNummer(Integer.parseInt(amtKode));
 				yder.setNummer(ydernr);
 				yder.setNavn(prakBetegn);
-				yder.setVejnavn(adresse);
+				yder.setVejnavn(adresse); // This includes the house number, suite etc.
 				yder.setPostnummer(postnr);
 				yder.setBynavn(postdist);
 				yder.setAfgangDato(afgDato);
