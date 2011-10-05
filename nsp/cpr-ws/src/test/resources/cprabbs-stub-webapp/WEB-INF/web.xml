@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+	xmlns="http://java.sun.com/xml/ns/j2ee" version="2.4">
+	<display-name>CprAbbsStubServices</display-name>
+
+	<listener>
+		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+	</listener>
+
+	<servlet>
+		<servlet-name>JAXWSServlet</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+		<load-on-startup>10</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>JAXWSServlet</servlet-name>
+		<url-pattern>/service/*</url-pattern>
+	</servlet-mapping>
+
+    <filter>
+        <filter-name>idcardfilter</filter-name>
+        <filter-class>dk.nsi.dgws.DgwsIdcardFilter</filter-class>
+        <init-param>
+            <param-name>dk.nsi.dgws.sosi.usetestfederation</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>idcardfilter</filter-name>
+        <servlet-name>JAXWSServlet</servlet-name>
+    </filter-mapping>
+</web-app>

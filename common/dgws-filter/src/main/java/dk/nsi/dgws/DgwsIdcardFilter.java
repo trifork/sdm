@@ -122,8 +122,6 @@ public class DgwsIdcardFilter implements Filter
 			
 			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 
-			// Since w
-			
 			chain.doFilter(httpRequest, response);
 		}
 		catch (SignatureInvalidModelBuildException ignore)

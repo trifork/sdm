@@ -1,12 +1,11 @@
-package dk.nsi.stamdata.cpr.integrationtest.dgws;
+package dk.nsi.stamdata.cpr.jaxws;
 
-import java.util.List;
+import com.google.common.collect.Lists;
 
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
-
-import com.google.common.collect.Lists;
+import java.util.List;
 
 
 public class SealNamespaceResolver implements HandlerResolver

@@ -1,40 +1,29 @@
 package dk.nsi.stamdata.cpr.pvit;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Maps;
+import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.SoapUtils;
+import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import dk.nsi.stamdata.cpr.medcom.FaultMessages;
+import dk.nsi.stamdata.cpr.ws.*;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.google.common.collect.Maps;
-import com.sun.xml.ws.developer.SchemaValidation;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.models.cpr.Person;
-
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
-import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.model.constants.FaultCodeValues;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 
 @SchemaValidation
@@ -51,6 +40,9 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
 
 	@Inject
+	/**
+	 * Constructor for this implementation as Guice request scoped beanw
+	 */
 	StamdataPersonLookupImpl(SystemIDCard idCard, Fetcher fetcher, PersonMapper personMapper)
 	{
 		this.clientCVR = idCard.getSystemInfo().getCareProvider().getID();
