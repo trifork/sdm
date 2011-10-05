@@ -152,6 +152,18 @@
 					<configLocation>sdm/sdm_checkstyle_config.xml</configLocation>
 				</configuration>
 			</plugin>
+			<!-- 
+			 | To avoid maven deploying as part of the release cycle
+			 | we disable deployment.
+			 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
