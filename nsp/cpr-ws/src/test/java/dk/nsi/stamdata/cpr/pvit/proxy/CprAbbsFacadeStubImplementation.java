@@ -9,10 +9,10 @@ import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.servlet.ServletRequest;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
+import java.util.Calendar;
 
 @WebService(endpointInterface = "dk.nsi.stamdata.cpr.ws.CprAbbsFacade")
 public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
@@ -33,10 +33,10 @@ public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
 	                                      @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
 	                                      @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "cprAbbsRequest") CprAbbsRequest cprAbbsRequest) throws DGWSFault {
 		CprAbbsResponse response = new CprAbbsResponse();
-		XMLGregorianCalendar since = cprAbbsRequest.getSince();
+		Calendar since = cprAbbsRequest.getSince();
 		String cpr;
 		if (since != null) {
-			DateTime sinceAsJoda = new DateTime(since.toGregorianCalendar().getTime());
+			DateTime sinceAsJoda = new DateTime(since.getTime());
 			if (SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES.equals(sinceAsJoda)) {
 				cpr = "1111111111";
 			} else {

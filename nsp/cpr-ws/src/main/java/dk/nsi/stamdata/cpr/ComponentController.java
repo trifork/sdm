@@ -1,27 +1,21 @@
 package dk.nsi.stamdata.cpr;
 
-import static com.google.inject.name.Names.bindProperties;
-
-import java.util.Set;
-
-import org.hibernate.Session;
-
-import com.google.inject.AbstractModule;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
-import com.google.inject.TypeLiteral;
+import com.google.inject.*;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.MonitoringModule;
-
 import dk.nsi.dgws.DGWSFilterSystemIDCardProvider;
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.sosi.seal.model.SystemIDCard;
+import org.hibernate.Session;
+
+import java.util.Set;
+
+import static com.google.inject.name.Names.bindProperties;
 
 
 public class ComponentController extends GuiceServletContextListener

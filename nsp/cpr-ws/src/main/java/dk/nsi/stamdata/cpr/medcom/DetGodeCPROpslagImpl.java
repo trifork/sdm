@@ -1,16 +1,5 @@
 package dk.nsi.stamdata.cpr.medcom;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-
-import javax.jws.WebParam;
-import javax.jws.WebService;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.ws.Holder;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
@@ -19,23 +8,22 @@ import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.Sikrede;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
-
 import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.ws.Holder;
+
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 
 @SchemaValidation
@@ -63,7 +51,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 
 
-	// FIXME: Headers should be set to outgoing. See BRS for correct way of
+	// TODO: Headers should be set to outgoing. See BRS for correct way of
 	// setting these.
 	@Override
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
@@ -90,14 +78,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		GetPersonInformationOut output = new GetPersonInformationOut();
 		PersonInformationStructureType personInformation;
 
-		try
-		{
-			personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
-		}
-		catch (DatatypeConfigurationException e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
+		personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
 
 		output.setPersonInformationStructure(personInformation);
 

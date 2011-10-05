@@ -6,14 +6,12 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Locale;
 
 public class CprAbbsClient {
 	public static final String ENDPOINT_PROPERTY_NAME = "cprabbs.service.endpoint.url";
@@ -38,8 +36,7 @@ public class CprAbbsClient {
 		CprAbbsRequest request = new CprAbbsRequest();
 
 		if (since != null) {
-			XMLGregorianCalendar sinceAsXml = newXMLGregorianCalendar(since);
-			request.setSince(sinceAsXml);
+			request.setSince(since.toCalendar(Locale.getDefault()));
 		}
 
 		CprAbbsResponse response;
@@ -51,15 +48,4 @@ public class CprAbbsClient {
 
 		return response.getChangedCprs();
 	}
-
-	private XMLGregorianCalendar newXMLGregorianCalendar(DateTime since) {
-		DatatypeFactory factory = null;
-		try {
-			factory = DatatypeFactory.newInstance();
-		} catch (DatatypeConfigurationException e) {
-			throw new RuntimeException(e);
-		}
-		return factory.newXMLGregorianCalendar(since.toGregorianCalendar());
-	}
-
 }

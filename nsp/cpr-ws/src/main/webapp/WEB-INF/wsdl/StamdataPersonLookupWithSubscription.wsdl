@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wsdl:definitions
+  targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/"
+  xmlns:tns="http://nsi.dk/2011/09/23/StamdataCpr/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:cprabbs="http://nsi.dk/cprabbs/2011/10"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+  xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"
+  >
+  
+  <wsdl:types>
+    <!-- Den gode webservice schemas. -->
+    <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+		<xs:include schemaLocation="wsse.xsd" />
+	</xs:schema>
+	<xs:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+		<xs:include schemaLocation="medcom.xsd" />
+	</xs:schema>
+
+    <!-- CPR Subscription schemas -->
+    <xs:schema targetNamespace="http://nsi.dk/cprabbs/2011/10">
+        <xs:include schemaLocation="cprAbbsRequest.xsd" />
+    </xs:schema>
+
+    <!-- The request and response schemas. -->
+    <xs:schema targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/">
+    	<xs:include schemaLocation="stamdata_cpr_request_response.xsd" />
+    </xs:schema>
+    
+    <!-- NB: This is added to avoid JAX-WS mapping date to XMLGregorialCalendar, which does not play nice with SEAL. -->
+    <xs:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/" jaxb:version="2.1" elementFormDefault="qualified">
+		<xs:annotation>
+			<xs:appinfo>
+				<jaxb:globalBindings>
+					<jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+						parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+						printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+				</jaxb:globalBindings>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:schema>
+  </wsdl:types>
+ 
+  <wsdl:message name="PersonLookupIn">
+  	<wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+  	<wsdl:part name="parameters" element="cprabbs:CprAbbsRequest" />
+  </wsdl:message>
+ 
+  <wsdl:message name="PersonLookupOut">
+    <wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+    <wsdl:part name="parameters" element="tns:PersonLookupResponse"/>
+  </wsdl:message>
+  
+  <wsdl:message name="DGWSFault">
+    <wsdl:part name="fault" element="dgws:FaultCode" />
+  </wsdl:message>
+ 
+  <wsdl:portType name="StamdataPersonLookupWithSubscription">
+    <wsdl:operation name="getSubscribedPersonDetails">
+      <wsdl:input message="tns:PersonLookupIn" />
+      <wsdl:output message="tns:PersonLookupOut" />
+      <wsdl:fault message="tns:DGWSFault" name="DGWSFault" />
+    </wsdl:operation>
+  </wsdl:portType>
+ 
+  <wsdl:binding name="StamdataPersonLookupWithSubscriptionSoapBinding" type="tns:StamdataPersonLookupWithSubscription">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="getSubscribedPersonDetails">
+        <soap:operation soapAction="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails" style="document"/>
+        <wsdl:input>
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:PersonLookupIn" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:PersonLookupIn" part="medcomHeader" use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:PersonLookupOut" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:PersonLookupOut" part="medcomHeader" use="literal"/>
+        </wsdl:output>
+        <wsdl:fault name="DGWSFault">
+            <soap:fault name="DGWSFault" use="literal"/>
+        </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+ 
+  <wsdl:service name="StamdataPersonLookupWithSubscriptionService">
+    <wsdl:port name="StamdataPersonLookupWithSubscription" binding="tns:StamdataPersonLookupWithSubscriptionSoapBinding">
+      <soap:address location="http://localhost/StamdataPersonLookupWithSubscriptionService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
