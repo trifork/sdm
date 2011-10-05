@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -80,50 +81,6 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>run</goal>
-							</goals>
-							<configuration>
-								<tasks>
-									<echo>Output dir: ${project.build.directory}</echo>
-									<copy todir="${project.build.directory}/dist" flatten="true" failonerror="false">
-										<fileset dir="${basedir}" includes="**/*.war" />
-									</copy>
-									<zip destfile="${project.build.directory}/${project.build.finalName}.zip">
-										<fileset dir="${project.build.directory}/dist" />
-									</zip>
-								</tasks>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>1.7</version>
-					<executions>
-						<execution>
-							<phase>package</phase>
-							<goals>
-								<goal>attach-artifact</goal>
-							</goals>
-							<configuration>
-								<artifacts>
-									<artifact>
-										<file>${project.build.directory}/${project.build.finalName}.zip</file>
-										<type>zip</type>
-									</artifact>
-								</artifacts>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
 						<source>1.6</source>
@@ -131,8 +88,36 @@
 						<showDeprecation>true</showDeprecation>
 					</configuration>
 				</plugin>
+				<!-- 
+				 | Since the performance test often will be part of the
+				 | src/test sources (go figure!) you have to be sure
+				 | to have compiled the test source classes before
+				 | running e.g. chronos:jmetergui, so it can pick up
+				 | the custom samplers.
+				 -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>chronos-maven-plugin</artifactId>
+					<version>1.0-SNAPSHOT</version>
+					<configuration>
+						<heap>768m</heap>
+						<permsize>256m</permsize>
+						<sysproperties>
+							<property>
+								<name>search_paths</name>
+								<value>${basedir}/target/test-classes;${basedir}/target</value>
+							</property>
+							<property>
+								<name>java.awt.headless</name>
+								<value>false</value>
+							</property>
+						</sysproperties>
+						<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
+
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -142,7 +127,7 @@
 					<dependency>
 						<groupId>dk.nsi.stamdata</groupId>
 						<artifactId>build-tools</artifactId>
-						<version>3.1.0-SNAPSHOT</version>
+						<version>${project.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
@@ -150,14 +135,14 @@
 				</configuration>
 			</plugin>
 			<plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-release-plugin</artifactId>
-        <version>2.2.1</version>
-        <configuration>
-          <tagNameFormat>v@{project.version}</tagNameFormat>
-        </configuration>
-      </plugin>
-			<!-- 
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<tagNameFormat>v@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+			<!--
 			 | To avoid maven deploying as part of the release cycle
 			 | we disable deployment.
 			 -->
@@ -171,31 +156,31 @@
 			</plugin>
 			<!--
 			 | The Stamdata project is inherited from Lægemiddelstyrelsen
-			 | and thus needs different license than other NSPi components. 
+			 | and thus needs different license than other NSPi components.
 			 -->
-			 <plugin>
-					<inherited>false</inherited>
-					<groupId>com.mycila.maven-license-plugin</groupId>
-					<artifactId>maven-license-plugin</artifactId>
-					<version>1.9.0</version>
-					<configuration>
-						<strictCheck>true</strictCheck>
-						<header>${basedir}/config/HEADER.txt</header>
-						<failIfMissing>true</failIfMissing>
-						<aggregate>true</aggregate>
-						<includes>
-							<include>**/src/**/*.java</include>
-						</includes>
-					</configuration>
-					<executions>
-						<execution>
-							<phase>verify</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-					</plugin>
+			<plugin>
+				<inherited>false</inherited>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<artifactId>maven-license-plugin</artifactId>
+				<version>1.9.0</version>
+				<configuration>
+					<strictCheck>true</strictCheck>
+					<header>${basedir}/config/HEADER.txt</header>
+					<failIfMissing>true</failIfMissing>
+					<aggregate>true</aggregate>
+					<includes>
+						<include>**/src/**/*.java</include>
+					</includes>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>verify</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

@@ -71,7 +71,7 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
 			@WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequest request) throws DGWSFault {
 		PersonLookupResponseType response;
 		try {
-			List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader.value, medcomHeader.value, new DateTime(request.getSince()));
+			List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader, medcomHeader, new DateTime(request.getSince()));
 
 			response = stamdataPersonResponseFinder.answerCivilRegistrationNumberListPersonRequest(clientCVR, changedCprs);
 		} catch (SQLException e) {

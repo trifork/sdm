@@ -34,6 +34,7 @@ import dk.nsi.dgws.DGWSFilterSystemIDCardProvider;
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsClient;
 import dk.sosi.seal.model.SystemIDCard;
 import org.hibernate.Session;
 
@@ -85,6 +86,12 @@ public class ComponentController extends GuiceServletContextListener
 			// when an exception occurs.
 
 			System.setProperty(DISPLAY_SOAP_FAULT_STACK_TRACE, "false");
+			
+			// To make sure the property for the CPR ABBS end-point is set
+			// we bind the class here and have Guice check at start-up if
+			// if can be instantiated.
+			
+			bind(CprAbbsClient.class);
 
 			// Tell the monitoring module how to monitor the component.
 			// All monitor pages are bound to the URL /status.
