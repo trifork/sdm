@@ -57,7 +57,7 @@ public class DgwsIdcardFilter implements Filter
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{
-		boolean useTestFederation = shouldWeUseTestFederation(filterConfig);
+		this.useTestFederation = shouldWeUseTestFederation(filterConfig);
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
 		Federation federation = useTestFederation ? new SOSITestFederation(properties) : new SOSIFederation(properties);
@@ -126,7 +126,7 @@ public class DgwsIdcardFilter implements Filter
 			
 			chain.doFilter(httpRequest, response);
 		}
-		catch (SignatureInvalidModelBuildException e)
+		catch (SignatureInvalidModelBuildException ignore)
 		{
 			// The signature was invalid. This sender is to blame.
 			
@@ -142,14 +142,14 @@ public class DgwsIdcardFilter implements Filter
 			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.INVALID_SIGNATURE, "The signature used to sign the message was incorrectly signed or no longer valid.");
 			writeFaultToResponse(httpResponse, reply);
 		}
-		catch (XmlUtilException e)
+		catch (XmlUtilException ignore)
 		{
 			// The message could not be read. The sender is to blame.
 			
 			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
 			writeFaultToResponse(httpResponse, reply);
 		}
-		catch (Exception e)
+		catch (Exception ignore)
 		{
 			// This is bad and will likely be a bug.
 
