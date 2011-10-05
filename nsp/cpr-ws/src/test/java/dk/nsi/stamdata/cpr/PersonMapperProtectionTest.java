@@ -18,9 +18,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.models.sikrede.Yderregister;
 
+import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.SystemIDCard;
 
@@ -42,6 +46,8 @@ public class PersonMapperProtectionTest
 	
 	private Set<String> whitelist;
 	private MunicipalityMapper municipalityMapper;
+	private Yderregister yderregister;
+	private SikredeYderRelation sikredeYderRelation;
 	
 	private static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
 	private static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
@@ -58,6 +64,8 @@ public class PersonMapperProtectionTest
 		
 		municipalityMapper = new MunicipalityMapper();
 		person = Factories.createPersonWithoutAddressProtection();
+		yderregister = Factories.createYderregister();
+		sikredeYderRelation = Factories.createSikredeYderRelation();
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)
@@ -71,8 +79,8 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(null);
 		person.setNavnebeskyttelseslettedato(null);
 		
-		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities));
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities));
+		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
+		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 	}
 	
 	@Test
@@ -81,7 +89,7 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(YESTERDAY);
 		person.setNavnebeskyttelseslettedato(TOMORROW);
 		
-		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities));
+		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 	}
 	
 	@Test
@@ -90,7 +98,7 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(YESTERDAY);
 		person.setNavnebeskyttelseslettedato(TOMORROW);
 		
-		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities));
+		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 	}
 	
 	@Test
@@ -99,8 +107,8 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(YESTERDAY);
 		person.setNavnebeskyttelseslettedato(TOMORROW);
 		
-		assertThatPersonIsProtected(mapper(FOR_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData));
-		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData));
+		assertThatPersonIsProtected(mapper(FOR_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
 	}
 	
 	@Test
@@ -109,7 +117,7 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(TOMORROW);
 		person.setNavnebeskyttelseslettedato(IN_TWO_DAYS);
 		
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData));
+		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
 	}
 	
 	@Test
@@ -118,7 +126,25 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(TWO_DAYS_AGO);
 		person.setNavnebeskyttelseslettedato(YESTERDAY);
 		
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData));
+		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+	}
+	
+	@Test
+	public void shouldProtectPersonHealthCareInfoIfProtectionIsActive() throws DatatypeConfigurationException
+	{
+		person.setNavnebeskyttelsestartdato(YESTERDAY);
+		person.setNavnebeskyttelseslettedato(TOMORROW);
+		
+		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister));
+	}
+	
+	@Test
+	public void shouldNotProtectPersonHealthCareInfoIfProtectionIsNotActive() throws DatatypeConfigurationException
+	{
+		person.setNavnebeskyttelsestartdato(TWO_DAYS_AGO);
+		person.setNavnebeskyttelseslettedato(YESTERDAY);
+		
+		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister));
 	}
 	
 	private void assertThatPersonIsNotProtected(PersonInformationStructureType output)
@@ -129,5 +155,15 @@ public class PersonMapperProtectionTest
 	private void assertThatPersonIsProtected(PersonInformationStructureType output)
 	{
 		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(CENSORED));
+	}
+	
+	private void assertThatHealthCareInfoIsProtected(PersonWithHealthCareInformationStructureType output)
+	{
+		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(CENSORED));
+	}
+	
+	private void assertThatHealthCareInfoIsNotProtected(PersonWithHealthCareInformationStructureType output)
+	{
+		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderregister.getBynavn()));
 	}
 }

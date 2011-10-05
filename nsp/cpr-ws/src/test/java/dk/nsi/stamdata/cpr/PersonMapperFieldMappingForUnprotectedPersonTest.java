@@ -18,6 +18,7 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
+import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -292,6 +293,6 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
 		MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 		PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);
 		
-		output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
+		output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
 	}
 }

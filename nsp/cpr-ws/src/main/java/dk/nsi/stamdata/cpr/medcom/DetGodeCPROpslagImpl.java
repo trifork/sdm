@@ -21,6 +21,7 @@ import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
@@ -50,21 +51,19 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 	private final Fetcher fetcher;
 	private final PersonMapper personMapper;
-	private final PersonWithHealthCareMapper personWithHealthCareMapper;
 	private final String clientCVR;
 
 
 	@Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, PersonWithHealthCareMapper personWithHealthCareMapper, SystemIDCard card)
+	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, SystemIDCard card)
 	{
 		this.fetcher = fetcher;
 		this.personMapper = personMapper;
-		this.personWithHealthCareMapper = personWithHealthCareMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
 	}
 
 
-	// TODO: Headers should be set to outgoing. See BRS for correct way of
+	// FIXME: Headers should be set to outgoing. See BRS for correct way of
 	// setting these.
 	@Override
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
@@ -93,7 +92,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		try
 		{
-			personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
+			personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
 		}
 		catch (DatatypeConfigurationException e)
 		{
@@ -138,7 +137,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		try
 		{
-			personWithHealthCareInformation = personWithHealthCareMapper.map(person, sikredeYderRelation, yderregister);
+			personWithHealthCareInformation = personMapper.map(person, sikredeYderRelation, yderregister);
 		}
 		catch (DatatypeConfigurationException e)
 		{

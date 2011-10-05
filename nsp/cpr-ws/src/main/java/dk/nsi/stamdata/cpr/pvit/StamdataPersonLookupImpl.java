@@ -20,6 +20,7 @@ import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
@@ -148,7 +149,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		
 		if (wasFound)
 		{
-			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities));
+			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 		}
 		
 		return response;
@@ -169,7 +170,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 			
 			if (wasFound)
 			{
-				personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities));
+				personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 			}
 		}
 
@@ -190,7 +191,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		{
 			logger.info("type=auditlog, client_cvr={}, cpr_of_returned_person={}", clientCVR, person.getCpr());
 			
-			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities));
+			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, CPRProtectionLevel.CensorCPR));
 		}
 
 		return response;
@@ -218,7 +219,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		{
 			logger.info("type=auditlog, client_cvr={}, cvr_of_returned_person={}", clientCVR, person.getCpr());
 			
-			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities));
+			personInformationStructure.add(personMapper.map(person, ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, CPRProtectionLevel.CensorCPR));
 		}
 
 		return response;

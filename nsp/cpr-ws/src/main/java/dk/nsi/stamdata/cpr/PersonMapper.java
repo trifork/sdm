@@ -16,8 +16,11 @@ import org.joda.time.Instant;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
+import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.models.sikrede.Yderregister;
 
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -25,6 +28,7 @@ import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.ws.AddressAccessType;
 import dk.nsi.stamdata.cpr.ws.AddressCompleteType;
 import dk.nsi.stamdata.cpr.ws.AddressPostalType;
+import dk.nsi.stamdata.cpr.ws.AssociatedGeneralPractitionerStructureType;
 import dk.nsi.stamdata.cpr.ws.CountryIdentificationCodeType;
 import dk.nsi.stamdata.cpr.ws.CountryIdentificationSchemeType;
 import dk.nsi.stamdata.cpr.ws.ObjectFactory;
@@ -32,8 +36,12 @@ import dk.nsi.stamdata.cpr.ws.PersonAddressStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonBirthDateStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonCivilRegistrationStatusStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
+import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonNameStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonPublicHealthInsuranceType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PublicHealthInsuranceGroupIdentifierType;
 import dk.nsi.stamdata.cpr.ws.RegularCPRPersonType;
 import dk.nsi.stamdata.cpr.ws.SimpleCPRPersonType;
 import dk.sosi.seal.model.SystemIDCard;
@@ -54,7 +62,15 @@ public class PersonMapper
 	}
 
 
+	public static enum CPRProtectionLevel
+	{
+		CensorCPR,
+		DoNotCensorCPR
+	}
+
+
 	private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
+	private static final String PROTECTED_CPR = "0000000000";
 
 	private final Set<String> whitelist;
 	private final SystemIDCard idCard;
@@ -66,8 +82,7 @@ public class PersonMapper
 	PersonMapper(@Whitelist Set<String> whitelist, SystemIDCard idCard, MunicipalityMapper munucipalityMapper)
 	{
 		// Once we get this far the filter should have gotten rid of id cards
-		// that
-		// are not CVR authenticated System ID Cards.
+		// that are not CVR authenticated System ID Cards.
 
 		this.whitelist = whitelist;
 		this.idCard = idCard;
@@ -75,15 +90,15 @@ public class PersonMapper
 	}
 
 
-	public PersonInformationStructureType map(Person person, ServiceProtectionLevel protectionLevel) throws DatatypeConfigurationException
+	public PersonInformationStructureType map(Person person, ServiceProtectionLevel protectionLevel, CPRProtectionLevel cprProtection) throws DatatypeConfigurationException
 	{
 		boolean censorData = isPersonProtected(person) && (protectionLevel == ServiceProtectionLevel.AlwaysCensorProtectedData || !isClientAnAuthority());
 
-		return (censorData) ? createOutputWithCensoredDate(person) : createOutputWithRealDate(person);
+		return (censorData) ? createOutputWithCensoredDate(person, cprProtection) : createOutputWithRealDate(person);
 	}
 
 
-	private PersonInformationStructureType createOutputWithCensoredDate(Person person) throws DatatypeConfigurationException
+	private PersonInformationStructureType createOutputWithCensoredDate(Person person, CPRProtectionLevel cprProtection) throws DatatypeConfigurationException
 	{
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
 		mapCurrentPersonCivilRegistrationIdentifier(person, output);
@@ -100,16 +115,20 @@ public class PersonMapper
 		personName.setPersonMiddleName(null);
 		personName.setPersonSurnameName(ADRESSEBESKYTTET);
 
-		simpleCprPerson.setPersonCivilRegistrationIdentifier(person.cpr);
+		// For some searches we also need to censor the CPR number.
+
+		boolean isCPRHidden = cprProtection == CPRProtectionLevel.CensorCPR;
+		simpleCprPerson.setPersonCivilRegistrationIdentifier(isCPRHidden ? PROTECTED_CPR : person.getCpr());
 
 		regularCprPerson.setSimpleCPRPerson(simpleCprPerson);
 
 		regularCprPerson.setPersonNameForAddressingName(ADRESSEBESKYTTET);
 
-		// It is safe to include the gender since it is encoded in the
-		// CPR number.
+		// Even though the CPR can be read from the CPR (when the CPR is
+		// included),
+		// we might as well always protect it.
 
-		regularCprPerson.setPersonGenderCode(mapGenderToGenderCode(person.koen));
+		regularCprPerson.setPersonGenderCode(PersonGenderCodeType.UNKNOWN);
 
 		regularCprPerson.setPersonInformationProtectionIndicator(true);
 
@@ -117,8 +136,8 @@ public class PersonMapper
 
 		PersonBirthDateStructureType personBirthDate = new PersonBirthDateStructureType();
 
-		personBirthDate.setBirthDate(newXMLGregorianCalendar(person.foedselsdato));
-		personBirthDate.setBirthDateUncertaintyIndicator(false);
+		personBirthDate.setBirthDate(newXMLGregorianCalendar(new Date(0)));
+		personBirthDate.setBirthDateUncertaintyIndicator(true);
 
 		regularCprPerson.setPersonBirthDateStructure(personBirthDate);
 
@@ -226,7 +245,7 @@ public class PersonMapper
 			if (StringUtils.isNotBlank(person.kommuneKode))
 			{
 				String municipalityCode = StringUtils.leftPad(person.kommuneKode, AUTHORITY_CODE_LENGTH, "0");
-	
+
 				addressAccess.setMunicipalityCode(municipalityCode);
 				personAddress.setCountyCode(munucipalityMapper.toCountyCode(municipalityCode));
 			}
@@ -235,9 +254,9 @@ public class PersonMapper
 				addressAccess.setMunicipalityCode("0000");
 				personAddress.setCountyCode("0000");
 			}
-			
+
 			personAddress.setCareOfName(actualOrNull(person.coNavn));
-			
+
 			addressAccess.setStreetCode(StringUtils.leftPad(person.vejKode, AUTHORITY_CODE_LENGTH, "0"));
 			addressAccess.setStreetBuildingIdentifier(getBuildingIdentifier(person));
 
@@ -317,11 +336,137 @@ public class PersonMapper
 	}
 
 
+	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister) throws DatatypeConfigurationException
+	{
+		Preconditions.checkNotNull(person, "person");
+		
+		PersonWithHealthCareInformationStructureType personWithHealthCare = new PersonWithHealthCareInformationStructureType();
+
+		PersonInformationStructureType personInformation = map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
+		personWithHealthCare.setPersonInformationStructure(personInformation);
+
+		PersonHealthCareInformationStructureType personHealthCareInformation = new PersonHealthCareInformationStructureType();
+		personWithHealthCare.setPersonHealthCareInformationStructure(personHealthCareInformation);
+
+		// Fill the associated general practitioner.
+		
+		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner;
+		
+		if (isPersonProtected(person))
+		{
+			associatedGeneralPractitioner = createDummyPractitioner(ADRESSEBESKYTTET);
+		}
+		else if (yderregister == null)
+		{
+			associatedGeneralPractitioner = createDummyPractitioner(UKENDT);
+		}
+		else
+		{
+			associatedGeneralPractitioner = createPractitioner(yderregister);
+		}
+		
+		personHealthCareInformation.setAssociatedGeneralPractitionerStructure(associatedGeneralPractitioner);
+
+		PersonPublicHealthInsuranceType personPublicHealthInsurance;
+		
+		if (isPersonProtected(person))
+		{
+			personPublicHealthInsurance = createDummyPublicHealthInsurance(ADRESSEBESKYTTET);
+		}
+		else if (sikredeYderRelation == null)
+		{
+			personPublicHealthInsurance = createDummyPublicHealthInsurance(UKENDT);
+		}
+		else
+		{
+			personPublicHealthInsurance = createPublicHealthInsurance(sikredeYderRelation);
+		}
+		
+		personHealthCareInformation.setPersonPublicHealthInsurance(personPublicHealthInsurance);
+
+		return personWithHealthCare;
+	}
+
+
+	private AssociatedGeneralPractitionerStructureType createPractitioner(Yderregister yderregister)
+	{
+		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner = new AssociatedGeneralPractitionerStructureType();
+		associatedGeneralPractitioner.setAssociatedGeneralPractitionerIdentifier(BigInteger.valueOf(yderregister.getNummer()));
+		associatedGeneralPractitioner.setAssociatedGeneralPractitionerOrganisationName(yderregister.getNavn());
+		associatedGeneralPractitioner.setDistrictName(yderregister.getBynavn());
+		associatedGeneralPractitioner.setEmailAddressIdentifier(yderregister.getEmail());
+		associatedGeneralPractitioner.setPostCodeIdentifier(yderregister.getPostnummer());
+
+		String address = yderregister.getVejnavn() + ", " + yderregister.getPostnummer() + " " + yderregister.getBynavn();
+
+		associatedGeneralPractitioner.setStandardAddressIdentifier(address);
+		associatedGeneralPractitioner.setTelephoneSubscriberIdentifier(yderregister.getTelefon());
+
+		return associatedGeneralPractitioner;
+	}
+
+
+	private AssociatedGeneralPractitionerStructureType createDummyPractitioner(String placeholderText)
+	{
+		Preconditions.checkNotNull(placeholderText, "placeholderText");
+
+		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner = new AssociatedGeneralPractitionerStructureType();
+		associatedGeneralPractitioner.setAssociatedGeneralPractitionerIdentifier(BigInteger.ZERO);
+		associatedGeneralPractitioner.setAssociatedGeneralPractitionerOrganisationName(placeholderText);
+		associatedGeneralPractitioner.setDistrictName(placeholderText);
+		associatedGeneralPractitioner.setEmailAddressIdentifier(placeholderText + "@example.com");
+		associatedGeneralPractitioner.setPostCodeIdentifier("0000");
+
+		associatedGeneralPractitioner.setStandardAddressIdentifier(placeholderText);
+		associatedGeneralPractitioner.setTelephoneSubscriberIdentifier("00000000");
+
+		return associatedGeneralPractitioner;
+	}
+
+
+	public PersonPublicHealthInsuranceType createPublicHealthInsurance(SikredeYderRelation sikredeYderRelation) throws DatatypeConfigurationException
+	{
+		PersonPublicHealthInsuranceType personPublicHealthInsurance = new PersonPublicHealthInsuranceType();
+
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
+		PublicHealthInsuranceGroupIdentifierType publicHealthInsuranceGroupIdentifier;
+
+		char code = sikredeYderRelation.getSikringsgruppeKode();
+
+		Preconditions.checkState(code == '1' || code == '2', "SikredeYderRelation for cpr" + sikredeYderRelation.getCpr() + " and yder " + sikredeYderRelation.getYdernummer() + " has unsupported group code " + sikredeYderRelation.getSikringsgruppeKode() + ". Cannot proceed with request");
+
+		if (sikredeYderRelation.getSikringsgruppeKode() == '1')
+		{
+			publicHealthInsuranceGroupIdentifier = PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
+		}
+		else
+		{
+			publicHealthInsuranceGroupIdentifier = PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
+		}
+
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(publicHealthInsuranceGroupIdentifier);
+
+		return personPublicHealthInsurance;
+	}
+
+
+	public PersonPublicHealthInsuranceType createDummyPublicHealthInsurance(String placeholderText) throws DatatypeConfigurationException
+	{
+		Preconditions.checkNotNull(placeholderText, "placeholderText");
+
+		PersonPublicHealthInsuranceType personPublicHealthInsurance = new PersonPublicHealthInsuranceType();
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(new Date(0)));
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1);
+
+		return personPublicHealthInsurance;
+	}
+
+
 	private String actualOrUnknown(String actual)
 	{
 		return !StringUtils.isBlank(actual) ? actual : UKENDT;
 	}
-	
+
 
 	private String actualOrNull(String actual)
 	{
@@ -350,7 +495,7 @@ public class PersonMapper
 		addressComplete.setAddressPostal(addressPostal);
 
 		addressPostal.setStreetName(placeholderText);
-		
+
 		addressPostal.setStreetBuildingIdentifier("1");
 
 		addressPostal.setPostCodeIdentifier("0000");

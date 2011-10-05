@@ -1,6 +1,9 @@
 package dk.nsi.stamdata.cpr;
 
 import com.trifork.stamdata.models.cpr.Person;
+import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
+import com.trifork.stamdata.models.sikrede.Yderregister;
+
 import org.joda.time.DateTime;
 
 import java.util.Date;
@@ -55,6 +58,45 @@ public class Factories
 		person.setValidTo(TOMORROW);
 
 		return person;
+	}
+	
+	public static SikredeYderRelation createSikredeYderRelation()
+	{
+		SikredeYderRelation relation = new SikredeYderRelation();
+		relation.setCpr("0204953569");
+		relation.setYdernummer(1234);
+		relation.setGruppeKodeIkraftDato(YESTERDAY);
+		relation.setGruppekodeRegistreringDato(TWO_DAYS_AGO);
+		relation.setId("dddsdsdssddssd");
+		relation.setSikringsgruppeKode('2');
+		relation.setType("C");
+		relation.setYdernummerIkraftDato(YESTERDAY);
+		relation.setYdernummerRegistreringDato(TWO_DAYS_AGO);
+		relation.setModifiedDate(TWO_DAYS_AGO);
+		relation.setCreatedDate(TWO_DAYS_AGO);
+		relation.setValidFrom(YESTERDAY);
+		relation.setValidTo(TOMORROW);
+		return relation;
+	}
+	
+	public static Yderregister createYderregister()
+	{
+		Yderregister yderregister = new Yderregister();
+		
+		yderregister.setBynavn("Århus");
+		yderregister.setEmail("test@example.com");
+		yderregister.setNavn("Klinikken");
+		yderregister.setNummer(1234);
+		yderregister.setPostnummer("8000");
+		yderregister.setTelefon("12345678");
+		yderregister.setVejnavn("Margrethepladsen 44, 8000 Århus");
+
+		yderregister.setModifiedDate(TWO_DAYS_AGO);
+		yderregister.setCreatedDate(TWO_DAYS_AGO);
+		yderregister.setValidFrom(YESTERDAY);
+		yderregister.setValidTo(TOMORROW);
+
+		return yderregister;
 	}
 
 	public static Person createPersonWithAddressProtection() {

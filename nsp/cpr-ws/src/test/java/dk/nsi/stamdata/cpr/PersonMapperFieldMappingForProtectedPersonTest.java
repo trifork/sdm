@@ -1,8 +1,8 @@
 package dk.nsi.stamdata.cpr;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
+import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
@@ -85,11 +86,11 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	}
 
 	@Test
-	public void mapsKoenMToGenderCodeMale() throws Exception {
+	public void mapsKoenMToGenderCodeUnknown() throws Exception {
 		person.setKoen("M");
 		doMap();
 
-		assertEquals(PersonGenderCodeType.MALE, output.getRegularCPRPerson().getPersonGenderCode());
+		assertEquals(PersonGenderCodeType.UNKNOWN, output.getRegularCPRPerson().getPersonGenderCode());
 	}
 
 	@Test
@@ -97,7 +98,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 		person.setKoen("K");
 		doMap();
 
-		assertEquals(PersonGenderCodeType.FEMALE, output.getRegularCPRPerson().getPersonGenderCode());
+		assertEquals(PersonGenderCodeType.UNKNOWN, output.getRegularCPRPerson().getPersonGenderCode());
 	}
 
 
@@ -127,7 +128,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 
 	@Test
 	public void mapsFoedselsdatoToBirthdate() throws Exception {
-		assertEquals(person.getFoedselsdato(), output.getRegularCPRPerson().getPersonBirthDateStructure().getBirthDate().toGregorianCalendar().getTime());
+		assertThat(output.getRegularCPRPerson().getPersonBirthDateStructure().getBirthDate().toGregorianCalendar().getTime(), is(not(person.getFoedselsdato())));
 	}
 
 	@Test
@@ -181,8 +182,8 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	}
 
 	@Test
-	public void usesFalseForBirthdateUncertaintyIndicator() throws Exception {
-		assertFalse(output.getRegularCPRPerson().getPersonBirthDateStructure().isBirthDateUncertaintyIndicator());
+	public void usesTrueForBirthdateUncertaintyIndicator() throws Exception {
+		assertTrue(output.getRegularCPRPerson().getPersonBirthDateStructure().isBirthDateUncertaintyIndicator());
 	}
 
 	@Test
@@ -233,6 +234,6 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 		
 		PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);
 		
-		output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData);
+		output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
 	}
 }
