@@ -26,22 +26,7 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
-import java.io.StringWriter;
-import java.security.cert.CertificateException;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.UUID;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
+import dk.nsi.stamdata.cpr.jaxws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Linking;
 import dk.nsi.stamdata.cpr.ws.Security;
@@ -52,6 +37,20 @@ import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.xml.XmlUtil;
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.StringWriter;
+import java.security.cert.CertificateException;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.UUID;
 
 
 public final class DGWSHeaderUtil

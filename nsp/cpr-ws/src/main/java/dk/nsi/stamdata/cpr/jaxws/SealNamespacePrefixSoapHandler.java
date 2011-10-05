@@ -1,8 +1,7 @@
-package dk.nsi.stamdata.cpr.integrationtest.dgws;
+package dk.nsi.stamdata.cpr.jaxws;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -10,12 +9,12 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-
-class SealNamespacePrefixSoapHandler implements SOAPHandler<SOAPMessageContext>
+public class SealNamespacePrefixSoapHandler implements SOAPHandler<SOAPMessageContext>
 {
 	private Map<String, String> prefixMap = SealNamespacePrefixMapper.prefixMap;
 

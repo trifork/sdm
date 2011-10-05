@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+	elementFormDefault="qualified"
+	targetNamespace="http://nsi.dk/cprabbs/2011/10">
+
+    <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+            schemaLocation="cpr.dk_core_20050318.xsd"/>
+
+    <element name="CprAbbsResponse">
+		<complexType>
+			<sequence>
+				<element name="changedCprs" type="cpr:PersonCivilRegistrationIdentifierType" minOccurs="0" maxOccurs="unbounded"/>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

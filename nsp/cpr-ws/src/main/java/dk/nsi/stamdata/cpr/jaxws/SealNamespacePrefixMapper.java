@@ -24,19 +24,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package dk.nsi.stamdata.cpr.integrationtest.dgws;
+package dk.nsi.stamdata.cpr.jaxws;
+
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
  * This class is used for deserializing DGWS headers. DGWS require that the
  * namespaces saml and ds be present.
  * 
  */
-class SealNamespacePrefixMapper extends NamespacePrefixMapper
+public class SealNamespacePrefixMapper extends NamespacePrefixMapper
 {
 	public static Map<String, String> prefixMap = new HashMap<String, String>();
 

@@ -1,20 +1,16 @@
 package dk.nsi.stamdata.cpr.pvit;
 
-import static dk.nsi.stamdata.cpr.Factories.TOMORROW;
-import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.net.URL;
-import java.util.Date;
-
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
-import javax.xml.ws.soap.SOAPFaultException;
-
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Stage;
+import com.trifork.stamdata.models.cpr.Person;
+import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
+import dk.nsi.stamdata.cpr.Factories;
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import dk.nsi.stamdata.cpr.ws.*;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
@@ -22,27 +18,17 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Stage;
-import com.trifork.stamdata.models.cpr.Person;
+import javax.xml.datatype.XMLGregorianCalendar;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
+import java.net.URL;
+import java.util.Date;
 
-import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
+import static dk.nsi.stamdata.cpr.Factories.TOMORROW;
+import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 
 public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
