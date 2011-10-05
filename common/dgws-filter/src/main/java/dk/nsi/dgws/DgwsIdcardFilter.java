@@ -1,25 +1,5 @@
 package dk.nsi.dgws;
 
-import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.Properties;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.IDCard;
 import dk.sosi.seal.model.Reply;
@@ -33,6 +13,19 @@ import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
 import dk.sosi.seal.xml.XmlUtilException;
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.Properties;
 
 
 /**
@@ -169,7 +162,7 @@ public class DgwsIdcardFilter implements Filter
 	{
 		httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
-		httpResponse.setContentType("text/xml"); // TODO: Shouldn't this depend on it being SOAP 1.1 or 1.2?
+		httpResponse.setContentType("text/xml");
 
 		Document replyXml = reply.serialize2DOMDocument();
 		String xml = XmlUtil.node2String(replyXml);
