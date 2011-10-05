@@ -19,6 +19,7 @@
 		<hamcrest.version>1.1</hamcrest.version>
 		<junit.version>4.8.2</junit.version>
 		<mockito.version>1.8.5</mockito.version>
+		<seal.version>2.1</seal.version>
 		<netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -29,6 +30,7 @@
 		<module>common/dgws-filter</module>
 		<module>common/build-tools</module>
 		<module>common/performance</module>
+		<module>common/testing</module>
 
 		<module>dodi/data-manager</module>
 

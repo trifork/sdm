@@ -36,7 +36,7 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
  * namespaces saml and ds be present.
  * 
  */
-public class SealNamespacePrefixMapper extends NamespacePrefixMapper
+class SealNamespacePrefixMapper extends NamespacePrefixMapper
 {
 	public static Map<String, String> prefixMap = new HashMap<String, String>();
 

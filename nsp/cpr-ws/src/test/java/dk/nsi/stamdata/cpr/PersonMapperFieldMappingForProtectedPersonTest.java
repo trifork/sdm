@@ -20,10 +20,10 @@ import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.SystemIDCard;
 
 public class PersonMapperFieldMappingForProtectedPersonTest {
@@ -228,7 +228,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
 	private void doMap() throws Exception {
 		
 		Set<String> whiteList = Sets.newHashSet();
-		SystemIDCard idCard = TestSTSMock.createTestSTSSignedIDCard("12345678");
+		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678");
 		MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 		
 		PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);

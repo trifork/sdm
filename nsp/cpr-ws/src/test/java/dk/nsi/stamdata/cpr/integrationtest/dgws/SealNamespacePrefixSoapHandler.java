@@ -15,7 +15,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 
-public class SealNamespacePrefixSoapHandler implements SOAPHandler<SOAPMessageContext>
+class SealNamespacePrefixSoapHandler implements SOAPHandler<SOAPMessageContext>
 {
 	private Map<String, String> prefixMap = SealNamespacePrefixMapper.prefixMap;
 

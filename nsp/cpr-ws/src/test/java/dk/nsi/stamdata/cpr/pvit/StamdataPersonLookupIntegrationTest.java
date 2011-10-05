@@ -9,14 +9,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.handler.PortInfo;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.hibernate.Session;
@@ -26,7 +22,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Stage;
@@ -35,9 +30,9 @@ import com.trifork.stamdata.models.cpr.Person;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
@@ -63,10 +58,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 	@Inject
 	private Session session;
-	
+
 	private Holder<Security> securityHolder;
 	private Holder<Header> medcomHolder;
-	
+
 	private Holder<Security> securityHolderNotWhitelisted;
 	private Holder<Header> medcomHolderNotWhitelisted;
 
@@ -75,6 +70,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 	public void setUp() throws Exception
 	{
 		// Use Guice to inject dependencies.
+
 		Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
 
 		purgePersonTable();
@@ -83,24 +79,19 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookup?wsdl");
 		StamdataPersonLookupService serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE);
 
-		// TODO: Comment why this resolver is needed.
-		serviceCatalog.setHandlerResolver(new HandlerResolver()
-		{
-			@Override
-			@SuppressWarnings("rawtypes")
-			public List<Handler> getHandlerChain(PortInfo portInfo)
-			{
-				return Lists.newArrayList((Handler) new SealNamespacePrefixSoapHandler());
-			}
-		});
+		// SEAL enforces that the XML prefixes are excatly
+		// as it creates them. So we have to make sure we
+		// don't change them.
+
+		serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
 		client = serviceCatalog.getStamdataPersonLookup();
 
-		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 		securityHolder = new Holder<Security>(securityHeaders.getSecurity());
 		medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
-		
-		SecurityWrapper secutityHeadersNotWhitelisted = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo2", "bar2");
+
+		SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo2", "bar2");
 		securityHolderNotWhitelisted = new Holder<Security>(secutityHeadersNotWhitelisted.getSecurity());
 		medcomHolderNotWhitelisted = new Holder<Header>(secutityHeadersNotWhitelisted.getMedcomHeader());
 	}
@@ -117,7 +108,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 	public void requestWithoutAnyQueryTypeGivesSenderSoapFault() throws Exception
 	{
 		PersonLookupRequestType query = new PersonLookupRequestType();
-		
+
 		client.getPersonDetails(securityHolder, medcomHolder, query);
 	}
 
@@ -220,7 +211,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		
+
 		assertEquals(1, response.getPersonInformationStructure().size());
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
@@ -237,7 +228,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
 		query.setBirthDatePersonQuery(cal);
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		
+
 		assertEquals(2, response.getPersonInformationStructure().size());
 	}
 
@@ -267,7 +258,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
 		assertEquals(1, response.getPersonInformationStructure().size());
-		
+
 		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
 	}
 
@@ -286,24 +277,26 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		assertEquals(2, response.getPersonInformationStructure().size());
 	}
 
+
 	@Test
 	public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws DGWSFault
 	{
 		Person person = Factories.createPersonWithAddressProtection();
-		
+
 		person.setNavnebeskyttelsestartdato(YESTERDAY);
 		person.setNavnebeskyttelseslettedato(TOMORROW);
-		
+
 		savePerson(person);
-		
+
 		PersonLookupRequestType query = new PersonLookupRequestType();
 		query.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
 		PersonLookupResponseType response = client.getPersonDetails(securityHolderNotWhitelisted, medcomHolderNotWhitelisted, query);
-		
+
 		String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
 		assertThat(givenName, is("ADRESSEBESKYTTET"));
 	}
+
 
 	private void purgePersonTable()
 	{
@@ -333,25 +326,26 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		}
 		person.efternavn = efternavn;
 		person.foedselsdato = foedselsdato.toDate();
-		
+
 		person.setModifiedDate(new Date());
 		person.setCreatedDate(new Date());
 		person.setValidFrom(DateTime.now().minusDays(1).toDate());
 		person.setValidTo(DateTime.now().plusDays(1).toDate());
-		
+
 		savePerson(person);
 
 		return person;
 	}
-	
+
+
 	private Person savePerson(Person person)
 	{
 		session.getTransaction().begin();
 
 		session.save(person);
-		
+
 		session.getTransaction().commit();
-		
+
 		return person;
 	}
 

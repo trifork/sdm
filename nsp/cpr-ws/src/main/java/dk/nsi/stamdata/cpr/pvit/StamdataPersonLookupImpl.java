@@ -1,7 +1,6 @@
 package dk.nsi.stamdata.cpr.pvit;
 
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,10 +19,9 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.cpr.Person;
 
-import dk.nsi.stamdata.cpr.DgwsHeadersUtils;
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.SoapFaultUtil;
+import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
@@ -68,7 +66,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
 		// TODO: This should be done in the filter
 		// This has to be done according to the DGWS specifications
-		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		try
 		{
@@ -95,12 +93,12 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 		catch (SQLException e)
 		{
 			logger.error(e.getMessage(), e); // TODO: Log medcom flow id
-			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+			throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
 		}
 		catch (DatatypeConfigurationException e)
 		{
 			logger.error(e.getMessage(), e); // TODO: Log medcom flow id
-			throw SoapFaultUtil.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+			throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
 		}
 
 		throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
@@ -132,7 +130,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 			// TODO: This way of throwing faults was taken from DGCPROpslag and
 			// does not contain any meaningful information for the caller.
 
-			throw SoapFaultUtil.newDGWSFault(securityHeaderHolder, medcomHeaderHolder, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+			throw SoapUtils.newDGWSFault(securityHeaderHolder, medcomHeaderHolder, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
 		}
 	}
 

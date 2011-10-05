@@ -19,9 +19,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.models.cpr.Person;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.SystemIDCard;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -53,8 +53,8 @@ public class PersonMapperProtectionTest
 	{
 		whitelist = Sets.newHashSet(WHITELISTED_CVR);
 		
-		nonWhitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(NON_WHITELISTED_CVR);
-		whitelistedIDCard = TestSTSMock.createTestSTSSignedIDCard(WHITELISTED_CVR);
+		nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR);
+		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR);
 		
 		municipalityMapper = new MunicipalityMapper();
 		person = Factories.createPersonWithoutAddressProtection();

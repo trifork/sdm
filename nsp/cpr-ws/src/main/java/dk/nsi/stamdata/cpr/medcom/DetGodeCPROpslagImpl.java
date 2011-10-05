@@ -20,10 +20,9 @@ import com.trifork.stamdata.models.sikrede.Sikrede;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
 
-import dk.nsi.stamdata.cpr.DgwsHeadersUtils;
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.SoapFaultUtil;
+import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
@@ -70,6 +69,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Override
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
+		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+
 		// 1. Check the white list to see if the client is authorized.
 
 		String pnr = input.getPersonCivilRegistrationIdentifier();
@@ -96,14 +97,10 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (DatatypeConfigurationException e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
 
 		output.setPersonInformationStructure(personInformation);
-
-		// TODO: This should be done in the filter
-		// This has to be done according to the DGWS specifications
-		DgwsHeadersUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		return output;
 	}
@@ -112,6 +109,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Override
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
 	{
+		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+
 		// 1. Check the white list to see if the client is authorized.
 
 		String pnr = parameters.getPersonCivilRegistrationIdentifier();
@@ -136,14 +135,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
 		PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
+
 		try
 		{
 			personWithHealthCareInformation = personWithHealthCareMapper.map(person, sikredeYderRelation, yderregister);
 		}
 		catch (DatatypeConfigurationException e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
+
 		output.setPersonWithHealthCareInformationStructure(personWithHealthCareInformation);
 
 		return output;
@@ -164,7 +165,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
 
 		// NOTE: Unfortunately the specification is defined so that we have to
@@ -175,7 +176,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		if (person == null)
 		{
-			throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
+			throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		return person;
@@ -195,7 +196,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
 
 		return sikredeYderRelation;
@@ -212,7 +213,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
 		return yderregister;
 	}
@@ -231,12 +232,12 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		}
 		catch (Exception e)
 		{
-			throw SoapFaultUtil.newServerErrorFault(e);
+			throw SoapUtils.newServerErrorFault(e);
 		}
 
 		if (sikrede == null)
 		{
-			throw SoapFaultUtil.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
+			throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
 		}
 
 		return sikrede;
@@ -251,7 +252,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			// not DGWS protected.
 			// Callers expect to be met with a SOAP sender fault.
 			// Callers to the PVIT service should expect DGWS faults instead.
-			throw SoapFaultUtil.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
+			throw SoapUtils.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
 		}
 	}
 

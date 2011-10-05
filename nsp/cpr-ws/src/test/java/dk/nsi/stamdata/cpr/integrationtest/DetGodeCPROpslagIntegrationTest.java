@@ -1,40 +1,51 @@
 package dk.nsi.stamdata.cpr.integrationtest;
 
-import com.google.common.collect.Lists;
+import static org.junit.Assert.fail;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.hibernate.Session;
+import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Stage;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
+
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespacePrefixSoapHandler;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.TestSTSMock;
-import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.cpr.ws.*;
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.Security;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.hibernate.Session;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
-import org.joda.time.DateTime;
-import org.junit.*;
-
-import javax.xml.namespace.QName;
-import javax.xml.soap.SOAPConstants;
-import javax.xml.ws.Holder;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.handler.HandlerResolver;
-import javax.xml.ws.handler.PortInfo;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -76,17 +87,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag?wsdl");
 		DetGodeCPROpslagService serviceCatalog = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
 
-		// TODO: Comment why this resolver is needed.
-
-		serviceCatalog.setHandlerResolver(new HandlerResolver()
-		{
-			@Override
-			@SuppressWarnings("rawtypes")
-			public List<Handler> getHandlerChain(PortInfo portInfo)
-			{
-				return Lists.newArrayList((Handler) new SealNamespacePrefixSoapHandler());
-			}
-		});
+		serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
 		client = serviceCatalog.getDetGodeCPROpslag();
 	}
@@ -117,7 +118,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 	{
 		GetPersonInformationIn request = new GetPersonInformationIn();
 
-		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
 		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 	}
@@ -129,7 +130,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		GetPersonInformationIn request = new GetPersonInformationIn();
 		request.setPersonCivilRegistrationIdentifier("7777777777");
 
-		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
 		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 	}
@@ -144,7 +145,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 		try
 		{
-			SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
+			SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
 
 			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 			fail("Expected DGWS");
@@ -176,7 +177,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 		GetPersonInformationIn request = new GetPersonInformationIn();
 		request.setPersonCivilRegistrationIdentifier("1111111111");
-		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
 		GetPersonInformationOut personInformation = client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 
@@ -237,7 +238,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 		GetPersonWithHealthCareInformationIn request = new GetPersonWithHealthCareInformationIn();
 		request.setPersonCivilRegistrationIdentifier("1111111111");
-		SecurityWrapper securityHeaders = TestSTSMock.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
+		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
 		GetPersonWithHealthCareInformationOut personWithHealthCareInformation = client.getPersonWithHealthCareInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
 
