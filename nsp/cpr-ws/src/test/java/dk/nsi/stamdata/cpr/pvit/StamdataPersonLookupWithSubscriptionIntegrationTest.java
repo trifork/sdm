@@ -9,6 +9,8 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
 import dk.nsi.stamdata.cpr.ws.*;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -20,9 +22,10 @@ import org.junit.Test;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import java.net.URL;
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class StamdataPersonLookupWithSubscriptionIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -39,15 +42,22 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	private Holder<Security> securityHolder;
 	private Holder<Header> medcomHolder;
 	private static final String EXAMPLE_CPR = "1111111111";
+	private Set<Person> personsInDatabase;
+	private CprAbbsStubJettyServer cprAbbsServer;
 
 	@Before
 	public void setUp() throws Exception
 	{
+		cprAbbsServer = new CprAbbsStubJettyServer();
+		cprAbbsServer.startServer(8099);
+
+		personsInDatabase = new HashSet<Person>();
+
 		// Use Guice to inject dependencies.
 		Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
 
 		purgePersonTable();
-		createExamplePersonInDatabase();
+		createExamplePersonsInDatabase();
 
 		URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookupWithSubscription?wsdl");
 		StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(wsdlLocation, PVIT_WITH_SUBSCRIPTIONS_SERVICE);
@@ -69,19 +79,24 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	@After
 	public void tearDown() throws Exception
 	{
+		cprAbbsServer.stopServer();
 		session.disconnect();
 	}
 
 	@Test
 	public void returnsAllSubscribedPersonsForRequestWithoutSince() throws Exception
 	{
+		Map<String, List<String>> cprsToReturnForCvrs = new HashMap<String, List<String>>();
+		cprsToReturnForCvrs.put(REQUEST_CVR, Arrays.asList(EXAMPLE_CPR, "0101821234"));
+		CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
+
 		CprAbbsRequest request = new CprAbbsRequest();
 		PersonLookupResponseType response = client.getSubscribedPersonDetails(securityHolder, medcomHolder, request);
 
-		assertEquals(1, response.getPersonInformationStructure().size());
+		assertEquals(2, response.getPersonInformationStructure().size());
 
-		PersonInformationStructureType information = response.getPersonInformationStructure().get(0);
-		assertReturnedResponseMatchesPersonFromDatabase(information);
+		assertPersonInReturnedResponseMatchesSomePersonFromDatabase(response.getPersonInformationStructure().get(0));
+		assertPersonInReturnedResponseMatchesSomePersonFromDatabase(response.getPersonInformationStructure().get(1));
 	}
 
 
@@ -91,7 +106,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	}
 
 
-	private void createExamplePersonInDatabase()
+	private void createExamplePersonsInDatabase()
 	{
 		createPerson(EXAMPLE_CPR, "M", "8464", "Thomas", "Greve", "Kristensen", new DateTime(1982, 4, 15, 0, 0));
 		createPerson("0101821234", "F", "8000", "Margit", "Greve", "Kristensen", new DateTime(1982, 1, 1, 0, 0));
@@ -127,6 +142,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 
 	private Person savePerson(Person person)
 	{
+		personsInDatabase.add(person);
+
 		session.getTransaction().begin();
 
 		session.save(person);
@@ -137,11 +154,17 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	}
 
 
-	private void assertReturnedResponseMatchesPersonFromDatabase(PersonInformationStructureType information)
+	private void assertPersonInReturnedResponseMatchesSomePersonFromDatabase(PersonInformationStructureType information)
 	{
-		assertEquals(EXAMPLE_CPR, information.getRegularCPRPerson().getSimpleCPRPerson()
-				.getPersonCivilRegistrationIdentifier());
-		assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess()
-				.getStreetCode());
+		for (Person person : personsInDatabase) {
+			if (person.getCpr().equals(information.getRegularCPRPerson().getSimpleCPRPerson()
+					.getPersonCivilRegistrationIdentifier()) &&
+				person.getVejKode().equals(information.getPersonAddressStructure().getAddressComplete().getAddressAccess()
+					.getStreetCode())) {
+				return;
+			}
+		}
+
+		fail("No person i database matches " + information.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier() + " in response");
 	}
 }
