@@ -44,7 +44,7 @@
 
 	<portType name="CprAbbsFacade">
 		<operation name="getChangedCprs">
-			<input message="tns:cprAbbsRequest" name="cprAbbsResponse" />
+			<input message="tns:cprAbbsRequest" name="cprAbbsRequest" />
 			<output message="tns:cprAbbsResponse" name="cprAbbsResponse" />
 			<fault message="tns:DGWSFault" name="DGWSFault" />
 		</operation>
