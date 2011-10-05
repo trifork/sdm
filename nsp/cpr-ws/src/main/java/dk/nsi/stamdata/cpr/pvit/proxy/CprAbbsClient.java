@@ -47,15 +47,12 @@ public class CprAbbsClient {
 		this.wsdlLocation = new URL(cprabbsServiceUrl + "?wsdl");
 	}
 
-	public List<String> getChangedCprs(Security wsseHeader, Header medcomHeader, DateTime since) throws CprAbbsException {
+	public List<String> getChangedCprs(Holder<Security> wsseHeader, Holder<Header> medcomHeader, DateTime since) throws CprAbbsException {
 		CprAbbsFacadeService serviceCatalog = new CprAbbsFacadeService(wsdlLocation, SERVICE_QNAME);
 
 		serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
 		CprAbbsFacade client = serviceCatalog.getCprAbbsSoapBinding();
-
-		Holder<Security> securityHolder = new Holder<Security>(wsseHeader);
-		Holder<Header> medcomHolder = new Holder<Header>(medcomHeader);
 
 		CprAbbsRequest request = new CprAbbsRequest();
 
@@ -65,7 +62,7 @@ public class CprAbbsClient {
 
 		CprAbbsResponse response;
 		try {
-			response = client.getChangedCprs(securityHolder, medcomHolder, request);
+			response = client.getChangedCprs(wsseHeader, medcomHeader, request);
 		} catch (DGWSFault dgwsFault) {
 			throw new CprAbbsException(dgwsFault);
 		}

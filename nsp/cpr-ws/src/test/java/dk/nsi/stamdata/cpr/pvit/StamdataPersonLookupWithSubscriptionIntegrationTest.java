@@ -24,6 +24,7 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Stage;
@@ -95,8 +96,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 		client = serviceCatalog.getStamdataPersonLookupWithSubscription();
 
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(REQUEST_CVR, "foo", "bar");
-		securityHolder = new Holder<Security>(securityHeaders.getSecurity());
-		medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
+		securityHolder = securityHeaders.getSecurity();
+		medcomHolder = securityHeaders.getMedcomHeader();
 	}
 
 
@@ -110,7 +111,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	@Test
 	public void returnsAllSubscribedPersonsForRequestWithoutSince() throws Exception
 	{
-		Map<String, List<String>> cprsToReturnForCvrs = new HashMap<String, List<String>>();
+		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
 		cprsToReturnForCvrs.put(REQUEST_CVR, Arrays.asList(EXAMPLE_CPR, "0101821234"));
 		CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
 

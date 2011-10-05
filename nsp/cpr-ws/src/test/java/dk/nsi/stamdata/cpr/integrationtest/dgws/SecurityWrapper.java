@@ -24,24 +24,30 @@
  */
 package dk.nsi.stamdata.cpr.integrationtest.dgws;
 
+import javax.xml.ws.Holder;
+
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Security;
 
+
 public class SecurityWrapper {
 
-	private Security security = null;
-	private Header medcomHeader = null;
+    private Security security = null;
+    private Header medcomHeader = null;
 
-	public SecurityWrapper(Security security, Header medcomHeader) {
-		this.security = security;
-		this.medcomHeader = medcomHeader;
-	}
 
-	public Security getSecurity() {
-		return security;
-	}
+    public SecurityWrapper(Security security, Header medcomHeader) {
+        this.security = security;
+        this.medcomHeader = medcomHeader;
+    }
 
-	public Header getMedcomHeader() {
-		return medcomHeader;
-	}
+
+    public Holder<Security> getSecurity() {
+        return new Holder<Security>(security);
+    }
+
+
+    public Holder<Header> getMedcomHeader() {
+        return new Holder<Header>(medcomHeader);
+    }
 }

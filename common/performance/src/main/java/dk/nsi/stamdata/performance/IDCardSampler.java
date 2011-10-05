@@ -24,28 +24,25 @@
  */
 package dk.nsi.stamdata.performance;
 
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.*;
-import dk.sosi.seal.pki.SOSITestFederation;
-import dk.sosi.seal.vault.ClasspathCredentialVault;
-import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
-import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
-import org.apache.jmeter.samplers.SampleResult;
-import org.w3c.dom.Node;
+import java.io.StringWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Scanner;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Properties;
-import java.util.Scanner;
 
-import static dk.sosi.seal.model.AuthenticationLevel.VOCES_TRUSTED_SYSTEM;
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
+import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
+import org.apache.jmeter.samplers.SampleResult;
+import org.w3c.dom.Node;
+
+import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.Request;
+import dk.sosi.seal.model.SystemIDCard;
 
 
 /**
@@ -90,26 +87,9 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 
 	private String createIdCard() throws Exception
 	{
-		Properties sosiProps = SignatureUtil.setupCryptoProviderForJVM();
-		SOSITestFederation federation = new SOSITestFederation(sosiProps);
-		SOSIFactory factory = new SOSIFactory(federation, new ClasspathCredentialVault(sosiProps, SOSITestConstants.KEY_STORE_PASSWORD), sosiProps);
-
-		// Create a SEAL ID card.
-
-		CareProvider careProvider = new CareProvider(CVR_NUMBER, SOSITestConstants.TEST_CVR, "dk");
-		IDCard unsignedCard = factory.createNewSystemIDCard(SOSITestConstants.TEST_IT_SYSTEM_NAME, careProvider, VOCES_TRUSTED_SYSTEM, null, null, factory.getCredentialVault().getSystemCredentialPair().getCertificate(), null);
-
-		SecurityTokenRequest stsRequest = factory.createNewSecurityTokenRequest();
-		stsRequest.setIDCard(unsignedCard);
-
-		// Send the request.
-
-		String r = send(SOSITestConstants.TEST_STS_URL, stsRequest.serialize2DOMDocument());
-
-		SecurityTokenResponse deserializeSecurityTokenResponse = factory.deserializeSecurityTokenResponse(r);
-
-		Request createNewRequest = factory.createNewRequest(false, "flowId");
-		createNewRequest.setIDCard(deserializeSecurityTokenResponse.getIDCard());
+		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(SOSITestConstants.TEST_CVR);
+		Request createNewRequest = MockSecureTokenService.createFactory().createNewRequest(false, "flowId");
+		createNewRequest.setIDCard(idCard);
 
 		StringWriter writer = new StringWriter();
 		Transformer t = TransformerFactory.newInstance().newTransformer();

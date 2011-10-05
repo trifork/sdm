@@ -98,12 +98,12 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 		client = serviceCatalog.getStamdataPersonLookup();
 
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
-		securityHolder = new Holder<Security>(securityHeaders.getSecurity());
-		medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
+		securityHolder = securityHeaders.getSecurity();
+		medcomHolder = securityHeaders.getMedcomHeader();
 
 		SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo2", "bar2");
-		securityHolderNotWhitelisted = new Holder<Security>(secutityHeadersNotWhitelisted.getSecurity());
-		medcomHolderNotWhitelisted = new Holder<Header>(secutityHeadersNotWhitelisted.getMedcomHeader());
+		securityHolderNotWhitelisted = secutityHeadersNotWhitelisted.getSecurity();
+		medcomHolderNotWhitelisted = secutityHeadersNotWhitelisted.getMedcomHeader();
 	}
 
 

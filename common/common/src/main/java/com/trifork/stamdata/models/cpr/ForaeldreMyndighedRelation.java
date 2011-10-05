@@ -23,7 +23,6 @@
  * National Board of e-Health (NSI). All Rights Reserved.
  */
 
-
 package com.trifork.stamdata.models.cpr;
 
 import javax.persistence.Column;
@@ -32,63 +31,74 @@ import javax.persistence.Id;
 
 import com.trifork.stamdata.models.BaseTemporalEntity;
 
+
 @Entity
 public class ForaeldreMyndighedRelation extends BaseTemporalEntity
 {
-	private String id;
-	private String cpr;
-	private String typeKode;
-	private String typeTekst;
-	private String relationCpr; // This is included if the guardian is not the mother or farther.
+    private String id;
+    private String cpr;
+    private String typeKode;
+    private String typeTekst;
+    private String relationCpr; // This is included if the guardian is not the
+                                // mother or farther.
 
-	@Id
-	@Column
-	public String getId()
-	{
-		return id;
-	}
-	
-	public void setId(String id)
-	{
-		this.id = id;
-	}
 
-	@Column
-	public String getCpr()
-	{
-		return cpr;
-	}
+    @Id
+    @Column
+    public String getId()
+    {
+        return id;
+    }
 
-	public void setCpr(String cpr)
-	{
-		this.cpr = cpr;
-	}
 
-	@Column
-	public String getTypeTekst()
-	{
-		return typeTekst;
-	}
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
-	@Column
-	public String getTypeKode()
-	{
-		return typeKode;
-	}
 
-	public void setType(String type)
-	{
-		this.typeKode = type;
-	}
+    @Column
+    public String getCpr()
+    {
+        return cpr;
+    }
 
-	@Column
-	public String getRelationCpr()
-	{
-		return relationCpr;
-	}
 
-	public void setRelationCpr(String relationCpr)
-	{
-		this.relationCpr = relationCpr;
-	}
+    public void setCpr(String cpr)
+    {
+        this.cpr = cpr;
+    }
+
+
+    @Column
+    public String getTypeTekst()
+    {
+        return typeTekst;
+    }
+
+
+    @Column
+    public String getTypeKode()
+    {
+        return typeKode;
+    }
+
+
+    public void setType(String type)
+    {
+        this.typeKode = type;
+    }
+
+
+    @Column
+    public String getRelationCpr()
+    {
+        return relationCpr;
+    }
+
+
+    public void setRelationCpr(String relationCpr)
+    {
+        this.relationCpr = relationCpr;
+    }
 }
