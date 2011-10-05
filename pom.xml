@@ -169,6 +169,33 @@
 					<skip>true</skip>
 				</configuration>
 			</plugin>
+			<!--
+			 | The Stamdata project is inherited from Lægemiddelstyrelsen
+			 | and thus needs different license than other NSPi components. 
+			 -->
+			 <plugin>
+					<inherited>false</inherited>
+					<groupId>com.mycila.maven-license-plugin</groupId>
+					<artifactId>maven-license-plugin</artifactId>
+					<version>1.9.0</version>
+					<configuration>
+						<strictCheck>true</strictCheck>
+						<header>${basedir}/config/HEADER.txt</header>
+						<failIfMissing>true</failIfMissing>
+						<aggregate>true</aggregate>
+						<includes>
+							<include>**/src/**/*.java</include>
+						</includes>
+					</configuration>
+					<executions>
+						<execution>
+							<phase>verify</phase>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+					</plugin>
 		</plugins>
 	</build>
 
@@ -203,7 +230,6 @@
 								</goals>
 								<configuration>
 									<autocommit>true</autocommit>
-									<printResultSet>true</printResultSet>
 									<srcFiles>
 										<srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
 										<srcFile>${basedir}/../../db/schema.sql</srcFile>
