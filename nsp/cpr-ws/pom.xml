@@ -1,12 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>stamdata-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.0</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -227,13 +226,11 @@
                         <phase>generate-sources</phase>
                         <configuration>
                             <tasks>
-                                <property name="target.dir" value="target"/>
+                                <property name="target.dir" value="target" />
                                 <mkdir dir="${project.build.directory}/generated-sources/jaxws" />
 
-                                <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport"
-                                         classpathref="maven.plugin.classpath"/>
-                                <wsimport
-                                        wsdl="${basedir}/src/main/webapp/WEB-INF/wsdl/DetGodeCprOpslag.wsdl"
+                                <taskdef name="wsimport" classname="com.sun.tools.ws.ant.WsImport" classpathref="maven.plugin.classpath" />
+                                <wsimport wsdl="${basedir}/src/main/webapp/WEB-INF/wsdl/DetGodeCprOpslag.wsdl"
                                         package="dk.nsi.stamdata.cpr.ws"
                                         verbose="false"
                                         keep="true"
@@ -242,8 +239,7 @@
                                         xnocompile="true"
                                         xendorsed="true">
                                 </wsimport>
-                                <wsimport
-                                        wsdl="${basedir}/src/main/webapp/WEB-INF/wsdl/StamdataPersonLookup.wsdl"
+                                <wsimport wsdl="${basedir}/src/main/webapp/WEB-INF/wsdl/StamdataPersonLookup.wsdl"
                                         package="dk.nsi.stamdata.cpr.ws"
                                         verbose="false"
                                         keep="true"
