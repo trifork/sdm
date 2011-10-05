@@ -1,28 +1,24 @@
 package dk.nsi.stamdata.cpr.medcom;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
-
-import java.math.BigInteger;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-
 import com.google.inject.Inject;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
-
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.ws.AssociatedGeneralPractitionerStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonPublicHealthInsuranceType;
-import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PublicHealthInsuranceGroupIdentifierType;
+import dk.nsi.stamdata.cpr.ws.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import java.math.BigInteger;
+
+import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
 
 public class PersonWithHealthCareMapper
 {
+	private static final Logger logger = LoggerFactory.getLogger(PersonWithHealthCareMapper.class);
 	private PersonMapper personMapper;
 
 	@Inject
@@ -62,22 +58,21 @@ public class PersonWithHealthCareMapper
         return associatedGeneralPractitioner;
     }
 
-    public PersonPublicHealthInsuranceType map(SikredeYderRelation sikredeYderRelation) {
+    private PersonPublicHealthInsuranceType map(SikredeYderRelation sikredeYderRelation) throws DatatypeConfigurationException {
         PersonPublicHealthInsuranceType personPublicHealthInsurance = new PersonPublicHealthInsuranceType() ;
-        try {
-            personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
-            PublicHealthInsuranceGroupIdentifierType publicHealthInsuranceGroupIdentifier;
-            if (sikredeYderRelation.getSikringsgruppeKode() == '1') {
-                publicHealthInsuranceGroupIdentifier =  PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
-            } else if (sikredeYderRelation.getSikringsgruppeKode() == '2') {
-                publicHealthInsuranceGroupIdentifier =  PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
-            } else {
-                throw new RuntimeException(); //FIXME - do the right thing
-            }
-            personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(publicHealthInsuranceGroupIdentifier);
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
+		PublicHealthInsuranceGroupIdentifierType publicHealthInsuranceGroupIdentifier;
+		if (sikredeYderRelation.getSikringsgruppeKode() == '1') {
+			publicHealthInsuranceGroupIdentifier =  PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
+		} else if (sikredeYderRelation.getSikringsgruppeKode() == '2') {
+			publicHealthInsuranceGroupIdentifier =  PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
+		} else {
+			String msg = "SikredeYderRelation for cpr" + sikredeYderRelation.getCpr() + " and yder " + sikredeYderRelation.getYdernummer() + " has unsupported group code " + sikredeYderRelation.getSikringsgruppeKode() + ". Cannot proceed with request";
+			logger.error(msg + ". Returning fault to caller");
+			throw new IllegalStateException(msg);
+		}
+		personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(publicHealthInsuranceGroupIdentifier);
+
         return personPublicHealthInsurance;
     }
 
