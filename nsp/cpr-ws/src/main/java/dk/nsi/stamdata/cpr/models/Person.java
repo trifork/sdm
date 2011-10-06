@@ -22,21 +22,20 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.models.cpr;
+package dk.nsi.stamdata.cpr.models;
 
-import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.models.BaseTemporalEntity;
+import static javax.persistence.TemporalType.DATE;
+import static javax.persistence.TemporalType.TIMESTAMP;
+
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 
-import java.text.DecimalFormat;
-import java.util.Date;
-
-import static javax.persistence.TemporalType.DATE;
-import static javax.persistence.TemporalType.TIMESTAMP;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.models.BaseTemporalEntity;
 
 // Use the split of different parts that the person table is made up of instead.
 // The person table is unstable and its behavior is not well-defined.

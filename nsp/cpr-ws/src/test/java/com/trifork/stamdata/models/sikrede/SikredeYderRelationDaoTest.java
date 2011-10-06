@@ -32,6 +32,8 @@ import java.util.Date;
 import org.joda.time.DateTime;
 import org.junit.Before;
 
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+
 public class SikredeYderRelationDaoTest extends AbstractDaoTest {
 
     @Before

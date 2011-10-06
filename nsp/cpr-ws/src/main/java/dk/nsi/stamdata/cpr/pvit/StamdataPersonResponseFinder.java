@@ -26,8 +26,8 @@ package dk.nsi.stamdata.cpr.pvit;
 
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.models.cpr.Person;
 import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;

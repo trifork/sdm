@@ -40,10 +40,11 @@ import javax.servlet.ServletResponse;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.metadata.ClassMetadata;
 
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 
 @Singleton
 public class HibernatePersistenceFilter implements Provider<Session>, Filter
@@ -66,6 +67,7 @@ public class HibernatePersistenceFilter implements Provider<Session>, Filter
 		config.setProperty("hibernate.connection.url", jdbcURL);
 		config.setProperty("hibernate.connection.username", username);
 		config.setProperty("hibernate.connection.password", password);
+		config.setProperty("hibernate.archive.autodetection", "class, hbm");
 
 		config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
 		config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
@@ -90,7 +92,14 @@ public class HibernatePersistenceFilter implements Provider<Session>, Filter
 		config.addAnnotatedClass(SikredeYderRelation.class);
 
 		sessionFactory = config.buildSessionFactory();
-		sessionFactory.openSession().isConnected();
+		Session session = sessionFactory.openSession();
+		
+		System.out.println("Listing mapped classes:");
+		
+		for (ClassMetadata meta : sessionFactory.getAllClassMetadata().values())
+		{
+		    System.out.println("MAPPED CLASS: " + meta.getEntityName());
+		}
 	}
 
 

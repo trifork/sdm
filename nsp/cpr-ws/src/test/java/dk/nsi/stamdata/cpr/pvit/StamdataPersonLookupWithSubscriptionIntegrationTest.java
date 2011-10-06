@@ -1,5 +1,30 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr.pvit;
 
+import com.google.common.collect.Maps;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Stage;
@@ -9,6 +34,8 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
 import dk.nsi.stamdata.cpr.ws.*;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -20,9 +47,10 @@ import org.junit.Test;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import java.net.URL;
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 
 public class StamdataPersonLookupWithSubscriptionIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -68,8 +96,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 		client = serviceCatalog.getStamdataPersonLookupWithSubscription();
 
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(REQUEST_CVR, "foo", "bar");
-		securityHolder = new Holder<Security>(securityHeaders.getSecurity());
-		medcomHolder = new Holder<Header>(securityHeaders.getMedcomHeader());
+		securityHolder = securityHeaders.getSecurity();
+		medcomHolder = securityHeaders.getMedcomHeader();
 	}
 
 

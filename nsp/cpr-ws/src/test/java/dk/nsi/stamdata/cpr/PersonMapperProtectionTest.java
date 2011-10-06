@@ -41,12 +41,12 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Sets;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;

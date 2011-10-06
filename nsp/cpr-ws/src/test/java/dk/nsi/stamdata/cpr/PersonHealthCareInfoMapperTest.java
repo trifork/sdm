@@ -41,11 +41,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.ws.AssociatedGeneralPractitionerStructureType;
 import dk.nsi.stamdata.cpr.ws.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;

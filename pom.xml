@@ -105,7 +105,7 @@
 						<sysproperties>
 							<property>
 								<name>search_paths</name>
-								<value>${basedir}/target/test-classes;${basedir}/target</value>
+								<value>${basedir}/target/test-classes;${basedir}/target/classes</value>
 							</property>
 							<property>
 								<name>java.awt.headless</name>

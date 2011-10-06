@@ -24,30 +24,40 @@
  */
 package dk.nsi.stamdata.cpr.medcom;
 
-import com.google.inject.Inject;
-import com.sun.xml.ws.developer.SchemaValidation;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.Sikrede;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import dk.nsi.stamdata.cpr.ws.*;
-import dk.sosi.seal.model.SystemIDCard;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.Nullable;
+
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.SoapUtils;
+import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.cpr.ws.Header;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.Security;
+import dk.sosi.seal.model.SystemIDCard;
 
 
 @SchemaValidation
@@ -220,31 +230,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			throw SoapUtils.newServerErrorFault(e);
 		}
 		return yderregister;
-	}
-
-
-	@SuppressWarnings("unused")
-	private Sikrede fetchSikredeWithPnr(String cpr)
-	{
-		checkNotNull(cpr, "cpr");
-
-		Sikrede sikrede = null;
-
-		try
-		{
-			// sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO
-		}
-		catch (Exception e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
-
-		if (sikrede == null)
-		{
-			throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
-
-		return sikrede;
 	}
 
 

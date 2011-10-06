@@ -34,6 +34,8 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import dk.nsi.stamdata.cpr.models.Yderregister;
+
 
 public class YderregisterDaoTest extends AbstractDaoTest
 {
