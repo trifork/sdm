@@ -43,7 +43,7 @@ import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
 
 
-public class PerformanceTest extends AbstractJavaSamplerClient {
+public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 
     private static final String REQUESTED_CPR_PARAM = "RequestedCPR";
     private static final String ENDPOINT_URL_PARAM = "EndpointURL";
@@ -85,23 +85,16 @@ public class PerformanceTest extends AbstractJavaSamplerClient {
             
             result.sampleStart();
             client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+
             result.sampleEnd();
             
-            result.setSuccessful(true);
-            result.setResponseCodeOK();
-            result.setResponseMessageOK();
-        }
-        catch (SOAPFaultException e)
-        {
-            result.sampleEnd();
-            e.printStackTrace();
-            result.setSuccessful(false);
+            result.setResponseOK();
         }
         catch (Exception e)
         {
             result.sampleEnd();
             e.printStackTrace();
-            throw new RuntimeException(e);
+            result.setSuccessful(false);
         }
 
         return result;

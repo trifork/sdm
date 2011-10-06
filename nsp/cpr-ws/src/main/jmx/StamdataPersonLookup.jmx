@@ -46,7 +46,7 @@
               </elementProp>
             </collectionProp>
           </elementProp>
-          <stringProp name="classname">dk.nsi.stamdata.cpr.PerformanceTest</stringProp>
+          <stringProp name="classname">dk.nsi.stamdata.cpr.StamdataPersonLookupSampler</stringProp>
         </JavaSampler>
         <hashTree>
           <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Response Assertion" enabled="true">
