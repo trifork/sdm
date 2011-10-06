@@ -24,27 +24,19 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import java.io.IOException;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.inject.Singleton;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.metadata.ClassMetadata;
-
-import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
+import javax.servlet.*;
+import java.io.IOException;
 
 @Singleton
 public class HibernatePersistenceFilter implements Provider<Session>, Filter
@@ -93,13 +85,6 @@ public class HibernatePersistenceFilter implements Provider<Session>, Filter
 
 		sessionFactory = config.buildSessionFactory();
 		Session session = sessionFactory.openSession();
-		
-		System.out.println("Listing mapped classes:");
-		
-		for (ClassMetadata meta : sessionFactory.getAllClassMetadata().values())
-		{
-		    System.out.println("MAPPED CLASS: " + meta.getEntityName());
-		}
 	}
 
 
