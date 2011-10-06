@@ -13,8 +13,6 @@ subprojects/importer/sdm_log
 .checkstyle
 target/
 logFile_IS_UNDEFINED
-performance-tests/jmeter/
-jmeter/
 */**/jmeter.log
 **/*.iml
 *.iml
