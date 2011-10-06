@@ -17,7 +17,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__property(numberOfIterations,,10)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__property(numberOfThreads,,1)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__property(numberOfThreads,,2)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1317856828000</longProp>
         <longProp name="ThreadGroup.end_time">1317856828000</longProp>
@@ -39,9 +39,14 @@
                 <stringProp name="Argument.value">12345678</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
-              <elementProp name="RequestedCPR" elementType="Argument">
-                <stringProp name="Argument.name">RequestedCPR</stringProp>
-                <stringProp name="Argument.value">${cpr}</stringProp>
+              <elementProp name="RequestedGivenName" elementType="Argument">
+                <stringProp name="Argument.name">RequestedGivenName</stringProp>
+                <stringProp name="Argument.value">${requestGivenname}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+              <elementProp name="RequestedSurname" elementType="Argument">
+                <stringProp name="Argument.name">RequestedSurname</stringProp>
+                <stringProp name="Argument.value">${requestSurname}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -92,14 +97,14 @@
         </ResultCollector>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="getPersonDetails cvs dataset" enabled="true">
-          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="delimiter">,</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="filename">../../../src/test/resources/getPersonDetailsQueryParameters.csv</stringProp>
           <boolProp name="quotedData">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <stringProp name="shareMode">All threads</stringProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="variableNames">cpr</stringProp>
+          <stringProp name="variableNames">requestGivenname,requestSurname</stringProp>
         </CSVDataSet>
         <hashTree/>
       </hashTree>

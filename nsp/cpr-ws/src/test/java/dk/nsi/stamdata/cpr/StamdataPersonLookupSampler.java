@@ -27,10 +27,7 @@ package dk.nsi.stamdata.cpr;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
+import dk.nsi.stamdata.cpr.ws.*;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -44,8 +41,9 @@ import java.net.URL;
 @SuppressWarnings({"UnusedDeclaration"}) // used by jmeter scripts
 public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 
-    private static final String REQUESTED_CPR_PARAM = "RequestedCPR";
-    private static final String ENDPOINT_URL_PARAM = "EndpointURL";
+    private static final String REQUESTED_GIVENNAME_PARAM = "RequestedGivenName";
+	private static final String REQUESTED_SURNAME_PARAM = "RequestedSurname";
+	private static final String ENDPOINT_URL_PARAM = "EndpointURL";
     private static final String CLIENT_CVR_PARAM = "ClientCVR";
 
 
@@ -56,9 +54,10 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 
         args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:80/stamdata-cpr-ws/service/StamdataPersonLookup");
         args.addArgument(CLIENT_CVR_PARAM, "12345678");
-        args.addArgument(REQUESTED_CPR_PARAM, "0101821234");
-        
-        return args;
+        args.addArgument(REQUESTED_GIVENNAME_PARAM, "Thomas");
+	    args.addArgument(REQUESTED_SURNAME_PARAM, "Kristensen");
+
+	    return args;
     }
 
 
@@ -67,10 +66,11 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
     {
         String endpointURL = context.getParameter(ENDPOINT_URL_PARAM);
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
-        String requestedCPR = context.getParameter(REQUESTED_CPR_PARAM);
+        String requestedGivenname = context.getParameter(REQUESTED_GIVENNAME_PARAM);
+	    String requestedSurname = context.getParameter(REQUESTED_SURNAME_PARAM);
 
 	    SampleResult result = new SampleResult();
-		result.setRequestHeaders("cpr: " + requestedCPR);
+	    result.setSampleLabel("StamdataPersonLookup getPersonDetails request for " + requestedGivenname + " " + requestedSurname);
 
 	    try
         {
@@ -79,7 +79,10 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
             SecurityWrapper headers = createHeaders(clientCVR);
             PersonLookupRequestType query = new PersonLookupRequestType();
 
-            query.setCivilRegistrationNumberPersonQuery(requestedCPR);
+	        NamePersonQueryType namePersonQuery = new NamePersonQueryType();
+	        namePersonQuery.setPersonGivenName(requestedGivenname);
+	        namePersonQuery.setPersonSurnameName(requestedSurname);
+	        query.setNamePersonQuery(namePersonQuery);
             
             // Wait until the last minute before starting the
             // timer.
