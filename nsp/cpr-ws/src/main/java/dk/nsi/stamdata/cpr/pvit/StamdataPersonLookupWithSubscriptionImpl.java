@@ -1,12 +1,39 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr.pvit;
 
 import com.sun.xml.ws.developer.SchemaValidation;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsClient;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsException;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +42,6 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 
 
