@@ -24,25 +24,24 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.soap.SOAPFaultException;
-
+import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
+import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
+import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
+import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
+import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
+import javax.xml.namespace.QName;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
+@SuppressWarnings({"UnusedDeclaration"}) // used by jmeter scripts
 public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 
     private static final String REQUESTED_CPR_PARAM = "RequestedCPR";
@@ -50,14 +49,14 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
     private static final String CLIENT_CVR_PARAM = "ClientCVR";
 
 
-    @Override
+	@Override
     public Arguments getDefaultParameters()
     {
         Arguments args = new Arguments();
 
         args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:80/stamdata-cpr-ws/service/StamdataPersonLookup");
         args.addArgument(CLIENT_CVR_PARAM, "12345678");
-        args.addArgument(REQUESTED_CPR_PARAM, "2905852569");
+        args.addArgument(REQUESTED_CPR_PARAM, "0101821234");
         
         return args;
     }
@@ -78,17 +77,24 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
             
             SecurityWrapper headers = createHeaders(clientCVR);
             PersonLookupRequestType query = new PersonLookupRequestType();
+
             query.setCivilRegistrationNumberPersonQuery(requestedCPR);
             
             // Wait until the last minute before starting the
             // timer.
-            
             result.sampleStart();
-            client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+	        PersonLookupResponseType responseType = client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+	        result.sampleEnd();
 
-            result.sampleEnd();
-            
-            result.setResponseOK();
+	        if (responseType.getPersonInformationStructure().size() != 1) {
+		        result.setSuccessful(false);
+		        result.setResponseMessage("Expected exactly 1 person in result, but found " + responseType.getPersonInformationStructure().size());
+	        } else if (!firstCprFromResponse(responseType).equals(requestedCPR)) {
+		        result.setSuccessful(false);
+		        result.setResponseMessage("Expected person with cpr " + requestedCPR + ", but found " + firstCprFromResponse(responseType));
+	        } else {
+                result.setResponseOK();
+	        }
         }
         catch (Exception e)
         {
@@ -100,8 +106,12 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
         return result;
     }
 
+	private String firstCprFromResponse(PersonLookupResponseType responseType) {
+		return responseType.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier();
+	}
 
-    private StamdataPersonLookup createClient(String endpointURL) throws MalformedURLException
+
+	private StamdataPersonLookup createClient(String endpointURL) throws MalformedURLException
     {
         QName PVIT_SERVICE_QNAME = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
         
