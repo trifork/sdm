@@ -86,12 +86,9 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 	        PersonLookupResponseType responseType = client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
 	        result.sampleEnd();
 
-	        if (responseType.getPersonInformationStructure().size() != 1) {
+	        if (responseType.getPersonInformationStructure().size() == 0) {
 		        result.setSuccessful(false);
-		        result.setResponseMessage("Expected exactly 1 person in result, but found " + responseType.getPersonInformationStructure().size());
-	        } else if (!firstCprFromResponse(responseType).equals(requestedCPR)) {
-		        result.setSuccessful(false);
-		        result.setResponseMessage("Expected person with cpr " + requestedCPR + ", but found " + firstCprFromResponse(responseType));
+		        result.setResponseMessage("Expected at least 1 person in result, but found none");
 	        } else {
                 result.setResponseOK();
 	        }

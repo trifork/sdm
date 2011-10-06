@@ -247,6 +247,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>chronos-maven-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -277,6 +278,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.7</version>
 				<executions>
 					<execution>
 						<id>add-source</id>
@@ -294,4 +296,91 @@
 			</plugin>
 		</plugins>
 	</build>
+
+    <profiles>
+        <profile>
+            <id>performancetest</id>
+            <properties>
+                <hostname>localhost</hostname>
+                <port>8080</port>
+                <numberOfThreads>10</numberOfThreads>
+                <numberOfIterations>20</numberOfIterations>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>chronos-maven-plugin</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                        <configuration>
+                            <heap>768m</heap>
+                            <permsize>256m</permsize>
+                            <jmeterVariables>
+                                <property>
+                                    <name>hostname</name>
+                                    <value>${hostname}</value>
+                                </property>
+                                <property>
+                                    <name>port</name>
+                                    <value>${port}</value>
+                                </property>
+                                <property>
+                                    <name>numberOfThreads</name>
+                                    <value>${numberOfThreads}</value>
+                                </property>
+                                <property>
+                                    <name>numberOfIterations</name>
+                                    <value>${numberOfIterations}</value>
+                                </property>
+                            </jmeterVariables>
+                            <jMeterRemoteLocation>
+                                http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip
+                            </jMeterRemoteLocation>
+                        </configuration>
+                        <executions>
+                            <!-- | CPR WS -->
+                            <execution>
+                                <id>StamdataPersonLookup-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>jmeter</goal>
+                                </goals>
+                                <configuration>
+                                    <dataid>StamdataPersonLookupGetPersonDetails</dataid>
+                                    <input>${basedir}/src/test/jmx/StamdataPersonLookup.jmx</input>
+                                </configuration>
+                            </execution>
+                            <!-- -->
+                            <!-- Authorization Lookup -->
+                            <!-- -->
+                            <execution>
+                                <id>StamdataPersonLookup-report</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <showgc>false</showgc>
+                                    <showpercentile99>true</showpercentile99>
+                                    <reportid>StamdataPersonLookupGetPersonDetails-report</reportid>
+                                    <dataid>StamdataPersonLookupGetPersonDetails</dataid>
+                                    <description>StamdataPersonLookup, getPersonDetails for single cpr Service Response Times</description>
+                                    <title>StamdataPersonLookup, getPersonDetails</title>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <reporting>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>chronos-maven-plugin</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                    </plugin>
+                </plugins>
+            </reporting>
+        </profile>
+    </profiles>
 </project>
