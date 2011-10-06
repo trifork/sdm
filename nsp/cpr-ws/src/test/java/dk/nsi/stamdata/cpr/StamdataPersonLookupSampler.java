@@ -65,13 +65,14 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
     @Override
     public SampleResult runTest(JavaSamplerContext context)
     {
-        SampleResult result = new SampleResult();
-
         String endpointURL = context.getParameter(ENDPOINT_URL_PARAM);
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
         String requestedCPR = context.getParameter(REQUESTED_CPR_PARAM);
 
-        try
+	    SampleResult result = new SampleResult();
+		result.setRequestHeaders("cpr: " + requestedCPR);
+
+	    try
         {
             StamdataPersonLookup client = createClient(endpointURL);
             

@@ -15,9 +15,9 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${__P(numberOfIterations)}</stringProp>
+          <stringProp name="LoopController.loops">${__property(numberOfIterations,,10)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(numberOfThreads)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__property(numberOfThreads,,1)}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">5</stringProp>
         <longProp name="ThreadGroup.start_time">1317856828000</longProp>
         <longProp name="ThreadGroup.end_time">1317856828000</longProp>
@@ -26,12 +26,12 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="Java Request" enabled="true">
+        <JavaSampler guiclass="JavaTestSamplerGui" testclass="JavaSampler" testname="StamdataPersonLookup getPersonDetails request" enabled="true">
           <elementProp name="arguments" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" enabled="true">
             <collectionProp name="Arguments.arguments">
               <elementProp name="EndpointURL" elementType="Argument">
                 <stringProp name="Argument.name">EndpointURL</stringProp>
-                <stringProp name="Argument.value">http://${__P(hostname)}:${__P(port)}/stamdata-cpr-ws/service/StamdataPersonLookup</stringProp>
+                <stringProp name="Argument.value">http://${__property(hostname,,localhost)}:${__property(port,,8080)}/stamdata-cpr-ws/service/StamdataPersonLookup</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
               <elementProp name="ClientCVR" elementType="Argument">
@@ -41,7 +41,7 @@
               </elementProp>
               <elementProp name="RequestedCPR" elementType="Argument">
                 <stringProp name="Argument.name">RequestedCPR</stringProp>
-                <stringProp name="Argument.value">0101821234</stringProp>
+                <stringProp name="Argument.value">${cpr}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
@@ -90,6 +90,17 @@
           </objProp>
           <stringProp name="filename"></stringProp>
         </ResultCollector>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="getPersonDetails cvs dataset" enabled="true">
+          <stringProp name="delimiter">\t</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="filename">../../../src/test/resources/getPersonDetailsQueryParameters.csv</stringProp>
+          <boolProp name="quotedData">true</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">All threads</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">cpr</stringProp>
+        </CSVDataSet>
         <hashTree/>
       </hashTree>
     </hashTree>
