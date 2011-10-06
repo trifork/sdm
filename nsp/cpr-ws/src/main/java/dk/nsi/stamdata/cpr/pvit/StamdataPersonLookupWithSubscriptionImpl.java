@@ -4,12 +4,9 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsClient;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsException;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +15,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -47,7 +45,7 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
 			@WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequest request) throws DGWSFault {
 		PersonLookupResponseType response;
 		try {
-			List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader.value, medcomHeader.value, new DateTime(request.getSince()));
+			List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader, medcomHeader, new DateTime(request.getSince()));
 
 			response = stamdataPersonResponseFinder.answerCivilRegistrationNumberListPersonRequest(clientCVR, changedCprs);
 		} catch (SQLException e) {

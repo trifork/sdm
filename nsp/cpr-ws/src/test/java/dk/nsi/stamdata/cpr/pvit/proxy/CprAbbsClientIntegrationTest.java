@@ -1,3 +1,27 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
@@ -11,61 +35,74 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 
+
 public class CprAbbsClientIntegrationTest {
-	private CprAbbsStubJettyServer server;
-	private SecurityWrapper securityHeaders;
 
-	@Before
-	public void setupSecurityHeaders() throws Exception {
-		securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("22345678", "foo", "bar");
-	}
+    private static final String SERVICE_URL = "http://localhost:8099/cprabbs/service/cprabbs";
+    private CprAbbsStubJettyServer server;
+    private SecurityWrapper securityHeaders;
 
-	@Before
-	public void startServer() throws Exception {
-		server = new CprAbbsStubJettyServer();
-		server.startServer(8099);
-	}
+    private CprAbbsClient client;
 
-	@After
-	public void stopServer() throws Exception {
-		server.stopServer();
-	}
 
-	@Test
-	public void canCallService() throws MalformedURLException, CprAbbsException {
-		CprAbbsClient client = new CprAbbsClient("http://localhost:8099/cprabbs/service/cprabbs");
-		List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), null);
+    @Before
+    public void setupSecurityHeaders() throws Exception {
 
-		assertEquals(1, changedCprs.size());
-		assertEquals("0000000000", changedCprs.get(0));
-	}
+        securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("22345678", "foo", "bar");
 
-	@Test
-	public void callsWithSinceWhichDoesntTriggerSpecialBehaviourInStub() throws MalformedURLException, CprAbbsException {
-		CprAbbsClient client = new CprAbbsClient("http://localhost:8099/cprabbs/service/cprabbs");
-		List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), CprAbbsFacadeStubImplementation.SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES.plusDays(1));
+        server = new CprAbbsStubJettyServer();
+        server.startServer(8099);
 
-		assertEquals(1, changedCprs.size());
-		assertEquals("2222222222", changedCprs.get(0));
-	}
+        client = new CprAbbsClient(SERVICE_URL);
+    }
 
-	@Test
-	public void callsWithSinceWhichTriggersSpecialBehaviourInStub() throws MalformedURLException, CprAbbsException {
-		CprAbbsClient client = new CprAbbsClient("http://localhost:8099/cprabbs/service/cprabbs");
-		List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), CprAbbsFacadeStubImplementation.SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES);
 
-		assertEquals(1, changedCprs.size());
-		assertEquals("1111111111", changedCprs.get(0));
-	}
+    @After
+    public void stopServer() throws Exception {
 
-	@Test
-	public void forwardsIdcardCvrInSecurityHeaders() throws Exception {
-		securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("12345678", "foo", "bar"); // cvr starting with 1 triggers special behaviour in stub service
-		CprAbbsClient client = new CprAbbsClient("http://localhost:8099/cprabbs/service/cprabbs");
-		List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), null);
+        server.stopServer();
+    }
 
-		assertEquals(1, changedCprs.size());
-		assertEquals("1234567800", changedCprs.get(0));
 
-	}
+    @Test
+    public void canCallService() throws MalformedURLException, CprAbbsException {
+
+        List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), null);
+
+        assertEquals(1, changedCprs.size());
+        assertEquals("0000000000", changedCprs.get(0));
+    }
+
+
+    @Test
+    public void callsWithSinceWhichDoesntTriggerSpecialBehaviourInStub() throws MalformedURLException, CprAbbsException {
+
+        List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), CprAbbsFacadeStubImplementation.SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES.plusDays(1));
+
+        assertEquals(1, changedCprs.size());
+        assertEquals("2222222222", changedCprs.get(0));
+    }
+
+
+    @Test
+    public void callsWithSinceWhichTriggersSpecialBehaviourInStub() throws MalformedURLException, CprAbbsException {
+
+        List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), CprAbbsFacadeStubImplementation.SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES);
+
+        assertEquals(1, changedCprs.size());
+        assertEquals("1111111111", changedCprs.get(0));
+    }
+
+
+    @Test
+    public void forwardsIdcardCvrInSecurityHeaders() throws Exception {
+
+        // cvr starting with 1 triggers special behavior in mock service.
+
+        securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("12345678", "foo", "bar");
+        List<String> changedCprs = client.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), null);
+
+        assertEquals(1, changedCprs.size());
+        assertEquals("1234567800", changedCprs.get(0));
+    }
 }

@@ -1,4 +1,46 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr.integrationtest;
+
+import static org.junit.Assert.fail;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
+
+import org.hibernate.Session;
+import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
+import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Inject;
@@ -6,26 +48,23 @@ import com.google.inject.Stage;
 import com.trifork.stamdata.models.cpr.Person;
 import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
 import com.trifork.stamdata.models.sikrede.Yderregister;
+
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.ws.*;
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
+import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.cpr.ws.PersonHealthCareInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.hibernate.Session;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
-import org.joda.time.DateTime;
-import org.junit.*;
-
-import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
-import javax.xml.ws.soap.SOAPFaultException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-
-import static org.junit.Assert.fail;
 
 
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -90,7 +129,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+		client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
 	}
 
 
@@ -102,7 +141,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-		client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+		client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
 	}
 
 
@@ -117,7 +156,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		{
 			SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo", "bar");
 
-			client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+			client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
 			fail("Expected DGWS");
 		}
 		catch (DGWSFault fault)
@@ -149,7 +188,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		request.setPersonCivilRegistrationIdentifier("1111111111");
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-		GetPersonInformationOut personInformation = client.getPersonInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+		GetPersonInformationOut personInformation = client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
 
 		PersonInformationStructureType information = personInformation.getPersonInformationStructure();
 		Assert.assertEquals("1111111111", information.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
@@ -210,7 +249,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 		request.setPersonCivilRegistrationIdentifier("1111111111");
 		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
 
-		GetPersonWithHealthCareInformationOut personWithHealthCareInformation = client.getPersonWithHealthCareInformation(new Holder<Security>(securityHeaders.getSecurity()), new Holder<Header>(securityHeaders.getMedcomHeader()), request);
+		GetPersonWithHealthCareInformationOut personWithHealthCareInformation = client.getPersonWithHealthCareInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
 
 		PersonWithHealthCareInformationStructureType healthCareInformationStructure = personWithHealthCareInformation.getPersonWithHealthCareInformationStructure();
 

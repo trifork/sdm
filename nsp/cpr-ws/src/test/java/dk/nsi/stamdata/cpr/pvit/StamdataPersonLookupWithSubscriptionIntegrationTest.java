@@ -9,8 +9,6 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
 import dk.nsi.stamdata.cpr.ws.*;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -22,10 +20,9 @@ import org.junit.Test;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import java.net.URL;
-import java.util.*;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 
 public class StamdataPersonLookupWithSubscriptionIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -86,7 +83,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	@Test
 	public void returnsAllSubscribedPersonsForRequestWithoutSince() throws Exception
 	{
-		Map<String, List<String>> cprsToReturnForCvrs = new HashMap<String, List<String>>();
+		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
 		cprsToReturnForCvrs.put(REQUEST_CVR, Arrays.asList(EXAMPLE_CPR, "0101821234"));
 		CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
 

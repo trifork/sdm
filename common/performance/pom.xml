@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>stamdata-parent</artifactId>
-		<version>3.2.0-SNAPSHOT</version>
+		<version>3.2.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -17,6 +17,32 @@
 		<hostname>localhost</hostname>
 		<port>8080</port>
 	</properties>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>chronos-maven-plugin</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<configuration>
+					<heap>768m</heap>
+					<permsize>256m</permsize>
+					<sysproperties>
+						<property>
+							<name>search_paths</name>
+							<value>${basedir}/target</value>
+						</property>
+						<property>
+							<name>java.awt.headless</name>
+							<value>false</value>
+						</property>
+					</sysproperties>
+					<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<profiles>
 		<profile>
@@ -54,6 +80,18 @@
 							</jMeterRemoteLocation>
 						</configuration>
 						<executions>
+							<!-- | CPR WS -->
+							<execution>
+								<id>cpr-ws</id>
+								<phase>integration-test</phase>
+								<goals>
+									<goal>jmeter</goal>
+								</goals>
+								<configuration>
+									<dataid>authorization-ws-data</dataid>
+									<input>${basedir}/src/main/resources/CPR.jmx</input>
+								</configuration>
+							</execution>
 							<!-- -->
 							<!-- Authorization Lookup -->
 							<!-- -->
@@ -129,6 +167,12 @@
 	</profiles>
 
 	<dependencies>
+	
+		<dependency>
+			<groupId>dk.nsi.stamdata</groupId>
+			<artifactId>stamdata-testing</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>

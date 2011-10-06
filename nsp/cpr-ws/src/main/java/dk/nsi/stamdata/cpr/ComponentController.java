@@ -1,3 +1,27 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr;
 
 import com.google.inject.*;
@@ -10,6 +34,7 @@ import dk.nsi.dgws.DGWSFilterSystemIDCardProvider;
 import dk.nsi.dgws.DgwsIdcardFilter;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsClient;
 import dk.sosi.seal.model.SystemIDCard;
 import org.hibernate.Session;
 
@@ -61,6 +86,12 @@ public class ComponentController extends GuiceServletContextListener
 			// when an exception occurs.
 
 			System.setProperty(DISPLAY_SOAP_FAULT_STACK_TRACE, "false");
+			
+			// To make sure the property for the CPR ABBS end-point is set
+			// we bind the class here and have Guice check at start-up if
+			// if can be instantiated.
+			
+			bind(CprAbbsClient.class);
 
 			// Tell the monitoring module how to monitor the component.
 			// All monitor pages are bound to the URL /status.
