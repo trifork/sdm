@@ -24,9 +24,10 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
+
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 
 import org.joda.time.DateTime;
 

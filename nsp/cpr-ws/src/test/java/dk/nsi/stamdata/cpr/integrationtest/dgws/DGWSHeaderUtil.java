@@ -77,7 +77,7 @@ public final class DGWSHeaderUtil
 		JAXBContext context = JAXBContext.newInstance(Security.class);
 		Marshaller marshaller = context.createMarshaller();
 		marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new SealNamespacePrefixMapper());
-
+		
 		StringWriter writer = new StringWriter();
 		marshaller.marshal(security, writer);
 
@@ -86,7 +86,7 @@ public final class DGWSHeaderUtil
 		DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = domFactory.newDocumentBuilder();
 		Document doc = builder.parse(IOUtils.toInputStream(writer.toString()));
-
+		
 		SOSIFactory factory = MockSecureTokenService.createFactory();
 		
 		Request request = getRequest(auth, factory, careProviderId, careProviderName, itSystemName);
@@ -99,7 +99,7 @@ public final class DGWSHeaderUtil
 		doc.getDocumentElement().appendChild(importNode);
 
 		// Unmarshall the new security object including the idCard.
-
+		
 		Unmarshaller unmarshaller = context.createUnmarshaller();
 		String securityHeaderSerialized = XmlUtil.node2String(doc);
 		Security securityResult = (Security) unmarshaller.unmarshal(IOUtils.toInputStream(securityHeaderSerialized));
@@ -110,7 +110,7 @@ public final class DGWSHeaderUtil
 		timeStamp.setCreated(cal);
 		securityResult.setTimestamp(timeStamp);
 		SecurityWrapper wrap = new SecurityWrapper(securityResult, getMedComHeader(request.getMessageID()));
-
+		
 		return wrap;
 	}
 

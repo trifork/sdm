@@ -55,7 +55,7 @@ public class PerformanceTest extends AbstractJavaSamplerClient {
     {
         Arguments args = new Arguments();
 
-        args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:8100/stamdata-cpr-ws/service/StamdataPersonLookup");
+        args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:80/stamdata-cpr-ws/service/StamdataPersonLookup");
         args.addArgument(CLIENT_CVR_PARAM, "12345678");
         args.addArgument(REQUESTED_CPR_PARAM, "2905852569");
         
@@ -75,30 +75,32 @@ public class PerformanceTest extends AbstractJavaSamplerClient {
         try
         {
             StamdataPersonLookup client = createClient(endpointURL);
+            
             SecurityWrapper headers = createHeaders(clientCVR);
-
             PersonLookupRequestType query = new PersonLookupRequestType();
             query.setCivilRegistrationNumberPersonQuery(requestedCPR);
-
+            
             // Wait until the last minute before starting the
             // timer.
-
+            
             result.sampleStart();
-
             client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
-
             result.sampleEnd();
-
+            
             result.setSuccessful(true);
             result.setResponseCodeOK();
+            result.setResponseMessageOK();
         }
         catch (SOAPFaultException e)
         {
-            result.setSuccessful(false);
             result.sampleEnd();
+            e.printStackTrace();
+            result.setSuccessful(false);
         }
         catch (Exception e)
         {
+            result.sampleEnd();
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -112,14 +114,15 @@ public class PerformanceTest extends AbstractJavaSamplerClient {
         
         URL wsdlLocation = new URL(endpointURL + "?wsdl");
         StamdataPersonLookupService serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE_QNAME);
-
+        
         // SEAL enforces that the XML prefixes are exactly
         // as it creates them. So we have to make sure we
         // don't change them.
 
         serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
+        StamdataPersonLookup client = serviceCatalog.getStamdataPersonLookup();
 
-        return serviceCatalog.getStamdataPersonLookup();
+        return client;
     }
 
 

@@ -41,11 +41,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
-import com.trifork.stamdata.models.cpr.Person;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
+import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
 import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
