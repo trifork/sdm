@@ -140,6 +140,7 @@
 				<version>2.2.1</version>
 				<configuration>
 					<tagNameFormat>v@{project.version}</tagNameFormat>
+                    <allowTimestampedSnapshots>true</allowTimestampedSnapshots> <!-- necessary because chronos-maven-plugin has never been properly released -->
 				</configuration>
 			</plugin>
 			<!--
