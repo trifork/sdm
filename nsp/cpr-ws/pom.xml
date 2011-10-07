@@ -338,7 +338,7 @@
                             </jMeterRemoteLocation>
                         </configuration>
                         <executions>
-                            <!-- | CPR WS -->
+                            <!-- CPR WS StamdataPersonLookup -->
                             <execution>
                                 <id>StamdataPersonLookup-test</id>
                                 <phase>integration-test</phase>
@@ -350,9 +350,6 @@
                                     <input>${basedir}/src/test/jmx/StamdataPersonLookup.jmx</input>
                                 </configuration>
                             </execution>
-                            <!-- -->
-                            <!-- Authorization Lookup -->
-                            <!-- -->
                             <execution>
                                 <id>StamdataPersonLookup-report</id>
                                 <phase>site</phase>
@@ -366,6 +363,35 @@
                                     <dataid>StamdataPersonLookupGetPersonDetails</dataid>
                                     <description>StamdataPersonLookup, getPersonDetails for single cpr Service Response Times</description>
                                     <title>StamdataPersonLookup, getPersonDetails</title>
+                                </configuration>
+                            </execution>
+                            <!-- CPR WS StamdataPersonLookupWithSubscription -->
+                            <execution>
+                                <id>StamdataPersonLookupWithSubscription-test</id>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>jmeter</goal>
+                                </goals>
+                                <configuration>
+                                    <dataid>StamdataPersonLookupWithSubscriptionGetSubscribedPersonDetails</dataid>
+                                    <input>${basedir}/src/test/jmx/StamdataPersonLookupWithSubscription.jmx</input>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>StamdataPersonLookupWithSubscription-report</id>
+                                <phase>site</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                                <configuration>
+                                    <showgc>false</showgc>
+                                    <showpercentile99>true</showpercentile99>
+                                    <reportid>StamdataPersonLookupWithSubscriptionGetSubscribedPersonDetails-report</reportid>
+                                    <dataid>StamdataPersonLookupWithSubscriptionGetSubscribedPersonDetails</dataid>
+                                    <description>StamdataPersonLookupWithSubscription, getSubscribedPersonDetails Service Response
+                                        Times
+                                    </description>
+                                    <title>StamdataPersonLookup, getSubscribedPersonDetails</title>
                                 </configuration>
                             </execution>
                         </executions>

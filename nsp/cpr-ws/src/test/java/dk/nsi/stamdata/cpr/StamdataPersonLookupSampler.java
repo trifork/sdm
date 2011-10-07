@@ -70,7 +70,6 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 	    String requestedSurname = context.getParameter(REQUESTED_SURNAME_PARAM);
 
 	    SampleResult result = new SampleResult();
-	    result.setSampleLabel("StamdataPersonLookup getPersonDetails request for " + requestedGivenname + " " + requestedSurname);
 
 	    try
         {
@@ -90,11 +89,13 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
 	        PersonLookupResponseType responseType = client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
 	        result.sampleEnd();
 
-	        if (responseType.getPersonInformationStructure().size() == 0) {
+	        int numberOfReturnedPersons = responseType.getPersonInformationStructure().size();
+	        if (numberOfReturnedPersons == 0) {
 		        result.setSuccessful(false);
 		        result.setResponseMessage("Expected at least 1 person in result, but found none");
 	        } else {
-                result.setResponseOK();
+		        result.setResponseMessage("StamdataPersonLookup getPersonDetails request for " + requestedGivenname + " " + requestedSurname + ", " + numberOfReturnedPersons + " persons in response");
+		        result.setResponseOK();
 	        }
         }
         catch (Exception e)

@@ -67,7 +67,6 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
 
 	    SampleResult result = new SampleResult();
-	    result.setSampleLabel("StamdataPersonLookupWithSubscription getSubscribedPersonDetails request for cvr " + clientCVR);
 
 	    try
         {
@@ -79,8 +78,11 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
 
 	        // Wait until the last minute before starting the timer.
 	        result.sampleStart();
-	        PersonLookupResponseType responseType = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+	        PersonLookupResponseType response = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
 	        result.sampleEnd();
+
+	        int numberOfReturnedPersons = response.getPersonInformationStructure().size();
+	        result.setResponseMessage("StamdataPersonLookupWithSubscription getSubscribedPersonDetails request for cvr " + clientCVR + " , " + numberOfReturnedPersons + " persons in response");
 
 	        // as the result is stateful ("changed since last call", we cannot assert that the response contains any persons
 			result.setResponseOK();
