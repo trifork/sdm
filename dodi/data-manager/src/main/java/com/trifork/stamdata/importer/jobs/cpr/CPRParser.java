@@ -349,22 +349,6 @@ public class CPRParser
 	}
 
 
-	private static Date getForrigeIkraftDato(String line) throws Exception
-	{
-		// TODO (thb): Why would you return null here if the line is less then
-		// 25 chars?
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-		if (line.length() >= 25)
-		{
-			return sdf.parse(cut(line, 27, 35));
-		}
-
-		return null;
-	}
-
-
 	private static String removeLeadingZeros(String str)
 	{
 		if (str == null) return null;

@@ -39,6 +39,7 @@ import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
@@ -88,6 +89,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	// TODO: Headers should be set to outgoing. See BRS for correct way of
 	// setting these.
 	@Override
+	@Transactional
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -121,6 +123,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 
 	@Override
+	@Transactional
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
 	{
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -145,8 +148,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		Person person = fetchPersonWithPnr(pnr);
 
 		SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr + "-C");
-		Yderregister yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
-
+		
+		// If the relation is not found we have to use fake data to satisfy the
+		// output format.
+		
+		Yderregister yderregister = null;
+		
+		if (sikredeYderRelation != null)
+		{
+		    yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
+		}
+		
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
 		PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
 

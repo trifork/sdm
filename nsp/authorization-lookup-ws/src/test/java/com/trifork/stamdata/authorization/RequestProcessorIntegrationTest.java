@@ -25,6 +25,8 @@
 package com.trifork.stamdata.authorization;
 
 import com.google.common.collect.ImmutableSet;
+
+import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.*;
 import dk.sosi.seal.pki.SOSITestFederation;
@@ -75,35 +77,9 @@ public class RequestProcessorIntegrationTest {
 	@BeforeClass
 	public static void fetchIDCard() throws Exception {
 
-		context = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
-
-		Properties sosiProps = SignatureUtil.setupCryptoProviderForJVM();
-		SOSITestFederation federation = new SOSITestFederation(sosiProps);
-		factory = new SOSIFactory(federation, new ClasspathCredentialVault(sosiProps, SOSITestConstants.KEY_STORE_PASSWORD), sosiProps);
-
-		// Create a SEAL ID card.
-
-		CareProvider careProvider = new CareProvider(CVR_NUMBER, TEST_CVR, "dk");
-		IDCard unsignedCard = factory.createNewSystemIDCard(TEST_IT_SYSTEM_NAME, careProvider, VOCES_TRUSTED_SYSTEM, null, null, factory.getCredentialVault().getSystemCredentialPair().getCertificate(), null);
-
-		SecurityTokenRequest stsRequest = factory.createNewSecurityTokenRequest();
-		stsRequest.setIDCard(unsignedCard);
-
-		// Send the request.
-		
-		String responseXML = send(TEST_STS_URL, stsRequest.serialize2DOMDocument());
-		SecurityTokenResponse response = factory.deserializeSecurityTokenResponse(responseXML);
-
-		// Check for errors.
-
-		if (response.isFault()) {
-			throw new RuntimeException(format("STS Error: %s %s", response.getFaultCode(), response.getFaultString()));
-		}
-
-		// If all has gone well,
-		// we can store the ID Card for later use.
-
-		idCard = response.getIDCard();
+	    context = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
+	    idCard = MockSecureTokenService.createSignedSystemIDCard(TEST_CVR);
+	    factory = MockSecureTokenService.createFactory();
 	}
 
 	@Test

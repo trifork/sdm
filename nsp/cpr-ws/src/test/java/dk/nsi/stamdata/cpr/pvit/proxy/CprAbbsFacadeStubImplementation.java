@@ -24,7 +24,7 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.dgws.DgwsIdcardFilter;
+import dk.nsi.dgws.DenGodeWebServiceFilter;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
 import org.joda.time.DateTime;
@@ -98,7 +98,6 @@ public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
 	public SystemIDCard findIdCardInRequest() {
 		MessageContext context = wsContext.getMessageContext();
 		ServletRequest request = (ServletRequest) context.get(MessageContext.SERVLET_REQUEST);
-		return (SystemIDCard) request.getAttribute(DgwsIdcardFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
-
+		return (SystemIDCard) request.getAttribute(DenGodeWebServiceFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
 	}
 }

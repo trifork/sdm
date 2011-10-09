@@ -27,5 +27,14 @@ package com.trifork.stamdata;
 
 public interface ComponentMonitor
 {
-	boolean isOK();
+    /**
+     * Checks that all the components local dependencies are OK.
+     * 
+     * Dependencies range from local files to database connections.
+     * Currently remote services NSP services that the service
+     * depends on are not checked.
+     * 
+     * @return true is the component is okay.
+     */
+	boolean isOk();
 }

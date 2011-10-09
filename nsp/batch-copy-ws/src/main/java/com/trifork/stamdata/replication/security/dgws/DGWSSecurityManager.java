@@ -50,7 +50,7 @@ import org.apache.commons.codec.binary.Base64;
 /**
  * Manage all aspects of authentication and authorization for DGWS Token.
  * 
- * @author Thomas Børlum (thomas@borlum.dk)
+ * @author Thomas Børlum <thb@trifork.com>
  */
 @RequestScoped
 public class DGWSSecurityManager implements SecurityManager

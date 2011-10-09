@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.trifork.stamdata.ComponentMonitor;
+import com.trifork.stamdata.persistence.Transactional;
 
 public class ComponentMonitorImpl implements ComponentMonitor
 {
@@ -46,7 +47,8 @@ public class ComponentMonitorImpl implements ComponentMonitor
 	}
 	
 	@Override
-	public boolean isOK()
+	@Transactional
+	public boolean isOk()
 	{
 		try
 		{

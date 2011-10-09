@@ -28,65 +28,41 @@ package com.trifork.stamdata.replication.webservice;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.bind.JAXBException;
-
 import com.google.common.collect.Maps;
-import com.google.inject.TypeLiteral;
+import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.replication.webservice.annotations.Registry;
+import com.trifork.stamdata.persistence.Persistent;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
-import com.trifork.stamdata.views.Views;
 
 
-public class RegistryModule extends ServletModule {
+public class RegistryModule extends ServletModule
+{
+    @Override
+    protected final void configureServlets()
+    {
+        bind(AtomFeedWriter.class);
+    }
 
-	@Override
-	protected final void configureServlets() {
 
-		// DISCOVER ALL VIEW CLASSES
-		//
-		// For speed only the model package will be searched.
-		// Because the war can be deployed in many ways we may
-		// have to search in several places.
+    @Provides
+    @SuppressWarnings("unchecked")
+    protected Map<String, Class<? extends View>> provideViewMap(@Persistent Set<Object> entities)
+    {
+        Map<String, Class<? extends View>> viewMap = Maps.newTreeMap();
 
-		Set<Class<? extends View>> views = Views.findAllViews();
-		
-		// MAP VIEWS TO THEIR PATHS
-		//
-		// Map the view classes to their respective registry/view/version.
-		// Bind the map to the Map<String, Class> annotated with @Registry.
-		//
-		// A tree map is used so the entries are lexically sorted.
+        for (Object entity : entities)
+        {
+            ViewPath annotation = entity.getClass().getAnnotation(ViewPath.class);
 
-		Map<String, Class<? extends View>> registry = Maps.newTreeMap();
+            if (entity.getClass().isAnnotationPresent(ViewPath.class))
+            {
+                Class<? extends View> viewClass = (Class<? extends View>) entity.getClass();
 
-		for (Class<? extends View> entity : views)
-		{
-			ViewPath annotation = entity.getAnnotation(ViewPath.class);
-			registry.put(annotation.value(), entity);
-		}
+                viewMap.put(annotation.value(), viewClass);
+            }
+        }
 
-		bind(new TypeLiteral<Map<String, Class<? extends View>>>() {}).annotatedWith(Registry.class).toInstance(registry);
-		
-		// BIND THE FEED WRITER
-		//
-		// We need a JAXB context that can marshal all
-		// the entities to XML.
-
-		bind(AtomFeedWriter.class);
-		
-		try {
-			bind(ViewXmlHelper.class).toInstance(new ViewXmlHelper(views));
-		}
-		catch (JAXBException e) {
-			addError(e);
-		}
-
-		// SERVE THE REGISTRIES
-		//
-		// All requests default to Stamdata default to this servlet.
-
-		serve("/*").with(RegistryServlet.class);
-	}
+        return viewMap;
+    }
 }

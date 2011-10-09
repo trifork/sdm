@@ -29,9 +29,9 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.metadata.ClassMetadata;
 
 import com.google.inject.Inject;
+
 
 /**
  * Data access layer for the Client Model.
@@ -40,57 +40,64 @@ import com.google.inject.Inject;
  */
 public class ClientDao
 {
-	private final Session session;
+    private final Session session;
 
-	@Inject
-	ClientDao(Session session)
-	{
-		this.session = session;
-	}
 
-	public Client find(String id)
-	{
-		return (Client) session.load(Client.class, id);
-	}
+    @Inject
+    ClientDao(Session session)
+    {
+        this.session = session;
+    }
 
-	public Client findByCvr(String cvr)
-	{
-		ClassMetadata classMetadata = session.getSessionFactory().getClassMetadata(Client.class);
-		String ssnlike = "CVR:" + cvr + "-%";
-		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber LIKE :subjectSerialNumber");
-		query.setParameter("subjectSerialNumber", ssnlike);
-		return (Client) query.uniqueResult();
-	}
 
-	public Client findBySubjectSerialNumber(String subjectSerialNumber)
-	{
-		Query query = session.createQuery("FROM Client WHERE subjectSerialNumber = :subjectSerialNumber");
-		query.setParameter("subjectSerialNumber", subjectSerialNumber);
-		return (Client) query.uniqueResult();
-	}
+    public Client find(String id)
+    {
+        return (Client) session.load(Client.class, id);
+    }
 
-	public boolean delete(String id)
-	{
-		Query query = session.createQuery("DELETE Client WHERE id = :id");
-		query.setParameter("id", id);
-		return query.executeUpdate() == 1;
-	}
 
-	public Client create(String name, String subjectSerialNumber)
-	{
-		Client client = new Client(name, subjectSerialNumber);
-		session.persist(client);
-		return client;
-	}
+    public Client findByCvr(String cvr)
+    {
+        String ssnlike = "CVR:" + cvr + "-%";
+        Query query = session.createQuery("FROM Client WHERE subjectSerialNumber LIKE :subjectSerialNumber");
+        query.setParameter("subjectSerialNumber", ssnlike);
+        return (Client) query.uniqueResult();
+    }
 
-	@SuppressWarnings("unchecked")
-	public List<Client> findAll()
-	{
-		return session.createQuery("FROM Client ORDER BY name").list();
-	}
 
-	public void update(Client client)
-	{
-		session.persist(client);
-	}
+    public Client findBySubjectSerialNumber(String subjectSerialNumber)
+    {
+        Query query = session.createQuery("FROM Client WHERE subjectSerialNumber = :subjectSerialNumber");
+        query.setParameter("subjectSerialNumber", subjectSerialNumber);
+        return (Client) query.uniqueResult();
+    }
+
+
+    public boolean delete(String id)
+    {
+        Query query = session.createQuery("DELETE Client WHERE id = :id");
+        query.setParameter("id", id);
+        return query.executeUpdate() == 1;
+    }
+
+
+    public Client create(String name, String subjectSerialNumber)
+    {
+        Client client = new Client(name, subjectSerialNumber);
+        session.persist(client);
+        return client;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public List<Client> findAll()
+    {
+        return session.createQuery("FROM Client ORDER BY name").list();
+    }
+
+
+    public void update(Client client)
+    {
+        session.persist(client);
+    }
 }

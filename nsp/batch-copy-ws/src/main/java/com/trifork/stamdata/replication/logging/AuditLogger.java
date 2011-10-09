@@ -25,20 +25,22 @@
 
 package com.trifork.stamdata.replication.logging;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- * An abstract for different kinds of audit loggers.
+ * Logs audit messages using to a file using SLF4J.
  * 
- * Uses the Strategy Pattern.
- * 
- * @author Thomas Børlum (thb@trifork.com)
+ * @author Thomas Børlum <thb@trifork.com>
  */
-public interface AuditLogger {
-	
-	/**
-	 * Logs a message formed by the format and arguments.
-	 * 
-	 * @param format The format of the message.
-	 * @param args The arguments to be inserted into the format.
-	 */
-	void log(String format, Object...args);
+public class AuditLogger
+{
+    private static final Logger logger = LoggerFactory.getLogger(AuditLogger.class);
+
+
+    public void log(String format, Object... args)
+    {
+        logger.info(String.format("type=audit, " + format, args));
+    }
 }

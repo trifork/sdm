@@ -87,7 +87,7 @@ public class PersonMapperProtectionTest
 		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR);
 		
 		municipalityMapper = new MunicipalityMapper();
-		person = Factories.createPersonWithoutAddressProtection();
+		person = Factories.createPerson();
 		yderregister = Factories.createYderregister();
 		sikredeYderRelation = Factories.createSikredeYderRelation();
 	}

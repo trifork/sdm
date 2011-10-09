@@ -25,15 +25,10 @@
 
 package com.trifork.stamdata.replication.webservice;
 
-import java.util.Collection;
-import java.util.Map;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import com.google.common.collect.Maps;
-import com.trifork.stamdata.views.View;
 
 /**
  * Creates separate JAXB contexts for each class, to avoid unneccessary
@@ -43,23 +38,15 @@ import com.trifork.stamdata.views.View;
  */
 public class ViewXmlHelper
 {
-	private Map<Class<? extends View>, JAXBContext> jaxbContexts = Maps.newHashMap();
-
-	public ViewXmlHelper(Collection<Class<? extends View>> classes) throws JAXBException
-	{
-		for (Class<? extends View> cls : classes)
-			jaxbContexts.put(cls, JAXBContext.newInstance(cls));
-	}
-
-	public Marshaller createMarshaller(Class<?> classToBeMarshalled)
-	{
-		try
-		{
-			return jaxbContexts.get(classToBeMarshalled).createMarshaller();
-		}
-		catch (JAXBException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
+    public Marshaller createMarshaller(Class<?> classToBeMarshalled)
+    {
+        try
+        {
+            return JAXBContext.newInstance(classToBeMarshalled).createMarshaller();
+        }
+        catch (JAXBException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

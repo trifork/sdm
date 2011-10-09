@@ -31,72 +31,67 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.persistence.Persistent;
+import com.trifork.stamdata.replication.models.Client;
 import com.trifork.stamdata.replication.security.SecurityManager;
-
-import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 
 
 public class DGWSModule extends ServletModule
 {
-	private JAXBContext jaxbContext;
+    private JAXBContext jaxbContext;
 
-	@Override
-	protected void configureServlets()
-	{
-		// BIND THE SECURITY MANAGER
-		//
-		// The binding is required by the replication module.
 
-		bind(SecurityManager.class).to(DGWSSecurityManager.class);
+    @Override
+    protected void configureServlets()
+    {
+        Multibinder<Object> persistent = Multibinder.newSetBinder(binder(), Object.class, Persistent.class);
+        persistent.addBinding().to(Authorization.class);
+        persistent.addBinding().to(Client.class);
 
-		// SERVE THE SOAP AUTHENTICATION SERVICE
-		//
-		// This servlet takes DGWS requests, authenticates and authorizes
-		// them, and returns a replication token if authorized.
+        // BIND THE SECURITY MANAGER
+        //
+        // The binding is required by the replication module.
 
-		serve("/authenticate").with(AuthorizationServlet.class);
-		
-		// SLA LOGGING
-		//
-		// Enabled SLA Logging using the NSP Util API.
-		// 
-		// The SLALoggingServletFilter is made for SOAP services.
-		// 
-		// This filter is only used for the authentication service SOAP since,
-		// the other parts of the service is REST.
-		
-		bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
-		filter("/authenticate").through(SLALoggingServletFilter.class);
+        bind(SecurityManager.class).to(DGWSSecurityManager.class);
 
-		// XML MARSHALLING
-		//
-		// The marshallers are used to marshal the SOAP
-		// bodies to and from XML.
-		//
-		// @see AuthorizationRequestStructure
-		// @see AuthorizationResponseStructure
+        // SERVE THE SOAP AUTHENTICATION SERVICE
+        //
+        // This servlet takes DGWS requests, authenticates and authorizes
+        // them, and returns a replication token if authorized.
 
-		try
-		{
-			jaxbContext = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
-		}
-		catch (JAXBException e)
-		{
-			addError(e);
-		}
-	}
+        serve("/authenticate").with(AuthorizationServlet.class);
 
-	@Provides
-	protected Marshaller provideMarshaller() throws JAXBException
-	{
-		return jaxbContext.createMarshaller();
-	}
+        // XML MARSHALLING
+        //
+        // The marshallers are used to marshal the SOAP
+        // bodies to and from XML.
+        //
+        // @see AuthorizationRequestStructure
+        // @see AuthorizationResponseStructure
 
-	@Provides
-	protected Unmarshaller provideUnmarshaller() throws JAXBException
-	{
-		return jaxbContext.createUnmarshaller();
-	}
+        try
+        {
+            jaxbContext = JAXBContext.newInstance(AuthorizationRequestStructure.class, AuthorizationResponseStructure.class);
+        }
+        catch (JAXBException e)
+        {
+            addError(e);
+        }
+    }
+
+
+    @Provides
+    protected Marshaller provideMarshaller() throws JAXBException
+    {
+        return jaxbContext.createMarshaller();
+    }
+
+
+    @Provides
+    protected Unmarshaller provideUnmarshaller() throws JAXBException
+    {
+        return jaxbContext.createUnmarshaller();
+    }
 }

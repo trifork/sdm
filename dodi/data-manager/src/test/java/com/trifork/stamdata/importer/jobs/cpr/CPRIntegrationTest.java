@@ -43,10 +43,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.Matchers;
-import org.hamcrest.generator.HamcrestFactoryWriter;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

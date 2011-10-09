@@ -40,65 +40,65 @@ import java.util.Set;
 
 public class SealNamespacePrefixSoapHandler implements SOAPHandler<SOAPMessageContext>
 {
-	private Map<String, String> prefixMap = SealNamespacePrefixMapper.prefixMap;
+    @Override
+    public Set<QName> getHeaders()
+    {
+        return null;
+    }
 
-	@Override
-	public Set<QName> getHeaders()
-	{
-		return null;
-	}
 
-	@Override
-	public boolean handleMessage(SOAPMessageContext context)
-	{
-		try
-		{
-			SOAPHeader soapHeader = context.getMessage().getSOAPHeader();
+    @Override
+    public boolean handleMessage(SOAPMessageContext context)
+    {
+        try
+        {
+            SOAPHeader soapHeader = context.getMessage().getSOAPHeader();
 
-			for (Map.Entry<String, String> prefixMapEntry : prefixMap.entrySet())
-			{
-				soapHeader.addNamespaceDeclaration(prefixMapEntry.getValue(), prefixMapEntry.getKey());
-			}
+            for (Map.Entry<String, String> prefixMapEntry : SealNamespacePrefixMapper.PREFIX_MAP.entrySet())
+            {
+                soapHeader.addNamespaceDeclaration(prefixMapEntry.getValue(), prefixMapEntry.getKey());
+            }
+            
+            for (Iterator<?> iterator = soapHeader.examineAllHeaderElements(); iterator.hasNext();)
+            {
+                Node element = (Node) iterator.next();
+                changePrefix(element.getChildNodes());
+            }
+        }
+        catch (SOAPException e)
+        {
+            return false;
+        }
 
-			Iterator<?> iterator = soapHeader.examineAllHeaderElements();
-			
-			while (iterator.hasNext())
-			{
-				Node element = (Node) iterator.next();
-				changePrefix(element.getChildNodes());
-			}
-		}
-		catch (SOAPException e)
-		{
-			throw new RuntimeException(e);
-		}
+        return true;
+    }
 
-		return true;
-	}
 
-	private void changePrefix(NodeList elementsToProcess)
-	{
-		for (int i = 0; i < elementsToProcess.getLength(); i++)
-		{
-			Node node = elementsToProcess.item(i);
-			String nodeNS = node.getNamespaceURI();
-			if (prefixMap.containsKey(nodeNS))
-			{
-				node.setPrefix(prefixMap.get(nodeNS));
-			}
+    private void changePrefix(NodeList elementsToProcess)
+    {
+        for (int i = 0; i < elementsToProcess.getLength(); i++)
+        {
+            Node node = elementsToProcess.item(i);
+            String nodeNS = node.getNamespaceURI();
+            if (SealNamespacePrefixMapper.PREFIX_MAP.containsKey(nodeNS))
+            {
+                node.setPrefix(SealNamespacePrefixMapper.PREFIX_MAP.get(nodeNS));
+            }
 
-			changePrefix(node.getChildNodes());
-		}
-	}
+            changePrefix(node.getChildNodes());
+        }
+    }
 
-	@Override
-	public boolean handleFault(SOAPMessageContext context)
-	{
-		return true;
-	}
 
-	@Override
-	public void close(MessageContext context)
-	{
-	}
+    @Override
+    public boolean handleFault(SOAPMessageContext context)
+    {
+        return true;
+    }
+
+
+    @Override
+    public void close(MessageContext context)
+    {
+    }
 }

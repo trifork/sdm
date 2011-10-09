@@ -33,45 +33,51 @@ import org.hibernate.Session;
 import com.google.inject.Inject;
 
 
-public class AuthorizationDao {
+public class AuthorizationDao
+{
+    private final Session em;
 
-	private final Session em;
 
-	@Inject
-	AuthorizationDao(Session em) {
+    @Inject
+    AuthorizationDao(Session em)
+    {
+        this.em = em;
+    }
 
-		this.em = em;
-	}
 
-	public boolean isClientAuthorized(String cvr, String viewName) {
+    public boolean isClientAuthorized(String cvr, String viewName)
+    {
+        Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE cvr = :cvr AND viewName = :viewName");
+        q.setParameter("cvr", cvr);
+        q.setParameter("viewName", viewName);
+        return 1 == (Long) q.uniqueResult();
+    }
 
-		Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE cvr = :cvr AND viewName = :viewName");
-		q.setParameter("cvr", cvr);
-		q.setParameter("viewName", viewName);
-		return 1 == (Long) q.uniqueResult();
-	}
 
-	public boolean isTokenValid(byte[] authorizationToken, String viewName) {
+    public boolean isTokenValid(byte[] authorizationToken, String viewName)
+    {
+        checkNotNull(authorizationToken);
+        checkNotNull(viewName);
 
-		checkNotNull(authorizationToken);
-		checkNotNull(viewName);
+        Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE token = :token AND viewName = :viewName AND expiresAt > NOW()");
+        q.setParameter("token", authorizationToken);
+        q.setParameter("viewName", viewName);
+        return 0 < (Long) q.uniqueResult();
+    }
 
-		Query q = em.createQuery("SELECT COUNT(a) FROM Authorization a WHERE token = :token AND viewName = :viewName AND expiresAt > NOW()");
-		q.setParameter("token", authorizationToken);
-		q.setParameter("viewName", viewName);
-		return 0 < (Long) q.uniqueResult();
-	}
 
-	public void save(Authorization authorization) {
+    public void save(Authorization authorization)
+    {
+        em.persist(authorization);
+    }
 
-		em.persist(authorization);
-	}
 
-	public String findCvr(byte[] authorizationToken) {
-		checkNotNull(authorizationToken);
+    public String findCvr(byte[] authorizationToken)
+    {
+        checkNotNull(authorizationToken);
 
-		Query q = em.createQuery("SELECT cvr FROM Authorization a WHERE token = :token AND expiresAt > NOW()");
-		q.setParameter("token", authorizationToken);
-		return q.uniqueResult().toString();
-	}
+        Query q = em.createQuery("SELECT cvr FROM Authorization a WHERE token = :token AND expiresAt > NOW()");
+        q.setParameter("token", authorizationToken);
+        return q.uniqueResult().toString();
+    }
 }

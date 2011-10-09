@@ -24,30 +24,38 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.ws.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-import javax.xml.namespace.QName;
-import java.net.MalformedURLException;
-import java.net.URL;
+import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
+import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
+import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
+import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
+import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
 
 
-@SuppressWarnings({"UnusedDeclaration"}) // used by jmeter scripts
-public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
-
+/**
+ * Performance Test used by JMeter.
+ */
+public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient
+{
     private static final String REQUESTED_GIVENNAME_PARAM = "RequestedGivenName";
-	private static final String REQUESTED_SURNAME_PARAM = "RequestedSurname";
-	private static final String ENDPOINT_URL_PARAM = "EndpointURL";
+    private static final String REQUESTED_SURNAME_PARAM = "RequestedSurname";
+    private static final String ENDPOINT_URL_PARAM = "EndpointURL";
     private static final String CLIENT_CVR_PARAM = "ClientCVR";
 
 
-	@Override
+    @Override
     public Arguments getDefaultParameters()
     {
         Arguments args = new Arguments();
@@ -55,9 +63,9 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
         args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:80/stamdata-cpr-ws/service/StamdataPersonLookup");
         args.addArgument(CLIENT_CVR_PARAM, "12345678");
         args.addArgument(REQUESTED_GIVENNAME_PARAM, "Thomas");
-	    args.addArgument(REQUESTED_SURNAME_PARAM, "Kristensen");
+        args.addArgument(REQUESTED_SURNAME_PARAM, "Kristensen");
 
-	    return args;
+        return args;
     }
 
 
@@ -67,36 +75,39 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
         String endpointURL = context.getParameter(ENDPOINT_URL_PARAM);
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
         String requestedGivenname = context.getParameter(REQUESTED_GIVENNAME_PARAM);
-	    String requestedSurname = context.getParameter(REQUESTED_SURNAME_PARAM);
+        String requestedSurname = context.getParameter(REQUESTED_SURNAME_PARAM);
 
-	    SampleResult result = new SampleResult();
+        SampleResult result = new SampleResult();
 
-	    try
+        try
         {
             StamdataPersonLookup client = createClient(endpointURL);
-            
+
             SecurityWrapper headers = createHeaders(clientCVR);
             PersonLookupRequestType query = new PersonLookupRequestType();
 
-	        NamePersonQueryType namePersonQuery = new NamePersonQueryType();
-	        namePersonQuery.setPersonGivenName(requestedGivenname);
-	        namePersonQuery.setPersonSurnameName(requestedSurname);
-	        query.setNamePersonQuery(namePersonQuery);
-            
+            NamePersonQueryType namePersonQuery = new NamePersonQueryType();
+            namePersonQuery.setPersonGivenName(requestedGivenname);
+            namePersonQuery.setPersonSurnameName(requestedSurname);
+            query.setNamePersonQuery(namePersonQuery);
+
             // Wait until the last minute before starting the
             // timer.
             result.sampleStart();
-	        PersonLookupResponseType responseType = client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
-	        result.sampleEnd();
+            PersonLookupResponseType responseType = client.getPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+            result.sampleEnd();
 
-	        int numberOfReturnedPersons = responseType.getPersonInformationStructure().size();
-	        if (numberOfReturnedPersons == 0) {
-		        result.setSuccessful(false);
-		        result.setResponseMessage("Expected at least 1 person in result, but found none");
-	        } else {
-		        result.setResponseMessage("StamdataPersonLookup getPersonDetails request for " + requestedGivenname + " " + requestedSurname + ", " + numberOfReturnedPersons + " persons in response");
-		        result.setResponseOK();
-	        }
+            int numberOfReturnedPersons = responseType.getPersonInformationStructure().size();
+            if (numberOfReturnedPersons == 0)
+            {
+                result.setSuccessful(false);
+                result.setResponseMessage("Expected at least 1 person in result, but found none");
+            }
+            else
+            {
+                result.setResponseMessage("StamdataPersonLookup getPersonDetails request for " + requestedGivenname + " " + requestedSurname + ", " + numberOfReturnedPersons + " persons in response");
+                result.setResponseOK();
+            }
         }
         catch (Exception e)
         {
@@ -108,18 +119,22 @@ public class StamdataPersonLookupSampler extends AbstractJavaSamplerClient {
         return result;
     }
 
-	private String firstCprFromResponse(PersonLookupResponseType responseType) {
-		return responseType.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier();
-	}
+
+    // used by jmeter scripts
+    @SuppressWarnings("unused")
+    private String firstCprFromResponse(PersonLookupResponseType responseType)
+    {
+        return responseType.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier();
+    }
 
 
-	private StamdataPersonLookup createClient(String endpointURL) throws MalformedURLException
+    private StamdataPersonLookup createClient(String endpointURL) throws MalformedURLException
     {
         QName PVIT_SERVICE_QNAME = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
-        
+
         URL wsdlLocation = new URL(endpointURL + "?wsdl");
         StamdataPersonLookupService serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE_QNAME);
-        
+
         // SEAL enforces that the XML prefixes are exactly
         // as it creates them. So we have to make sure we
         // don't change them.

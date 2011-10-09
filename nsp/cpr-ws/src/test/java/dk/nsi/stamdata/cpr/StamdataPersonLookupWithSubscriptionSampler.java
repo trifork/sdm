@@ -24,13 +24,14 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
 import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.ws.CprAbbsRequest;
 import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscriptionService;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -40,15 +41,17 @@ import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/**
+ * Performance Test used by JMeter.
+ */
+public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSamplerClient
+{
 
-@SuppressWarnings({"UnusedDeclaration"}) // used by jmeter scripts
-public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSamplerClient {
-
-	private static final String ENDPOINT_URL_PARAM = "EndpointURL";
+    private static final String ENDPOINT_URL_PARAM = "EndpointURL";
     private static final String CLIENT_CVR_PARAM = "ClientCVR";
 
 
-	@Override
+    @Override
     public Arguments getDefaultParameters()
     {
         Arguments args = new Arguments();
@@ -56,7 +59,7 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
         args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription");
         args.addArgument(CLIENT_CVR_PARAM, "12345678");
 
-	    return args;
+        return args;
     }
 
 
@@ -66,26 +69,27 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
         String endpointURL = context.getParameter(ENDPOINT_URL_PARAM);
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
 
-	    SampleResult result = new SampleResult();
+        SampleResult result = new SampleResult();
 
-	    try
+        try
         {
             StamdataPersonLookupWithSubscription client = createClient(endpointURL);
-            
+
             SecurityWrapper headers = createHeaders(clientCVR);
 
-	        CprAbbsRequest query = new CprAbbsRequest();
+            CprAbbsRequest query = new CprAbbsRequest();
 
-	        // Wait until the last minute before starting the timer.
-	        result.sampleStart();
-	        PersonLookupResponseType response = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
-	        result.sampleEnd();
+            // Wait until the last minute before starting the timer.
+            result.sampleStart();
+            PersonLookupResponseType response = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+            result.sampleEnd();
 
-	        int numberOfReturnedPersons = response.getPersonInformationStructure().size();
-	        result.setResponseMessage("StamdataPersonLookupWithSubscription getSubscribedPersonDetails request for cvr " + clientCVR + " , " + numberOfReturnedPersons + " persons in response");
+            int numberOfReturnedPersons = response.getPersonInformationStructure().size();
+            result.setResponseMessage("StamdataPersonLookupWithSubscription getSubscribedPersonDetails request for cvr " + clientCVR + " , " + numberOfReturnedPersons + " persons in response");
 
-	        // as the result is stateful ("changed since last call", we cannot assert that the response contains any persons
-			result.setResponseOK();
+            // as the result is stateful ("changed since last call", we cannot
+            // assert that the response contains any persons
+            result.setResponseOK();
         }
         catch (Exception e)
         {
@@ -97,20 +101,23 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
         return result;
     }
 
-	private String firstCprFromResponse(PersonLookupResponseType responseType) {
-		return responseType.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier();
-	}
-
-
-	private StamdataPersonLookupWithSubscription createClient(String endpointURL) throws MalformedURLException
+    // used by jmeter scripts
+    @SuppressWarnings("unused")
+    private String firstCprFromResponse(PersonLookupResponseType responseType)
     {
-	    StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(new URL(endpointURL + "?wsdl"), new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupWithSubscriptionService"));
+        return responseType.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier();
+    }
 
-	    // SEAL enforces that the XML prefixes are excatly
-	    // as it creates them. So we have to make sure we
-	    // don't change them.
 
-	    serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
+    private StamdataPersonLookupWithSubscription createClient(String endpointURL) throws MalformedURLException
+    {
+        StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(new URL(endpointURL + "?wsdl"), new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupWithSubscriptionService"));
+
+        // SEAL enforces that the XML prefixes are exactly
+        // as it creates them. So we have to make sure we
+        // don't change them.
+
+        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
         StamdataPersonLookupWithSubscription client = serviceCatalog.getStamdataPersonLookupWithSubscription();
 

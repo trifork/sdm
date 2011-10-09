@@ -24,51 +24,39 @@
  */
 package com.trifork.stamdata.models.sikrede;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.sql.SQLException;
 
-import org.hibernate.Session;
-import org.junit.Before;
-import org.junit.Test;
+import javax.inject.Inject;
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Stage;
+import org.hibernate.Session;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.models.BaseTemporalEntity;
+import com.trifork.stamdata.persistence.Transactional;
 
-import dk.nsi.stamdata.cpr.ComponentController;
+import dk.nsi.stamdata.guice.GuiceTestRunner;
 
+
+@RunWith(GuiceTestRunner.class)
 public abstract class AbstractDaoTest
 {
-	protected static Session session;
-	protected Fetcher fetcher;
+    @Inject
+    protected Session session;
+    
+    @Inject
+    protected Fetcher fetcher;
 
-	@Before
-	public void setupSession()
-	{
-		Injector injector = Guice.createInjector(Stage.DEVELOPMENT, new ComponentController.ComponentModule());
 
-		session = injector.getInstance(Session.class);
-		fetcher = injector.getInstance(Fetcher.class);
-	}
+    @Transactional
+    protected void insertInTable(BaseTemporalEntity entity)
+    {
+        session.createQuery("DELETE FROM SikredeYderRelation");
+        session.save(entity);
+    }
 
-	protected void purgeTable(String table)
-	{
-		assertNotNull(table);
-		session.createSQLQuery("TRUNCATE " + table).executeUpdate();
-	}
 
-	protected void insertInTable(BaseTemporalEntity entity)
-	{
-		session.getTransaction().begin();
-		session.save(entity);
-		session.flush();
-		session.getTransaction().commit();
-	}
-
-	@Test
-	public abstract void verifyMapping() throws SQLException;
-
+    @Test
+    public abstract void verifyMapping() throws SQLException;
 }

@@ -64,7 +64,7 @@ public class MonitoringModule extends ServletModule
 		
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 		{
-			response.getWriter().println(monitor.isOK() ? "200 OK" : "500 ERROR");
+			response.getWriter().println(monitor.isOk() ? "200 OK" : "500 ERROR");
 		}
 		
 		private static final long serialVersionUID = 0L;

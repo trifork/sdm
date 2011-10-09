@@ -25,46 +25,29 @@
 package com.trifork.stamdata.models.sikrede;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
-import java.util.Date;
 
-import org.joda.time.DateTime;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import com.trifork.stamdata.persistence.Transactional;
+
+import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Yderregister;
+import dk.nsi.stamdata.guice.GuiceTestRunner;
 
-
+@RunWith(GuiceTestRunner.class)
 public class YderregisterDaoTest extends AbstractDaoTest
 {
-	@Before
-	public void init()
-	{
-		purgeTable("Yderregister");
-	}
+    @Test
+    @Transactional
+    public void verifyMapping() throws SQLException
+    {
+        Yderregister yderregister = Factories.createYderregister();
+        insertInTable(yderregister);
 
-	private void insertInYderregistertable()
-	{
-		Yderregister yderregister = new Yderregister();
-		yderregister.setNummer(1234);
-		yderregister.setBynavn("test");
-		yderregister.setModifiedDate(new Date());
-		yderregister.setCreatedDate(new Date());
-		yderregister.setValidFrom(DateTime.now().minusDays(1).toDate());
-		yderregister.setValidTo(DateTime.now().plusDays(1).toDate());
-
-		insertInTable(yderregister);
-	}
-
-	@Test
-	public void verifyMapping() throws SQLException
-	{
-		assertTrue(true);
-		insertInYderregistertable();
-
-		Yderregister yderregister1 = fetcher.fetch(Yderregister.class, 1234);
-		assertEquals("test", yderregister1.getBynavn());
-	}
+        Yderregister record = fetcher.fetch(Yderregister.class, yderregister.getNummer());
+        assertEquals(record.getNummer(), yderregister.getNummer());
+    }
 }

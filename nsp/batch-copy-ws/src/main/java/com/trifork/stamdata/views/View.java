@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlAccessorOrder;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-import com.trifork.stamdata.replication.HistoryOffset;
+import com.trifork.stamdata.replication.webservice.HistoryOffset;
 
 
 @XmlType(namespace=STAMDATA_3_0 + "/common")
