@@ -39,7 +39,7 @@ public class ServletTest
     @Before
     public void setUp() throws Exception
     {
-        server = new TestServer().port(8080).contextPath("/").start();
+        server = new TestServer().port(8986).contextPath("/").start();
     }
     
     @After
