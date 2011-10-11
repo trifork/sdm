@@ -32,6 +32,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Provides;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.persistence.Persistent;
+import com.trifork.stamdata.replication.webservice.annotations.Registry;
 import com.trifork.stamdata.views.View;
 import com.trifork.stamdata.views.ViewPath;
 
@@ -46,6 +47,7 @@ public class RegistryModule extends ServletModule
 
 
     @Provides
+    @Registry
     @SuppressWarnings("unchecked")
     protected Map<String, Class<? extends View>> provideViewMap(@Persistent Set<Object> entities)
     {
