@@ -32,25 +32,16 @@ import java.util.Properties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.ConfigurationLoader;
-import com.trifork.stamdata.MonitoringModule;
-import com.trifork.stamdata.persistence.PersistenceFilter;
 import com.trifork.stamdata.persistence.PersistenceModule;
-import com.trifork.stamdata.persistence.StatelessPersistenceFilter;
 
 import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
-import dk.nsi.stamdata.replication.security.dgws.DGWSModule;
 import dk.nsi.stamdata.replication.webservice.RegistryModule;
-import dk.nsi.stamdata.replication.webservice.ViewServlet;
 import dk.nsi.stamdata.views.ViewModule;
-import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -83,7 +74,6 @@ public class ComponentController extends GuiceServletContextListener
                 bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to("true");
             }
             
-            install(new DGWSModule());
             install(new ViewModule());
 
             install(new PersistenceModule());

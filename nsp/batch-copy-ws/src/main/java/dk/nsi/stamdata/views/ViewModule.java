@@ -88,7 +88,7 @@ public class ViewModule extends AbstractModule
     @Override
     protected void configure()
     {
-        Multibinder<View> views = Multibinder.newSetBinder(binder(), View.class, Persistent.class);
+        Multibinder<Object> views = Multibinder.newSetBinder(binder(), Object.class, Persistent.class);
         views.addBinding().to(Dosering.class);
         
         // Autorisationsregisteret
