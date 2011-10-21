@@ -26,10 +26,19 @@ package com.trifork.stamdata.replication.webservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import dk.nsi.stamdata.replication.jaxws.ObjectFactory;
+import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
+import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
+import dk.nsi.stamdata.replication.jaxws.StamdataReplicationService;
 import dk.nsi.stamdata.testing.TestServer;
 
 public class ServletTest
@@ -49,8 +58,21 @@ public class ServletTest
     }
     
     @Test
-    public void truth()
+    public void truth() throws MalformedURLException
     {
+        URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication");
+        QName serviceName = new QName("http://nsi.dk/2011/10/21/StamdataKrs/", "StamdataReplicationService");
+        StamdataReplicationService service = new StamdataReplicationService(wsdlLocation, serviceName);
+
+        StamdataReplication stamdataReplicationClient = service.getStamdataReplication();
+        ReplicationRequestType request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("cpr");
+        request.setDatatype("person");
+        request.setVersion(1L);
+        request.setOffset("0");
+        
+        stamdataReplicationClient.getPersonDetails(null, null, request);
+        
         assertTrue(true);
     }
 }

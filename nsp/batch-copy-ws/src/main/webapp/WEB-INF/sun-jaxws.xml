@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+	<endpoint name="StamdataReplication" wsdl="WEB-INF/wsdl/krs/stamdata_krs.wsdl"
+		service="{http://nsi.dk/2011/10/21/StamdataKrs/}StamdataReplicationService"
+		port="{http://nsi.dk/2011/10/21/StamdataKrs/}StamdataReplication"
+		implementation="dk.nsi.stamdata.replication.webservice.StamdataReplicationImpl" url-pattern="/service/StamdataReplication" />
+</endpoints>

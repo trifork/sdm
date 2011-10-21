@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" 
+  targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" 
+  xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+  xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" 
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" 
+  xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="wsu.xsd"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="ds.xsd"/>
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="saml.xsd"/>
+  <xs:element name="Security">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsu:Timestamp" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="saml:Assertion" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsernameToken">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsse:Username" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="wsse:Password" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Username" type="xs:NCName"/>
+  <xs:element name="Password" type="xs:NCName"/>
+</xs:schema>
