@@ -24,10 +24,16 @@
  */
 package dk.nsi.stamdata.views;
 
+import java.util.Map;
+import java.util.Set;
+
+import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
 
+import dk.nsi.stamdata.replication.webservice.annotations.Registry;
 import dk.nsi.stamdata.views.autorisationsregisteret.Autorisation;
 import dk.nsi.stamdata.views.cpr.BarnRelation;
 import dk.nsi.stamdata.views.cpr.ForaeldremyndighedsRelation;
@@ -170,5 +176,30 @@ public class ViewModule extends AbstractModule
         
         views.addBinding().to(dk.nsi.stamdata.views.yderregisteret.Person.class);
         views.addBinding().to(Yderregister.class);
+    }
+    
+
+    @Provides
+    @Registry
+    @SuppressWarnings("unchecked")
+    protected Map<String, Class<? extends View>> provideViewMap(@Persistent Set<Object> entities)
+    {
+        // Filter out views from the persistent classes.
+        
+        Map<String, Class<? extends View>> viewMap = Maps.newTreeMap();
+
+        for (Object entity : entities)
+        {
+            ViewPath annotation = entity.getClass().getAnnotation(ViewPath.class);
+
+            if (entity.getClass().isAnnotationPresent(ViewPath.class))
+            {
+                Class<? extends View> viewClass = (Class<? extends View>) entity.getClass();
+
+                viewMap.put(annotation.value(), viewClass);
+            }
+        }
+
+        return viewMap;
     }
 }

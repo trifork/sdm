@@ -147,6 +147,7 @@ public class DenGodeWebServiceFilter implements Filter
 			// Rip out the ID Card and cram it into the request context.
 
 			final String xml = IOUtils.toString(httpRequest.getReader());
+			httpRequest.getPathInfo();
 			
 			// NB. SEAL throws an exception if the id card is not valid in time
 			// or invalid in some other way.

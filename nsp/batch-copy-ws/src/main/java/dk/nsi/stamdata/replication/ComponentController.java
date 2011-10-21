@@ -32,16 +32,22 @@ import java.util.Properties;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.ConfigurationLoader;
+import com.trifork.stamdata.MonitoringModule;
+import com.trifork.stamdata.persistence.PersistenceFilter;
 import com.trifork.stamdata.persistence.PersistenceModule;
+import com.trifork.stamdata.persistence.StatelessPersistenceFilter;
 
 import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.stamdata.replication.webservice.RegistryModule;
+import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
 import dk.nsi.stamdata.views.ViewModule;
+import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -64,9 +70,9 @@ public class ComponentController extends GuiceServletContextListener
             Properties props = ConfigurationLoader.loadForName(COMPONENT_NAME);
             bindProperties(binder(), props);
 
-            // A previous version on this component used the property
-            // 'security' to determine what type of security to use.
-            // To avoid the operator to have to change deployment we
+            // A previous version of this component used the property
+            // 'security' to determine what type of security to use (e.g. none, DGWS, Two-way-SSL).
+            // To avoid the operator (Netic) to have to change deployment (i.e. puppet scripts) we
             // still support this property.
 
             if ("dgwsTest".equalsIgnoreCase(props.getProperty("security")))
@@ -75,9 +81,7 @@ public class ComponentController extends GuiceServletContextListener
             }
             
             install(new ViewModule());
-
             install(new PersistenceModule());
-            install(new RegistryModule());
         }
     }
 
@@ -87,17 +91,17 @@ public class ComponentController extends GuiceServletContextListener
         @Override
         protected void configureServlets()
         {
-            //filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
-            //filterRegex("/*").through(PersistenceFilter.class);
-            //filterRegex("(?!/status|/authenticate)/.*").through(StatelessPersistenceFilter.class);
+            String ALL_EXCEPT_STATUS_PAGE = "(?!/status)/.*";
             
-            //bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
-            //install(new MonitoringModule());
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(DenGodeWebServiceFilter.class);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(PersistenceFilter.class);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(StatelessPersistenceFilter.class);
             
-            //serveRegex("/.*/.*/v.*").with(ViewServlet.class);
+            bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
+            install(new MonitoringModule());
             
-            //bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
-            //filter("/authenticate").through(SLALoggingServletFilter.class);
+            bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class);
         }
     }
 }

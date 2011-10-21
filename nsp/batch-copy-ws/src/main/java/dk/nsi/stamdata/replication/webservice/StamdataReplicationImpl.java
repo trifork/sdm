@@ -24,6 +24,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
             Holder<Security> wsseHeader, Holder<Header> medcomHeader,
             ReplicationRequestType parameters) {
         
+        
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         Document document;
         
