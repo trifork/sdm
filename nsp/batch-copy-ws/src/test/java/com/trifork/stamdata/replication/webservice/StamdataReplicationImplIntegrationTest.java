@@ -73,7 +73,7 @@ public class StamdataReplicationImplIntegrationTest
         request.setOffset("0");
         
         SecurityWrapper securityWrapper = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("12345678");
-        stamdataReplicationClient.getPersonDetails(securityWrapper.getSecurity(), securityWrapper.getMedcomHeader(), request);
+        stamdataReplicationClient.replicate(securityWrapper.getSecurity(), securityWrapper.getMedcomHeader(), request);
         
         assertTrue(true);
     }

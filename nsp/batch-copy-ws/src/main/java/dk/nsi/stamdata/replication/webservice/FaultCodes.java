@@ -22,16 +22,13 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.dgws;
+package dk.nsi.stamdata.replication.webservice;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+public final class FaultCodes {
 
-import com.google.inject.BindingAnnotation;
-
-@BindingAnnotation
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ClientVocesCvr
-{
-
+    protected FaultCodes() {}
+    
+    public static final String INVALID_OFFSET = "urn:stamdata:invalid-history-offset";
+    public static final String UNKNOWN_VIEW = "urn:stamdata:unknown-view";
+    public static final String IO_ERROR = "urn:stamdata:io-error";
 }

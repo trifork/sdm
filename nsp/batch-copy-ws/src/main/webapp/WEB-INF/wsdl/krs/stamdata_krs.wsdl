@@ -48,18 +48,23 @@
     <wsdl:part name="medcomHeader" element="dgws:Header" />
     <wsdl:part name="parameters" element="tns:ReplicationResponse"/>
   </wsdl:message>
- 
+  
+  <wsdl:message name="ReplicationFault">
+    <wsdl:part name="fault" element="tns:ReplicationFault" />
+  </wsdl:message>
+  
   <wsdl:portType name="StamdataReplication">
-    <wsdl:operation name="getPersonDetails">
+    <wsdl:operation name="replicate">
       <wsdl:input message="tns:ReplicationIn" />
       <wsdl:output message="tns:ReplicationOut" />
+      <wsdl:fault message="tns:ReplicationFault" name="ReplicationFault" />
     </wsdl:operation>
   </wsdl:portType>
  
   <wsdl:binding name="StamdataReplicationSoap11Binding" type="tns:StamdataReplication">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-    <wsdl:operation name="getPersonDetails">
-        <soap:operation soapAction="http://nsi.dk/2011/10/21/StamdataKrs/getPersonDetails" style="document"/> 
+    <wsdl:operation name="replicate">
+        <soap:operation soapAction="http://nsi.dk/2011/10/21/StamdataKrs/replicate" style="document"/> 
         <wsdl:input>
             <soap:body use="literal" parts="parameters"/>
             <soap:header message="tns:ReplicationIn" part="wsseHeader" use="literal"/>
@@ -70,6 +75,9 @@
             <soap:header message="tns:ReplicationOut" part="wsseHeader" use="literal"/>
             <soap:header message="tns:ReplicationOut" part="medcomHeader" use="literal"/>
         </wsdl:output>
+        <wsdl:fault name="ReplicationFault">
+          <soap:fault use="literal" name="ReplicationFault" />
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
  

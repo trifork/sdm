@@ -28,20 +28,22 @@ package dk.nsi.stamdata.replication.webservice;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Date;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlSchema;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.dom.DOMResult;
 
 import org.hibernate.ScrollableResults;
+import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
-import com.sun.xml.fastinfoset.stax.factory.StAXOutputFactory;
 
 import dk.nsi.stamdata.views.View;
 import dk.nsi.stamdata.views.Views;
@@ -73,21 +75,23 @@ public class AtomFeedWriter
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public int write(Class<? extends View> viewClass, ScrollableResults records, OutputStream outputStream, boolean useFastInfoset) throws IOException
+	public Document write(Class<? extends View> viewClass, ScrollableResults records) throws IOException
 	{
 		checkNotNull(viewClass);
 		checkNotNull(records);
-		checkNotNull(outputStream);
 		
 		records.beforeFirst();
 
 		String entityName = Views.getViewPath(viewClass);
-		int writtenRecords = 0;
 
 		try
 		{
-			XMLStreamWriter writer = (useFastInfoset) ? StAXOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING) : XMLOutputFactory.newInstance().createXMLStreamWriter(outputStream, STREAM_ENCODING);
-
+		    XMLOutputFactory xof = XMLOutputFactory.newInstance();
+		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		    DocumentBuilder db = dbf.newDocumentBuilder();
+		    Document doc = db.newDocument();
+		    XMLStreamWriter writer = xof.createXMLStreamWriter(new DOMResult(doc));
+		    
 			// Start the feed.
 
 			writer.writeStartDocument(XML_DOC_ENCODING, "1.0");
@@ -108,13 +112,13 @@ public class AtomFeedWriter
 			{
 				View view = (View) records.get(0);
 				writeEntry(writer, entityName, view, marshaller);
-				writtenRecords++;
 			}
 
 			// End the feed.
 
 			writer.writeEndDocument();
-			return writtenRecords;
+			
+			return doc;
 		}
 		catch (Exception e)
 		{

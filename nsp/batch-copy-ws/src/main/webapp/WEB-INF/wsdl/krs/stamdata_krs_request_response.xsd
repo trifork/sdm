@@ -46,4 +46,12 @@
       </any>
     </sequence>
   </complexType>
+  
+  <element name="ReplicationFault" type="string" />
+  
+  <complexType name="ReplicationFaultType">
+    <all>
+      <element name="errorMessage" type="string"/>
+    </all>
+  </complexType>
 </schema>
