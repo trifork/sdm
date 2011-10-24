@@ -26,19 +26,12 @@ package dk.nsi.stamdata.replication.webservice;
 
 import static java.lang.String.format;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringBufferInputStream;
 import java.util.Map;
 
 import javax.jws.WebService;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.SOAPException;
 import javax.xml.ws.Holder;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.StringBuilderWriter;
 import org.hibernate.ScrollableResults;
 import org.w3c.dom.Document;
 
@@ -50,7 +43,6 @@ import dk.nsi.dgws.ClientVocesCvr;
 import dk.nsi.stamdata.replication.jaxws.Header;
 import dk.nsi.stamdata.replication.jaxws.ObjectFactory;
 import dk.nsi.stamdata.replication.jaxws.ReplicationFault;
-import dk.nsi.stamdata.replication.jaxws.ReplicationFaultType;
 import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
 import dk.nsi.stamdata.replication.jaxws.ReplicationResponseType;
 import dk.nsi.stamdata.replication.jaxws.Security;

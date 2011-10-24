@@ -33,15 +33,20 @@ import java.util.Date;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlSchema;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXSource;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.Namespace;
+import org.dom4j.io.DocumentResult;
+import org.dom4j.io.DocumentSource;
 import org.hibernate.ScrollableResults;
-import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
 
@@ -55,8 +60,6 @@ import dk.nsi.stamdata.views.Views;
  */
 public class AtomFeedWriter
 {
-	/* This string must be lower case for it to be valid XML. */
-	private static final String XML_DOC_ENCODING = "utf-8";
 	private static final String STREAM_ENCODING = "UTF-8";
 
 	private static final String ATOM_NS = "http://www.w3.org/2005/Atom";
@@ -75,7 +78,7 @@ public class AtomFeedWriter
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public Document write(Class<? extends View> viewClass, ScrollableResults records) throws IOException
+	public org.w3c.dom.Document write(Class<? extends View> viewClass, ScrollableResults records) throws IOException
 	{
 		checkNotNull(viewClass);
 		checkNotNull(records);
@@ -86,21 +89,20 @@ public class AtomFeedWriter
 
 		try
 		{
-		    XMLOutputFactory xof = XMLOutputFactory.newInstance();
-		    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		    DocumentBuilder db = dbf.newDocumentBuilder();
-		    Document doc = db.newDocument();
-		    XMLStreamWriter writer = xof.createXMLStreamWriter(new DOMResult(doc));
-		    
+		    Document document = DocumentHelper.createDocument();
+	        document.setXMLEncoding("utf-8");
+	        
 			// Start the feed.
-
-			writer.writeStartDocument(XML_DOC_ENCODING, "1.0");
-			writer.setDefaultNamespace(ATOM_NS);
-			writer.writeStartElement("feed");
-			writer.writeNamespace(null, ATOM_NS);
-			writer.writeNamespace("sd", viewClass.getPackage().getAnnotation(XmlSchema.class).namespace());
-
-			writeFeedMetadata(entityName, writer);
+		    
+            Element feed = document.addElement("atom:feed", ATOM_NS);
+            
+            // Get the namespace of the view class.
+            
+            String viewNS = viewClass.getPackage().getAnnotation(XmlSchema.class).namespace();
+            Namespace namespace = new Namespace(null, viewNS);
+            document.getRootElement().add(namespace);
+            
+			writeFeedMetadata(entityName, feed);
 
 			// Write each record as an ATOM entry.
 
@@ -111,14 +113,10 @@ public class AtomFeedWriter
 			while (records.next())
 			{
 				View view = (View) records.get(0);
-				writeEntry(writer, entityName, view, marshaller);
+				writeEntry(feed, entityName, view, marshaller);
 			}
-
-			// End the feed.
-
-			writer.writeEndDocument();
 			
-			return doc;
+			return convertToW3C(document);
 		}
 		catch (Exception e)
 		{
@@ -126,34 +124,24 @@ public class AtomFeedWriter
 		}
 	}
 
-	protected void writeEntry(XMLStreamWriter feed, String path, View record, Marshaller marshaller) throws XMLStreamException, JAXBException
+	protected void writeEntry(Element feed, String path, View record, Marshaller marshaller) throws JAXBException
 	{
-		feed.writeStartElement("entry");
-
-		feed.writeStartElement("id");
-		feed.writeCharacters(TAG_PREFIX + path + "/" + record.getOffset());
-		feed.writeEndElement(); // Id
-
-		// The title element is required,
-		// we'll just leave it empty.
-
-		feed.writeEmptyElement("title");
-
-		feed.writeStartElement("updated");
-		feed.writeCharacters(AtomDate.toString(record.getUpdated()));
-		feed.writeEndElement(); // Updated
+		Element entry = feed.addElement("atom:entry", ATOM_NS);
+		
+		entry.addElement("atom:id", ATOM_NS).addText(TAG_PREFIX + path + "/" + record.getOffset());
+		entry.addElement("atom:title", ATOM_NS); // Empty, but required by ATOM for human redability.
+		entry.addElement("atom:updated", ATOM_NS).addText(AtomDate.toString(record.getUpdated()));
 
 		// Write the actual entity inside the content tag.
 
-		feed.writeStartElement("content");
-		feed.writeAttribute("type", "application/xml");
-		marshaller.marshal(record, feed);
-		feed.writeEndElement(); // Content
-
-		feed.writeEndElement(); // Entry
+		Element content = entry.addElement("atom:content", ATOM_NS).addAttribute("type", "application/xml");
+		
+		DocumentResult dr = new DocumentResult();
+		marshaller.marshal(record, dr);
+		content.add(dr.getDocument().getRootElement());
 	}
 
-	protected void writeFeedMetadata(String path, XMLStreamWriter feed) throws XMLStreamException
+	protected void writeFeedMetadata(String path, Element feed)
 	{
 		// There is currently no stability in the feeds' output,
 		// This means that if you access the same URL two times
@@ -164,26 +152,30 @@ public class AtomFeedWriter
 		//
 		// TODO: Add offset=nextOffset count=records.size() to the feed id.
 
-		feed.writeStartElement("id");
-		feed.writeCharacters(TAG_PREFIX + path);
-		feed.writeEndElement(); // Id
-
-		feed.writeStartElement("updated");
-		feed.writeCharacters(AtomDate.toString(new Date()));
-		feed.writeEndElement(); // Updated
+		feed.addElement("atom:id", ATOM_NS).addText(TAG_PREFIX + path);
+		feed.addElement("atom:updated", ATOM_NS).addText(AtomDate.toString(new Date()));
 
 		// Write the feed meta data.
 
-		feed.writeStartElement("title");
-		feed.writeCharacters("Stamdata Registry Feed");
-		feed.writeEndElement(); // Title
+		feed.addElement("atom:title", ATOM_NS).addText("Stamdata Registry Feed");
+		feed.addElement("atom:author", ATOM_NS).addElement("atom:name", ATOM_NS).addText("National Sundheds IT");
+    }
 
-		feed.writeStartElement("author");
+    private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-		feed.writeStartElement("name");
-		feed.writeCharacters("NSI");
-		feed.writeEndElement(); // Name
+    public static org.w3c.dom.Document convertToW3C(org.dom4j.Document dom4jdoc) throws TransformerException
+    {
+        SAXSource source = new DocumentSource(dom4jdoc);
+        DOMResult result = new DOMResult();
+        
 
-		feed.writeEndElement(); // Author
-	}
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+        
+        String s = dom4jdoc.asXML();
+        
+        transformer.transform(source, result);
+        return (org.w3c.dom.Document) result.getNode();
+    }
 }
