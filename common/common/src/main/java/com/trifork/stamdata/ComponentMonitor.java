@@ -36,5 +36,5 @@ public interface ComponentMonitor
      * 
      * @return true is the component is okay.
      */
-	boolean isOk();
+    boolean isOk();
 }

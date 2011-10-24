@@ -62,11 +62,6 @@
     </dependency>
 
     <dependency>
-      <groupId>dk.sosi.seal</groupId>
-      <artifactId>seal</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>jaxws-tools</artifactId>
     </dependency>
@@ -139,7 +134,6 @@
     <dependency>
       <groupId>dk.sdsd.nsp</groupId>
       <artifactId>nsp-util</artifactId>
-      <version>1.0.6</version>
     </dependency>
 
     <dependency>

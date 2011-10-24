@@ -86,7 +86,17 @@ public class StamdataReplicationImpl implements StamdataReplication {
         
         Class<? extends View> requestedView = getViewClass(parameters);
         HistoryOffset offset = getOffset(parameters);
-        int limit = Math.min(parameters.getMaxRecords().intValue(), MAX_RECORD_LIMIT);
+        
+        int limit;
+        
+        if (parameters.getMaxRecords() == null)
+        {
+            limit = MAX_RECORD_LIMIT;
+        }
+        else
+        {
+            limit = Math.min(parameters.getMaxRecords().intValue(), MAX_RECORD_LIMIT);
+        }
         
         ScrollableResults results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
         
@@ -107,8 +117,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
         catch (IOException e) {
             
-            throw new ReplicationFault("A unexpected error occured. Processing stopped.", FaultCodes.IO_ERROR);
+            throw new ReplicationFault("A unexpected error occured. Processing stopped.", FaultCodes.IO_ERROR, e);
         }
+        
         return body;
     }
 

@@ -44,10 +44,10 @@ import com.google.common.collect.Maps;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Stage;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
 import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;

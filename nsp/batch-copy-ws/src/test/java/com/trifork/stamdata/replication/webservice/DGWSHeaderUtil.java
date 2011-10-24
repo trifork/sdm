@@ -40,6 +40,8 @@ import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import com.trifork.stamdata.jaxws.SealNamespacePrefixMapper;
+
 import dk.nsi.stamdata.replication.jaxws.Header;
 import dk.nsi.stamdata.replication.jaxws.Linking;
 import dk.nsi.stamdata.replication.jaxws.Security;

@@ -43,9 +43,9 @@ import org.junit.runner.RunWith;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;

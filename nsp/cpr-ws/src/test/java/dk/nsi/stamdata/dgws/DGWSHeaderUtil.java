@@ -24,7 +24,6 @@
  */
 package dk.nsi.stamdata.dgws;
 
-import dk.nsi.stamdata.cpr.jaxws.SealNamespacePrefixMapper;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.Linking;
 import dk.nsi.stamdata.cpr.ws.Security;
@@ -38,6 +37,8 @@ import dk.sosi.seal.xml.XmlUtil;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+
+import com.trifork.stamdata.jaxws.SealNamespacePrefixMapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;

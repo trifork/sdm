@@ -32,8 +32,9 @@ import javax.xml.namespace.QName;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
+
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.replication.jaxws.ObjectFactory;
 import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
@@ -64,6 +65,8 @@ public class StamdataReplicationImplIntegrationTest
         QName serviceName = new QName("http://nsi.dk/2011/10/21/StamdataKrs/", "StamdataReplicationService");
         StamdataReplicationService service = new StamdataReplicationService(wsdlLocation, serviceName);
 
+        service.setHandlerResolver(new SealNamespaceResolver());
+        
         StamdataReplication stamdataReplicationClient = service.getStamdataReplication();
         ReplicationRequestType request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("cpr");

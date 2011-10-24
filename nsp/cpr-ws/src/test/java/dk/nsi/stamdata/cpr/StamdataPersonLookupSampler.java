@@ -34,7 +34,8 @@ import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
 
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+
 import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
 import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
 import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;

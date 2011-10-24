@@ -24,7 +24,6 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.ws.CprAbbsRequest;
 import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
 import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription;
@@ -36,6 +35,8 @@ import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
+
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;

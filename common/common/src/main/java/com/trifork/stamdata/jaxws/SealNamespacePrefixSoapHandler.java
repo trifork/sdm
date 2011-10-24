@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.jaxws;
+package com.trifork.stamdata.jaxws;
 
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

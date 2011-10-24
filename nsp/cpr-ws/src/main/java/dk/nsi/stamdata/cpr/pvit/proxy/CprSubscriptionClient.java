@@ -24,10 +24,10 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.cpr.ws.*;
 import org.joda.time.DateTime;
 
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 import com.trifork.stamdata.persistence.Transactional;
 
 import javax.inject.Inject;

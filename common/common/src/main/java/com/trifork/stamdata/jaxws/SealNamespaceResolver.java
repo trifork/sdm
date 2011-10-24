@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.jaxws;
+package com.trifork.stamdata.jaxws;
 
 import com.google.common.collect.Lists;
 
@@ -31,7 +31,13 @@ import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.PortInfo;
 import java.util.List;
 
-
+/**
+ * SEAL is really picky about it's namespaces.
+ * Therefore we have to make sure that JAXWS serializes to
+ * the same namespace prefixes as SEAL expects.
+ * 
+ * All JAX-WS clients must use this namespace resolver.
+ */
 public class SealNamespaceResolver implements HandlerResolver
 {
 	@Override

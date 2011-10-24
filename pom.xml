@@ -77,10 +77,16 @@
         <version>2.1.7</version>
         <scope>provided</scope>
       </dependency>
+      <!-- SOSI, SDSD, NSP etc. -->
       <dependency>
         <groupId>dk.sosi.seal</groupId>
         <artifactId>seal</artifactId>
         <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>dk.sdsd.nsp</groupId>
+        <artifactId>nsp-util</artifactId>
+        <version>1.0.6</version>
       </dependency>
       <!-- Guava, Commons, etc. -->
       <dependency>
@@ -144,6 +150,17 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>${netic.provided.mysql.version}</version>
         <scope>provided</scope>
+      </dependency>
+      <!-- Workaround -->
+      <!-- 
+       | Seal 2.1.1 must have version 1.5 of
+       | commons codec. To avoid others overriding
+       | the version we force it here. 
+      -->
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.5</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
