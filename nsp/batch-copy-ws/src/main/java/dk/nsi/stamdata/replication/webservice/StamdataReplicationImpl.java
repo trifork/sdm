@@ -44,6 +44,7 @@ import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 
 import dk.nsi.dgws.ClientVocesCvr;
 import dk.nsi.stamdata.replication.jaxws.Header;
@@ -56,8 +57,9 @@ import dk.nsi.stamdata.replication.jaxws.Security;
 import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
 import dk.nsi.stamdata.views.View;
 
-@WebService(serviceName = "StamdataReplication", endpointInterface = "dk.nsi.stamdata.replication.jaxws.StamdataReplication")
+@GuiceWebservice
 @SchemaValidation
+@WebService(serviceName = "StamdataReplication", endpointInterface = "dk.nsi.stamdata.replication.jaxws.StamdataReplication")
 public class StamdataReplicationImpl implements StamdataReplication {
 
     private static final int MAX_RECORD_LIMIT = 2000;

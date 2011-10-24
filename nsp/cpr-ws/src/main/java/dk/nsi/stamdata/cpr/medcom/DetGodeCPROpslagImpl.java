@@ -39,12 +39,12 @@ import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;

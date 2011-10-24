@@ -23,14 +23,7 @@
 
 		<dependency>
 			<groupId>dk.sosi.seal</groupId>
-			<artifactId>seal-jboss6</artifactId>
-			<version>2.1.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>seal</artifactId>
 		</dependency>
 
 		<!-- Logging -->
@@ -52,8 +45,6 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>${netic.provided.mysql.version}</version>
-			<scope>provided</scope>
 		</dependency>
     
 		<dependency>
@@ -86,8 +77,6 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- Test -->
@@ -95,22 +84,16 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>${mockito.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
-			<version>${hamcrest.version}</version>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>

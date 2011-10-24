@@ -21,11 +21,9 @@
     <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
     <jboss6.xalan.version>2.7.1</jboss6.xalan.version>
     <guice.version>3.0</guice.version>
-    <guava.version>r09</guava.version>
     <hamcrest.version>1.1</hamcrest.version>
     <junit.version>4.8.2</junit.version>
     <mockito.version>1.8.5</mockito.version>
-    <seal.version>2.1</seal.version>
     <netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -45,12 +43,18 @@
     <module>nsp/cpr-ws</module>
   </modules>
 
-  <!-- 
+  <!--
    | Dependency Managment defines the versions and scope of sub-modules' 
    | dependencies.
   -->
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+      </dependency>
       <dependency>
         <groupId>com.sun.xml.ws</groupId>
         <artifactId>jaxws-tools</artifactId>
@@ -66,6 +70,80 @@
             <artifactId>stax-api</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.ws</groupId>
+        <artifactId>jaxws-rt</artifactId>
+        <version>2.1.7</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>dk.sosi.seal</groupId>
+        <artifactId>seal</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <!-- Guava, Commons, etc. -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>r09</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.0</version>
+      </dependency>
+      <!-- Guice -->
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-servlet</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-multibindings</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <!-- Testing -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-all</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- MySQL & Hibernate -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${netic.provided.mysql.version}</version>
+        <scope>provided</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>

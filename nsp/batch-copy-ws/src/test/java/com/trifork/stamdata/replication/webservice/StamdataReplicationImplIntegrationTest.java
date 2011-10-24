@@ -58,7 +58,6 @@ public class StamdataReplicationImplIntegrationTest
     }
     
     @Test
-    @Ignore("Not working")
     public void truth() throws Exception
     {
         URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication?wsdl");

@@ -33,7 +33,6 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
 
-import dk.nsi.stamdata.replication.webservice.annotations.Registry;
 import dk.nsi.stamdata.views.autorisationsregisteret.Autorisation;
 import dk.nsi.stamdata.views.cpr.BarnRelation;
 import dk.nsi.stamdata.views.cpr.ForaeldremyndighedsRelation;
@@ -180,7 +179,6 @@ public class ViewModule extends AbstractModule
     
 
     @Provides
-    @Registry
     @SuppressWarnings("unchecked")
     protected Map<String, Class<? extends View>> provideViewMap(@Persistent Set<Object> entities)
     {

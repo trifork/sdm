@@ -93,7 +93,7 @@ public class ComponentController extends GuiceServletContextListener
         {
             String ALL_EXCEPT_STATUS_PAGE = "(?!/status)/.*";
             
-            //filterRegex(ALL_EXCEPT_STATUS_PAGE).through(DenGodeWebServiceFilter.class);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(DenGodeWebServiceFilter.class);
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(PersistenceFilter.class);
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(StatelessPersistenceFilter.class);
             

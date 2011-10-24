@@ -33,7 +33,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 
-import org.hamcrest.Matchers;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.After;

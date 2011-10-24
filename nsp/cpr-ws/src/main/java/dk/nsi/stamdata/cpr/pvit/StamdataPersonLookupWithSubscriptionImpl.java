@@ -35,10 +35,10 @@ import javax.xml.ws.Holder;
 import org.joda.time.DateTime;
 
 import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsException;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;

@@ -25,10 +25,10 @@
 package dk.nsi.stamdata.cpr.pvit;
 
 import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.ws.*;
 import dk.sosi.seal.model.SystemIDCard;
