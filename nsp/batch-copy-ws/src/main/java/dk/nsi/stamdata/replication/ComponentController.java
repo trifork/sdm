@@ -77,10 +77,8 @@ public class ComponentController extends GuiceServletContextListener
             // To avoid the operator (Netic) to have to change deployment (i.e. puppet scripts) we
             // still support this property.
 
-            if ("dgwsTest".equalsIgnoreCase(props.getProperty("security")))
-            {
-                bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to("true");
-            }
+            String useTestSTS = "dgwsTest".equalsIgnoreCase(props.getProperty("security")) ? "true" : "false";
+            bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to(useTestSTS);
             
             install(new ViewModule());
             install(new PersistenceModule());
