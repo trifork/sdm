@@ -42,6 +42,8 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -52,6 +54,7 @@ import org.w3c.dom.Element;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
+import com.sun.xml.bind.v2.runtime.output.NamespaceContextImpl;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.replication.jaxws.Header;
