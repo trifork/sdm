@@ -27,42 +27,36 @@ package dk.nsi.stamdata.replication.webservice;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
-import org.apache.xpath.XPathFactory;
-import org.dom4j.io.DOMReader;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.ibm.wsdl.util.IOUtils;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.replication.jaxws.Header;
 import dk.nsi.stamdata.replication.jaxws.ObjectFactory;
+import dk.nsi.stamdata.replication.jaxws.ReplicationFault;
 import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
 import dk.nsi.stamdata.replication.jaxws.ReplicationResponseType;
 import dk.nsi.stamdata.replication.jaxws.Security;
@@ -85,14 +79,16 @@ public class StamdataReplicationImplIntegrationTest {
 
     private ReplicationRequestType request;
     private ReplicationResponseType response;
-
+    private Element anyAsElement;
+    
     @Inject
     private Session session;
     @Inject
     private ClientDao clientDao;
 
     private List<Person> persons = Lists.newArrayList();
-
+    private DateTime now, lastYear, nextYear;
+    
     @Before
     public void setUp() throws Exception {
         server = new TestServer().port(8986).contextPath("/").start();
@@ -103,6 +99,10 @@ public class StamdataReplicationImplIntegrationTest {
 
         service.setHandlerResolver(new SealNamespaceResolver());
         client = service.getStamdataReplication();
+        
+        now = DateTime.now();
+        lastYear = now.minusYears(1);
+        nextYear = now.plusYears(1);
     }
 
     @After
@@ -121,25 +121,16 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Test
     public void basicQueryDoesNotRaiseAnException() throws Exception {
-        request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister("cpr");
-        request.setDatatype("person");
-        request.setVersion(1L);
-        request.setOffset("0");
+        createCprPersonRegisterReplicationRequest();
 
         isClientAuthority = true;
 
         populateDatabaseAndSendRequest();
     }
 
-    @Ignore
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = ReplicationFault.class)
     public void cvrThatIsNotWhitelistedRaisesAnException() throws Exception {
-        request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister("cpr");
-        request.setDatatype("person");
-        request.setVersion(1L);
-        request.setOffset("0");
+        createCprPersonRegisterReplicationRequest();
 
         isClientAuthority = false;
 
@@ -148,63 +139,210 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Test
     public void basicQueryOnEmptyDatabaseReturnsZeroResults() throws Exception {
-        request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister("cpr");
-        request.setDatatype("person");
-        request.setVersion(1L);
-        request.setOffset("0");
+        createCprPersonRegisterReplicationRequest();
 
         isClientAuthority = true;
 
         populateDatabaseAndSendRequest();
 
-        Element anyAsElement = (Element) response.getAny();
-        assertThat(anyAsElement.getLocalName(), is("feed"));
-        assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
+        assertResponseContainsAtom();
+        
+        assertResponseContainsExactNumberOfRecords("person", 0);
     }
 
     @Test
     public void basicQueryOnNonEmptyDatabaseReturnsOneResult() throws Exception {
+        createCprPersonRegisterReplicationRequest();
+
+        isClientAuthority = true;
+
+        Person person = createDonaldDuckPerson(now, lastYear, nextYear);
+        persons.add(person);
+
+        populateDatabaseAndSendRequest();
+
+        assertResponseContainsAtom();
+
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        
+        String fornavn = "Anders";
+        String efternavn = "And";
+        assertResponseContainsPersonWithSurNameMatchingGivenName(fornavn, efternavn);
+    }
+
+    @Test
+    public void personsArePagedAccordingToParameter() throws Exception {
+        createCprPersonRegisterReplicationRequest();
+        
+        isClientAuthority = true;
+
+        Person a = createDonaldDuckPerson(now, lastYear, nextYear);
+        a.cpr = "1111111111";
+        persons.add(a);
+        
+        Person b = createDonaldDuckPerson(now, lastYear, nextYear);
+        b.cpr = "2222222222";
+        persons.add(b);
+
+        request.setOffset("0");
+        request.setMaxRecords(2L);
+        
+        populateDatabaseAndSendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 2);
+    }
+
+    @Test
+    public void personsAreCorrectlyPaged() throws Exception {
+        createCprPersonRegisterReplicationRequest();
+        
+        isClientAuthority = true;
+
+        DateTime yesterday = now.minusDays(1);
+        
+        Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
+        a.cpr = "1111111111";
+        persons.add(a);
+        
+        Person b = createDonaldDuckPerson(yesterday, lastYear, nextYear);
+        b.cpr = "2222222222";
+        persons.add(b);
+
+        Person c = createDonaldDuckPerson(now, lastYear, nextYear);
+        c.cpr = "3333333333";
+        persons.add(c);
+
+        request.setOffset("0");
+        request.setMaxRecords(1L);
+        
+        populateDatabaseAndSendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("1111111111");
+        
+        request.setOffset(getOffsetFromAtomEntry());
+        sendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("2222222222");
+        
+        request.setOffset(getOffsetFromAtomEntry());
+        sendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("3333333333");
+    }
+
+    /*
+    @Test
+    public void personsAreCorrectlyPagedEvenWhenNewRecordIsInserted() throws Exception {
+        createCprPersonRegisterReplicationRequest();
+        
+        isClientAuthority = true;
+
+        DateTime yesterday = now.minusDays(1);
+        
+        Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
+        a.cpr = "1111111111";
+        persons.add(a);
+        
+        Person b = createDonaldDuckPerson(yesterday, lastYear, nextYear);
+        b.cpr = "2222222222";
+        persons.add(b);
+
+        Person c = createDonaldDuckPerson(now, lastYear, nextYear);
+        c.cpr = "3333333333";
+        persons.add(c);
+
+        request.setOffset("0");
+        request.setMaxRecords(1L);
+        
+        populateDatabaseAndSendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("1111111111");
+        
+        request.setOffset(getOffsetFromAtomEntry());
+        sendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("2222222222");
+        
+        a.modifiedDate = now.toDate();
+        insertSinglePersonIntoDatabase(a);
+        
+        request.setOffset(getOffsetFromAtomEntry());
+        sendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("3333333333");
+
+        request.setOffset(getOffsetFromAtomEntry());
+        sendRequest();
+        assertResponseContainsAtom();
+        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsPersonWithCpr("1111111111");
+    }
+    */
+
+    // Helper methods
+    
+    private void createCprPersonRegisterReplicationRequest() {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("cpr");
         request.setDatatype("person");
         request.setVersion(1L);
         request.setOffset("0");
-
-        isClientAuthority = true;
-
-        createDonaldDuckPerson();
-
-        populateDatabaseAndSendRequest();
-
-        Element anyAsElement = (Element) response.getAny();
+    }
+    
+    private void assertResponseContainsAtom() {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        
         assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
-
-        /*
-        DOMReader domReader = new DOMReader();
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.newDocument();
-        document.adoptNode(anyAsElement);
-        org.dom4j.Document dom4jDocument = domReader.read(document);
-        
-        dom4jDocument.selectSingleNode("//person[fornavn='Anders']/efternavn");
-        */
-        /*
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
-        transformer.transform(new DOMSource(anyAsElement), new StreamResult(outputStream));
-        String transformResult = new String(outputStream.toByteArray());
-        String result = expr.evaluate(anyAsElement);
-        */
-        
-//        assertThat(result, is("And"));
     }
 
+    private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException {
+        XPathExpression expression = createXpathExpression("//sdm:person[sdm:fornavn='" + givenName + "']/sdm:efternavn");
+        String result = expression.evaluate(anyAsElement);
+        assertThat(result, is(surName));
+    }
+
+    private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException {
+        XPathExpression expression = createXpathExpression("count(//sdm:person)");
+        String countAsString = expression.evaluate(anyAsElement);
+        assertThat(Integer.parseInt(countAsString), is(n));
+    }
+
+    private void assertResponseContainsPersonWithCpr(String oracleCpr) throws XPathExpressionException {
+        XPathExpression expression = createXpathExpression("//sdm:person/sdm:cpr");
+        String result = expression.evaluate(anyAsElement);
+        assertThat(result, is(oracleCpr));
+    }
+
+    private String getOffsetFromAtomEntry() throws XPathExpressionException {
+        XPathExpression expression = createXpathExpression("//atom:entry/atom:id");
+        String atomId = expression.evaluate(anyAsElement);
+        String[] tokens = atomId.split("/");
+        return tokens[tokens.length - 1];
+    }
+
+    private XPathExpression createXpathExpression(String expression) throws XPathExpressionException {
+        NamespaceContext context = new NamespaceContextMap(
+                "krs", "http://nsi.dk/2011/10/21/StamdataKrs/", 
+                "atom", "http://www.w3.org/2005/Atom",
+                "sdm", "http://trifork.com/-/stamdata/3.0/cpr");
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xpath = factory.newXPath();
+        xpath.setNamespaceContext(context);
+        return xpath.compile(expression);
+    }
+    
     private void populateDatabaseAndSendRequest() throws Exception {
+        populateDatabase();
+        sendRequest();
+    }
+
+    private void populateDatabase() {
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Client").executeUpdate();
@@ -220,7 +358,9 @@ public class StamdataReplicationImplIntegrationTest {
             session.persist(person);
         }
         t.commit();
+    }
 
+    private void sendRequest() throws Exception, ReplicationFault {
         Holder<Security> securityHeader;
         Holder<Header> medcomHeader;
 
@@ -236,11 +376,12 @@ public class StamdataReplicationImplIntegrationTest {
         }
 
         response = client.replicate(securityHeader, medcomHeader, request);
+        anyAsElement = (Element) response.getAny();
     }
 
     // StamdataPersonLookupIntegrationTest contains a "Factories" class that we
     // would rather use
-    private void createDonaldDuckPerson() {
+    private Person createDonaldDuckPerson(DateTime modifiedDate, DateTime validFrom, DateTime validTo) {
         String cpr = "0102451234";
         String koen = "M";
         String fornavn = "Anders";
@@ -262,15 +403,12 @@ public class StamdataReplicationImplIntegrationTest {
         String stilling = "Liggende";
         BigInteger vejKode = BigInteger.ONE;
         BigInteger kommuneKode = BigInteger.TEN;
-        Date modifiedDate = new Date();
         Date navnebeskyttelseslettedato = null;
         Date navnebeskyttelsestartdato = null;
-        Date validFrom = DateTime.now().minusYears(1).toDate();
-        Date validTo = DateTime.now().plusDays(1).toDate();
         Person person = new Person(cpr, koen, fornavn, mellemnavn, efternavn, coNavn, lokalitet, vejnavn,
                 bygningsnummer, husnummer, etage, sideDoerNummer, bynavn, postnummer, postdistrikt, status,
-                gaeldendeCPR, foedselsdato, stilling, vejKode, kommuneKode, modifiedDate, navnebeskyttelseslettedato,
-                navnebeskyttelsestartdato, validFrom, validTo);
-        persons.add(person);
+                gaeldendeCPR, foedselsdato, stilling, vejKode, kommuneKode, modifiedDate.toDate(), navnebeskyttelseslettedato,
+                navnebeskyttelsestartdato, validFrom.toDate(), validTo.toDate());
+        return person;
     }
 }
