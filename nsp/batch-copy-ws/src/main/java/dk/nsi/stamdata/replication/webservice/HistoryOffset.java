@@ -48,19 +48,21 @@ public class HistoryOffset {
 	protected String recordID;
 	protected Date modifiedDate;
 
-	public HistoryOffset(String id, Date modifiedDate) {
-
+	public HistoryOffset(String id, Date modifiedDate)
+	{
 		this.recordID = StringUtils.leftPad(id, 10, "0");
 		this.modifiedDate = modifiedDate;
 	}
 
 	public HistoryOffset(String offsetString) {
 
-		if (offsetString == null) {
+		if (offsetString == null)
+		{
 			recordID = "0000000000";
 			modifiedDate = new Date(0);
 		}
-		else {
+		else
+		{
 			offsetString = StringUtils.leftPad(offsetString, 20, "0");
 
 			String sinceDateParam = offsetString.substring(0, HISTORY_ID_SEGMENT_LENGTH);
@@ -70,19 +72,19 @@ public class HistoryOffset {
 		}
 	}
 
-	public Date getModifiedDate() {
-
+	public Date getModifiedDate()
+	{
 		return modifiedDate;
 	}
 
-	public String getRecordID() {
-
+	public String getRecordID()
+	{
 		return recordID;
 	}
 
 	@Override
-	public String toString() {
-
+	public String toString()
+	{
 		return String.format("%010d%s", modifiedDate.getTime() / 1000, recordID);
 	}
 }

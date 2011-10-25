@@ -31,4 +31,5 @@ public final class FaultCodes {
     public static final String INVALID_OFFSET = "urn:stamdata:invalid-history-offset";
     public static final String UNKNOWN_VIEW = "urn:stamdata:unknown-view";
     public static final String IO_ERROR = "urn:stamdata:io-error";
+    public static final String UNAUTHORIZED = "urn:stamdata:unauthorized-access";
 }

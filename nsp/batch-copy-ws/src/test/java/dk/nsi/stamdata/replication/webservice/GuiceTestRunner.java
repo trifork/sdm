@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.replication.webservice;
+package dk.nsi.stamdata.replication.webservice;
 
 import org.junit.runners.model.InitializationError;
 
