@@ -83,7 +83,6 @@ public class ComponentController extends GuiceServletContextListener
             
             install(new ViewModule());
             install(new PersistenceModule());
-            install(new DenGodeWebServiceModule());
         }
     }
 
@@ -104,6 +103,8 @@ public class ComponentController extends GuiceServletContextListener
             
             bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class);
+            
+            install(new DenGodeWebServiceModule());
         }
     }
 }
