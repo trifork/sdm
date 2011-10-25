@@ -47,6 +47,8 @@ import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
 import dk.nsi.stamdata.replication.jaxws.ReplicationResponseType;
 import dk.nsi.stamdata.replication.jaxws.Security;
 import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.views.View;
 
 @GuiceWebservice
@@ -59,49 +61,69 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final String cvr;
     private final RecordDao dao;
     private final Map<String, Class<? extends View>> viewClasses;
+    private final ClientDao clients;
 
     private final AtomFeedWriter outputWriter;
 
+
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao dao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter) {
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao dao, ClientDao clients, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter) {
         
         this.cvr = cvr;
         this.dao = dao;
+        this.clients = clients;
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
     }
     
     @Override
-    public ReplicationResponseType replicate(
-            Holder<Security> wsseHeader, Holder<Header> medcomHeader,
-            ReplicationRequestType parameters) throws ReplicationFault {
-        
+    public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
+    {
         Class<? extends View> requestedView = getViewClass(parameters);
+        
+        // Validate authentication.
+        //
+        Client client = clients.findByCvr(cvr);
+        if (client == null || client.isAuthorizedFor(requestedView))
+        {
+            throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
+        }
+        
+        // Validate the input parameters.
+        //
         HistoryOffset offset = getOffset(parameters);
+        int limit = getRecordLimit(parameters);
         
-        int limit;
-        
-        if (parameters.getMaxRecords() == null)
-        {
-            limit = MAX_RECORD_LIMIT;
-        }
-        else
-        {
-            limit = Math.min(parameters.getMaxRecords().intValue(), MAX_RECORD_LIMIT);
-        }
-        
+        // Fetch the records from the database and
+        // fill the output structure.
+        //
         ScrollableResults results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
-        
         Document feedDocument = createFeed(requestedView, results);
         
+        // Construct the output container.
+        //
         ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
         response.setAny(feedDocument.getFirstChild());
         
         return response;
     }
 
-    private Document createFeed(Class<? extends View> requestedView, ScrollableResults results) throws ReplicationFault {
-        
+
+    private int getRecordLimit(ReplicationRequestType parameters)
+    {
+        if (parameters.getMaxRecords() == null)
+        {
+            return MAX_RECORD_LIMIT;
+        }
+        else
+        {
+            return Math.min(parameters.getMaxRecords().intValue(), MAX_RECORD_LIMIT);
+        }
+    }
+
+
+    private Document createFeed(Class<? extends View> requestedView, ScrollableResults results) throws ReplicationFault
+    {
         Document body;
         
         try {
@@ -115,30 +137,29 @@ public class StamdataReplicationImpl implements StamdataReplication {
         return body;
     }
 
-    private Class<? extends View> getViewClass(ReplicationRequestType parameters) throws ReplicationFault {
-        
+    private Class<? extends View> getViewClass(ReplicationRequestType parameters) throws ReplicationFault
+    {
         String viewPath = format("%s/%s/v%d", parameters.getRegister(), parameters.getDatatype(), parameters.getVersion());
         
         Class<? extends View> requestedView = viewClasses.get(viewPath);
         
-        if (requestedView == null) {
-            
+        if (requestedView == null)
+        {
             throw new ReplicationFault(format("No view with identifier register=%s, datatype=%s and version=%d can be found.", parameters.getRegister(), parameters.getDatatype(), parameters.getVersion()), FaultCodes.UNKNOWN_VIEW);
         }
+        
         return requestedView;
     }
 
-    private HistoryOffset getOffset(ReplicationRequestType parameters)
-            throws ReplicationFault {
-        HistoryOffset offset;
-        
-        try {
-            offset = new HistoryOffset(parameters.getOffset());
+    private HistoryOffset getOffset(ReplicationRequestType parameters) throws ReplicationFault
+    {
+        try
+        {
+            return new HistoryOffset(parameters.getOffset());
         }
         catch (Exception e) {
             
             throw new ReplicationFault("Invalid offset in the request.", FaultCodes.INVALID_OFFSET, e);
         }
-        return offset;
     }
 }

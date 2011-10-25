@@ -190,6 +190,19 @@
         <artifactId>commons-codec</artifactId>
         <version>1.5</version>
       </dependency>
+      <!--
+       | The SAAJ implementation on JBOSS in quite
+       | broken. Yet we have to use it an we cannot
+       | provide our own. Thus we have to use the
+       | JBoss version or it complains. There might
+       | be a workaround for this.
+       -->
+       <dependency>
+           <groupId>com.sun.xml.messaging.saaj</groupId>
+           <artifactId>saaj-impl</artifactId>
+           <version>1.3.3</version>
+           <scope>provided<!-- exclude --></scope>
+       </dependency>
     </dependencies>
   </dependencyManagement>
 

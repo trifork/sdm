@@ -22,9 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.replication.webservice;
-
-import static org.junit.Assert.assertTrue;
+package dk.nsi.stamdata.replication.webservice;
 
 import java.net.URL;
 
@@ -76,7 +74,5 @@ public class StamdataReplicationImplIntegrationTest
         
         SecurityWrapper securityWrapper = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("12345678");
         stamdataReplicationClient.replicate(securityWrapper.getSecurity(), securityWrapper.getMedcomHeader(), request);
-        
-        assertTrue(true);
     }
 }

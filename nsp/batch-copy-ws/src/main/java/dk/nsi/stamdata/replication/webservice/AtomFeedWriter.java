@@ -171,9 +171,6 @@ public class AtomFeedWriter
 
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-
-        
-        String s = dom4jdoc.asXML();
         
         transformer.transform(source, result);
         return (org.w3c.dom.Document) result.getNode();
