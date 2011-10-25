@@ -76,6 +76,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         this.outputWriter = outputWriter;
     }
     
+
     @Override
     public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
