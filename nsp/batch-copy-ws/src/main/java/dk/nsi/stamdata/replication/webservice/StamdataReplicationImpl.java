@@ -84,7 +84,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         // Validate authentication.
         //
         Client client = clients.findByCvr(cvr);
-        if (client == null || client.isAuthorizedFor(requestedView))
+        if (client == null || !client.isAuthorizedFor(requestedView))
         {
             throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
         }

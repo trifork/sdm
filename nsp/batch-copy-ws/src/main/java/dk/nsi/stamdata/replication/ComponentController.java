@@ -46,6 +46,7 @@ import com.trifork.stamdata.persistence.StatelessPersistenceFilter;
 
 import dk.nsi.dgws.DenGodeWebServiceFilter;
 import dk.nsi.dgws.DenGodeWebServiceModule;
+import dk.nsi.stamdata.replication.models.AuthenticationModule;
 import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
 import dk.nsi.stamdata.views.ViewModule;
 import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
@@ -83,6 +84,7 @@ public class ComponentController extends GuiceServletContextListener
             
             install(new ViewModule());
             install(new PersistenceModule());
+            install(new AuthenticationModule());
         }
     }
 

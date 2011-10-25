@@ -68,7 +68,10 @@ import dk.nsi.stamdata.replication.jaxws.ReplicationResponseType;
 import dk.nsi.stamdata.replication.jaxws.Security;
 import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
 import dk.nsi.stamdata.replication.jaxws.StamdataReplicationService;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
 import dk.nsi.stamdata.views.cpr.Person;
 
 @RunWith(GuiceTestRunner.class)
@@ -85,6 +88,9 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Inject
     private Session session;
+    @Inject
+    private ClientDao clientDao;
+
     private List<Person> persons = Lists.newArrayList();
 
     @Before
@@ -200,6 +206,15 @@ public class StamdataReplicationImplIntegrationTest {
 
     private void populateDatabaseAndSendRequest() throws Exception {
         Transaction t = session.beginTransaction();
+
+        session.createQuery("DELETE FROM Client").executeUpdate();
+        session.createSQLQuery("DELETE FROM Client_Permissions").executeUpdate();
+        
+        // Example of subject serial number: CVR:19343634-UID:1234
+        Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
+        cvrClient.addPermission(Views.getViewPath(Person.class));
+        session.persist(cvrClient);
+
         session.createQuery("DELETE FROM Person").executeUpdate();
         for (Person person : persons) {
             session.persist(person);
