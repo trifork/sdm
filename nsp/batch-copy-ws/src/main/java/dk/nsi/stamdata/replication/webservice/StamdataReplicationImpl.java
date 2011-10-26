@@ -33,6 +33,9 @@ import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
 import org.hibernate.ScrollableResults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
@@ -50,12 +53,15 @@ import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.views.View;
+import dk.nsi.stamdata.views.Views;
 
 @GuiceWebservice
 @SchemaValidation
 @WebService(serviceName = "StamdataReplication", endpointInterface = "dk.nsi.stamdata.replication.jaxws.StamdataReplication")
 public class StamdataReplicationImpl implements StamdataReplication {
 
+    private static final Logger logger = LoggerFactory.getLogger(StamdataReplicationImpl.class);
+    
     private static final int MAX_RECORD_LIMIT = 2000;
     
     private final String cvr;
@@ -80,33 +86,73 @@ public class StamdataReplicationImpl implements StamdataReplication {
     @Override
     public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
-        Class<? extends View> requestedView = getViewClass(parameters);
-        
-        // Validate authentication.
-        //
-        Client client = clients.findByCvr(cvr);
-        if (client == null || !client.isAuthorizedFor(requestedView))
+        try
         {
-            throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
+            Class<? extends View> requestedView = getViewClass(parameters);
+
+            MDC.put("view", Views.getViewPath(requestedView));
+            MDC.put("cvr", cvr);
+
+            // Validate authentication.
+            //
+            Client client = clients.findByCvr(cvr);
+            if (client == null || !client.isAuthorizedFor(requestedView))
+            {
+                throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
+            }
+
+            // Validate the input parameters.
+            //
+            HistoryOffset offset = getOffset(parameters);
+            int limit = getRecordLimit(parameters);
+
+            MDC.put("offset", String.valueOf(offset));
+            MDC.put("limit", String.valueOf(limit));
+
+            // Fetch the records from the database and
+            // fill the output structure.
+            //
+            ScrollableResults results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
+            Document feedDocument = createFeed(requestedView, results);
+
+            // Construct the output container.
+            //
+            ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
+            response.setAny(feedDocument.getFirstChild());
+            
+            // Log that the client successfully accessed the data.
+            // Simply for audit purposes.
+            //
+            // The client details are included in the MDC.
+            //
+            logger.info("Records fetched, sending response.");
+
+            return response;
         }
-        
-        // Validate the input parameters.
-        //
-        HistoryOffset offset = getOffset(parameters);
-        int limit = getRecordLimit(parameters);
-        
-        // Fetch the records from the database and
-        // fill the output structure.
-        //
-        ScrollableResults results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
-        Document feedDocument = createFeed(requestedView, results);
-        
-        // Construct the output container.
-        //
-        ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
-        response.setAny(feedDocument.getFirstChild());
-        
-        return response;
+        catch (ReplicationFault e)
+        {
+            // Log an throw is normally an anti-pattern, but since
+            // exceptions are part of JAX-WS's flow it is "OK" here.
+            
+            logger.warn("The request could not be handled. This is likely the clients mistake.", e);
+            
+            throw e;
+        }
+        catch (RuntimeException e)
+        {
+            logger.error("An unhandled error occured.", e);
+            
+            throw e;
+        }
+        finally
+        {
+            // Clean up the thread's MDC.
+            // TODO: This might fit better in a filter or intercepter.
+            MDC.remove("view");
+            MDC.remove("cvr");
+            MDC.remove("offset");
+            MDC.remove("limit");
+        }
     }
 
 
