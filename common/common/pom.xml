@@ -42,20 +42,6 @@
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>jaxws-rt</artifactId>
     </dependency>
-    
-    <dependency>
-	   	<groupId>javax.activation</groupId>
-   		<artifactId>activation</artifactId>
-    	<version>1.1</version>
-    	<scope>provided</scope>
-    </dependency>
-    
-    <dependency>
-		<groupId>org.codehaus.woodstox</groupId>
-  		<artifactId>wstx-asl</artifactId>
-  		<version>3.2.3</version>
-  		<scope>provided</scope>
-    </dependency>
 
     <dependency>
       <groupId>joda-time</groupId>
