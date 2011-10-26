@@ -48,20 +48,24 @@
           <stringProp name="LoopController.loops">1000</stringProp>
         </LoopController>
         <hashTree>
-          <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Fetch Authorization Token" enabled="true">
+          <SoapSampler guiclass="SoapSamplerGui" testclass="SoapSampler" testname="Fetch data from KRS" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="SoapSampler.URL_DATA">http://${__P(hostname,localhost)}:${__P(port,8080)}/stamdata-batch-copy-ws/authenticate</stringProp>
+            <stringProp name="SoapSampler.URL_DATA">http://${__P(hostname,localhost)}:${__P(port,8080)}/stamdata-batch-copy-ws/service/StamdataReplication</stringProp>
             <stringProp name="HTTPSamper.xml_data">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:ds=&quot;http://www.w3.org/2000/09/xmldsig#&quot; xmlns:medcom=&quot;http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd&quot; xmlns:saml=&quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; xmlns:sosi=&quot;http://www.sosi.dk/sosi/2006/04/sosi-1.0.xsd&quot; xmlns:wsa=&quot;http://schemas.xmlsoap.org/ws/2004/08/addressing&quot; xmlns:wsse=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd&quot; xmlns:wst=&quot;http://schemas.xmlsoap.org/ws/2005/02/trust&quot; xmlns:wsu=&quot;http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; id=&quot;Envelope&quot;&gt;
 
 ${idCard}
 
 &lt;soapenv:Body&gt;
-	&lt;AuthorizationRequestStructure&gt;
-		&lt;view&gt;stamdata://cpr/person/v1&lt;/view&gt;
-	&lt;/AuthorizationRequestStructure&gt;
+&lt;ns1:ReplicationRequest xmlns:ns1=&quot;http://nsi.dk/2011/10/21/StamdataKrs/&quot;&gt;
+      &lt;register&gt;cpr&lt;/register&gt;
+      &lt;datatype&gt;person&lt;/datatype&gt;
+      &lt;version&gt;1&lt;/version&gt;
+      &lt;offset&gt;0&lt;/offset&gt;
+    &lt;/ns1:ReplicationRequest&gt;
+
 &lt;/soapenv:Body&gt;
 &lt;/soapenv:Envelope&gt;
 </stringProp>

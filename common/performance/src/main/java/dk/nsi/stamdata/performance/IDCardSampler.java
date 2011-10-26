@@ -27,6 +27,8 @@ package dk.nsi.stamdata.performance;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.xml.XmlUtil;
+
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
 import org.apache.jmeter.samplers.SampleResult;
@@ -86,9 +88,10 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 		StringWriter writer = new StringWriter();
 		Transformer t = TransformerFactory.newInstance().newTransformer();
 		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
+		        
 		t.transform(new DOMSource(createNewRequest.serialize2DOMDocument().getFirstChild().getFirstChild()), new StreamResult(writer));
-
 		return writer.toString();
+		
+		//return XmlUtil.node2String(createNewRequest.serialize2DOMDocument());
 	}
 }
