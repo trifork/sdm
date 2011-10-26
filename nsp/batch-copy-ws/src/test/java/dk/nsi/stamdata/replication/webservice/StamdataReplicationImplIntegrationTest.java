@@ -42,8 +42,6 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -54,7 +52,6 @@ import org.w3c.dom.Element;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
-import com.sun.xml.bind.v2.runtime.output.NamespaceContextImpl;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.replication.jaxws.Header;
@@ -106,6 +103,8 @@ public class StamdataReplicationImplIntegrationTest {
         now = DateTime.now();
         lastYear = now.minusYears(1);
         nextYear = now.plusYears(1);
+
+        isClientAuthority = true;
     }
 
     @After
@@ -117,47 +116,60 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Test(expected = SOAPFaultException.class)
     public void requestWithoutAnyReplicationTypeGivesSenderSoapFault() throws Exception {
-        request = new ReplicationRequestType();
 
+        request = new ReplicationRequestType();
         populateDatabaseAndSendRequest();
     }
 
     @Test
     public void basicQueryDoesNotRaiseAnException() throws Exception {
+        
         createCprPersonRegisterReplicationRequest();
-
-        isClientAuthority = true;
-
         populateDatabaseAndSendRequest();
     }
 
     @Test(expected = ReplicationFault.class)
     public void cvrThatIsNotWhitelistedRaisesAnException() throws Exception {
+
         createCprPersonRegisterReplicationRequest();
-
         isClientAuthority = false;
+        populateDatabaseAndSendRequest();
+    }
+    
+    @Test(expected = ReplicationFault.class)
+    public void cvrThatIsWhitelistedForAnotherRegisterRaisesAnException() throws Exception {
 
+        createSorHospitalRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
     }
 
+    @Test(expected = ReplicationFault.class)
+    public void requestToAnUnexistingRegisterAndDatatypeRaisesAnException() throws Exception {
+    
+        createUnexistingRegisterAndDatatypeReplicationRequest();
+        populateDatabaseAndSendRequest();
+    }
+    
+    @Test(expected = ReplicationFault.class)
+    public void requestToAnExistingRegisterButUnexistingDatatypeRaisesAnException() throws Exception {
+
+        createExistingRegisterButUnexistingDatatypeReplicationRequest();
+        populateDatabaseAndSendRequest();
+    }
+    
     @Test
     public void basicQueryOnEmptyDatabaseReturnsZeroResults() throws Exception {
+
         createCprPersonRegisterReplicationRequest();
-
-        isClientAuthority = true;
-
         populateDatabaseAndSendRequest();
-
         assertResponseContainsAtom();
-        
         assertResponseContainsExactNumberOfRecords("person", 0);
     }
 
     @Test
     public void basicQueryOnNonEmptyDatabaseReturnsOneResult() throws Exception {
-        createCprPersonRegisterReplicationRequest();
 
-        isClientAuthority = true;
+        createCprPersonRegisterReplicationRequest();
 
         Person person = createDonaldDuckPerson(now, lastYear, nextYear);
         persons.add(person);
@@ -175,10 +187,9 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Test
     public void personsArePagedAccordingToParameter() throws Exception {
+
         createCprPersonRegisterReplicationRequest();
         
-        isClientAuthority = true;
-
         Person a = createDonaldDuckPerson(now, lastYear, nextYear);
         a.cpr = "1111111111";
         persons.add(a);
@@ -197,10 +208,9 @@ public class StamdataReplicationImplIntegrationTest {
 
     @Test
     public void personsAreCorrectlyPaged() throws Exception {
+        
         createCprPersonRegisterReplicationRequest();
         
-        isClientAuthority = true;
-
         DateTime yesterday = now.minusDays(1);
         
         Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
@@ -236,57 +246,6 @@ public class StamdataReplicationImplIntegrationTest {
         assertResponseContainsPersonWithCpr("3333333333");
     }
 
-    /*
-    @Test
-    public void personsAreCorrectlyPagedEvenWhenNewRecordIsInserted() throws Exception {
-        createCprPersonRegisterReplicationRequest();
-        
-        isClientAuthority = true;
-
-        DateTime yesterday = now.minusDays(1);
-        
-        Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
-        a.cpr = "1111111111";
-        persons.add(a);
-        
-        Person b = createDonaldDuckPerson(yesterday, lastYear, nextYear);
-        b.cpr = "2222222222";
-        persons.add(b);
-
-        Person c = createDonaldDuckPerson(now, lastYear, nextYear);
-        c.cpr = "3333333333";
-        persons.add(c);
-
-        request.setOffset("0");
-        request.setMaxRecords(1L);
-        
-        populateDatabaseAndSendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
-        assertResponseContainsPersonWithCpr("1111111111");
-        
-        request.setOffset(getOffsetFromAtomEntry());
-        sendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
-        assertResponseContainsPersonWithCpr("2222222222");
-        
-        a.modifiedDate = now.toDate();
-        insertSinglePersonIntoDatabase(a);
-        
-        request.setOffset(getOffsetFromAtomEntry());
-        sendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
-        assertResponseContainsPersonWithCpr("3333333333");
-
-        request.setOffset(getOffsetFromAtomEntry());
-        sendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
-        assertResponseContainsPersonWithCpr("1111111111");
-    }
-    */
 
     // Helper methods
     
@@ -294,6 +253,30 @@ public class StamdataReplicationImplIntegrationTest {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("cpr");
         request.setDatatype("person");
+        request.setVersion(1L);
+        request.setOffset("0");
+    }
+    
+    private void createSorHospitalRegisterReplicationRequest() {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("sor");
+        request.setDatatype("sygehus");
+        request.setVersion(1L);
+        request.setOffset("0");
+    }
+    
+    private void createUnexistingRegisterAndDatatypeReplicationRequest() {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("foo");
+        request.setDatatype("bar");
+        request.setVersion(1L);
+        request.setOffset("0");
+    }
+    
+    private void createExistingRegisterButUnexistingDatatypeReplicationRequest() {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("sor");
+        request.setDatatype("bar");
         request.setVersion(1L);
         request.setOffset("0");
     }
