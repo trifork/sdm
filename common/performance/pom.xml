@@ -78,21 +78,10 @@
 							</jMeterRemoteLocation>
 						</configuration>
 						<executions>
-							<!-- | CPR WS -->
-							<execution>
-								<id>cpr-ws</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>authorization-ws-data</dataid>
-									<input>${basedir}/src/main/resources/CPR.jmx</input>
-								</configuration>
-							</execution>
 							<!-- -->
 							<!-- Authorization Lookup -->
 							<!-- -->
+							<!-- 
 							<execution>
 								<id>authorization-ws</id>
 								<phase>integration-test</phase>
@@ -119,32 +108,33 @@
 									<title>Load test, 10 req/sec minimum requirement</title>
 								</configuration>
 							</execution>
+							-->
 							<!-- -->
-							<!-- Replication Token -->
+							<!-- Replication Service -->
 							<!-- -->
 							<execution>
-								<id>replication-token-ws</id>
+								<id>replication-ws</id>
 								<phase>integration-test</phase>
 								<goals>
 									<goal>jmeter</goal>
 								</goals>
 								<configuration>
-									<dataid>replication-token-ws-data</dataid>
-									<input>${basedir}/src/main/resources/ReplicationTokenService.jmx</input>
+									<dataid>replication-ws-data</dataid>
+									<input>${basedir}/src/main/resources/ReplicationService.jmx</input>
 								</configuration>
 							</execution>
 							<execution>
-								<id>replication-token-ws-report</id>
+								<id>replication-ws-report</id>
 								<phase>site</phase>
 								<goals>
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<reportid>replication-token-ws-report</reportid>
-									<dataid>replication-token-ws-data</dataid>
+									<reportid>replication-ws-report</reportid>
+									<dataid>replication-ws-data</dataid>
 									<showgc>false</showgc>
 									<showpercentile99>true</showpercentile99>
-									<description>Authorization Lookup Service Response Times</description>
+									<description>Replication Service Response Times</description>
 									<title>Load test, 10 req/sec minimum requirement</title>
 								</configuration>
 							</execution>
