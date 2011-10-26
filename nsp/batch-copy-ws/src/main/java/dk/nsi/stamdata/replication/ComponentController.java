@@ -29,6 +29,8 @@ import static com.google.inject.name.Names.bindProperties;
 
 import java.util.Properties;
 
+import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
+
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -101,8 +103,19 @@ public class ComponentController extends GuiceServletContextListener
             bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
             install(new MonitoringModule());
             
+            // Logging
+            
+            // The mandatory SLA filter.
+            //
             bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class);
+            
+            // Inserts IP and other goodies into the MDC.
+            //
+            bind(MDCInsertingServletFilter.class).in(Scopes.SINGLETON);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(MDCInsertingServletFilter.class);
+            
+            // Security
             
             install(new DenGodeWebServiceModule());
         }

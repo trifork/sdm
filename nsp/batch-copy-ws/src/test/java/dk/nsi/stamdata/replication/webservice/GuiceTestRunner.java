@@ -31,8 +31,14 @@ import dk.nsi.stamdata.testing.AbstractGuiceTestRunner;
 
 public class GuiceTestRunner extends AbstractGuiceTestRunner
 {
+    private static final String LOG_DIR_PROP = "jboss.server.log.dir";
+    
     public GuiceTestRunner(Class<?> classToRun) throws InitializationError
     {
         super(classToRun, new ComponentController.ComponentModule());
+        
+        // Set the log folder, if not running in JBoss.
+        //
+        System.setProperty(LOG_DIR_PROP, "logs");
     }
 }

@@ -49,24 +49,23 @@
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
 
+    <!-- Hibernate -->
+    
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-c3p0</artifactId>
-      <version>${jboss6.hibernate.version}</version>
-      <scope>runtime</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
-      <version>${jboss6.hibernate.version}</version>
-      <scope>provided</scope>
     </dependency>
-
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
-      <version>${jboss6.hibernate.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -74,6 +73,8 @@
       <groupId>dk.sdsd.nsp</groupId>
       <artifactId>nsp-util</artifactId>
     </dependency>
+    
+    <!-- Commons -->
 
     <dependency>
       <groupId>commons-io</groupId>
@@ -81,15 +82,34 @@
     </dependency>
 
     <!-- Logging -->
-
+    <!-- 
+     | This component doesn't use the provided
+     | SLF4J but a newer version and Logback.
+     | Other components should be migrated to
+     | do the same.
+    -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <version>${war.slf4j.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
+      <version>${war.slf4j.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy</artifactId>
+      <version>1.8.3</version>
     </dependency>
 
     <!-- Test -->
@@ -107,11 +127,6 @@
     <dependency>
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
     </dependency>
     
     <dependency>

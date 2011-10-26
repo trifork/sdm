@@ -17,6 +17,7 @@
   </scm>
 
   <properties>
+    <war.slf4j.version>1.6.3</war.slf4j.version>
     <jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
     <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
     <jboss6.xalan.version>2.7.1</jboss6.xalan.version>
@@ -71,7 +72,7 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${jboss6.slf4j.version}</version>
-        <scope>provided</scope>
+        <scope>compile<!-- shadow --></scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -84,6 +85,37 @@
         <artifactId>slf4j-simple</artifactId>
         <version>${jboss6.slf4j.version}</version>
         <scope>test</scope>
+      </dependency>
+      <dependency>
+        <!-- Can only be used with SLF4J 1.6.3 -->
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>0.9.30</version>
+      </dependency>
+      <!-- Hibernate -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-c3p0</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>provided</scope>
       </dependency>
       <!-- SOSI, SDSD, NSP etc. -->
       <dependency>
