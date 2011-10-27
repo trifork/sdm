@@ -81,7 +81,6 @@
 							<!-- -->
 							<!-- Authorization Lookup -->
 							<!-- -->
-							<!-- 
 							<execution>
 								<id>authorization-ws</id>
 								<phase>integration-test</phase>
@@ -108,7 +107,6 @@
 									<title>Load test, 10 req/sec minimum requirement</title>
 								</configuration>
 							</execution>
-							-->
 							<!-- -->
 							<!-- Replication Service -->
 							<!-- -->

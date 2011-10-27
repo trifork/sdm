@@ -80,10 +80,6 @@ public class PersistenceFilter implements Filter
 			
 			throw new ServletException(e);
 		}
-		finally
-		{
-		    session.close();
-		}
 	}
 
 

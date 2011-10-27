@@ -16,6 +16,17 @@
   <name>SOSI ID-Card Servlet Filter</name>
 
   <dependencies>
+    <!-- Logging -->
+    <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    </dependency>
+    
+    <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-simple</artifactId>
+    </dependency>
+  
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>

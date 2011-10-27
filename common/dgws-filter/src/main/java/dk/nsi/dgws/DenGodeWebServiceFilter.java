@@ -30,6 +30,7 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Properties;
@@ -47,6 +48,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import dk.sosi.seal.SOSIFactory;
@@ -75,6 +78,8 @@ import dk.sosi.seal.xml.XmlUtilException;
 @Singleton
 public class DenGodeWebServiceFilter implements Filter
 {
+    private static final Logger logger = LoggerFactory.getLogger(DenGodeWebServiceFilter.class);
+    
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
 	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
 	public static final String USE_TEST_FEDERATION_PARAMETER = "useSOSITestFederation";
@@ -126,7 +131,7 @@ public class DenGodeWebServiceFilter implements Filter
 
 		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
 		{
-			return;
+		    throw new AssertionError("We are unable to handle requests and responses that are not of the type HttpServletRequest and HttpServletResponse");
 		}
 
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
@@ -163,6 +168,7 @@ public class DenGodeWebServiceFilter implements Filter
 		}
 		catch (SignatureInvalidModelBuildException ignore)
 		{
+	        logger.warn("The signature was invalid");
 			// The signature was invalid. This sender is to blame.
 			
 			// Unfortunately SEAL's API is not made with the user in mind and
@@ -179,6 +185,7 @@ public class DenGodeWebServiceFilter implements Filter
 		}
 		catch (XmlUtilException ignore)
 		{
+            logger.warn("An XmlUtilException was caught: " + ignore.getMessage());
 			// The message could not be read. The sender is to blame.
 			
 			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
@@ -186,6 +193,7 @@ public class DenGodeWebServiceFilter implements Filter
 		}
 		catch (Exception ignore)
 		{
+		    logger.warn("An unexpected exception was caught: " + ignore.getMessage());
 			// This is bad and will likely be a bug.
 
 			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
@@ -195,13 +203,18 @@ public class DenGodeWebServiceFilter implements Filter
 
 	private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException
 	{
+	    logger.warn("Returning fault to user. The reply fault string is: " + reply.getFaultString() + ". The internal server error: " + HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+	    
 		httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 
 		httpResponse.setContentType("text/xml");
 
 		Document replyXml = reply.serialize2DOMDocument();
 		String xml = XmlUtil.node2String(replyXml);
-		httpResponse.getWriter().write(xml);
+		PrintWriter writer = httpResponse.getWriter();
+        writer.write(xml);
+        writer.flush();
+        writer.close();
 	}
 
 	@Override
