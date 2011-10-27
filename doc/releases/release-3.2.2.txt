@@ -1,0 +1,53 @@
+Stamdata 3.2.2 Release Notes
+============================
+
+To komponenter skal redeployes, Data Manager og Kopi Register Service.
+
+Data manager
+============
+
+1. Yderregister Parser
+
+Der er hos FMK fundet en fejl i Yderregister parseren som er en del af
+stamdatas data manager. Det betyder at der skal deployes en ny version
+af data manager.
+Samtidigt skal stamdata database skema også opdateres for at kunne håndtere
+de nye ændringer.
+
+Man kan migrere databasen med:
+
+ALTER TABLE `YderregisterPerson` MODIFY COLUMN `CPR` CHAR(10);
+ALTER TABLE `YderregisterPerson` MODIFY COLUMN `personrolleKode` CHAR(2);
+
+2. Logning
+
+Data manager har tidligere logget til server.log. Dette er noget stort problem
+men ikke særligt hensigtsmæssigt for debugging og gør det svært at lave en
+ordenlig Splunk konfiguration for komponenten.
+
+Fremover logger data manager til filen:
+
+$JBOSS_HOME/server/default/log/stamdata-data-manager.log
+
+3. Dokumentation
+
+Ændringerne i formatet er dokumenteret register specifikationen som ligger på
+software børsen.
+
+Kopi register service
+=====================
+
+1. Token Service
+
+Token servicen er blevet fjernet fra komponenten for at gøre den stateless.
+Der med kan to af komponentens tabeller fjernes:
+
+DROP TABLE Authorization;
+DROP TABLE LogEntry;
+
+2. Logning
+
+På samme måde som data manageren logger KRS ikke længere til server.log men
+i stedet til:
+
+$JBOSS_HOME/server/default/log/stamdata-batch-copy-ws.log
