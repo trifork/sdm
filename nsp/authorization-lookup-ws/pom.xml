@@ -29,15 +29,23 @@
 		<!-- Logging -->
 
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-    	  <version>${war.slf4j.version}</version>
-		</dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>${jboss6.slf4j.version}</version>
+          <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-simple</artifactId>
+          <version>${jboss6.slf4j.version}</version>
+          <scope>test</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
-	      <version>${war.slf4j.version}</version>
+            <version>${jboss6.slf4j.version}</version>
 		</dependency>
 
 		<dependency>
@@ -82,11 +90,6 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-all</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
 </project>

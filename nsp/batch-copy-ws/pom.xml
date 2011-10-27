@@ -94,7 +94,7 @@
       <groupId>org.slf4j</groupId>
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${war.slf4j.version}</version>
-      <scope>compile</scope>
+      <scope>runtime</scope>
     </dependency>
     
     <dependency>
