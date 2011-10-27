@@ -246,6 +246,32 @@ public class StamdataReplicationImplIntegrationTest {
         assertResponseContainsPersonWithCpr("3333333333");
     }
 
+    @Test
+    public void testThatWeAreAbleToHandleMoreThanTwentyRequestsForWsdlInSuccession() throws Exception
+    {
+        URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication?wsdl");
+        QName serviceName = new QName("http://nsi.dk/2011/10/21/StamdataKrs/", "StamdataReplicationService");
+
+        for(int i = 0; i < 20; i++)
+        {
+            StamdataReplicationService service = new StamdataReplicationService(wsdlLocation, serviceName);
+
+            service.setHandlerResolver(new SealNamespaceResolver());
+            client = service.getStamdataReplication();    
+        }
+    }
+    
+    @Test
+    public void testThatWeAreAbleToHandleMoreThanTwentyConnectionsInSuccession() throws Exception
+    {
+        createCprPersonRegisterReplicationRequest();
+        populateDatabaseAndSendRequest();
+        for(int i = 0; i < 20; i++)
+        {
+            System.out.println("That was " + i);
+            sendRequest();
+        }
+    }
 
     // Helper methods
     

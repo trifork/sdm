@@ -55,6 +55,7 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.ws.CivilRegistrationNumberListPersonQueryType;
+import dk.nsi.stamdata.cpr.ws.DGWSFault;
 import dk.nsi.stamdata.cpr.ws.Header;
 import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
 import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
@@ -109,7 +110,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     {
         request = new PersonLookupRequestType();
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
     }
 
 
@@ -124,7 +125,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         namePersonQueryType.setPersonSurnameName("Kristensen");
         request.setNamePersonQuery(namePersonQueryType);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
     }
 
 
@@ -135,7 +136,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         request.setCivilRegistrationNumberPersonQuery("0103952595");
         
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertThat(response.getPersonInformationStructure().size(), is(0));
     }
@@ -151,7 +152,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertThat(response.getPersonInformationStructure().size(), is(1));
     }
@@ -166,7 +167,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add("0206562469");
         request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add("0302801961");
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertThat(response.getPersonInformationStructure().size(), is(0));
     }
@@ -187,7 +188,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add(EXISTING_CPR_2);
         request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add(NON_EXISTING_CPR);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertEquals(2, response.getPersonInformationStructure().size());
     }
@@ -201,7 +202,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
         request.setBirthDatePersonQuery(REQUESTED_BIRTHDAY);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertTrue(response.getPersonInformationStructure().isEmpty());
     }
@@ -217,7 +218,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         XMLGregorianCalendar birthday = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
         request.setBirthDatePersonQuery(birthday);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertEquals(2, response.getPersonInformationStructure().size());
     }
@@ -234,7 +235,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         value.setPersonSurnameName("Brock");
         request.setNamePersonQuery(value);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertTrue(response.getPersonInformationStructure().isEmpty());
     }
@@ -251,7 +252,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         name.setPersonSurnameName("Kristensen");
         request.setNamePersonQuery(name);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertEquals(1, response.getPersonInformationStructure().size());
     }
@@ -269,7 +270,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         value.setPersonSurnameName("Sørensen");
         request.setNamePersonQuery(value);
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         assertEquals(2, response.getPersonInformationStructure().size());
     }
@@ -283,7 +284,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
         assertThat(givenName, is("ADRESSEBESKYTTET"));
@@ -300,12 +301,29 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
-        sendRequest();
+        prepareDatabaseAndSendRequest();
 
         String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
         assertThat(givenName, is(person.getFornavn()));
     }
 
+    @Test
+    public void testThatServiceIsAbleToHandleTwentySuccessiveRequests() throws Exception
+    {
+        isClientAuthority = true;
+
+        Person person = Factories.createPersonWithAddressProtection();
+        persons.add(person);
+
+        request.setCivilRegistrationNumberPersonQuery(person.getCpr());
+
+        prepareDatabaseAndSendRequest();
+        
+        for(int i = 0; i < 30; i++)
+        {
+            sendRequest();
+        }
+    }
 
     private Person createPersonWithName(String givenName, @Nullable String middleName, String surName)
     {
@@ -320,7 +338,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     }
 
 
-    private void sendRequest() throws Exception
+    private void prepareDatabaseAndSendRequest() throws Exception
     {
         Transaction t = session.beginTransaction();
         session.createQuery("DELETE FROM Person").executeUpdate();
@@ -330,6 +348,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         }
         t.commit();
 
+        sendRequest();
+    }
+
+    private void sendRequest() throws Exception, DGWSFault {
         Holder<Security> securityHeader;
         Holder<Header> medcomHeader;
 
