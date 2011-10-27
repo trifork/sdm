@@ -37,6 +37,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.hibernate.StatelessSession;
+import org.hibernate.Transaction;
 
 
 @Singleton
@@ -55,6 +56,8 @@ public class StatelessPersistenceFilter implements Filter
         {
             session = sessionProvider.get();
             session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            transaction.setTimeout(5);
 
             chain.doFilter(request, response);
 
@@ -71,6 +74,10 @@ public class StatelessPersistenceFilter implements Filter
             }
 
             throw new ServletException(e);
+        }
+        finally
+        {
+            session.close();
         }
     }
 

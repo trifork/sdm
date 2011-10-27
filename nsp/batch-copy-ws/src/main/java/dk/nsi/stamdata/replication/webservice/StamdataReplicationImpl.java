@@ -27,12 +27,12 @@ package dk.nsi.stamdata.replication.webservice;
 import static java.lang.String.format;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
-import org.hibernate.ScrollableResults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -112,12 +112,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // Fetch the records from the database and
             // fill the output structure.
             //
-            ScrollableResults results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
+            List<? extends View> results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
             Document feedDocument = createFeed(requestedView, results);
 
             // Construct the output container.
             //
             ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
+            
             response.setAny(feedDocument.getFirstChild());
             
             // Log that the client successfully accessed the data.
@@ -169,7 +170,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
     }
 
 
-    private Document createFeed(Class<? extends View> requestedView, ScrollableResults results) throws ReplicationFault
+    private Document createFeed(Class<? extends View> requestedView, List<? extends View> results) throws ReplicationFault
     {
         Document body;
         

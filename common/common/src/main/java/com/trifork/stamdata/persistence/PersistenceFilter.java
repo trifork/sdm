@@ -37,6 +37,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 @Singleton
 public class PersistenceFilter implements Filter
@@ -57,6 +58,8 @@ public class PersistenceFilter implements Filter
 		{
 			session = sessionProvider.get();
 			session.beginTransaction();
+			Transaction transaction = session.beginTransaction();
+			transaction.setTimeout(5);
 
 			chain.doFilter(request, response);
 
@@ -76,6 +79,10 @@ public class PersistenceFilter implements Filter
 			// Let other filters handle the exception.
 			
 			throw new ServletException(e);
+		}
+		finally
+		{
+		    session.close();
 		}
 	}
 

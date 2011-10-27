@@ -268,7 +268,6 @@ public class StamdataReplicationImplIntegrationTest {
         populateDatabaseAndSendRequest();
         for(int i = 0; i < 20; i++)
         {
-            System.out.println("That was " + i);
             sendRequest();
         }
     }

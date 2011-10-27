@@ -30,10 +30,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.StatelessSession;
 
 import com.google.inject.Inject;
@@ -42,15 +41,16 @@ import dk.nsi.stamdata.views.View;
 
 public class RecordDao
 {
-	private final StatelessSession em;
+	private final StatelessSession statelessSession;
 
 	@Inject
-	RecordDao(StatelessSession em)
+	RecordDao(StatelessSession statelessSession)
 	{
-		this.em = checkNotNull(em);
+		this.statelessSession = checkNotNull(statelessSession);
 	}
 
-	public <T extends View> ScrollableResults findPage(Class<T> type, String recordId, Date modifiedDate, int limit)
+	@SuppressWarnings("unchecked")
+    public <T extends View> List<? extends View> findPage(Class<T> type, String recordId, Date modifiedDate, int limit)
 	{
 		checkNotNull(type);
 		checkNotNull(recordId);
@@ -71,16 +71,16 @@ public class RecordDao
 		// the same
 		// time stamp for each of the records in to batch.
 
-		String SQL = " FROM " + type.getName() + " WHERE ((recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID))" + " ORDER BY recordID, modifiedDate";
+		String SQL = " FROM " + type.getName() + " WHERE ((recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID)) ORDER BY recordID, modifiedDate";
 
-		Query query = em.createQuery(SQL);
+		Query query = statelessSession.createQuery(SQL);
 		query.setParameter("recordID", id);
 		query.setParameter("modifiedDate", modifiedDate);
 		query.setMaxResults(limit);
-
+		
 		// FETCH THE RECORDS
 		//
-
-		return query.scroll(ScrollMode.SCROLL_SENSITIVE);
+		
+		return (List<T>) query.list();
 	}
 }

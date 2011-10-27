@@ -29,6 +29,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -78,13 +79,11 @@ public class AtomFeedWriter
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public org.w3c.dom.Document write(Class<? extends View> viewClass, ScrollableResults records) throws IOException
+	public org.w3c.dom.Document write(Class<? extends View> viewClass, List records) throws IOException
 	{
 		checkNotNull(viewClass);
 		checkNotNull(records);
 		
-		records.beforeFirst();
-
 		String entityName = Views.getViewPath(viewClass);
 
 		try
@@ -110,9 +109,9 @@ public class AtomFeedWriter
 			marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 			marshaller.setProperty(Marshaller.JAXB_ENCODING, STREAM_ENCODING);
 
-			while (records.next())
+			for(Object record: records)
 			{
-				View view = (View) records.get(0);
+			    View view = (View) record;
 				writeEntry(feed, entityName, view, marshaller);
 			}
 			
@@ -167,7 +166,6 @@ public class AtomFeedWriter
     {
         SAXSource source = new DocumentSource(dom4jdoc);
         DOMResult result = new DOMResult();
-        
 
         Transformer transformer = transformerFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
