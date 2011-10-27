@@ -220,7 +220,7 @@ public class YderregisterParser
 					throw new SAXException("Problems reading or parsing AfgDatoPerson=" + afgDatoString + " or TilDatoPerson=" + tilgDatoString, pe);
 				}
 
-				Long rolleKode = Long.valueOf(atts.getValue("PersonrolleKode"));
+				String rolleKode = atts.getValue("PersonrolleKode").trim();
 				String rolleTekst = atts.getValue("PersonrolleTxt").trim();
 
 				// Ignore empty CPR numbers. TODO (thb): Why? Ask Jan Buchholdt 

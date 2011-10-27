@@ -26,61 +26,70 @@
 
 package com.trifork.stamdata.importer.jobs.yderregister;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.format.ISODateTimeFormat;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
+import com.trifork.stamdata.importer.util.DateUtils;
 
 
 public class YderregisterParserTest
 {
-	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
 	@Test
-	public void testParse() throws Exception
+	public void canImportACorrectFileSet() throws Exception
 	{
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/initial/"));
 
 		YderregisterDatasets yderReg = new YderregisterParser().parseYderregister(dir.listFiles());
 
+		// Entries
+
 		assertEquals(12, yderReg.getYderregisterDS().getEntities().size());
-		Yderregister y = yderReg.getYderregisterDS().getEntityById("4219");
-		assertNotNull(y);
-		assertEquals("Yders Navn", "Jørgen Vagn Nielsen", y.getNavn());
-		assertEquals("Yders Vejnavn", "Store Kongensgade 96,4.", y.getVejnavn());
-		assertEquals("Yders Telefon", "33112299", y.getTelefon());
-		assertEquals("Yders Postnummer", "1264", y.getPostnummer());
-		assertEquals("Yders Bynavn", "København K", y.getBynavn());
-		assertEquals("Yders Amtsnummer", 84, y.getAmtNummer());
-		assertEquals("Yders Email", "klinik@33112299.dk", y.getEmail());
-		assertEquals("Yders www", "www.plib.dk", y.getWww());
-		assertEquals("Yders startdato", "1978-07-01", df.format(y.getValidFrom().getTime()));
-		assertEquals("Yders slutdato", "2999-12-31", df.format(y.getValidTo().getTime()));
-
-		assertEquals(21, yderReg.getYderregisterPersonDS().getEntities().size());
-		YderregisterPerson yp = yderReg.getYderregisterPersonDS().getEntityById("15458-1234567893");
-		assertEquals("Personens Ydernummer", "15458", yp.getNummer());
-		assertEquals("Personens CPR", "1234567893", yp.getCpr());
-		assertEquals("Personens rollekode", new Long("15"), yp.getPersonrolleKode());
-		assertEquals("Personens rolletekst", "Praksisreservelæge", yp.getPersonrolleTxt());
-		assertEquals("Personens startdato", "2010-04-01", df.format(yp.getValidFrom().getTime()));
-		assertEquals("Personens slutdato", "2010-09-30", df.format(yp.getValidTo().getTime()));
-
-		assertNotNull(yp);
+        Yderregister praksis = yderReg.getYderregisterDS().getEntityById("4219");
+		
+		assertThat(praksis.getNavn(), is("Jørgen Vagn Nielsen"));
+		assertThat(praksis.getVejnavn(), is("Store Kongensgade 96,4."));
+		assertThat(praksis.getTelefon(), is("33112299"));
+		assertThat(praksis.getPostnummer(), is("1264"));
+		assertThat(praksis.getBynavn(), is("København K"));
+		assertThat(praksis.getAmtNummer(), is(84));
+		assertThat(praksis.getEmail(), is("klinik@33112299.dk"));
+		assertThat(praksis.getWww(), is("www.plib.dk"));
+		assertThat(praksis.getValidFrom(), is(date("1978-07-01")));
+		assertThat(praksis.getValidTo(), is(DateUtils.THE_END_OF_TIME));
+		
+		// Persons
+		
+		assertThat(yderReg.getYderregisterPersonDS().getEntities().size(), is(21));
+		YderregisterPerson person = yderReg.getYderregisterPersonDS().getEntityById("15458-1234567893");
+		
+		assertThat(person.getNummer(), is("15458"));
+		assertThat(person.getCpr(), is("1234567893"));
+		assertThat(person.getPersonrolleKode(), is("1A"));
+		assertThat(person.getPersonrolleTxt(), is("Praksisreservelæge"));
+		assertThat(person.getValidFrom(), is(date("2010-04-01")));
+		assertThat(person.getValidTo(), is(date("2010-09-30")));
 	}
 
 	@Test(expected = Exception.class)
-	public void testInvalid() throws Exception
+	public void shouldFailIfPresentedWithAnInvalidFileSet() throws Exception
 	{
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/yderregister/invalid/"));
 		new YderregisterParser().parseYderregister(dir.listFiles());
+	}
+	
+	private Date date(String dateString)
+	{
+	    return ISODateTimeFormat.date().parseDateTime(dateString).toDate();
 	}
 }

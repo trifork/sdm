@@ -46,7 +46,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Tempor
 	private String nummer;
 	private String histIdPerson;
 	private String cpr;
-	private Long personrolleKode;
+	private String personrolleKode;
 	private String personrolleTxt;
 	private Date tilgangDato;
 	private Date afgangDato;
@@ -92,12 +92,12 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Tempor
 	}
 
 	@Column
-	public Long getPersonrolleKode()
+	public String getPersonrolleKode()
 	{
 		return personrolleKode;
 	}
 
-	public void setPersonrolleKode(Long personrolleKode)
+	public void setPersonrolleKode(String personrolleKode)
 	{
 		this.personrolleKode = personrolleKode;
 	}

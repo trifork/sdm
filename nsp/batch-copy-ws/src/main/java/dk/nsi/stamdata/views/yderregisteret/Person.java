@@ -60,7 +60,7 @@ public class Person extends View
 
 	protected String cpr;
 
-	protected BigInteger personrolleKode;
+	protected String personrolleKode;
 
 	@Column(name = "personrolleTxt")
 	protected String personrolleTekst;
