@@ -85,7 +85,6 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${jboss6.slf4j.version}</version>
-        <scope>compile<!-- shadow --></scope>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
