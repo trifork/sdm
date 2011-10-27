@@ -105,6 +105,12 @@
         <artifactId>logback-classic</artifactId>
         <version>0.9.30</version>
       </dependency>
+      <dependency>
+        <!-- For logback configuration -->
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <version>1.8.3</version>
+      </dependency>
       <!-- Hibernate -->
       <dependency>
         <groupId>org.hibernate</groupId>
