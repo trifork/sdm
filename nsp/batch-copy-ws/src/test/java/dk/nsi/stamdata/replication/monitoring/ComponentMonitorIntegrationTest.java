@@ -58,10 +58,4 @@ public class ComponentMonitorIntegrationTest {
     {
         expect().statusCode(200).body(containsString("200 OK")).when().get("/status");
     }
-    
-    @Test
-    public void testStatusIsNotOkWhenClosingDatabase()
-    {
-        expect().statusCode(500).body(containsString("200 OK")).when().get("/status");
-    }
 }
