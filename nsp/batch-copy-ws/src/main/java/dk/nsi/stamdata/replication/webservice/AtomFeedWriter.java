@@ -47,7 +47,6 @@ import org.dom4j.Element;
 import org.dom4j.Namespace;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
-import org.hibernate.ScrollableResults;
 
 import com.google.inject.Inject;
 
@@ -79,7 +78,7 @@ public class AtomFeedWriter
 		this.viewXmlHelper = checkNotNull(viewXmlHelper);
 	}
 
-	public org.w3c.dom.Document write(Class<? extends View> viewClass, List records) throws IOException
+	public <T extends View> org.w3c.dom.Document write(Class<T> viewClass, List<T> records) throws IOException
 	{
 		checkNotNull(viewClass);
 		checkNotNull(records);

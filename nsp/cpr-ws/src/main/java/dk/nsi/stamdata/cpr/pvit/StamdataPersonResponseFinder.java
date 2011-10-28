@@ -24,25 +24,27 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 
 
 public class StamdataPersonResponseFinder

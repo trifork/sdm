@@ -9,6 +9,10 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
+  <properties>
+    <cxf.version>2.2.3</cxf.version>
+  </properties>
+
   <artifactId>stamdata-authorization-lookup-ws</artifactId>
 
   <packaging>war</packaging>
@@ -48,19 +52,21 @@
       <artifactId>jcl-over-slf4j</artifactId>
       <version>${jboss6.slf4j.version}</version>
     </dependency>
+    
+    <!-- Guice -->
+    
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+    </dependency>
+
+    <!-- DB -->
 
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>dk.nsi.stamdata</groupId>
-      <artifactId>stamdata-testing</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
+    
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-c3p0</artifactId>
@@ -69,6 +75,23 @@
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-entitymanager</artifactId>
+    </dependency>
+    
+    <!-- Testing -->
+
+    <dependency>
+      <groupId>dk.nsi.stamdata</groupId>
+      <artifactId>stamdata-testing</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- DGWS -->
+    
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>dgws-servlet-filter</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
@@ -98,37 +121,34 @@
     <plugins>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.0</version>
+        <artifactId>jaxws-maven-plugin</artifactId>
         <executions>
           <execution>
-            <phase>validate</phase>
+            <phase>generate-sources</phase>
             <goals>
-              <goal>create</goal>
+              <goal>wsimport</goal>
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <doCheck>true</doCheck>
-          <doUpdate>true</doUpdate>
-        </configuration>
       </plugin>
+
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
-        <configuration>
-          <archive>
-            <index>true</index>
-            <manifest>
-              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
-            </manifest>
-            <manifestEntries>
-              <Implementation-Build>${buildNumber}</Implementation-Build>
-            </manifestEntries>
-          </archive>
-        </configuration>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/jaxws</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

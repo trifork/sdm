@@ -24,10 +24,9 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.stamdata.cpr.ws.*;
-import dk.sosi.seal.model.SystemIDCard;
-import org.joda.time.DateTime;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.jws.WebParam;
@@ -36,11 +35,22 @@ import javax.servlet.ServletRequest;
 import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
 
-@WebService(endpointInterface = "dk.nsi.stamdata.cpr.ws.CprAbbsFacade")
+import org.joda.time.DateTime;
+
+import com.sun.xml.ws.developer.SchemaValidation;
+
+import dk.nsi.dgws.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsFacade;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsResponse;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.sosi.seal.model.SystemIDCard;
+
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.CprAbbsFacade")
+@SchemaValidation
 public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
 	public static final DateTime SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES = new DateTime(2011, 4, 14, 12, 0, 0);
 	public static Map<String, List<String>> cprsToReturnForCvrs = null;
@@ -60,7 +70,7 @@ public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
 	 */
 	public CprAbbsResponse getChangedCprs(@WebParam(name = "Security", targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
 	                                      @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
-	                                      @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "cprAbbsRequest") CprAbbsRequest cprAbbsRequest) throws DGWSFault {
+	                                      @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "cprAbbsRequest") CprAbbsRequestType cprAbbsRequest) throws DGWSFault {
 		try {
 			String cvr = findIdCardInRequest().getSystemInfo().getCareProvider().getID();
 			CprAbbsResponse response = new CprAbbsResponse();

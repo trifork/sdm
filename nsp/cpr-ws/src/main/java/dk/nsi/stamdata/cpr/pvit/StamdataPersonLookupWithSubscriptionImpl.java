@@ -42,19 +42,19 @@ import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsException;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
-import dk.nsi.stamdata.cpr.ws.CprAbbsRequest;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
-@SchemaValidation
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription")
 @GuiceWebservice
-@WebService(serviceName = "StamdataPersonLookupWithSubscription", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription")
+@SchemaValidation
 public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonLookupWithSubscription
 {
     private final String clientCVR;
@@ -79,7 +79,7 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
     public PersonLookupResponseType getSubscribedPersonDetails(
             @WebParam(name = "Security", targetNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
             @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
-            @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequest request) throws DGWSFault
+            @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequestType request) throws DGWSFault
     {
         PersonLookupResponseType response;
         

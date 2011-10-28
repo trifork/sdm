@@ -24,7 +24,7 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 
 /**
  * Signals an exception while calling the BRS CPR Subscription service

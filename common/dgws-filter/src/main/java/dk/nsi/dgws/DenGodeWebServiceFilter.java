@@ -78,6 +78,8 @@ import dk.sosi.seal.xml.XmlUtilException;
 @Singleton
 public class DenGodeWebServiceFilter implements Filter
 {
+    public static final String ALL_EXCEPT_STATUS_PAGE = "(?!/status)/.*";
+    
     private static final Logger logger = LoggerFactory.getLogger(DenGodeWebServiceFilter.class);
     
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
@@ -90,7 +92,7 @@ public class DenGodeWebServiceFilter implements Filter
 	public DenGodeWebServiceFilter() { }
 
 	@Inject
-	DenGodeWebServiceFilter(@Named(USE_TEST_FEDERATION_PARAMETER) @Nullable String useTestFederation)
+	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation)
 	{
 		this.useTestFederation = Boolean.valueOf(useTestFederation);
 	}

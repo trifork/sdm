@@ -36,13 +36,13 @@ import org.apache.jmeter.samplers.SampleResult;
 
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
-import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupRequestType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookup;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupService;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 
 
 /**

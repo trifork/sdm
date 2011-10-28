@@ -26,8 +26,8 @@ package dk.nsi.stamdata.cpr;
 
 import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
 import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
-import static dk.nsi.stamdata.cpr.ws.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
-import static dk.nsi.stamdata.cpr.ws.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
+import static dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
+import static dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -46,9 +46,9 @@ import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
-import dk.nsi.stamdata.cpr.ws.AssociatedGeneralPractitionerStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonPublicHealthInsuranceType;
-import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
+import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.SystemIDCard;
 

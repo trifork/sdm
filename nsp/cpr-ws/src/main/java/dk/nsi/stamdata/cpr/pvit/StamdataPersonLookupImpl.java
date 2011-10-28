@@ -24,28 +24,35 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
+import java.sql.SQLException;
+
+import javax.inject.Inject;
+import javax.jws.WebService;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.ws.Holder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.cpr.ws.*;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.jws.WebService;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.ws.Holder;
-import java.sql.SQLException;
 
 
-@SchemaValidation
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup")
 @GuiceWebservice
-@WebService(serviceName = "StamdataPersonLookup", endpointInterface = "dk.nsi.stamdata.cpr.ws.StamdataPersonLookup")
+@SchemaValidation
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
 {
     private final static Logger logger = LoggerFactory.getLogger(StamdataPersonLookupImpl.class);
@@ -54,10 +61,10 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
     private final StamdataPersonResponseFinder stamdataPersonResponseFinder;
 
 
-    @Inject
     /**
      * Constructor for this implementation as Guice request scoped bean
      */
+    @Inject
     StamdataPersonLookupImpl(SystemIDCard idCard, StamdataPersonResponseFinder stamdataPersonResponseFinder)
     {
         this.clientCVR = idCard.getSystemInfo().getCareProvider().getID();

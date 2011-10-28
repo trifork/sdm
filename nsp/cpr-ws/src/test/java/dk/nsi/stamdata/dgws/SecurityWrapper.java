@@ -26,8 +26,8 @@ package dk.nsi.stamdata.dgws;
 
 import javax.xml.ws.Holder;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Security;
 
 
 public class SecurityWrapper {

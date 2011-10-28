@@ -46,8 +46,8 @@ import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.ws.PersonGenderCodeType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
 
 

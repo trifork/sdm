@@ -24,30 +24,51 @@
  */
 package dk.nsi.stamdata.cpr;
 
+import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
+
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.Set;
+
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
+
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
-import dk.nsi.stamdata.cpr.ws.*;
+import dk.nsi.stamdata.jaxws.generated.AddressAccessType;
+import dk.nsi.stamdata.jaxws.generated.AddressCompleteType;
+import dk.nsi.stamdata.jaxws.generated.AddressPostalType;
+import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
+import dk.nsi.stamdata.jaxws.generated.CountryIdentificationCodeType;
+import dk.nsi.stamdata.jaxws.generated.CountryIdentificationSchemeType;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.jaxws.generated.PersonAddressStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonBirthDateStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonCivilRegistrationStatusStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
+import dk.nsi.stamdata.jaxws.generated.PersonHealthCareInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonNameStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
+import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
+import dk.nsi.stamdata.jaxws.generated.RegularCPRPersonType;
+import dk.nsi.stamdata.jaxws.generated.SimpleCPRPersonType;
 import dk.sosi.seal.model.SystemIDCard;
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
-import java.util.Date;
-import java.util.Set;
-
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
 
 @RequestScoped

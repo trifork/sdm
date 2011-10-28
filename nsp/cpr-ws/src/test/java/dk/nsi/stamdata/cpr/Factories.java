@@ -40,6 +40,9 @@ public class Factories
 {
     private static Random random = new Random();
     
+    public static final Date YEAR_2000 = new DateTime(2000, 1, 1, 0, 0, 0).toDate();
+    public static final Date YEAR_1999 = new DateTime(1999, 1, 1, 0, 0, 0).toDate();
+    
     public static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
     public static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
     public static final Date TOMORROW = DateTime.now().plusDays(1).toDate();

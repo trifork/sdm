@@ -24,32 +24,34 @@
  */
 package dk.nsi.stamdata.dgws;
 
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.Linking;
-import dk.nsi.stamdata.cpr.ws.Security;
-import dk.nsi.stamdata.cpr.ws.Timestamp;
-import dk.nsi.stamdata.testing.MockSecureTokenService;
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.AuthenticationLevel;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.xml.XmlUtil;
-import org.apache.commons.io.IOUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import com.trifork.stamdata.jaxws.SealNamespacePrefixMapper;
+import java.io.StringWriter;
+import java.security.cert.CertificateException;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.StringWriter;
-import java.security.cert.CertificateException;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.util.UUID;
+
+import org.apache.commons.io.IOUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import com.trifork.stamdata.jaxws.SealNamespacePrefixMapper;
+
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Linking;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.Timestamp;
+import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.SOSIFactory;
+import dk.sosi.seal.model.AuthenticationLevel;
+import dk.sosi.seal.model.Request;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.xml.XmlUtil;
 
 
 public final class DGWSHeaderUtil

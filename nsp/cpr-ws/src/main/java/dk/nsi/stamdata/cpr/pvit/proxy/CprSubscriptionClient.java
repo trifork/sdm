@@ -24,20 +24,28 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.stamdata.cpr.ws.*;
-import org.joda.time.DateTime;
-
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.Transactional;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-import java.util.Locale;
+
+import org.joda.time.DateTime;
+
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Transactional;
+
+import dk.nsi.stamdata.jaxws.generated.CprAbbsFacade;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsFacadeService;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsResponse;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Security;
 
 
 public class CprSubscriptionClient
@@ -48,7 +56,7 @@ public class CprSubscriptionClient
 
 
     @Inject
-    public CprSubscriptionClient(@Named(ENDPOINT_PROPERTY_NAME) String cprabbsServiceUrl) throws MalformedURLException
+    CprSubscriptionClient(@Named(ENDPOINT_PROPERTY_NAME) String cprabbsServiceUrl) throws MalformedURLException
     {
         this.wsdlLocation = new URL(cprabbsServiceUrl + "?wsdl");
     }
@@ -63,7 +71,7 @@ public class CprSubscriptionClient
 
         CprAbbsFacade client = serviceCatalog.getCprAbbsSoapBinding();
 
-        CprAbbsRequest request = new CprAbbsRequest();
+        CprAbbsRequestType request = new CprAbbsRequestType();
 
         if (since != null)
         {

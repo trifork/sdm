@@ -51,12 +51,12 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
-import dk.nsi.stamdata.cpr.ws.CprAbbsRequest;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscriptionService;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscriptionService;
 
 
 public class StamdataPersonLookupWithSubscriptionIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
@@ -71,7 +71,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	
 	private List<Person> persons = Lists.newArrayList();
 	
-	private CprAbbsRequest request = new CprAbbsRequest();
+	private CprAbbsRequestType request = new CprAbbsRequestType();
 	private PersonLookupResponseType response;
 	
 	private String CHANGED_PERSON_CPR1 = "0101822231";

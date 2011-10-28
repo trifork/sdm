@@ -49,15 +49,15 @@ import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslagService;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
+import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
+import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslagService;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
 
 
 @RunWith(GuiceTestRunner.class)

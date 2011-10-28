@@ -24,12 +24,10 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import dk.nsi.stamdata.cpr.ws.CprAbbsRequest;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscription;
-import dk.nsi.stamdata.cpr.ws.StamdataPersonLookupWithSubscriptionService;
-import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.dgws.SecurityWrapper;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
 
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
@@ -38,9 +36,12 @@ import org.apache.jmeter.samplers.SampleResult;
 
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
-import javax.xml.namespace.QName;
-import java.net.MalformedURLException;
-import java.net.URL;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscriptionService;
 
 /**
  * Performance Test used by JMeter.
@@ -78,7 +79,7 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
 
             SecurityWrapper headers = createHeaders(clientCVR);
 
-            CprAbbsRequest query = new CprAbbsRequest();
+            CprAbbsRequestType query = new CprAbbsRequestType();
 
             // Wait until the last minute before starting the timer.
             result.sampleStart();

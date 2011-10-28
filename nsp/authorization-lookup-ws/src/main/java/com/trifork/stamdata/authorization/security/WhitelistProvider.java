@@ -22,12 +22,33 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
+package com.trifork.stamdata.authorization.security;
 
+import java.util.Set;
 
-@XmlSchema(namespace = STAMDATA_3_0, elementFormDefault = XmlNsForm.QUALIFIED)
-package com.trifork.stamdata.authorization;
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Provider;
 
-import static com.trifork.stamdata.Namespace.STAMDATA_3_0;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.TypeLiteral;
 
-import javax.xml.bind.annotation.XmlNsForm;
-import javax.xml.bind.annotation.XmlSchema;
+public class WhitelistProvider implements Provider<Set<String>>
+{
+    public static final TypeLiteral<Set<String>> SET_OF_STRINGS = new TypeLiteral<Set<String>>() {};
+    private final Set<String> whitelist;
+
+    @Inject
+    WhitelistProvider(@Named("subjectSerialNumbers") String subjectSerialNumbers)
+    {
+        whitelist = ImmutableSet.copyOf(Splitter.on(',').omitEmptyStrings().trimResults().split(subjectSerialNumbers));
+    }
+    
+    @Override
+    public Set<String> get() {
+        
+        return whitelist;
+    }
+
+}

@@ -22,22 +22,18 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.authorization;
+package com.trifork.stamdata.authorization.security;
 
-import org.junit.Test;
+import static com.trifork.stamdata.authorization.security.WhitelistProvider.SET_OF_STRINGS;
 
-import com.google.inject.Injector;
-import com.trifork.stamdata.authorization.webservice.AuthorizationLookupImpl;
+import com.google.inject.AbstractModule;
 
-public class WebServiceIntegrationTest
-{
-	@Test
-	public void should_be_able_to_start_the_webservice_from_the_guice_configuration()
-	{
-		ComponentController contextListener = new ComponentController();
+public class SecurityModule extends AbstractModule {
 
-		Injector injector = contextListener.getInjector();
-
-		injector.getInstance(AuthorizationLookupImpl.class);
-	}
+    @Override
+    protected void configure()
+    {
+        bind(SET_OF_STRINGS).toProvider(WhitelistProvider.class);
+        
+    }
 }

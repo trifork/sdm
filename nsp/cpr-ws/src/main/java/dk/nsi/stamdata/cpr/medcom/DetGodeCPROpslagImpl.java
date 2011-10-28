@@ -48,22 +48,22 @@ import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
-import dk.nsi.stamdata.cpr.ws.DGWSFault;
-import dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonInformationOut;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.cpr.ws.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.cpr.ws.Header;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonWithHealthCareInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.Security;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.sosi.seal.model.SystemIDCard;
 
 
-@SchemaValidation
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag")
 @GuiceWebservice
-@WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
+@SchemaValidation
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {
 	private static final Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);

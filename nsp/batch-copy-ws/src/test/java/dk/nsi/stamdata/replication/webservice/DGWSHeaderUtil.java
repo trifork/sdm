@@ -42,10 +42,10 @@ import org.w3c.dom.Node;
 
 import com.trifork.stamdata.jaxws.SealNamespacePrefixMapper;
 
-import dk.nsi.stamdata.replication.jaxws.Header;
-import dk.nsi.stamdata.replication.jaxws.Linking;
-import dk.nsi.stamdata.replication.jaxws.Security;
-import dk.nsi.stamdata.replication.jaxws.Timestamp;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Linking;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.Timestamp;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.AuthenticationLevel;

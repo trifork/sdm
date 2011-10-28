@@ -23,23 +23,37 @@
  * National Board of e-Health (NSI). All Rights Reserved.
  */
 
-package com.trifork.stamdata.authorization;
+package com.trifork.stamdata.authorization.webservice;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.inject.Provider;
+import javax.inject.Singleton;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class AuthorizationRequestStructure {
+import org.hibernate.Session;
 
-	protected String cpr;
+import com.google.inject.Inject;
+import com.trifork.stamdata.ComponentMonitor;
 
-	protected AuthorizationRequestStructure() {
+/**
+ * Status monitor that check if the database connection is up.
+ * 
+ * @author Thomas Børlum <thb@trifork.com>
+ */
+@Singleton
+public class AuthorizationComponentMonitor implements ComponentMonitor
+{
+    private final Provider<Session> session;
 
-	}
-	
-	public String getCpr() {
-		return cpr;
-	}
+    @Inject
+    AuthorizationComponentMonitor(Provider<Session> session)
+    {
+        this.session = session;
+    }
+
+    @Override
+    public boolean isOk()
+    {
+        session.get().createSQLQuery("SELECT 1").setCacheable(false).uniqueResult();
+        
+        return true;
+    }
 }

@@ -24,17 +24,17 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.dgws.SecurityWrapper;
+import static junit.framework.Assert.assertEquals;
+
+import java.net.MalformedURLException;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.MalformedURLException;
-import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
 
 
 public class CprAbbsClientIntegrationTest {

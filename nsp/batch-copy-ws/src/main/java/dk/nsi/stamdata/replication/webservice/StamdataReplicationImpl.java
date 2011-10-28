@@ -43,21 +43,21 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 
 import dk.nsi.dgws.ClientVocesCvr;
-import dk.nsi.stamdata.replication.jaxws.Header;
-import dk.nsi.stamdata.replication.jaxws.ObjectFactory;
-import dk.nsi.stamdata.replication.jaxws.ReplicationFault;
-import dk.nsi.stamdata.replication.jaxws.ReplicationRequestType;
-import dk.nsi.stamdata.replication.jaxws.ReplicationResponseType;
-import dk.nsi.stamdata.replication.jaxws.Security;
-import dk.nsi.stamdata.replication.jaxws.StamdataReplication;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
+import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
+import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.views.View;
 import dk.nsi.stamdata.views.Views;
 
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataReplication")
 @GuiceWebservice
 @SchemaValidation
-@WebService(serviceName = "StamdataReplication", endpointInterface = "dk.nsi.stamdata.replication.jaxws.StamdataReplication")
 public class StamdataReplicationImpl implements StamdataReplication {
 
     private static final Logger logger = LoggerFactory.getLogger(StamdataReplicationImpl.class);
@@ -73,8 +73,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao dao, ClientDao clients, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter) {
-        
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao dao, ClientDao clients, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter)
+    {
         this.cvr = cvr;
         this.dao = dao;
         this.clients = clients;
@@ -112,8 +112,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // Fetch the records from the database and
             // fill the output structure.
             //
-            List<? extends View> results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
-            Document feedDocument = createFeed(requestedView, results);
+            Document feedDocument = createFeed(requestedView, offset, limit);
 
             // Construct the output container.
             //
@@ -170,8 +169,10 @@ public class StamdataReplicationImpl implements StamdataReplication {
     }
 
 
-    private Document createFeed(Class<? extends View> requestedView, List<? extends View> results) throws ReplicationFault
+    private <T extends View> Document createFeed(Class<T> requestedView, HistoryOffset offset, int limit) throws ReplicationFault
     {
+        List<T> results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
+        
         Document body;
         
         try {

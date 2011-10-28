@@ -129,7 +129,7 @@ public final class NamespaceContextMap implements
   public String getNamespaceURI(String prefix) {
     checkNotNull(prefix);
     String nsURI = prefixMap.get(prefix);
-    return nsURI == null ? XMLConstants.NULL_NS_URI : nsURI;
+    return nsURI == null ? XMLConstants.DEFAULT_NS_PREFIX : nsURI;
   }
 
   @Override

@@ -50,7 +50,7 @@ public class RecordDao
 	}
 
 	@SuppressWarnings("unchecked")
-    public <T extends View> List<? extends View> findPage(Class<T> type, String recordId, Date modifiedDate, int limit)
+    public <T extends View> List<T> findPage(Class<T> type, String recordId, Date modifiedDate, int limit)
 	{
 		checkNotNull(type);
 		checkNotNull(recordId);

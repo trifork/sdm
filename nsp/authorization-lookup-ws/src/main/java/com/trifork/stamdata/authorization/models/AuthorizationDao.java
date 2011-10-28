@@ -23,7 +23,7 @@
  * National Board of e-Health (NSI). All Rights Reserved.
  */
 
-package com.trifork.stamdata.authorization;
+package com.trifork.stamdata.authorization.models;
 
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;

@@ -26,8 +26,8 @@ package dk.nsi.stamdata.replication.webservice;
 
 import javax.xml.ws.Holder;
 
-import dk.nsi.stamdata.replication.jaxws.Header;
-import dk.nsi.stamdata.replication.jaxws.Security;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Security;
 
 
 public class SecurityWrapper {
