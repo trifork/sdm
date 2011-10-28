@@ -50,25 +50,11 @@ public class ClientDao
     }
 
 
-    public Client find(String id)
-    {
-        return (Client) session.load(Client.class, id);
-    }
-
-
     public Client findByCvr(String cvr)
     {
         String ssnlike = "CVR:" + cvr + "-%";
         Query query = session.createQuery("FROM Client WHERE subjectSerialNumber LIKE :subjectSerialNumber");
         query.setParameter("subjectSerialNumber", ssnlike);
-        return (Client) query.uniqueResult();
-    }
-
-
-    public Client findBySubjectSerialNumber(String subjectSerialNumber)
-    {
-        Query query = session.createQuery("FROM Client WHERE subjectSerialNumber = :subjectSerialNumber");
-        query.setParameter("subjectSerialNumber", subjectSerialNumber);
         return (Client) query.uniqueResult();
     }
 
