@@ -1,95 +1,135 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>dk.nsi.stamdata</groupId>
-		<artifactId>stamdata-parent</artifactId>
-		<version>3.2.3-SNAPSHOT</version>
-		<relativePath>../../pom.xml</relativePath>
-	</parent>
+  <parent>
+    <groupId>dk.nsi.stamdata</groupId>
+    <artifactId>stamdata-parent</artifactId>
+    <version>3.2.3-SNAPSHOT</version>
+    <relativePath>../../pom.xml</relativePath>
+  </parent>
 
-	<artifactId>stamdata-authorization-lookup-ws</artifactId>
+  <artifactId>stamdata-authorization-lookup-ws</artifactId>
 
-	<packaging>war</packaging>
+  <packaging>war</packaging>
 
-	<name>Stamdata Authorization Lookup WebService</name>
+  <name>Stamdata Authorization Lookup WebService</name>
 
-	<dependencies>
-		<dependency>
-			<groupId>dk.nsi.stamdata</groupId>
-			<artifactId>stamdata-common</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>dk.nsi.stamdata</groupId>
+      <artifactId>stamdata-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>dk.sosi.seal</groupId>
-			<artifactId>seal</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>dk.sosi.seal</groupId>
+      <artifactId>seal</artifactId>
+    </dependency>
 
-		<!-- Logging -->
+    <!-- Logging -->
 
-		<dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-api</artifactId>
-          <version>${jboss6.slf4j.version}</version>
-          <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-simple</artifactId>
-          <version>${jboss6.slf4j.version}</version>
-          <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${jboss6.slf4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-            <version>${jboss6.slf4j.version}</version>
-		</dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${jboss6.slf4j.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-		</dependency>
-    
-		<dependency>
-			<groupId>dk.nsi.stamdata</groupId>
-			<artifactId>stamdata-testing</artifactId>
-			<version>${project.version}</version>
-			<scope>test</scope>
-		</dependency>
-        		
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-c3p0</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <version>${jboss6.slf4j.version}</version>
+    </dependency>
 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-entitymanager</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>dk.nsi.stamdata</groupId>
+      <artifactId>stamdata-testing</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
 
-		<!-- Test -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-c3p0</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-		</dependency>
-	</dependencies>
+    <!-- Test -->
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-all</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <doCheck>true</doCheck>
+          <doUpdate>true</doUpdate>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Build>${buildNumber}</Implementation-Build>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>
