@@ -31,21 +31,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.w3c.dom.Element;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
@@ -56,7 +54,11 @@ import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
 import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
+import dk.nsi.stamdata.views.cpr.Person;
 import dk.sosi.seal.model.AuthenticationLevel;
 
 @RunWith(GuiceTestRunner.class)
@@ -70,7 +72,12 @@ public class StamdataReplicationIdCardLevelAttackTest {
     private ReplicationRequestType request;
     private ReplicationResponseType response;
     private Element anyAsElement;
-    
+
+    @Inject
+    private Session session;
+    @Inject
+    private ClientDao clientDao;
+
     @Before
     public void setUp() throws Exception {
         server = new TestServer().port(8986).contextPath("/").start();
@@ -114,11 +121,26 @@ public class StamdataReplicationIdCardLevelAttackTest {
 
     private void attemptCallWithLevel(int level) throws ReplicationFault, Exception
     {
+        populateDatabase();
+        
         createCprPersonRegisterReplicationRequest();
         sendRequest(level);
         
         assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 0);        
+    }
+    
+    private void populateDatabase() {
+        Transaction t = session.beginTransaction();
+
+        session.createQuery("DELETE FROM Client").executeUpdate();
+        session.createSQLQuery("DELETE FROM Client_permissions").executeUpdate();
+        
+        // Example of subject serial number: CVR:19343634-UID:1234
+        Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
+        cvrClient.addPermission(Views.getViewPath(Person.class));
+        session.persist(cvrClient);
+
+        t.commit();
     }
     
     private void createCprPersonRegisterReplicationRequest() {
@@ -135,23 +157,6 @@ public class StamdataReplicationIdCardLevelAttackTest {
         assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
     }
 
-    private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException {
-        XPathExpression expression = createXpathExpression("count(//sdm:person)");
-        String countAsString = expression.evaluate(anyAsElement);
-        assertThat(Integer.parseInt(countAsString), is(n));
-    }
-
-    private XPathExpression createXpathExpression(String expression) throws XPathExpressionException {
-        NamespaceContext context = new NamespaceContextMap(
-                "krs", "http://nsi.dk/2011/10/21/StamdataKrs/", 
-                "atom", "http://www.w3.org/2005/Atom",
-                "sdm", "http://trifork.com/-/stamdata/3.0/cpr");
-        XPathFactory factory = XPathFactory.newInstance();
-        XPath xpath = factory.newXPath();
-        xpath.setNamespaceContext(context);
-        return xpath.compile(expression);
-    }
-    
     private static Map<Integer, AuthenticationLevel> mapFromIntegerLevelToEnum;
     static {
         mapFromIntegerLevelToEnum = new HashMap<Integer, AuthenticationLevel>();
