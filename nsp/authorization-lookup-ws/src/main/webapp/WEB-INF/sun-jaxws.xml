@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
+
+	<!-- This binding is for AuthorizationService SOAP 1.1 -->
+	<endpoint name="DetGodeCprOpslag" wsdl="WEB-INF/wsdl/Authorization.wsdl"
+		service="{http://trifork.com/-/stamdata/3.0}AuthorizationService"
+		port="{http://trifork.com/-/stamdata/3.0}AuthorizationPort"
+		implementation="com.trifork.stamdata.authorization.webservice.AuthorizationLookupImpl" url-pattern="/service/AuthorizationService" />
+</endpoints>

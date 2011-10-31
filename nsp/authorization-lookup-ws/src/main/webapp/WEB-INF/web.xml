@@ -1,20 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
-	version="2.4">
-	<display-name>Stamdata Authorization Lookup Component</display-name>
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+  version="2.4">
+  <display-name>Stamdata Authorization Lookup Component</display-name>
 
-	<listener>
-		<listener-class>com.trifork.stamdata.authorization.ComponentController</listener-class>
-	</listener>
+  <listener>
+    <listener-class>com.trifork.stamdata.authorization.ComponentController</listener-class>
+  </listener>
 
-	<filter>
-		<filter-name>Guice Filter</filter-name>
-		<filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
-	</filter>
+  <filter>
+    <filter-name>Guice Filter</filter-name>
+    <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+  </filter>
 
-	<filter-mapping>
-		<filter-name>Guice Filter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+  <filter-mapping>
+    <filter-name>Guice Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- JAX-WS -->
+
+  <listener>
+    <listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
+  </listener>
+
+  <servlet>
+    <servlet-name>JAXWSServlet</servlet-name>
+    <servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+    <load-on-startup>10</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+    <servlet-name>JAXWSServlet</servlet-name>
+    <url-pattern>/service/*</url-pattern>
+  </servlet-mapping>
 </web-app>

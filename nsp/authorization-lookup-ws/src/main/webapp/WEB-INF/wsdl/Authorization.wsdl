@@ -1,7 +1,9 @@
 <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
   xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsa="http://www.w3.org/2005/08/addressing"
   xmlns:wsaw="http://www.w3.org/2005/08/addressing/wsdl" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:tns="http://trifork.com/-/stamdata/3.0" targetNamespace="http://trifork.com/-/stamdata/3.0">
+  xmlns:tns="http://trifork.com/-/stamdata/3.0" targetNamespace="http://trifork.com/-/stamdata/3.0"
+    xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+  xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
   <wsdl:types>
     <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema"
       xmlns:sd="http://trifork.com/-/stamdata/3.0" targetNamespace="http://trifork.com/-/stamdata/3.0"
@@ -20,7 +22,7 @@
         <sequence>
           <element name="authorizationCode" type="string" />
           <element name="educationCode" type="string" />
-          <element name="educationName" type="string" />
+          <element name="educationName" type="string" minOccurs="0" />
         </sequence>
       </complexType>
       <element name="AuthorizationResponseStructure" type="sd:AuthorizationResponseType">
@@ -33,43 +35,75 @@
           <element name="cpr" type="string" />
           <element name="firstName" type="string" minOccurs="0" />
           <element name="lastName" type="string" minOccurs="0" />
-          <element name="authorization" type="sd:AuthorizationType" minOccurs="0" maxOccurs="unbounded" />
+          <element name="authorization" type="sd:AuthorizationType"
+            minOccurs="0" maxOccurs="unbounded" />
         </sequence>
       </complexType>
     </xsd:schema>
+
+    <!-- Den gode webservice schemas. -->
+    <xsd:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <xsd:include schemaLocation="dgws/wsse.xsd" />
+  </xsd:schema>
+  <xsd:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+    <xsd:include schemaLocation="dgws/medcom.xsd" />
+  </xsd:schema>
+  
+    <!-- NB: This is added to avoid JAX-WS mapping date to XMLGregorialCalendar, which does not play nice with SEAL. -->
+    <xsd:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" targetNamespace="http://trifork.com/-/stamdata/3.0" jaxb:version="2.1" elementFormDefault="qualified">
+    <xsd:annotation>
+      <xsd:appinfo>
+        <jaxb:globalBindings>
+          <jaxb:javaType name="java.util.Calendar" xmlType="xsd:dateTime"
+            parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+            printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+        </jaxb:globalBindings>
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:schema>
   </wsdl:types>
 
   <wsdl:message name="AuthorizationRequestMessage">
-    <wsdl:part element="tns:AuthorizationRequestStructure"
-      name="AuthorizationRequestPart" />
+    <wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+    <wsdl:part element="tns:AuthorizationRequestStructure" name="parameters" />
   </wsdl:message>
 
   <wsdl:message name="AuthorizationResponseMessage">
-    <wsdl:part element="tns:AuthorizationResponseStructure"
-      name="AuthorizationResponsePart" />
+    <wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+    <wsdl:part element="tns:AuthorizationResponseStructure" name="parameters" />
+  </wsdl:message>
+
+  <wsdl:message name="DGWSFault">
+    <wsdl:part name="fault" element="dgws:FaultCode" />
   </wsdl:message>
 
   <wsdl:portType name="AuthorizationPortType">
     <wsdl:operation name="Authorization">
-      <wsdl:input message="tns:AuthorizationRequestMessage"
-        name="AuthorizationRequestStructureInput" />
-      <wsdl:output message="tns:AuthorizationResponseMessage"
-        name="AuthorizationResponseStructureOutput" />
+      <wsdl:input message="tns:AuthorizationRequestMessage" name="AuthorizationRequestStructureInput" />
+      <wsdl:output message="tns:AuthorizationResponseMessage" name="AuthorizationResponseStructureOutput" />
+      <wsdl:fault message="tns:DGWSFault" name="DGWSFault" />
     </wsdl:operation>
   </wsdl:portType>
 
   <wsdl:binding name="AuthorizationBinding" type="tns:AuthorizationPortType">
-    <soap:binding style="document"
-      transport="http://schemas.xmlsoap.org/soap/http" />
-    <!--wsaw:UsingAddressing wsdl:required="true" / -->
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="Authorization">
       <soap:operation soapAction="http://trifork.com/sdm/Gateway" />
       <wsdl:input name="AuthorizationRequestStructureInput">
-        <soap:body use="literal" />
+        <soap:body use="literal" parts="parameters" />
+        <soap:header message="tns:AuthorizationRequestMessage" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:AuthorizationRequestMessage" part="medcomHeader" use="literal"/>
       </wsdl:input>
       <wsdl:output name="AuthorizationResponseStructureOutput">
-        <soap:body use="literal" />
+        <soap:body use="literal" parts="parameters" />
+        <soap:header message="tns:AuthorizationResponseMessage" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:AuthorizationResponseMessage" part="medcomHeader" use="literal"/>
       </wsdl:output>
+      <wsdl:fault name="DGWSFault">
+        <soap:fault name="DGWSFault" use="literal" />
+      </wsdl:fault>
     </wsdl:operation>
   </wsdl:binding>
 

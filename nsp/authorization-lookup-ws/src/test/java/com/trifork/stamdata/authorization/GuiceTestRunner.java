@@ -24,20 +24,13 @@
  */
 package com.trifork.stamdata.authorization;
 
-import org.junit.Test;
+import org.junit.runners.model.InitializationError;
+import dk.nsi.stamdata.testing.AbstractGuiceTestRunner;
 
-import com.google.inject.Injector;
-import com.trifork.stamdata.authorization.webservice.AuthorizationLookupImpl;
-
-public class WebServiceIntegrationTest
+public class GuiceTestRunner extends AbstractGuiceTestRunner
 {
-	@Test
-	public void should_be_able_to_start_the_webservice_from_the_guice_configuration()
-	{
-		ComponentController contextListener = new ComponentController();
-
-		Injector injector = contextListener.getInjector();
-
-		injector.getInstance(AuthorizationLookupImpl.class);
-	}
+    public GuiceTestRunner(Class<?> classToRun) throws InitializationError
+    {
+        super(classToRun, new ComponentController.ComponentModule());
+    }
 }

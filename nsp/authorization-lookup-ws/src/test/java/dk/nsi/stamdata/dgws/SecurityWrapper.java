@@ -22,17 +22,32 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.authorization.security;
+package dk.nsi.stamdata.dgws;
 
-import static com.trifork.stamdata.authorization.security.WhitelistProvider.SET_OF_STRINGS;
+import javax.xml.ws.Holder;
 
-import com.google.inject.AbstractModule;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.Security;
 
-public class SecurityModule extends AbstractModule {
 
-    @Override
-    protected void configure()
-    {
-        bind(SET_OF_STRINGS).toProvider(WhitelistProvider.class);
+public class SecurityWrapper {
+
+    private Security security = null;
+    private Header medcomHeader = null;
+
+
+    public SecurityWrapper(Security security, Header medcomHeader) {
+        this.security = security;
+        this.medcomHeader = medcomHeader;
+    }
+
+
+    public Holder<Security> getSecurity() {
+        return new Holder<Security>(security);
+    }
+
+
+    public Holder<Header> getMedcomHeader() {
+        return new Holder<Header>(medcomHeader);
     }
 }

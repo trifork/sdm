@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.jws.WebService;
+import javax.xml.ws.Holder;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
@@ -38,11 +39,16 @@ import com.trifork.stamdata.authorization.models.Authorization;
 import com.trifork.stamdata.authorization.models.AuthorizationDao;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 
+import dk.nsi.dgws.ClientVocesCvr;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationPortType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationRequestType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationResponseType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationType;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.AuthorizationPortType")
@@ -52,28 +58,30 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
 {
 	private final Set<String> whitelist;
 	private final AuthorizationDao authorizationDao;
+    private final String cvr;
 
 	@Inject
-	AuthorizationLookupImpl(Set<String> whitelist, AuthorizationDao authorizationDao)
+	AuthorizationLookupImpl(@ClientVocesCvr String cvr, Set<String> whitelist, AuthorizationDao authorizationDao)
 	{
-		this.authorizationDao = authorizationDao;
+		this.cvr = cvr;
+        this.authorizationDao = authorizationDao;
 		this.whitelist = whitelist;
 	}
 
-    @Override
-    public AuthorizationResponseType authorization(AuthorizationRequestType request)
-    {
-        String cvr = "11111111";
+	@Override
+	public AuthorizationResponseType authorization(Holder<Security> wsseHeader,
+	        Holder<Header> medcomHeader, AuthorizationRequestType parameters)
+	        throws DGWSFault {
 
         if (!whitelist.contains(cvr))
         {
-            // TODO: Throw exception
+            throw new DGWSFault("The request CVR number is not authorized to use this service.", FaultCodeValues.NOT_AUTHORIZED);
         }
         
-        List<Authorization> authorizations = authorizationDao.getAuthorizations(request.getCpr());
+        List<Authorization> authorizations = authorizationDao.getAuthorizations(parameters.getCpr());
 
         AuthorizationResponseType response = new ObjectFactory().createAuthorizationResponseType();
-        response.setCpr(request.getCpr());
+        response.setCpr(parameters.getCpr());
         
         if (!authorizations.isEmpty())
         {

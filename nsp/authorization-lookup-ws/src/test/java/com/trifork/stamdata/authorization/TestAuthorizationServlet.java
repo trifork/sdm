@@ -24,22 +24,54 @@
  */
 package com.trifork.stamdata.authorization;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.net.URL;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.xml.namespace.QName;
+
+import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
+import com.google.common.collect.Lists;
 import com.trifork.stamdata.authorization.models.Authorization;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Transactional;
 
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationPortType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationRequestType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationResponseType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationService;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationType;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.testing.TestServer;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(GuiceTestRunner.class)
 public class TestAuthorizationServlet
 {
     TestServer server;
-
+    List<Authorization> authorizations = Lists.newArrayList();
+    
+    static final String WHITELISTED_CVR = "19343634";
+    static final String NON_WHITELISTED_CVR = "12341234";
+    
+    String cvr = WHITELISTED_CVR;
+    
+    @Inject
+    Session session;
+    
+    private AuthorizationRequestType request = new ObjectFactory().createAuthorizationRequestType();
+    private AuthorizationResponseType response = null;
+    private AuthorizationPortType client;
 
     @Before
     public void setUp() throws Exception
@@ -56,13 +88,72 @@ public class TestAuthorizationServlet
 
 
     @Test
-    public void should_return_authorization()
+    public void shouldReturnTheExpectedAuthorizationWhenThereAreOthersThatDontMatchTheQuery() throws Exception
     {
-        Authorization authorization = createAuthorization();
-    }
+        Authorization authorization1 = createAuthorization();
+        authorization1.cpr = "1111122222";
+        authorization1.educationCode = "2131";
+        authorization1.firstName = "Peter";
+        authorization1.lastName = "Andersen";
+        authorization1.authorizationCode = "B1114";
+        
+        // Add another to make sure the right one is selected.
+        
+        Authorization authorization2 = createAuthorization();
+        authorization2.cpr = "2222211111";
+        
+        request.setCpr(authorization1.cpr);
+        
+        sendRequest();
+
+        assertThat(response.getFirstName(), is(authorization1.firstName));
+        assertThat(response.getLastName(), is(authorization1.lastName));
+        
+        assertThat(response.getAuthorization().size(), is(1));
+        
+        AuthorizationType authorization = response.getAuthorization().get(0);
+        
+        assertThat(authorization.getEducationCode(), is(authorization1.educationCode));
+        assertThat(authorization.getAuthorizationCode(), is(authorization1.authorizationCode));
+    } 
     
     public Authorization createAuthorization()
     {
-        return new Authorization("1234567890", "Ib", "Sørensen", "A1234", "2312");
+        Authorization auth = new Authorization("1234567890", "Ib", "Sørensen", "A1234", "2312");
+        authorizations.add(auth);
+        return auth;
+    }
+    
+    @Transactional
+    public void persistAuthorizations()
+    {
+        session.createQuery("DELETE FROM Authorization").executeUpdate();
+        
+        for (Authorization authorization : authorizations)
+        {
+            session.persist(authorization);
+        }
+    }
+    
+    public void sendRequest() throws Exception
+    {
+        persistAuthorizations();
+        
+        final QName SERVICE_QNAME = new QName("http://trifork.com/-/stamdata/3.0", "AuthorizationService");
+
+        URL wsdlLocation = new URL("http://localhost:8080/service/AuthorizationService?wsdl");
+        AuthorizationService serviceCatalog = new AuthorizationService(wsdlLocation, SERVICE_QNAME);
+
+        // SEAL enforces that the XML prefixes are exactly
+        // as it creates them. So we have to make sure we
+        // don't change them.
+
+        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
+        
+        client = serviceCatalog.getAuthorizationPort();
+        
+        SecurityWrapper headers = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(cvr, "foo2", "bar2");
+
+        response = client.authorization(headers.getSecurity(), headers.getMedcomHeader(), request);
     }
 }

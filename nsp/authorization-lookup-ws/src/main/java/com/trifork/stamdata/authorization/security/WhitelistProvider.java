@@ -24,6 +24,7 @@
  */
 package com.trifork.stamdata.authorization.security;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -32,6 +33,7 @@ import javax.inject.Provider;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.inject.TypeLiteral;
 
 public class WhitelistProvider implements Provider<Set<String>>
@@ -42,7 +44,17 @@ public class WhitelistProvider implements Provider<Set<String>>
     @Inject
     WhitelistProvider(@Named("subjectSerialNumbers") String subjectSerialNumbers)
     {
-        whitelist = ImmutableSet.copyOf(Splitter.on(',').omitEmptyStrings().trimResults().split(subjectSerialNumbers));
+        Iterable<String> serials = Splitter.on(',').omitEmptyStrings().trimResults().split(subjectSerialNumbers);
+        List<String> cvrs = Lists.newArrayList();
+        
+        for (String serial : serials)
+        {
+            String cvr = serial.split(":")[1];
+            cvr = cvr.split("-")[0];
+            cvrs.add(cvr);
+        }
+        
+        whitelist = ImmutableSet.copyOf(cvrs);
     }
     
     @Override

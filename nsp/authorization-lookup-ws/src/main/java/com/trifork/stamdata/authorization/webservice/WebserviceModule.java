@@ -24,8 +24,6 @@
  */
 package com.trifork.stamdata.authorization.webservice;
 
-import static dk.nsi.dgws.DenGodeWebServiceFilter.ALL_EXCEPT_STATUS_PAGE;
-
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.MonitoringModule;
@@ -41,7 +39,7 @@ public class WebserviceModule extends ServletModule
     protected void configureServlets()
     {
         install(new SecurityModule());
-        filter(ALL_EXCEPT_STATUS_PAGE).through(DenGodeWebServiceFilter.class);
+        filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
         install(new DenGodeWebServiceModule());
         
         filter("/*").through(PersistenceFilter.class);
