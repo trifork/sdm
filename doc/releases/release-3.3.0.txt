@@ -1,0 +1,37 @@
+Stamdata 3.3.0 - Release Notes
+==============================
+
+== Generelt
+
+I denne release har der været fokus Den Gode Webservice Authentication Level.
+Der var bekymring om at man kunne bruge de respektive services uden det rette
+sikkerhedsniveau på sine SOSI ID Kort.
+
+Vores test viser dog at det ikke umiddelbart er sandt. Vi har dog gjort sik-
+kerheds niveauet for alle komponenter mere eksplisit. Man kan nu sætte en
+property i hver af komponenternes konfigurations fil:
+
+Eksempel:
+
+dk.nsi.dgws.sosi.nistLevels=3
+
+eller
+
+dk.nsi.dgws.sosi.nistLevels=3,4
+
+Som udgangspunkt er alle komponenter konfigureret til at køre med niveau '3'.
+Der er altså ikke brug for at operatøren ændre noget nu, det virker 
+out-of-the-box. Men i fremtiden kan man altså styres niveauet fra en konfigfil.
+
+Driftsdokumentationen er opdateret.
+
+== WSDL for Autorisations Opslags Service
+
+Under denne opdatering blev der fundet en fejl i WSDL-filen for autorisations-
+opslags servicen. Fejlen gjorde at svar fra servicen når en autorisation ikke
+blev fundet, ikke stemte overens med WSDL-specifikation. Dog er Word
+dokumentationen af servicen korrekt.
+
+Vi har i samme omgang forbedret WSDL'en med bedre support for DGWS faults og
+headers.
+ 
