@@ -13,11 +13,11 @@ property i hver af komponenternes konfigurations fil:
 
 Eksempel:
 
-dk.nsi.dgws.sosi.nistLevels=3
+dk.nsi.dgws.sosi.dgwsLevels=3
 
 eller
 
-dk.nsi.dgws.sosi.nistLevels=3,4
+dk.nsi.dgws.sosi.dgwsLevels=3,4
 
 Som udgangspunkt er alle komponenter konfigureret til at køre med niveau '3'.
 Der er altså ikke brug for at operatøren ændre noget nu, det virker 

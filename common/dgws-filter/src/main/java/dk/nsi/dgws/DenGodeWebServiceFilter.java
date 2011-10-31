@@ -88,20 +88,20 @@ public class DenGodeWebServiceFilter implements Filter
     
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
 	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
-    public static final String USE_NIST_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.nistLevels";
+    public static final String USE_DGWS_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.dgwsLevels";
 	public static final String USE_TEST_FEDERATION_PARAMETER = "useSOSITestFederation";
 	
 	private Boolean useTestFederation;
-	private Set<Integer> nistLevels;
+	private Set<Integer> dgwsLevels;
 	private SOSIFactory factory;
 	
 	public DenGodeWebServiceFilter() { }
 
 	@Inject
-	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation, @Named(USE_NIST_INIT_PARAM_KEY) String nistLevels)
+	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation, @Named(USE_DGWS_INIT_PARAM_KEY) String dgwsLevels)
 	{
 		this.useTestFederation = Boolean.valueOf(useTestFederation);
-		this.nistLevels = splitNistList(nistLevels);
+		this.dgwsLevels = splitNistList(dgwsLevels);
 	}
 	
 	private Set<Integer> splitNistList(String levels)
@@ -125,7 +125,7 @@ public class DenGodeWebServiceFilter implements Filter
 		Federation federation = useTestFederation ? new SOSITestFederation(properties) : new SOSIFederation(properties);
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
 	
-		nistLevels = getNistLevel(filterConfig);
+		dgwsLevels = getNistLevel(filterConfig);
 	}
 
 	private boolean shouldWeUseTestFederation(FilterConfig filterConfig)
@@ -149,8 +149,8 @@ public class DenGodeWebServiceFilter implements Filter
 	
 	   private Set<Integer> getNistLevel(FilterConfig filterConfig)
 	   {
-	       String initParameter = filterConfig.getInitParameter(USE_NIST_INIT_PARAM_KEY);
-	       String sysProp = System.getProperty(USE_NIST_INIT_PARAM_KEY);
+	       String initParameter = filterConfig.getInitParameter(USE_DGWS_INIT_PARAM_KEY);
+	       String sysProp = System.getProperty(USE_DGWS_INIT_PARAM_KEY);
 	       
 	       if (sysProp != null)
 	       {
@@ -162,7 +162,7 @@ public class DenGodeWebServiceFilter implements Filter
 	       }
 	       else
 	       {
-	           return nistLevels;
+	           return dgwsLevels;
 	       }
 	   }
 
@@ -204,7 +204,7 @@ public class DenGodeWebServiceFilter implements Filter
 			// We have to make sure ourselves that the ID Cards NIST level etc.
 			// is as expected.
 			
-			if (nistLevels.contains(idCard.getAuthenticationLevel().getLevel()))
+			if (dgwsLevels.contains(idCard.getAuthenticationLevel().getLevel()))
 			{
 			    request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 	            chain.doFilter(httpRequest, response);
