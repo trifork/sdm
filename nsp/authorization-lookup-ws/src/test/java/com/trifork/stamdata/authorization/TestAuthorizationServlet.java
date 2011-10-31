@@ -25,6 +25,7 @@
 package com.trifork.stamdata.authorization;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
@@ -51,6 +52,7 @@ import dk.nsi.stamdata.jaxws.generated.AuthorizationRequestType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationResponseType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationService;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationType;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.testing.TestServer;
 
@@ -90,32 +92,68 @@ public class TestAuthorizationServlet
     @Test
     public void shouldReturnTheExpectedAuthorizationWhenThereAreOthersThatDontMatchTheQuery() throws Exception
     {
-        Authorization authorization1 = createAuthorization();
-        authorization1.cpr = "1111122222";
-        authorization1.educationCode = "2131";
-        authorization1.firstName = "Peter";
-        authorization1.lastName = "Andersen";
-        authorization1.authorizationCode = "B1114";
+        Authorization authorization1_1 = createAuthorization();
+        authorization1_1.cpr = "1111122222";
+        authorization1_1.educationCode = "2131";
+        authorization1_1.firstName = "Peter";
+        authorization1_1.lastName = "Andersen";
+        authorization1_1.authorizationCode = "B1114";
+        
+        Authorization authorization1_2 = createAuthorization();
+        authorization1_2.cpr = "1111122222";
+        authorization1_2.firstName = "Peter";
+        authorization1_2.lastName = "Andersen";
+        authorization1_2.authorizationCode = "A2114";
+        authorization1_2.educationCode = "5155";
         
         // Add another to make sure the right one is selected.
         
         Authorization authorization2 = createAuthorization();
         authorization2.cpr = "2222211111";
         
-        request.setCpr(authorization1.cpr);
+        request.setCpr(authorization1_1.cpr);
         
         sendRequest();
 
-        assertThat(response.getFirstName(), is(authorization1.firstName));
-        assertThat(response.getLastName(), is(authorization1.lastName));
+        assertThat(response.getFirstName(), is(authorization1_1.firstName));
+        assertThat(response.getLastName(), is(authorization1_1.lastName));
         
-        assertThat(response.getAuthorization().size(), is(1));
+        assertThat(response.getAuthorization().size(), is(2));
         
-        AuthorizationType authorization = response.getAuthorization().get(0);
+        AuthorizationType authorization = response.getAuthorization().get(1);
         
-        assertThat(authorization.getEducationCode(), is(authorization1.educationCode));
-        assertThat(authorization.getAuthorizationCode(), is(authorization1.authorizationCode));
-    } 
+        assertThat(authorization.getEducationCode(), is(authorization1_1.educationCode));
+        assertThat(authorization.getAuthorizationCode(), is(authorization1_1.authorizationCode));
+        
+        authorization = response.getAuthorization().get(0);
+
+        assertThat(authorization.getEducationCode(), is(authorization1_2.educationCode));
+        assertThat(authorization.getAuthorizationCode(), is(authorization1_2.authorizationCode));
+        assertThat(authorization.getEducationName(), is("Fodterapeut"));
+    }
+    
+    @Test(expected = DGWSFault.class)
+    public void shouldReturnFaultIfNotWhitelisted() throws Exception
+    {
+        Authorization authorization = createAuthorization();
+        request.setCpr(authorization.cpr);
+        
+        cvr = NON_WHITELISTED_CVR;
+        
+        sendRequest();
+    }
+    
+    @Test
+    public void shouldReturnEnEmptyResponseIfNoAuthorizationsWereFound() throws Exception
+    {
+        createAuthorization();
+        
+        request.setCpr("0000000000");
+        
+        sendRequest();
+        
+        assertThat(response.getFirstName(), is(nullValue()));
+    }
     
     public Authorization createAuthorization()
     {
