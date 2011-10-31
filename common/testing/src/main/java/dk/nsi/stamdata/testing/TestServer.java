@@ -35,7 +35,7 @@ public class TestServer
 {
     private Server server;
     private String contextPath = "/";
-    private int port = 8080;
+    private int port = 8972;
     private String warPath = "src/main/webapp/";
 
 
