@@ -74,7 +74,7 @@ public final class DGWSHeaderUtil
     }
 
 
-    private static SecurityWrapper getSecurityWrapper(AuthenticationLevel auth, String careProviderId, String careProviderName, String itSystemName) throws Exception
+    public static SecurityWrapper getSecurityWrapper(AuthenticationLevel auth, String careProviderId, String careProviderName, String itSystemName) throws Exception
     {
         Security security = new Security();
 
