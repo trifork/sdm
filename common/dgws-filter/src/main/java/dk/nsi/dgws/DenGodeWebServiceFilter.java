@@ -211,7 +211,7 @@ public class DenGodeWebServiceFilter implements Filter
 			}
 			else
 			{
-			    Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.SECURITY_LEVEL_FAILED, "The invalid security level.");
+			    Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.SECURITY_LEVEL_FAILED, "Invalid security level.");
 	            writeFaultToResponse(httpResponse, reply);
 			}
 		}

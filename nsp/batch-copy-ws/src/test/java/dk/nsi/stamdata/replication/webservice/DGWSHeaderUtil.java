@@ -135,7 +135,7 @@ public final class DGWSHeaderUtil
     private static Request getRequest(AuthenticationLevel auth, SOSIFactory factory, String cvr, String careProviderName, String itSystemName) throws CertificateException
     {
         Request request = factory.createNewRequest(false, null);
-        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(cvr);
+        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(cvr, auth);
         request.setIDCard(idCard);
         return request;
     }

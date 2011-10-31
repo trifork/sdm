@@ -50,6 +50,7 @@ import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureTyp
 import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 
@@ -79,7 +80,7 @@ public class PersonHealthCareInfoMapperTest
     {
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
         Set<String> whitelist = Sets.newHashSet();
-        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR);
+        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
         output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, relation, yder);
     }

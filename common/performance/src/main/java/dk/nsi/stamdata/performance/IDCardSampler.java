@@ -25,6 +25,7 @@
 package dk.nsi.stamdata.performance;
 
 import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.Request;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.xml.XmlUtil;
@@ -81,7 +82,7 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 
 	private String createIdCard() throws Exception
 	{
-		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(SOSITestConstants.TEST_CVR);
+		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(SOSITestConstants.TEST_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 		Request createNewRequest = MockSecureTokenService.createFactory().createNewRequest(false, "flowId");
 		createNewRequest.setIDCard(idCard);
 

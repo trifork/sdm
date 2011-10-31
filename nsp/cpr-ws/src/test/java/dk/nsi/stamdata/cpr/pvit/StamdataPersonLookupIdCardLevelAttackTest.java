@@ -34,7 +34,6 @@ import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
-import javax.xml.ws.soap.SOAPFaultException;
 
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
@@ -86,12 +85,12 @@ public class StamdataPersonLookupIdCardLevelAttackTest extends AbstractWebAppEnv
         client = serviceCatalog.getStamdataPersonLookup();
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = DGWSFault.class)
     public void requestWithLevelOneIdCardRaisesAnException() throws Exception {
         sendRequestWithGivenSecurityLevel(1);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = DGWSFault.class)
     public void requestWithLevelTwoIdCardRaisesAnException() throws Exception {
         sendRequestWithGivenSecurityLevel(2);
     }
@@ -101,7 +100,7 @@ public class StamdataPersonLookupIdCardLevelAttackTest extends AbstractWebAppEnv
         sendRequestWithGivenSecurityLevel(3);
     }
 
-    @Test(expected = SOAPFaultException.class)
+    @Test(expected = DGWSFault.class)
     public void requestWithLevelFourIdCardRaisesAnException() throws Exception {
         sendRequestWithGivenSecurityLevel(4);
     }

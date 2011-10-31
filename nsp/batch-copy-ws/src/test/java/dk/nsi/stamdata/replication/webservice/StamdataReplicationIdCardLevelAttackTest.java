@@ -110,6 +110,8 @@ public class StamdataReplicationIdCardLevelAttackTest {
         attemptCallWithLevel(4);
     }
     
+    // Helper methods
+
     private void attemptCallWithLevel(int level) throws ReplicationFault, Exception
     {
         createCprPersonRegisterReplicationRequest();
@@ -118,8 +120,6 @@ public class StamdataReplicationIdCardLevelAttackTest {
         assertResponseContainsAtom();
         assertResponseContainsExactNumberOfRecords("person", 0);        
     }
-
-    // Helper methods
     
     private void createCprPersonRegisterReplicationRequest() {
         request = new ObjectFactory().createReplicationRequestType();
