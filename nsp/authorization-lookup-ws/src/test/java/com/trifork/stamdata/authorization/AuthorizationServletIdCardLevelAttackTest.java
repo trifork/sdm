@@ -176,7 +176,7 @@ public class AuthorizationServletIdCardLevelAttackTest
         
         final QName SERVICE_QNAME = new QName("http://trifork.com/-/stamdata/3.0", "AuthorizationService");
 
-        URL wsdlLocation = new URL("http://localhost:8080/service/AuthorizationService?wsdl");
+        URL wsdlLocation = new URL("http://localhost:8972/service/AuthorizationService?wsdl");
         AuthorizationService serviceCatalog = new AuthorizationService(wsdlLocation, SERVICE_QNAME);
 
         // SEAL enforces that the XML prefixes are exactly
