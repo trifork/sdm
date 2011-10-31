@@ -56,7 +56,7 @@ public class AuthorizationDao {
 	@SuppressWarnings("unchecked")
 	public List<Authorization> getAuthorizations(String cpr) {
 
-		Query query = session.createQuery("FROM Authorization WHERE cpr = :cpr");
+		Query query = session.createQuery("FROM Authorization WHERE cpr = :cpr ORDER BY authorizationCode");
 		query.setParameter("cpr", cpr);
 
 		List<Authorization> authorizations = query.list();
