@@ -34,6 +34,7 @@ import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,6 +52,9 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 
 import dk.sosi.seal.SOSIFactory;
 import dk.sosi.seal.model.IDCard;
@@ -84,17 +88,32 @@ public class DenGodeWebServiceFilter implements Filter
     
 	public static final String IDCARD_REQUEST_ATTRIBUTE_KEY = "dk.nsi.dgws.sosi.idcard";
 	public static final String USE_TEST_FEDERATION_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.usetestfederation";
+    public static final String USE_NIST_INIT_PARAM_KEY = "dk.nsi.dgws.sosi.nistLevels";
 	public static final String USE_TEST_FEDERATION_PARAMETER = "useSOSITestFederation";
 	
 	private Boolean useTestFederation;
+	private Set<Integer> nistLevels;
 	private SOSIFactory factory;
 	
 	public DenGodeWebServiceFilter() { }
 
 	@Inject
-	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation)
+	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation, @Named(USE_NIST_INIT_PARAM_KEY) String nistLevels)
 	{
 		this.useTestFederation = Boolean.valueOf(useTestFederation);
+		this.nistLevels = splitNistList(nistLevels);
+	}
+	
+	private Set<Integer> splitNistList(String levels)
+	{
+	    Set<Integer> levelSet = Sets.newLinkedHashSet();
+	    
+	    for (String level : Splitter.on(",").trimResults().omitEmptyStrings().split(levels))
+	    {
+	        levelSet.add(Integer.parseInt(level));
+	    }
+	    
+	    return levelSet;
 	}
 	
 	@Override
@@ -105,6 +124,8 @@ public class DenGodeWebServiceFilter implements Filter
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
 		Federation federation = useTestFederation ? new SOSITestFederation(properties) : new SOSIFederation(properties);
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
+	
+		nistLevels = getNistLevel(filterConfig);
 	}
 
 	private boolean shouldWeUseTestFederation(FilterConfig filterConfig)
@@ -125,6 +146,25 @@ public class DenGodeWebServiceFilter implements Filter
 			return useTestFederation;
 		}
 	}
+	
+	   private Set<Integer> getNistLevel(FilterConfig filterConfig)
+	   {
+	       String initParameter = filterConfig.getInitParameter(USE_NIST_INIT_PARAM_KEY);
+	       String sysProp = System.getProperty(USE_NIST_INIT_PARAM_KEY);
+	       
+	       if (sysProp != null)
+	       {
+	           return splitNistList(sysProp);
+	       }
+	       else if (initParameter != null)
+	       {
+	           return splitNistList(initParameter);
+	       }
+	       else
+	       {
+	           return nistLevels;
+	       }
+	   }
 
 	@Override
 	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
@@ -164,9 +204,16 @@ public class DenGodeWebServiceFilter implements Filter
 			// We have to make sure ourselves that the ID Cards NIST level etc.
 			// is as expected.
 			
-			request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
-
-			chain.doFilter(httpRequest, response);
+			if (nistLevels.contains(idCard.getAuthenticationLevel().getLevel()))
+			{
+			    request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
+	            chain.doFilter(httpRequest, response);
+			}
+			else
+			{
+			    Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.SECURITY_LEVEL_FAILED, "The invalid security level.");
+	            writeFaultToResponse(httpResponse, reply);
+			}
 		}
 		catch (SignatureInvalidModelBuildException ignore)
 		{

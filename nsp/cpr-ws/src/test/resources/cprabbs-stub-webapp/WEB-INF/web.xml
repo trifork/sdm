@@ -25,6 +25,10 @@
             <param-name>dk.nsi.dgws.sosi.usetestfederation</param-name>
             <param-value>true</param-value>
         </init-param>
+        <init-param>
+            <param-name>dk.nsi.dgws.sosi.nistLevels</param-name>
+            <param-value>3</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>idcardfilter</filter-name>
