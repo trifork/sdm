@@ -49,6 +49,7 @@ import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
 import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 
@@ -324,7 +325,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest
     private void doMap() throws Exception
     {
         Set<String> whiteList = Sets.newHashSet();
-        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678");
+        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678", AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 
         PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);

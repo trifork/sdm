@@ -50,6 +50,7 @@ import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -83,8 +84,8 @@ public class PersonMapperProtectionTest
 	{
 		whitelist = Sets.newHashSet(WHITELISTED_CVR);
 		
-		nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR);
-		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR);
+		nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
+		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 		
 		municipalityMapper = new MunicipalityMapper();
 		person = Factories.createPerson();
