@@ -148,6 +148,4 @@ public final class MockSecureTokenService
 	    
 	    return idCard;
 	}
-	
-	
 }
