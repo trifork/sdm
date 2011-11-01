@@ -46,7 +46,9 @@ import com.trifork.stamdata.importer.persistence.Persister;
  */
 public class SKSParser implements FileParser
 {
-	private static final Logger logger = LoggerFactory.getLogger(SKSParser.class);
+	private static final char OLD_RECORD_OPERATION_CODE = ' ';
+
+    private static final Logger logger = LoggerFactory.getLogger(SKSParser.class);
 	
 	private static final int SKS_NUMBER_END_INDEX = 23;
 	private static final int SKS_NUMBER_START_INDEX = 3;
@@ -57,7 +59,6 @@ public class SKSParser implements FileParser
 	private static final int ENTRY_TYPE_END_INDEX = 3;
 
 	private static final char CREATE_OPERATION_CODE = '1';
-	private static final char DELETE_OPERATION_CODE = '2';
 	private static final char UPDATE_OPERATION_CODE = '3';
 
 	private static final String HOSPITAL_TYPE = "sgh";
@@ -134,22 +135,13 @@ public class SKSParser implements FileParser
 	{
 		if (line.length() < NEW_FORMAT_LINE_LENGTH)
 		{
-			logger.debug("Ignoring old format SKS afd line. line_content={}", line);
 			return null;
 		}
 
 		char code = line.charAt(OPERATION_CODE_INDEX);
 
-		if (code == ' ')
+		if (code == OLD_RECORD_OPERATION_CODE)
 		{
-			logger.debug("Operation code cannot be derived from line. Must be an old record. The line is ignored.");
-			return null;
-		}
-		else if (code == DELETE_OPERATION_CODE)
-		{
-			// TODO: This should be discussed with Lakeside.
-
-			logger.warn("Received an SKS entry with action code (2) (DELETE). Ignoring as PEM does.");
 			return null;
 		}
 		else if (code == CREATE_OPERATION_CODE || code == UPDATE_OPERATION_CODE)

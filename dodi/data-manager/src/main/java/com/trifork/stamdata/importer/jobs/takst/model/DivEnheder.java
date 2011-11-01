@@ -26,6 +26,8 @@
 
 package com.trifork.stamdata.importer.jobs.takst.model;
 
+import javax.persistence.Id;
+
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
 
 // The entities of this type are output by these classes:
@@ -42,6 +44,7 @@ public class DivEnheder extends TakstEntity
 	private String kortTekst;
 	private String tekst;
 
+	@Id
 	@Override
 	public String getKey()
 	{

@@ -33,7 +33,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,9 +44,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.takst.Takst;
-import com.trifork.stamdata.importer.jobs.takst.TakstDataset;
-import com.trifork.stamdata.importer.jobs.takst.TakstImporter;
 import com.trifork.stamdata.importer.jobs.takst.model.Doseringskode;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.DateUtils;
@@ -84,21 +80,6 @@ public class TakstImporterIntegrationTest
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/takst/incomplete/"));
 
 		assertFalse(ti.ensureRequiredFileArePresent(dir.listFiles()));
-	}
-
-	@Test
-	public void testGetNextImportExpectedBefore() throws SQLException
-	{
-		assertTrue(new TakstImporter().getNextImportExpectedBefore(null).before(new Date()));
-
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		stmt.execute("INSERT INTO TakstVersion (TakstUge, ModifiedDate, CreatedDate, validFrom, validTo) VALUES ('201001', \"2010-01-01 00:00:00\", \"2010-01-01 00:00:00\", \"2010-01-01 00:00:00\", \"2999-12-31 00:00:00\")");
-		stmt.close();
-
-		// We expect that the next takst after the first week in 2010 will be 3
-		// week in 2010, or latest sat. January 16th at noon
-		assertEquals(DateUtils.toDate(2010, 1, 16, 12, 0, 0).getTime(), new TakstImporter().getNextImportExpectedBefore(DateUtils.toDate(2008, 12, 12, 15, 10, 0)).getTime());
 	}
 
 	@SuppressWarnings("unchecked")

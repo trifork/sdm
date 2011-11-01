@@ -117,7 +117,7 @@ public class SOREventHandler extends DefaultHandler
 			}
 			catch (ParseException e)
 			{
-				throw (new SAXException(e));
+				throw new SAXException(e);
 			}
 		}
 		else if ("InstitutionOwnerEntity".equals(qName))

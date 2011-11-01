@@ -41,7 +41,6 @@ import junit.framework.Assert;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
@@ -200,7 +199,6 @@ public class DataLayerIntegrationTest
 	}
 
 	@Test
-	@Ignore
 	public void RealTest() throws Exception
 	{
 		// Arrange

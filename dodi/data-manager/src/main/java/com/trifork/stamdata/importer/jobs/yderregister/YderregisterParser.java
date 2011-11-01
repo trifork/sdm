@@ -83,15 +83,15 @@ public class YderregisterParser
 
 	protected class YderRegisterEventHandler extends DefaultHandler
 	{
-		protected static final String SUPPORTED_INTERFACE_VERSION = "S1040013";
-		protected static final String EXPECTED_RECEIPIENT_ID = "B084";
+		private static final String SUPPORTED_INTERFACE_VERSION = "S1040013";
+		private static final String EXPECTED_RECEIPIENT_ID = "B084";
 
 		protected final DateFormat datoFormatter = new SimpleDateFormat("yyyyMMdd");
 
-		protected static final String START_QNAME = "Start";
-		protected static final String END_QNAME = "Slut";
-		protected static final String YDER_QNAME = "Yder";
-		protected static final String PERSON_QNAME = "Person";
+		private static final String START_QNAME = "Start";
+		private static final String END_QNAME = "Slut";
+		private static final String YDER_QNAME = "Yder";
+		private static final String PERSON_QNAME = "Person";
 
 		protected String opgDato;
 
@@ -105,14 +105,10 @@ public class YderregisterParser
 				{
 					opgDato = atts.getValue("OpgDato");
 					dataset = new YderregisterDatasets(getDateFromOpgDato(opgDato));
-
 				}
-				else
+				else if (!opgDato.equals(atts.getValue("OpgDato")))
 				{
-					if (!opgDato.equals(atts.getValue("OpgDato")))
-					{
-						throw new SAXException("The dates in the files differ. This is not allowed and the fileset is invalid.");
-					}
+					throw new SAXException("The dates in the files differ. This is not allowed and the fileset is invalid.");
 				}
 
 				String modtager = atts.getValue("Modt");

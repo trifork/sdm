@@ -86,10 +86,12 @@ public class CPRImporter implements FileParser
 	{
 		checkNotNull(input);
 		checkNotNull(persister);
+		
+		// TODO: Should this not be done in #ensureRequiredFileArePresent()
 
 		for (File personFile : input)
 		{
-			if (!isPersonerFile(personFile))
+			if (!isPersonFile(personFile))
 			{
 				throw new Exception("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing will be imported from the fileset.");
 			}
@@ -108,14 +110,11 @@ public class CPRImporter implements FileParser
 
 			if (isDeltaFile(personFile))
 			{
-				// TODO: Don't use the connection this way. @see
-				// Persister#getConnection()
-
 				Date previousVersion = getLatestVersion(connection);
 
 				if (previousVersion == null)
 				{
-					logger.debug("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
+					logger.warn("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
 				}
 			}
 			
@@ -178,7 +177,7 @@ public class CPRImporter implements FileParser
 		updateChangesTable.close();
 	}
 
-	private boolean isPersonerFile(File f)
+	private boolean isPersonFile(File f)
 	{
 		return personFilePattern.matcher(f.getName()).matches();
 	}
@@ -192,7 +191,8 @@ public class CPRImporter implements FileParser
 	{
 		Statement stm = con.createStatement();
 		ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
-		if (rs.first()) return rs.getTimestamp(1);
+		
+		if (rs.next()) return rs.getTimestamp("Ikraft");
 
 		// Returns null if no previous version of CPR has been imported.
 		
