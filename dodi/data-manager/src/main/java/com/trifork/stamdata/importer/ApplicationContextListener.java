@@ -97,7 +97,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 			// We'll just log the error here and allow the rest of the
 			// system to shut down.
 
-			logger.error("Could not start the job manager.", e);
+			logger.error("Could not stop the job manager.", e);
 		}
 
 		super.contextDestroyed(servletContextEvent);

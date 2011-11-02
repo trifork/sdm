@@ -14,7 +14,7 @@ appender("ROLLING", RollingFileAppender) {
     file = "${LOGS_DIR}/${LOG_FILE}"
 
     encoder(PatternLayoutEncoder) {
-        pattern = "%d [%-4level] %msg [%thread] [%mdc]%n"
+        pattern = "%d [%-4level] %msg [thread=%thread, %mdc]%n"
     }
 
     rollingPolicy(TimeBasedRollingPolicy) {

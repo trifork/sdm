@@ -39,10 +39,12 @@ import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.Transactional;
 
 
 public class FileParserJob implements Job
@@ -73,56 +75,81 @@ public class FileParserJob implements Job
 	@Override
 	public final void run()
 	{
-		// Check for rejected files.
-		// The parser is in a error state as long as there are files there.
+	    // This is the outermost most run loop for a parser.
+	    // It is extremely important that exceptions are handled
+	    // so they do not get swallowed by the void that is
+	    // Runnable.class, and we never get notified.
+	    
+	    try {
+	        // Set up a nice logging context so every log entry
+	        // knows which parser we are running.
+	        
+	        MDC.put("parser", parser.getIdentifier());
+	        
+	        internalRun();
+	    }
+	    catch (Exception e) {
+	        
+	        logger.error("Something went wrong while executing the parser.", e);
+	    }
+	    finally {
+	        
+	        MDC.clear();
+	    }
+	}
+	
+	private final void internalRun()
+	{
+        // Check for rejected files.
+        // The parser is in a error state as long as there are files there.
 
-		if (!isOK()) return;
+        if (!isOK()) return;
 
-		// Check if there are any files to import,
-		// ignoring any unimportant files such as '.DS_Store'.
+        // Check if there are any files to import,
+        // ignoring any unimportant files such as '.DS_Store'.
 
-		if (getInputFiles().length == 0) return;
+        if (getInputFiles().length == 0) return;
 
-		isRunning = true;
+        isRunning = true;
 
-		// If there are files to import wait a while and make sure the
-		// files are stable.
+        // If there are files to import wait a while and make sure the
+        // files are stable.
 
-		if (inputDirSignature != getDirSignature())
-		{
-			logger.info("Files discovered in the input directory. Making sure the files have been completly transfered before parsing will begin. parser={}", parser.getIdentifier());
+        if (inputDirSignature != getDirSignature())
+        {
+            logger.info("Files discovered in the input directory. Making sure the files have been completly transfered before parsing will begin.");
 
-			startStabilizationPeriod();
-			return;
-		}
+            startStabilizationPeriod();
+            return;
+        }
 
-		// Wait until the input files seem to be stable.
+        // Wait until the input files seem to be stable.
 
-		if (stabilizationPeriodEnd.isAfterNow()) return;
+        if (stabilizationPeriodEnd.isAfterNow()) return;
 
-		stabilizationPeriodEnd = null;
-		inputDirSignature = -1;
+        stabilizationPeriodEnd = null;
+        inputDirSignature = -1;
 
-		// Once stable check to see if all the expected files are there.
+        // Once stable check to see if all the expected files are there.
 
-		File[] input = getInputFiles();
+        File[] input = getInputFiles();
 
-		if (!parser.ensureRequiredFileArePresent(input))
-		{
-			logger.error("Not all expected files could be found. Moving the input to the rejected folder. parser={}", parser.getIdentifier());
+        if (!parser.ensureRequiredFileArePresent(input))
+        {
+            logger.error("Not all expected files could be found. Moving the input to the rejected folder.");
 
-			moveAllFilesToRejected();
+            moveAllFilesToRejected();
 
-			return;
-		}
+            return;
+        }
 
-		// If so parse and import them.
+        // If so parse and import them.
 
-		doImport();
+        runParser();
 	}
 
 	/**
-	 * Determins wether a file should be ignored when checking for input.
+	 * Determines whether a file should be ignored when checking for input.
 	 * 
 	 * @param file the file to check.
 	 * 
@@ -180,7 +207,7 @@ public class FileParserJob implements Job
 		}
 		catch (IOException e)
 		{
-			logger.error("Could not move all input files to processing directory. parser={} message=\"{}\"", parser.getIdentifier(), e.getMessage());
+			logger.error("Could not move all input files to processing directory.", e);
 			success = false;
 		}
 
@@ -191,7 +218,7 @@ public class FileParserJob implements Job
 	 * Wraps an import in a database transaction, and handles any errors that
 	 * might occur while parsing a set of files.
 	 */
-	private void doImport()
+	private void runParser()
 	{
 		moveInputToProcessing();
 
@@ -199,7 +226,7 @@ public class FileParserJob implements Job
 
 		try
 		{
-			logger.info("Starting import. parser={}", parser.getIdentifier());
+			logger.info("Starting import.");
 
 			connection = MySQLConnectionManager.getConnection();
 
@@ -208,7 +235,7 @@ public class FileParserJob implements Job
 
 			connection.commit();
 
-			logger.info("Import completed. parser={}", parser.getIdentifier());
+			logger.info("Import completed.");
 
 			FileUtils.deleteQuietly(getProcessingDir());
 		}
@@ -373,9 +400,9 @@ public class FileParserJob implements Job
 	public String getCronExpression()
 	{
 		// File parsers poll their input directories
-		// every 5 seconds.
+		// every second.
 
-		return "0/5 * * * * ?";
+		return "0/1 * * * * ?";
 	}
 
 	/** {@inheritDoc} */
