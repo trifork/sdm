@@ -77,8 +77,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 		try
 		{
-			JobManager manager = injector.getInstance(JobManager.class);
-			manager.start();
+			injector.getInstance(JobManager.class).start();
 		}
 		catch (Exception e)
 		{
@@ -91,8 +90,7 @@ public class ApplicationContextListener extends GuiceServletContextListener
 	{
 		try
 		{
-			JobManager manager = injector.getInstance(JobManager.class);
-			manager.stop();
+			injector.getInstance(JobManager.class).stop();
 		}
 		catch (Exception e)
 		{
