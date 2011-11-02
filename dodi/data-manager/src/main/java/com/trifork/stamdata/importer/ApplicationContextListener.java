@@ -45,13 +45,15 @@ import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.ComponentMonitor;
+import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.jobs.Job;
 import com.trifork.stamdata.importer.jobs.JobManager;
+import com.trifork.stamdata.importer.webinterface.DataManagerComponentMonitor;
 import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
 import com.trifork.stamdata.importer.webinterface.GUIServlet;
-import com.trifork.stamdata.importer.webinterface.StatusServelet;
 
 
 public class ApplicationContextListener extends GuiceServletContextListener
@@ -127,7 +129,9 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 				// Serve the status servlet.
 
-				serve("/status").with(StatusServelet.class);
+				bind(ComponentMonitor.class).to(DataManagerComponentMonitor.class);
+				install(new MonitoringModule());
+
 				serve("/").with(GUIServlet.class);
 
 				// Bind the required dependencies.
