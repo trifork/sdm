@@ -49,7 +49,7 @@ public class UdgaaedeNavne extends TakstEntity
     }
 
 	@Column
-	public Long getDrugid()
+	public Long getDrugId()
 	{
 		return drugid;
 	}
@@ -81,5 +81,10 @@ public class UdgaaedeNavne extends TakstEntity
 	public void setTidligereNavn(String tidligereNavn)
 	{
 		this.tidligereNavn = tidligereNavn;
+	}
+	
+	public void isVeterinaryDrug()
+	{
+	    
 	}
 }

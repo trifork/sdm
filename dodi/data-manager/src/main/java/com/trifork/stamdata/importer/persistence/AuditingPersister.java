@@ -49,10 +49,12 @@ public class AuditingPersister implements Persister
 	private static final Logger logger = LoggerFactory.getLogger(AuditingPersister.class);
 
 	protected Connection connection;
+	protected Date transactionTime;
 
 	public AuditingPersister(Connection connection)
 	{
 		this.connection = connection;
+		transactionTime = new Date();
 	}
 
 	public void persistCompleteDataset(List<CompleteDataset<? extends TemporalEntity>> datasets) throws Exception
@@ -66,7 +68,7 @@ public class AuditingPersister implements Persister
 	}
 
 	public void persistCompleteDataset(CompleteDataset<? extends TemporalEntity>... datasets) throws Exception
-	{		
+	{
 		for (CompleteDataset<? extends TemporalEntity> dataset : datasets)
 		{
 			if (!dataset.getType().isAnnotationPresent(Entity.class)) continue;
@@ -81,23 +83,17 @@ public class AuditingPersister implements Persister
 	 * is present in mysql. If an entity is changed, the existing, mysql record
 	 * is "closed" by assigning validto, and a new MySQL record created to
 	 * represent the new state of the entity.
-	 * <p/>
+	 * 
 	 * It is also checked, if some of the "open" MySQL records are not present
 	 * in this dataset. If an entity is no longer in the dataset, its record
 	 * will be "closed" in mysql by assigning validto.
 	 */
 	public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 	{
-		Date transactionTime = new Date();
-
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
-
-		int processedEntities = 0;
 
 		for (T record : dataset.getEntities())
 		{
-			processedEntities++;
-			
 			Date validFrom = record.getValidFrom();
 
 			Object key = Entities.getEntityID(record);
@@ -138,13 +134,13 @@ public class AuditingPersister implements Persister
 							if (!dataEquals)
 							{
 								// The existing version must be split in two.
-								// Copy existing row. Set validfrom in copy
-								// entity to our validto.
+								// Copy existing row. Set validFrom in copy
+								// entity to our validTo.
 
 								table.copyCurrentRowButWithChangedValidFrom(record.getValidTo(), transactionTime);
 
-								// Set validto in existing entity to our
-								// validfrom.
+								// Set validTo in existing entity to our
+								// validFrom.
 
 								table.updateValidToOnCurrentRow(record.getValidFrom(), transactionTime);
 							}
@@ -274,11 +270,12 @@ public class AuditingPersister implements Persister
 
 					}
 				} while (table.nextRow());
+				
 				if (insertVersion) table.insertAndUpdateRow(record, transactionTime);
 			}
 		}
-		logger.debug("...persistDeltaDataset complete. " + processedEntities + " processed, " + table.getInsertedRows() + " inserted, " + table.getUpdatedRecords() + " updated, " + table.getDeletedRecords() + " deleted");
-
+		
+		logger.info("Persist complete");
 	}
 
 	public <T extends TemporalEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException
@@ -287,42 +284,33 @@ public class AuditingPersister implements Persister
 	}
 
 	/**
-	 * @param dataset
-	 * @throws SQLException 
-	 * @throws FilePersistException
+	 * Invalidates all records not in the data set by setting validTo to the transactionTime.
 	 */
 	private <T extends TemporalEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws SQLException
 	{
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("updateValidToOnRecordsNotInDataset {} starting...",  dataset.getEntityTypeDisplayName());
-		}
+		logger.info("Updating validTo on records not present in the dataset.");
 
-		Date now = new Date();
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 
-		List<StamdataEntityVersion> evs = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
+		List<StamdataEntityVersion> versions = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
 
 		int nExisting = 0;
 
-		for (StamdataEntityVersion ev : evs)
+		for (StamdataEntityVersion version : versions)
 		{
-			List<? extends TemporalEntity> entitiesWithId = dataset.getEntitiesById(ev.id);
+			List<? extends TemporalEntity> entitiesWithId = dataset.getEntitiesById(version.id);
 
 			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
 
-			if (!recordFoundInCompleteDataset) table.updateValidToOnEntityVersion(dataset.getValidFrom(), ev, now);
+			if (!recordFoundInCompleteDataset) table.updateValidToOnEntityVersion(dataset.getValidFrom(), version, transactionTime);
 
 			if (logger.isDebugEnabled() && ++nExisting % 10000 == 0)
 			{
-				logger.debug("Processed " + nExisting + " existing records of type " + dataset.getEntityTypeDisplayName());
+				logger.debug("Processed {} existing records of type {}.", nExisting, dataset.getEntityTypeDisplayName());
 			}
 		}
 
-		if (logger.isDebugEnabled())
-		{
-			logger.debug("updateValidToOnRecordsNotInDataset {} complete. Updated: {} records", dataset.getEntityTypeDisplayName(), table.getUpdatedRecords());
-		}
+		logger.info("Done updating validTo.");
 	}
 
 	public Connection getConnection()

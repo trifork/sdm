@@ -39,6 +39,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekstFactory;
@@ -228,18 +229,20 @@ public class TakstParser
 		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class));
 	}
 
+
 	private List<Administrationsvej> getAdministrationsveje(Laegemiddel drug, Takst takst)
 	{
 		List<Administrationsvej> adminveje = Lists.newArrayList();
-
-		for (int idx = 0; idx < drug.getAdministrationsvejKode().length(); idx += 2)
+		
+		String routeOfAdministration = drug.getAdministrationsvejKode();
+		
+		for (String code : Splitter.fixedLength(2).split(routeOfAdministration))
 		{
-			String avKode = drug.getAdministrationsvejKode().substring(idx, idx + 2);
-			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, avKode);
+			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, code);
 
 			if (adminVej == null)
 			{
-				logger.warn("Administaritonvej not found for kode: '" + avKode + "'");
+				logger.warn("Unknown route of administration, code not found in LMS11. code={}", code);
 			}
 			else
 			{
@@ -250,43 +253,42 @@ public class TakstParser
 		return adminveje;
 	}
 
+	
 	/**
-	 * Sorterer DivEnheder ud på stærke(re) typede entiteter for at matche fmk
-	 * stamtabel skemaet.
+	 * Splits up the entity type 'DivEnhed' into three sub-catagories.
 	 */
 	private void addTypedDivEnheder(Takst takst)
 	{
-		List<Tidsenhed> tidsenhed = new ArrayList<Tidsenhed>();
-		List<Pakningsstoerrelsesenhed> pakEnheder = new ArrayList<Pakningsstoerrelsesenhed>();
-		List<Styrkeenhed> styrkeEnheder = new ArrayList<Styrkeenhed>();
+		List<Tidsenhed> timeUnits = new ArrayList<Tidsenhed>();
+		List<Pakningsstoerrelsesenhed> packageUnits = new ArrayList<Pakningsstoerrelsesenhed>();
+		List<Styrkeenhed> strengthUnits = new ArrayList<Styrkeenhed>();
 		Dataset<DivEnheder> divEnheder = takst.getDatasetOfType(DivEnheder.class);
 
 		for (DivEnheder enhed : divEnheder.getEntities())
 		{
 			if (enhed.isEnhedstypeTid())
 			{
-				tidsenhed.add(new Tidsenhed(enhed));
+				timeUnits.add(new Tidsenhed(enhed));
 			}
 			else if (enhed.isEnhedstypePakning())
 			{
-				pakEnheder.add(new Pakningsstoerrelsesenhed(enhed));
+				packageUnits.add(new Pakningsstoerrelsesenhed(enhed));
 			}
 			else if (enhed.isEnhedstypeStyrke())
 			{
-				styrkeEnheder.add(new Styrkeenhed(enhed));
+				strengthUnits.add(new Styrkeenhed(enhed));
 			}
 		}
 
-		takst.addDataset(new TakstDataset<Tidsenhed>(takst, tidsenhed, Tidsenhed.class));
-		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, pakEnheder, Pakningsstoerrelsesenhed.class));
-		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, styrkeEnheder, Styrkeenhed.class));
+		takst.addDataset(new TakstDataset<Tidsenhed>(takst, timeUnits, Tidsenhed.class));
+		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, packageUnits, Pakningsstoerrelsesenhed.class));
+		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, strengthUnits, Styrkeenhed.class));
 	}
 
+
 	/**
-	 * Filtes out veterinary medicin from a dataset.
-	 * 
-	 * @param takst
-	 */
+	 * Filters out veterinary medicine from a data set.
+     */
 	public static void filterOutVetDrugs(Takst takst)
 	{
 		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
@@ -303,33 +305,57 @@ public class TakstParser
 			pakninger.removeEntities(pakningerToBeRemoved);
 		}
 
-		Dataset<Laegemiddel> lmr = takst.getDatasetOfType(Laegemiddel.class);
+		Dataset<ATCKoderOgTekst> atcCodes = takst.getDatasetOfType(ATCKoderOgTekst.class);
 
-		if (lmr != null)
-		{
-			List<Laegemiddel> laegemidlerToBeRemoved = Lists.newArrayList();
-
-			for (Laegemiddel lm : lmr.getEntities())
-			{
-				if (!lm.isTilHumanAnvendelse()) laegemidlerToBeRemoved.add(lm);
-			}
-
-			lmr.removeEntities(laegemidlerToBeRemoved);
-		}
-
-		Dataset<ATCKoderOgTekst> atckoder = takst.getDatasetOfType(ATCKoderOgTekst.class);
-
-		if (atckoder != null)
+		if (atcCodes != null)
 		{
 			List<ATCKoderOgTekst> atcToBeRemoved = Lists.newArrayList();
 
-			for (ATCKoderOgTekst atc : atckoder.getEntities())
+			for (ATCKoderOgTekst atc : atcCodes.getEntities())
 			{
 				if (!atc.isTilHumanAnvendelse()) atcToBeRemoved.add(atc);
 			}
 
-			atckoder.removeEntities(atcToBeRemoved);
+			atcCodes.removeEntities(atcToBeRemoved);
 		}
+		
+		Dataset<Laegemiddel> drugs = takst.getDatasetOfType(Laegemiddel.class);
+		Dataset<UdgaaedeNavne> udgaaedeNavne = takst.getDatasetOfType(UdgaaedeNavne.class);
+		
+		if (udgaaedeNavne != null)
+		{
+		    List<UdgaaedeNavne> itemsForRemoval = Lists.newArrayList();
+
+            for (UdgaaedeNavne name : udgaaedeNavne.getEntities())
+            {
+                Laegemiddel drug = drugs.getEntityById(name.getDrugId());
+                
+                if (drug == null)
+                {
+                    logger.warn("Drug with changed name from LMS10 does not reference an drug in LMS01.");
+                }
+                else if (!drug.isTilHumanAnvendelse())
+                {
+                    itemsForRemoval.add(name);
+                }
+            }
+            
+            udgaaedeNavne.removeEntities(itemsForRemoval);
+		}
+		
+		// Remove the drugs last since we depend on them in the above removals.
+		
+		if (drugs != null)
+        {
+            List<Laegemiddel> laegemidlerToBeRemoved = Lists.newArrayList();
+
+            for (Laegemiddel lm : drugs.getEntities())
+            {
+                if (!lm.isTilHumanAnvendelse()) laegemidlerToBeRemoved.add(lm);
+            }
+
+            drugs.removeEntities(laegemidlerToBeRemoved);
+        }
 	}
 
 	private int getValidYear(String line)

@@ -199,19 +199,15 @@ public class DataLayerIntegrationTest
 	}
 
 	@Test
-	public void RealTest() throws Exception
+	public void canImportACompleteDatasetWillAllDataTimes() throws Exception
 	{
-		// Arrange
-		Takst takstinit = parseTakst("data/takst/realtakst");
+		Takst takst = parseTakst("data/takst/realtakst");
 
-		Statement statement = connection.createStatement();
 		AuditingPersister versionedDao = new AuditingPersister(connection);
 
-		// Act
-		versionedDao.persistCompleteDataset(takstinit.getDatasets());
-
-		// Assert
-		statement.close();
+		versionedDao.persistCompleteDataset(takst.getDatasets());
+	
+		// TODO: Assert the expected number of the different record types.
 	}
 
 	private Integer getRecordCount(Persister versionedDao) throws SQLException
