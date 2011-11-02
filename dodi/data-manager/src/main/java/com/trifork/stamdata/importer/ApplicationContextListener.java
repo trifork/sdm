@@ -49,8 +49,6 @@ import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.jobs.Job;
 import com.trifork.stamdata.importer.jobs.JobManager;
-import com.trifork.stamdata.importer.jobs.Updater;
-import com.trifork.stamdata.importer.jobs.UpdaterJob;
 import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
 import com.trifork.stamdata.importer.webinterface.GUIServlet;
 import com.trifork.stamdata.importer.webinterface.StatusServelet;
@@ -116,7 +114,6 @@ public class ApplicationContextListener extends GuiceServletContextListener
 
 		final List<Job> jobs = Lists.newArrayList();
 
-		jobs.addAll(getConfiguredUpdateJobs(config));
 		jobs.addAll(getConfiguredParserJobs(config));
 
 		injector = Guice.createInjector(new ServletModule()
@@ -141,44 +138,6 @@ public class ApplicationContextListener extends GuiceServletContextListener
 		});
 
 		return injector;
-	}
-
-	private Collection<? extends Job> getConfiguredUpdateJobs(CompositeConfiguration config)
-	{
-		// Job config format:
-		//
-		// job : <Job's class name>; <cron expression>
-
-		List<Job> jobs = Lists.newArrayList();
-
-		for (String jobConfiguration : config.getStringArray("job"))
-		{
-			String[] values = jobConfiguration.split(";");
-
-			if (values.length != 2)
-			{
-				throw new RuntimeException("All parsers must be configured with an expected import frequency. " + jobConfiguration);
-			}
-
-			String className = values[0].trim();
-			String cronExpression = values[1].trim();
-
-			try
-			{
-				Class<? extends Updater> type = Class.forName(className).asSubclass(Updater.class);
-				Updater job = type.newInstance();
-
-				// Wrap the updater in a updater job.
-
-				jobs.add(new UpdaterJob(job, cronExpression));
-			}
-			catch (Exception e)
-			{
-				throw new RuntimeException("An error occurred while loading job.", e);
-			}
-		}
-
-		return jobs;
 	}
 
 	private List<Job> getConfiguredParserJobs(final CompositeConfiguration config)
