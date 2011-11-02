@@ -34,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -41,6 +42,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Preconditions;
@@ -100,7 +102,7 @@ public class CPRImporter implements FileParser
 		// Check that the sequence is kept.
 
 		Connection connection = persister.getConnection();
-		Set<String> cprWithChanges = Sets.newHashSet();
+		ArrayList<String> cprWithChanges = Lists.newArrayList();
 
 		for (File personFile : input)
 		{
@@ -161,7 +163,7 @@ public class CPRImporter implements FileParser
 			}
 		}
 		
-		// Update the GOS/CPR table with the current timestamp and
+		// Update the GOS/CPR table with the current time stamp and
 		// CPR numbers.
 		
 		PreparedStatement updateChangesTable = persister.getConnection().prepareStatement("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)");
