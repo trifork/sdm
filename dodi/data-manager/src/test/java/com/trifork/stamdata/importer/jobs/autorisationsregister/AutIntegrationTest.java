@@ -37,7 +37,7 @@ import org.junit.*;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.*;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
 
@@ -73,7 +73,7 @@ public class AutIntegrationTest
 		a.setEfternavn(efternavn);
 		a.setUddannelsesKode(uddKode);
 		a.setValidFrom(validFrom);
-		a.setValidTo(DateUtils.THE_END_OF_TIME);
+		a.setValidTo(Dates.THE_END_OF_TIME);
 		
 		return a;
 	}

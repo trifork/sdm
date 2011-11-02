@@ -26,8 +26,8 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyyMMddHHmm;
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.Dates.yyyyMMddHHmm;
+import static com.trifork.stamdata.importer.util.Dates.yyyy_MM_dd;
 
 import java.io.BufferedReader;
 import java.io.File;

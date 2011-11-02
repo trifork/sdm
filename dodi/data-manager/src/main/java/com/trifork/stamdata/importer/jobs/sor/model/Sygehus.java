@@ -33,7 +33,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 @Entity
@@ -178,7 +178,7 @@ public class Sygehus extends AbstractStamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return (validTo != null) ? validTo : DateUtils.THE_END_OF_TIME;
+		return (validTo != null) ? validTo : Dates.THE_END_OF_TIME;
 	}
 
 	public void setValidTo(Date validTo)

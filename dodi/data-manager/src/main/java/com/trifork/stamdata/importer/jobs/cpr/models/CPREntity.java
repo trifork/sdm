@@ -30,7 +30,7 @@ import java.util.Date;
 
 import com.trifork.stamdata.importer.jobs.cpr.CPRDataset;
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public abstract class CPREntity extends AbstractStamdataEntity
@@ -51,7 +51,7 @@ public abstract class CPREntity extends AbstractStamdataEntity
 	@Override
 	public Date getValidTo()
 	{
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 
 	public CPRDataset getDataset()

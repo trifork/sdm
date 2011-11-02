@@ -26,7 +26,7 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.util.DateUtils.toMySQLdate;
+import static com.trifork.stamdata.importer.util.Dates.toMySQLdate;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

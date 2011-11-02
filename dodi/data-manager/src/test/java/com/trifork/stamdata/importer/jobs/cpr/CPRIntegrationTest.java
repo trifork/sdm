@@ -26,7 +26,7 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.Dates.yyyy_MM_dd;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -49,7 +49,7 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class CPRIntegrationTest
@@ -240,7 +240,7 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
 		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("ValidFrom"));
-		assertEquals(DateUtils.THE_END_OF_TIME, rs.getDate("ValidTo"));
+		assertEquals(Dates.THE_END_OF_TIME, rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 

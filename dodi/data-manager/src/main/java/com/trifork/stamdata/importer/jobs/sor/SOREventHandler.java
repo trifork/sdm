@@ -46,7 +46,7 @@ import com.trifork.stamdata.importer.jobs.sor.xmlmodel.HealthInstitutionEntity;
 import com.trifork.stamdata.importer.jobs.sor.xmlmodel.InstitutionOwnerEntity;
 import com.trifork.stamdata.importer.jobs.sor.xmlmodel.OrganizationalUnitEntity;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class SOREventHandler extends DefaultHandler
@@ -66,11 +66,11 @@ public class SOREventHandler extends DefaultHandler
 
 	private void createDatasets(Date snapshotDate)
 	{
-		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, Dates.THE_END_OF_TIME));
 	}
 
 	@Override

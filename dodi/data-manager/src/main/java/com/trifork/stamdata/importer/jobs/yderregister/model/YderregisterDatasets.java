@@ -29,7 +29,7 @@ package com.trifork.stamdata.importer.jobs.yderregister.model;
 import java.util.Date;
 
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class YderregisterDatasets
@@ -39,8 +39,8 @@ public class YderregisterDatasets
 
 	public YderregisterDatasets(Date validFrom)
 	{
-		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom, DateUtils.THE_END_OF_TIME);
-		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class, validFrom, DateUtils.THE_END_OF_TIME);
+		yderregisterDS = new CompleteDataset<Yderregister>(Yderregister.class, validFrom, Dates.THE_END_OF_TIME);
+		yderregisterPersonDS = new CompleteDataset<YderregisterPerson>(YderregisterPerson.class, validFrom, Dates.THE_END_OF_TIME);
 	}
 
 	public CompleteDataset<Yderregister> getYderregisterDS()

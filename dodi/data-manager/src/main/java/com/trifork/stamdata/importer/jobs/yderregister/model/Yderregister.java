@@ -33,7 +33,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 @Entity
 public class Yderregister extends AbstractStamdataEntity
@@ -216,6 +216,6 @@ public class Yderregister extends AbstractStamdataEntity
 	public Date getValidTo()
 	{
 		if (afgangDato != null) return afgangDato;
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 }

@@ -44,7 +44,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
 
@@ -142,7 +142,7 @@ public class AutorisationImporter implements FileParser
 			autorisation.setUddannelsesKode(st.nextToken());
 			
 			autorisation.setValidFrom(validFrom.toDate());
-			autorisation.setValidTo(DateUtils.THE_END_OF_TIME);
+			autorisation.setValidTo(Dates.THE_END_OF_TIME);
 			
 			dataset.addEntity(autorisation);
 		}

@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 // FIXME (thb): This class serves no purpose and can be refactored into the FileParserJob class.
 public class ImportTimeManager
@@ -97,7 +97,7 @@ public class ImportTimeManager
 		{
 			con = MySQLConnectionManager.getAutoCommitConnection();
 			stmt = con.createStatement();
-			stmt.executeUpdate("INSERT INTO Import VALUES ('" + DateUtils.toMySQLdate(importTime) + "', '" + spoolerName + "')");
+			stmt.executeUpdate("INSERT INTO Import VALUES ('" + Dates.toMySQLdate(importTime) + "', '" + spoolerName + "')");
 		}
 		catch (Exception e)
 		{

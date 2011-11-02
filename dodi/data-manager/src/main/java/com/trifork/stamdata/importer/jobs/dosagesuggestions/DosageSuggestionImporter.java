@@ -26,7 +26,7 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions;
 
-import static com.trifork.stamdata.importer.util.DateUtils.THE_END_OF_TIME;
+import static com.trifork.stamdata.importer.util.Dates.THE_END_OF_TIME;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;

@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -127,6 +127,6 @@ public abstract class AbstractStamdataEntity implements TemporalEntity
 	@Override
 	public Date getValidTo()
 	{
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 }

@@ -40,7 +40,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class YderregisterParserTest
@@ -66,7 +66,7 @@ public class YderregisterParserTest
 		assertThat(praksis.getEmail(), is("klinik@33112299.dk"));
 		assertThat(praksis.getWww(), is("www.plib.dk"));
 		assertThat(praksis.getValidFrom(), is(date("1978-07-01")));
-		assertThat(praksis.getValidTo(), is(DateUtils.THE_END_OF_TIME));
+		assertThat(praksis.getValidTo(), is(Dates.THE_END_OF_TIME));
 		
 		// Persons
 		

@@ -52,7 +52,7 @@ import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -202,7 +202,7 @@ public class CPRImporter implements FileParser
 	void insertVersion(Date calendar, Connection con) throws SQLException
 	{
 		Statement stm = con.createStatement();
-		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
+		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toMySQLdate(calendar) + "');";
 		stm.execute(query);
 	}
 

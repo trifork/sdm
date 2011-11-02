@@ -46,7 +46,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.takst.model.Doseringskode;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class TakstImporterIntegrationTest
@@ -86,8 +86,8 @@ public class TakstImporterIntegrationTest
 	@Test
 	public void testLaegemiddelDoseringRef() throws Exception
 	{
-		Date from = DateUtils.toDate(2008, 01, 01);
-		Date to = DateUtils.toDate(2009, 01, 01);
+		Date from = Dates.toDate(2008, 01, 01);
+		Date to = Dates.toDate(2009, 01, 01);
 
 		Takst takst = new Takst(from, to);
 
