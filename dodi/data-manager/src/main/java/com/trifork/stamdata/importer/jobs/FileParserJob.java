@@ -44,7 +44,6 @@ import org.slf4j.MDC;
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.persistence.Transactional;
 
 
 public class FileParserJob implements Job
