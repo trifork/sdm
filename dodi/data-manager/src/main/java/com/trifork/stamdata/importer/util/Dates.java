@@ -44,7 +44,7 @@ public class Dates
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
 
 	/**
-	 * @param long1 representing a date sing the format: yyyyMMdd.
+	 * @param long1 a date string with the format: yyyyMMdd.
 	 * @return a String representing the ISO 8601 date without time zone.
 	 * @throws ParseException 
 	 */
@@ -53,11 +53,17 @@ public class Dates
 		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
 		return informat.parse(dateString);
 	}
+	
+	public static String toDateStringISO8601(Date date)
+    {
+	    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        return formatter.format(date);
+    }
 
 	public static String toFilenameDatetime(Date date)
 	{
-		SimpleDateFormat outformat = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
-		return outformat.format(date);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
+		return formatter.format(date);
 	}
 
 	/**

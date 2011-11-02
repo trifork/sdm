@@ -33,6 +33,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.trifork.stamdata.importer.jobs.takst.TakstEntity;
+import com.trifork.stamdata.importer.util.Dates;
 
 @Entity
 public class UdgaaedeNavne extends TakstEntity
@@ -42,10 +43,10 @@ public class UdgaaedeNavne extends TakstEntity
 	private String tidligereNavn;
 
 	@Column
-	public Date getDatoForAendringen()
+    public String getDatoForAendringen()
 	{
-		return datoForAendringen;
-	}
+        return Dates.toDateStringISO8601(datoForAendringen);
+    }
 
 	@Column
 	public Long getDrugid()
@@ -58,7 +59,7 @@ public class UdgaaedeNavne extends TakstEntity
 	@Column(name = "CID")
 	public String getKey()
 	{
-		return datoForAendringen.toGMTString() + '-' + tidligereNavn + '-' + drugid;
+		return String.format("%s-%s-%s", getDatoForAendringen(), tidligereNavn, drugid);
 	}
 
 	@Column
