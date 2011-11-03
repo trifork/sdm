@@ -1,3 +1,5 @@
+USE sdm_warehouse;
+
 -- ADMINISTRATION TABLES (USERS ETC.)
 
 CREATE TABLE Client (
@@ -48,7 +50,9 @@ CREATE TABLE DosageStructure (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
-	INDEX (releaseNumber)
+	
+	INDEX (DosageStructurePID, ModifiedDate),
+	INDEX (code, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageUnit (
@@ -61,7 +65,9 @@ CREATE TABLE DosageUnit (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
-	INDEX (releaseNumber)
+	
+	INDEX (DosageUnitPID, ModifiedDate),
+	INDEX (code, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageVersion (
@@ -74,7 +80,9 @@ CREATE TABLE DosageVersion (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
-	INDEX (releaseNumber)
+	
+	INDEX (DosageVersionPID, ModifiedDate),
+	INDEX (releaseDate, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DrugDosageStructureRelation (
@@ -87,7 +95,9 @@ CREATE TABLE DrugDosageStructureRelation (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
-	INDEX (releaseNumber)
+	
+	INDEX (DrugDosageStructureRelationPID, ModifiedDate),
+	INDEX (id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE DosageDrug (
@@ -100,7 +110,9 @@ CREATE TABLE DosageDrug (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME,
-	INDEX (releaseNumber)
+	
+	INDEX (DosageDrugPID, ModifiedDate),
+	INDEX (drugId, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Administrationsvej (
@@ -112,8 +124,9 @@ CREATE TABLE Administrationsvej (
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME NOT NULL,
 	CreatedDate DATETIME,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Administrationsvej_1 UNIQUE (AdministrationsvejKode, ValidTo)
+	
+	INDEX (AdministrationsvejPID, ModifiedDate),
+	INDEX (AdministrationsvejKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Apotek (
@@ -131,11 +144,14 @@ CREATE TABLE Apotek (
 	Bynavn VARCHAR(30),
 	Email VARCHAR(100),
 	Www VARCHAR(100),
+	
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME NOT NULL,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (ApotekPID, ModifiedDate),
+	INDEX (SorNummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 -- See LMS12 for documentation of this table.
@@ -144,11 +160,14 @@ CREATE TABLE ATC (
 	ATCPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	ATC CHAR(8) NOT NULL,
 	ATCTekst VARCHAR(72) NOT NULL,
+	
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (ATCPID, ModifiedDate),
+	INDEX (ATC, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Autorisation (
@@ -159,11 +178,13 @@ CREATE TABLE Autorisation (
 	Efternavn VARCHAR(100) NOT NULL,
 	UddannelsesKode INT(4) NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (AutorisationPID, ModifiedDate),
+	INDEX (Autorisationsnummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 -- This table is used to hold the set of currently valid
@@ -190,9 +211,9 @@ CREATE TABLE BarnRelation (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom),
-	INDEX (modifiedDate, BarnRelationPID)
+	
+	INDEX (BarnRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Beregningsregler (
@@ -203,7 +224,9 @@ CREATE TABLE Beregningsregler (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (BeregningsreglerPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Dosering (
@@ -221,7 +244,9 @@ CREATE TABLE Dosering (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (DoseringPID, ModifiedDate),
+	INDEX (DoseringKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE EmballagetypeKoder (
@@ -234,7 +259,9 @@ CREATE TABLE EmballagetypeKoder (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (EmballagetypeKoderPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Enhedspriser (
@@ -249,7 +276,9 @@ CREATE TABLE Enhedspriser (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (EnhedspriserPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Firma (
@@ -263,7 +292,9 @@ CREATE TABLE Firma (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (FirmaPID, ModifiedDate),
+	INDEX (Firmanummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE ForaeldreMyndighedRelation (
@@ -278,9 +309,9 @@ CREATE TABLE ForaeldreMyndighedRelation (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom),
-	INDEX (modifiedDate, ForaeldreMyndighedRelationPID)
+	
+	INDEX (ForaeldreMyndighedRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Formbetegnelse (
@@ -293,7 +324,9 @@ CREATE TABLE Formbetegnelse (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+
+	INDEX (FormbetegnelsePID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Indholdsstoffer (
@@ -305,11 +338,13 @@ CREATE TABLE Indholdsstoffer (
 	Substansgruppe VARCHAR(100),
 	Substans VARCHAR(150),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (IndholdsstofferPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Indikation (
@@ -320,12 +355,14 @@ CREATE TABLE Indikation (
 	IndikationstekstLinie2 VARCHAR(26),
 	IndikationstekstLinie3 VARCHAR(26),
 	aktiv BOOLEAN,
-
+	
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (IndikationPID, ModifiedDate),
+	INDEX (IndikationKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE IndikationATCRef (
@@ -339,7 +376,9 @@ CREATE TABLE IndikationATCRef (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo, IndikationKode, ATC)
+	
+	INDEX (IndikationATCRefPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Kommune (
@@ -351,7 +390,9 @@ CREATE TABLE Kommune (
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (KommunePID, ModifiedDate),
+	INDEX (Nummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Laegemiddel (
@@ -381,11 +422,13 @@ CREATE TABLE Laegemiddel (
 	MTIndehaverKode BIGINT(12),
 	RepraesentantDistributoerKode BIGINT(12),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (LaegemiddelPID, ModifiedDate),
+	INDEX (DrugID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Laegemiddelnavn (
@@ -393,11 +436,13 @@ CREATE TABLE Laegemiddelnavn (
 	DrugID BIGINT(12) NOT NULL,
 	LaegemidletsUforkortedeNavn VARCHAR(60),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (LaegemiddelnavnPID, ModifiedDate),
+	INDEX (DrugID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE LaegemiddelAdministrationsvejRef (
@@ -406,11 +451,13 @@ CREATE TABLE LaegemiddelAdministrationsvejRef (
 	DrugID BIGINT(12) NOT NULL,
 	AdministrationsvejKode CHAR(2) NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (LaegemiddelAdministrationsvejRefPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE LaegemiddelDoseringRef (
@@ -419,11 +466,13 @@ CREATE TABLE LaegemiddelDoseringRef (
 	DrugID BIGINT(12) NOT NULL,
 	DoseringKode BIGINT(12) NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (LaegemiddelDoseringRefPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Klausulering (
@@ -432,11 +481,13 @@ CREATE TABLE Klausulering (
 	KortTekst VARCHAR(60),
 	Tekst VARCHAR(600),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (KlausuleringPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Medicintilskud (
@@ -445,11 +496,13 @@ CREATE TABLE Medicintilskud (
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (MedicintilskudPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Opbevaringsbetingelser (
@@ -458,11 +511,13 @@ CREATE TABLE Opbevaringsbetingelser (
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (OpbevaringsbetingelserPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE OplysningerOmDosisdispensering (
@@ -476,11 +531,13 @@ CREATE TABLE OplysningerOmDosisdispensering (
 	KodeForBilligsteDrugid VARCHAR(1),
 	BilligsteDrugid BIGINT(12),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (OplysningerOmDosisdispenseringPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Organisation (
@@ -489,11 +546,13 @@ CREATE TABLE Organisation (
 	Navn VARCHAR(256),
 	Organisationstype VARCHAR(30) NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (OrganisationPID, ModifiedDate),
+	INDEX (Nummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakning (
@@ -524,11 +583,13 @@ CREATE TABLE Pakning (
 	Faerdigfremstillingsgebyr BOOLEAN,
 	Pakningsdistributoer BIGINT(12),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (PakningPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakningskombinationer (
@@ -541,11 +602,13 @@ CREATE TABLE Pakningskombinationer (
 	EkspeditionensSamledePris BIGINT(12),
 	InformationspligtMarkering VARCHAR(1),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (PakningskombinationerPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PakningskombinationerUdenPriser (
@@ -556,11 +619,13 @@ CREATE TABLE PakningskombinationerUdenPriser (
 	AntalPakninger BIGINT(12),
 	InformationspligtMarkering VARCHAR(1),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (PakningskombinationerUdenPriserPID, ModifiedDate),
+	INDEX (VarenummerOrdineret, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Pakningsstoerrelsesenhed (
@@ -568,12 +633,14 @@ CREATE TABLE Pakningsstoerrelsesenhed (
 	PakningsstoerrelsesenhedKode VARCHAR(10) NOT NULL,
 	PakningsstoerrelsesenhedTekst VARCHAR(50) NOT NULL,
 	PakningsstoerrelsesenhedKortTekst VARCHAR(10),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME,
- INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Pakningsstoerrelsesenhed_1 UNIQUE (PakningsstoerrelsesEnhedKode, ValidTo)
+	
+	INDEX (PakningsstoerrelsesenhedPID, ModifiedDate),
+	INDEX (PakningsstoerrelsesenhedKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Person (
@@ -602,13 +669,13 @@ CREATE TABLE Person (
 	VejKode BIGINT(12), 
 	KommuneKode BIGINT(12),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	INDEX(modifiedDate, PersonPID),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom)
+	
+	INDEX (PersonPID, ModifiedDate),
+	INDEX (CPR, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE PersonIkraft (
@@ -623,11 +690,13 @@ CREATE TABLE Praksis (
 	RegionCode BIGINT(12),
 	Navn VARCHAR(256),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (PraksisPID, ModifiedDate),
+	INDEX (SorNummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Priser (
@@ -640,11 +709,13 @@ CREATE TABLE Priser (
 	LeveranceprisTilHospitaler BIGINT(12),
 	IkkeTilskudsberettigetDel BIGINT(12),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (PriserPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Rekommandationer (
@@ -654,11 +725,13 @@ CREATE TABLE Rekommandationer (
 	DrugID BIGINT(12),
 	Rekommandationsniveau VARCHAR(25),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (RekommandationerPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SpecialeForNBS (
@@ -667,11 +740,13 @@ CREATE TABLE SpecialeForNBS (
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (SpecialeForNBSPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Styrkeenhed (
@@ -680,12 +755,13 @@ CREATE TABLE Styrkeenhed (
 	StyrkeenhedTekst VARCHAR(50) NOT NULL,
 	StyrkeenhedKortTekst VARCHAR(10),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME,
- INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Styrkeenhed_1 UNIQUE (StyrkeenhedKode, ValidTo)
+	
+	INDEX (StyrkeenhedPID, ModifiedDate),
+	INDEX (StyrkeenhedKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Substitution (
@@ -696,24 +772,28 @@ CREATE TABLE Substitution (
 	ProdAlfabetiskeSekvensplads VARCHAR(9),
 	SubstitutionskodeForPakning VARCHAR(1),
 	BilligsteVarenummer BIGINT(12),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (SubstitutionPID, ModifiedDate),
+	INDEX (ReceptensVarenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SubstitutionAfLaegemidlerUdenFastPris (
 	SubstitutionAfLaegemidlerUdenFastPrisPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Varenummer BIGINT(12) NOT NULL,
 	Substitutionsgruppenummer BIGINT(12),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (SubstitutionAfLaegemidlerUdenFastPrisPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 
@@ -729,12 +809,14 @@ CREATE TABLE Sygehus (
 	Bynavn VARCHAR(30),
 	Email VARCHAR(100),
 	Www VARCHAR(100),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (SygeHusPID, ModifiedDate),
+	INDEX (SorNummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE SygehusAfdeling (
@@ -756,22 +838,27 @@ CREATE TABLE SygehusAfdeling (
 	Bynavn VARCHAR(30),
 	Email VARCHAR(100),
 	Www VARCHAR(100),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (SygeHusAfdelingPID, ModifiedDate),
+	INDEX (SorNummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE TakstVersion (
 	TakstVersionPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	TakstUge VARCHAR(8) NOT NULL,
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (TakstVersionPID, ModifiedDate),
+	INDEX (TakstUge, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Tidsenhed (
@@ -779,12 +866,14 @@ CREATE TABLE Tidsenhed (
 	TidsenhedKode VARCHAR(10) NOT NULL,
 	TidsenhedTekst VARCHAR(50) NOT NULL,
 	TidsenhedKortTekst VARCHAR(10),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Tidsenhed_1 UNIQUE (TidsenhedKode, ValidTo)
+	
+	INDEX (TidsenhedPID, ModifiedDate),
+	INDEX (TidsenhedKode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Tilskudsintervaller (
@@ -795,24 +884,28 @@ CREATE TABLE Tilskudsintervaller (
 	NedreGraense BIGINT(12),
 	OevreGraense BIGINT(12),
 	Procent DECIMAL,
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (TilskudsintervallerPID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE TilskudsprisgrupperPakningsniveau (
 	TilskudsprisgrupperPakningsniveauPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	Varenummer BIGINT(12) NOT NULL,
 	TilskudsprisGruppe BIGINT(12),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (TilskudsprisgrupperPakningsniveauPID, ModifiedDate),
+	INDEX (Varenummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE UdgaaedeNavne (
@@ -821,12 +914,14 @@ CREATE TABLE UdgaaedeNavne (
 	Drugid BIGINT(12),
 	DatoForAendringen DATE,
 	TidligereNavn VARCHAR(50),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (UdgaaedeNavnePID, ModifiedDate),
+	INDEX (CID, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Udleveringsbestemmelser (
@@ -835,12 +930,14 @@ CREATE TABLE Udleveringsbestemmelser (
 	Udleveringsgruppe VARCHAR(1),
 	KortTekst VARCHAR(10),
 	Tekst VARCHAR(50),
+
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (UdleveringsbestemmelserPID, ModifiedDate),
+	INDEX (Kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE UmyndiggoerelseVaergeRelation (
@@ -859,13 +956,13 @@ CREATE TABLE UmyndiggoerelseVaergeRelation (
 	RelationsTekst4 VARCHAR(50),
 	RelationsTekst5 VARCHAR(50),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	INDEX(modifiedDate, UmyndiggoerelseVaergeRelationPID),
-	CONSTRAINT UC_Person_1 UNIQUE (Id, ValidFrom)
+	
+	INDEX (UmyndiggoerelseVaergeRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Yder (
@@ -884,11 +981,13 @@ CREATE TABLE Yder (
 	HovedSpecialeKode VARCHAR(20),
 	HovedSpecialeTekst VARCHAR(40),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (YderPID, ModifiedDate),
+	INDEX (SorNummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE YderLoebenummer (
@@ -911,11 +1010,13 @@ CREATE TABLE Yderregister (
 	HovedSpecialeTekst VARCHAR(100),
 	HistID VARCHAR(100),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (YderregisterPID, ModifiedDate),
+	INDEX (Nummer, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE YderregisterPerson (
@@ -927,11 +1028,13 @@ CREATE TABLE YderregisterPerson (
 	personrolleTxt VARCHAR(200),
 	HistIDPerson VARCHAR(100),
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo)
+	
+	INDEX (YderregisterPersonPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 CREATE TABLE Folkekirkeoplysninger (
@@ -1087,13 +1190,13 @@ CREATE TABLE Sikrede (
     socialLand VARCHAR(47) NOT NULL,
     socialLandKode CHAR(2) NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
     ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (ModifiedDate, SikredePID)
+	
+	INDEX (SikredePID, ModifiedDate),
+	INDEX (CPR, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  YderRelation (For each Sikrede, there are three sikredeyderrelation-records - 'current', 'old', 'future') */
@@ -1112,13 +1215,13 @@ CREATE TABLE SikredeYderRelation (
 	gruppekodeRegistreringDato DATE NOT NULL,
     ydernummerRegistreringDato DATE NOT NULL,
 
+	CreatedDate DATETIME NOT NULL,
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
-	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (id, ValidFrom),
-	INDEX (ModifiedDate, SikredeYderRelationPID)
+	
+	INDEX (SikredeYderRelationPID, ModifiedDate),
+	INDEX (Id, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
 
 /* "Sikrede" type 10  SSK */
@@ -1142,7 +1245,7 @@ CREATE TABLE SaerligSundhedskort (
 	ValidFrom DATETIME NOT NULL,
 	ValidTo DATETIME,
 	CreatedDate DATETIME NOT NULL,
-	INDEX (ValidFrom, ValidTo),
-	CONSTRAINT UC_Person_1 UNIQUE (CPR, ValidFrom),
-	INDEX (ModifiedDate, SaerligSundhedskortPID)
+
+	INDEX (SaerligSundhedskortPID, ModifiedDate),
+	INDEX (CPR, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_danish_ci;
