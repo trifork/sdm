@@ -2,10 +2,10 @@ USE sdm_warehouse;
 
 CREATE TABLE KeyValueStore (
 	ownerId VARCHAR(200) NOT NULL,
-	key VARCHAR(200) NOT NULL,
+	id VARCHAR(200) NOT NULL,
 	value VARCHAR(200) NOT NULL,
-	PRIMARY KEY (ownerId, key),
-	INDEX (key)
+	PRIMARY KEY (ownerId, id),
+	INDEX (id)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 -- ADMINISTRATION TABLES (USERS ETC.)
