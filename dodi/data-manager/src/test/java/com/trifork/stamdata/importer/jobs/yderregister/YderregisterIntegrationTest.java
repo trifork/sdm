@@ -82,7 +82,7 @@ public class YderregisterIntegrationTest
 	{
 		File fInitial = getFile("data/yderregister/initial/");
 
-		new YderregisterImporter().importFiles(fInitial.listFiles(), new AuditingPersister(connection));
+		new YderregisterImporter().parse(fInitial.listFiles(), new AuditingPersister(connection), null);
 
 		Statement stmt = connection.createStatement();
 
@@ -117,9 +117,9 @@ public class YderregisterIntegrationTest
 
 		AuditingPersister persister = new AuditingPersister(connection);
 
-		new YderregisterImporter().importFiles(fInitial.listFiles(), persister);
+		new YderregisterImporter().parse(fInitial.listFiles(), persister, null);
 
-		new YderregisterImporter().importFiles(fNext.listFiles(), persister);
+		new YderregisterImporter().parse(fNext.listFiles(), persister, null);
 	}
 
 	@Test

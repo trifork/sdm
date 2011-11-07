@@ -54,11 +54,12 @@ public class UdgaaedeNavne extends TakstEntity
 		return drugid;
 	}
 
-	@Override
 	@Id
+	@Override
 	@Column(name = "CID")
 	public String getKey()
 	{
+	    // The key can be a maximum of: 71
 		return String.format("%s-%s-%s", getDatoForAendringen(), tidligereNavn, drugid);
 	}
 
@@ -81,10 +82,5 @@ public class UdgaaedeNavne extends TakstEntity
 	public void setTidligereNavn(String tidligereNavn)
 	{
 		this.tidligereNavn = tidligereNavn;
-	}
-	
-	public void isVeterinaryDrug()
-	{
-	    
 	}
 }

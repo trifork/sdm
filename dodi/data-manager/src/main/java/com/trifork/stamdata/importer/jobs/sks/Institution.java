@@ -32,6 +32,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 
 @Entity(name = "Organisation")
@@ -43,6 +46,7 @@ public class Institution extends AbstractStamdataEntity
 	private String nummer;
 
 	private final InstitutionType type;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	public enum InstitutionType
 	{

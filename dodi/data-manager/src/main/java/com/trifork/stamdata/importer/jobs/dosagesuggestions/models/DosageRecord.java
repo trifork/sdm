@@ -28,6 +28,9 @@ package com.trifork.stamdata.importer.jobs.dosagesuggestions.models;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 
 
@@ -35,6 +38,7 @@ public abstract class DosageRecord extends AbstractStamdataEntity
 {
 
 	private Date validFrom;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	public void setVersion(Date validFrom)
 	{

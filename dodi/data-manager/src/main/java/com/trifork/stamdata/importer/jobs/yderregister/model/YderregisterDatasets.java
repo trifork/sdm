@@ -55,11 +55,11 @@ public class YderregisterDatasets
 
 	public void addYderregister(Yderregister entity)
 	{
-		yderregisterDS.addEntity(entity);
+		yderregisterDS.add(entity);
 	}
 
 	public void addYderregisterPerson(YderregisterPerson entity)
 	{
-		yderregisterPersonDS.addEntity(entity);
+		yderregisterPersonDS.add(entity);
 	}
 }

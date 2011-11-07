@@ -68,11 +68,6 @@ public class CPRIntegrationTest
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
-		statement.execute("truncate table Udrejseoplysninger");
-		statement.execute("truncate table Statsborgerskab");
-		statement.execute("truncate table Foedselsregistreringsoplysninger");
-		statement.execute("truncate table KommunaleForhold");
-		statement.execute("truncate table AktuelCivilstand");
 		statement.execute("truncate table ChangesToCPR");
 	}
 
@@ -353,6 +348,6 @@ public class CPRIntegrationTest
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().importFiles(new File[] { file }, new AuditingPersister(connection));
+		new CPRImporter().parse(new File[] { file }, new AuditingPersister(connection), null);
 	}
 }

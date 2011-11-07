@@ -54,9 +54,7 @@ public class JobManager
 	{
 		// To avoid problems with concurrency, we restrict
 		// jobs to be run in serial. This is not a problem
-		// since performace is not an critical at the moment.
-		//
-		// See quartz.properties.
+		// since performance is not an critical at the moment.
 
 		// Schedule all the jobs.
 

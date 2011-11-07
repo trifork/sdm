@@ -26,12 +26,11 @@
 
 package com.trifork.stamdata.persistence;
 
-import junit.framework.TestCase;
-
 import java.sql.Connection;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import org.junit.Test;
+
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 
 public class ConnectionIntegrationTest {
 

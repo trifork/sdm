@@ -42,7 +42,6 @@ import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelati
 
 public class CPRParserTest
 {
-
 	@Test
 	public void testRecord01() throws Exception
 	{
@@ -64,6 +63,7 @@ public class CPRParserTest
 		assertEquals("*", record.getSlutDatoMarkering());
 		assertEquals("Pensionist", record.getStilling());
 	}
+
 
 	@Test
 	public void testRecord03() throws Exception
@@ -89,6 +89,7 @@ public class CPRParserTest
 		assertEquals("Industrivænget", record.getVejnavnTilAdressering());
 	}
 
+
 	@Test
 	public void testRecord04() throws Exception
 	{
@@ -100,6 +101,7 @@ public class CPRParserTest
 		assertEquals(yyyy_MM_dd.parse("1997-09-09"), record.getNavneBeskyttelseStartDato());
 		assertEquals(yyyy_MM_dd.parse("2001-02-20"), record.getNavneBeskyttelseSletteDato());
 	}
+
 
 	@Test
 	public void testRecord08() throws Exception

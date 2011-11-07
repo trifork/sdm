@@ -5,7 +5,7 @@
 	<display-name>Stamdata Data Manager</display-name>
 
 	<listener>
-		<listener-class>com.trifork.stamdata.importer.ApplicationContextListener</listener-class>
+		<listener-class>com.trifork.stamdata.importer.ComponentController</listener-class>
 	</listener>
 
 	<filter>

@@ -32,6 +32,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
@@ -50,6 +53,7 @@ public class YderregisterPerson extends AbstractStamdataEntity implements Tempor
 	private String personrolleTxt;
 	private Date tilgangDato;
 	private Date afgangDato;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	@Id
 	@Column

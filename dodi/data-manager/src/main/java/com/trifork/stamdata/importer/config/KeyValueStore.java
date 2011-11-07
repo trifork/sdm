@@ -24,6 +24,7 @@
  */
 package com.trifork.stamdata.importer.config;
 
+
 /**
  * A key value store for keeping state information.
  * 
@@ -37,6 +38,7 @@ public interface KeyValueStore {
      * @param key
      *            the key of the value to look up.
      * @return the value for the key, possibly {@code null}.
+     * @throws Exception 
      */
     String get(String key);
 
@@ -50,6 +52,7 @@ public interface KeyValueStore {
      * @param value
      *            A non-empty string. If null any existing recorded value is
      *            deleted.
+     * @throws Exception 
      */
-    void set(String key, String value);
+    void put(String key, String value);
 }

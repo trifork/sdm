@@ -28,7 +28,6 @@ package com.trifork.stamdata.importer;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 
 import javax.servlet.ServletContextEvent;
@@ -56,9 +55,9 @@ import com.trifork.stamdata.importer.webinterface.DatabaseStatus;
 import com.trifork.stamdata.importer.webinterface.GUIServlet;
 
 
-public class ApplicationContextListener extends GuiceServletContextListener
+public class ComponentController extends GuiceServletContextListener
 {
-	private static final Logger logger = LoggerFactory.getLogger(ApplicationContextListener.class);
+	private static final Logger logger = LoggerFactory.getLogger(ComponentController.class);
 
 	public static final String BUILDIN_CONFIG_FILE = "config.properties";
 	public static final String DEPLOYMENT_CONFIG_FILE = "stamdata-data-manager.properties";

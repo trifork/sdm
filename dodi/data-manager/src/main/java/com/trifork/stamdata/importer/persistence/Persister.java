@@ -26,7 +26,9 @@
 
 package com.trifork.stamdata.importer.persistence;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 import com.trifork.stamdata.models.TemporalEntity;
 
@@ -69,4 +71,7 @@ public interface Persister
 	 * the parsers access to a key/value store.
 	 */
 	public Connection getConnection();
+	
+	
+	void persist(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, InvocationTargetException;
 }

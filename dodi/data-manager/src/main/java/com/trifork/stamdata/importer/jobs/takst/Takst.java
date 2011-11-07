@@ -26,9 +26,10 @@
 
 package com.trifork.stamdata.importer.jobs.takst;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -47,7 +48,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 @Entity(name = "TakstVersion")
 public class Takst extends TakstEntity
 {
-	private final List<CompleteDataset<? extends TemporalEntity>> datasets = new ArrayList<CompleteDataset<? extends TemporalEntity>>();
+	private final Map<Class<?>, CompleteDataset<? extends TemporalEntity>> datasets = new HashMap<Class<?>, CompleteDataset<? extends TemporalEntity>>();
 
 	// The week-number for which LMS guarantees some sort of stability/validity
 	// for a subset of this takst. (The stable subset excludes pricing and
@@ -62,9 +63,9 @@ public class Takst extends TakstEntity
 		this.validTo = validTo;
 	}
 
-	public void addDataset(TakstDataset<?> dataset)
+	public <T extends TakstEntity> void addDataset(TakstDataset<T> dataset, Class<T> type)
 	{
-		datasets.add(dataset);
+		datasets.put(type, dataset);
 	}
 
 	/**
@@ -72,36 +73,20 @@ public class Takst extends TakstEntity
 	 * @return All entities of the given type in this takst.
 	 */
 	@SuppressWarnings("unchecked")
-	public <A extends TakstEntity> TakstDataset<A> getDatasetOfType(Class<A> clazz)
+    public <T extends TakstEntity> TakstDataset<T> getDatasetOfType(Class<T> clazz)
 	{
-		for (Dataset<? extends TemporalEntity> dataset : datasets)
-		{
-			if (clazz.equals(dataset.getType())) return (TakstDataset<A>) dataset;
-		}
-		
-		return null;
+		return (TakstDataset<T>) datasets.get(clazz);
 	}
 
-	public List<CompleteDataset<? extends TemporalEntity>> getDatasets()
+	public Collection<CompleteDataset<? extends TemporalEntity>> getDatasets()
 	{
-		return datasets;
+		return datasets.values();
 	}
 
-	/**
-	 * @param type, the type of the requested entity
-	 * @param entityId the id of the requested entity
-	 * @return the requested entity
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends TakstEntity> T getEntity(Class<T> type, Object entityId)
+	public <T extends TakstEntity> T getEntity(Object entityId, Class<T> type)
 	{
-		if (entityId == null) return null;
-
-		Dataset<?> avds = getDatasetOfType(type);
-
-		if (avds == null) return null;
-
-		return (T)avds.getEntityById(entityId);
+		Dataset<T> dataset = getDatasetOfType(type);
+		return dataset == null ? null : dataset.getEntityById(entityId);
 	}
 
 	@Column(name = "TakstUge")

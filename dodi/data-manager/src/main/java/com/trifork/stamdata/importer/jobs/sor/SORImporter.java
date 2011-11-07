@@ -32,6 +32,7 @@ import javax.xml.parsers.*;
 
 import org.slf4j.*;
 
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Persister;
 
@@ -74,7 +75,7 @@ public class SORImporter implements FileParser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		for (File file : files)
 		{

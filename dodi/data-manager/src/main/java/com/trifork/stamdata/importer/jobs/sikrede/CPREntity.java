@@ -31,10 +31,14 @@ import com.trifork.stamdata.importer.util.Dates;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public abstract class CPREntity extends AbstractStamdataEntity {
     SikredeDataset dataset;
     String cpr;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
     public String getCpr() {
         return cpr;

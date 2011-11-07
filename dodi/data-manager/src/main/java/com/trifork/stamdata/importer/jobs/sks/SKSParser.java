@@ -33,6 +33,7 @@ import org.apache.commons.io.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sks.Institution.InstitutionType;
 import com.trifork.stamdata.importer.persistence.Dataset;
@@ -95,7 +96,7 @@ public class SKSParser implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		for (File file : files)
 		{
@@ -112,7 +113,7 @@ public class SKSParser implements FileParser
 					
 					if (institution != null)
 					{
-						dataset.addEntity(institution);
+						dataset.add(institution);
 					}
 					else
 					{

@@ -99,7 +99,7 @@ public class TakstImporterIntegrationTest
 		dk.add(d);
 
 		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
-		takst.addDataset(dataset);
+		takst.addDataset(dataset, Doseringskode.class);
 
 		Connection con = MySQLConnectionManager.getAutoCommitConnection();
 

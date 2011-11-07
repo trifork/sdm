@@ -60,8 +60,12 @@ public class FixedLengthFileParser
 
 		List<T> results = Lists.newArrayList();
 
+		int count = 0;
+		
 		while (lines.hasNext())
 		{
+		    count++;
+		    
 			String line = lines.nextLine();
 
 			if (line.trim().length() == 0)
@@ -96,6 +100,8 @@ public class FixedLengthFileParser
 
 			results.add(entity);
 		}
+		
+		logger.info("Number of lines in file. lineCount={} file={} resultCount={}", new Object[]{ count, configuration.getFilename(), results.size()});
 
 		return results;
 	}

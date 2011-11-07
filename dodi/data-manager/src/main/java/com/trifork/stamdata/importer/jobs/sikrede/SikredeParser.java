@@ -42,6 +42,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
@@ -100,7 +101,7 @@ public class SikredeParser implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		// 1. CHECK VERSIONS
 		//

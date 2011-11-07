@@ -94,7 +94,7 @@ public class Fetcher
         // is set to the same value as its ValidFrom. Therefore the
         // ValidTo must be checked using the '<' operator.
 
-        String keyColumn = Entities.getIdColumnNameOfEntity(type);
+        String keyColumn = Entities.getIdColumnName(type);
         String entityName = type.getCanonicalName();
 
         Query query = session.createQuery(format("FROM %s WHERE %s = :id AND ValidFrom <= :instant AND :instant < ValidTo", entityName, keyColumn));

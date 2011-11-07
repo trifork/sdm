@@ -47,6 +47,7 @@ import com.google.common.collect.Sets;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.config.Configuration;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
 import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
@@ -84,7 +85,7 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] input, Persister persister) throws Exception
+	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		checkNotNull(input);
 		checkNotNull(persister);

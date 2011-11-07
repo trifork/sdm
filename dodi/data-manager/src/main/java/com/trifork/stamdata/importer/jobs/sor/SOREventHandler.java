@@ -136,7 +136,7 @@ public class SOREventHandler extends DefaultHandler
 						// Yder for Lægepraksis.
 
 						Yder yder = XMLModelMapper.toYder(oue);
-						dataSets.getYderDS().addEntity(yder);
+						dataSets.getYderDS().add(yder);
 
 						if (!oue.getSons().isEmpty())
 						{
@@ -144,7 +144,7 @@ public class SOREventHandler extends DefaultHandler
 						}
 					}
 
-					dataSets.getPraksisDS().addEntity(praksis);
+					dataSets.getPraksisDS().add(praksis);
 				}
 				else if (institutuinEntity.getInstitutionType() == 22232009L)
 				{
@@ -157,7 +157,7 @@ public class SOREventHandler extends DefaultHandler
 						addAfdelinger(oue);
 					}
 
-					dataSets.getSygehusDS().addEntity(s);
+					dataSets.getSygehusDS().add(s);
 				}
 				else if (institutuinEntity.getInstitutionType() == 264372000L)
 				{
@@ -166,7 +166,7 @@ public class SOREventHandler extends DefaultHandler
 					for (OrganizationalUnitEntity oue : institutuinEntity.getOrganizationalUnitEntities())
 					{
 						Apotek a = XMLModelMapper.toApotek(oue);
-						dataSets.getApotekDS().addEntity(a);
+						dataSets.getApotekDS().add(a);
 					}
 				}
 			}
@@ -200,7 +200,7 @@ public class SOREventHandler extends DefaultHandler
 		{
 			// Ignore all 'SygehusAfdeling' with no SKS
 			SygehusAfdeling sa = XMLModelMapper.toSygehusAfdeling(oue);
-			dataSets.getSygehusAfdelingDS().addEntity(sa);
+			dataSets.getSygehusAfdelingDS().add(sa);
 
 			for (OrganizationalUnitEntity soue : oue.getSons())
 			{

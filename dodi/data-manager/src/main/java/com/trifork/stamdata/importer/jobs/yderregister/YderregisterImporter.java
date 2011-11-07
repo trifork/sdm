@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
 import com.trifork.stamdata.importer.persistence.Persister;
@@ -50,7 +51,7 @@ public class YderregisterImporter implements FileParser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void importFiles(File[] input, Persister persister) throws Exception
+	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		String versionString = null;
 		int version;

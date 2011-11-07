@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageRecord;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageStructure;
@@ -68,7 +69,7 @@ public class DosageSuggestionImporter implements FileParser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		// METADATA FILE
 		//
@@ -77,7 +78,7 @@ public class DosageSuggestionImporter implements FileParser
 
 		DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
 		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), THE_END_OF_TIME);
-		versionDataset.addEntity(version);
+		versionDataset.add(version);
 
 		// CHECK PREVIOUS VERSION
 		//
@@ -178,7 +179,7 @@ public class DosageSuggestionImporter implements FileParser
 
 		for (T structure : parsedData.get(root))
 		{
-			dataset.addEntity(structure);
+			dataset.add(structure);
 		}
 
 		return dataset;

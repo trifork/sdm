@@ -98,7 +98,7 @@ public class Pakning extends TakstEntity
 	@Column
 	public boolean getDosisdispenserbar()
 	{
-		return takst.getEntity(Laegemiddel.class, drugid).getEgnetTilDosisdispensering();
+		return takst.getEntity(drugid, Laegemiddel.class).getEgnetTilDosisdispensering();
 	}
 
 	@Column(name = "DrugID")
@@ -168,7 +168,7 @@ public class Pakning extends TakstEntity
 
 	public Firma getPakningsdistributoerRef()
 	{
-		return takst.getEntity(Firma.class, pakningsdistributoer);
+		return takst.getEntity(pakningsdistributoer, Firma.class);
 	}
 
 	@Column(name = "PakningsstoerrelseTekst")
@@ -199,7 +199,7 @@ public class Pakning extends TakstEntity
 
 	public Priser getPriser()
 	{
-		return takst.getEntity(Priser.class, varenummer);
+		return takst.getEntity(varenummer, Priser.class);
 	}
 
 	public List<Pakning> getSubstitutioner()
@@ -246,7 +246,7 @@ public class Pakning extends TakstEntity
 
 	public Udleveringsbestemmelser getUdleveringsbestemmelseRef()
 	{
-		return takst.getEntity(Udleveringsbestemmelser.class, udleveringsbestemmelse);
+		return takst.getEntity(udleveringsbestemmelse, Udleveringsbestemmelser.class);
 	}
 
 	@Column
@@ -257,11 +257,11 @@ public class Pakning extends TakstEntity
 
 	public SpecialeForNBS getUdleveringSpecialeRef()
 	{
-		return takst.getEntity(SpecialeForNBS.class, udleveringSpeciale);
+		return takst.getEntity(udleveringSpeciale, SpecialeForNBS.class);
 	}
 
 	@Id
-	@Column(name = "Varenummer")
+	@Column
 	public Long getVarenummer()
 	{
 		return this.varenummer;
@@ -275,7 +275,7 @@ public class Pakning extends TakstEntity
 
 	public boolean isTilHumanAnvendelse()
 	{
-		Laegemiddel lm = takst.getEntity(Laegemiddel.class, drugid);
+		Laegemiddel lm = takst.getEntity(drugid, Laegemiddel.class);
 		
 		if (lm == null) return true;
 		

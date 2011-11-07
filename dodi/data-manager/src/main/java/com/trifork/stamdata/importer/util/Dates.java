@@ -32,11 +32,15 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.joda.time.DateTimeZone;
+
 import com.trifork.stamdata.Preconditions;
 
 
 public class Dates
 {
+    public static final DateTimeZone DANISH_TIMEZONE = DateTimeZone.forID("Europe/Copenhagen");
+    
 	public static final Date THE_BEGINNING_OF_TIME = toDate(0,0,0);
 	public static final Date THE_END_OF_TIME = toDate(2999, 12, 31);
 

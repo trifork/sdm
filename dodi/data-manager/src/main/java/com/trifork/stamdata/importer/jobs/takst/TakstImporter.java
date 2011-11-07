@@ -30,6 +30,7 @@ import java.io.File;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Persister;
@@ -60,11 +61,9 @@ public class TakstImporter implements FileParser
 		return true;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void importFiles(File[] input, Persister persister) throws Exception
+	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		Takst takst = new TakstParser().parseFiles(input);
-
 		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[] {}));
 	}
 	

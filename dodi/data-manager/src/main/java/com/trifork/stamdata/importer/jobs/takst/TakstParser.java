@@ -119,7 +119,8 @@ public class TakstParser
 	private <T extends TakstEntity> void add(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
 		List<T> entities = parser.parse(config, type);
-		takst.addDataset(new TakstDataset<T>(takst, entities, type));
+		TakstDataset<T> ds = new TakstDataset<T>(takst, entities, type);
+		takst.addDataset(ds, type);
 	}
 
 	private <T extends TakstEntity> void addOptional(File[] input, Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
@@ -129,7 +130,7 @@ public class TakstParser
 		if (file != null && file.isFile())
 		{
 			List<T> entities = parser.parse(config, type);
-			takst.addDataset(new TakstDataset<T>(takst, entities, type));
+			takst.addDataset(new TakstDataset<T>(takst, entities, type), type);
 		}
 	}
 
@@ -154,7 +155,7 @@ public class TakstParser
 
 		List<Takst> takstMetaEntity = new ArrayList<Takst>();
 		takstMetaEntity.add(takst);
-		takst.addDataset(new TakstDataset<Takst>(takst, takstMetaEntity, Takst.class));
+		takst.addDataset(new TakstDataset<Takst>(takst, takstMetaEntity, Takst.class), Takst.class);
 
 		// Now parse the required data files.
 
@@ -200,8 +201,7 @@ public class TakstParser
 
 		addTypedDivEnheder(takst);
 		addLaegemiddelAdministrationsvejRefs(takst);
-		filterOutVetDrugs(takst);
-
+		
 		return takst;
 	}
 
@@ -226,7 +226,7 @@ public class TakstParser
 			}
 		}
 
-		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class));
+		takst.addDataset(new TakstDataset<LaegemiddelAdministrationsvejRef>(takst, lars, LaegemiddelAdministrationsvejRef.class), LaegemiddelAdministrationsvejRef.class);
 	}
 
 
@@ -238,7 +238,7 @@ public class TakstParser
 		
 		for (String code : Splitter.fixedLength(2).split(routeOfAdministration))
 		{
-			Administrationsvej adminVej = takst.getEntity(Administrationsvej.class, code);
+			Administrationsvej adminVej = takst.getEntity(code, Administrationsvej.class);
 
 			if (adminVej == null)
 			{
@@ -280,82 +280,9 @@ public class TakstParser
 			}
 		}
 
-		takst.addDataset(new TakstDataset<Tidsenhed>(takst, timeUnits, Tidsenhed.class));
-		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, packageUnits, Pakningsstoerrelsesenhed.class));
-		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, strengthUnits, Styrkeenhed.class));
-	}
-
-
-	/**
-	 * Filters out veterinary medicine from a data set.
-     */
-	public static void filterOutVetDrugs(Takst takst)
-	{
-		Dataset<Pakning> pakninger = takst.getDatasetOfType(Pakning.class);
-
-		if (pakninger != null)
-		{
-			List<Pakning> pakningerToBeRemoved = Lists.newArrayList();
-
-			for (Pakning pakning : pakninger.getEntities())
-			{
-				if (!pakning.isTilHumanAnvendelse()) pakningerToBeRemoved.add(pakning);
-			}
-
-			pakninger.removeEntities(pakningerToBeRemoved);
-		}
-
-		Dataset<ATCKoderOgTekst> atcCodes = takst.getDatasetOfType(ATCKoderOgTekst.class);
-
-		if (atcCodes != null)
-		{
-			List<ATCKoderOgTekst> atcToBeRemoved = Lists.newArrayList();
-
-			for (ATCKoderOgTekst atc : atcCodes.getEntities())
-			{
-				if (!atc.isTilHumanAnvendelse()) atcToBeRemoved.add(atc);
-			}
-
-			atcCodes.removeEntities(atcToBeRemoved);
-		}
-		
-		Dataset<Laegemiddel> drugs = takst.getDatasetOfType(Laegemiddel.class);
-		Dataset<UdgaaedeNavne> udgaaedeNavne = takst.getDatasetOfType(UdgaaedeNavne.class);
-		
-		if (udgaaedeNavne != null)
-		{
-		    List<UdgaaedeNavne> itemsForRemoval = Lists.newArrayList();
-
-            for (UdgaaedeNavne name : udgaaedeNavne.getEntities())
-            {
-                Laegemiddel drug = drugs.getEntityById(name.getDrugId());
-                
-                if (drug == null)
-                {
-                    logger.warn("Drug with changed name from LMS10 does not reference an drug in LMS01.");
-                }
-                else if (!drug.isTilHumanAnvendelse())
-                {
-                    itemsForRemoval.add(name);
-                }
-            }
-            
-            udgaaedeNavne.removeEntities(itemsForRemoval);
-		}
-		
-		// Remove the drugs last since we depend on them in the above removals.
-		
-		if (drugs != null)
-        {
-            List<Laegemiddel> laegemidlerToBeRemoved = Lists.newArrayList();
-
-            for (Laegemiddel lm : drugs.getEntities())
-            {
-                if (!lm.isTilHumanAnvendelse()) laegemidlerToBeRemoved.add(lm);
-            }
-
-            drugs.removeEntities(laegemidlerToBeRemoved);
-        }
+		takst.addDataset(new TakstDataset<Tidsenhed>(takst, timeUnits, Tidsenhed.class), Tidsenhed.class);
+		takst.addDataset(new TakstDataset<Pakningsstoerrelsesenhed>(takst, packageUnits, Pakningsstoerrelsesenhed.class), Pakningsstoerrelsesenhed.class);
+		takst.addDataset(new TakstDataset<Styrkeenhed>(takst, strengthUnits, Styrkeenhed.class), Styrkeenhed.class);
 	}
 
 	private int getValidYear(String line)

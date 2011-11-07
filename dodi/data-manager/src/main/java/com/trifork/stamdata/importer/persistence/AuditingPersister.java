@@ -28,6 +28,7 @@ package com.trifork.stamdata.importer.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import javax.persistence.Entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
@@ -51,13 +53,13 @@ public class AuditingPersister implements Persister
 	protected Connection connection;
 	protected Date transactionTime;
 
-	public AuditingPersister(Connection connection)
+	public AuditingPersister(Connection connection) throws SQLException
 	{
 		this.connection = connection;
-		transactionTime = new Date();
+		this.transactionTime = new Date();
 	}
 
-	public void persistCompleteDataset(List<CompleteDataset<? extends TemporalEntity>> datasets) throws Exception
+	public void persistCompleteDataset(Collection<CompleteDataset<? extends TemporalEntity>> datasets) throws Exception
 	{
 		// TODO: Remove this method. We should use the version below.
 
@@ -79,42 +81,47 @@ public class AuditingPersister implements Persister
 	}
 
 	/**
-	 * For each entity of this dataset, it is checked if it is changed from what
-	 * is present in mysql. If an entity is changed, the existing, mysql record
-	 * is "closed" by assigning validto, and a new MySQL record created to
+	 * For each entity of this data set, it is checked if it is changed from what
+	 * is present in MySQL. If an entity is changed, the existing, MySQL record
+	 * is "closed" by assigning validTo, and a new MySQL record created to
 	 * represent the new state of the entity.
 	 * 
 	 * It is also checked, if some of the "open" MySQL records are not present
-	 * in this dataset. If an entity is no longer in the dataset, its record
-	 * will be "closed" in mysql by assigning validto.
+	 * in this dataSet. If an entity is no longer in the dataSet, its record
+	 * will be "closed" in MySQL by assigning validTo.
 	 */
 	public <T extends TemporalEntity> void persistDeltaDataset(Dataset<T> dataset) throws Exception
 	{
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
+		
+		MDC.put("data_type", Entities.getEntityTypeDisplayName(dataset.getType()));
 
+		int insertedCount = 0;
+		
+		logger.info("Dataset contains rows={}", dataset.getEntities().size());
+		
 		for (T record : dataset.getEntities())
 		{
-			Date validFrom = record.getValidFrom();
-
 			Object key = Entities.getEntityID(record);
-			boolean exists = table.fetchEntityVersions(key, validFrom, record.getValidTo());
+			boolean exists = table.fetchEntityConflicts(key, record.getValidFrom(), record.getValidTo());
 
 			if (!exists)
 			{
+	            insertedCount++;
 				// Entity was not found, so create it.
-				table.insertRow(record, transactionTime);
+				table.insertEntity(record, transactionTime);
 			}
 			else
 			{
 				// At least one version was found in the same validity range.
 				boolean insertVersion = true;
-
+				
 				do
 				{
 					Date existingValidFrom = table.getCurrentRowValidFrom();
 					Date existingValidTo = table.getCurrentRowValidTo();
 
-					boolean dataEquals = table.dataInCurrentRowEquals(record);
+					boolean dataEquals = table.currentRowEquals(record);
 
 					if (existingValidFrom.before(record.getValidFrom()))
 					{
@@ -151,22 +158,25 @@ public class AuditingPersister implements Persister
 							// later.
 							if (dataEquals)
 							{
-								// If necesary, increase validto on existing
+								// If necessary, increase validTo on existing
 								// entity to our validTo.
-								if (table.getCurrentRowValidTo().before(record.getValidTo())) table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
+								
+							    if (table.getCurrentRowValidTo().before(record.getValidTo())) table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
+								
 								// No need to insert our version as the range is
 								// covered by existing version
+								
 								insertVersion = false;
 							}
 							else
 							{
 								// Our version starts after the existing, but
 								// ends at the same time.
-								// Set validto in existing entity to our
-								// validfrom.
+								// Set validTo in existing entity to our
+								// validFrom.
+							    
 								table.updateValidToOnCurrentRow(record.getValidFrom(), transactionTime);
 							}
-
 						}
 						else
 						{
@@ -230,22 +240,21 @@ public class AuditingPersister implements Persister
 							table.updateRow(record, transactionTime, existingValidFrom, existingValidTo);
 							insertVersion = false;
 						}
-
 					}
 					else
 					{
 						// Our version is as old as the existing one
 						if (record.getValidTo().after((existingValidTo)))
 						{
-							// Our version has the same validfrom but later
-							// validto as the existing.
+							// Our version has the same validFrom but later
+							// validTo as the existing.
 							table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
 							insertVersion = false;
 						}
 						else if (record.getValidTo().before((existingValidTo)))
 						{
-							// Our version has the same validfrom but earlier
-							// validto as the existing.
+							// Our version has the same validFrom but earlier
+							// validTo as the existing.
 							if (dataEquals)
 							{
 								table.updateValidToOnCurrentRow(record.getValidTo(), transactionTime);
@@ -258,7 +267,7 @@ public class AuditingPersister implements Persister
 						}
 						else
 						{
-							// Our version has the same validfrom and validto as
+							// Our version has the same validFrom and validTo as
 							// the existing.
 							if (!dataEquals)
 							{
@@ -267,15 +276,16 @@ public class AuditingPersister implements Persister
 							}
 							insertVersion = false;
 						}
-
 					}
-				} while (table.nextRow());
+				} while (table.moveToNextRow());
 				
 				if (insertVersion) table.insertAndUpdateRow(record, transactionTime);
 			}
 		}
 		
-		logger.info("Persist complete");
+		table.close();
+		
+		logger.info("Persist complete. rows={}", insertedCount);
 	}
 
 	public <T extends TemporalEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException
@@ -284,6 +294,8 @@ public class AuditingPersister implements Persister
 	}
 
 	/**
+	 * For complete data sets.
+	 * 
 	 * Invalidates all records not in the data set by setting validTo to the transactionTime.
 	 */
 	private <T extends TemporalEntity> void updateValidToOnRecordsNotInDataset(CompleteDataset<T> dataset) throws SQLException
@@ -292,21 +304,13 @@ public class AuditingPersister implements Persister
 
 		DatabaseTableWrapper<T> table = getTable(dataset.getType());
 
-		List<StamdataEntityVersion> versions = table.getEntityVersions(dataset.getValidFrom(), dataset.getValidTo());
-
-		int nExisting = 0;
+		List<StamdataEntityVersion> versions = table.findEntitiesInRange(dataset.getValidFrom(), dataset.getValidTo());
 
 		for (StamdataEntityVersion version : versions)
 		{
-			List<? extends TemporalEntity> entitiesWithId = dataset.getEntitiesById(version.id);
-
-			boolean recordFoundInCompleteDataset = entitiesWithId != null && entitiesWithId.size() > 0;
-
-			if (!recordFoundInCompleteDataset) table.updateValidToOnEntityVersion(dataset.getValidFrom(), version, transactionTime);
-
-			if (logger.isDebugEnabled() && ++nExisting % 10000 == 0)
+			if (!dataset.containsKey(version.id))
 			{
-				logger.debug("Processed {} existing records of type {}.", nExisting, dataset.getEntityTypeDisplayName());
+			    table.updateValidToOnEntityVersion(dataset.getValidFrom(), version, transactionTime);
 			}
 		}
 
@@ -317,4 +321,10 @@ public class AuditingPersister implements Persister
 	{
 		return connection;
 	}
+
+    @Override
+    public void persist(Object entity)
+    {
+        
+    }
 }

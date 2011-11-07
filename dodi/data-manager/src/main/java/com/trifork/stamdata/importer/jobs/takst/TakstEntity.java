@@ -28,6 +28,9 @@ package com.trifork.stamdata.importer.jobs.takst;
 
 import java.util.Date;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.Dates;
 
@@ -35,6 +38,7 @@ import com.trifork.stamdata.importer.util.Dates;
 public abstract class TakstEntity extends AbstractStamdataEntity
 {
 	protected Takst takst;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	@Override
 	public Date getValidFrom()

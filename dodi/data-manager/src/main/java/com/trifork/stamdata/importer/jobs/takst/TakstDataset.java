@@ -49,10 +49,10 @@ public class TakstDataset<T extends TakstEntity> extends CompleteDataset<T>
 	}
 
 	@Override
-	public void addEntity(T entity)
+	public void add(T entity)
 	{
-		super.addEntity(entity);
-		entity.takst = takst;
+        entity.takst = takst;
+		super.add(entity);
 	}
 
 	@Override

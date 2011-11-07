@@ -50,6 +50,6 @@ public class TakstModelTest extends TestCase
 		Date to = Dates.toDate(2000, 15, 1);
 		Takst takst = new Takst(from, to);
 		TakstDataset<ATCKoderOgTekst> atckoder = new TakstDataset<ATCKoderOgTekst>(takst, new ArrayList<ATCKoderOgTekst>(), ATCKoderOgTekst.class);
-		takst.addDataset(atckoder);
+		takst.addDataset(atckoder, ATCKoderOgTekst.class);
 	}
 }

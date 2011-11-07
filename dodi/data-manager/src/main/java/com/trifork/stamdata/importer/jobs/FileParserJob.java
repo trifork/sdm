@@ -229,7 +229,7 @@ public class FileParserJob implements Job
 
 			connection = MySQLConnectionManager.getConnection();
 
-			parser.importFiles(getProcessingFiles(), new AuditingPersister(connection));
+			parser.parse(getProcessingFiles(), new AuditingPersister(connection), null);
 			ImportTimeManager.setImportTime(parser.getIdentifier(), new Date());
 
 			connection.commit();
