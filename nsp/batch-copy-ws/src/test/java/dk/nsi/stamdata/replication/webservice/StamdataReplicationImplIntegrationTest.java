@@ -180,7 +180,7 @@ public class StamdataReplicationImplIntegrationTest {
 
         assertResponseContainsExactNumberOfRecords("person", 1);
         
-        String fornavn = "Anders";
+        String fornavn = "Joakim";
         String efternavn = "And";
         assertResponseContainsPersonWithSurNameMatchingGivenName(fornavn, efternavn);
     }
@@ -395,25 +395,25 @@ public class StamdataReplicationImplIntegrationTest {
     private Person createDonaldDuckPerson(DateTime modifiedDate, DateTime validFrom, DateTime validTo) {
         String cpr = "0102451234";
         String koen = "M";
-        String fornavn = "Anders";
-        String mellemnavn = "Von";
+        String fornavn = "Joakim";
+        String mellemnavn = "von";
         String efternavn = "And";
-        String coNavn = null;
-        String lokalitet = "Pas";
+        String coNavn = "Andersine And";
+        String lokalitet = "Pengetanken";
         String vejnavn = "Ligustervænget";
         String bygningsnummer = "42";
         String husnummer = "123";
         String etage = "12";
         String sideDoerNummer = "th.";
         String bynavn = "Andeby";
-        BigInteger postnummer = BigInteger.ZERO;
-        String postdistrikt = "1234";
-        String status = "1";
-        String gaeldendeCPR = "0102451234";
-        Date foedselsdato = new Date();
-        String stilling = "Liggende";
-        BigInteger vejKode = BigInteger.ONE;
-        BigInteger kommuneKode = BigInteger.TEN;
+        BigInteger postnummer = new BigInteger("8000");
+        String postdistrikt = "Gåserød";
+        String status = "01";
+        String gaeldendeCPR = "3105459876";
+        Date foedselsdato = new DateTime(1947, 12, 24, 0, 0).toDate();
+        String stilling = "Gnier";
+        BigInteger vejKode = new BigInteger("740");
+        BigInteger kommuneKode = new BigInteger("314");
         Date navnebeskyttelseslettedato = null;
         Date navnebeskyttelsestartdato = null;
         Person person = new Person(cpr, koen, fornavn, mellemnavn, efternavn, coNavn, lokalitet, vejnavn,
