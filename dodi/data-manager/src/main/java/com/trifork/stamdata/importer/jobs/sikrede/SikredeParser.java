@@ -146,36 +146,7 @@ public class SikredeParser implements FileParser
 		}
 
         syncAssignedDoctorTable(cprs.toArray(new String[cprs.size()]), persister);
-
 	}
-
-    private void syncAssignedDoctorTable(String[] cprs, Persister persister) throws SQLException {
-        PreparedStatement preparedStatement = persister.getConnection().prepareStatement(ASSIGNED_DOCTOR_QUERY);
-        int numberOfParams = StringUtils.countMatches(ASSIGNED_DOCTOR_QUERY, "?");
-        int iterations  = cprs.length / numberOfParams;
-
-        int cprIdx = 0;
-
-        //First handle all the CPRs that fits the prepared statement (ASSIGNED_DOCTOR_QUERY) - this way the number of server roundtrips are minimized since we can execute updates for 20 CPRs at a time
-        for (int i = 0; i < iterations; i++) {
-            for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
-                preparedStatement.setString(paramIdx, cprs[cprIdx]);
-            }
-            preparedStatement.executeUpdate();
-        }
-
-        //Handle the remaining CPRs that does not fit into the ASSIGNED_DOCTOR_QUERY prepared statement.
-        //Create new query with the proper number of params (always less than the number of params in ASSIGNED_DOCTOR_QUERY)
-        int remainder = cprs.length % numberOfParams;
-        String remainderQuery = _ASSIGNED_DOCTOR_QUERY_START + StringUtils.repeat("?,", remainder-1) + "?)";
-        preparedStatement = persister.getConnection().prepareStatement(remainderQuery);
-        numberOfParams = StringUtils.countMatches(remainderQuery, "?");
-
-        for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
-            preparedStatement.setString(paramIdx, cprs[cprIdx]);
-        }
-        preparedStatement.executeUpdate();
-    }
 
     private SikredeDataset parse(File file, DateTime version) throws Exception
 	{
@@ -429,4 +400,32 @@ public class SikredeParser implements FileParser
 		DateTimeFormatter formatter = DateTimeFormat.forPattern(FILENAME_DATE_FORMAT);
 		return formatter.parseDateTime(filename.substring(0, 8));
 	}
+	
+    private void syncAssignedDoctorTable(String[] cprs, Persister persister) throws SQLException {
+        PreparedStatement preparedStatement = persister.getConnection().prepareStatement(ASSIGNED_DOCTOR_QUERY);
+        int numberOfParams = StringUtils.countMatches(ASSIGNED_DOCTOR_QUERY, "?");
+        int iterations  = cprs.length / numberOfParams;
+
+        int cprIdx = 0;
+
+        //First handle all the CPRs that fits the prepared statement (ASSIGNED_DOCTOR_QUERY) - this way the number of server roundtrips are minimized since we can execute updates for 20 CPRs at a time
+        for (int i = 0; i < iterations; i++) {
+            for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
+                preparedStatement.setString(paramIdx, cprs[cprIdx]);
+            }
+            preparedStatement.executeUpdate();
+        }
+
+        //Handle the remaining CPRs that does not fit into the ASSIGNED_DOCTOR_QUERY prepared statement.
+        //Create new query with the proper number of params (always less than the number of params in ASSIGNED_DOCTOR_QUERY)
+        int remainder = cprs.length % numberOfParams;
+        String remainderQuery = _ASSIGNED_DOCTOR_QUERY_START + StringUtils.repeat("?,", remainder-1) + "?)";
+        preparedStatement = persister.getConnection().prepareStatement(remainderQuery);
+        numberOfParams = StringUtils.countMatches(remainderQuery, "?");
+
+        for (int paramIdx = 1; paramIdx <= numberOfParams; paramIdx++, cprIdx++) {
+            preparedStatement.setString(paramIdx, cprs[cprIdx]);
+        }
+        preparedStatement.executeUpdate();
+    }
 }
