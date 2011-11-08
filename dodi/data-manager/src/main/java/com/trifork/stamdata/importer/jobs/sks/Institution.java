@@ -40,13 +40,15 @@ import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 @Entity(name = "Organisation")
 public class Institution extends AbstractStamdataEntity
 {
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
+    
 	private Date validFrom;
 	private Date validTo;
+	
 	private String navn;
 	private String nummer;
 
 	private final InstitutionType type;
-    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	public enum InstitutionType
 	{
