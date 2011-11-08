@@ -26,13 +26,14 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 
@@ -73,9 +74,9 @@ public class SikredeSqlStatementCreator
         return connection.prepareStatement(insertStatementString());
     }
     
-    public void insertValuesIntoPreparedStatement(PreparedStatement preparedStatement, Map<String, Object> values) throws SQLException
+    public void insertValuesIntoPreparedStatement(PreparedStatement preparedStatement, SikredeRecord record) throws SQLException
     {
-        if(!sikredeFields.conformsToSpecifications(values))
+        if(!sikredeFields.conformsToSpecifications(record))
         {
             throw new IllegalArgumentException("Supplied values do not conform to fields in sikrede");
         }
@@ -85,11 +86,11 @@ public class SikredeSqlStatementCreator
         {
             if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
             {
-                preparedStatement.setString(index, (String) values.get(fieldSpecification.name));
+                preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
             } 
             else if(fieldSpecification.type == SikredeType.NUMERICAL)
             {
-                preparedStatement.setInt(index, (Integer) values.get(fieldSpecification.name));
+                preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
             }
             else
             {
@@ -99,4 +100,57 @@ public class SikredeSqlStatementCreator
         }
     }
     
+    ////////////////////////////////
+    
+    public String createSelectStatementAsString(String key)
+    {
+        return "SELECT * FROM SikredeGenerated WHERE " + key + " = ?";
+    }
+    
+    public PreparedStatement createSelectStatementAsPreparedStatement(Connection connection, String key, Object value) throws SQLException
+    {
+        PreparedStatement statement = connection.prepareStatement(createSelectStatementAsString(key));
+        statement.setObject(1, value);
+        return statement;
+    }
+    
+    /**
+     * Assumes the result set is pointing to a record (i.e. that next() was called at least once on the ResultSet
+     * @throws SQLException 
+     */
+    public SikredeRecord sikredeDataFromResultSet(ResultSet resultSet) throws SQLException
+    {
+        Preconditions.checkNotNull(resultSet);
+        Preconditions.checkArgument(!resultSet.isBeforeFirst());
+        Preconditions.checkArgument(!resultSet.isAfterLast());
+        
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(sikredeFields);
+        
+        for(SikredeFieldSpecification fieldSpecification : sikredeFields.getFieldSpecificationsInCorrectOrder())
+        {
+            String key = fieldSpecification.name;
+            if(fieldSpecification.type == SikredeType.NUMERICAL)
+            {
+                // TODO: Explicit check of returned type
+                builder.field(key, resultSet.getInt(key));
+            }
+            else if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            {
+                builder.field(key, resultSet.getString(key));
+            }
+            else
+            {
+                throw new AssertionError("Invalid field specifier used");
+            }
+        }
+        
+        SikredeRecord record = builder.build();
+        
+        if(!sikredeFields.conformsToSpecifications(record))
+        {
+            throw new IllegalStateException("ResultSet did not contain valid values as specified");
+        }
+        
+        return record;
+    }
 }

@@ -24,13 +24,16 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +51,7 @@ public class SikredeSqlStatementCreatorTest {
         this.exampleSikredeFields = SikredeFields.newSikredeFields(
                 "Foo", SikredeType.NUMERICAL, 3,
                 "Bar", SikredeType.ALFANUMERICAL, 5);
+        
         this.exampleStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
     }
     
@@ -63,17 +67,75 @@ public class SikredeSqlStatementCreatorTest {
     public void testInsertValuesIntoPreparedStatement() throws SQLException
     {
         PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
-        Map<String, Object> values = createMap("Bar", "Baz", "Foo", 42);
+        SikredeRecord record = createRecord("Bar", "Baz", "Foo", 42);
         
-        exampleStatementCreator.insertValuesIntoPreparedStatement(mockedPrepareStatement, values);
+        exampleStatementCreator.insertValuesIntoPreparedStatement(mockedPrepareStatement, record);
 
         verify(mockedPrepareStatement).setInt(1, 42);
         verify(mockedPrepareStatement).setString(2, "Baz");
     }
     
-    private Map<String, Object> createMap(Object... keysAndValues)
+    @Test
+    public void testSelectStatementString()
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        String actual = exampleStatementCreator.createSelectStatementAsString("Foo");
+        String expected = "SELECT * FROM SikredeGenerated WHERE Foo = ?";
+        
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testSelectStatementAsPrepredStatement() throws SQLException
+    {
+        Connection mockConnection = mock(Connection.class);
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+        
+        when(mockConnection.prepareStatement("SELECT * FROM SikredeGenerated WHERE Foo = ?")).thenReturn(mockPreparedStatement);
+
+        exampleStatementCreator.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
+
+        verify(mockPreparedStatement).setObject(1, 10);
+    }
+    
+    @Test
+    public void testSikredeDataFromResultSet() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Bar")).thenReturn("Moo");
+        
+        SikredeRecord actual = exampleStatementCreator.sikredeDataFromResultSet(mockResultSet);
+        
+        assertTrue(actual.containsKey("Foo"));
+        assertEquals(42, actual.get("Foo"));
+        
+        assertTrue(actual.containsKey("Bar"));
+        assertEquals("Moo", actual.get("Bar"));
+    }
+    
+    @Test(expected=IllegalStateException.class)
+    public void testSikredeDataFromResultSetWhichContainsStringThatIsLongerThanSpecified() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+        
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Bar")).thenReturn("MooMoo");
+        
+        exampleStatementCreator.sikredeDataFromResultSet(mockResultSet);
+    }
+    
+    ///////////////
+    
+    private SikredeRecord createRecord(Object... keysAndValues)
+    {
+        SikredeRecord record = new SikredeRecord();
         
         assertTrue(keysAndValues.length % 2 == 0);
         
@@ -81,10 +143,9 @@ public class SikredeSqlStatementCreatorTest {
         {
             String key = (String) keysAndValues[i];
             Object value = keysAndValues[i+1];
-            map.put(key, value);
+            record = record.setField(key, value);
         }
         
-        return map;
+        return record;
     }
-   
 }

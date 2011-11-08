@@ -24,9 +24,6 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 
@@ -39,14 +36,14 @@ public class SikredeLineParser {
         this.sikredeFields = sikredeFields;
     }
     
-    public Map<String, Object> parseLine(String line)
+    public SikredeRecord parseLine(String line)
     {
         if(line.length() != sikredeFields.acceptedTotalLineLength())
         {
             throw new IllegalArgumentException("Supplied line had length " + line.length() + " but only lines of length " + sikredeFields.acceptedTotalLineLength() + " are accepted");
         }
         
-        Map<String, Object> result = new HashMap<String, Object>();
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(sikredeFields);
         int offset = 0;
         for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
         {
@@ -54,12 +51,12 @@ public class SikredeLineParser {
             
             if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
             {
-                result.put(fieldSpecification.name, subString.trim());
+                builder.field(fieldSpecification.name, subString.trim());
             }
             else if(fieldSpecification.type == SikredeType.NUMERICAL)
             {
                 // This will potentially throw a runtime exception on bad input
-                result.put(fieldSpecification.name, Integer.parseInt(subString.trim()));
+                builder.field(fieldSpecification.name, Integer.parseInt(subString.trim()));
             }
             else
             {
@@ -69,6 +66,6 @@ public class SikredeLineParser {
             offset += fieldSpecification.length;
         }
         
-        return result;
+        return builder.build();
     }
 }

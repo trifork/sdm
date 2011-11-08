@@ -25,24 +25,32 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.sql.Connection;
-import java.util.Map;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import com.trifork.stamdata.importer.persistence.Persister;
 
 public class SikredePersisterUsingNewArchitecture {
 
-    private SikredeFields sikredeFields;
-    private Persister persister;
+    private final SikredeSqlStatementCreator statementCreator;
+    private final Persister persister;
 
-    public SikredePersisterUsingNewArchitecture(SikredeFields sikredeFields, Persister persister)
+    public SikredePersisterUsingNewArchitecture(SikredeSqlStatementCreator statementCreator, Persister persister)
     {
-        this.sikredeFields = sikredeFields;
+        this.statementCreator = statementCreator;
         this.persister = persister;
     }
     
-    public void persist(Map<String, Object> values)
+    // FIXME: Handle valid from and to
+    public void persist(SikredeRecord record) throws SQLException
     {
         Connection connection = persister.getConnection();
-        
+        PreparedStatement statement = statementCreator.insertPreparedStatement(connection);
+        statementCreator.insertValuesIntoPreparedStatement(statement, record);
+        int updated = statement.executeUpdate();
+        if(updated != 1)
+        {
+            throw new IllegalStateException("Too many records touched by insertion (" + updated + ")");
+        }
     }
 }

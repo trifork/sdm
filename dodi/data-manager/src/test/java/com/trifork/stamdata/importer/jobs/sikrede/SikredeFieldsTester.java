@@ -24,10 +24,9 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.junit.Assert.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -100,12 +99,12 @@ public class SikredeFieldsTester {
                 "Foo", SikredeType.NUMERICAL, 10,
                 "Bar", SikredeType.ALFANUMERICAL, 32);
 
-        Map<String, Object> correctValues = createMap("Foo", 42, "Bar", "12345678901234567890123456789012");
-        Map<String, Object> correctValuesWhereBarIsShorter = createMap("Foo", 42, "Bar", "123456789012345678901234567890");
-        Map<String, Object> missingFoo = createMap("Bar", "12345678901234567890123456789012");
-        Map<String, Object> fooIsNotNumerical = createMap("Foo", "Baz", "Bar", "12345678901234567890123456789012");
-        Map<String, Object> barIsTooLong = createMap("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
-        Map<String, Object> containsUnknownKey = createMap("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
+        SikredeRecord correctValues = createRecord("Foo", 42, "Bar", "12345678901234567890123456789012");
+        SikredeRecord correctValuesWhereBarIsShorter = createRecord("Foo", 42, "Bar", "123456789012345678901234567890");
+        SikredeRecord missingFoo = createRecord("Bar", "12345678901234567890123456789012");
+        SikredeRecord fooIsNotNumerical = createRecord("Foo", "Baz", "Bar", "12345678901234567890123456789012");
+        SikredeRecord barIsTooLong = createRecord("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
+        SikredeRecord containsUnknownKey = createRecord("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
         
         assertTrue(exampleSikredeFields.conformsToSpecifications(correctValues));
         assertTrue(exampleSikredeFields.conformsToSpecifications(correctValuesWhereBarIsShorter));
@@ -115,9 +114,9 @@ public class SikredeFieldsTester {
         assertFalse(exampleSikredeFields.conformsToSpecifications(containsUnknownKey));
     }
     
-    private Map<String, Object> createMap(Object... keysAndValues)
+    private SikredeRecord createRecord(Object... keysAndValues)
     {
-        Map<String, Object> map = new HashMap<String, Object>();
+        SikredeRecord record = new SikredeRecord();
         
         assertTrue(keysAndValues.length % 2 == 0);
         
@@ -125,9 +124,9 @@ public class SikredeFieldsTester {
         {
             String key = (String) keysAndValues[i];
             Object value = keysAndValues[i+1];
-            map.put(key, value);
+            record = record.setField(key, value);
         }
         
-        return map;
+        return record;
     }
 }

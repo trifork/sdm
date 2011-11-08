@@ -24,16 +24,43 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import java.io.File;
+import java.sql.SQLException;
+import java.util.Iterator;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.slf4j.MDC;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
+import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 
 public class SikredeParserUsingNewArchitecture implements FileParser {
 
+    private static final String RECORD_TYPE_ENTRY = "10";
+    private static final String RECORD_TYPE_END = "99";
+    private static final String RECORD_TYPE_START = "00";
+    private static final String FILE_ENCODING = "ISO-8859-1";
+    
+    private static final SikredeLineParser endRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
+            "PostType", SikredeType.NUMERICAL, 2,
+            "AntPoster", SikredeType.NUMERICAL, 8));
+    
+    private static final SikredeLineParser startRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
+            "PostType", SikredeType.NUMERICAL, 2,
+            "OpgDato", SikredeType.ALFANUMERICAL, 8,
+            "Timestamp", SikredeType.ALFANUMERICAL, 20,
+            "Modt", SikredeType.ALFANUMERICAL, 6,
+            "SnitfladeId", SikredeType.ALFANUMERICAL, 8));
+
+    private static final SikredeLineParser entryParser = new SikredeLineParser(SikredeFields.SIKREDE_FIELDS_SINGLETON);
+    
     @Override
     public String getIdentifier() 
     {
@@ -51,13 +78,94 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     {
         // FIXME: What are the expected names? We don't want to see unexpected filenames
         checkNotNull(input);
-        return (input.length > 0);
+        return (input.length == 1);
     }
 
     @Override
-    public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception 
+    public void parse(File[] input, Persister oldPersister, KeyValueStore keyValueStore) throws Exception 
     {
-        // FIXME: Implement
+        checkArgument(input.length == 1, "Only one file is expected at this point.");
+        File file = input[0];
+        
+        MDC.put("filename", file.getName());
+        
+        // FIXME: Check that files are imported in the right order. We can not do this yet as we do not know what the files are named
+        
+        SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(SikredeFields.SIKREDE_FIELDS_SINGLETON);
+        SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(statementCreator, oldPersister);
+        
+        LineIterator lines = null;
+        
+        try
+        {
+            lines = FileUtils.lineIterator(file, FILE_ENCODING);
+            importFile(lines, persister);
+        }
+        catch (Exception e)
+        {
+            throw new ParserException("An error occured while parsing the sikrede file.", e);
+        }
+        finally
+        {
+            LineIterator.closeQuietly(lines);
+        }
     }
-
+    
+    private void importFile(Iterator<String> lines, SikredePersisterUsingNewArchitecture persister) throws SQLException
+    {       
+        SikredeRecord startRecord = null;
+        SikredeRecord endRecord = null;
+        
+        int numRecords = 0;
+        
+        for (String line; lines.hasNext();)
+        {
+            if (endRecord != null)
+            {
+                throw new ParserException("Lines found after End Record.");
+            }
+            
+            line = lines.next();
+            
+            if (line.startsWith(RECORD_TYPE_START))
+            {
+                if (startRecord != null)
+                {
+                    throw new ParserException("Several Start Records were found.");
+                }
+                
+                startRecord = startRecordParser.parseLine(line);
+            }
+            else if (line.startsWith(RECORD_TYPE_END))
+            {
+                if (startRecord != null)
+                {
+                    throw new ParserException("Start record was not found before end record.");
+                }
+                
+                endRecord = endRecordParser.parseLine(line);
+            }
+            else if (line.startsWith(RECORD_TYPE_ENTRY))
+            {
+                if (startRecord != null)
+                {
+                    throw new ParserException("Start record was not found before first entry.");
+                }
+                
+                SikredeRecord record = entryParser.parseLine(line);
+                persister.persist(record);
+                
+                numRecords++;
+            }
+            else
+            {
+                throw new ParserException("Unknown record type. line_content='" + line + "'");
+            }
+        }
+        
+        if (!endRecord.getField("AntPost").equals(numRecords))
+        {
+            throw new ParserException("The number of records that were parsed did not match the total from the end record.");
+        }
+    }
 }

@@ -26,7 +26,6 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.ImmutableList;
 
@@ -35,7 +34,7 @@ public class SikredeFields {
     enum SikredeType { ALFANUMERICAL, NUMERICAL }
     
     public static final SikredeFields SIKREDE_FIELDS_SINGLETON;
-    
+
     static 
     {
         SIKREDE_FIELDS_SINGLETON = SikredeFields.newSikredeFields(
@@ -152,7 +151,7 @@ public class SikredeFields {
         return totalLength;
     }
     
-    public boolean conformsToSpecifications(Map<String, Object> values)
+    public boolean conformsToSpecifications(SikredeRecord values)
     {
         if(values.size() != fieldSpecifications.size())
         {

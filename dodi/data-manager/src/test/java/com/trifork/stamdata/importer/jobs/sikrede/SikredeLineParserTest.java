@@ -24,9 +24,7 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.junit.Assert.*;
-
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -62,12 +60,12 @@ public class SikredeLineParserTest {
                 "farmor",
                 "    42");
         
-        Map<String, Object> map = exampleSikredeLineParser.parseLine(exampleLine);
+        SikredeRecord record = exampleSikredeLineParser.parseLine(exampleLine);
         
-        assertEquals(1, map.get("PostType"));
-        assertEquals("din", map.get("TruncatedString"));
-        assertEquals("farmor", map.get("UntruncatedString"));
-        assertEquals(42, map.get("NumberWithSpacesForPadding"));
+        assertEquals(1, record.get("PostType"));
+        assertEquals("din", record.get("TruncatedString"));
+        assertEquals("farmor", record.get("UntruncatedString"));
+        assertEquals(42, record.get("NumberWithSpacesForPadding"));
     }
 
     @Test(expected=IllegalArgumentException.class)
