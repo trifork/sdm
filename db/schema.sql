@@ -617,8 +617,8 @@ CREATE TABLE OplysningerOmDosisdispensering (
 CREATE TABLE Organisation (
 	OrganisationPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	
-	Nummer VARCHAR(30) NOT NULL,
-	Navn VARCHAR(256),
+	Nummer VARCHAR(20) NOT NULL,
+	Navn VARCHAR(60),
 	Organisationstype VARCHAR(30) NOT NULL,
 
 	CreatedDate DATETIME NOT NULL,
