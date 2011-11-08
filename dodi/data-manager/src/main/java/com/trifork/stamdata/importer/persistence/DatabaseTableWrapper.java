@@ -47,6 +47,7 @@ import com.trifork.stamdata.models.TemporalEntity;
  */
 public class DatabaseTableWrapper<T extends TemporalEntity>
 {
+    private final PreparedStatement insertRecordStmt;
     private final PreparedStatement insertAndUpdateRecordStmt;
     private final PreparedStatement updateRecordStmt;
     private final PreparedStatement selectConflictsStmt;
@@ -68,15 +69,41 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         this.tablename = Entities.getEntityTypeDisplayName(type);
         this.type = type;
         this.connection = connection;
+        
         this.idMethod = Entities.getIdMethod(type);
-
         this.outputMethods = Entities.getOutputMethods(type);
+        
         this.notUpdatedColumns = findNotUpdatedColumns();
+        this.insertRecordStmt = prepareInsertStatement();
         this.insertAndUpdateRecordStmt = prepareInsertAndUpdateStatement();
         this.updateRecordStmt = prepareUpdateStatement();
         this.selectConflictsStmt = prepareSelectConflictsStatement();
         this.updateValidToStmt = prepareUpdateValidToStatement();
         this.updateValidFromStmt = prepareUpdateValidFromStatement();
+    }
+    
+    private PreparedStatement prepareInsertStatement() throws SQLException
+    {
+        String sql = "INSERT INTO " + tablename + " (ModifiedDate, CreatedDate, ValidFrom, ValidTo";
+        for (Method method : outputMethods)
+        {
+            sql += ", ";
+            sql += Entities.getColumnName(method);
+        }
+        sql += ") VALUES (";
+        sql += "?,"; // modifieddate
+        sql += "?,"; // createddate
+        sql += "?,"; // validfrom
+        sql += "?"; // validto
+
+        for (int i = 0; i < outputMethods.size(); i++)
+        {
+            sql += ",?";
+        }
+
+        sql += ")";
+
+        return connection.prepareStatement(sql);
     }
 
     private PreparedStatement prepareInsertAndUpdateStatement() throws SQLException
@@ -133,29 +160,20 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
 
     public void insertEntity(TemporalEntity entity, Date transactionTime) throws Exception
     {
-        applyParamsToInsertStatement(insertAndUpdateRecordStmt, entity, transactionTime, transactionTime);
-        insertAndUpdateRecordStmt.execute();
+        applyParamsToInsertStatement(insertRecordStmt, entity, transactionTime, transactionTime);
+        insertRecordStmt.execute();
     }
 
     public void insertAndUpdateRow(TemporalEntity entity, Date transactionTime) throws Exception
     {
-        int idx = applyParamsToInsertStatement(insertAndUpdateRecordStmt, entity, transactionTime, transactionTime);
-
-        // TODO: Why???? currentRS.last();
-
-        for (String notUpdateName : notUpdatedColumns)
-        {
-            Object o = getCurrentRS().getObject(notUpdateName);
-            insertAndUpdateRecordStmt.setObject(idx++, o);
-        }
-        
-        insertAndUpdateRecordStmt.executeUpdate();
+        applyParamsToInsertAndUpdateStatement(insertAndUpdateRecordStmt, entity, transactionTime, transactionTime);
+        insertAndUpdateRecordStmt.execute();
     }
 
     public void updateRow(T entity, Date transactionTime, Date existingValidFrom, Date existingValidTo) throws Exception
     {
         applyParamsToUpdateStatement(updateRecordStmt, entity, transactionTime, transactionTime, existingValidFrom, existingValidTo);
-        updateRecordStmt.executeUpdate();
+        updateRecordStmt.execute();
     }
 
     private PreparedStatement prepareUpdateValidToStatement() throws SQLException
@@ -190,6 +208,20 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         return idx;
     }
     
+    public int applyParamsToInsertAndUpdateStatement(PreparedStatement pstmt, TemporalEntity sde, Date transactionTime, Date createdTime) throws Exception
+    {
+        int idx = applyParamsToInsertStatement(pstmt, sde, transactionTime, createdTime);
+        
+        currentRS.last();
+        
+        for (String notUpdateName : notUpdatedColumns)
+        {
+            Object o = currentRS.getObject(notUpdateName);
+            pstmt.setObject(idx++, o);
+        }
+        
+        return idx;
+    }
 
     public void applyParamsToUpdateStatement(PreparedStatement statement, TemporalEntity entity, Date transactionTime, Date createdTime, Date existingValidFrom, Date existingValidTo) throws Exception
     {
@@ -279,7 +311,7 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
             sql += ", " + notUpdateName;
         }
 
-        sql += ") values (";
+        sql += ") VALUES (";
         sql += "'" + toMySQLdate(transactionTime) + "',"; // modifieddate
         sql += "'" + toMySQLdate(transactionTime) + "',"; // createddate
         sql += "'" + toMySQLdate(validFrom) + "',"; // validfrom
@@ -322,26 +354,26 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
 
         int rowsAffected = updateValidToStmt.executeUpdate();
 
-        Preconditions.checkState(rowsAffected == 1, "Updated wrong number of rows. expected=1, actual=" + rowsAffected);
+        Preconditions.checkState(rowsAffected == 1, "Updated completeXml number of rows. expected=1, actual=" + rowsAffected);
     }
 
     public void updateValidFromOnCurrentRow(Date validFrom, Date transactionTime) throws SQLException
     {
-        updateValidFromStmt.setTimestamp(1, new Timestamp(validFrom.getTime()));
-        updateValidFromStmt.setTimestamp(2, new Timestamp(transactionTime.getTime()));
+        updateValidFromStmt.setObject(1, validFrom);
+        updateValidFromStmt.setObject(2, transactionTime);
         updateValidFromStmt.setObject(3, getCurrentRS().getObject(Entities.getIdColumnName(type)));
-        updateValidFromStmt.setTimestamp(4, getCurrentRS().getTimestamp("ValidFrom"));
+        updateValidFromStmt.setObject(4, getCurrentRS().getTimestamp("ValidFrom"));
 
         int rowsAffected = updateValidFromStmt.executeUpdate();
-        Preconditions.checkState(rowsAffected == 1, "wrong number of affected rows. expected=1, actual=" + rowsAffected);
+        
+        Preconditions.checkState(rowsAffected == 1, "completeXml number of affected rows. expected=1, actual=" + rowsAffected);
     }
 
     public boolean currentRowEquals(TemporalEntity entity) throws Exception
     {
         for (Method method : outputMethods)
         {
-            if (!fieldEqualsCurrentRow(method, entity))
-                return false;
+            if (!fieldEqualsCurrentRow(method, entity)) return false;
         }
 
         return true;
@@ -361,27 +393,32 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
                 return true;
             if (!o.equals(value))
                 return false;
-        } else if (o instanceof Integer)
+        }
+        else if (o instanceof Integer)
         {
             Integer value = getCurrentRS().getInt(fieldname);
             if (!o.equals(value))
                 return false;
-        } else if (o instanceof Long)
+        }
+        else if (o instanceof Long)
         {
             Long value = getCurrentRS().getLong(fieldname);
             if (!o.equals(value))
                 return false;
-        } else if (o instanceof Double)
+        }
+        else if (o instanceof Double)
         {
             Double value = getCurrentRS().getDouble(fieldname);
             if (!o.equals(value))
                 return false;
-        } else if (o instanceof Boolean)
+        }
+        else if (o instanceof Boolean)
         {
             Boolean value = getCurrentRS().getInt(fieldname) != 0;
             if (!o.equals(value))
                 return false;
-        } else if (o instanceof Date)
+        }
+        else if (o instanceof Date)
         {
             Timestamp ts = getCurrentRS().getTimestamp(fieldname);
             if (ts == null)
@@ -389,12 +426,14 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
             long millis = ts.getTime();
             if (millis != ((Date) o).getTime())
                 return false;
-        } else if (o == null)
+        }
+        else if (o == null)
         {
             Object value = getCurrentRS().getObject(fieldname);
             if (value != null)
                 return false;
-        } else
+        }
+        else
         {
             String message = "method " + Entities.getEntityTypeDisplayName(type) + "." + method.getName() + " has unsupported return type: " + o + ". DB mapping unknown.";
             throw new Exception(message);
@@ -436,7 +475,7 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
 
         int rowsAffected = updateValidToStmt.executeUpdate();
 
-        Preconditions.checkState(rowsAffected == 1, "updateValidToStmt wrong number of rows updated - expected=1, actual=" + rowsAffected);
+        Preconditions.checkState(rowsAffected == 1, "updateValidToStmt completeXml number of rows updated - expected=1, actual=" + rowsAffected);
     }
 
     /**

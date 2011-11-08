@@ -27,6 +27,7 @@ package com.trifork.stamdata.importer.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import com.google.common.base.Preconditions;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 
 public class Files
@@ -42,5 +43,34 @@ public class Files
         }
         
         return file;
+    }
+    
+    public static File getFile(File[] files, String filename, boolean isRequired)
+    {
+        File file = null;
+        
+        for (File f : files)
+        {
+            if (f.getName().equals(filename))
+            {
+                file = f;
+                break;
+            }
+        }
+        
+        if (isRequired && (file == null || !file.exists()))
+        {
+            FileNotFoundException e = new FileNotFoundException(file.getAbsolutePath());
+            throw new ParserException("A required file was not present.", e);
+        }
+        
+        return file;
+    }
+    
+    public static File[] toArray(File file)
+    {
+        Preconditions.checkNotNull(file);
+        
+        return new File[] { file };
     }
 }
