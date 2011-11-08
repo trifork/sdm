@@ -622,6 +622,7 @@
 								<format>xml</format>
 								<format>html</format>
 							</formats>
+                            <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
 						</configuration>
 						<executions>
 							<execution>
@@ -639,6 +640,7 @@
 							<systemPropertyVariables>
 								<jboss.server.log.dir>${java.io.tmpdir}</jboss.server.log.dir>
 							</systemPropertyVariables>
+                            <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
 						</configuration>
 					</plugin>
 					<plugin>
