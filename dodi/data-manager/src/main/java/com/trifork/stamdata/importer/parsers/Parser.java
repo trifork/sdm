@@ -30,5 +30,7 @@ import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 
 public interface Parser
 {
+    String identifier();
+
     void process(File inputDirectory) throws ParserException;
 }

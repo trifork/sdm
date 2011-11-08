@@ -59,7 +59,13 @@ public class DkmaParser implements Parser
         this.keyValueStore = keyValueStore;
         this.parserFactory = parserFactory;
     }
-    
+
+    @Override
+    public String identifier()
+    {
+        return "dkma";
+    }
+
     @Override
     public void process(File inputDirectory)
     {
