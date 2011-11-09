@@ -73,21 +73,6 @@ public class SikredePersisterUsingNewArcitechtureTest {
     }
     
     @Test
-    public void testSimplePersistense() throws SQLException 
-    {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
-        sikredePersister.persist(record);
-        connection.commit();
-        
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM SikredeGenerated");
-        resultSet.next();
-        long numberOfFoundRecords = resultSet.getLong(1);
-        assertEquals(1, numberOfFoundRecords);
-    }
-
-    @Test
     public void testAddingTheSameRecordTwiceButWithNeverTimestamp() throws SQLException 
     {
         SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);

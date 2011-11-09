@@ -44,19 +44,6 @@ public class SikredePersisterUsingNewArchitecture {
         this.persister = persister;
     }
     
-    // FIXME: Handle valid from and to
-    public void persist(SikredeRecord record) throws SQLException
-    {
-        Connection connection = persister.getConnection();
-        PreparedStatement statement = statementCreator.insertPreparedStatement(connection);
-        statementCreator.insertValuesIntoPreparedStatement(statement, record, new DateTime());
-        int updated = statement.executeUpdate();
-        if(updated != 1)
-        {
-            throw new IllegalStateException("Too many records touched by insertion (" + updated + ")");
-        }
-    }
-    
     public void persistRecordWithValidityDate(SikredeRecord record, String key, DateTime timestampOfInsertion) throws SQLException
     {
         Connection connection = persister.getConnection();

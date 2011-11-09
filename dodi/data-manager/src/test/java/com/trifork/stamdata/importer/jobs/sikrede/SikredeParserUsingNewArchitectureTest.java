@@ -35,7 +35,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -53,11 +52,6 @@ public class SikredeParserUsingNewArchitectureTest {
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
-    @Before
-    public void setupParser()
-    {
-    }
-  
     @Test
     public void testEmptyFile() throws Exception 
     {
@@ -69,7 +63,7 @@ public class SikredeParserUsingNewArchitectureTest {
             SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
             SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
             SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    statementCreator);
+                    statementCreator, "CPRnr");
 
             connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
 
@@ -108,7 +102,7 @@ public class SikredeParserUsingNewArchitectureTest {
             SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
             SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
             SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    statementCreator);
+                    statementCreator, "Foo");
 
             connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
 

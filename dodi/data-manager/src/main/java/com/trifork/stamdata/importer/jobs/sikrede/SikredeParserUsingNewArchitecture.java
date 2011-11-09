@@ -33,6 +33,7 @@ import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.joda.time.DateTime;
 import org.slf4j.MDC;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
@@ -65,11 +66,13 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     
     private final SikredeLineParser entryParser;
     private final SikredeSqlStatementCreator statementCreator;
+    private final String key;
     
-    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeSqlStatementCreator statementCreator)
+    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeSqlStatementCreator statementCreator, String key)
     {
         this.entryParser = entryParser;
         this.statementCreator = statementCreator;
+        this.key = key;
     }
     
     @Override
@@ -123,6 +126,8 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     
     private void importFile(Iterator<String> lines, SikredePersisterUsingNewArchitecture persister) throws SQLException
     {       
+        DateTime timestampOfInsertion = new DateTime();
+        
         SikredeRecord startRecord = null;
         SikredeRecord endRecord = null;
         
@@ -163,7 +168,7 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
                 }
                 
                 SikredeRecord record = entryParser.parseLine(line);
-                persister.persist(record);
+                persister.persistRecordWithValidityDate(record, key, timestampOfInsertion);
                 
                 numRecords++;
             }
