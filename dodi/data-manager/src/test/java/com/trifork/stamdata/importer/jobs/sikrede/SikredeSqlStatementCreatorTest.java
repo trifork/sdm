@@ -67,7 +67,7 @@ public class SikredeSqlStatementCreatorTest {
     public void testInsertValuesIntoPreparedStatement() throws SQLException
     {
         PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
-        SikredeRecord record = createRecord("Bar", "Baz", "Foo", 42);
+        SikredeRecord record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Bar", "Baz", "Foo", 42);
         
         exampleStatementCreator.insertValuesIntoPreparedStatement(mockedPrepareStatement, record);
 
@@ -131,21 +131,4 @@ public class SikredeSqlStatementCreatorTest {
         exampleStatementCreator.sikredeDataFromResultSet(mockResultSet);
     }
     
-    ///////////////
-    
-    private SikredeRecord createRecord(Object... keysAndValues)
-    {
-        SikredeRecord record = new SikredeRecord();
-        
-        assertTrue(keysAndValues.length % 2 == 0);
-        
-        for(int i = 0; i < keysAndValues.length; i += 2)
-        {
-            String key = (String) keysAndValues[i];
-            Object value = keysAndValues[i+1];
-            record = record.setField(key, value);
-        }
-        
-        return record;
-    }
 }

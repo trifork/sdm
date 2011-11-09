@@ -99,12 +99,12 @@ public class SikredeFieldsTester {
                 "Foo", SikredeType.NUMERICAL, 10,
                 "Bar", SikredeType.ALFANUMERICAL, 32);
 
-        SikredeRecord correctValues = createRecord("Foo", 42, "Bar", "12345678901234567890123456789012");
-        SikredeRecord correctValuesWhereBarIsShorter = createRecord("Foo", 42, "Bar", "123456789012345678901234567890");
-        SikredeRecord missingFoo = createRecord("Bar", "12345678901234567890123456789012");
-        SikredeRecord fooIsNotNumerical = createRecord("Foo", "Baz", "Bar", "12345678901234567890123456789012");
-        SikredeRecord barIsTooLong = createRecord("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
-        SikredeRecord containsUnknownKey = createRecord("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
+        SikredeRecord correctValues = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "12345678901234567890123456789012");
+        SikredeRecord correctValuesWhereBarIsShorter = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "123456789012345678901234567890");
+        SikredeRecord missingFoo = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Bar", "12345678901234567890123456789012");
+        SikredeRecord fooIsNotNumerical = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", "Baz", "Bar", "12345678901234567890123456789012");
+        SikredeRecord barIsTooLong = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
+        SikredeRecord containsUnknownKey = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
         
         assertTrue(exampleSikredeFields.conformsToSpecifications(correctValues));
         assertTrue(exampleSikredeFields.conformsToSpecifications(correctValuesWhereBarIsShorter));
@@ -112,21 +112,5 @@ public class SikredeFieldsTester {
         assertFalse(exampleSikredeFields.conformsToSpecifications(fooIsNotNumerical));
         assertFalse(exampleSikredeFields.conformsToSpecifications(barIsTooLong));
         assertFalse(exampleSikredeFields.conformsToSpecifications(containsUnknownKey));
-    }
-    
-    private SikredeRecord createRecord(Object... keysAndValues)
-    {
-        SikredeRecord record = new SikredeRecord();
-        
-        assertTrue(keysAndValues.length % 2 == 0);
-        
-        for(int i = 0; i < keysAndValues.length; i += 2)
-        {
-            String key = (String) keysAndValues[i];
-            Object value = keysAndValues[i+1];
-            record = record.setField(key, value);
-        }
-        
-        return record;
     }
 }

@@ -46,20 +46,31 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     private static final String RECORD_TYPE_ENTRY = "10";
     private static final String RECORD_TYPE_END = "99";
     private static final String RECORD_TYPE_START = "00";
-    private static final String FILE_ENCODING = "ISO-8859-1";
+    static final String FILE_ENCODING = "ISO-8859-1";
     
-    private static final SikredeLineParser endRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
-            "PostType", SikredeType.NUMERICAL, 2,
-            "AntPoster", SikredeType.NUMERICAL, 8));
-    
-    private static final SikredeLineParser startRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
+    static final SikredeFields startRecordSikredeFields = SikredeFields.newSikredeFields(
             "PostType", SikredeType.NUMERICAL, 2,
             "OpgDato", SikredeType.ALFANUMERICAL, 8,
             "Timestamp", SikredeType.ALFANUMERICAL, 20,
             "Modt", SikredeType.ALFANUMERICAL, 6,
-            "SnitfladeId", SikredeType.ALFANUMERICAL, 8));
+            "SnitfladeId", SikredeType.ALFANUMERICAL, 8);
+    static final SikredeLineParser startRecordParser = new SikredeLineParser(startRecordSikredeFields);
 
-    private static final SikredeLineParser entryParser = new SikredeLineParser(SikredeFields.SIKREDE_FIELDS_SINGLETON);
+    static final SikredeFields endRecordSikredeFields = SikredeFields.newSikredeFields(
+            "PostType", SikredeType.NUMERICAL, 2,
+            "AntPost", SikredeType.NUMERICAL, 8);
+    static final SikredeLineParser endRecordParser = new SikredeLineParser(endRecordSikredeFields);
+    
+    // FIXME: Verificer Modt og SnitfladeId jf. dokumentation
+    
+    private final SikredeLineParser entryParser;
+    private final SikredeSqlStatementCreator statementCreator;
+    
+    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeSqlStatementCreator statementCreator)
+    {
+        this.entryParser = entryParser;
+        this.statementCreator = statementCreator;
+    }
     
     @Override
     public String getIdentifier() 
@@ -91,7 +102,6 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
         
         // FIXME: Check that files are imported in the right order. We can not do this yet as we do not know what the files are named
         
-        SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(SikredeFields.SIKREDE_FIELDS_SINGLETON);
         SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(statementCreator, oldPersister);
         
         LineIterator lines = null;
@@ -138,7 +148,7 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
             }
             else if (line.startsWith(RECORD_TYPE_END))
             {
-                if (startRecord != null)
+                if (startRecord == null)
                 {
                     throw new ParserException("Start record was not found before end record.");
                 }
@@ -147,7 +157,7 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
             }
             else if (line.startsWith(RECORD_TYPE_ENTRY))
             {
-                if (startRecord != null)
+                if (startRecord == null)
                 {
                     throw new ParserException("Start record was not found before first entry.");
                 }
