@@ -25,6 +25,7 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -79,7 +80,6 @@ public class SikredePersisterUsingNewArcitechtureTest {
         sikredePersister.persist(record);
         connection.commit();
         
-        // TODO: Changes me to fetcher
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM SikredeGenerated");
         resultSet.next();
@@ -135,10 +135,95 @@ public class SikredePersisterUsingNewArcitechtureTest {
         assertEquals(2, recordCount);
     }
     
+    @Test
+    public void testAddingTwoDifferentRecordsDontEffectEachOther() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord recordA = builder.field("Foo", 42).field("Moo", "Far").build();
+        SikredeRecord recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        sikredePersister.persistRecordWithValidityDate(recordA, "Moo", theYear2000);
+        connection.commit();
+        
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        sikredePersister.persistRecordWithValidityDate(recordB, "Moo", theYear2010);
+        connection.commit();
+        
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
+        
+        SikredeSqlStatementCreator sikredeSqlStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
+        
+        int recordCount = 0;
+        while(resultSet.next())
+        {
+            recordCount++;
+            
+            SikredeRecord sikredeRecord = sikredeSqlStatementCreator.sikredeDataFromResultSet(resultSet);
+            
+            assertTrue(recordsEqual(recordA, sikredeRecord) || recordsEqual(recordB, sikredeRecord));
+        }
+        
+        assertEquals(2, recordCount);
+    }
+    
+    @Test
+    public void testAddingExactSameRecordTwiceAddsANewRecord() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+        
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
+        
+        SikredeSqlStatementCreator sikredeSqlStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
+        
+        int recordCount = 0;
+        while(resultSet.next())
+        {
+            recordCount++;
+            
+            SikredeRecord sikredeRecord = sikredeSqlStatementCreator.sikredeDataFromResultSet(resultSet);
+            assertEquals("Far", sikredeRecord.get("Moo"));
+            
+            DateTime validFrom = sikredePersister.getValidFrom(resultSet);
+            DateTime validTo = sikredePersister.getValidtTo(resultSet);
+
+            if(validFrom.equals(theYear2000))
+            {
+                assertEquals(theYear2010, validTo);
+            }
+            else if(validFrom.equals(theYear2010))
+            {
+                assertEquals(null, validTo);
+            }
+            else
+            {
+                throw new AssertionError("Unexpected value of \"ValidFrom\" in test: " + validFrom);
+            }
+        }
+        
+        assertEquals(2, recordCount);
+    }
+    
     private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException
     {
         Statement setupStatements = connection.createStatement();
         setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
         setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
+    }
+    
+    private boolean recordsEqual(SikredeRecord lhs, SikredeRecord rhs) 
+    {
+        return lhs.map.equals(rhs.map);
     }
 }
