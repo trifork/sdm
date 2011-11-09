@@ -25,9 +25,8 @@
 package com.trifork.stamdata.importer.jobs;
 
 import antlr.ParserSharedInputState;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.MapMaker;
-import com.google.common.collect.Ordering;
+import com.google.common.collect.*;
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.parsers.Parser;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -35,16 +34,18 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FalseFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.joda.time.Instant;
+import org.joda.time.Seconds;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+
+import static com.trifork.stamdata.Preconditions.checkArgument;
 
 /**
  * Uses a file system directory as inbox.
@@ -62,19 +63,23 @@ import java.util.concurrent.TimeUnit;
  */
 public class DirectoryInbox implements Inbox
 {
-    private static final ConcurrentMap<String, Long> sizeHistory = new MapMaker().expireAfterAccess(10, TimeUnit.MINUTES).makeMap();
+    private static final ConcurrentMap<String, DirectoryState> sizeHistory = new MapMaker().expireAfterAccess(10, TimeUnit.MINUTES).makeMap();
 
     private final File inboxDirectory;
 
     /**
      * The elements in the current found by the latest call to {@code update}.
      */
-    private Queue<File> elements;
+    private Queue<File> elements = Lists.newLinkedList();
+    private final int stabilizationPeriod;
 
     @Inject
-    DirectoryInbox(@Named("rootDir") String root, Parser parser) throws IOException
+    DirectoryInbox(@Named("rootDir") String root, Parser parser, @Named("stabilization.period") int stabilizationPeriod) throws IOException
     {
-        inboxDirectory = new File(root + File.pathSeparator + parser.identifier());
+        Preconditions.checkArgument(stabilizationPeriod >= 0, "stabilizationPeriod must be a non-negative number.");
+        this.stabilizationPeriod = stabilizationPeriod;
+
+        this.inboxDirectory = new File(root + File.separator + parser.identifier());
 
         // Make sure the directory exists.
         //
@@ -100,10 +105,13 @@ public class DirectoryInbox implements Inbox
     @Override
     public void progress() throws IOException
     {
+        File element = peek();
+        if (element == null) throw new IllegalStateException("You must not call progress when no entries are present.");
+
         // First we have to successfully delete the
         // directory physically.
         //
-        FileUtils.deleteDirectory(peek());
+        FileUtils.forceDelete(element);
 
         // Then we can pop it from the input queue.
         //
@@ -128,52 +136,68 @@ public class DirectoryInbox implements Inbox
     @Override
     public void update() throws IOException
     {
-        // Allow IO to
-        //
-        try
-        {
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e)
-        {
-            Thread.currentThread().interrupt();
-        }
+        final Ordering FILENAME_ORDERING = Ordering.usingToString();
 
         // Dispose of any previous elements and use lexicographical ordering
         // for the elements.
         //
         elements = new PriorityQueue<File>(10, Ordering.usingToString());
 
-        for (File element : inboxDirectory.listFiles())
+        // There is no guaranties that the filenames are sorted lexicographically
+        // so we have to make sure ourselves.
+        //
+        File[] directories = inboxDirectory.listFiles();
+        Arrays.sort(directories, FILENAME_ORDERING);
+
+        boolean unstableEntryFound = false;
+
+        for (File element : directories)
         {
             // Only files are considered.
             //
             if (element.isFile()) continue;
 
-            Long previousSize = sizeHistory.get(element.getPath());
-            Long currentSize = FileUtils.sizeOfDirectory(element);
+            DirectoryState previousState = sizeHistory.get(element.getPath());
+            DirectoryState currentState = createState(element);
 
-            if (previousSize == null || previousSize != currentSize)
+            if (previousState == null || currentState.size != previousState.size)
             {
-                // Update the current.
+                // Update the current state.
                 //
-                sizeHistory.put(element.getPath(), currentSize);
+                sizeHistory.put(element.getPath(), currentState);
 
-                // Ensure that only stable directories
+                // Ensure that only stable directories (top down)
                 // makes it into the elements queue.
                 //
                 // If this is not done we might end up
                 // with items being imported in the
                 // wrong order.
                 //
-                break;
+                unstableEntryFound = true;
             }
-            else
+            else if (!unstableEntryFound && previousState.timestamp.plus(stabilizationPeriod).isBefore(currentState.timestamp))
             {
                 // If the content is stable add the element.
                 //
                 elements.add(element);
             }
         }
+    }
+
+    private static DirectoryState createState(File directory)
+    {
+        checkArgument(directory.isDirectory());
+
+        DirectoryState state = new DirectoryState();
+        state.size = FileUtils.sizeOfDirectory(directory);
+        state.timestamp = Instant.now();
+
+        return state;
+    }
+
+    private static class DirectoryState
+    {
+        Long size = null;
+        Instant timestamp = null;
     }
 }
