@@ -54,6 +54,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
                 );
         
         connection = MySQLConnectionManager.getConnection();
+        createSikredeFieldsTableOnDatabase(connection, exampleSikredeFields);
         
         Statement setupStatements = connection.createStatement();
         setupStatements.executeUpdate("DROP TABLE SikredeGenerated");
@@ -79,4 +80,10 @@ public class SikredePersisterUsingNewArcitechtureTest {
         assertEquals(1, numberOfFoundRecords);
     }
 
+    private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException
+    {
+        Statement setupStatements = connection.createStatement();
+        setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
+    }
 }
