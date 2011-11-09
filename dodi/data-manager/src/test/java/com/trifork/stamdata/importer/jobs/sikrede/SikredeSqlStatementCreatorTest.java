@@ -35,6 +35,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,7 +59,7 @@ public class SikredeSqlStatementCreatorTest {
     @Test
     public void testInsertStatementString() 
     {
-        String expected = "INSERT INTO SikredeGenerated (Foo, Bar) VALUES (?, ?)";
+        String expected = "INSERT INTO SikredeGenerated (Foo, Bar, ValidFrom) VALUES (?, ?, ?)";
         String actual = exampleStatementCreator.insertStatementString();
         assertEquals(expected, actual);
     }
@@ -69,7 +70,7 @@ public class SikredeSqlStatementCreatorTest {
         PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
         SikredeRecord record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Bar", "Baz", "Foo", 42);
         
-        exampleStatementCreator.insertValuesIntoPreparedStatement(mockedPrepareStatement, record);
+        exampleStatementCreator.insertValuesIntoPreparedStatement(mockedPrepareStatement, record, new DateTime());
 
         verify(mockedPrepareStatement).setInt(1, 42);
         verify(mockedPrepareStatement).setString(2, "Baz");

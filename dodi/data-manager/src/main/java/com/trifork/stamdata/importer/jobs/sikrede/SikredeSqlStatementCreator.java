@@ -25,13 +25,16 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
@@ -61,6 +64,9 @@ public class SikredeSqlStatementCreator
             questionMarks.add("?");
         }
         
+        fieldNames.add("ValidFrom");
+        questionMarks.add("?");
+        
         builder.append(StringUtils.join(fieldNames, ", "));
         builder.append(") VALUES (");
         builder.append(StringUtils.join(questionMarks, ", "));
@@ -74,7 +80,7 @@ public class SikredeSqlStatementCreator
         return connection.prepareStatement(insertStatementString());
     }
     
-    public void insertValuesIntoPreparedStatement(PreparedStatement preparedStatement, SikredeRecord record) throws SQLException
+    public void insertValuesIntoPreparedStatement(PreparedStatement preparedStatement, SikredeRecord record, DateTime validFrom) throws SQLException
     {
         if(!sikredeFields.conformsToSpecifications(record))
         {
@@ -98,6 +104,8 @@ public class SikredeSqlStatementCreator
             }
             index++;
         }
+        
+        preparedStatement.setDate(index, new Date(validFrom.getMillis()));
     }
     
     ////////////////////////////////
@@ -152,5 +160,17 @@ public class SikredeSqlStatementCreator
         }
         
         return record;
+    }
+
+    public PreparedStatement updateValidToPreparedStatement(Connection connection, String key) throws SQLException 
+    {
+        return connection.prepareStatement("UPDATE SikredeGenerated SET ValidTo = ? WHERE " + key + " = ?");
+    }
+
+    public void updateValuesIntoPreparedStatement(PreparedStatement statement, SikredeRecord record,
+            String key, DateTime timestampOfInsertion) throws SQLException 
+    {
+        statement.setDate(1, new Date(timestampOfInsertion.getMillis()));
+        statement.setObject(2, record.get(key));
     }
 }

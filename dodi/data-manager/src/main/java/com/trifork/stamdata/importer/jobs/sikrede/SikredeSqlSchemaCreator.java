@@ -66,6 +66,9 @@ public class SikredeSqlSchemaCreator {
             }
         }
         
+        builder.append(",\n\tValidFrom DateTime NOT NULL");
+        builder.append(",\n\tValidTo DateTime");
+        
         builder.append("\n) ENGINE=InnoDB COLLATE=utf8_bin;\n");
         
         return builder.toString();
