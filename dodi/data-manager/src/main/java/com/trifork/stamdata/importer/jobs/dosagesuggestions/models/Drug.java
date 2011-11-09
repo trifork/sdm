@@ -33,7 +33,6 @@ import javax.persistence.Id;
 @Entity(name = "DosageDrug")
 public class Drug extends DosageRecord
 {
-
 	private long drugId;
 	private int releaseNumber;
 	private String drugName;

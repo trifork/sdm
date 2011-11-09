@@ -69,7 +69,7 @@ public class SikredeDataset
 			{
 				@SuppressWarnings("unchecked")
 				Dataset<T> typedDataset = (Dataset<T>) dataset;
-				typedDataset.addEntity(entity);
+				typedDataset.add(entity);
 			}
 		}
 	}

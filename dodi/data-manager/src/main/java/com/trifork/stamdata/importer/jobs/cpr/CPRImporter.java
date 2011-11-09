@@ -34,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -41,10 +42,12 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.config.Configuration;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
 import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
@@ -52,7 +55,7 @@ import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -82,14 +85,16 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public void importFiles(File[] input, Persister persister) throws Exception
+	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		checkNotNull(input);
 		checkNotNull(persister);
+		
+		// TODO: Should this not be done in #ensureRequiredFileArePresent()
 
 		for (File personFile : input)
 		{
-			if (!isPersonerFile(personFile))
+			if (!isPersonFile(personFile))
 			{
 				throw new Exception("File " + personFile.getAbsolutePath() + " is not a valid CPR file. Nothing will be imported from the fileset.");
 			}
@@ -98,7 +103,7 @@ public class CPRImporter implements FileParser
 		// Check that the sequence is kept.
 
 		Connection connection = persister.getConnection();
-		Set<String> cprWithChanges = Sets.newHashSet();
+		ArrayList<String> cprWithChanges = Lists.newArrayList();
 
 		for (File personFile : input)
 		{
@@ -108,14 +113,11 @@ public class CPRImporter implements FileParser
 
 			if (isDeltaFile(personFile))
 			{
-				// TODO: Don't use the connection this way. @see
-				// Persister#getConnection()
-
 				Date previousVersion = getLatestVersion(connection);
 
 				if (previousVersion == null)
 				{
-					logger.debug("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
+					logger.warn("Didn't find any previous versions of CPR. Asuming an initial import and skipping sequence checks.");
 				}
 			}
 			
@@ -162,7 +164,7 @@ public class CPRImporter implements FileParser
 			}
 		}
 		
-		// Update the GOS/CPR table with the current timestamp and
+		// Update the GOS/CPR table with the current time stamp and
 		// CPR numbers.
 		
 		PreparedStatement updateChangesTable = persister.getConnection().prepareStatement("REPLACE INTO ChangesToCPR (CPR, ModifiedDate) VALUES (?,?)");
@@ -178,7 +180,7 @@ public class CPRImporter implements FileParser
 		updateChangesTable.close();
 	}
 
-	private boolean isPersonerFile(File f)
+	private boolean isPersonFile(File f)
 	{
 		return personFilePattern.matcher(f.getName()).matches();
 	}
@@ -192,7 +194,8 @@ public class CPRImporter implements FileParser
 	{
 		Statement stm = con.createStatement();
 		ResultSet rs = stm.executeQuery("SELECT MAX(IkraftDato) AS Ikraft FROM PersonIkraft");
-		if (rs.first()) return rs.getTimestamp(1);
+		
+		if (rs.next()) return rs.getTimestamp("Ikraft");
 
 		// Returns null if no previous version of CPR has been imported.
 		
@@ -202,7 +205,7 @@ public class CPRImporter implements FileParser
 	void insertVersion(Date calendar, Connection con) throws SQLException
 	{
 		Statement stm = con.createStatement();
-		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + DateUtils.toMySQLdate(calendar) + "');";
+		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toMySQLdate(calendar) + "');";
 		stm.execute(query);
 	}
 

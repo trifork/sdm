@@ -24,16 +24,17 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static junit.framework.Assert.assertEquals;
 
 import java.net.MalformedURLException;
 import java.util.List;
 
-import static junit.framework.Assert.assertEquals;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
 
 
 public class CprAbbsClientIntegrationTest {
@@ -42,7 +43,7 @@ public class CprAbbsClientIntegrationTest {
     private CprAbbsStubJettyServer server;
     private SecurityWrapper securityHeaders;
 
-    private CprAbbsClient client;
+    private CprSubscriptionClient client;
 
 
     @Before
@@ -53,7 +54,7 @@ public class CprAbbsClientIntegrationTest {
         server = new CprAbbsStubJettyServer();
         server.startServer(8099);
 
-        client = new CprAbbsClient(SERVICE_URL);
+        client = new CprSubscriptionClient(SERVICE_URL);
     }
 
 

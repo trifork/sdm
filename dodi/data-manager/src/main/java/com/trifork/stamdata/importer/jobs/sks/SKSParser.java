@@ -23,163 +23,230 @@
  * National Board of e-Health (NSI). All Rights Reserved.
  */
 
-
 package com.trifork.stamdata.importer.jobs.sks;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
+import java.io.File;
+import java.util.Iterator;
 
-import org.apache.commons.io.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
+import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sks.Institution.InstitutionType;
+import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.persistence.Persister;
-
 
 /**
  * Parser for the SKS register.
  * 
- * SKS is an acronym for 'Sundhedsvæsenets KlassifikationsSystem'.
+ * SKS is an acronym for 'Sundhedsvæsenets Klassifikationssystem'.
+ * The input file is documented in the sks.pdf file in the doc directory.
+ * 
+ * Ændringer til SKS-registeret (sgh/afd) indlæses via deltafiler.
+ * Ved etablering af registeret anvendes en deltafil der indeholder
+ * samtlige sgh/afd dvs. indlæsningen foretages på præcis samme måde
+ * hvadenten der indlæses/opdateres et fuld register eller blot ændringer
+ * siden sidst (delta)
+ * 
+ * Eksempel på deltafil-indhold:
+ * 
+ * afd1301011             197901011979010119821231ANÆSTHESIAFD. AN                                                                                                        084                                            
+ * afd1301011             198301011983010119941231ANÆSTESIAFD. AN,ANÆSTESIAFSNIT                                                                                          084                                            
+ * afd1301011             199501011999112419991231ANÆSTESIAFD. AN,ANÆSTESIAFSNIT                                                                                          084         SKS     3                          
+ * afd1301011             200001012004102920031231Anæstesiologisk klinik AN, anæstesiafsnit                                                                               084         SKS     3                          
+ * afd1301011             200401012004102925000101Anæstesi-/operationsklinik, ABD                                                                                         084         SKS     1                          
+ *
+ * Hver række angiver en sgh/afd med nummer, gyldighedperiode, navn samt
+ * operationskode (3=opdatering, 1=ny eller 2=sletning) 
+ * Der anvendes fastpositionering dvs. værdierne er altid placeret på
+ * samme position og der anvendes whitespaces til at "fylde" ud med 
+ * 
+ * Der er intet krav om at rækkefølgen for hvert nummer skal være
+ * kronologisk dvs. der tages højde for at der efter at være indlæst en
+ * sgh/afd med gyldighedsperiode
+ * 
+ * 01.01.2008 - 01.01.2500
+ * 
+ * kan optræde en anden record for samme nummer med gyldighedsperiode
+ *
+ * 01.01.2000 - 31.13.2007
+ * 
+ * Det garanteres dog at der ikke optræder overlap på gyldighedsperioden
+ * for samme nummer.
+ * 
+ * Operationskoden (action) (position 187-188) angiver om recorden skal
+ * betragtes som ny, opdatering eller sletning.
+ * Med den måde hvorpå SKS-registeret anvendes i PEM gælder det at alle
+ * entries/versioner af hvert nummer skal være placeret i
+ * Organisationshistorik-tabellen (og altså ikke kun gamle versioner i
+ * denne tabel) dvs. det er altid muligt heri at finde den gyldige/aktive
+ * sgh/afd for en bestemt dato. I Organisations-tabellen derimod placeres
+ * kun den nyeste record for en given sgh/afd dvs. recorden med nyeste
+ * gyldighedsdato. 
+ * For at sikre denne versionering skal enhver entry (med operationskode 1
+ * eller 3) altid skal indsættes/opdateres i Organisationshistorik-tabellen,
+ * mens kun nyeste entry (med operationskode 1 eller 3) skal
+ * indsættes/opdateres i Organisations-tabellen.
+ * Det gælder at operationskode/action (1,2,3) kun er angivet for entries
+ * nyere end 1995. Da vi kun ønsker at indlæse records nyere end 1995
+ * ignoreres alle records hvor operationskode ikke er angivet.
  */
 public class SKSParser implements FileParser
 {
-	private static final Logger logger = LoggerFactory.getLogger(SKSParser.class);
-	
-	private static final int SKS_NUMBER_END_INDEX = 23;
-	private static final int SKS_NUMBER_START_INDEX = 3;
-	private static final int NAME_END_INDEX = 167;
-	private static final int NAME_START_INDEX = 47;
-	private static final String DATE_FORMAT = "yyyyMMdd";
-	private static final int ENTRY_TYPE_START_INDEX = 0;
-	private static final int ENTRY_TYPE_END_INDEX = 3;
+    private static final int SKS_CODE_START_INDEX = 3;
+    private static final int SKS_CODE_END_INDEX = 23;
 
-	private static final char CREATE_OPERATION_CODE = '1';
-	private static final char DELETE_OPERATION_CODE = '2';
-	private static final char UPDATE_OPERATION_CODE = '3';
+    private static final int CODE_TEXT_START_INDEX = 47;
+    
+    /**
+     * The field is actually 120 characters long. But the
+     * specification says only to use the first 60.
+     */
+    private static final int CODE_TEXT_END_INDEX = 107;
+    
+    private static final int ENTRY_TYPE_START_INDEX = 0;
+    private static final int ENTRY_TYPE_END_INDEX = 3;
 
-	private static final String HOSPITAL_TYPE = "sgh";
-	private static final String HOSPITAL_DEPARTMENT_TYPE = "afd";
+    private static final char OPERATION_CODE_NONE = ' ';
+    private static final char OPERATION_CODE_CREATE = '1';
+    private static final char OPERATION_CODE_UPDATE = '3';
 
-	private static final int OPERATION_CODE_INDEX = 187;
-	private static final int NEW_FORMAT_LINE_LENGTH = 188;
+    private static final String RECORD_TYPE_HOSPITAL = "sgh";
+    private static final String RECORD_TYPE_DEPARTMENT = "afd";
 
-	private static final String FILE_ENCODING = "ISO8859-15";
+    private static final int OPERATION_CODE_INDEX = 187;
 
-	@Override
-	public String getIdentifier()
-	{
-		return "sks";
-	}
+    private static final String FILE_ENCODING = "ISO8859-15";
 
-	@Override
-	public String getHumanName()
-	{
-		return "SKS Parser";
-	}
+    private static final DateTimeFormatter dateFormat = ISODateTimeFormat.basicDate();
 
-	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
-	{
-		boolean present = false;
+    @Override
+    public String getIdentifier()
+    {
+        return "sks";
+    }
 
-		for (File file : input)
-		{
-			if (file.getName().toUpperCase().endsWith(".TXT")) present = true;
-		}
+    @Override
+    public String getHumanName()
+    {
+        return "SKS Parser";
+    }
 
-		return present;
-	}
+    @Override
+    public boolean ensureRequiredFileArePresent(File[] input)
+    {
+        Preconditions.checkNotNull(input, "input");
+        Preconditions.checkArgument(input.length > 0, "At least one file should be present at this point.");
+        
+        return input.length == 1 && isValidFilePresent(input);
+    }
+    
+    private boolean isValidFilePresent(File[] input)
+    {
+        final String filename = input[0].getName();
+        
+        return filename.equalsIgnoreCase("SHAKCOMPLETE.TXT")
+            || filename.equalsIgnoreCase("SHAKDELTA.TXT");
+    }
 
-	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
-	{
-		for (File file : files)
-		{
-			if (file.getName().toUpperCase().endsWith(".TXT"))
-			{
-				Dataset<Institution> dataset = new Dataset<Institution>(Institution.class);
+    @Override
+    public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
+    {
+        Preconditions.checkArgument(files.length == 1, "Only one file should be present at this point.");
+        
+        // TODO: Check sequence.
+        
+        LineIterator lines = null;
+        
+        try
+        {
+            lines = FileUtils.lineIterator(files[0], FILE_ENCODING);
+            
+            Dataset<Institution> dataset = innerParse(lines);
+            persister.persistDeltaDataset(dataset);
+        }
+        catch (Exception e)
+        {
+            LineIterator.closeQuietly(lines);
+        }
+    }
+    
+    private Dataset<Institution> innerParse(Iterator<String> lines)
+    {
+        Dataset<Institution> dataset = new Dataset<Institution>(Institution.class);
+        
+        while (lines.hasNext())
+        {
+            Institution institution = parseLine(lines.next());
 
-				LineIterator lines = FileUtils.lineIterator(file, FILE_ENCODING);
-				while (lines.hasNext())
-				{
-					String line = lines.nextLine();
-					
-					Institution institution = parseLine(line);
-					
-					if (institution != null)
-					{
-						dataset.addEntity(institution);
-					}
-					else
-					{
-						logger.debug("Line ignored. line_content={}", line);
-					}
-				}
+            if (institution != null)
+            {
+                dataset.add(institution);
+            }
+        }
+        
+        return dataset;
+    }
 
-				persister.persistDeltaDataset(dataset);
+    private Institution parseLine(String line)
+    {
+        // Determine the record type.
+        //
+        String recordType = line.substring(ENTRY_TYPE_START_INDEX, ENTRY_TYPE_END_INDEX);
 
-				logger.info("SKS file parsed. num_records={}, file={}", dataset.getEntities().size(), file.getAbsolutePath());
-			}
-			else
-			{
-				logger.warn("Ignoring file, which doen't match *.TXT. file={}", file.getAbsolutePath());
-			}
-		}
-	}
+        if (!recordType.equals(RECORD_TYPE_DEPARTMENT) && !recordType.equals(RECORD_TYPE_HOSPITAL))
+        {
+            throw new ParserException("Unknown record type. line=" + line);
+        }
+        
+        // Since the old record types do not have a operation code (and we are not
+        // interested in those records) we can ignore the line.
+        //
+        if (line.length() < OPERATION_CODE_INDEX + 1)
+        {
+            return null;
+        }
 
-	public Institution parseLine(String line) throws Exception
-	{
-		if (line.length() < NEW_FORMAT_LINE_LENGTH)
-		{
-			logger.debug("Ignoring old format SKS afd line. line_content={}", line);
-			return null;
-		}
+        // Determine the operation code.
+        //
+        char code = line.charAt(OPERATION_CODE_INDEX);
 
-		char code = line.charAt(OPERATION_CODE_INDEX);
+        if (code == OPERATION_CODE_CREATE || code == OPERATION_CODE_UPDATE)
+        {
+            // Create and update are handled the same way.
 
-		if (code == ' ')
-		{
-			logger.debug("Operation code cannot be derived from line. Must be an old record. The line is ignored.");
-			return null;
-		}
-		else if (code == DELETE_OPERATION_CODE)
-		{
-			// TODO: This should be discussed with Lakeside.
+            InstitutionType type = recordType.equals(RECORD_TYPE_DEPARTMENT) ? InstitutionType.HOSPITAL_DEPARTMENT : InstitutionType.HOSPITAL;
 
-			logger.warn("Received an SKS entry with action code (2) (DELETE). Ignoring as PEM does.");
-			return null;
-		}
-		else if (code == CREATE_OPERATION_CODE || code == UPDATE_OPERATION_CODE)
-		{
-			// Create and Update are handled the same way.
+            Institution institution = new Institution(type);
+            
+            // TODO: Rename to 'SKSkode' so it matches the input. This is generally what we should
+            // do for all parsers to get consistency and transparency.
+            //
+            institution.setNummer(line.substring(SKS_CODE_START_INDEX, SKS_CODE_END_INDEX).trim());
+            
+            // FIXME: This does not make sense for validFrom and validTo. Use other fields.
+            //
+            institution.setValidFrom(dateFormat.parseDateTime(line.substring(23, 31)).toDate());
+            institution.setValidTo(dateFormat.parseDateTime(line.substring(39, 47)).toDate());
 
-			String entryType = line.substring(ENTRY_TYPE_START_INDEX, ENTRY_TYPE_END_INDEX);
+            // TODO: Rename to 'Kodetekst' so it matches the input.
+            //
+            institution.setNavn(line.substring(CODE_TEXT_START_INDEX, CODE_TEXT_END_INDEX).trim());
 
-			if (!entryType.equals(HOSPITAL_DEPARTMENT_TYPE) && !entryType.equals(HOSPITAL_TYPE))
-			{
-				throw new Exception("Received an SKS entry with no 'afd' or 'shg' prefixing SKS. line_content=" + line);
-			}
-
-			InstitutionType type = (entryType.equals(HOSPITAL_DEPARTMENT_TYPE)) ? InstitutionType.HOSPITAL_DEPARTMENT : InstitutionType.HOSPITAL;
-
-			Institution institution = new Institution(type);
-			institution.setNummer(line.substring(SKS_NUMBER_START_INDEX, SKS_NUMBER_END_INDEX).trim());
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-
-			institution.setValidFrom(dateFormat.parse(line.substring(23, 31)));
-			institution.setValidTo(dateFormat.parse(line.substring(39, 47)));
-
-			institution.setNavn(line.substring(NAME_START_INDEX, NAME_END_INDEX).trim());
-
-			return institution;
-		}
-		else
-		{
-			throw new Exception("SKS parser encountered an unkown operation code. code=" + code);
-		}
-	}
+            return institution;
+        }
+        else if (code == OPERATION_CODE_NONE)
+        {
+            return null;
+        }
+        else
+        {
+            throw new ParserException("SKS parser encountered an unkown operation code. code=" + code);
+        }
+    }
 }

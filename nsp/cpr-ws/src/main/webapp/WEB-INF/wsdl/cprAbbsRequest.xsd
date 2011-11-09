@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" 
-	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://nsi.dk/cprabbs/2011/10">
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://nsi.dk/cprabbs/2011/10" xmlns:tns="http://nsi.dk/cprabbs/2011/10">
 
-	<element name="CprAbbsRequest">
-		<complexType>
-			<sequence>
-				<element name="since" type="xsd:dateTime" minOccurs="0" />
-			</sequence>
-		</complexType>
-	</element>
+  <element name="CprAbbsRequest" type="tns:CprAbbsRequestType" />
+
+  <complexType name="CprAbbsRequestType">
+    <sequence>
+      <element name="since" type="xsd:dateTime" minOccurs="0" />
+    </sequence>
+  </complexType>
 </schema>

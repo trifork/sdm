@@ -232,7 +232,7 @@ public class SikredeIntegrationTest
 	{
 		SikredeParser parser = new SikredeParser();
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		parser.importFiles(new File[] { file }, new AuditingPersister(con));
+		parser.parse(new File[] { file }, new AuditingPersister(con), null);
         //con.commit();
 	}
 }

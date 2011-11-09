@@ -27,14 +27,18 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public abstract class CPREntity extends AbstractStamdataEntity {
     SikredeDataset dataset;
     String cpr;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
     public String getCpr() {
         return cpr;
@@ -46,7 +50,7 @@ public abstract class CPREntity extends AbstractStamdataEntity {
 
     @Override
     public Date getValidTo() {
-        return DateUtils.THE_END_OF_TIME;
+        return Dates.THE_END_OF_TIME;
     }
 
     public SikredeDataset getDataset() {

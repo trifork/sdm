@@ -26,8 +26,8 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyyMMddHHmm;
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.Dates.yyyyMMddHHmm;
+import static com.trifork.stamdata.importer.util.Dates.yyyy_MM_dd;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -346,22 +346,6 @@ public class CPRParser
 	{
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		return sdf.parse(cut(line, 19, 27));
-	}
-
-
-	private static Date getForrigeIkraftDato(String line) throws Exception
-	{
-		// TODO (thb): Why would you return null here if the line is less then
-		// 25 chars?
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-		if (line.length() >= 25)
-		{
-			return sdf.parse(cut(line, 27, 35));
-		}
-
-		return null;
 	}
 
 

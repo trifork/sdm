@@ -26,7 +26,7 @@
 
 package com.trifork.stamdata.importer.jobs.cpr;
 
-import static com.trifork.stamdata.importer.util.DateUtils.yyyy_MM_dd;
+import static com.trifork.stamdata.importer.util.Dates.yyyy_MM_dd;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -43,16 +43,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
-import org.hamcrest.Matchers;
-import org.hamcrest.generator.HamcrestFactoryWriter;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class CPRIntegrationTest
@@ -71,11 +68,6 @@ public class CPRIntegrationTest
 		statement.execute("truncate table ForaeldreMyndighedRelation");
 		statement.execute("truncate table UmyndiggoerelseVaergeRelation");
 		statement.execute("truncate table PersonIkraft");
-		statement.execute("truncate table Udrejseoplysninger");
-		statement.execute("truncate table Statsborgerskab");
-		statement.execute("truncate table Foedselsregistreringsoplysninger");
-		statement.execute("truncate table KommunaleForhold");
-		statement.execute("truncate table AktuelCivilstand");
 		statement.execute("truncate table ChangesToCPR");
 	}
 
@@ -243,7 +235,7 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
 		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("ValidFrom"));
-		assertEquals(DateUtils.THE_END_OF_TIME, rs.getDate("ValidTo"));
+		assertEquals(Dates.THE_END_OF_TIME, rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
@@ -356,6 +348,6 @@ public class CPRIntegrationTest
 	private void importFile(String fileName) throws Exception
 	{
 		File file = FileUtils.toFile(getClass().getClassLoader().getResource(fileName));
-		new CPRImporter().importFiles(new File[] { file }, new AuditingPersister(connection));
+		new CPRImporter().parse(new File[] { file }, new AuditingPersister(connection), null);
 	}
 }

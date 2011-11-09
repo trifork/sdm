@@ -46,7 +46,7 @@ import com.trifork.stamdata.importer.jobs.sor.xmlmodel.HealthInstitutionEntity;
 import com.trifork.stamdata.importer.jobs.sor.xmlmodel.InstitutionOwnerEntity;
 import com.trifork.stamdata.importer.jobs.sor.xmlmodel.OrganizationalUnitEntity;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 
 public class SOREventHandler extends DefaultHandler
@@ -66,11 +66,11 @@ public class SOREventHandler extends DefaultHandler
 
 	private void createDatasets(Date snapshotDate)
 	{
-		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, DateUtils.THE_END_OF_TIME));
-		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, DateUtils.THE_END_OF_TIME));
+		dataSets.setApotekDS(new CompleteDataset<Apotek>(Apotek.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setYderDS(new CompleteDataset<Yder>(Yder.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setPraksisDS(new CompleteDataset<Praksis>(Praksis.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setSygehusDS(new CompleteDataset<Sygehus>(Sygehus.class, snapshotDate, Dates.THE_END_OF_TIME));
+		dataSets.setSygehusAfdelingDS(new CompleteDataset<SygehusAfdeling>(SygehusAfdeling.class, snapshotDate, Dates.THE_END_OF_TIME));
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class SOREventHandler extends DefaultHandler
 			}
 			catch (ParseException e)
 			{
-				throw (new SAXException(e));
+				throw new SAXException(e);
 			}
 		}
 		else if ("InstitutionOwnerEntity".equals(qName))
@@ -136,7 +136,7 @@ public class SOREventHandler extends DefaultHandler
 						// Yder for Lægepraksis.
 
 						Yder yder = XMLModelMapper.toYder(oue);
-						dataSets.getYderDS().addEntity(yder);
+						dataSets.getYderDS().add(yder);
 
 						if (!oue.getSons().isEmpty())
 						{
@@ -144,7 +144,7 @@ public class SOREventHandler extends DefaultHandler
 						}
 					}
 
-					dataSets.getPraksisDS().addEntity(praksis);
+					dataSets.getPraksisDS().add(praksis);
 				}
 				else if (institutuinEntity.getInstitutionType() == 22232009L)
 				{
@@ -157,7 +157,7 @@ public class SOREventHandler extends DefaultHandler
 						addAfdelinger(oue);
 					}
 
-					dataSets.getSygehusDS().addEntity(s);
+					dataSets.getSygehusDS().add(s);
 				}
 				else if (institutuinEntity.getInstitutionType() == 264372000L)
 				{
@@ -166,7 +166,7 @@ public class SOREventHandler extends DefaultHandler
 					for (OrganizationalUnitEntity oue : institutuinEntity.getOrganizationalUnitEntities())
 					{
 						Apotek a = XMLModelMapper.toApotek(oue);
-						dataSets.getApotekDS().addEntity(a);
+						dataSets.getApotekDS().add(a);
 					}
 				}
 			}
@@ -200,7 +200,7 @@ public class SOREventHandler extends DefaultHandler
 		{
 			// Ignore all 'SygehusAfdeling' with no SKS
 			SygehusAfdeling sa = XMLModelMapper.toSygehusAfdeling(oue);
-			dataSets.getSygehusAfdelingDS().addEntity(sa);
+			dataSets.getSygehusAfdelingDS().add(sa);
 
 			for (OrganizationalUnitEntity soue : oue.getSons())
 			{

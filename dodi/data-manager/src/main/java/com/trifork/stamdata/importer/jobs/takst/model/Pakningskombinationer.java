@@ -60,9 +60,9 @@ public class Pakningskombinationer extends TakstEntity
 	{
 		return informationspligtMarkering;
 	}
-
-	@Override
+	
 	@Id
+	@Override
 	@Column(name = "CID")
 	public String getKey()
 	{

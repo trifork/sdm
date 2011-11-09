@@ -42,9 +42,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
 
@@ -79,7 +80,7 @@ public class AutorisationImporter implements FileParser
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void importFiles(File[] files, Persister persister) throws Exception
+	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
 		// Make sure the file set has not been imported before.
 		// Check what the previous highest version is (the ValidFrom column).
@@ -142,9 +143,9 @@ public class AutorisationImporter implements FileParser
 			autorisation.setUddannelsesKode(st.nextToken());
 			
 			autorisation.setValidFrom(validFrom.toDate());
-			autorisation.setValidTo(DateUtils.THE_END_OF_TIME);
+			autorisation.setValidTo(Dates.THE_END_OF_TIME);
 			
-			dataset.addEntity(autorisation);
+			dataset.add(autorisation);
 		}
 
 		return dataset;

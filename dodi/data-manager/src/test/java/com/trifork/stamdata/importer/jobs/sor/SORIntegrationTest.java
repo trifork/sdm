@@ -91,7 +91,7 @@ public class SORIntegrationTest
 		SORImporter importer = new SORImporter();
 		File[] files = new File[] { fullSor };
 
-		importer.importFiles(files, new AuditingPersister(con));
+		importer.parse(files, new AuditingPersister(con), null);
 
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Praksis");

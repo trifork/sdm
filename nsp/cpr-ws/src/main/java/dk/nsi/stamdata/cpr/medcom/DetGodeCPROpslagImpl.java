@@ -24,35 +24,46 @@
  */
 package dk.nsi.stamdata.cpr.medcom;
 
-import com.google.inject.Inject;
-import com.sun.xml.ws.developer.SchemaValidation;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.models.cpr.Person;
-import com.trifork.stamdata.models.sikrede.Sikrede;
-import com.trifork.stamdata.models.sikrede.SikredeYderRelation;
-import com.trifork.stamdata.models.sikrede.Yderregister;
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
-import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import dk.nsi.stamdata.cpr.ws.*;
-import dk.sosi.seal.model.SystemIDCard;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.inject.Inject;
+import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import com.trifork.stamdata.persistence.Transactional;
+
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.SoapUtils;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
+import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.sosi.seal.model.SystemIDCard;
 
 
-@SchemaValidation
+@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag")
 @GuiceWebservice
-@WebService(serviceName = "DetGodeCprOpslag", endpointInterface = "dk.nsi.stamdata.cpr.ws.DetGodeCPROpslag")
+@SchemaValidation
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {
 	private static final Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
@@ -78,6 +89,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	// TODO: Headers should be set to outgoing. See BRS for correct way of
 	// setting these.
 	@Override
+	@Transactional
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -111,6 +123,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 
 	@Override
+	@Transactional
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
 	{
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -135,8 +148,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		Person person = fetchPersonWithPnr(pnr);
 
 		SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr + "-C");
-		Yderregister yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
-
+		
+		// If the relation is not found we have to use fake data to satisfy the
+		// output format.
+		
+		Yderregister yderregister = null;
+		
+		if (sikredeYderRelation != null)
+		{
+		    yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
+		}
+		
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
 		PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
 
@@ -220,31 +242,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 			throw SoapUtils.newServerErrorFault(e);
 		}
 		return yderregister;
-	}
-
-
-	@SuppressWarnings("unused")
-	private Sikrede fetchSikredeWithPnr(String cpr)
-	{
-		checkNotNull(cpr, "cpr");
-
-		Sikrede sikrede = null;
-
-		try
-		{
-			// sikrede = fetcher.fetch(Sikrede.class, pnr); //TODO
-		}
-		catch (Exception e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
-
-		if (sikrede == null)
-		{
-			throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
-
-		return sikrede;
 	}
 
 

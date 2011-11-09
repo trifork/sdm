@@ -32,8 +32,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 @Entity
 public class Yderregister extends AbstractStamdataEntity
@@ -52,6 +55,7 @@ public class Yderregister extends AbstractStamdataEntity
 	private String histID;
 	private Date tilgangDato;
 	private Date afgangDato;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	@Id
 	@Column
@@ -216,6 +220,6 @@ public class Yderregister extends AbstractStamdataEntity
 	public Date getValidTo()
 	{
 		if (afgangDato != null) return afgangDato;
-		return DateUtils.THE_END_OF_TIME;
+		return Dates.THE_END_OF_TIME;
 	}
 }

@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -197,7 +198,7 @@ public class DoseringsforslagImporterIntegrationTest
 		importer = new DosageSuggestionImporter();
 		File[] files = new File[] { versionFile, drugsFile, dosageStructureFile, unitsFile, relationFile };
 
-		importer.importFiles(files, persister);
+		importer.parse(files, persister, null);
 	}
 
 	public <T extends TemporalEntity> T getFirst(Class<T> type)
@@ -239,5 +240,12 @@ public class DoseringsforslagImporterIntegrationTest
 		{
 			return connection;
 		}
+
+        @Override
+        public void persist(Object entity) throws SQLException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+        {
+            // TODO Auto-generated method stub
+            
+        }
 	}
 }

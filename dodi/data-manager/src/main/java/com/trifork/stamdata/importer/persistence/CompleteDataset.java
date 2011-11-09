@@ -44,9 +44,9 @@ public class CompleteDataset<T extends TemporalEntity> extends Dataset<T>
 	private final Date ValidFrom;
 	private final Date ValidTo;
 
-	protected CompleteDataset(Class<T> type, List<T> entities, Date validFrom, Date ValidTo)
+	protected CompleteDataset(Class<T> type, List<T> records, Date validFrom, Date ValidTo)
 	{
-		super(entities, type);
+		super(records, type);
 
 		this.ValidFrom = validFrom;
 		this.ValidTo = ValidTo;

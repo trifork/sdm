@@ -26,18 +26,14 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getIdMethod;
-import static com.trifork.stamdata.importer.persistence.AbstractStamdataEntity.getOutputFieldName;
-
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Entity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.models.TemporalEntity;
 
@@ -46,26 +42,23 @@ import com.trifork.stamdata.models.TemporalEntity;
  */
 public class Dataset<T extends TemporalEntity>
 {
-	private Map<Object, List<T>> entities = Maps.newHashMap();
-	private Class<T> type;
+    private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
+    
+	private final Map<Object, T> entities = new HashMap<Object, T>();
+	private final Class<T> type;
 
 	public Dataset(Class<T> type)
 	{
-		this.type = type;
+	    this.type = type;
 	}
 
-	public Dataset(List<T> entities, Class<T> type)
+	public Dataset(List<T> records, Class<T> type)
 	{
-		this.type = type;
+		this(type);
 
-		for (T entity : entities)
+		for (T record : records)
 		{
-			List<T> entityList = Lists.newArrayList();
-			entityList.add(entity);
-			
-			Object key = Entities.getEntityID(entity);
-			
-			this.entities.put(key, entityList);
+			add(record);
 		}
 	}
 
@@ -76,25 +69,17 @@ public class Dataset<T extends TemporalEntity>
 
 	public Collection<T> getEntities()
 	{
-		Collection<T> allEnts = new ArrayList<T>();
-		for (List<T> ents : entities.values())
-		{
-			allEnts.addAll(ents);
-		}
-		return allEnts;
+		return entities.values();
 	}
 
 	public T getEntityById(Object id)
 	{
-		List<T> ents = entities.get(id);
-		if (ents == null) return null;
-		if (ents.size() == 1) return ents.get(0);
-		throw new RuntimeException("Multiple entities exist with entityid " + id);
+		return entities.get(id);
 	}
 
-	public List<T> getEntitiesById(Object id)
+	public boolean containsKey(Object id)
 	{
-		return entities.get(id);
+		return entities.containsKey(id);
 	}
 
 	public Class<T> getType()
@@ -102,48 +87,20 @@ public class Dataset<T extends TemporalEntity>
 		return type;
 	}
 
-	/**
-	 * @return the name that this entity type (class) should be displayed with
-	 *         when output
-	 */
-	public String getEntityTypeDisplayName()
-	{
-		return getEntityTypeDisplayName(type);
-	}
-
-	public static String getEntityTypeDisplayName(Class<? extends TemporalEntity> type)
-	{
-		Entity output = type.getAnnotation(Entity.class);
-		if (output != null && !output.name().isEmpty()) return output.name();
-		return type.getSimpleName();
-	}
-
-	public void removeEntities(List<T> entities)
-	{
-		for (T entity : entities)
-		{
-			Object key = Entities.getEntityID(entity);
-			this.entities.remove(key);
-		}
-	}
-
-	public void addEntity(T entity)
+	public void add(T entity)
 	{
 		Object id = Entities.getEntityID(entity);
-
-		List<T> ents = entities.get(id);
-
-		if (ents == null)
+		Object previousValue = entities.put(id, entity);
+		
+		if (previousValue != null)
 		{
-			ents = new ArrayList<T>();
-			entities.put(id, ents);
+		    // DO NOT CHANGE THIS TO 'WARN' IT IS AN ERROR.
+		    //
+		    // We might not be able to fix this for the given register but it should
+		    // be handled in the future. At least it should be an conscious choice
+		    // that we ignore double keys in a register.
+		    
+		    logger.error("Two entries in a single import contains the same id. type={}, id={}", type.getSimpleName(), id);
 		}
-
-		ents.add(entity);
-	}
-
-	public static String getIdOutputName(Class<? extends TemporalEntity> clazz)
-	{
-		return getOutputFieldName(getIdMethod(clazz));
 	}
 }

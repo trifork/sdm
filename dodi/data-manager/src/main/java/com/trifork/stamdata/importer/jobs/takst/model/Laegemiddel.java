@@ -93,7 +93,7 @@ public class Laegemiddel extends TakstEntity
 	@Column(name = "ATCTekst")
 	public String getATCTekst()
 	{
-		ATCKoderOgTekst atcObj = takst.getEntity(ATCKoderOgTekst.class, atc);
+		ATCKoderOgTekst atcObj = takst.getEntity(atc, ATCKoderOgTekst.class);
 		if (atcObj == null) return null;
 		
 		return atcObj.getTekst();
@@ -121,7 +121,7 @@ public class Laegemiddel extends TakstEntity
 	@Column(name = "FormTekst")
 	public String getForm()
 	{
-		LaegemiddelformBetegnelser lmfb = takst.getEntity(LaegemiddelformBetegnelser.class, formKode);
+		LaegemiddelformBetegnelser lmfb = takst.getEntity(formKode, LaegemiddelformBetegnelser.class);
 		
 		if (lmfb == null) return null;
 		

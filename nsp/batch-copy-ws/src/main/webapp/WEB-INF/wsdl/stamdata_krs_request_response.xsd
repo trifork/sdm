@@ -1,0 +1,57 @@
+<schema targetNamespace="http://nsi.dk/2011/10/21/StamdataKrs/"
+  xmlns:sd="http://nsi.dk/2011/10/21/StamdataKrs/" xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <element name="ReplicationRequest" type="sd:ReplicationRequestType" />
+
+  <complexType name="ReplicationRequestType">
+    <sequence>
+      <element name="register" type="string" />
+      <element name="datatype" type="string" />
+      <element name="version" type="unsignedInt" />
+
+      <element name="offset" type="string">
+        <annotation>
+          <documentation>
+            The offset in the register's history from which
+            to start.
+          </documentation>
+        </annotation>
+      </element>
+      <element name="maxRecords" type="unsignedInt" minOccurs="0" maxOccurs="1">
+        <annotation>
+          <documentation>The maximum number of records to output. You
+            are not guaranteed to receive the maximum, but it will never
+            be exceeded.
+          </documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+
+  <element name="ReplicationResponse" type="sd:ReplicationResponseType"></element>
+
+  <complexType name="ReplicationResponseType">
+    <sequence>
+      <any id="feed" processContents="lax">
+        <annotation>
+          <documentation>
+            The output format will always be an ATOM 1.0
+            feed.
+            ATOM 1.0 cannot be described by XML Schema.
+
+            The entires of the feed will contain the requested
+            datatype.
+          </documentation>
+        </annotation>
+      </any>
+    </sequence>
+  </complexType>
+  
+  <element name="ReplicationFault" type="string" />
+  
+  <complexType name="ReplicationFaultType">
+    <all>
+      <element name="errorMessage" type="string"/>
+    </all>
+  </complexType>
+</schema>

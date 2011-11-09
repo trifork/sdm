@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wsdl:definitions
+  targetNamespace="http://nsi.dk/2011/10/21/StamdataKrs/"
+  xmlns:tns="http://nsi.dk/2011/10/21/StamdataKrs/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+  xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"
+  >
+  
+  <wsdl:types>
+    <!-- Den gode webservice schemas. --> 
+    <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+		<xs:include schemaLocation="dgws/wsse.xsd" />
+	</xs:schema>
+	<xs:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+		<xs:include schemaLocation="dgws/medcom.xsd" />
+	</xs:schema>
+	
+    <!-- The request and response schemas. -->
+    <xs:schema targetNamespace="http://nsi.dk/2011/10/21/StamdataKrs/">
+    	<xs:include schemaLocation="stamdata_krs_request_response.xsd" />
+    </xs:schema>
+    
+    <!-- NB: This is added to avoid JAX-WS mapping date to XMLGregorialCalendar, which does not play nice with SEAL. -->
+    <xs:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/" jaxb:version="2.1" elementFormDefault="qualified">
+		<xs:annotation>
+			<xs:appinfo>
+				<jaxb:globalBindings>
+					<jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+						parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+						printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+				</jaxb:globalBindings>
+			</xs:appinfo>
+		</xs:annotation>
+	</xs:schema>
+  </wsdl:types>
+ 
+  <wsdl:message name="ReplicationIn">
+  	<wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+  	<wsdl:part name="parameters" element="tns:ReplicationRequest" />
+  </wsdl:message>
+ 
+  <wsdl:message name="ReplicationOut">
+    <wsdl:part name="wsseHeader" element="wsse:Security" />
+    <wsdl:part name="medcomHeader" element="dgws:Header" />
+    <wsdl:part name="parameters" element="tns:ReplicationResponse"/>
+  </wsdl:message>
+  
+  <wsdl:message name="ReplicationFault">
+    <wsdl:part name="fault" element="tns:ReplicationFault" />
+  </wsdl:message>
+  
+  <wsdl:portType name="StamdataReplication">
+    <wsdl:operation name="replicate">
+      <wsdl:input message="tns:ReplicationIn" />
+      <wsdl:output message="tns:ReplicationOut" />
+      <wsdl:fault message="tns:ReplicationFault" name="ReplicationFault" />
+    </wsdl:operation>
+  </wsdl:portType>
+ 
+  <wsdl:binding name="StamdataReplicationSoap11Binding" type="tns:StamdataReplication">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="replicate">
+        <soap:operation soapAction="http://nsi.dk/2011/10/21/StamdataKrs/replicate" style="document"/> 
+        <wsdl:input>
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:ReplicationIn" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:ReplicationIn" part="medcomHeader" use="literal"/>
+        </wsdl:input>
+        <wsdl:output>
+            <soap:body use="literal" parts="parameters"/>
+            <soap:header message="tns:ReplicationOut" part="wsseHeader" use="literal"/>
+            <soap:header message="tns:ReplicationOut" part="medcomHeader" use="literal"/>
+        </wsdl:output>
+        <wsdl:fault name="ReplicationFault">
+          <soap:fault use="literal" name="ReplicationFault" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+ 
+  <wsdl:service name="StamdataReplicationService">
+    <wsdl:port name="StamdataReplication" binding="tns:StamdataReplicationSoap11Binding">
+      <soap:address location="http://localhost/StamdataReplicationService" />
+    </wsdl:port>
+  </wsdl:service>
+ 
+</wsdl:definitions>

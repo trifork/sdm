@@ -24,23 +24,32 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import com.google.inject.*;
+import static com.google.inject.name.Names.bindProperties;
+
+import java.util.Set;
+
+import com.google.inject.AbstractModule;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Stage;
+import com.google.inject.TypeLiteral;
+import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.MonitoringModule;
-import dk.nsi.dgws.DGWSFilterSystemIDCardProvider;
-import dk.nsi.dgws.DgwsIdcardFilter;
+import com.trifork.stamdata.persistence.PersistenceModule;
+import com.trifork.stamdata.persistence.Persistent;
+
+import dk.nsi.dgws.DenGodeWebServiceFilter;
+import dk.nsi.dgws.DenGodeWebServiceModule;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsClient;
-import dk.sosi.seal.model.SystemIDCard;
-import org.hibernate.Session;
-
-import java.util.Set;
-
-import static com.google.inject.name.Names.bindProperties;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -72,7 +81,14 @@ public class ComponentController extends GuiceServletContextListener
 
 			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class);
 
-			bind(Session.class).toProvider(HibernatePersistenceFilter.class);
+			install(new PersistenceModule());
+			
+			// Bind the classes that Hibernate needs to manager.
+			
+			Multibinder<Object> persistentClasses = Multibinder.newSetBinder(binder(), Object.class, Persistent.class); 
+			persistentClasses.addBinding().to(Person.class);
+			persistentClasses.addBinding().to(SikredeYderRelation.class);
+			persistentClasses.addBinding().to(Yderregister.class);
 		}
 	}
 
@@ -91,7 +107,7 @@ public class ComponentController extends GuiceServletContextListener
 			// we bind the class here and have Guice check at start-up if
 			// if can be instantiated.
 			
-			bind(CprAbbsClient.class);
+			bind(CprSubscriptionClient.class);
 
 			// Tell the monitoring module how to monitor the component.
 			// All monitor pages are bound to the URL /status.
@@ -102,12 +118,9 @@ public class ComponentController extends GuiceServletContextListener
 			// Filter everything through the DGWS filter,
 			// but exclude the status page.
 
-			filterRegex("(?!/status)/.*").through(DgwsIdcardFilter.class);
-			bind(SystemIDCard.class).toProvider(DGWSFilterSystemIDCardProvider.class);
-			
-			// Transactions are managed by the session filter.
-			
-			filter("/*").through(HibernatePersistenceFilter.class);
+			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
+
+			install(new DenGodeWebServiceModule());
 		}
 	}
 }

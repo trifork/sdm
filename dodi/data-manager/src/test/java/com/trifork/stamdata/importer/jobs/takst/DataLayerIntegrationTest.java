@@ -23,216 +23,212 @@
  * National Board of e-Health (NSI). All Rights Reserved.
  */
 
-
 package com.trifork.stamdata.importer.jobs.takst;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
-
-import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.importer.persistence.Persister;
-
+import com.trifork.stamdata.importer.util.Dates;
 
 /**
- * Integration test of the database access layer. Tests that a dataset can be
- * written to the database
+ * Integration test of the database access layer. Tests that a dataset can be written to the
+ * database
  * 
  * @author Anders Bo Christensen
  * 
  */
 public class DataLayerIntegrationTest
 {
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	private Connection connection;
+    private Connection connection;
+    private AuditingPersister persister;
+    private Statement statement;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		connection = MySQLConnectionManager.getAutoCommitConnection();
+    @Before
+    public void setUp() throws Exception
+    {
+        connection = MySQLConnectionManager.getAutoCommitConnection();
 
-		Statement statement = connection.createStatement();
-		statement.execute("truncate table TakstVersion");
-		statement.execute("truncate table Laegemiddel");
-		statement.execute("truncate table Pakning");
-		statement.execute("truncate table Administrationsvej");
-		statement.execute("truncate table ATC");
-		statement.execute("truncate table IndikationATCRef");
-		statement.execute("truncate table Indikation");
-		statement.execute("truncate table LaegemiddelDoseringRef");
-		statement.execute("truncate table Klausulering");
-		statement.execute("truncate table Medicintilskud");
-		statement.execute("truncate table Dosering");
-		statement.execute("truncate table Formbetegnelse");
-		statement.execute("truncate table Tidsenhed");
-		statement.execute("truncate table Pakningsstoerrelsesenhed");
-		statement.execute("truncate table Styrkeenhed");
-		statement.execute("truncate table LaegemiddelAdministrationsvejRef");
-		statement.execute("truncate table Beregningsregler");
-		statement.execute("truncate table EmballagetypeKoder");
-		statement.execute("truncate table Enhedspriser");
-		statement.execute("truncate table Indholdsstoffer");
-		statement.execute("truncate table Laegemiddelnavn");
-		statement.execute("truncate table Opbevaringsbetingelser");
-		statement.execute("truncate table OplysningerOmDosisdispensering");
-		statement.execute("truncate table Pakningskombinationer");
-		statement.execute("truncate table PakningskombinationerUdenPriser");
-		statement.execute("truncate table Priser");
-		statement.execute("truncate table Rekommandationer");
-		statement.execute("truncate table SpecialeForNBS");
-		statement.execute("truncate table Substitution");
-		statement.execute("truncate table SubstitutionAfLaegemidlerUdenFastPris");
-		statement.execute("truncate table Tilskudsintervaller");
-		statement.execute("truncate table TilskudsprisgrupperPakningsniveau");
-		statement.execute("truncate table UdgaaedeNavne");
-		statement.execute("truncate table Udleveringsbestemmelser");
-		statement.execute("truncate table Firma");
+        statement = connection.createStatement();
+        statement.execute("truncate table TakstVersion");
+        statement.execute("truncate table Laegemiddel");
+        statement.execute("truncate table Pakning");
+        statement.execute("truncate table Administrationsvej");
+        statement.execute("truncate table ATC");
+        statement.execute("truncate table IndikationATCRef");
+        statement.execute("truncate table Indikation");
+        statement.execute("truncate table LaegemiddelDoseringRef");
+        statement.execute("truncate table Klausulering");
+        statement.execute("truncate table Medicintilskud");
+        statement.execute("truncate table Dosering");
+        statement.execute("truncate table Formbetegnelse");
+        statement.execute("truncate table Tidsenhed");
+        statement.execute("truncate table Pakningsstoerrelsesenhed");
+        statement.execute("truncate table Styrkeenhed");
+        statement.execute("truncate table LaegemiddelAdministrationsvejRef");
+        statement.execute("truncate table Beregningsregler");
+        statement.execute("truncate table EmballagetypeKoder");
+        statement.execute("truncate table Enhedspriser");
+        statement.execute("truncate table Indholdsstoffer");
+        statement.execute("truncate table Laegemiddelnavn");
+        statement.execute("truncate table Opbevaringsbetingelser");
+        statement.execute("truncate table OplysningerOmDosisdispensering");
+        statement.execute("truncate table Pakningskombinationer");
+        statement.execute("truncate table PakningskombinationerUdenPriser");
+        statement.execute("truncate table Priser");
+        statement.execute("truncate table Rekommandationer");
+        statement.execute("truncate table SpecialeForNBS");
+        statement.execute("truncate table Substitution");
+        statement.execute("truncate table SubstitutionAfLaegemidlerUdenFastPris");
+        statement.execute("truncate table Tilskudsintervaller");
+        statement.execute("truncate table TilskudsprisgrupperPakningsniveau");
+        statement.execute("truncate table UdgaaedeNavne");
+        statement.execute("truncate table Udleveringsbestemmelser");
+        statement.execute("truncate table Firma");
 
-		statement.close();
+        // We don't want an auto commit connection for the tests.
 
-		// We don't want an autocommit connection for the tests.
+        connection.setAutoCommit(false);
 
-		connection.setAutoCommit(false);
-	}
+        persister = new AuditingPersister(connection);
+    }
 
-	@After
-	public void tearDown() throws Exception
-	{
-		connection.rollback();
-		connection.close();
-	}
+    @After
+    public void tearDown() throws Exception
+    {
+        connection.commit();
+        connection.close();
+    }
 
-	@Test
-	public void ImportTest() throws Exception
-	{
-		// Arrange
-		Takst takst = parseTakst("data/takst/initial");
+    @Test
+    public void simpleImportOfInitilDataset() throws Exception
+    {
+        Takst takst = parse("data/takst/initial");
 
-		Statement statement = connection.createStatement();
-		AuditingPersister versionedDao = new AuditingPersister(connection);
+        persister.persistCompleteDataset(takst.getDatasets());
 
-		// Act
-		versionedDao.persistCompleteDataset(takst.getDatasets());
+        assertThat(count("Laegemiddel"), is(100));
+    }
 
-		// Assert
-		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
+    @Test
+    public void updateANameShouldResultInTheOldRecordBeingInvalidated() throws Exception
+    {
+        Takst initialDataset = parse("data/takst/initial");
+        persister.persistCompleteDataset(initialDataset.getDatasets());
+        connection.commit();
 
-		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin';");
+        Takst updateDataset = parse("data/takst/update");
+        persister.persistCompleteDataset(updateDataset.getDatasets());
+        connection.commit();
 
-		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+        int numOfRecords = 100;
+        int numOfChangesToExisting = 1;
 
-		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
-		
-		statement.close();
-	}
+        // The overwritten record should be kept but have its validity period
+        // set to validTo = validFrom.
 
-	@Test
-	public void UpdateTest() throws Exception
-	{
-		// Arrange
-		Takst takstinit = parseTakst("data/takst/initial");
-		Takst takstupd = parseTakst("data/takst/update");
+        assertThat(count("Laegemiddel"), is(numOfRecords + numOfChangesToExisting));
 
-		Statement statement = connection.createStatement();
-		AuditingPersister persister = new AuditingPersister(connection);
+        // The update changes the name 'Kemadrin' to 'Kemadron'.
 
-		// Act
-		persister.persistCompleteDataset(takstinit.getDatasets());
-		persister.persistCompleteDataset(takstupd.getDatasets());
+        ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin' AND DrugId = 28100009555");
+        rs.next();
+        assertThat(rs.getTimestamp("ValidTo").getTime(), is(new DateTime(2009, 7, 30, 0, 0).getMillis()));
 
-		// Assert
-		Assert.assertEquals(new Integer(93), getRecordCount(persister));
+        rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron' AND DrugId = 28100009555");
+        rs.next();
+        assertThat(rs.getTimestamp("ValidTo").getTime(), is(Dates.THE_END_OF_TIME.getTime()));
+    }
 
-		ResultSet rs = statement.executeQuery("select * from Laegemiddel where DrugName like 'Kemadrin'");
+    @Test
+    public void ifARecordIsMissingInANewDatasetTheCoresponsingRecordFromAnyExistingDatasetShouldBeInvalidated() throws Exception
+    {
+        Takst initDataset = parse("data/takst/initial");
+        persister.persistCompleteDataset(initDataset.getDatasets());
 
-		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+        Takst updatedDataset = parse("data/takst/delete");
+        persister.persistCompleteDataset(updatedDataset.getDatasets());
 
-		assertEquals(dateFormat.parse("2009-07-30 00:00:00"), rs.getTimestamp("ValidTo"));
+        assertThat(count("Laegemiddel"), is(100));
 
-		rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadron'");
-		
-		assertTrue("Did not find expected Laegemiddel Kemadron", rs.next());
+        ResultSet rs = connection.createStatement().executeQuery("SELECT * FROM Laegemiddel WHERE DrugId = 28100009555");
 
-		assertEquals(dateFormat.parse("2999-12-31 00:00:00"), rs.getTimestamp("ValidTo"));
+        rs.next();
 
-		statement.close();
-	}
+        assertThat(rs.getTimestamp("ValidTo").getTime(), is(new DateTime(2009, 7, 31, 0, 0).getMillis()));
+    }
 
-	@Test
-	public void DeleteTest() throws Exception
-	{
-		// Arrange
-		Takst takstinit = parseTakst("data/takst/initial");
-		Takst deleteupd = parseTakst("data/takst/delete");
+    @Test
+    public void canImportUdgaaedeNavneSubsetWhereEntriesHaveDifferentLetterCase() throws Exception
+    {
+        Takst takst = parse("data/takst/udgaaedeNavneTakst");
 
-		Statement statement = connection.createStatement();
-		AuditingPersister versionedDao = new AuditingPersister(connection);
+        persister.persistCompleteDataset(takst.getDatasets());
 
-		// Act
-		versionedDao.persistCompleteDataset(takstinit.getDatasets());
-		versionedDao.persistCompleteDataset(deleteupd.getDatasets());
+        connection.commit();
 
-		// Assert
-		Assert.assertEquals(new Integer(92), getRecordCount(versionedDao));
+        assertThat(count("UdgaaedeNavne"), is(3));
+    }
 
-		ResultSet rs = statement.executeQuery("SELECT * FROM Laegemiddel WHERE DrugName LIKE 'Kemadrin'");
-		
-		assertTrue("Did not find expected Laegemiddel Kemadrin", rs.next());
+    @Test
+    public void canImportACompleteDatasetWithAllDataTypes() throws Exception
+    {
+        Takst takst = parse("data/takst/realtakst");
 
-		Assert.assertEquals(dateFormat.parse("2009-07-31 00:00:00"), rs.getTimestamp("ValidTo"));
+        persister.persistCompleteDataset(takst.getDatasets());
 
-		statement.close();
-	}
+        connection.commit();
 
-	@Test
-	@Ignore
-	public void RealTest() throws Exception
-	{
-		// Arrange
-		Takst takstinit = parseTakst("data/takst/realtakst");
+        // See these numbers in the system.txt file.
 
-		Statement statement = connection.createStatement();
-		AuditingPersister versionedDao = new AuditingPersister(connection);
+        assertThat(count("Laegemiddel"), is(5492));
+        assertThat(count("Pakning"), is(8809));
 
-		// Act
-		versionedDao.persistCompleteDataset(takstinit.getDatasets());
+        // Udgaaede navne is a bit special. Since the keys we are able to
+        // construct from the line entries might create duplicates, we might
+        // not persist all entries. This is a problem stamdata solves itself
+        // (by keeping track of historical data). Removal of UdgaaedeNavne (LMS10)
+        // should be considered.
 
-		// Assert
-		statement.close();
-	}
+        int totalUdgaaedeNavnRecords = 2547;
+        int numDublicateEntriesOnSameDay = 7;
 
-	private Integer getRecordCount(Persister versionedDao) throws SQLException
-	{
-		Statement statement = connection.createStatement();
+        assertThat(count("UdgaaedeNavne"), is(totalUdgaaedeNavnRecords - numDublicateEntriesOnSameDay));
+    }
 
-		ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM Laegemiddel");
-		
-		rs.next();
-		
-		return rs.getInt(1);
-	}
+    //
+    // Helpers
+    //
 
-	private Takst parseTakst(String dir) throws Exception
-	{
-		File file = FileUtils.toFile(getClass().getClassLoader().getResource(dir));
-		TakstParser tp = new TakstParser();
-		Takst takst = tp.parseFiles(file.listFiles());
+    public int count(String tableName) throws SQLException
+    {
+        ResultSet rs = statement.executeQuery("SELECT COUNT(*) FROM " + tableName);
+        rs.next();
 
-		return takst;
-	}
+        int count = rs.getInt(1);
+
+        return count;
+    }
+
+    private Takst parse(String dir) throws Exception
+    {
+        File file = FileUtils.toFile(getClass().getClassLoader().getResource(dir));
+        TakstParser parser = new TakstParser();
+        Takst takst = parser.parseFiles(file.listFiles());
+
+        return takst;
+    }
 }

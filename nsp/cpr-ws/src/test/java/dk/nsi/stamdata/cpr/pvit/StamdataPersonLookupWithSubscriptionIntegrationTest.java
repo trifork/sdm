@@ -24,80 +24,72 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
-import com.google.common.collect.Maps;
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Stage;
-import com.trifork.stamdata.models.cpr.Person;
-import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
-import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
-import dk.nsi.stamdata.cpr.ws.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.net.URL;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
-import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
-import java.net.URL;
-import java.util.*;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Stage;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
+import dk.nsi.stamdata.cpr.Factories;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsFacadeStubImplementation;
+import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscriptionService;
 
 
 public class StamdataPersonLookupWithSubscriptionIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
 {
 	public static final QName PVIT_WITH_SUBSCRIPTIONS_SERVICE = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupWithSubscriptionService");
-
-	public static final String REQUEST_CVR = "12345678";
-
-	private StamdataPersonLookupWithSubscription client;
+	public static final String CLIENT_CVR = "12345678";
 
 	@Inject
 	private Session session;
 
-	private Holder<Security> securityHolder;
-	private Holder<Header> medcomHolder;
-	private static final String EXAMPLE_CPR = "1111111111";
-	private Set<Person> personsInDatabase;
 	private CprAbbsStubJettyServer cprAbbsServer;
+	
+	private List<Person> persons = Lists.newArrayList();
+	
+	private CprAbbsRequestType request = new CprAbbsRequestType();
+	private PersonLookupResponseType response;
+	
+	private String CHANGED_PERSON_CPR1 = "0101822231";
+	private String CHANGED_PERSON_CPR2 = "0101821234";
+	private String OTHER_CPR = "2705842246";
+
 
 	@Before
 	public void setUp() throws Exception
 	{
-		cprAbbsServer = new CprAbbsStubJettyServer();
+        Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
+
+	    cprAbbsServer = new CprAbbsStubJettyServer();
 		cprAbbsServer.startServer(8099);
-
-		personsInDatabase = new HashSet<Person>();
-
-		// Use Guice to inject dependencies.
-		Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
-
-		purgePersonTable();
-		createExamplePersonsInDatabase();
-
-		URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookupWithSubscription?wsdl");
-		StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(wsdlLocation, PVIT_WITH_SUBSCRIPTIONS_SERVICE);
-
-		// SEAL enforces that the XML prefixes are excatly
-		// as it creates them. So we have to make sure we
-		// don't change them.
-
-		serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
-
-		client = serviceCatalog.getStamdataPersonLookupWithSubscription();
-
-		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(REQUEST_CVR, "foo", "bar");
-		securityHolder = securityHeaders.getSecurity();
-		medcomHolder = securityHeaders.getMedcomHeader();
+		
+		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
+	    cprsToReturnForCvrs.put(CLIENT_CVR, Lists.newArrayList(CHANGED_PERSON_CPR1, CHANGED_PERSON_CPR2));
+	    CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
 	}
 
 
@@ -105,91 +97,43 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	public void tearDown() throws Exception
 	{
 		cprAbbsServer.stopServer();
-		session.disconnect();
 	}
+
 
 	@Test
 	public void returnsAllSubscribedPersonsForRequestWithoutSince() throws Exception
 	{
-		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
-		cprsToReturnForCvrs.put(REQUEST_CVR, Arrays.asList(EXAMPLE_CPR, "0101821234"));
-		CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
+	    persons.add(Factories.createPersonWithCPR(CHANGED_PERSON_CPR1));
+	    persons.add(Factories.createPersonWithCPR(CHANGED_PERSON_CPR2));
+	    persons.add(Factories.createPersonWithCPR(OTHER_CPR));
+	    
+		sendRequest();
 
-		CprAbbsRequest request = new CprAbbsRequest();
-		PersonLookupResponseType response = client.getSubscribedPersonDetails(securityHolder, medcomHolder, request);
-
-		assertEquals(2, response.getPersonInformationStructure().size());
-
-		assertPersonInReturnedResponseMatchesSomePersonFromDatabase(response.getPersonInformationStructure().get(0));
-		assertPersonInReturnedResponseMatchesSomePersonFromDatabase(response.getPersonInformationStructure().get(1));
+		assertThat(response.getPersonInformationStructure().size(), is(2));
+		
+		assertThat(response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier(), is(CHANGED_PERSON_CPR1));
+	    assertThat(response.getPersonInformationStructure().get(1).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier(), is(CHANGED_PERSON_CPR2));
 	}
 
 
-	private void purgePersonTable()
+	private void sendRequest() throws Exception
 	{
-		session.createSQLQuery("TRUNCATE Person").executeUpdate();
-	}
+	    session.getTransaction().begin();
+		session.createQuery("DELETE FROM Person").executeUpdate();
 
+        for (Person person : persons)
+        {
+            session.persist(person);
+        }
 
-	private void createExamplePersonsInDatabase()
-	{
-		createPerson(EXAMPLE_CPR, "M", "8464", "Thomas", "Greve", "Kristensen", new DateTime(1982, 4, 15, 0, 0));
-		createPerson("0101821234", "F", "8000", "Margit", "Greve", "Kristensen", new DateTime(1982, 1, 1, 0, 0));
-		createPerson("0101821232", "F", "8100", "Margit", "Greve", "Kristensen", new DateTime(1929, 1, 1, 0, 0));
-	}
-
-
-	private Person createPerson(String cpr, String koen, String vejkode, String fornavn, String mellemnavn,
-			String efternavn, DateTime foedselsdato)
-	{
-		Person person = Factories.createPersonWithoutAddressProtection();
-		person.cpr = cpr;
-		person.koen = koen;
-		person.vejKode = vejkode;
-		person.fornavn = fornavn;
-		if (mellemnavn != null)
-		{
-			person.mellemnavn = mellemnavn;
-		}
-		person.efternavn = efternavn;
-		person.foedselsdato = foedselsdato.toDate();
-
-		person.setModifiedDate(new Date());
-		person.setCreatedDate(new Date());
-		person.setValidFrom(DateTime.now().minusDays(1).toDate());
-		person.setValidTo(DateTime.now().plusDays(1).toDate());
-
-		savePerson(person);
-
-		return person;
-	}
-
-
-	private Person savePerson(Person person)
-	{
-		personsInDatabase.add(person);
-
-		session.getTransaction().begin();
-
-		session.save(person);
-
-		session.getTransaction().commit();
-
-		return person;
-	}
-
-
-	private void assertPersonInReturnedResponseMatchesSomePersonFromDatabase(PersonInformationStructureType information)
-	{
-		for (Person person : personsInDatabase) {
-			if (person.getCpr().equals(information.getRegularCPRPerson().getSimpleCPRPerson()
-					.getPersonCivilRegistrationIdentifier()) &&
-				person.getVejKode().equals(information.getPersonAddressStructure().getAddressComplete().getAddressAccess()
-					.getStreetCode())) {
-				return;
-			}
-		}
-
-		fail("No person i database matches " + information.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier() + " in response");
-	}
+        session.getTransaction().commit();
+        
+        URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookupWithSubscription?wsdl");
+        StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(wsdlLocation, PVIT_WITH_SUBSCRIPTIONS_SERVICE);
+        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
+        
+        SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CLIENT_CVR, "foo", "bar");
+        StamdataPersonLookupWithSubscription client = serviceCatalog.getStamdataPersonLookupWithSubscription();
+        response = client.getSubscribedPersonDetails(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
+    }
 }

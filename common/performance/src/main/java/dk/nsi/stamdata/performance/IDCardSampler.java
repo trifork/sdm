@@ -24,31 +24,26 @@
  */
 package dk.nsi.stamdata.performance;
 
-import java.io.StringWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
+import dk.nsi.stamdata.testing.MockSecureTokenService;
+import dk.sosi.seal.model.AuthenticationLevel;
+import dk.sosi.seal.model.Request;
+import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.xml.XmlUtil;
+
+import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
+import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
+import org.apache.jmeter.samplers.SampleResult;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
-import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
-import org.apache.jmeter.samplers.SampleResult;
-import org.w3c.dom.Node;
-
-import dk.nsi.stamdata.testing.MockSecureTokenService;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.SystemIDCard;
+import java.io.StringWriter;
 
 
 /**
- * This class is a JMeter plugin that contacts the STS and gets a valid IDCard.
- * 
- * TODO: Should take the STS URL and other parameters.
+ * This class is a JMeter plugin that makes a selfsigned, valid IDCard.
  * 
  * @author Thomas Børlum (thb@trifork.com)
  */
@@ -87,45 +82,17 @@ public class IDCardSampler extends AbstractJavaSamplerClient
 
 	private String createIdCard() throws Exception
 	{
-		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(SOSITestConstants.TEST_CVR);
+		SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(SOSITestConstants.TEST_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 		Request createNewRequest = MockSecureTokenService.createFactory().createNewRequest(false, "flowId");
 		createNewRequest.setIDCard(idCard);
 
 		StringWriter writer = new StringWriter();
 		Transformer t = TransformerFactory.newInstance().newTransformer();
 		t.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-
+		        
 		t.transform(new DOMSource(createNewRequest.serialize2DOMDocument().getFirstChild().getFirstChild()), new StreamResult(writer));
-
 		return writer.toString();
-	}
-
-
-	public static String send(String urlString, Node node) throws Exception
-	{
-		URL url = new URL(urlString);
-
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-
-		// Prepare for SOAP
-
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("SOAPAction", "\"\"");
-		connection.setRequestProperty("Content-Type", "text/xml; charset=utf-8;");
-
-		// Send the request XML.
-
-		connection.setDoOutput(true);
-		Transformer transformer = TransformerFactory.newInstance().newTransformer();
-		transformer.transform(new DOMSource(node), new StreamResult(connection.getOutputStream()));
-
-		// Read the response.
-
-		if (connection.getResponseCode() > 400)
-		{
-			throw new RuntimeException(new Scanner(connection.getErrorStream()).useDelimiter("\\A").next());
-		}
-
-		return new Scanner(connection.getInputStream()).useDelimiter("\\A").next();
+		
+		//return XmlUtil.node2String(createNewRequest.serialize2DOMDocument());
 	}
 }

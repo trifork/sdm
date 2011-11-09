@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>dk.nsi.stamdata</groupId>
 		<artifactId>stamdata-parent</artifactId>
-		<version>3.2.1-SNAPSHOT</version>
+		<version>3.3.1-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
 	</parent>
 
@@ -24,7 +23,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>chronos-maven-plugin</artifactId>
-				<version>1.0-SNAPSHOT</version>
 				<configuration>
 					<heap>768m</heap>
 					<permsize>256m</permsize>
@@ -38,7 +36,7 @@
 							<value>false</value>
 						</property>
 					</sysproperties>
-					<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
+					<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.5.1.zip</jMeterRemoteLocation>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -52,8 +50,8 @@
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
 						<artifactId>chronos-maven-plugin</artifactId>
-						<version>1.0-SNAPSHOT</version>
-						<configuration>
+                        <version>1.0-SNAPSHOT</version>
+                        <configuration>
 							<heap>768m</heap>
 							<permsize>256m</permsize>
 							<sysproperties>
@@ -76,22 +74,10 @@
 									<value>${port}</value>
 								</property>
 							</jmeterVariables>
-							<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip
+							<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.5.1.zip
 							</jMeterRemoteLocation>
 						</configuration>
 						<executions>
-							<!-- | CPR WS -->
-							<execution>
-								<id>cpr-ws</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>jmeter</goal>
-								</goals>
-								<configuration>
-									<dataid>authorization-ws-data</dataid>
-									<input>${basedir}/src/main/resources/CPR.jmx</input>
-								</configuration>
-							</execution>
 							<!-- -->
 							<!-- Authorization Lookup -->
 							<!-- -->
@@ -122,31 +108,31 @@
 								</configuration>
 							</execution>
 							<!-- -->
-							<!-- Replication Token -->
+							<!-- Replication Service -->
 							<!-- -->
 							<execution>
-								<id>replication-token-ws</id>
+								<id>replication-ws</id>
 								<phase>integration-test</phase>
 								<goals>
 									<goal>jmeter</goal>
 								</goals>
 								<configuration>
-									<dataid>replication-token-ws-data</dataid>
-									<input>${basedir}/src/main/resources/ReplicationTokenService.jmx</input>
+									<dataid>replication-ws-data</dataid>
+									<input>${basedir}/src/main/resources/ReplicationService.jmx</input>
 								</configuration>
 							</execution>
 							<execution>
-								<id>replication-token-ws-report</id>
+								<id>replication-ws-report</id>
 								<phase>site</phase>
 								<goals>
 									<goal>report</goal>
 								</goals>
 								<configuration>
-									<reportid>replication-token-ws-report</reportid>
-									<dataid>replication-token-ws-data</dataid>
+									<reportid>replication-ws-report</reportid>
+									<dataid>replication-ws-data</dataid>
 									<showgc>false</showgc>
 									<showpercentile99>true</showpercentile99>
-									<description>Authorization Lookup Service Response Times</description>
+									<description>Replication Service Response Times</description>
 									<title>Load test, 10 req/sec minimum requirement</title>
 								</configuration>
 							</execution>
@@ -154,15 +140,6 @@
 					</plugin>
 				</plugins>
 			</build>
-			<reporting>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>chronos-maven-plugin</artifactId>
-						<version>1.0-SNAPSHOT</version>
-					</plugin>
-				</plugins>
-			</reporting>
 		</profile>
 	</profiles>
 

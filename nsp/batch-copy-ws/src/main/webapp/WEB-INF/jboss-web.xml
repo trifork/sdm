@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss-web>
+    <context-root>stamdata-batch-copy-ws</context-root>
+    <class-loading java2ClassLoadingCompliance="false">
+      <loader-repository>
+         dk.nsi.stamdata:loader=stamdata-batch-copy-ws.war
+         <loader-repository-config>java2ParentDelegation=false</loader-repository-config>
+      </loader-repository>
+   </class-loading>
+</jboss-web>

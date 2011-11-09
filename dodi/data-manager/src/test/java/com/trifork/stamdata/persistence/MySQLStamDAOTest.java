@@ -51,7 +51,7 @@ import com.trifork.stamdata.importer.jobs.takst.model.Laegemiddel;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -67,7 +67,7 @@ public class MySQLStamDAOTest
 	public void setUp() throws Exception
 	{
 
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new Takst(Dates.toDate(2009, 7, 1), Dates.toDate(2009, 7, 14));
 		// Add a dataset to the takst with one member
 		List<Laegemiddel> list = new ArrayList<Laegemiddel>();
 		laegemiddel = new Laegemiddel();
@@ -75,7 +75,7 @@ public class MySQLStamDAOTest
 		laegemiddel.setNavn("Zymedolinatexafylitungebraekker");
 		list.add(laegemiddel);
 		TakstDataset<Laegemiddel> dataset = new TakstDataset<Laegemiddel>(takst, list, Laegemiddel.class);
-		takst.addDataset(dataset);
+		takst.addDataset(dataset, Laegemiddel.class);
 
 		/*
 		 * // Add an empty dataset to the takst (should be ignored)
@@ -89,7 +89,7 @@ public class MySQLStamDAOTest
 		DivEnheder enhed = new DivEnheder();
 		enhed.setTekst("millimol pr. gigajoule");
 		TakstDataset<DivEnheder> hiddenDataset = new TakstDataset<DivEnheder>(takst, enheder, DivEnheder.class);
-		takst.addDataset(hiddenDataset);
+		takst.addDataset(hiddenDataset, DivEnheder.class);
 
 		// ------ Setup database mocks -------
 		Connection con = mock(Connection.class);
@@ -102,14 +102,13 @@ public class MySQLStamDAOTest
 	@Test
 	public void testPersistOneLaegemiddel() throws Exception
 	{
-
-		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class))).thenReturn(false);
+		when(laegemiddeltableMock.fetchEntityConflicts(anyObject(), any(Date.class), any(Date.class))).thenReturn(false);
 		// Simulate no existing entities
 
 		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the new record is inserted
-		verify(laegemiddeltableMock, times(1)).insertRow(eq(laegemiddel), any(Date.class));
+		verify(laegemiddeltableMock, times(1)).insertEntity(eq(laegemiddel), any(Date.class));
 	}
 
 	@Test
@@ -117,15 +116,15 @@ public class MySQLStamDAOTest
 	{
 
 		// Simulate that the entity is already present.
-		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class))).thenReturn(true);
+		when(laegemiddeltableMock.fetchEntityConflicts(anyObject(), any(Date.class), any(Date.class))).thenReturn(true);
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
 		// So it must be updated.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(Dates.toDate(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(Dates.THE_END_OF_TIME);
 
 		// Simulate that the entity has changed.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(TemporalEntity.class))).thenReturn(false);
+		when(laegemiddeltableMock.currentRowEquals(any(TemporalEntity.class))).thenReturn(false);
 
 		dao.persistCompleteDataset(takst.getDatasets());
 
@@ -140,19 +139,19 @@ public class MySQLStamDAOTest
 	public void testDeltaPutUnchanged() throws Exception
 	{
 		// Simulate that the entity is already present.
-		when(laegemiddeltableMock.fetchEntityVersions(anyObject(), any(Date.class), any(Date.class))).thenReturn(true);
+		when(laegemiddeltableMock.fetchEntityConflicts(anyObject(), any(Date.class), any(Date.class))).thenReturn(true);
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(DateUtils.toDate(1950, 01, 1));
-		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(DateUtils.THE_END_OF_TIME);
+		when(laegemiddeltableMock.getCurrentRowValidFrom()).thenReturn(Dates.toDate(1950, 01, 1));
+		when(laegemiddeltableMock.getCurrentRowValidTo()).thenReturn(Dates.THE_END_OF_TIME);
 
 		// Simulate that the entity is unchanged.
-		when(laegemiddeltableMock.dataInCurrentRowEquals(any(TemporalEntity.class))).thenReturn(true);
+		when(laegemiddeltableMock.currentRowEquals(any(TemporalEntity.class))).thenReturn(true);
 
 		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the new record is inserted
-		verify(laegemiddeltableMock, times(0)).insertRow(eq(laegemiddel), any(Date.class));
+		verify(laegemiddeltableMock, times(0)).insertEntity(eq(laegemiddel), any(Date.class));
 
 		// Verify that the existing record is not updated
 		verify(laegemiddeltableMock, times(0)).updateValidToOnCurrentRow(eq(takst.getValidFrom()), any(Date.class));
@@ -164,10 +163,10 @@ public class MySQLStamDAOTest
 	{
 		// An empty takst.
 
-		takst = new Takst(DateUtils.toDate(2009, 7, 1), DateUtils.toDate(2009, 7, 14));
+		takst = new Takst(Dates.toDate(2009, 7, 1), Dates.toDate(2009, 7, 14));
 		// ..with an empty dataset
-		TakstDataset<?> lmr = new TakstDataset(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
-		takst.addDataset(lmr);
+		TakstDataset<Laegemiddel> lmr = new TakstDataset(takst, new ArrayList<Laegemiddel>(), Laegemiddel.class);
+		takst.addDataset(lmr, Laegemiddel.class);
 
 		List<StamdataEntityVersion> sev = new ArrayList<StamdataEntityVersion>();
 		// Simulate that there is one record
@@ -175,14 +174,14 @@ public class MySQLStamDAOTest
 		sv.id = 1;
 
 		// Simulate that the existing row's validity range is 1950 to infinity.
-		sv.validFrom = DateUtils.toDate(1950, 01, 1);
+		sv.validFrom = Dates.toDate(1950, 01, 1);
 		sev.add(sv);
 
-		when(laegemiddeltableMock.getEntityVersions(any(Date.class), any(Date.class))).thenReturn(sev);
+		when(laegemiddeltableMock.findEntitiesInRange(any(Date.class), any(Date.class))).thenReturn(sev);
 
 		dao.persistCompleteDataset(takst.getDatasets());
 
 		// Verify that the existing record is updated
-		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(eq(DateUtils.toDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
+		verify(laegemiddeltableMock, times(1)).updateValidToOnEntityVersion(eq(Dates.toDate(2009, 7, 1)), any(StamdataEntityVersion.class), any(Date.class));
 	}
 }

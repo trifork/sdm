@@ -86,7 +86,7 @@ public class AutorisationParserIntegrationTest
 		AuditingPersister persister = Mockito.spy(new AuditingPersister(connection));
 
 		File[] files = new File[] { valid };
-		importer.importFiles(files, persister);
+		importer.parse(files, persister, null);
 
 		verify(persister).persistCompleteDataset(Mockito.any(CompleteDataset.class));
 	}

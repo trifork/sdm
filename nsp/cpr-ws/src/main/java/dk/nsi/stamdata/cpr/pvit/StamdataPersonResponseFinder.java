@@ -24,109 +24,134 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
-import com.google.common.collect.Maps;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.models.cpr.Person;
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.ws.NamePersonQueryType;
-import dk.nsi.stamdata.cpr.ws.PersonInformationStructureType;
-import dk.nsi.stamdata.cpr.ws.PersonLookupResponseType;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class StamdataPersonResponseFinder {
-	private final static Logger logger = LoggerFactory.getLogger(StamdataPersonResponseFinder.class);
+import javax.inject.Inject;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.XMLGregorianCalendar;
 
-	private final Fetcher fetcher;
-	private final PersonMapper personMapper;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	@Inject
-	StamdataPersonResponseFinder(Fetcher fetcher, PersonMapper personMapper) {
-		this.fetcher = fetcher;
-		this.personMapper = personMapper;
-	}
+import com.google.common.collect.Maps;
+import com.trifork.stamdata.Fetcher;
+import com.trifork.stamdata.persistence.Transactional;
 
-	protected PersonLookupResponseType answerCprRequest(String cvr, String cpr) throws SQLException, DatatypeConfigurationException {
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
+import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 
-		PersonLookupResponseType response = new PersonLookupResponseType();
-		List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
 
-		Person person = fetcher.fetch(Person.class, cpr);
-		boolean wasFound = (person != null);
+public class StamdataPersonResponseFinder
+{
+    private final static Logger logger = LoggerFactory.getLogger(StamdataPersonResponseFinder.class);
 
-		logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[]{cvr, cpr, wasFound});
+    private final Fetcher fetcher;
+    private final PersonMapper personMapper;
 
-		if (wasFound) {
-			personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
-		}
 
-		return response;
-	}
+    @Inject
+    StamdataPersonResponseFinder(Fetcher fetcher, PersonMapper personMapper)
+    {
+        this.fetcher = fetcher;
+        this.personMapper = personMapper;
+    }
 
-	protected PersonLookupResponseType answerCivilRegistrationNumberListPersonRequest(String cvr, List<String> civilRegistrationNumberList) throws SQLException {
-		PersonLookupResponseType response = new PersonLookupResponseType();
-		List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
 
-		for (String cpr : civilRegistrationNumberList) {
-			Person person = fetcher.fetch(Person.class, cpr);
-			boolean wasFound = (person != null);
+    @Transactional
+    protected PersonLookupResponseType answerCprRequest(String cvr, String cpr) throws SQLException, DatatypeConfigurationException
+    {
+        PersonLookupResponseType response = new PersonLookupResponseType();
+        List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
 
-			logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[]{cvr, cpr, wasFound});
+        Person person = fetcher.fetch(Person.class, cpr);
+        boolean wasFound = (person != null);
 
-			if (wasFound) {
-				personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
-			}
-		}
+        logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[] { cvr, cpr, wasFound });
 
-		return response;
-	}
+        if (wasFound)
+        {
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
+        }
 
-	protected PersonLookupResponseType answerBirthDatePersonRequest(String cvr, XMLGregorianCalendar birthDate) throws SQLException, DatatypeConfigurationException {
-		PersonLookupResponseType response = new PersonLookupResponseType();
-		List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
+        return response;
+    }
 
-		List<Person> persons = fetcher.fetch(Person.class, "Foedselsdato", birthDate.toGregorianCalendar().getTime());
 
-		logger.info("type=auditlog, client_cvr={}, search_birthday_param={}", cvr, birthDate.toGregorianCalendar());
+    @Transactional
+    protected PersonLookupResponseType answerCivilRegistrationNumberListPersonRequest(String cvr, List<String> civilRegistrationNumberList) throws SQLException
+    {
+        PersonLookupResponseType response = new PersonLookupResponseType();
+        List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
 
-		for (Person person : persons) {
-			logger.info("type=auditlog, client_cvr={}, cpr_of_returned_person={}", cvr, person.getCpr());
+        for (String cpr : civilRegistrationNumberList)
+        {
+            Person person = fetcher.fetch(Person.class, cpr);
+            boolean wasFound = (person != null);
 
-			personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
-		}
+            logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[] { cvr, cpr, wasFound });
 
-		return response;
-	}
+            if (wasFound)
+            {
+                personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
+            }
+        }
 
-	protected PersonLookupResponseType answerNamePersonRequest(String cvr, NamePersonQueryType namePerson) throws SQLException, DatatypeConfigurationException {
-		PersonLookupResponseType response = new PersonLookupResponseType();
-		List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
+        return response;
+    }
 
-		Map<String, Object> columnValuePairs = Maps.newHashMap();
 
-		columnValuePairs.put("Fornavn", namePerson.getPersonGivenName());
-		columnValuePairs.put("Efternavn", namePerson.getPersonSurnameName());
+    @Transactional
+    protected PersonLookupResponseType answerBirthDatePersonRequest(String cvr, XMLGregorianCalendar birthDate) throws SQLException, DatatypeConfigurationException
+    {
+        PersonLookupResponseType response = new PersonLookupResponseType();
+        List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
 
-		if (!StringUtils.isBlank(namePerson.getPersonMiddleName())) {
-			columnValuePairs.put("Mellemnavn", namePerson.getPersonMiddleName());
-		}
+        List<Person> persons = fetcher.fetch(Person.class, "Foedselsdato", birthDate.toGregorianCalendar().getTime());
 
-		logger.info("type=auditlog, client_cvr={}, requested_name={} {} {}", new Object[]{cvr, namePerson.getPersonGivenName(), namePerson.getPersonMiddleName(), namePerson.getPersonSurnameName()});
+        logger.info("type=auditlog, client_cvr={}, search_birthday_param={}", cvr, birthDate.toGregorianCalendar());
 
-		for (Person person : fetcher.fetch(Person.class, columnValuePairs)) {
-			logger.info("type=auditlog, client_cvr={}, cvr_of_returned_person={}", cvr, person.getCpr());
+        for (Person person : persons)
+        {
+            logger.info("type=auditlog, client_cvr={}, cpr_of_returned_person={}", cvr, person.getCpr());
 
-			personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
-		}
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
+        }
 
-		return response;
-	}
+        return response;
+    }
+
+
+    @Transactional
+    protected PersonLookupResponseType answerNamePersonRequest(String cvr, NamePersonQueryType namePerson) throws SQLException, DatatypeConfigurationException
+    {
+        PersonLookupResponseType response = new PersonLookupResponseType();
+        List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
+
+        Map<String, Object> columnValuePairs = Maps.newHashMap();
+
+        columnValuePairs.put("Fornavn", namePerson.getPersonGivenName());
+        columnValuePairs.put("Efternavn", namePerson.getPersonSurnameName());
+
+        if (!StringUtils.isBlank(namePerson.getPersonMiddleName()))
+        {
+            columnValuePairs.put("Mellemnavn", namePerson.getPersonMiddleName());
+        }
+
+        logger.info("type=auditlog, client_cvr={}, requested_name={} {} {}", new Object[] { cvr, namePerson.getPersonGivenName(), namePerson.getPersonMiddleName(), namePerson.getPersonSurnameName() });
+
+        for (Person person : fetcher.fetch(Person.class, columnValuePairs))
+        {
+            logger.info("type=auditlog, client_cvr={}, cvr_of_returned_person={}", cvr, person.getCpr());
+
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
+        }
+
+        return response;
+    }
 }

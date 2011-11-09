@@ -32,8 +32,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -55,6 +58,7 @@ public class Yder extends AbstractStamdataEntity implements TemporalEntity
 	private Long praktisSorNummer;
 	private Date validFrom;
 	private Date validTo;
+    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
 
 	@Column
 	public String getNummer()
@@ -214,7 +218,7 @@ public class Yder extends AbstractStamdataEntity implements TemporalEntity
 	@Override
 	public Date getValidTo()
 	{
-		return (validTo != null) ? validTo : DateUtils.THE_END_OF_TIME;
+		return (validTo != null) ? validTo : Dates.THE_END_OF_TIME;
 	}
 
 	public void setValidTo(Date validTo)

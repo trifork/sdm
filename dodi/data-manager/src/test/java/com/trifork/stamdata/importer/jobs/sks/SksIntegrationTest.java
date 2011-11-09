@@ -41,21 +41,22 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.util.Files;
 
 
 public class SksIntegrationTest
 {
 	private File shakFile;
-	private Connection con;
+	private Connection connection;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		shakFile = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
 
-		con = MySQLConnectionManager.getConnection();
+		connection = MySQLConnectionManager.getConnection();
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		stmt.executeQuery("TRUNCATE TABLE Organisation");
 		stmt.close();
 	}
@@ -63,25 +64,29 @@ public class SksIntegrationTest
 	@After
 	public void tearDown() throws SQLException
 	{
-		con.rollback();
-		con.close();
+		connection.rollback();
+		connection.close();
 	}
 
 	@Test
-	public void testSHAKImport() throws Throwable
+	public void canImportTheCorrectNumberOfRecords() throws Throwable
 	{
-		File[] files = new File[] { shakFile };
+		File[] files = Files.toArray(shakFile);
 		SKSParser importer = new SKSParser();
-		importer.importFiles(files, new AuditingPersister(con));
+		importer.parse(files, new AuditingPersister(connection), null);
+		
+		// FIXME: These record counts are only correct iff if duplicate keys are disregarted.
+		// This is unfortunate. Keys are currently only considered based their SKSKode.
+		// They should be a combination of type + kode + startdato based on the register doc.
 
-		Statement stmt = con.createStatement();
+		Statement stmt = connection.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Sygehus'");
 		rs.next();
-		assertEquals(745, rs.getInt(1));
+		assertEquals(622, rs.getInt(1));
 
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM Organisation WHERE Organisationstype = 'Afdeling'");
 		rs.next();
-		assertEquals(9754, rs.getInt(1));
+		assertEquals(8451, rs.getInt(1));
 		stmt.close();
 	}
 }

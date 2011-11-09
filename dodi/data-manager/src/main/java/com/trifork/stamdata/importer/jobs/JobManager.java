@@ -30,27 +30,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.quartz.CronScheduleBuilder;
-import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
-import org.quartz.impl.StdSchedulerFactory;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import com.google.inject.Inject;
 
 
 public class JobManager
 {
-	private static final String DATA_MAP_OBJECT = "QuartzJobScheduler.Object";
-
 	private final List<Job> jobs;
-	private Scheduler scheduler;
+	private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
 	@Inject
 	JobManager(List<Job> jobs) throws Exception
@@ -62,64 +52,21 @@ public class JobManager
 
 	public void start() throws Exception
 	{
-		if (scheduler == null)
+		// To avoid problems with concurrency, we restrict
+		// jobs to be run in serial. This is not a problem
+		// since performance is not an critical at the moment.
+
+		// Schedule all the jobs.
+
+		for (Job job : jobs)
 		{
-			// Create a scheduler.
-
-			scheduler = StdSchedulerFactory.getDefaultScheduler();
-
-			// To avoid problems with concurrency, we restrict
-			// jobs to be run in serial. This is not a problem
-			// since performace is not an critical at the moment.
-			//
-			// See quartz.properties.
-
-			// Schedule all the jobs.
-
-			for (Job job : jobs)
-			{
-				final CronScheduleBuilder schedule = CronScheduleBuilder.cronSchedule(job.getCronExpression());
-				final Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(schedule).build();
-
-				final JobDataMap jobDataMap = this.initDataMap(job.getIdentifier(), job);
-				final JobDetail detail = this.createJobDetail(job.getIdentifier(), jobDataMap);
-
-				scheduler.scheduleJob(detail, trigger);
-			}
+			executor.scheduleWithFixedDelay(job, 0, 1, TimeUnit.SECONDS);
 		}
-
-		this.scheduler.start();
 	}
 
 	public void stop() throws Exception
 	{
-		this.scheduler.shutdown(true);
-	}
-
-	protected JobDataMap initDataMap(String jobName, Object job)
-	{
-		final JobDataMap jobDataMap = new JobDataMap();
-
-		jobDataMap.put(DATA_MAP_OBJECT, job);
-
-		return jobDataMap;
-	}
-
-	protected JobDetail createJobDetail(String name, JobDataMap jobDataMap)
-	{
-		return JobBuilder.newJob(QuartzJobExecutor.class).usingJobData(jobDataMap).build();
-	}
-
-
-	public static class QuartzJobExecutor implements org.quartz.Job
-	{
-		@Override
-		public void execute(JobExecutionContext context) throws JobExecutionException
-		{
-			Job job = (Job) context.getMergedJobDataMap().get(DATA_MAP_OBJECT);
-
-			job.run();
-		}
+		executor.shutdownNow();
 	}
 
 	public boolean areAllJobsRunning()

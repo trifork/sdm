@@ -1,266 +1,693 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-	<modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-	<name>Stamdata Project</name>
+  <name>Stamdata Project</name>
 
-	<groupId>dk.nsi.stamdata</groupId>
-	<artifactId>stamdata-parent</artifactId>
-	<packaging>pom</packaging>
-	<version>3.2.1-SNAPSHOT</version>
+  <groupId>dk.nsi.stamdata</groupId>
+  <artifactId>stamdata-parent</artifactId>
+  <packaging>pom</packaging>
+  <version>3.3.1-SNAPSHOT</version>
 
-	<scm>
-		<connection>scm:git:git@github.com:trifork/sdm.git</connection>
-		<url>scm:git:git@github.com:trifork/sdm.git</url>
-		<developerConnection>scm:git:git@github.com:trifork/sdm.git</developerConnection>
-	</scm>
+  <scm>
+    <connection>scm:git:git@github.com:trifork/sdm.git</connection>
+    <url>scm:git:git@github.com:trifork/sdm.git</url>
+    <developerConnection>scm:git:git@github.com:trifork/sdm.git</developerConnection>
+  </scm>
 
-	<properties>
-		<jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
-		<jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
-		<jboss6.xalan.version>2.7.1</jboss6.xalan.version>
-		<guice.version>3.0</guice.version>
-		<guava.version>r09</guava.version>
-		<hamcrest.version>1.1</hamcrest.version>
-		<junit.version>4.8.2</junit.version>
-		<mockito.version>1.8.5</mockito.version>
-		<seal.version>2.1</seal.version>
-		<netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
+  <properties>
+    <war.slf4j.version>1.6.2</war.slf4j.version>
+    <jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
+    <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
+    <jboss6.xalan.version>2.7.1</jboss6.xalan.version>
+    <jboss6.jaxws.version>2.2</jboss6.jaxws.version>
+    <guice.version>3.0</guice.version>
+    <hamcrest.version>1.1</hamcrest.version>
+    <junit.version>4.8.2</junit.version>
+    <mockito.version>1.8.5</mockito.version>
+    <netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  </properties>
 
-	<modules>
-		<module>common/common</module>
-		<module>common/dgws-filter</module>
-		<module>common/build-tools</module>
-		<module>common/performance</module>
-		<module>common/testing</module>
+  <modules>
+    <module>common/common</module>
+    <module>common/dgws-filter</module>
+    <module>common/performance</module>
+    <module>common/testing</module>
 
-		<module>dodi/data-manager</module>
+    <module>dodi/data-manager</module>
 
-		<module>nsp/batch-copy-ws</module>
-		<module>nsp/authorization-lookup-ws</module>
-		<module>nsp/cpr-ws</module>
-	</modules>
+    <module>nsp/batch-copy-ws</module>
+    <module>nsp/authorization-lookup-ws</module>
+    <module>nsp/cpr-ws</module>
+  </modules>
 
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.7.2</version>
-					<configuration>
-						<excludes>
-							<exclude>**/*IntegrationTest*</exclude>
-							<exclude>**/*DaoTest*</exclude>
-							<exclude>**/*ViewTest*</exclude>
-						</excludes>
-					</configuration>
+  <!--
+   | Dependency Managment defines the versions and scope of sub-modules' 
+   | dependencies.
+   -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- JAX-WS -->
+      <dependency>
+        <groupId>com.sun.xml.ws</groupId>
+        <artifactId>jaxws-rt</artifactId>
+        <version>2.1.7</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.activation</groupId>
+        <artifactId>activation</artifactId>
+        <version>1.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>wstx-asl</artifactId>
+        <version>3.2.3</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <!-- Can only be used with SLF4J 1.6.3 -->
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>0.9.30</version>
+      </dependency>
+      <dependency>
+        <!-- For logback configuration -->
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <version>1.8.3</version>
+      </dependency>
+      <!-- Hibernate -->
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-c3p0</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-core</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-entitymanager</artifactId>
+        <version>${jboss6.hibernate.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- SOSI, SDSD, NSP etc. -->
+      <dependency>
+        <groupId>dk.sosi.seal</groupId>
+        <artifactId>seal</artifactId>
+        <version>2.1.1</version>
+      </dependency>
+      <dependency>
+        <groupId>dk.sdsd.nsp</groupId>
+        <artifactId>nsp-util</artifactId>
+        <version>1.0.6</version>
+      </dependency>
+      <!-- Guava, Commons, etc. -->
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>r09</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>2.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>joda-time</groupId>
+        <artifactId>joda-time</artifactId>
+        <version>2.0</version>
+      </dependency>
+      <!-- Guice -->
+      <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-servlet</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.inject.extensions</groupId>
+        <artifactId>guice-multibindings</artifactId>
+        <version>${guice.version}</version>
+      </dependency>
+      <!-- Testing -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-all</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <!-- MySQL & Hibernate -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${netic.provided.mysql.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- Workaround -->
+      <!-- | Seal 2.1.1 must have version 1.5 of | commons codec. To avoid 
+        others overriding | the version we force it here. -->
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.5</version>
+      </dependency>
+      <!-- | The SAAJ implementation on JBOSS in quite | broken. Yet we have 
+        to use it an we cannot | provide our own. Thus we have to use the | JBoss 
+        version or it complains. There might | be a workaround for this. -->
+      <dependency>
+        <groupId>com.sun.xml.messaging.saaj</groupId>
+        <artifactId>saaj-impl</artifactId>
+        <version>1.3.3</version>
+        <scope>provided<!-- exclude --></scope>
+      </dependency>
+      <dependency>
+        <!-- SEAL uses this, but any SAAJ will suffice. -->
+        <groupId>axis</groupId>
+        <artifactId>axis-saaj</artifactId>
+        <version>1.4</version>
+        <scope>provided<!-- exclude --></scope>
+      </dependency>
+      <dependency>
+        <!-- This conflicts with the JBoss QName definition. -->
+        <groupId>axis</groupId>
+        <artifactId>axis-jaxrpc</artifactId>
+        <version>1.4</version>
+        <scope>provided<!-- exclude --></scope>
+      </dependency>
+      <!-- | The Jboss's libraries (which we cannot replace) | do not work 
+        with other xerces implementation. -->
+      <dependency>
+        <groupId>xml-apis</groupId>
+        <artifactId>xml-apis</artifactId>
+        <version>1.3.04</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>xerces</groupId>
+        <artifactId>xercesImpl</artifactId>
+        <version>2.9.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>2.7.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.stream</groupId>
+        <artifactId>stax-api</artifactId>
+        <version>1.0-2</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>stax</groupId>
+        <artifactId>stax-api</artifactId>
+        <version>1.0.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-impl</artifactId>
+        <version>2.2.4-1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+        <version>2.2.3</version>
+        <scope>provided</scope>
+      </dependency>
+    <dependency>
+      <groupId>javax.xml.ws</groupId>
+      <artifactId>jaxws-api</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
+    </dependencies>
+  </dependencyManagement>
 
-					<executions>
-						<execution>
-							<id>surefire-it</id>
-							<phase>integration-test</phase>
-							<goals>
-								<goal>test</goal>
-							</goals>
-							<configuration>
-								<excludes>
-									<exclude>none</exclude>
-								</excludes>
-								<includes>
-									<include>**/*IntegrationTest*</include>
-									<include>**/*DaoTest*</include>
-									<include>**/*ViewTest*</include>
-								</includes>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-						<showDeprecation>true</showDeprecation>
-					</configuration>
-				</plugin>
-				<!-- 
-				 | Since the performance test often will be part of the
-				 | src/test sources (go figure!) you have to be sure
-				 | to have compiled the test source classes before
-				 | running e.g. chronos:jmetergui, so it can pick up
-				 | the custom samplers.
-				 -->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>chronos-maven-plugin</artifactId>
-					<version>1.0-SNAPSHOT</version>
-					<configuration>
-						<heap>768m</heap>
-						<permsize>256m</permsize>
-						<sysproperties>
-							<property>
-								<name>search_paths</name>
-								<value>${basedir}/target/test-classes;${basedir}/target</value>
-							</property>
-							<property>
-								<name>java.awt.headless</name>
-								<value>false</value>
-							</property>
-						</sysproperties>
-						<jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
+  <build>
+    <pluginManagement>
+      <!-- JAX-WS -->
+      <plugins>
+        <!--This plugin's configuration is used to store Eclipse m2e settings 
+          only. It has no influence on the Maven build itself. -->
+        <plugin>
+          <groupId>org.eclipse.m2e</groupId>
+          <artifactId>lifecycle-mapping</artifactId>
+          <version>1.0.0</version>
+          <configuration>
+            <lifecycleMappingMetadata>
+              <pluginExecutions>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.codehaus.mojo
+                    </groupId>
+                    <artifactId>
+                      jaxws-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.12,)
+                    </versionRange>
+                    <goals>
+                      <goal>wsimport</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.codehaus.mojo
+                    </groupId>
+                    <artifactId>
+                      exec-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.1,)
+                    </versionRange>
+                    <goals>
+                      <goal>exec</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+                <pluginExecution>
+                  <pluginExecutionFilter>
+                    <groupId>
+                      org.codehaus.mojo
+                    </groupId>
+                    <artifactId>
+                      properties-maven-plugin
+                    </artifactId>
+                    <versionRange>
+                      [1.0-alpha-2,)
+                    </versionRange>
+                    <goals>
+                      <goal>read-project-properties</goal>
+                    </goals>
+                  </pluginExecutionFilter>
+                  <action>
+                    <ignore />
+                  </action>
+                </pluginExecution>
+              </pluginExecutions>
+            </lifecycleMappingMetadata>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jaxws-maven-plugin</artifactId>
+          <version>1.12</version>
+          <configuration>
+            <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
+            <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+            <wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl</wsdlDirectory>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals><goal>wsimport</goal></goals>
+            </execution>
+          </executions>
+          <!--
+           | In order to use JAX-WS 2.2, we will have to
+           | change the generator version.
+           | We still target 2.0 to avoid endorsing jar
+           | in maven which is a real pain for Eclipse and
+           | IDEA. These IDE plugins don't support it well. 
+           -->
+           <dependencies>
+           <dependency>
+              <groupId>com.sun.xml.ws</groupId>
+              <artifactId>jaxws-tools</artifactId>
+              <version>2.1.7</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>1.7</version>
+          <configuration>
+            <sources>
+              <source>${project.build.directory}/generated-sources/jaxws</source>
+            </sources>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>generate-sources</phase>
+              <goals><goal>add-source</goal></goals>
+            </execution>
+          </executions>
+        </plugin>
+        <!-- | Since the performance test often will be part of the | src/test 
+          sources (go figure!) you have to be sure | to have compiled the test source 
+          classes before | running e.g. chronos:jmetergui, so it can pick up | the 
+          custom samplers. -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>chronos-maven-plugin</artifactId>
+          <version>1.0-SNAPSHOT</version>
+          <configuration>
+            <heap>768m</heap>
+            <permsize>256m</permsize>
+            <sysproperties>
+              <property>
+                <name>search_paths</name>
+                <value>${basedir}/target/test-classes;${basedir}/target/classes</value>
+              </property>
+              <property>
+                <name>java.awt.headless</name>
+                <value>false</value>
+              </property>
+            </sysproperties>
+            <jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.7</version>
-				<dependencies>
-					<dependency>
-						<groupId>dk.nsi.stamdata</groupId>
-						<artifactId>build-tools</artifactId>
-						<version>${project.version}</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<configLocation>sdm/sdm_checkstyle_config.xml</configLocation>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.2.1</version>
-				<configuration>
-					<tagNameFormat>v@{project.version}</tagNameFormat>
-				</configuration>
-			</plugin>
-			<!--
-			 | To avoid maven deploying as part of the release cycle
-			 | we disable deployment.
-			 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-			<!--
-			 | The Stamdata project is inherited from Lægemiddelstyrelsen
-			 | and thus needs different license than other NSPi components.
-			 -->
-			<plugin>
-				<inherited>false</inherited>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.9.0</version>
-				<configuration>
-					<strictCheck>true</strictCheck>
-					<header>${basedir}/config/HEADER.txt</header>
-					<failIfMissing>true</failIfMissing>
-					<aggregate>true</aggregate>
-					<includes>
-						<include>**/src/**/*.java</include>
-					</includes>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>verify</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+    <plugins>
+      <plugin>
+       <groupId>org.apache.maven.plugins</groupId>
+       <artifactId>maven-compiler-plugin</artifactId>
+       <configuration>
+         <source>1.6</source>
+         <target>1.6</target>
+       </configuration>
+     </plugin>
+      <!--
+       | The Stamdata project is inherited from Lægemiddelstyrelsen
+       | and thus needs different license than other NSPi components.
+       -->
+      <plugin>
+        <inherited>false</inherited>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.9.0</version>
+        <configuration>
+          <strictCheck>true</strictCheck>
+          <header>${basedir}/config/HEADER.txt</header>
+          <failIfMissing>true</failIfMissing>
+          <aggregate>true</aggregate>
+          <includes>
+            <include>**/src/**/*.java</include>
+          </includes>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>compile</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <!--
+       | To avoid maven deploying as part of the release cycle
+       | we disable deployment.
+       -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      
+      <!-- 
+       | Take the SHA from git and place it in the manifest. 
+       | This does not take local modifications into consideration.
+       | This is because it is a pain in the neck during devel.
+       -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.1</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <executable>git</executable>
+          <arguments>
+            <argument>log</argument>
+            <argument>--pretty=format:buildNumber = %H</argument>
+            <argument>-n1</argument>
+          </arguments>
+          <outputFile>${project.build.directory}/git.properties</outputFile>
+        </configuration>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0-alpha-2</version>
+        <executions>
+          <execution>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>read-project-properties</goal>
+            </goals>
+            <configuration>
+              <files>
+                <file>${project.build.directory}/git.properties</file>
+              </files>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
 
-	<profiles>
-		<profile>
-			<id>dropAndCreateDB</id>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.1.1</version>
+        <configuration>
+          <archive>
+            <index>true</index>
+            <manifest>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+            <manifestEntries>
+              <Build-SHA1>${buildNumber}</Build-SHA1>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>dropAndCreateDB</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sql-maven-plugin</artifactId>
+            <version>1.5</version>
+            <dependencies>
+              <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${netic.provided.mysql.version}</version>
+                <scope>runtime</scope>
+              </dependency>
+            </dependencies>
+            <configuration>
+              <driver>com.mysql.jdbc.Driver</driver>
+              <url>jdbc:mysql:///sdm_warehouse</url>
+              <username>sdm</username>
+              <password>papkasse</password>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>pre-integration-test</phase>
+                <goals>
+                  <goal>execute</goal>
+                </goals>
+                <configuration>
+                  <autocommit>true</autocommit>
+                  <srcFiles>
+                    <srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
+                    <srcFile>${basedir}/../../db/schema.sql</srcFile>
+                  </srcFiles>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+   		<profile>
+			<id>parent</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 			<build>
+				<finalName>${project.artifactId}-${project.version}</finalName>
 				<plugins>
 					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>sql-maven-plugin</artifactId>
-						<version>1.5</version>
-						<dependencies>
-							<dependency>
-								<groupId>mysql</groupId>
-								<artifactId>mysql-connector-java</artifactId>
-								<version>${netic.provided.mysql.version}</version>
-								<scope>runtime</scope>
-							</dependency>
-						</dependencies>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<version>2.3.2</version>
 						<configuration>
-							<driver>com.mysql.jdbc.Driver</driver>
-							<url>jdbc:mysql:///sdm_warehouse</url>
-							<username>sdm</username>
-							<password>papkasse</password>
+							<source>1.6</source>
+							<target>1.6</target>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.8</version>
+						<configuration>
+							<excludePackageNames>dk.nsi.stamdata.jaxws.generated:dk.nsi.stamdata.views.*:di.nsi.stamdata.testing.*:dk.nsi.stamdata.performance.*</excludePackageNames>
 						</configuration>
 						<executions>
 							<execution>
-								<phase>pre-integration-test</phase>
+								<phase>site</phase>
 								<goals>
-									<goal>execute</goal>
+									<goal>javadoc</goal>
 								</goals>
-								<configuration>
-									<autocommit>true</autocommit>
-									<srcFiles>
-										<srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
-										<srcFile>${basedir}/../../db/schema.sql</srcFile>
-									</srcFiles>
-								</configuration>
 							</execution>
 						</executions>
 					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>cobertura-maven-plugin</artifactId>
+						<version>2.5.1</version>
+						<configuration>
+							<instrumentation>
+								<excludes>
+									<exclude>dk/nsi/stamdata/jaxws/generated/**/*</exclude>
+                                    <exclude>dk/nsi/stamdata/views/**/*</exclude>
+                                    <exclude>dk/nsi/stamdata/testing/**/*</exclude>
+                                    <exclude>dk/nsi/stamdata/performance/**/*</exclude>
+								</excludes>
+							</instrumentation>
+							<formats>
+								<format>xml</format>
+								<format>html</format>
+							</formats>
+                            <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>clean</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>2.9</version>
+						<configuration>
+							<systemPropertyVariables>
+								<jboss.server.log.dir>${java.io.tmpdir}</jboss.server.log.dir>
+							</systemPropertyVariables>
+                            <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
+						</configuration>
+					</plugin>
+					<plugin>
+        				<groupId>org.apache.maven.plugins</groupId>
+        				<artifactId>maven-source-plugin</artifactId>
+        				<version>2.1.2</version>
+      				</plugin>					
 				</plugins>
 			</build>
+			<reporting>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<version>2.8</version>
+					</plugin>
+				</plugins>
+			</reporting>
 		</profile>
-	</profiles>
+  </profiles>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.7</version>
-				<configuration>
-					<configLocation>sdm/sdm_checkstyle_config.xml</configLocation>
-				</configuration>
-			</plugin>
-		</plugins>
-	</reporting>
+  <repositories>
+    <repository>
+      <id>maven2-repository.dev.java.net</id>
+      <name>Java.net Repository for Maven</name>
+      <url>http://download.java.net/maven/2</url>
+    </repository>
 
-	<repositories>
-		<repository>
-			<id>trifork</id>
-			<name>Trifork Public Nexus</name>
-			<layout>default</layout>
-			<url>https://nexus.trifork.com/content/groups/public</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
+    <repository>
+      <id>trifork</id>
+      <name>Trifork Public Nexus</name>
+      <layout>default</layout>
+      <url>https://nexus.trifork.com/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>trifork</id>
-			<name>Trifork Public Nexus</name>
-			<url>https://nexus.trifork.com/content/groups/public</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>trifork</id>
+      <name>Trifork Public Nexus</name>
+      <url>https://nexus.trifork.com/content/groups/public</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </pluginRepository>
+  </pluginRepositories>
 </project>

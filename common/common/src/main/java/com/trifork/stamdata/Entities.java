@@ -33,15 +33,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Ordering;
+import com.trifork.stamdata.models.TemporalEntity;
 
 public final class Entities
 {
-	private static final Map<Class<?>, Iterable<Method>> columnCache = new MapMaker().expireAfterAccess(1, MINUTES).makeMap();
+	private static final Map<Class<?>, List<Method>> columnCache = new MapMaker().expireAfterAccess(1, MINUTES).makeMap();
 	private static final Map<Class<?>, Method> idColumnCache = new MapMaker().expireAfterAccess(1, MINUTES).makeMap();
 
 	protected Entities()
@@ -68,7 +70,7 @@ public final class Entities
 	 * 
 	 * @return An iterable of columns that are lexically ordered.
 	 */
-	public static Iterable<Method> getColumns(Class<?> type)
+	public static List<Method> getColumns(Class<?> type)
 	{
 		if (columnCache.containsKey(type)) return columnCache.get(type);
 
@@ -79,7 +81,7 @@ public final class Entities
 			columns.add(method);
 		}
 
-		Iterable<Method> sortedColumns = Ordering.usingToString().sortedCopy(columns);
+		List<Method> sortedColumns = Ordering.usingToString().sortedCopy(columns);
 		columnCache.put(type, sortedColumns);
 
 		return sortedColumns;
@@ -116,8 +118,66 @@ public final class Entities
 		throw new IllegalArgumentException(format("The type '%s' does not have a method annotated with @Id.", type.getCanonicalName()));
 	}
 
-	public static String getIdColumnNameOfEntity(Class<?> type)
-	{
-		return getColumnName(getIdColumn(type));
-	}
+    public static String getEntityTypeDisplayName(Class<?> type)
+    {
+    	Entity output = type.getAnnotation(Entity.class);
+    	if (output != null && !output.name().isEmpty()) return output.name();
+    	return type.getSimpleName();
+    }
+
+    public static List<Method> getOutputMethods(Class<? extends TemporalEntity> type)
+    {
+    	Method[] methods = type.getMethods();
+    	List<Method> outputMethods = Lists.newArrayList();
+    
+    	for (Method method : methods)
+    	{
+    		if (method.isAnnotationPresent(Column.class)) outputMethods.add(method);
+    	}
+    
+    	return outputMethods;
+    }
+
+    /**
+     * @param method A getter method, that is used for serialization.
+     * @return The name used to designate this field when serializing
+     */
+    public static String getOutputFieldName(Method method)
+    {
+    	
+    		Column output = method.getAnnotation(Column.class);
+    	String name = method.getName().substring(3); // Strip "get"
+    
+    		if (output != null && output.name().length() > 0)
+    		{
+    			name = output.name();
+    		}
+    	
+    	return name;
+    }
+
+    /**
+     * @param type A type of StamdataEntity
+     * @return the getter method that contains the unique id for the given
+     *         StamdataEntity type
+     */
+    public static Method getIdMethod(Class<?> type)
+    {
+    	Method[] allMethods = type.getMethods();
+    
+    	for (Method method : allMethods)
+    	{
+    		if (method.isAnnotationPresent(Id.class))
+    		{
+    			return method;
+    		}
+    	}
+    
+    	return null;
+    }
+
+    public static String getIdColumnName(Class<?> entityType)
+    {
+    	return getOutputFieldName(getIdMethod(entityType));
+    }
 }

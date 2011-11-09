@@ -33,7 +33,7 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.util.DateUtils;
+import com.trifork.stamdata.importer.util.Dates;
 
 public class DateUtilsTest
 {
@@ -42,7 +42,7 @@ public class DateUtilsTest
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
-		assertEquals("2009-08-21T21-45-40", DateUtils.toFilenameDatetime(cal.getTime()));
+		assertEquals("2009-08-21T21-45-40", Dates.toFilenameDatetime(cal.getTime()));
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class DateUtilsTest
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
-		assertEquals("2009-08-21 21:45:40", DateUtils.toMySQLdate(cal.getTime()));
+		assertEquals("2009-08-21 21:45:40", Dates.toMySQLdate(cal.getTime()));
 	}
 
 	@Test
@@ -59,6 +59,6 @@ public class DateUtilsTest
 		Calendar cal = GregorianCalendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
 		java.sql.Date date = new java.sql.Date(cal.getTimeInMillis());
-		assertEquals(cal.getTime().getTime(), DateUtils.toCalendar(date).getTime());
+		assertEquals(cal.getTime().getTime(), Dates.toCalendar(date).getTime());
 	}
 }

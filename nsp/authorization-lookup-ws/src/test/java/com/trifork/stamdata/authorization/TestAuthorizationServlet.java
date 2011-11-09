@@ -24,150 +24,174 @@
  */
 package com.trifork.stamdata.authorization;
 
-import static dk.sosi.seal.model.SignatureUtil.setupCryptoProviderForJVM;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
+import java.net.URL;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.inject.Inject;
+import javax.xml.namespace.QName;
 
+import org.hibernate.Session;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 
-import com.google.inject.Provider;
+import com.google.common.collect.Lists;
+import com.trifork.stamdata.authorization.models.Authorization;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Transactional;
 
-import dk.sosi.seal.SOSIFactory;
-import dk.sosi.seal.model.Reply;
-import dk.sosi.seal.model.Request;
-import dk.sosi.seal.model.constants.DGWSConstants;
-import dk.sosi.seal.model.constants.FlowStatusValues;
-import dk.sosi.seal.modelbuilders.ModelBuildException;
-import dk.sosi.seal.vault.EmptyCredentialVault;
-import dk.sosi.seal.xml.XmlUtilException;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationPortType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationRequestType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationResponseType;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationService;
+import dk.nsi.stamdata.jaxws.generated.AuthorizationType;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.testing.TestServer;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(GuiceTestRunner.class)
 public class TestAuthorizationServlet
 {
-	@Mock
-	HttpServletRequest in;
+    TestServer server;
+    List<Authorization> authorizations = Lists.newArrayList();
+    
+    static final String WHITELISTED_CVR = "19343634";
+    static final String NON_WHITELISTED_CVR = "12341234";
+    
+    String cvr = WHITELISTED_CVR;
+    
+    @Inject
+    Session session;
+    
+    private AuthorizationRequestType request = new ObjectFactory().createAuthorizationRequestType();
+    private AuthorizationResponseType response = null;
+    private AuthorizationPortType client;
 
-	@Mock
-	HttpServletResponse out;
+    @Before
+    public void setUp() throws Exception
+    {
+         server = new TestServer().start();
+    }
 
-	@Mock
-	PrintWriter writer;
 
-	@Mock
-	SOSIFactory sosiFactory;
-	SOSIFactory sosiHelper;
+    @After
+    public void tearDown() throws Exception
+    {
+        server.stop();
+    }
 
-	@Mock
-	Request request;
 
-	@Mock
-	RequestProcessor processor;
+    @Test
+    public void shouldReturnTheExpectedAuthorizationWhenThereAreOthersThatDontMatchTheQuery() throws Exception
+    {
+        Authorization authorization1_1 = createAuthorization();
+        authorization1_1.cpr = "1111122222";
+        authorization1_1.educationCode = "2131";
+        authorization1_1.firstName = "Peter";
+        authorization1_1.lastName = "Andersen";
+        authorization1_1.authorizationCode = "B1114";
+        
+        Authorization authorization1_2 = createAuthorization();
+        authorization1_2.cpr = "1111122222";
+        authorization1_2.firstName = "Peter";
+        authorization1_2.lastName = "Andersen";
+        authorization1_2.authorizationCode = "A2114";
+        authorization1_2.educationCode = "5155";
+        
+        // Add another to make sure the right one is selected.
+        
+        Authorization authorization2 = createAuthorization();
+        authorization2.cpr = "2222211111";
+        
+        request.setCpr(authorization1_1.cpr);
+        
+        sendRequest();
 
-	@Mock
-	Provider<RequestProcessor> processorProvider;
+        assertThat(response.getFirstName(), is(authorization1_1.firstName));
+        assertThat(response.getLastName(), is(authorization1_1.lastName));
+        
+        assertThat(response.getAuthorization().size(), is(2));
+        
+        AuthorizationType authorization = response.getAuthorization().get(1);
+        
+        assertThat(authorization.getEducationCode(), is(authorization1_1.educationCode));
+        assertThat(authorization.getAuthorizationCode(), is(authorization1_1.authorizationCode));
+        
+        authorization = response.getAuthorization().get(0);
 
-	WebService webService;
+        assertThat(authorization.getEducationCode(), is(authorization1_2.educationCode));
+        assertThat(authorization.getAuthorizationCode(), is(authorization1_2.authorizationCode));
+        assertThat(authorization.getEducationName(), is("Fodterapeut"));
+    }
+    
+    @Test(expected = DGWSFault.class)
+    public void shouldReturnFaultIfNotWhitelisted() throws Exception
+    {
+        Authorization authorization = createAuthorization();
+        request.setCpr(authorization.cpr);
+        
+        cvr = NON_WHITELISTED_CVR;
+        
+        sendRequest();
+    }
+    
+    @Test
+    public void shouldReturnEnEmptyResponseIfNoAuthorizationsWereFound() throws Exception
+    {
+        createAuthorization();
+        
+        request.setCpr("0000000000");
+        
+        sendRequest();
+        
+        assertThat(response.getFirstName(), is(nullValue()));
+    }
+    
+    public Authorization createAuthorization()
+    {
+        Authorization auth = new Authorization("1234567890", "Ib", "Sørensen", "A1234", "2312");
+        authorizations.add(auth);
+        return auth;
+    }
+    
+    @Transactional
+    public void persistAuthorizations()
+    {
+        session.createQuery("DELETE FROM Authorization").executeUpdate();
+        
+        for (Authorization authorization : authorizations)
+        {
+            session.persist(authorization);
+        }
+    }
+    
+    public void sendRequest() throws Exception
+    {
+        persistAuthorizations();
+        
+        final QName SERVICE_QNAME = new QName("http://trifork.com/-/stamdata/3.0", "AuthorizationService");
 
-	BufferedReader reader = new BufferedReader(new StringReader(" "));
+        URL wsdlLocation = new URL("http://localhost:8972/service/AuthorizationService?wsdl");
+        AuthorizationService serviceCatalog = new AuthorizationService(wsdlLocation, SERVICE_QNAME);
 
-	@Before
-	public void setUp() throws IOException
-	{
-		when(processorProvider.get()).thenReturn(processor);
+        // SEAL enforces that the XML prefixes are exactly
+        // as it creates them. So we have to make sure we
+        // don't change them.
 
-		webService = new WebService(sosiFactory, processorProvider);
+        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
+        
+        client = serviceCatalog.getAuthorizationPort();
+        
+        SecurityWrapper headers = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(cvr, "foo2", "bar2");
 
-		sosiHelper = new SOSIFactory(new EmptyCredentialVault(), setupCryptoProviderForJVM());
-	}
-
-	@Test
-	public void should_deserialize_the_request_and_pass_it_to_the_request_processor() throws Exception
-	{
-		when(sosiFactory.deserializeRequest(Mockito.anyString())).thenReturn(request);
-		when(processor.process(request)).thenReturn(sosiHelper.createNewReply(DGWSConstants.VERSION_1_0_1, "1", "2", FlowStatusValues.FLOW_FINALIZED_SUCCESFULLY));
-		when(out.getWriter()).thenReturn(writer);
-		when(in.getReader()).thenReturn(reader);
-
-		// We want to examine the contents of the response.
-		// So we store it in this variable.
-
-		final ThreadLocal<String> response = new ThreadLocal<String>();
-
-		doAnswer(new Answer<Object>()
-		{
-			public Object answer(InvocationOnMock invocation)
-			{
-				Object[] args = invocation.getArguments();
-				response.set((String) args[0]);
-				return null;
-			}
-		}).when(writer).write(Mockito.anyString());
-
-		// Call the service.
-
-		webService.doPost(in, out);
-
-		Reply reply = sosiHelper.deserializeReply(response.get());
-
-		assertFalse(reply.isFault());
-	}
-
-	@Test
-	public void should_return_soap_fault_if_could_not_deserialize_request() throws Exception
-	{
-		sosiFactory = new SOSIFactory(new EmptyCredentialVault(), setupCryptoProviderForJVM())
-		{
-			@Override
-			public Request deserializeRequest(String xml) throws XmlUtilException, ModelBuildException
-			{
-				throw new ModelBuildException("Some exception.");
-			}
-		};
-
-		webService = new WebService(sosiFactory, processorProvider);
-		
-		when(out.getWriter()).thenReturn(writer);
-		when(in.getReader()).thenReturn(reader);
-
-		// We want to examine the contents of the response.
-		// So we store it in this variable.
-
-		final ThreadLocal<String> response = new ThreadLocal<String>();
-
-		doAnswer(new Answer<Object>()
-		{
-			public Object answer(InvocationOnMock invocation)
-			{
-				Object[] args = invocation.getArguments();
-				response.set((String) args[0]);
-				return null;
-			}
-		}).when(writer).write(Mockito.anyString());
-
-		// Call the service.
-
-		webService.doPost(in, out);
-
-		Reply reply = sosiFactory.deserializeReply(response.get());
-
-		assertTrue(reply.isFault());
-	}
+        response = client.authorization(headers.getSecurity(), headers.getMedcomHeader(), request);
+    }
 }

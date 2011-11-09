@@ -24,347 +24,350 @@
  */
 package dk.nsi.stamdata.cpr.pvit;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Stage;
-import com.trifork.stamdata.models.cpr.Person;
-import dk.nsi.stamdata.cpr.ComponentController.ComponentModule;
-import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.DGWSHeaderUtil;
-import dk.nsi.stamdata.cpr.integrationtest.dgws.SecurityWrapper;
-import dk.nsi.stamdata.cpr.jaxws.SealNamespaceResolver;
-import dk.nsi.stamdata.cpr.ws.*;
-import org.hibernate.Session;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
-import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import static dk.nsi.stamdata.cpr.Factories.TWO_DAYS_AGO;
+import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.net.URL;
+import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
-import java.net.URL;
-import java.util.Date;
 
-import static dk.nsi.stamdata.cpr.Factories.TOMORROW;
-import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+
+import dk.nsi.stamdata.cpr.Factories;
+import dk.nsi.stamdata.cpr.PersonMapper;
+import dk.nsi.stamdata.cpr.models.Person;
+import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
+import dk.nsi.stamdata.dgws.SecurityWrapper;
+import dk.nsi.stamdata.guice.GuiceTestRunner;
+import dk.nsi.stamdata.jaxws.generated.CivilRegistrationNumberListPersonQueryType;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
+import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
+import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 
 
+@RunWith(GuiceTestRunner.class)
 public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
 {
-	private static final String EXAMPLE_CPR = "1111111111";
+    public static final QName PVIT_SERVICE_QNAME = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
 
-	public static final QName PVIT_SERVICE = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
+    private List<Person> persons = Lists.newArrayList();
+    private PersonLookupRequestType request = new PersonLookupRequestType();
+    private PersonLookupResponseType response;
 
-	public static final String CVR_WHITELISTED = "12345678";
-	public static final String CVR_NOT_WHITELISTED = "87654321";
+    public static final String WHITELISTED_CVR = "12345678";
+    public static final String NON_WHITELISTED_CVR = "87654321";
 
-	private StamdataPersonLookup client;
+    private static StamdataPersonLookup client;
+    private static StamdataPersonLookupService serviceCatalog;
 
-	@Inject
-	private Session session;
+    private boolean isClientAuthority = false;
+    
+    @Inject
+    private Session session;
 
-	private Holder<Security> securityHolder;
-	private Holder<Header> medcomHolder;
 
-	private Holder<Security> securityHolderNotWhitelisted;
-	private Holder<Header> medcomHolderNotWhitelisted;
+    @Before
+    public void setUp() throws Exception
+    {
+        URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookup?wsdl");
+        serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE_QNAME);
 
+        // SEAL enforces that the XML prefixes are exactly
+        // as it creates them. So we have to make sure we
+        // don't change them.
 
-	@Before
-	public void setUp() throws Exception
-	{
-		// Use Guice to inject dependencies.
+        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
-		Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
+        client = serviceCatalog.getStamdataPersonLookup();
+    }
 
-		purgePersonTable();
-		createExamplePersonInDatabase();
 
-		URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookup?wsdl");
-		StamdataPersonLookupService serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE);
+    @Test(expected = SOAPFaultException.class)
+    public void requestWithoutAnyQueryTypeGivesSenderSoapFault() throws Exception
+    {
+        request = new PersonLookupRequestType();
 
-		// SEAL enforces that the XML prefixes are excatly
-		// as it creates them. So we have to make sure we
-		// don't change them.
+        prepareDatabaseAndSendRequest();
+    }
 
-		serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
-		client = serviceCatalog.getStamdataPersonLookup();
+    @Test(expected = SOAPFaultException.class)
+    public void requestWithTwoQueryTypeGivesSenderSoapFault() throws Exception
+    {
+        request.setCivilRegistrationNumberPersonQuery("2805842569");
 
-		SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_WHITELISTED, "foo", "bar");
-		securityHolder = securityHeaders.getSecurity();
-		medcomHolder = securityHeaders.getMedcomHeader();
+        NamePersonQueryType namePersonQueryType = new NamePersonQueryType();
+        namePersonQueryType.setPersonGivenName("Thomas");
+        namePersonQueryType.setPersonMiddleName("Greve");
+        namePersonQueryType.setPersonSurnameName("Kristensen");
+        request.setNamePersonQuery(namePersonQueryType);
 
-		SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CVR_NOT_WHITELISTED, "foo2", "bar2");
-		securityHolderNotWhitelisted = secutityHeadersNotWhitelisted.getSecurity();
-		medcomHolderNotWhitelisted = secutityHeadersNotWhitelisted.getMedcomHeader();
-	}
+        prepareDatabaseAndSendRequest();
+    }
 
 
-	@After
-	public void tearDown() throws Exception
-	{
-		session.disconnect();
-	}
+    @Test
+    public void requestWithACprNumberNotPresentInDatabaseReturnsNothing() throws Exception
+    {
+        persons.add(Factories.createPersonWithCPR("2905853347"));
 
+        request.setCivilRegistrationNumberPersonQuery("0103952595");
+        
+        prepareDatabaseAndSendRequest();
 
-	@Test(expected = SOAPFaultException.class)
-	public void requestWithoutAnyQueryTypeGivesSenderSoapFault() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
+        assertThat(response.getPersonInformationStructure().size(), is(0));
+    }
 
-		client.getPersonDetails(securityHolder, medcomHolder, query);
-	}
 
+    @Test
+    public void requestWithACprNumberPresentInDatabase() throws Exception
+    {
+        Person person = Factories.createPerson();
 
-	@Test(expected = SOAPFaultException.class)
-	public void requestWithTwoQueryTypeGivesSenderSoapFault() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		query.setCivilRegistrationNumberPersonQuery("2805842569");
-		NamePersonQueryType namePersonQueryType = new NamePersonQueryType();
-		namePersonQueryType.setPersonGivenName("Thomas");
-		namePersonQueryType.setPersonMiddleName("Greve");
-		namePersonQueryType.setPersonSurnameName("Kristensen");
-		query.setNamePersonQuery(namePersonQueryType);
+        persons.add(person);
+        persons.add(Factories.createPerson());
 
-		client.getPersonDetails(securityHolder, medcomHolder, query);
-	}
+        request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
+        prepareDatabaseAndSendRequest();
 
-	@Test
-	public void requestWithACprNumberNotPresentInDatabase() throws Exception
-	{
-		String decoyCpr = "0103952595";
+        assertThat(response.getPersonInformationStructure().size(), is(1));
+    }
 
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		query.setCivilRegistrationNumberPersonQuery(decoyCpr);
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
+    @Test
+    public void requestWithSeveralCprNumbersNoneOfWhichAreInTheDatabase() throws Exception
+    {
+        persons.add(Factories.createPersonWithCPR("0000000000"));
 
-		assertEquals(0, response.getPersonInformationStructure().size());
-	}
+        request.setCivilRegistrationNumberListPersonQuery(new CivilRegistrationNumberListPersonQueryType());
+        request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add("0206562469");
+        request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add("0302801961");
 
+        prepareDatabaseAndSendRequest();
 
-	@Test
-	public void requestWithACprNumberPresentInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		query.setCivilRegistrationNumberPersonQuery(EXAMPLE_CPR);
+        assertThat(response.getPersonInformationStructure().size(), is(0));
+    }
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
 
-		assertEquals(1, response.getPersonInformationStructure().size());
+    @Test
+    public void requestWithSeveralCprNumbersOfWhichSomeAreInTheDatabase() throws Exception
+    {
+        String EXISTING_CPR_1 = "0302801961";
+        String EXISTING_CPR_2 = "0905852363";
+        String NON_EXISTING_CPR = "0405852364";
 
-		PersonInformationStructureType information = response.getPersonInformationStructure().get(0);
-		assertReturnedResponseMatchesPersonFromDatabase(information);
-	}
+        persons.add(Factories.createPersonWithCPR(EXISTING_CPR_1));
+        persons.add(Factories.createPersonWithCPR(EXISTING_CPR_2));
 
+        request.setCivilRegistrationNumberListPersonQuery(new CivilRegistrationNumberListPersonQueryType());
+        request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add(EXISTING_CPR_1);
+        request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add(EXISTING_CPR_2);
+        request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber().add(NON_EXISTING_CPR);
 
-	@Test
-	public void requestWithSeveralCprNumbersNoneOfWhichAreInTheDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		CivilRegistrationNumberListPersonQueryType list = new CivilRegistrationNumberListPersonQueryType();
-		query.setCivilRegistrationNumberListPersonQuery(list);
-		list.getCivilRegistrationNumber().add("0206562469");
-		list.getCivilRegistrationNumber().add("0302801961");
+        prepareDatabaseAndSendRequest();
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
+        assertEquals(2, response.getPersonInformationStructure().size());
+    }
 
-		assertEquals(0, response.getPersonInformationStructure().size());
-	}
 
+    @Test
+    public void requestWithBirthDateNotFoundInDatabase() throws Exception
+    {
+        persons.add(Factories.createPersonWithBirthday(TWO_DAYS_AGO));
 
-	@Test
-	public void requestWithSeveralCprNumbersOfWhichOneIsInTheDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		CivilRegistrationNumberListPersonQueryType list = new CivilRegistrationNumberListPersonQueryType();
-		query.setCivilRegistrationNumberListPersonQuery(list);
-		list.getCivilRegistrationNumber().add("0302801961");
-		list.getCivilRegistrationNumber().add(EXAMPLE_CPR);
-		list.getCivilRegistrationNumber().add("0905852363");
+        XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
+        request.setBirthDatePersonQuery(REQUESTED_BIRTHDAY);
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
+        prepareDatabaseAndSendRequest();
 
-		assertEquals(1, response.getPersonInformationStructure().size());
-		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
-	}
+        assertTrue(response.getPersonInformationStructure().isEmpty());
+    }
 
 
-	@Test
-	public void requestWithBirthDateNotFoundInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
+    @Test
+    public void requestWithBirthDateFoundInDatabaseSeveralTimes() throws Exception
+    {
+        persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
+        persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
+        persons.add(Factories.createPersonWithBirthday(Factories.YEAR_1999));
 
-		DateTime dateTime = new DateTime(1982, 5, 1, 0, 0, 0);
-		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
-		query.setBirthDatePersonQuery(cal);
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue(response.getPersonInformationStructure().isEmpty());
-	}
+        XMLGregorianCalendar birthday = PersonMapper.newXMLGregorianCalendar(Factories.YEAR_2000);
+        request.setBirthDatePersonQuery(birthday);
 
+        prepareDatabaseAndSendRequest();
 
-	@Test
-	public void requestWithBirthDateFoundInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
+        assertEquals(2, response.getPersonInformationStructure().size());
+    }
 
-		DateTime dateTime = new DateTime(1982, 4, 15, 0, 0, 0);
-		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
-		query.setBirthDatePersonQuery(cal);
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
 
-		assertEquals(1, response.getPersonInformationStructure().size());
-		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
-	}
+    @Test
+    public void requestWithNameNotFoundInDatabase() throws Exception
+    {
+        createPersonWithName("Peter", "Konrad", "Sørensen");
+        createPersonWithName("Anders", null, "Thuesen");
 
+        NamePersonQueryType value = new NamePersonQueryType();
+        value.setPersonGivenName("Ragna");
+        value.setPersonSurnameName("Brock");
+        request.setNamePersonQuery(value);
 
-	@Test
-	public void requestWithBirthDateFoundInDatabaseSeveralTimes() throws Exception
-	{
-		createPerson("1504823210", "M", "8484", "Birger", null, "Thomsen", new DateTime(1982, 4, 15, 0, 0, 0));
+        prepareDatabaseAndSendRequest();
 
-		PersonLookupRequestType query = new PersonLookupRequestType();
+        assertTrue(response.getPersonInformationStructure().isEmpty());
+    }
 
-		DateTime dateTime = new DateTime(1982, 4, 15, 0, 0, 0);
-		XMLGregorianCalendar cal = PersonMapper.newXMLGregorianCalendar(dateTime.toDate());
-		query.setBirthDatePersonQuery(cal);
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
 
-		assertEquals(2, response.getPersonInformationStructure().size());
-	}
+    @Test
+    public void requestWithNameFoundOnceInDatabase() throws Exception
+    {
+        createPersonWithName("Peter", "Konrad", "Sørensen");
+        createPersonWithName("Thomas", "Greve", "Kristensen");
 
+        NamePersonQueryType name = new NamePersonQueryType();
+        name.setPersonGivenName("Thomas");
+        name.setPersonSurnameName("Kristensen");
+        request.setNamePersonQuery(name);
 
-	@Test
-	public void requestWithNameNotFoundInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		NamePersonQueryType value = new NamePersonQueryType();
-		value.setPersonGivenName("Ragna");
-		value.setPersonSurnameName("Brock");
-		query.setNamePersonQuery(value);
+        prepareDatabaseAndSendRequest();
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertTrue(response.getPersonInformationStructure().isEmpty());
-	}
+        assertEquals(1, response.getPersonInformationStructure().size());
+    }
 
 
-	@Test
-	public void requestWithNameFoundOnceInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		NamePersonQueryType value = new NamePersonQueryType();
-		value.setPersonGivenName("Thomas");
-		value.setPersonSurnameName("Kristensen");
-		query.setNamePersonQuery(value);
+    @Test
+    public void requestWithNameFoundSeveralTimesInDatabase() throws Exception
+    {
+        createPersonWithName("Peter", "Konrad", "Sørensen");
+        createPersonWithName("Thomas", "Greve", "Kristensen");
+        createPersonWithName("Peter", null, "Sørensen");
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals(1, response.getPersonInformationStructure().size());
+        NamePersonQueryType value = new NamePersonQueryType();
+        value.setPersonGivenName("Peter");
+        value.setPersonSurnameName("Sørensen");
+        request.setNamePersonQuery(value);
 
-		assertReturnedResponseMatchesPersonFromDatabase(response.getPersonInformationStructure().get(0));
-	}
+        prepareDatabaseAndSendRequest();
 
+        assertEquals(2, response.getPersonInformationStructure().size());
+    }
 
-	@Test
-	public void requestWithNameFoundSeveralTimesInDatabase() throws Exception
-	{
-		PersonLookupRequestType query = new PersonLookupRequestType();
 
-		NamePersonQueryType value = new NamePersonQueryType();
-		value.setPersonGivenName("Margit");
-		value.setPersonSurnameName("Kristensen");
-		query.setNamePersonQuery(value);
+    @Test
+    public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws Exception
+    {
+        Person person = Factories.createPersonWithAddressProtection();
+        persons.add(person);
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolder, medcomHolder, query);
-		assertEquals(2, response.getPersonInformationStructure().size());
-	}
+        request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
+        prepareDatabaseAndSendRequest();
 
-	@Test
-	public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws DGWSFault
-	{
-		Person person = Factories.createPersonWithAddressProtection();
+        String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
+        assertThat(givenName, is("ADRESSEBESKYTTET"));
+    }
+    
+    
+    @Test
+    public void requestWithWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnRealData() throws Exception
+    {
+        isClientAuthority = true;
+        
+        Person person = Factories.createPersonWithAddressProtection();
+        persons.add(person);
 
-		person.setNavnebeskyttelsestartdato(YESTERDAY);
-		person.setNavnebeskyttelseslettedato(TOMORROW);
+        request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
-		savePerson(person);
+        prepareDatabaseAndSendRequest();
 
-		PersonLookupRequestType query = new PersonLookupRequestType();
-		query.setCivilRegistrationNumberPersonQuery(person.getCpr());
+        String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
+        assertThat(givenName, is(person.getFornavn()));
+    }
 
-		PersonLookupResponseType response = client.getPersonDetails(securityHolderNotWhitelisted, medcomHolderNotWhitelisted, query);
+    @Test
+    public void testThatServiceIsAbleToHandleTwentySuccessiveRequests() throws Exception
+    {
+        isClientAuthority = true;
 
-		String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
-		assertThat(givenName, is("ADRESSEBESKYTTET"));
-	}
+        Person person = Factories.createPersonWithAddressProtection();
+        persons.add(person);
 
+        request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
-	private void purgePersonTable()
-	{
-		session.createSQLQuery("TRUNCATE Person").executeUpdate();
-	}
+        prepareDatabaseAndSendRequest();
+        
+        for(int i = 0; i < 30; i++)
+        {
+            sendRequest();
+        }
+    }
 
+    private Person createPersonWithName(String givenName, @Nullable String middleName, String surName)
+    {
+        Person person = Factories.createPerson();
+        person.setFornavn(givenName);
+        person.setMellemnavn(middleName);
+        person.setEfternavn(surName);
 
-	private void createExamplePersonInDatabase()
-	{
-		createPerson(EXAMPLE_CPR, "M", "8464", "Thomas", "Greve", "Kristensen", new DateTime(1982, 4, 15, 0, 0));
-		createPerson("0101821234", "F", "8000", "Margit", "Greve", "Kristensen", new DateTime(1982, 1, 1, 0, 0));
-		createPerson("0101821232", "F", "8100", "Margit", "Greve", "Kristensen", new DateTime(1929, 1, 1, 0, 0));
-	}
+        persons.add(person);
 
+        return person;
+    }
 
-	private Person createPerson(String cpr, String koen, String vejkode, String fornavn, String mellemnavn,
-			String efternavn, DateTime foedselsdato)
-	{
-		Person person = Factories.createPersonWithoutAddressProtection();
-		person.cpr = cpr;
-		person.koen = koen;
-		person.vejKode = vejkode;
-		person.fornavn = fornavn;
-		if (mellemnavn != null)
-		{
-			person.mellemnavn = mellemnavn;
-		}
-		person.efternavn = efternavn;
-		person.foedselsdato = foedselsdato.toDate();
 
-		person.setModifiedDate(new Date());
-		person.setCreatedDate(new Date());
-		person.setValidFrom(DateTime.now().minusDays(1).toDate());
-		person.setValidTo(DateTime.now().plusDays(1).toDate());
+    private void prepareDatabaseAndSendRequest() throws Exception
+    {
+        Transaction t = session.beginTransaction();
+        session.createQuery("DELETE FROM Person").executeUpdate();
+        for (Person person : persons)
+        {
+            session.persist(person);
+        }
+        t.commit();
 
-		savePerson(person);
+        sendRequest();
+    }
 
-		return person;
-	}
+    private void sendRequest() throws Exception, DGWSFault {
+        Holder<Security> securityHeader;
+        Holder<Header> medcomHeader;
 
+        if (isClientAuthority)
+        {
+            SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(WHITELISTED_CVR, "foo2", "bar2");
+            securityHeader = secutityHeadersNotWhitelisted.getSecurity();
+            medcomHeader = secutityHeadersNotWhitelisted.getMedcomHeader();
+        }
+        else
+        {
+            SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(NON_WHITELISTED_CVR, "foo", "bar");
+            securityHeader = securityHeaders.getSecurity();
+            medcomHeader = securityHeaders.getMedcomHeader();
+        }
 
-	private Person savePerson(Person person)
-	{
-		session.getTransaction().begin();
-
-		session.save(person);
-
-		session.getTransaction().commit();
-
-		return person;
-	}
-
-
-	private void assertReturnedResponseMatchesPersonFromDatabase(PersonInformationStructureType information)
-	{
-		assertEquals(EXAMPLE_CPR, information.getRegularCPRPerson().getSimpleCPRPerson()
-				.getPersonCivilRegistrationIdentifier());
-		assertEquals("8464", information.getPersonAddressStructure().getAddressComplete().getAddressAccess()
-				.getStreetCode());
-	}
+        response = client.getPersonDetails(securityHeader, medcomHeader, request);
+    }
 }

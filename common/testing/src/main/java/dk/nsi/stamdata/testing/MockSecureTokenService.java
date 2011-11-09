@@ -138,15 +138,14 @@ public final class MockSecureTokenService
 	private MockSecureTokenService()
 	{}
 
-
-	public static SystemIDCard createSignedSystemIDCard(String cvr)
+	public static SystemIDCard createSignedSystemIDCard(String cvr, AuthenticationLevel auth)
 	{
-		String username = null; // Only used for level 2
-		String password = null; // Only used for level 2
-
-		CareProvider careProvider = new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, cvr, "dk");
-		SystemIDCard idCard = createFactory().createNewSystemIDCard("ACME Pro", careProvider, AuthenticationLevel.VOCES_TRUSTED_SYSTEM, username, password, certificate, "123");
-
-		return idCard;
+	    String username = "Brian"; // Only used for level 2
+	    String password = "Graversen"; // Only used for level 2
+	    
+	    CareProvider careProvider = new CareProvider(SubjectIdentifierTypeValues.CVR_NUMBER, cvr, "dk");
+	    SystemIDCard idCard = createFactory().createNewSystemIDCard("ACME Pro", careProvider, auth, username, password, certificate, "123");
+	    
+	    return idCard;
 	}
 }

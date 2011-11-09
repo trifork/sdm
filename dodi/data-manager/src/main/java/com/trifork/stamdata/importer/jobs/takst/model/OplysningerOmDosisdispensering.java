@@ -48,13 +48,13 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 	@Column
 	public Long getBilligsteDrugid()
 	{
-		return this.billigsteDrugid;
+		return billigsteDrugid;
 	}
 
 	@Column
 	public Long getDrugid()
 	{
-		return this.drugid;
+		return drugid;
 	}
 
 	@Override
@@ -66,38 +66,38 @@ public class OplysningerOmDosisdispensering extends TakstEntity
 	@Column
 	public String getKodeForBilligsteDrugid()
 	{
-		return this.kodeForBilligsteDrugid;
+		return kodeForBilligsteDrugid;
 	}
 
 	@Column
 	public String getLaegemidletsSubstitutionsgruppe()
 	{
-		return this.laegemidletsSubstitutionsgruppe;
+		return laegemidletsSubstitutionsgruppe;
 	}
 
 	@Column
 	public Long getMindsteAIPPrEnhed()
 	{
-		return this.mindsteAIPPrEnhed;
+		return mindsteAIPPrEnhed;
 	}
 
 	@Column
 	public Long getMindsteRegisterprisEnh()
 	{
-		return this.mindsteRegisterprisEnh;
+		return mindsteRegisterprisEnh;
 	}
 
 	@Column
 	public Long getTSPPrEnhed()
 	{
-		return this.tSPPrEnhed;
+		return tSPPrEnhed;
 	}
 
 	@Id
 	@Column
 	public Long getVarenummer()
 	{
-		return this.varenummer;
+		return varenummer;
 	}
 
 	public void setBilligsteDrugid(Long billigsteDrugid)
