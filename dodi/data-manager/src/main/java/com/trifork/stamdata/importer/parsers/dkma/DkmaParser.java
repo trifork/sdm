@@ -30,6 +30,7 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -37,7 +38,6 @@ import org.slf4j.MDC;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.dkma.SystemFile.FileDescriptor;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.util.Files;
 
 public class DkmaParser implements Parser

@@ -30,11 +30,11 @@ import java.io.File;
 
 import javax.xml.parsers.*;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.slf4j.*;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.persistence.Persister;
 
 
 /**
@@ -59,7 +59,7 @@ public class SORImporter implements FileParser
 	}
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean validateInputStructure(File[] input)
 	{
 		if (input.length == 0) return false;
 

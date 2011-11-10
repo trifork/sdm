@@ -22,9 +22,50 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.parsers.yderregister;
+package com.trifork.stamdata.importer.jobs.sikrede;
 
-public class Parser
+import java.util.HashMap;
+
+import com.google.common.collect.ImmutableMap;
+
+public class Record
 {
 
+    ImmutableMap<String, Object> map;
+    
+    Record()
+    {
+        map = ImmutableMap.of();
+    }
+    
+    Record setField(String fieldName, Object value)
+    {
+        Record copy = new Record();
+
+        HashMap<String, Object> tempMap = new HashMap<String, Object>(map);
+        tempMap.put(fieldName, value);
+        copy.map = ImmutableMap.copyOf(tempMap);
+        
+        return copy;
+    }
+    
+    Object getField(String fieldName)
+    {
+        return map.get(fieldName);
+    }
+    
+    int size()
+    {
+        return map.size();
+    }
+    
+    boolean containsKey(String key)
+    {
+        return map.containsKey(key);
+    }
+    
+    Object get(String key)
+    {
+        return map.get(key);
+    }
 }

@@ -24,39 +24,41 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
 
-public class SikredeLineParser {
-
-    private SikredeFields sikredeFields;
+public class SingleLineRecordParser
+{
+    private final RecordSpecification recordSpecification;
     
-    public SikredeLineParser(SikredeFields sikredeFields)
+    public SingleLineRecordParser(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpecification = recordSpecification;
     }
     
-    public SikredeRecord parseLine(String line)
+    public Record parseLine(String line)
     {
-        if(line.length() != sikredeFields.acceptedTotalLineLength())
+        if (line.length() != recordSpecification.acceptedTotalLineLength())
         {
-            throw new IllegalArgumentException("Supplied line had length " + line.length() + " but only lines of length " + sikredeFields.acceptedTotalLineLength() + " are accepted");
+            throw new IllegalArgumentException("Supplied line had length " + line.length() + " but only lines of length " + recordSpecification.acceptedTotalLineLength() + " are accepted");
         }
         
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(sikredeFields);
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+
         int offset = 0;
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             String subString = line.substring(offset, offset + fieldSpecification.length);
             
-            if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
             {
                 builder.field(fieldSpecification.name, subString.trim());
             }
-            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            else if (fieldSpecification.type == SikredeType.NUMERICAL)
             {
-                // This will potentially throw a runtime exception on bad input
+                // This will potentially throw a runtime exception on bad input.
+                //
                 builder.field(fieldSpecification.name, Integer.parseInt(subString.trim()));
             }
             else

@@ -70,7 +70,7 @@ public class TakstImporterIntegrationTest
 		TakstImporter importer = new TakstImporter();
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/takst/initial/"));
 
-		assertTrue(importer.ensureRequiredFileArePresent(dir.listFiles()));
+		assertTrue(importer.validateInputStructure(dir.listFiles()));
 	}
 
 	@Test
@@ -79,7 +79,7 @@ public class TakstImporterIntegrationTest
 		TakstImporter ti = new TakstImporter();
 		File dir = FileUtils.toFile(getClass().getClassLoader().getResource("data/takst/incomplete/"));
 
-		assertFalse(ti.ensureRequiredFileArePresent(dir.listFiles()));
+		assertFalse(ti.validateInputStructure(dir.listFiles()));
 	}
 
 	@SuppressWarnings("unchecked")

@@ -24,40 +24,40 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
+
 import static org.junit.Assert.assertTrue;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.persistence.SikredeRecord;
 
-public class SikredeRecordStringGenerator {
+public class SikredeRecordStringGenerator
+{
+    private RecordSpecification recordSpecification;
 
-    private SikredeFields sikredeFields;
-
-    public SikredeRecordStringGenerator(SikredeFields sikredeFields)
+    public SikredeRecordStringGenerator(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpecification = recordSpecification;
     }
     
-    public String stringFromRecords(SikredeRecord sikredeRecord)
+    public String stringFromRecords(Record record)
     {
-        if(!sikredeFields.conformsToSpecifications(sikredeRecord))
+        if(!recordSpecification.conformsToSpecifications(record))
         {
             throw new IllegalArgumentException("Sikrede record does not conform to specification");
         }
         
         StringBuilder builder = new StringBuilder();
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
             {
-                String value = (String) sikredeRecord.get(fieldSpecification.name);
+                String value = (String) record.get(fieldSpecification.name);
                 builder.append(prefixPadding(' ', fieldSpecification.length - value.length()));
                 builder.append(value);
             }
             else if(fieldSpecification.type == SikredeType.NUMERICAL)
             {
-                String value = Integer.toString((Integer) sikredeRecord.get(fieldSpecification.name));
+                String value = Integer.toString((Integer) record.get(fieldSpecification.name));
                 builder.append(prefixPadding('0', fieldSpecification.length - value.length()));
                 builder.append(value);
             }
@@ -69,19 +69,19 @@ public class SikredeRecordStringGenerator {
         return builder.toString();
     }
     
-    public String stringFromIncompleteRecord(SikredeRecord sikredeRecord)
+    public String stringFromIncompleteRecord(Record record)
     {
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
-            if(!sikredeRecord.containsKey(fieldSpecification.name))
+            if(!record.containsKey(fieldSpecification.name))
             {
                 if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
                 {
-                    sikredeRecord = sikredeRecord.setField(fieldSpecification.name, "");
+                    record = record.setField(fieldSpecification.name, "");
                 }
                 else if(fieldSpecification.type == SikredeType.NUMERICAL)
                 {
-                    sikredeRecord = sikredeRecord.setField(fieldSpecification.name, 0);
+                    record = record.setField(fieldSpecification.name, 0);
                 } 
                 else
                 {
@@ -90,7 +90,7 @@ public class SikredeRecordStringGenerator {
             }
         }
         
-        return stringFromRecords(sikredeRecord);
+        return stringFromRecords(record);
     }
     
     public String stringRecordFromIncompleteSetOfFields(Object... keysAndValues)
@@ -98,9 +98,9 @@ public class SikredeRecordStringGenerator {
         return stringFromIncompleteRecord(sikredeRecordFromKeysAndValues(keysAndValues));
     }
     
-    public static SikredeRecord sikredeRecordFromKeysAndValues(Object... keysAndValues)
+    public static Record sikredeRecordFromKeysAndValues(Object... keysAndValues)
     {
-        SikredeRecord record = new SikredeRecord();
+        Record record = new Record();
         
         assertTrue(keysAndValues.length % 2 == 0);
         

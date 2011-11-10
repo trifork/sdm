@@ -133,7 +133,7 @@ public class FileParserJob implements Job
 
         File[] input = getInputFiles();
 
-        if (!parser.ensureRequiredFileArePresent(input))
+        if (!parser.validateInputStructure(input))
         {
             logger.error("Not all expected files could be found. Moving the input to the rejected folder.");
 

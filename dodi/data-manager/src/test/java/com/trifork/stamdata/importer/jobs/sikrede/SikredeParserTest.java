@@ -24,7 +24,14 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.junit.Assert.*;
+import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
+import com.trifork.stamdata.importer.parsers.dkma.ParserException;
+import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.util.Files;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,22 +42,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
-import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.importer.util.Files;
-import com.trifork.stamdata.persistence.SikredeRecord;
-
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 
-public class SikredeParserUsingNewArchitectureTest {
-
+public class SikredeParserTest
+{
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
@@ -60,15 +58,15 @@ public class SikredeParserUsingNewArchitectureTest {
         Connection connection = null;
         try 
         {
-            SikredeFields sikredeFields = SikredeFields.SIKREDE_FIELDS_SINGLETON;
+            RecordSpecification recordSpecification = RecordSpecification.SIKREDE_FIELDS_SINGLETON;
 
-            SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    sikredeFields, "CPRnr");
+            SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
+            SikredeParser sikredeParser = new SikredeParser(entryParser,
+                    recordSpecification, "CPRnr");
 
-            connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
+            connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
-            File[] input = Files.toArray(setupExampleFile(sikredeFields));
+            File[] input = Files.toArray(setupExampleFile(recordSpecification));
 
             Persister mockPersister = mock(Persister.class);
             when(mockPersister.getConnection()).thenReturn(connection);
@@ -96,17 +94,17 @@ public class SikredeParserUsingNewArchitectureTest {
         Connection connection = null;
         try 
         {
-            SikredeFields sikredeFields = SikredeFields.newSikredeFields(
-                    "PostType", SikredeType.NUMERICAL, 2, 
+            RecordSpecification recordSpecification = RecordSpecification.newSikredeFields(
+                    "PostType", SikredeType.NUMERICAL, 2,
                     "Foo", SikredeType.ALFANUMERICAL, 10);
 
-            SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    sikredeFields, "Foo");
+            SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
+            SikredeParser sikredeParser = new SikredeParser(entryParser,
+                    recordSpecification, "Foo");
 
-            connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
+            connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
-            File[] input = Files.toArray(setupExampleFile(sikredeFields,
+            File[] input = Files.toArray(setupExampleFile(recordSpecification,
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "1234567890"),
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "ABCDEFGHIJ"),
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "Bar"),
@@ -140,17 +138,17 @@ public class SikredeParserUsingNewArchitectureTest {
         Connection connection = null;
         try 
         {
-            SikredeFields sikredeFields = SikredeFields.newSikredeFields(
-                    "PostType", SikredeType.NUMERICAL, 2, 
+            RecordSpecification recordSpecification = RecordSpecification.newSikredeFields(
+                    "PostType", SikredeType.NUMERICAL, 2,
                     "Foo", SikredeType.ALFANUMERICAL, 10);
             
-            SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    sikredeFields, "Foo");
+            SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
+            SikredeParser sikredeParser = new SikredeParser(entryParser,
+                    recordSpecification, "Foo");
             
-            connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
+            connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
             
-            File[] input = Files.toArray(setupExampleFileWithIllegalModtager(sikredeFields,
+            File[] input = Files.toArray(setupExampleFileWithIllegalModtager(recordSpecification,
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "1234567890"),
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "ABCDEFGHIJ"),
                     SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "Bar"),
@@ -174,31 +172,31 @@ public class SikredeParserUsingNewArchitectureTest {
         }
     }
     
-    private Connection setupSikredeGeneratedDatabaseAndConnection(SikredeFields sikredeFields) throws SQLException
+    private Connection setupSikredeGeneratedDatabaseAndConnection(RecordSpecification recordSpecification) throws SQLException
     {
         Connection connection = MySQLConnectionManager.getConnection();
         
         Statement setupStatements = connection.createStatement();
         setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
-        setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
+        setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
         
         return connection;
     }
     
-    private File setupExampleFile(SikredeFields sikredeFields, SikredeRecord... records) throws IOException
+    private File setupExampleFile(RecordSpecification recordSpecification, Record... records) throws IOException
     {
-        SikredeRecordStringGenerator startStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.startRecordSikredeFields);
-        SikredeRecordStringGenerator endStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.endRecordSikredeFields);
+        SikredeRecordStringGenerator startStringGenerator = new SikredeRecordStringGenerator(SikredeParser.START_RECORD_RECORD_SPECIFICATION);
+        SikredeRecordStringGenerator endStringGenerator = new SikredeRecordStringGenerator(SikredeParser.END_RECORD_RECORD_SPECIFICATION);
         
         StringBuilder builder = new StringBuilder();
         
         builder.append(startStringGenerator.stringRecordFromIncompleteSetOfFields("PostType", 0, "Modt", "F053", "SnitfladeId", "S1061023"));
         builder.append('\n');
 
-        SikredeRecordStringGenerator entryStringGenerator = new SikredeRecordStringGenerator(sikredeFields);
-        for(SikredeRecord sikredeRecord: records)
+        SikredeRecordStringGenerator entryStringGenerator = new SikredeRecordStringGenerator(recordSpecification);
+        for(Record record : records)
         {
-            builder.append(entryStringGenerator.stringFromIncompleteRecord(sikredeRecord));
+            builder.append(entryStringGenerator.stringFromIncompleteRecord(record));
             builder.append('\n');
         }
         
@@ -208,7 +206,7 @@ public class SikredeParserUsingNewArchitectureTest {
         File file = temporaryFolder.newFile("foo.txt");
         
         FileOutputStream fileOutputStream = new FileOutputStream(file);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, SikredeParserUsingNewArchitecture.FILE_ENCODING);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, SikredeParser.FILE_ENCODING);
         outputStreamWriter.write(builder.toString());
         outputStreamWriter.flush();
         fileOutputStream.close();        
@@ -216,20 +214,20 @@ public class SikredeParserUsingNewArchitectureTest {
         return file;
     }
 
-    private File setupExampleFileWithIllegalModtager(SikredeFields sikredeFields, SikredeRecord... records) throws IOException
+    private File setupExampleFileWithIllegalModtager(RecordSpecification recordSpecification, Record... records) throws IOException
     {
-        SikredeRecordStringGenerator startStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.startRecordSikredeFields);
-        SikredeRecordStringGenerator endStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.endRecordSikredeFields);
+        SikredeRecordStringGenerator startStringGenerator = new SikredeRecordStringGenerator(SikredeParser.START_RECORD_RECORD_SPECIFICATION);
+        SikredeRecordStringGenerator endStringGenerator = new SikredeRecordStringGenerator(SikredeParser.END_RECORD_RECORD_SPECIFICATION);
         
         StringBuilder builder = new StringBuilder();
         
         builder.append(startStringGenerator.stringRecordFromIncompleteSetOfFields("PostType", 0, "Modt", "F042", "SnitfladeId", "S1061023"));
         builder.append('\n');
         
-        SikredeRecordStringGenerator entryStringGenerator = new SikredeRecordStringGenerator(sikredeFields);
-        for(SikredeRecord sikredeRecord: records)
+        SikredeRecordStringGenerator entryStringGenerator = new SikredeRecordStringGenerator(recordSpecification);
+        for(Record record : records)
         {
-            builder.append(entryStringGenerator.stringFromIncompleteRecord(sikredeRecord));
+            builder.append(entryStringGenerator.stringFromIncompleteRecord(record));
             builder.append('\n');
         }
         
@@ -239,7 +237,7 @@ public class SikredeParserUsingNewArchitectureTest {
         File file = temporaryFolder.newFile("foo.txt");
         
         FileOutputStream fileOutputStream = new FileOutputStream(file);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, SikredeParserUsingNewArchitecture.FILE_ENCODING);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, SikredeParser.FILE_ENCODING);
         outputStreamWriter.write(builder.toString());
         outputStreamWriter.flush();
         fileOutputStream.close();        

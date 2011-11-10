@@ -24,22 +24,22 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
 
-public class SikredeSqlSchemaCreator {
-    
-    public static String createSqlSchema(SikredeFields sikredeFields)
+public class RecordMySQLTableGenerator
+{
+    public static String createSqlSchema(RecordSpecification recordSpecification)
     {
-        SikredeSqlSchemaCreator creator = new SikredeSqlSchemaCreator(sikredeFields);
+        RecordMySQLTableGenerator creator = new RecordMySQLTableGenerator(recordSpecification);
         return creator.buildSqlSchema();
     }
     
-    private SikredeFields sikredeFields;
+    private RecordSpecification recordSpecification;
     
-    private SikredeSqlSchemaCreator(SikredeFields sikredeFields)
+    private RecordMySQLTableGenerator(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpecification = recordSpecification;
     }
     
     private String buildSqlSchema()
@@ -50,7 +50,7 @@ public class SikredeSqlSchemaCreator {
         
         builder.append("\tSikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY");
         
-        for (SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             if(fieldSpecification.type == SikredeType.NUMERICAL)
             {

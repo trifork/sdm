@@ -24,166 +24,157 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import com.google.common.collect.Lists;
+import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
+import com.trifork.stamdata.importer.persistence.Persister;
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.Instant;
+
+import java.sql.*;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
+import static java.lang.String.format;
 
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.importer.persistence.Persister;
-import com.trifork.stamdata.persistence.SikredeRecord;
-
-public class SikredePersisterUsingNewArchitecture {
-
-    private SikredeFields sikredeFields;
+public class RecordPersister
+{
+    private RecordSpecification recordSpec;
     private final Persister persister;
 
-    public SikredePersisterUsingNewArchitecture(SikredeFields sikredeFields, Persister persister)
+    public RecordPersister(RecordSpecification recordSpecification, Persister persister)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpec = recordSpecification;
         this.persister = persister;
     }
-    
-    public void persistRecordWithValidityDate(SikredeRecord record, String key, DateTime timestampOfInsertion) throws SQLException
+
+    public void persistRecordWithValidityDate(Record record, String key, Instant transactionTime) throws SQLException
     {
         Connection connection = persister.getConnection();
         PreparedStatement statement = createSelectStatementAsPreparedStatement(connection, key, record.getField(key));
         ResultSet resultSet = statement.executeQuery();
 
-        // TODO: This might be slow when many records with the same key are loaded: in that case detecting this would be better handled on the server
-        SikredeRecord recordThatIsCurrentlyValid = null;
+        // TODO: This might be slow when many records with the same key are loaded, in that case detecting this would be better handled on the server.
+        Record recordThatIsCurrentlyValid = null;
         int numberOfRecordsWithSameKey = 0;
-        while(resultSet.next())
+
+        // FIXME: I think not all cases are taken into account here.
+
+        while (resultSet.next())
         {
             numberOfRecordsWithSameKey++;
-            
+
             // It is not permitted to insert records with a timestamp earlier than records already in the database
-            if(timestampOfInsertion.isBefore(getValidFrom(resultSet)))
+            if (transactionTime.isBefore(getValidFrom(resultSet)))
             {
                 throw new IllegalArgumentException("The supplied timestamp is earlier than the valid from time of record with the same key alread present in the database");
             }
 
-            if(validToDateIsSet(resultSet))
+            if (isValidToSet(resultSet))
             {
                 // It is not permitted to insert records with a timestamp before the end time of other records (except the case where valid to is not set)
-                if(timestampOfInsertion.isBefore(getValidTo(resultSet)))
+                if (transactionTime.isBefore(getValidTo(resultSet)))
                 {
                     throw new IllegalArgumentException("The supplied timestamp is earlier than the valid to time of a record with the same key alread present in the database");
                 }
             }
             else
             {
-                if(recordThatIsCurrentlyValid != null)
+                if (recordThatIsCurrentlyValid != null)
                 {
                     throw new IllegalStateException("Database is in an invalid state. Several records with the same key \"" + key + "\" are still valid.");
                 }
-                
-                recordThatIsCurrentlyValid = sikredeDataFromResultSet(resultSet);
+
+                recordThatIsCurrentlyValid = createRecordUsingResultSet(resultSet);
             }
         }
-        
-        if(recordThatIsCurrentlyValid == null && numberOfRecordsWithSameKey > 0)
+
+        if (recordThatIsCurrentlyValid == null && numberOfRecordsWithSameKey > 0)
         {
             throw new IllegalStateException("Database is in an invalid state. Records with same key exists, but none of them are currently active.");
         }
 
-        if(recordThatIsCurrentlyValid != null)
+        if (recordThatIsCurrentlyValid != null)
         {
-            updateValidToDateForRecord(recordThatIsCurrentlyValid, key, timestampOfInsertion);
+            updateValidToOnRecord(recordThatIsCurrentlyValid, key, transactionTime);
         }
-        
-        uncheckedInsertRecordWithValidityDate(record, timestampOfInsertion);
-    }
-    
-    boolean validToDateIsSet(ResultSet resultSet) throws SQLException
-    {
-        return (resultSet.getDate("ValidTo") != null);
+
+        uncheckedInsertRecordWithValidityDate(record, transactionTime);
     }
 
-    DateTime getValidFrom(ResultSet resultSet) throws SQLException 
+    private boolean isValidToSet(ResultSet resultSet) throws SQLException
     {
-        return new DateTime(resultSet.getDate("ValidFrom"));
+        return (resultSet.getTimestamp("ValidTo") != null);
     }
 
-    DateTime getValidTo(ResultSet resultSet) throws SQLException 
+    Instant getValidFrom(ResultSet resultSet) throws SQLException
     {
-        if(validToDateIsSet(resultSet))
-        {
-            return new DateTime(resultSet.getDate("ValidTo"));
-        }
-        else
-        {
-            return null;
-        }
+        return new Instant(resultSet.getTimestamp("ValidFrom"));
     }
-    
-    private void uncheckedInsertRecordWithValidityDate(SikredeRecord record, DateTime timestampOfInsertion) throws SQLException 
+
+    Instant getValidTo(ResultSet resultSet) throws SQLException
     {
-        PreparedStatement statement = insertPreparedStatement(persister.getConnection());
-        insertValuesIntoPreparedStatement(statement, record, timestampOfInsertion);
+        return isValidToSet(resultSet) ? new Instant(resultSet.getTimestamp("ValidTo")) : null;
+    }
+
+    private void uncheckedInsertRecordWithValidityDate(Record record, Instant transactionTime) throws SQLException
+    {
+        PreparedStatement statement = createInsertStatement(persister.getConnection());
+        populateStatement(statement, record, transactionTime);
         statement.executeUpdate();
     }
 
-    private void updateValidToDateForRecord(SikredeRecord record, String key, DateTime timestampOfInsertion) throws SQLException 
+    private void updateValidToOnRecord(Record record, String key, Instant transactionTime) throws SQLException
     {
-        PreparedStatement statement = updateValidToPreparedStatement(persister.getConnection(), key);
-        updateValuesIntoPreparedStatement(statement, record, key, timestampOfInsertion);
+        PreparedStatement statement = updateValidToForRecordWithKey(persister.getConnection(), key);
+        populateUpdateStatement(statement, record, key, transactionTime);
         statement.executeUpdate();
     }
-    
-    String insertStatementString()
+
+    String createInsertStatementSql()
     {
         StringBuilder builder = new StringBuilder();
 
         builder.append("INSERT INTO SikredeGenerated (");
-        
-        List<String> fieldNames = new ArrayList<String>();
-        List<String> questionMarks = new ArrayList<String>();
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+
+        List<String> fieldNames = Lists.newArrayList();
+        List<String> questionMarks = Lists.newArrayList();
+
+        for(FieldSpecification fieldSpecification: recordSpec.getFieldSpecificationsInCorrectOrder())
         {
             fieldNames.add(fieldSpecification.name);
             questionMarks.add("?");
         }
-        
+
         fieldNames.add("ValidFrom");
         questionMarks.add("?");
-        
+
         builder.append(StringUtils.join(fieldNames, ", "));
         builder.append(") VALUES (");
         builder.append(StringUtils.join(questionMarks, ", "));
         builder.append(")");
-        
+
         return builder.toString();
     }
-    
-    PreparedStatement insertPreparedStatement(Connection connection) throws SQLException
+
+    private PreparedStatement createInsertStatement(Connection connection) throws SQLException
     {
-        return connection.prepareStatement(insertStatementString());
+        return connection.prepareStatement(createInsertStatementSql());
     }
-    
-    void insertValuesIntoPreparedStatement(PreparedStatement preparedStatement, SikredeRecord record, DateTime validFrom) throws SQLException
+
+    void populateStatement(PreparedStatement preparedStatement, Record record, Instant validFrom) throws SQLException
     {
-        if(!sikredeFields.conformsToSpecifications(record))
-        {
-            throw new IllegalArgumentException("Supplied values do not conform to fields in sikrede");
-        }
-        
+        Preconditions.checkArgument(recordSpec.conformsToSpecifications(record), "The record does not conform to it's spec.");
+
         int index = 1;
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+
+        for (FieldSpecification fieldSpecification: recordSpec.getFieldSpecificationsInCorrectOrder())
         {
-            if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
             {
                 preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
-            } 
-            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            }
+            else if (fieldSpecification.type == SikredeType.NUMERICAL)
             {
                 preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
             }
@@ -191,47 +182,49 @@ public class SikredePersisterUsingNewArchitecture {
             {
                 throw new AssertionError("SikredeType was not set correctly in Sikrede specification");
             }
+
             index++;
         }
-        
-        preparedStatement.setDate(index, new Date(validFrom.getMillis()));
+
+        preparedStatement.setTimestamp(index, new Timestamp(validFrom.getMillis()));
     }
-    
+
     ////////////////////////////////
-    
+
     String createSelectStatementAsString(String key)
     {
-        return "SELECT * FROM SikredeGenerated WHERE " + key + " = ?";
+        return format("SELECT * FROM SikredeGenerated WHERE %s = ?", key);
     }
-    
+
     PreparedStatement createSelectStatementAsPreparedStatement(Connection connection, String key, Object value) throws SQLException
     {
         PreparedStatement statement = connection.prepareStatement(createSelectStatementAsString(key));
         statement.setObject(1, value);
         return statement;
     }
-    
+
     /**
      * Assumes the result set is pointing to a record (i.e. that next() was called at least once on the ResultSet
-     * @throws SQLException 
+     * @throws SQLException
      */
-    SikredeRecord sikredeDataFromResultSet(ResultSet resultSet) throws SQLException
+    Record createRecordUsingResultSet(ResultSet resultSet) throws SQLException
     {
         Preconditions.checkNotNull(resultSet);
         Preconditions.checkArgument(!resultSet.isBeforeFirst());
         Preconditions.checkArgument(!resultSet.isAfterLast());
-        
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(sikredeFields);
-        
-        for(SikredeFieldSpecification fieldSpecification : sikredeFields.getFieldSpecificationsInCorrectOrder())
+
+        RecordBuilder builder = new RecordBuilder(recordSpec);
+
+        for(FieldSpecification fieldSpec : recordSpec.getFieldSpecificationsInCorrectOrder())
         {
-            String key = fieldSpecification.name;
-            if(fieldSpecification.type == SikredeType.NUMERICAL)
+            String key = fieldSpec.name;
+            
+            if (fieldSpec.type == SikredeType.NUMERICAL)
             {
                 // TODO: Explicit check of returned type
                 builder.field(key, resultSet.getInt(key));
             }
-            else if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            else if (fieldSpec.type == SikredeType.ALFANUMERICAL)
             {
                 builder.field(key, resultSet.getString(key));
             }
@@ -240,26 +233,25 @@ public class SikredePersisterUsingNewArchitecture {
                 throw new AssertionError("Invalid field specifier used");
             }
         }
-        
-        SikredeRecord record = builder.build();
-        
-        if(!sikredeFields.conformsToSpecifications(record))
+
+        Record record = builder.build();
+
+        if (!recordSpec.conformsToSpecifications(record))
         {
             throw new IllegalStateException("ResultSet did not contain valid values as specified");
         }
-        
+
         return record;
     }
 
-    PreparedStatement updateValidToPreparedStatement(Connection connection, String key) throws SQLException 
+    private PreparedStatement updateValidToForRecordWithKey(Connection connection, String key) throws SQLException
     {
         return connection.prepareStatement("UPDATE SikredeGenerated SET ValidTo = ? WHERE " + key + " = ?");
     }
 
-    void updateValuesIntoPreparedStatement(PreparedStatement statement, SikredeRecord record,
-            String key, DateTime timestampOfInsertion) throws SQLException 
+    private void populateUpdateStatement(PreparedStatement statement, Record record, String key, Instant transactionTime) throws SQLException
     {
-        statement.setDate(1, new Date(timestampOfInsertion.getMillis()));
+        statement.setTimestamp(1, new Timestamp(transactionTime.getMillis()));
         statement.setObject(2, record.get(key));
     }
 }

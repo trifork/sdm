@@ -24,6 +24,8 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType.ALFANUMERICAL;
+import static com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType.NUMERICAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -37,35 +39,35 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-import com.trifork.stamdata.persistence.SikredeRecord;
 
-public class SikredePersisterUsingNewArcitechtureTest {
-
+public class RecordPersisterTest
+{
     Connection connection;
-    SikredeFields exampleSikredeFields;
-    SikredePersisterUsingNewArchitecture sikredePersister;
+    RecordSpecification recordSpecification;
+    RecordPersister persister;
     
     @Before
     public void setupSikredePersister() throws SQLException
     {
         // TODO: Add test with two identical field names
-        exampleSikredeFields = SikredeFields.newSikredeFields(
-                "Foo", SikredeType.NUMERICAL, 2,
-                "Moo", SikredeType.ALFANUMERICAL, 5
-                );
+        recordSpecification = RecordSpecification.newSikredeFields(
+            "Foo",  NUMERICAL,       2,
+            "Moo",  ALFANUMERICAL,   5
+        );
         
         connection = MySQLConnectionManager.getConnection();
-        createSikredeFieldsTableOnDatabase(connection, exampleSikredeFields);
+        createSikredeFieldsTableOnDatabase(connection, recordSpecification);
         
-        AuditingPersister persister = new AuditingPersister(connection);
-        sikredePersister = new SikredePersisterUsingNewArchitecture(exampleSikredeFields, persister);
+        AuditingPersister oldPersister = new AuditingPersister(connection);
+        persister = new RecordPersister(recordSpecification, oldPersister);
     }
 
     @After
@@ -80,30 +82,32 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test
     public void testAddingTheSameRecordTwiceButWithNeverTimestamp() throws SQLException 
     {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
-        
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+        Record record = builder.field("Foo", 42).field("Moo", "Far").build();
+
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 42), "Moo", theYear2000);
+        persister.persistRecordWithValidityDate(record.setField("Foo", 42), "Moo", theYear2000.toInstant());
         connection.commit();
         
         DateTime theYear2010 = theYear2000.plusYears(10);
-        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 10), "Moo", theYear2010);
+        persister.persistRecordWithValidityDate(record.setField("Foo", 10), "Moo", theYear2010.toInstant());
         connection.commit();
         
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
         
         int recordCount = 0;
+        
         while(resultSet.next())
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            Record sikredeRecord = persister.createRecordUsingResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
 
-            DateTime validFrom = sikredePersister.getValidFrom(resultSet);
-            DateTime validTo = sikredePersister.getValidTo(resultSet);
+            Instant validFrom = persister.getValidFrom(resultSet);
+            Instant validTo = persister.getValidTo(resultSet);
+
             if(sikredeRecord.get("Foo").equals(42))
             {
                 assertEquals(theYear2000, validFrom);
@@ -126,16 +130,16 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test
     public void testAddingTwoDifferentRecordsDontEffectEachOther() throws SQLException 
     {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord recordA = builder.field("Foo", 42).field("Moo", "Far").build();
-        SikredeRecord recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+        Record recordA = builder.field("Foo", 42).field("Moo", "Far").build();
+        Record recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
         
-        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        sikredePersister.persistRecordWithValidityDate(recordA, "Moo", theYear2000);
+        Instant theYear2000 = new DateTime(2000, 1, 1, 0, 0).toInstant();
+        persister.persistRecordWithValidityDate(recordA, "Moo", theYear2000);
         connection.commit();
         
-        DateTime theYear2010 = theYear2000.plusYears(10);
-        sikredePersister.persistRecordWithValidityDate(recordB, "Moo", theYear2010);
+        Instant theYear2010 = new DateTime(2010, 1, 1, 0, 0).toInstant();
+        persister.persistRecordWithValidityDate(recordB, "Moo", theYear2010);
         connection.commit();
         
         Statement statement = connection.createStatement();
@@ -146,9 +150,8 @@ public class SikredePersisterUsingNewArcitechtureTest {
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
-            
-            assertTrue(recordA.equals(sikredeRecord) || recordB.equals(sikredeRecord));
+            Record record = persister.createRecordUsingResultSet(resultSet);
+            assertTrue(recordA.equals(record) || recordB.equals(record));
         }
         
         assertEquals(2, recordCount);
@@ -157,15 +160,15 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test
     public void testAddingExactSameRecordTwiceAddsANewRecord() throws SQLException 
     {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+        Record record = builder.field("Foo", 42).field("Moo", "Far").build();
         
-        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        Instant theYear2000 = new DateTime(2000, 1, 1, 0, 0).toInstant();
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2000);
         connection.commit();
         
-        DateTime theYear2010 = theYear2000.plusYears(10);
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        Instant theYear2010 = new DateTime(2010, 1, 1, 0, 0).toInstant();
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2010);
         connection.commit();
         
         Statement statement = connection.createStatement();
@@ -176,11 +179,11 @@ public class SikredePersisterUsingNewArcitechtureTest {
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            Record sikredeRecord = persister.createRecordUsingResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
             
-            DateTime validFrom = sikredePersister.getValidFrom(resultSet);
-            DateTime validTo = sikredePersister.getValidTo(resultSet);
+            Instant validFrom = persister.getValidFrom(resultSet);
+            Instant validTo = persister.getValidTo(resultSet);
 
             if(validFrom.equals(theYear2000))
             {
@@ -202,36 +205,36 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test(expected=IllegalArgumentException.class)
     public void testAddingTheSameRecordWithAnEarlierTimestampRaisesAnException() throws SQLException 
     {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+        Record record = builder.field("Foo", 42).field("Moo", "Far").build();
         
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
         DateTime theYear2010 = theYear2000.plusYears(10);
 
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2010.toInstant());
         connection.commit();
         
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2000.toInstant());
         connection.commit();
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testAddingARecordWithATimestampInTheMiddleOfAnExistingRecordRaisesAnException() throws SQLException 
     {
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        RecordBuilder builder = new RecordBuilder(recordSpecification);
+        Record record = builder.field("Foo", 42).field("Moo", "Far").build();
         
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
         DateTime theYear2005 = theYear2000.plusYears(5);
         DateTime theYear2010 = theYear2000.plusYears(10);
         
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2000.toInstant());
         connection.commit();
         
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2010.toInstant());
         connection.commit();
         
-        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2005);
+        persister.persistRecordWithValidityDate(record, "Moo", theYear2005.toInstant());
         connection.commit();
     }
     
@@ -239,7 +242,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
     public void testInsertStatementString() 
     {
         String expected = "INSERT INTO SikredeGenerated (Foo, Moo, ValidFrom) VALUES (?, ?, ?)";
-        String actual = sikredePersister.insertStatementString();
+        String actual = persister.createInsertStatementSql();
         assertEquals(expected, actual);
     }
 
@@ -247,9 +250,9 @@ public class SikredePersisterUsingNewArcitechtureTest {
     public void testInsertValuesIntoPreparedStatement() throws SQLException
     {
         PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
-        SikredeRecord record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Moo", "Baz", "Foo", 42);
+        Record record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Moo", "Baz", "Foo", 42);
         
-        sikredePersister.insertValuesIntoPreparedStatement(mockedPrepareStatement, record, new DateTime());
+        persister.populateStatement(mockedPrepareStatement, record, Instant.now());
 
         verify(mockedPrepareStatement).setInt(1, 42);
         verify(mockedPrepareStatement).setString(2, "Baz");
@@ -258,7 +261,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test
     public void testSelectStatementString()
     {
-        String actual = sikredePersister.createSelectStatementAsString("Foo");
+        String actual = persister.createSelectStatementAsString("Foo");
         String expected = "SELECT * FROM SikredeGenerated WHERE Foo = ?";
         
         assertEquals(expected, actual);
@@ -272,7 +275,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         
         when(mockConnection.prepareStatement("SELECT * FROM SikredeGenerated WHERE Foo = ?")).thenReturn(mockPreparedStatement);
 
-        sikredePersister.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
+        persister.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
 
         verify(mockPreparedStatement).setObject(1, 10);
     }
@@ -288,7 +291,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         when(mockResultSet.getInt("Foo")).thenReturn(42);
         when(mockResultSet.getString("Moo")).thenReturn("Moo");
         
-        SikredeRecord actual = sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        Record actual = persister.createRecordUsingResultSet(mockResultSet);
         
         assertTrue(actual.containsKey("Foo"));
         assertEquals(42, actual.get("Foo"));
@@ -308,13 +311,13 @@ public class SikredePersisterUsingNewArcitechtureTest {
         when(mockResultSet.getInt("Foo")).thenReturn(42);
         when(mockResultSet.getString("Moo")).thenReturn("MooMoo");
         
-        sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        persister.createRecordUsingResultSet(mockResultSet);
     }
     
-    private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException
+    private void createSikredeFieldsTableOnDatabase(Connection connection, RecordSpecification recordSpecification) throws SQLException
     {
         Statement setupStatements = connection.createStatement();
         setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
-        setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
+        setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
     }
 }

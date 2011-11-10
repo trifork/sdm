@@ -22,249 +22,137 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-
-
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
+import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.jobs.FileParser;
+import com.trifork.stamdata.importer.jobs.sikrede.RecordPersister;
+import com.trifork.stamdata.importer.parsers.dkma.ParserException;
+import com.trifork.stamdata.importer.persistence.Persister;
+import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.util.List;
+import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import static java.lang.String.format;
 
-import com.trifork.stamdata.importer.jobs.yderregister.model.Yderregister;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterDatasets;
-import com.trifork.stamdata.importer.jobs.yderregister.model.YderregisterPerson;
 
-/**
- * @author Jan Buchholdt <jbu@trofork.com>
- */
-public class YderregisterParser
+public class YderregisterParser implements FileParser
 {
-	private static final Logger logger = LoggerFactory.getLogger(YderregisterParser.class);
+    private static final String KEY_STORE_VERSION_KEY = "version";
+    private static final DateTimeFormatter VERSION_DATE_FORMAT = ISODateTimeFormat.basicDate();
 
-	public YderregisterDatasets parseYderregister(File[] files) throws Exception
+	private static final List<String> REQUIRED_FILE_EXTENSIONS = ImmutableList.of("K05", "K40", "K45", "K1025", "K5094");
+
+    @Override
+	public String getIdentifier()
 	{
-		YderRegisterEventHandler handler = new YderRegisterEventHandler();
-		SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
-		for (File f : files)
-		{
-			try
-			{
-				if (f.getName().toLowerCase().endsWith("xml"))
-				{
-					parser.parse(f, handler);
-				}
-				else
-				{
-					logger.warn("Can only parse files with extension 'xml'! Ignoring: {}", f.getAbsolutePath());
-				}
-			}
-			catch (Exception e)
-			{
-				throw new Exception("Error parsing data from file=" + f.getAbsolutePath(), e);
-			}
-		}
-
-		return handler.getDataset();
+        // WARNING: Be careful not to change this after the first run.
+        // If you do this, you will have to change any external reference
+        // to it too. Such as mentions in the database.
+        //
+		return "yderregister";
 	}
 
-
-	protected class YderRegisterEventHandler extends DefaultHandler
+	@Override
+	public String getHumanName()
 	{
-		private static final String SUPPORTED_INTERFACE_VERSION = "S1040013";
-		private static final String EXPECTED_RECEIPIENT_ID = "B084";
-
-		protected final DateFormat datoFormatter = new SimpleDateFormat("yyyyMMdd");
-
-		private static final String START_QNAME = "Start";
-		private static final String END_QNAME = "Slut";
-		private static final String YDER_QNAME = "Yder";
-		private static final String PERSON_QNAME = "Person";
-
-		protected String opgDato;
-
-		protected YderregisterDatasets dataset;
-
-		public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException
-		{
-			if (START_QNAME.equals(qName))
-			{
-				if (opgDato == null)
-				{
-					opgDato = atts.getValue("OpgDato");
-					dataset = new YderregisterDatasets(getDateFromOpgDato(opgDato));
-				}
-				else if (!opgDato.equals(atts.getValue("OpgDato")))
-				{
-					throw new SAXException("The dates in the files differ. This is not allowed and the fileset is invalid.");
-				}
-
-				String modtager = atts.getValue("Modt");
-				String snitfladeID = atts.getValue("SnitfladeId");
-
-				if (!modtager.trim().equals(EXPECTED_RECEIPIENT_ID))
-				{
-					throw new SAXException("Yder-register filen har forkert modtagerangivelse: " + modtager + " i stedet for" + EXPECTED_RECEIPIENT_ID + ".");
-				}
-				
-				if (!SUPPORTED_INTERFACE_VERSION.equals(snitfladeID.trim()))
-				{
-					throw new SAXException("Yder-register filen har forkert snitfladeID: " + snitfladeID + " i stedet for " + SUPPORTED_INTERFACE_VERSION + ".");
-				}
-			}
-			else if (YDER_QNAME.equals(qName))
-			{
-				String histId = atts.getValue("HistIdYder");
-				String amtKode = atts.getValue("AmtKodeYder").trim();
-				String ydernr = removeLeadingZeroes(atts.getValue("YdernrYder")).trim();
-				String prakBetegn = atts.getValue("PrakBetegn").trim();
-				String adresse = atts.getValue("AdrYder").trim();
-				String postnr = atts.getValue("PostnrYder").trim();
-				String postdist = atts.getValue("PostdistYder").trim();
-
-				Date afgDato = null;
-				Date tilgDato = null;
-				
-				String afgDatoString = "";
-				String tilgDatoString = "";
-				
-				try
-				{
-					afgDatoString = atts.getValue("AfgDatoYder").trim();
-					tilgDatoString = atts.getValue("TilgDatoYder").trim();
-
-					if (!afgDatoString.trim().isEmpty())
-					{
-						afgDato = datoFormatter.parse(afgDatoString);
-					}
-					
-					if (!tilgDatoString.trim().isEmpty())
-					{
-						tilgDato = datoFormatter.parse(tilgDatoString);
-					}
-				}
-				catch (ParseException e)
-				{
-					throw new SAXException("Problems reading or parsing AfgDatoYder=" + afgDatoString + " or TilDatoYder=" + tilgDatoString, e);
-				}
-
-				String hvdSpecKode = atts.getValue("HvdSpecKode").trim();
-				String hvdSpecTekst = atts.getValue("HvdSpecTxt").trim();
-				String telefon = atts.getValue("HvdTlf").trim();
-				String email = atts.getValue("EmailYder").trim();
-				String www = atts.getValue("WWW").trim();
-
-				Yderregister yder = new Yderregister();
-
-				yder.setHistID(histId);
-				yder.setAmtNummer(Integer.parseInt(amtKode));
-				yder.setNummer(ydernr);
-				yder.setNavn(prakBetegn);
-				yder.setVejnavn(adresse); // This includes the house number, suite etc.
-				yder.setPostnummer(postnr);
-				yder.setBynavn(postdist);
-				yder.setAfgangDato(afgDato);
-				yder.setTilgangDato(tilgDato);
-				yder.setHovedSpecialeKode(hvdSpecKode);
-				yder.setHovedSpecialeTekst(hvdSpecTekst);
-				yder.setTelefon(telefon);
-				yder.setEmail(email);
-				yder.setWww(www);
-
-				dataset.addYderregister(yder);
-			}
-			else if (PERSON_QNAME.equals(qName))
-			{
-				String histId = atts.getValue("HistIdPerson");
-				String ydernr = removeLeadingZeroes(atts.getValue("YdernrPerson")).trim();
-				String cpr = atts.getValue("CprNr");
-
-				Date afgDato = null;
-				Date tilgDato = null;
-				
-				String afgDatoString = "";
-				String tilgDatoString = "";
-				
-				try
-				{
-					afgDatoString = atts.getValue("AfgDatoPerson").trim();
-					tilgDatoString = atts.getValue("TilgDatoPerson").trim();
-
-					if (!afgDatoString.trim().isEmpty())
-					{
-						afgDato = datoFormatter.parse(afgDatoString);
-					}
-					if (!tilgDatoString.trim().isEmpty())
-					{
-						tilgDato = datoFormatter.parse(tilgDatoString);
-					}
-				}
-				catch (ParseException pe)
-				{
-					throw new SAXException("Problems reading or parsing AfgDatoPerson=" + afgDatoString + " or TilDatoPerson=" + tilgDatoString, pe);
-				}
-
-				String rolleKode = atts.getValue("PersonrolleKode").trim();
-				String rolleTekst = atts.getValue("PersonrolleTxt").trim();
-
-				// Ignore empty CPR numbers. TODO (thb): Why? Ask Jan Buchholdt 
-				
-				if (cpr != null && cpr.length() == 10)
-				{
-					YderregisterPerson yderPerson = new YderregisterPerson();
-					yderPerson.setAfgangDato(afgDato);
-					yderPerson.setTilgangDato(tilgDato);
-					yderPerson.setCpr(cpr);
-					yderPerson.setHistIdPerson(histId);
-					yderPerson.setPersonrolleKode(rolleKode);
-					yderPerson.setPersonrolleTxt(rolleTekst);
-					yderPerson.setNummer(ydernr);
-					dataset.addYderregisterPerson(yderPerson);
-				}
-			}
-		}
-
-		public YderregisterDatasets getDataset()
-		{
-			return dataset;
-		}
-
-		private String removeLeadingZeroes(String valueToStrip)
-		{
-			// Strips leading zeros but leaves one if the input is all zeros.
-			// E.g. "0000" -> "0".
-			
-			return valueToStrip.replaceFirst("^0+(?!$)", "");
-		}
+		return "Yderregister Parser";
 	}
 
-	public Date getDateFromOpgDato(String opgDato)
+    @Override
+    public boolean validateInputStructure(File[] input)
 	{
-		// TODO (thb): Use a SimpleDateFormat here. Why would you return null? Shouldn't it throw an exception. Ask Jan Buchholdt.
-		
-		try
+        // FIXME: The original implementation of this class requires
+        // the presence of all the file in REQUIRED_FILE_EXTENSIONS.
+        // It seems however that there only are records in the 'K05'.
+        //
+        // This class could be considerable easier to understand if
+        // we only have to check the single file.
+
+		Set<String> found = Sets.newHashSet();
+
+		for (File file : input)
 		{
-			int year = new Integer(opgDato.substring(0, 4));
-			int month = new Integer(opgDato.substring(4, 6));
-			int date = new Integer(opgDato.substring(6, 8));
-			return new GregorianCalendar(year, month - 1, date).getTime();
+			String filename = file.getName();
+            
+			if (filename.indexOf('.') != filename.lastIndexOf('.'))
+			{
+                int extensionStart = filename.indexOf('.') + 1;
+                int extensionEnd = filename.lastIndexOf('.');
+                String extension = filename.substring(extensionStart, extensionEnd);
+
+                boolean added = found.add(extension);
+
+                if (!added) throw new ParserException(format("Multiple files with extension '%s'.", extension));
+			}
 		}
-		catch (NumberFormatException e)
-		{
-			return null;
-		}
+
+		return found.containsAll(REQUIRED_FILE_EXTENSIONS);
 	}
 
+	@Override
+	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
+	{
+        Instant transactionTime = Instant.now();
+
+		String newVersion = extractVersionFromFileSet(input);
+
+        // FIXME: Ensure the import sequence. This cannot be done until we get more information
+        // about the filename conversion.
+        //
+        // Currently we can ensure that we don't import an old version, by looking at the previous
+        // version and ensuring that the version number is larger.
+        //
+		String prevVersion = keyValueStore.get(KEY_STORE_VERSION_KEY);
+
+        // TODO: Ensure the new version has the correct format: yyyyMMdd
+        //
+		if (newVersion.compareTo(prevVersion) > 0)
+		{
+			throw new ParserException(format("The received version '%s' of the register is not in sequence. Current version is '%s'.", newVersion, prevVersion));
+		}
+
+		keyValueStore.put(KEY_STORE_VERSION_KEY, prevVersion);
+
+        // Do the actual import.
+        //
+        RecordPersister newPersister = new RecordPersister(null, persister);
+        SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+
+        for (File file : input)
+        {
+	        parser.parse(file, new YderRegisterSaxEventHandler(newPersister, transactionTime));
+	    }
+    }
+
+    private String extractVersionFromFileSet(File[] input)
+    {
+        String version = null;
+        
+        for (File file : input)
+        {
+            String versionInFilename = file.getName().substring(10, 15);
+
+            if (version == null)
+            {
+                version = versionInFilename;
+            }
+            else if (!version.equals(versionInFilename))
+            {
+                throw new ParserException(format("The data set contains files with different version numbers. (%s, %s)", version, versionInFilename));
+            }
+        }
+        
+        if (version == null) throw new ParserException(format("Malformed file set. No version number found."));
+        
+        return version;
+    }
 }

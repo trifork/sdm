@@ -126,6 +126,8 @@ public class JobScheduler
 
     private ListenableFuture executeParser(Class<? extends Parser> parserClass)
     {
+        // Create a child injector for the parser to limit its scope
+        //
         Injector parserInjector = injector.createChildInjector(ParserModule.using(parserClass));
 
         ParserExecutor executor = parserInjector.getInstance(ParserExecutor.class);

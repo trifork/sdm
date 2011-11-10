@@ -24,8 +24,8 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import com.trifork.stamdata.importer.jobs.sikrede.RecordSpecification.SikredeType;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.w3c.dom.Document;
@@ -33,36 +33,34 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeXmlGeneratorTest {
 
-    private SikredeFields exampleSikredeFields;
-    private SikredeXmlGenerator exampleXmlGenerator;
+    private RecordSpecification exampleRecordSpecification;
+    private RecordXmlSchemaGenerator exampleXmlGenerator;
 
     @Before
     public void initialiseVariables()
     {
-        this.exampleSikredeFields = SikredeFields.newSikredeFields(
+        this.exampleRecordSpecification = RecordSpecification.newSikredeFields(
                 "Foo", SikredeType.NUMERICAL, 2,
                 "Bar", SikredeType.ALFANUMERICAL, 10);
-        exampleXmlGenerator = new SikredeXmlGenerator(exampleSikredeFields);
+        exampleXmlGenerator = new RecordXmlSchemaGenerator(exampleRecordSpecification);
     }
     
     @Test
     public void testSimpleXmlDocumentGeneration() throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
     {
-        SikredeRecordBuilder recordBuilder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord sikredeRecord = recordBuilder.field("Foo", 42).field("Bar", "ABCDEFGH").build();
-        Document document = exampleXmlGenerator.generateXml(sikredeRecord);
+        RecordBuilder recordBuilder = new RecordBuilder(exampleRecordSpecification);
+        Record record = recordBuilder.field("Foo", 42).field("Bar", "ABCDEFGH").build();
+        Document document = exampleXmlGenerator.generateXml(record);
         
         String expected = 
                 "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" + 
-                        "<SikredeRecord>"+
+                        "<Record>"+
                         "<Foo>42</Foo>" + 
                         "<Bar>ABCDEFGH</Bar>" + 
-                        "</SikredeRecord>";
+                        "</Record>";
         String actual = serializeDomDocument(document);
         
         Assert.assertEquals(expected, actual);
@@ -71,22 +69,22 @@ public class SikredeXmlGeneratorTest {
     @Test(expected=IllegalArgumentException.class)
     public void testEmptyRecordGeneration()
     {
-        SikredeRecord sikredeRecord = new SikredeRecord();
-        exampleXmlGenerator.generateXml(sikredeRecord);
+        Record record = new Record();
+        exampleXmlGenerator.generateXml(record);
     }
     
     @Test
     public void testEmptySchemaRecordGeneration() throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
     {
-        exampleSikredeFields = SikredeFields.newSikredeFields();
-        exampleXmlGenerator = new SikredeXmlGenerator(exampleSikredeFields);
-        SikredeRecordBuilder recordBuilder = new SikredeRecordBuilder(exampleSikredeFields);
-        SikredeRecord sikredeRecord = recordBuilder.build();
-        Document document = exampleXmlGenerator.generateXml(sikredeRecord);
+        exampleRecordSpecification = RecordSpecification.newSikredeFields();
+        exampleXmlGenerator = new RecordXmlSchemaGenerator(exampleRecordSpecification);
+        RecordBuilder recordBuilder = new RecordBuilder(exampleRecordSpecification);
+        Record record = recordBuilder.build();
+        Document document = exampleXmlGenerator.generateXml(record);
         
         String expected = 
                 "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" + 
-                        "<SikredeRecord/>";
+                        "<Record/>";
         String actual = serializeDomDocument(document);
         
         Assert.assertEquals(expected, actual);
