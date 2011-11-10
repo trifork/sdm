@@ -44,6 +44,9 @@ import com.trifork.stamdata.importer.persistence.Persister;
 
 public class SikredeParserUsingNewArchitecture implements FileParser {
 
+    static final String ACCEPTED_MODTAGER = "F053";
+    static final String ACCEPTED_SNITFLADE_ID = "S1061023";
+    
     private static final String RECORD_TYPE_ENTRY = "10";
     private static final String RECORD_TYPE_END = "99";
     private static final String RECORD_TYPE_START = "00";
@@ -61,8 +64,6 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
             "PostType", SikredeType.NUMERICAL, 2,
             "AntPost", SikredeType.NUMERICAL, 8);
     static final SikredeLineParser endRecordParser = new SikredeLineParser(endRecordSikredeFields);
-    
-    // FIXME: Verificer Modt og SnitfladeId jf. dokumentation
     
     private final SikredeLineParser entryParser;
     private final SikredeSqlStatementCreator statementCreator;
@@ -150,6 +151,18 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
                 }
                 
                 startRecord = startRecordParser.parseLine(line);
+                
+                // FIXME: Verificer Modt og SnitfladeId jf. dokumentation
+                if(!ACCEPTED_MODTAGER.equals(startRecord.get("Modt")))
+                {
+                    throw new ParserException("The \"Modt\" field of the start record did not match the accepted: " + ACCEPTED_MODTAGER + ", but was " + startRecord.get("Modt"));
+                }
+                
+                if(!ACCEPTED_SNITFLADE_ID.equals(startRecord.get("SnitfladeId")))
+                {
+                    throw new ParserException("The \"SnitfladeId\" field of the start record did not match the accepted: " + ACCEPTED_SNITFLADE_ID + ", but was " + startRecord.get("SnitfladeId"));
+                }
+
             }
             else if (line.startsWith(RECORD_TYPE_END))
             {

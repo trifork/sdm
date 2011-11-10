@@ -41,6 +41,7 @@ import org.junit.rules.TemporaryFolder;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.util.Files;
 
@@ -133,6 +134,47 @@ public class SikredeParserUsingNewArchitectureTest {
             }
         }
     }
+
+    @Test(expected=ParserException.class)
+    public void testIllegalStartRecord() throws Exception 
+    {
+        Connection connection = null;
+        try 
+        {
+            SikredeFields sikredeFields = SikredeFields.newSikredeFields(
+                    "PostType", SikredeType.NUMERICAL, 2, 
+                    "Foo", SikredeType.ALFANUMERICAL, 10);
+            
+            SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
+            SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
+            SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
+                    statementCreator, "Foo");
+            
+            connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
+            
+            File[] input = Files.toArray(setupExampleFileWithIllegalModtager(sikredeFields,
+                    SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "1234567890"),
+                    SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "ABCDEFGHIJ"),
+                    SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "Bar"),
+                    SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("PostType", 10, "Foo", "BarBaz")));
+            
+            Persister mockPersister = mock(Persister.class);
+            when(mockPersister.getConnection()).thenReturn(connection);
+            
+            sikredeParser.parse(input, mockPersister, null);
+        } 
+        catch (SQLException e)
+        {
+            throw new AssertionError(e);
+        }
+        finally
+        {
+            if(connection != null)
+            {
+                connection.rollback();
+            }
+        }
+    }
     
     private Connection setupSikredeGeneratedDatabaseAndConnection(SikredeFields sikredeFields) throws SQLException
     {
@@ -165,6 +207,37 @@ public class SikredeParserUsingNewArchitectureTest {
         builder.append(endStringGenerator.stringRecordFromIncompleteSetOfFields("PostType", 99, "AntPost", records.length));
         builder.append('\n');
 
+        File file = temporaryFolder.newFile("foo.txt");
+        
+        FileOutputStream fileOutputStream = new FileOutputStream(file);
+        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, SikredeParserUsingNewArchitecture.FILE_ENCODING);
+        outputStreamWriter.write(builder.toString());
+        outputStreamWriter.flush();
+        fileOutputStream.close();        
+        
+        return file;
+    }
+
+    private File setupExampleFileWithIllegalModtager(SikredeFields sikredeFields, SikredeRecord... records) throws IOException
+    {
+        SikredeRecordStringGenerator startStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.startRecordSikredeFields);
+        SikredeRecordStringGenerator endStringGenerator = new SikredeRecordStringGenerator(SikredeParserUsingNewArchitecture.endRecordSikredeFields);
+        
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append(startStringGenerator.stringRecordFromIncompleteSetOfFields("PostType", 0, "Modt", "F042", "SnitfladeId", "S1061023"));
+        builder.append('\n');
+        
+        SikredeRecordStringGenerator entryStringGenerator = new SikredeRecordStringGenerator(sikredeFields);
+        for(SikredeRecord sikredeRecord: records)
+        {
+            builder.append(entryStringGenerator.stringFromIncompleteRecord(sikredeRecord));
+            builder.append('\n');
+        }
+        
+        builder.append(endStringGenerator.stringRecordFromIncompleteSetOfFields("PostType", 99, "AntPost", records.length));
+        builder.append('\n');
+        
         File file = temporaryFolder.newFile("foo.txt");
         
         FileOutputStream fileOutputStream = new FileOutputStream(file);
