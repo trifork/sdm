@@ -26,8 +26,12 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -60,7 +64,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         createSikredeFieldsTableOnDatabase(connection, exampleSikredeFields);
         
         AuditingPersister persister = new AuditingPersister(connection);
-        sikredePersister = new SikredePersisterUsingNewArchitecture(new SikredeSqlStatementCreator(exampleSikredeFields), persister);
+        sikredePersister = new SikredePersisterUsingNewArchitecture(exampleSikredeFields, persister);
     }
 
     @After
@@ -89,14 +93,12 @@ public class SikredePersisterUsingNewArcitechtureTest {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
         
-        SikredeSqlStatementCreator sikredeSqlStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
-        
         int recordCount = 0;
         while(resultSet.next())
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredeSqlStatementCreator.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
 
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
@@ -138,14 +140,12 @@ public class SikredePersisterUsingNewArcitechtureTest {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
         
-        SikredeSqlStatementCreator sikredeSqlStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
-        
         int recordCount = 0;
         while(resultSet.next())
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredeSqlStatementCreator.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
             
             assertTrue(recordsEqual(recordA, sikredeRecord) || recordsEqual(recordB, sikredeRecord));
         }
@@ -170,14 +170,12 @@ public class SikredePersisterUsingNewArcitechtureTest {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
         
-        SikredeSqlStatementCreator sikredeSqlStatementCreator = new SikredeSqlStatementCreator(exampleSikredeFields);
-        
         int recordCount = 0;
         while(resultSet.next())
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredeSqlStatementCreator.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
             
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
@@ -234,6 +232,82 @@ public class SikredePersisterUsingNewArcitechtureTest {
         
         sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2005);
         connection.commit();
+    }
+    
+    @Test
+    public void testInsertStatementString() 
+    {
+        String expected = "INSERT INTO SikredeGenerated (Foo, Moo, ValidFrom) VALUES (?, ?, ?)";
+        String actual = sikredePersister.insertStatementString();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testInsertValuesIntoPreparedStatement() throws SQLException
+    {
+        PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
+        SikredeRecord record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Moo", "Baz", "Foo", 42);
+        
+        sikredePersister.insertValuesIntoPreparedStatement(mockedPrepareStatement, record, new DateTime());
+
+        verify(mockedPrepareStatement).setInt(1, 42);
+        verify(mockedPrepareStatement).setString(2, "Baz");
+    }
+    
+    @Test
+    public void testSelectStatementString()
+    {
+        String actual = sikredePersister.createSelectStatementAsString("Foo");
+        String expected = "SELECT * FROM SikredeGenerated WHERE Foo = ?";
+        
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testSelectStatementAsPrepredStatement() throws SQLException
+    {
+        Connection mockConnection = mock(Connection.class);
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+        
+        when(mockConnection.prepareStatement("SELECT * FROM SikredeGenerated WHERE Foo = ?")).thenReturn(mockPreparedStatement);
+
+        sikredePersister.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
+
+        verify(mockPreparedStatement).setObject(1, 10);
+    }
+    
+    @Test
+    public void testSikredeDataFromResultSet() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Moo")).thenReturn("Moo");
+        
+        SikredeRecord actual = sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        
+        assertTrue(actual.containsKey("Foo"));
+        assertEquals(42, actual.get("Foo"));
+        
+        assertTrue(actual.containsKey("Moo"));
+        assertEquals("Moo", actual.get("Moo"));
+    }
+    
+    @Test(expected=IllegalStateException.class)
+    public void testSikredeDataFromResultSetWhichContainsStringThatIsLongerThanSpecified() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+        
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Moo")).thenReturn("MooMoo");
+        
+        sikredePersister.sikredeDataFromResultSet(mockResultSet);
     }
     
     private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException

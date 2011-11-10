@@ -62,9 +62,8 @@ public class SikredeParserUsingNewArchitectureTest {
             SikredeFields sikredeFields = SikredeFields.SIKREDE_FIELDS_SINGLETON;
 
             SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
             SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    statementCreator, "CPRnr");
+                    sikredeFields, "CPRnr");
 
             connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
 
@@ -101,9 +100,8 @@ public class SikredeParserUsingNewArchitectureTest {
                     "Foo", SikredeType.ALFANUMERICAL, 10);
 
             SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
             SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    statementCreator, "Foo");
+                    sikredeFields, "Foo");
 
             connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
 
@@ -146,9 +144,8 @@ public class SikredeParserUsingNewArchitectureTest {
                     "Foo", SikredeType.ALFANUMERICAL, 10);
             
             SikredeLineParser entryParser = new SikredeLineParser(sikredeFields);
-            SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(sikredeFields);
             SikredeParserUsingNewArchitecture sikredeParser = new SikredeParserUsingNewArchitecture(entryParser,
-                    statementCreator, "Foo");
+                    sikredeFields, "Foo");
             
             connection = setupSikredeGeneratedDatabaseAndConnection(sikredeFields);
             

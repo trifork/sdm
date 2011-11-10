@@ -66,13 +66,13 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     static final SikredeLineParser endRecordParser = new SikredeLineParser(endRecordSikredeFields);
     
     private final SikredeLineParser entryParser;
-    private final SikredeSqlStatementCreator statementCreator;
+    private SikredeFields sikredeFields;
     private final String key;
     
-    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeSqlStatementCreator statementCreator, String key)
+    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeFields sikredeFields, String key)
     {
         this.entryParser = entryParser;
-        this.statementCreator = statementCreator;
+        this.sikredeFields = sikredeFields;
         this.key = key;
     }
     
@@ -106,7 +106,7 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
         
         // FIXME: Check that files are imported in the right order. We can not do this yet as we do not know what the files are named
         
-        SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(statementCreator, oldPersister);
+        SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(sikredeFields, oldPersister);
         
         LineIterator lines = null;
         
