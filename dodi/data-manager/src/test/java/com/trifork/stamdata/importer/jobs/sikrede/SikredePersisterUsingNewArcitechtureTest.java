@@ -100,7 +100,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
             assertEquals("Far", sikredeRecord.get("Moo"));
 
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
-            DateTime validTo = sikredePersister.getValidtTo(resultSet);
+            DateTime validTo = sikredePersister.getValidTo(resultSet);
             if(sikredeRecord.get("Foo").equals(42))
             {
                 assertEquals(theYear2000, validFrom);
@@ -181,7 +181,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
             assertEquals("Far", sikredeRecord.get("Moo"));
             
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
-            DateTime validTo = sikredePersister.getValidtTo(resultSet);
+            DateTime validTo = sikredePersister.getValidTo(resultSet);
 
             if(validFrom.equals(theYear2000))
             {
@@ -198,6 +198,42 @@ public class SikredePersisterUsingNewArcitechtureTest {
         }
         
         assertEquals(2, recordCount);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddingTheSameRecordWithAnEarlierTimestampRaisesAnException() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        DateTime theYear2010 = theYear2000.plusYears(10);
+
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddingARecordWithATimestampInTheMiddleOfAnExistingRecordRaisesAnException() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        DateTime theYear2005 = theYear2000.plusYears(5);
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2005);
+        connection.commit();
     }
     
     private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException

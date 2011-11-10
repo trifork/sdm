@@ -57,9 +57,19 @@ public class SikredePersisterUsingNewArchitecture {
         {
             numberOfRecordsWithSameKey++;
             
+            // It is not permitted to insert records with a timestamp earlier than records already in the database
+            if(timestampOfInsertion.isBefore(getValidFrom(resultSet)))
+            {
+                throw new IllegalArgumentException("The supplied timestamp is earlier than the valid from time of record with the same key alread present in the database");
+            }
+
             if(validToDateIsSet(resultSet))
             {
-                // TODO: Examine that the new timestamp is after the date found in the result to ensure we are not "pushing it in"
+                // It is not permitted to insert records with a timestamp before the end time of other records (except the case where valid to is not set)
+                if(timestampOfInsertion.isBefore(getValidTo(resultSet)))
+                {
+                    throw new IllegalArgumentException("The supplied timestamp is earlier than the valid to time of a record with the same key alread present in the database");
+                }
             }
             else
             {
@@ -71,7 +81,7 @@ public class SikredePersisterUsingNewArchitecture {
                 recordThatIsCurrentlyValid = statementCreator.sikredeDataFromResultSet(resultSet);
             }
         }
-       
+        
         if(recordThatIsCurrentlyValid == null && numberOfRecordsWithSameKey > 0)
         {
             throw new IllegalStateException("Database is in an invalid state. Records with same key exists, but none of them are currently active.");
@@ -95,7 +105,7 @@ public class SikredePersisterUsingNewArchitecture {
         return new DateTime(resultSet.getDate("ValidFrom"));
     }
 
-    public DateTime getValidtTo(ResultSet resultSet) throws SQLException 
+    public DateTime getValidTo(ResultSet resultSet) throws SQLException 
     {
         if(validToDateIsSet(resultSet))
         {
