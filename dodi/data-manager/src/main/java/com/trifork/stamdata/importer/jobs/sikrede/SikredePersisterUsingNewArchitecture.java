@@ -65,7 +65,7 @@ public class SikredePersisterUsingNewArchitecture {
             {
                 if(recordThatIsCurrentlyValid != null)
                 {
-                    throw new IllegalStateException("Database is in an invalid state. Several records are still valid.");
+                    throw new IllegalStateException("Database is in an invalid state. Several records with the same key \"" + key + "\" are still valid.");
                 }
                 
                 recordThatIsCurrentlyValid = statementCreator.sikredeDataFromResultSet(resultSet);
