@@ -39,6 +39,7 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredePersisterUsingNewArchitecture {
 

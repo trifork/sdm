@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package com.trifork.stamdata.persistence;
 
 import java.util.HashMap;
 
@@ -32,12 +32,12 @@ public class SikredeRecord {
 
     ImmutableMap<String, Object> map;
     
-    SikredeRecord()
+    public SikredeRecord()
     {
         map = ImmutableMap.of();
     }
     
-    SikredeRecord setField(String fieldName, Object value)
+    public SikredeRecord setField(String fieldName, Object value)
     {
         SikredeRecord copy = new SikredeRecord();
 
@@ -48,23 +48,41 @@ public class SikredeRecord {
         return copy;
     }
     
-    Object getField(String fieldName)
+    public Object getField(String fieldName)
     {
         return map.get(fieldName);
     }
     
-    int size()
+    public int size()
     {
         return map.size();
     }
     
-    boolean containsKey(String key)
+    public boolean containsKey(String key)
     {
         return map.containsKey(key);
     }
     
-    Object get(String key)
+    public Object get(String key)
     {
         return map.get(key);
+    }
+
+    @Override
+    public boolean equals(Object obj) 
+    {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        SikredeRecord other = (SikredeRecord) obj;
+        if (map == null) {
+            if (other.map != null)
+                return false;
+        } else if (!map.equals(other.map))
+            return false;
+        return true;
     }
 }

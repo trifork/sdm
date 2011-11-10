@@ -26,6 +26,7 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeLineParser {
 

@@ -44,6 +44,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredePersisterUsingNewArcitechtureTest {
 
@@ -147,7 +148,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
             
             SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
             
-            assertTrue(recordsEqual(recordA, sikredeRecord) || recordsEqual(recordB, sikredeRecord));
+            assertTrue(recordA.equals(sikredeRecord) || recordB.equals(sikredeRecord));
         }
         
         assertEquals(2, recordCount);
@@ -315,10 +316,5 @@ public class SikredePersisterUsingNewArcitechtureTest {
         Statement setupStatements = connection.createStatement();
         setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
         setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
-    }
-    
-    private boolean recordsEqual(SikredeRecord lhs, SikredeRecord rhs) 
-    {
-        return lhs.map.equals(rhs.map);
     }
 }

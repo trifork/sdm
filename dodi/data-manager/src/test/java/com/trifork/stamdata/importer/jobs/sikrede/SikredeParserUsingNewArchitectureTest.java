@@ -44,6 +44,7 @@ import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.util.Files;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 import static org.mockito.Mockito.*;
 

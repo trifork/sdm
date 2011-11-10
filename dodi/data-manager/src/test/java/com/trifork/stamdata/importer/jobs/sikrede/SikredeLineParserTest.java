@@ -32,6 +32,7 @@ import org.junit.Test;
 import com.google.common.collect.ImmutableList;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeLineParserTest {
 

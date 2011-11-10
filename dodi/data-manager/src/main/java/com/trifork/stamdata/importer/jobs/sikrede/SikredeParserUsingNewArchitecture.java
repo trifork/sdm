@@ -41,6 +41,7 @@ import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeParserUsingNewArchitecture implements FileParser {
 
