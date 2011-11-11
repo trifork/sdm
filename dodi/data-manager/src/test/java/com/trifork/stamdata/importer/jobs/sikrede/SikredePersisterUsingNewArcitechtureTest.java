@@ -25,18 +25,26 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredePersisterUsingNewArcitechtureTest {
 
@@ -54,29 +62,259 @@ public class SikredePersisterUsingNewArcitechtureTest {
                 );
         
         connection = MySQLConnectionManager.getConnection();
-        
-        Statement setupStatements = connection.createStatement();
-        setupStatements.executeUpdate("DROP TABLE SikredeGenerated");
-        setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(exampleSikredeFields));
+        createSikredeFieldsTableOnDatabase(connection, exampleSikredeFields);
         
         AuditingPersister persister = new AuditingPersister(connection);
-        sikredePersister = new SikredePersisterUsingNewArchitecture(new SikredeSqlStatementCreator(exampleSikredeFields), persister);
+        sikredePersister = new SikredePersisterUsingNewArchitecture(exampleSikredeFields, persister);
     }
 
+    @After
+    public void closeConnection() throws SQLException
+    {
+        if(connection != null)
+        {
+            connection.close();
+        }
+    }
+    
     @Test
-    public void testSimplePersistense() throws SQLException 
+    public void testAddingTheSameRecordTwiceButWithNeverTimestamp() throws SQLException 
     {
         SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
         SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
-        sikredePersister.persist(record);
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 42), "Moo", theYear2000);
         connection.commit();
         
-        // TODO: Changes me to fetcher
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 10), "Moo", theYear2010);
+        connection.commit();
+        
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM SikredeGenerated");
-        resultSet.next();
-        long numberOfFoundRecords = resultSet.getLong(1);
-        assertEquals(1, numberOfFoundRecords);
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
+        
+        int recordCount = 0;
+        while(resultSet.next())
+        {
+            recordCount++;
+            
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            assertEquals("Far", sikredeRecord.get("Moo"));
+
+            DateTime validFrom = sikredePersister.getValidFrom(resultSet);
+            DateTime validTo = sikredePersister.getValidTo(resultSet);
+            if(sikredeRecord.get("Foo").equals(42))
+            {
+                assertEquals(theYear2000, validFrom);
+                assertEquals(theYear2010, validTo);
+            }
+            else if(sikredeRecord.get("Foo").equals(10))
+            {
+                assertEquals(theYear2010, validFrom);
+                assertEquals(null, validTo);
+            }
+            else
+            {
+                throw new AssertionError("Unexpected value of \"Foo\" in test: " + sikredeRecord.get("Foo"));
+            }
+        }
+        
+        assertEquals(2, recordCount);
+    }
+    
+    @Test
+    public void testAddingTwoDifferentRecordsDontEffectEachOther() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord recordA = builder.field("Foo", 42).field("Moo", "Far").build();
+        SikredeRecord recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        sikredePersister.persistRecordWithValidityDate(recordA, "Moo", theYear2000);
+        connection.commit();
+        
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        sikredePersister.persistRecordWithValidityDate(recordB, "Moo", theYear2010);
+        connection.commit();
+        
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
+        
+        int recordCount = 0;
+        while(resultSet.next())
+        {
+            recordCount++;
+            
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            
+            assertTrue(recordA.equals(sikredeRecord) || recordB.equals(sikredeRecord));
+        }
+        
+        assertEquals(2, recordCount);
+    }
+    
+    @Test
+    public void testAddingExactSameRecordTwiceAddsANewRecord() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+        
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
+        
+        int recordCount = 0;
+        while(resultSet.next())
+        {
+            recordCount++;
+            
+            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            assertEquals("Far", sikredeRecord.get("Moo"));
+            
+            DateTime validFrom = sikredePersister.getValidFrom(resultSet);
+            DateTime validTo = sikredePersister.getValidTo(resultSet);
+
+            if(validFrom.equals(theYear2000))
+            {
+                assertEquals(theYear2010, validTo);
+            }
+            else if(validFrom.equals(theYear2010))
+            {
+                assertEquals(null, validTo);
+            }
+            else
+            {
+                throw new AssertionError("Unexpected value of \"ValidFrom\" in test: " + validFrom);
+            }
+        }
+        
+        assertEquals(2, recordCount);
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddingTheSameRecordWithAnEarlierTimestampRaisesAnException() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        DateTime theYear2010 = theYear2000.plusYears(10);
+
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+    }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testAddingARecordWithATimestampInTheMiddleOfAnExistingRecordRaisesAnException() throws SQLException 
+    {
+        SikredeRecordBuilder builder = new SikredeRecordBuilder(exampleSikredeFields);
+        SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
+        
+        DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
+        DateTime theYear2005 = theYear2000.plusYears(5);
+        DateTime theYear2010 = theYear2000.plusYears(10);
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        connection.commit();
+        
+        sikredePersister.persistRecordWithValidityDate(record, "Moo", theYear2005);
+        connection.commit();
+    }
+    
+    @Test
+    public void testInsertStatementString() 
+    {
+        String expected = "INSERT INTO SikredeGenerated (Foo, Moo, ValidFrom) VALUES (?, ?, ?)";
+        String actual = sikredePersister.insertStatementString();
+        assertEquals(expected, actual);
     }
 
+    @Test
+    public void testInsertValuesIntoPreparedStatement() throws SQLException
+    {
+        PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
+        SikredeRecord record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Moo", "Baz", "Foo", 42);
+        
+        sikredePersister.insertValuesIntoPreparedStatement(mockedPrepareStatement, record, new DateTime());
+
+        verify(mockedPrepareStatement).setInt(1, 42);
+        verify(mockedPrepareStatement).setString(2, "Baz");
+    }
+    
+    @Test
+    public void testSelectStatementString()
+    {
+        String actual = sikredePersister.createSelectStatementAsString("Foo");
+        String expected = "SELECT * FROM SikredeGenerated WHERE Foo = ?";
+        
+        assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testSelectStatementAsPrepredStatement() throws SQLException
+    {
+        Connection mockConnection = mock(Connection.class);
+        PreparedStatement mockPreparedStatement = mock(PreparedStatement.class);
+        
+        when(mockConnection.prepareStatement("SELECT * FROM SikredeGenerated WHERE Foo = ?")).thenReturn(mockPreparedStatement);
+
+        sikredePersister.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
+
+        verify(mockPreparedStatement).setObject(1, 10);
+    }
+    
+    @Test
+    public void testSikredeDataFromResultSet() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Moo")).thenReturn("Moo");
+        
+        SikredeRecord actual = sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        
+        assertTrue(actual.containsKey("Foo"));
+        assertEquals(42, actual.get("Foo"));
+        
+        assertTrue(actual.containsKey("Moo"));
+        assertEquals("Moo", actual.get("Moo"));
+    }
+    
+    @Test(expected=IllegalStateException.class)
+    public void testSikredeDataFromResultSetWhichContainsStringThatIsLongerThanSpecified() throws SQLException
+    {
+        ResultSet mockResultSet = mock(ResultSet.class);
+        
+        when(mockResultSet.isBeforeFirst()).thenReturn(false);
+        when(mockResultSet.isAfterLast()).thenReturn(false);
+        
+        when(mockResultSet.getInt("Foo")).thenReturn(42);
+        when(mockResultSet.getString("Moo")).thenReturn("MooMoo");
+        
+        sikredePersister.sikredeDataFromResultSet(mockResultSet);
+    }
+    
+    private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException
+    {
+        Statement setupStatements = connection.createStatement();
+        setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        setupStatements.executeUpdate(SikredeSqlSchemaCreator.createSqlSchema(sikredeFields));
+    }
 }

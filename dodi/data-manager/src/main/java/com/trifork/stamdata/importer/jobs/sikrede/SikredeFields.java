@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeFields {
 

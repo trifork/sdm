@@ -57,6 +57,8 @@ public interface Inbox
      * successfully imported.
      *
      * This has no effect if the inbox is empty.
+     *
+     * @throws IllegalStateException thrown if progress() called while the inbox is empty.
      */
     void progress() throws IOException;
 

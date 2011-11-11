@@ -33,6 +33,7 @@ import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
+import org.joda.time.DateTime;
 import org.slf4j.MDC;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
@@ -40,26 +41,41 @@ import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeParserUsingNewArchitecture implements FileParser {
 
+    static final String ACCEPTED_MODTAGER = "F053";
+    static final String ACCEPTED_SNITFLADE_ID = "S1061023";
+    
     private static final String RECORD_TYPE_ENTRY = "10";
     private static final String RECORD_TYPE_END = "99";
     private static final String RECORD_TYPE_START = "00";
-    private static final String FILE_ENCODING = "ISO-8859-1";
+    static final String FILE_ENCODING = "ISO-8859-1";
     
-    private static final SikredeLineParser endRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
-            "PostType", SikredeType.NUMERICAL, 2,
-            "AntPoster", SikredeType.NUMERICAL, 8));
-    
-    private static final SikredeLineParser startRecordParser = new SikredeLineParser(SikredeFields.newSikredeFields(
+    static final SikredeFields startRecordSikredeFields = SikredeFields.newSikredeFields(
             "PostType", SikredeType.NUMERICAL, 2,
             "OpgDato", SikredeType.ALFANUMERICAL, 8,
             "Timestamp", SikredeType.ALFANUMERICAL, 20,
             "Modt", SikredeType.ALFANUMERICAL, 6,
-            "SnitfladeId", SikredeType.ALFANUMERICAL, 8));
+            "SnitfladeId", SikredeType.ALFANUMERICAL, 8);
+    static final SikredeLineParser startRecordParser = new SikredeLineParser(startRecordSikredeFields);
 
-    private static final SikredeLineParser entryParser = new SikredeLineParser(SikredeFields.SIKREDE_FIELDS_SINGLETON);
+    static final SikredeFields endRecordSikredeFields = SikredeFields.newSikredeFields(
+            "PostType", SikredeType.NUMERICAL, 2,
+            "AntPost", SikredeType.NUMERICAL, 8);
+    static final SikredeLineParser endRecordParser = new SikredeLineParser(endRecordSikredeFields);
+    
+    private final SikredeLineParser entryParser;
+    private SikredeFields sikredeFields;
+    private final String key;
+    
+    public SikredeParserUsingNewArchitecture(SikredeLineParser entryParser, SikredeFields sikredeFields, String key)
+    {
+        this.entryParser = entryParser;
+        this.sikredeFields = sikredeFields;
+        this.key = key;
+    }
     
     @Override
     public String getIdentifier() 
@@ -91,8 +107,7 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
         
         // FIXME: Check that files are imported in the right order. We can not do this yet as we do not know what the files are named
         
-        SikredeSqlStatementCreator statementCreator = new SikredeSqlStatementCreator(SikredeFields.SIKREDE_FIELDS_SINGLETON);
-        SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(statementCreator, oldPersister);
+        SikredePersisterUsingNewArchitecture persister = new SikredePersisterUsingNewArchitecture(sikredeFields, oldPersister);
         
         LineIterator lines = null;
         
@@ -113,6 +128,8 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
     
     private void importFile(Iterator<String> lines, SikredePersisterUsingNewArchitecture persister) throws SQLException
     {       
+        DateTime timestampOfInsertion = new DateTime();
+        
         SikredeRecord startRecord = null;
         SikredeRecord endRecord = null;
         
@@ -135,10 +152,22 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
                 }
                 
                 startRecord = startRecordParser.parseLine(line);
+                
+                // FIXME: Verificer Modt og SnitfladeId jf. dokumentation
+                if(!ACCEPTED_MODTAGER.equals(startRecord.get("Modt")))
+                {
+                    throw new ParserException("The \"Modt\" field of the start record did not match the accepted: " + ACCEPTED_MODTAGER + ", but was " + startRecord.get("Modt"));
+                }
+                
+                if(!ACCEPTED_SNITFLADE_ID.equals(startRecord.get("SnitfladeId")))
+                {
+                    throw new ParserException("The \"SnitfladeId\" field of the start record did not match the accepted: " + ACCEPTED_SNITFLADE_ID + ", but was " + startRecord.get("SnitfladeId"));
+                }
+
             }
             else if (line.startsWith(RECORD_TYPE_END))
             {
-                if (startRecord != null)
+                if (startRecord == null)
                 {
                     throw new ParserException("Start record was not found before end record.");
                 }
@@ -147,13 +176,13 @@ public class SikredeParserUsingNewArchitecture implements FileParser {
             }
             else if (line.startsWith(RECORD_TYPE_ENTRY))
             {
-                if (startRecord != null)
+                if (startRecord == null)
                 {
                     throw new ParserException("Start record was not found before first entry.");
                 }
                 
                 SikredeRecord record = entryParser.parseLine(line);
-                persister.persist(record);
+                persister.persistRecordWithValidityDate(record, key, timestampOfInsertion);
                 
                 numRecords++;
             }
