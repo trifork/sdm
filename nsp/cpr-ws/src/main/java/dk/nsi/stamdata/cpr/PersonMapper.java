@@ -42,9 +42,11 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
+import dk.nsi.stamdata.cpr.mapping.SikredeRecordToPersonPublicHealhInsuranceMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
@@ -360,7 +362,7 @@ public class PersonMapper
 	}
 
 
-	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister) throws DatatypeConfigurationException
+	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister, SikredeRecord sikredeRecord) throws DatatypeConfigurationException
 	{
 		Preconditions.checkNotNull(person, "person");
 		
@@ -397,13 +399,14 @@ public class PersonMapper
 		{
 			personPublicHealthInsurance = createDummyPublicHealthInsurance(ADRESSEBESKYTTET);
 		}
-		else if (sikredeYderRelation == null)
+		else if (sikredeRecord == null)
 		{
 			personPublicHealthInsurance = createDummyPublicHealthInsurance(UKENDT);
 		}
 		else
 		{
-			personPublicHealthInsurance = createPublicHealthInsurance(sikredeYderRelation);
+			SikredeRecordToPersonPublicHealhInsuranceMapper sikredeRecordToPersonPublicHealhInsuranceMapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
+            personPublicHealthInsurance = sikredeRecordToPersonPublicHealhInsuranceMapper.map(sikredeRecord);
 		}
 		
 		personHealthCareInformation.setPersonPublicHealthInsurance(personPublicHealthInsurance);

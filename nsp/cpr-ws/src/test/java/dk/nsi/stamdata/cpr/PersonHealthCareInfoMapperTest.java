@@ -37,10 +37,12 @@ import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
@@ -63,6 +65,7 @@ public class PersonHealthCareInfoMapperTest
     private Person person;
     private Yderregister yder;
     private SikredeYderRelation relation;
+    private SikredeRecord sikredeRecord;
 
     private PersonWithHealthCareInformationStructureType output;
 
@@ -73,8 +76,8 @@ public class PersonHealthCareInfoMapperTest
         person = Factories.createPerson();
         yder = Factories.createYderregister();
         relation = Factories.createSikredeYderRelation();
+        sikredeRecord = Factories.createSikredeRecordFor(person, yder, "2", new DateTime(Factories.YESTERDAY));
     }
-
 
     private void doMapping() throws DatatypeConfigurationException
     {
@@ -82,7 +85,7 @@ public class PersonHealthCareInfoMapperTest
         Set<String> whitelist = Sets.newHashSet();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
-        output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, relation, yder);
+        output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, relation, yder, sikredeRecord);
     }
 
 
@@ -138,6 +141,7 @@ public class PersonHealthCareInfoMapperTest
     public void itInsertsDummyDataIfTheRelationDataIsMissing() throws DatatypeConfigurationException
     {
         relation = null;
+        sikredeRecord = null;
 
         doMapping();
 
@@ -150,6 +154,7 @@ public class PersonHealthCareInfoMapperTest
     public void itInsertsDummyDataIfBothAreMissing() throws DatatypeConfigurationException
     {
         relation = null;
+        sikredeRecord = null;
         yder = null;
 
         doMapping();

@@ -22,17 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package com.trifork.stamdata.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
-import com.trifork.stamdata.persistence.SikredeRecord;
 
 public class SikredeFields {
 
-    enum SikredeType { ALFANUMERICAL, NUMERICAL }
+    public enum SikredeType { ALFANUMERICAL, NUMERICAL }
     
     public static final SikredeFields SIKREDE_FIELDS_SINGLETON;
 

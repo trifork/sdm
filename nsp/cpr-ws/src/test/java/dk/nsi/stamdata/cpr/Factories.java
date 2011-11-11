@@ -29,6 +29,10 @@ import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.trifork.stamdata.persistence.SikredeRecord;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -43,11 +47,12 @@ public class Factories
     public static final Date YEAR_2000 = new DateTime(2000, 1, 1, 0, 0, 0).toDate();
     public static final Date YEAR_1999 = new DateTime(1999, 1, 1, 0, 0, 0).toDate();
     
-    public static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
-    public static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
-    public static final Date TOMORROW = DateTime.now().plusDays(1).toDate();
+    public static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+    public static final Date YESTERDAY = DateTime.now().minusDays(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+    public static final Date TOMORROW = DateTime.now().plusDays(1).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
+    public static final Date IN_TWO_DAYS = DateTime.now().plusDays(2).withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0).toDate();
 
-
+    
     public static String generateRandomCPR()
     {
         
@@ -186,5 +191,21 @@ public class Factories
         person.setNavnebeskyttelseslettedato(TOMORROW);
 
         return person;
+    }
+
+
+    public static SikredeRecord createSikredeRecordFor(Person person, Yderregister register, String groupCode, DateTime ikraftDato)
+    {
+        return new SikredeRecord()
+            .withField("CPRnr", person.getCpr())
+            .withField("SYdernr", Integer.toString(register.getNummer()))
+            .withField("SSikrGrpKode", groupCode)
+            .withField("SIkraftDatoGrp", sikredeRecordDateString(ikraftDato));
+    }
+    
+    private static String sikredeRecordDateString(DateTime date) 
+    {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+        return formatter.print(date);
     }
 }

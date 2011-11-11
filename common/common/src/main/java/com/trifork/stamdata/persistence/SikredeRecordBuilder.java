@@ -22,14 +22,14 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package com.trifork.stamdata.persistence;
 
 import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
+
 
 public class SikredeRecordBuilder {
 

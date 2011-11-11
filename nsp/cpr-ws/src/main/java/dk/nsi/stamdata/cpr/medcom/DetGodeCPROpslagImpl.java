@@ -26,12 +26,16 @@ package dk.nsi.stamdata.cpr.medcom;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +44,9 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import com.trifork.stamdata.persistence.SikredeFetcher;
+import com.trifork.stamdata.persistence.SikredeFields;
+import com.trifork.stamdata.persistence.SikredeRecord;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
@@ -74,14 +81,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 	private final Fetcher fetcher;
 	private final PersonMapper personMapper;
+	// TODO: Session is only used for SikredeFetcher. Maybe that should be injected instead
+    private Session session;
 	private final String clientCVR;
 
-
 	@Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, SystemIDCard card)
+	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, Session session, SystemIDCard card)
 	{
 		this.fetcher = fetcher;
 		this.personMapper = personMapper;
+		this.session = session;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
 	}
 
@@ -148,7 +157,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		Person person = fetchPersonWithPnr(pnr);
 
 		SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr + "-C");
-		
+
+		SikredeRecord sikredeRecord = null;
+		try 
+		{
+		    sikredeRecord = getSikredeRecord(pnr);
+		}
+		catch (SQLException e)
+		{
+            throw SoapUtils.newServerErrorFault(e);		    
+		}
+        
 		// If the relation is not found we have to use fake data to satisfy the
 		// output format.
 		
@@ -164,7 +183,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		try
 		{
-			personWithHealthCareInformation = personMapper.map(person, sikredeYderRelation, yderregister);
+			personWithHealthCareInformation = personMapper.map(person, sikredeYderRelation, yderregister, sikredeRecord);
 		}
 		catch (DatatypeConfigurationException e)
 		{
@@ -175,6 +194,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		return output;
 	}
+
+
+    private SikredeRecord getSikredeRecord(String pnr) throws SQLException 
+    {
+		SikredeFetcher sikredeFetcher = new SikredeFetcher(SikredeFields.SIKREDE_FIELDS_SINGLETON);
+		// FIXME: Instead of using the connection the fetcher could be injected.
+		Connection connection = session.connection();
+        SikredeRecord sikredeRecord = sikredeFetcher.fetchSikredeRecordUsingCpr(connection, pnr);
+        return sikredeRecord;
+    }
 
 
 	// HELPERS

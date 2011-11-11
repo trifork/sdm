@@ -42,15 +42,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.persistence.SikredeFetcher;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeRecordBuilder;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
-public class SikredePersisterUsingNewArcitechtureTest {
+// FIXME: The tests concerning the fetcher should be moved to common
+public class SikredeDatabaseTest {
 
     Connection connection;
     SikredeFields exampleSikredeFields;
     SikredePersisterUsingNewArchitecture sikredePersister;
+    SikredeFetcher sikredeFetcher;
     
     @Before
     public void setupSikredePersister() throws SQLException
@@ -66,6 +71,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         
         AuditingPersister persister = new AuditingPersister(connection);
         sikredePersister = new SikredePersisterUsingNewArchitecture(exampleSikredeFields, persister);
+        sikredeFetcher = new SikredeFetcher(exampleSikredeFields);
     }
 
     @After
@@ -99,7 +105,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredeFetcher.sikredeDataFromResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
 
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
@@ -146,7 +152,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredeFetcher.sikredeDataFromResultSet(resultSet);
             
             assertTrue(recordA.equals(sikredeRecord) || recordB.equals(sikredeRecord));
         }
@@ -176,7 +182,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         {
             recordCount++;
             
-            SikredeRecord sikredeRecord = sikredePersister.sikredeDataFromResultSet(resultSet);
+            SikredeRecord sikredeRecord = sikredeFetcher.sikredeDataFromResultSet(resultSet);
             assertEquals("Far", sikredeRecord.get("Moo"));
             
             DateTime validFrom = sikredePersister.getValidFrom(resultSet);
@@ -258,7 +264,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
     @Test
     public void testSelectStatementString()
     {
-        String actual = sikredePersister.createSelectStatementAsString("Foo");
+        String actual = sikredeFetcher.createSelectStatementAsString("Foo");
         String expected = "SELECT * FROM SikredeGenerated WHERE Foo = ?";
         
         assertEquals(expected, actual);
@@ -272,7 +278,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         
         when(mockConnection.prepareStatement("SELECT * FROM SikredeGenerated WHERE Foo = ?")).thenReturn(mockPreparedStatement);
 
-        sikredePersister.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
+        sikredeFetcher.createSelectStatementAsPreparedStatement(mockConnection, "Foo", 10);
 
         verify(mockPreparedStatement).setObject(1, 10);
     }
@@ -288,7 +294,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         when(mockResultSet.getInt("Foo")).thenReturn(42);
         when(mockResultSet.getString("Moo")).thenReturn("Moo");
         
-        SikredeRecord actual = sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        SikredeRecord actual = sikredeFetcher.sikredeDataFromResultSet(mockResultSet);
         
         assertTrue(actual.containsKey("Foo"));
         assertEquals(42, actual.get("Foo"));
@@ -308,7 +314,7 @@ public class SikredePersisterUsingNewArcitechtureTest {
         when(mockResultSet.getInt("Foo")).thenReturn(42);
         when(mockResultSet.getString("Moo")).thenReturn("MooMoo");
         
-        sikredePersister.sikredeDataFromResultSet(mockResultSet);
+        sikredeFetcher.sikredeDataFromResultSet(mockResultSet);
     }
     
     private void createSikredeFieldsTableOnDatabase(Connection connection, SikredeFields sikredeFields) throws SQLException

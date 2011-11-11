@@ -31,10 +31,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
+// FIXME: These tests should be moved to common
 public class SikredeFieldsTester {
 
     @Test

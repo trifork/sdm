@@ -35,11 +35,12 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.persistence.SikredeFetcher;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
 public class SikredePersisterUsingNewArchitecture {
 
@@ -55,7 +56,8 @@ public class SikredePersisterUsingNewArchitecture {
     public void persistRecordWithValidityDate(SikredeRecord record, String key, DateTime timestampOfInsertion) throws SQLException
     {
         Connection connection = persister.getConnection();
-        PreparedStatement statement = createSelectStatementAsPreparedStatement(connection, key, record.getField(key));
+        SikredeFetcher sikredeFetcher = new SikredeFetcher(sikredeFields);
+        PreparedStatement statement = sikredeFetcher.createSelectStatementAsPreparedStatement(connection, key, record.getField(key));
         ResultSet resultSet = statement.executeQuery();
 
         // TODO: This might be slow when many records with the same key are loaded: in that case detecting this would be better handled on the server
@@ -86,7 +88,7 @@ public class SikredePersisterUsingNewArchitecture {
                     throw new IllegalStateException("Database is in an invalid state. Several records with the same key \"" + key + "\" are still valid.");
                 }
                 
-                recordThatIsCurrentlyValid = sikredeDataFromResultSet(resultSet);
+                recordThatIsCurrentlyValid = sikredeFetcher.sikredeDataFromResultSet(resultSet);
             }
         }
         
@@ -197,60 +199,6 @@ public class SikredePersisterUsingNewArchitecture {
         preparedStatement.setDate(index, new Date(validFrom.getMillis()));
     }
     
-    ////////////////////////////////
-    
-    String createSelectStatementAsString(String key)
-    {
-        return "SELECT * FROM SikredeGenerated WHERE " + key + " = ?";
-    }
-    
-    PreparedStatement createSelectStatementAsPreparedStatement(Connection connection, String key, Object value) throws SQLException
-    {
-        PreparedStatement statement = connection.prepareStatement(createSelectStatementAsString(key));
-        statement.setObject(1, value);
-        return statement;
-    }
-    
-    /**
-     * Assumes the result set is pointing to a record (i.e. that next() was called at least once on the ResultSet
-     * @throws SQLException 
-     */
-    SikredeRecord sikredeDataFromResultSet(ResultSet resultSet) throws SQLException
-    {
-        Preconditions.checkNotNull(resultSet);
-        Preconditions.checkArgument(!resultSet.isBeforeFirst());
-        Preconditions.checkArgument(!resultSet.isAfterLast());
-        
-        SikredeRecordBuilder builder = new SikredeRecordBuilder(sikredeFields);
-        
-        for(SikredeFieldSpecification fieldSpecification : sikredeFields.getFieldSpecificationsInCorrectOrder())
-        {
-            String key = fieldSpecification.name;
-            if(fieldSpecification.type == SikredeType.NUMERICAL)
-            {
-                // TODO: Explicit check of returned type
-                builder.field(key, resultSet.getInt(key));
-            }
-            else if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
-            {
-                builder.field(key, resultSet.getString(key));
-            }
-            else
-            {
-                throw new AssertionError("Invalid field specifier used");
-            }
-        }
-        
-        SikredeRecord record = builder.build();
-        
-        if(!sikredeFields.conformsToSpecifications(record))
-        {
-            throw new IllegalStateException("ResultSet did not contain valid values as specified");
-        }
-        
-        return record;
-    }
-
     PreparedStatement updateValidToPreparedStatement(Connection connection, String key) throws SQLException 
     {
         return connection.prepareStatement("UPDATE SikredeGenerated SET ValidTo = ? WHERE " + key + " = ?");

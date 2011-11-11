@@ -26,9 +26,10 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static org.junit.Assert.assertTrue;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
 public class SikredeRecordStringGenerator {
 

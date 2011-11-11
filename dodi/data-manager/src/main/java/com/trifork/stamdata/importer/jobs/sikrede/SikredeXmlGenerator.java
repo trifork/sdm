@@ -31,9 +31,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
 public class SikredeXmlGenerator {
 

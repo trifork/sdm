@@ -38,10 +38,11 @@ import org.slf4j.MDC;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.persistence.SikredeFields;
 import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
 public class SikredeParserUsingNewArchitecture implements FileParser {
 

@@ -29,7 +29,8 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.SikredeFields;
+import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
 
 public class SikredeSqlSchemaCreatorTest {
 
