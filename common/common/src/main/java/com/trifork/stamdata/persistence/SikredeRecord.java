@@ -37,7 +37,7 @@ public class SikredeRecord {
         map = ImmutableMap.of();
     }
     
-    public SikredeRecord setField(String fieldName, Object value)
+    public SikredeRecord withField(String fieldName, Object value)
     {
         SikredeRecord copy = new SikredeRecord();
 

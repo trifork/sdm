@@ -77,11 +77,11 @@ public class SikredeRecordStringGenerator {
             {
                 if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
                 {
-                    sikredeRecord = sikredeRecord.setField(fieldSpecification.name, "");
+                    sikredeRecord = sikredeRecord.withField(fieldSpecification.name, "");
                 }
                 else if(fieldSpecification.type == SikredeType.NUMERICAL)
                 {
-                    sikredeRecord = sikredeRecord.setField(fieldSpecification.name, 0);
+                    sikredeRecord = sikredeRecord.withField(fieldSpecification.name, 0);
                 } 
                 else
                 {
@@ -108,7 +108,7 @@ public class SikredeRecordStringGenerator {
         {
             String key = (String) keysAndValues[i];
             Object value = keysAndValues[i+1];
-            record = record.setField(key, value);
+            record = record.withField(key, value);
         }
         
         return record;

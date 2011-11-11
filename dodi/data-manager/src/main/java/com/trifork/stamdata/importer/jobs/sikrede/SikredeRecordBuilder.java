@@ -57,7 +57,7 @@ public class SikredeRecordBuilder {
         checkNotNull(fieldName);
         checkArgument(getFieldType(fieldName) == sikredeType, "Field " + fieldName + " is not " + sikredeType);
         
-        sikredeRecord = sikredeRecord.setField(fieldName, value);
+        sikredeRecord = sikredeRecord.withField(fieldName, value);
         
         return this;
     }

@@ -24,8 +24,6 @@
  */
 package dk.nsi.stamdata.cpr.mapping;
 
-import java.util.Date;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -76,12 +74,14 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
     static XMLGregorianCalendar newXMLGregorianCalendar(int year, int month, int day)
     {
         DatatypeFactory factory = null;
-        try {
+        try 
+        {
             factory = DatatypeFactory.newInstance();
-        } catch (DatatypeConfigurationException e) {
+        } 
+        catch (DatatypeConfigurationException e) 
+        {
             throw new RuntimeException(e);
         }
         return factory.newXMLGregorianCalendar(new DateTime(year, month, day, 0, 0).toGregorianCalendar());
     }
-
 }

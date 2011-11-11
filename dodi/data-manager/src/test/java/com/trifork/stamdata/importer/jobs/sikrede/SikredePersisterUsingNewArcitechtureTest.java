@@ -84,11 +84,11 @@ public class SikredePersisterUsingNewArcitechtureTest {
         SikredeRecord record = builder.field("Foo", 42).field("Moo", "Far").build();
         
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 42), "Moo", theYear2000);
+        sikredePersister.persistRecordWithValidityDate(record.withField("Foo", 42), "Moo", theYear2000);
         connection.commit();
         
         DateTime theYear2010 = theYear2000.plusYears(10);
-        sikredePersister.persistRecordWithValidityDate(record.setField("Foo", 10), "Moo", theYear2010);
+        sikredePersister.persistRecordWithValidityDate(record.withField("Foo", 10), "Moo", theYear2010);
         connection.commit();
         
         Statement statement = connection.createStatement();
