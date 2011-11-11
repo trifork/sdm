@@ -36,6 +36,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.StringTokenizer;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.joda.time.DateTime;
@@ -44,7 +45,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.autorisationsregister.Autorisation;
 
@@ -55,7 +55,7 @@ public class AutorisationImporter implements FileParser
 	private static final String FILE_ENCODING = "ISO8859-15";
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean validateInputStructure(File[] input)
 	{
 		// TODO: It doesn't seem like we know anything about
 		// what the required files are. Therefore we just

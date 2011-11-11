@@ -22,51 +22,50 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package com.trifork.stamdata.persistence;
 
 import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
-public class SikredeRecordBuilder {
-
-    private SikredeFields sikredeFields;
-    private SikredeRecord sikredeRecord;
+public class RecordBuilder
+{
+    private RecordSpecification recordSpecification;
+    private Record record;
     
-    public SikredeRecordBuilder(SikredeFields sikredeFields)
+    public RecordBuilder(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
-        sikredeRecord = new SikredeRecord();
+        this.recordSpecification = recordSpecification;
+        record = new Record();
     }
     
-    public SikredeRecordBuilder field(String fieldName, int value)
+    public RecordBuilder field(String fieldName, int value)
     {
         return field(fieldName, value, SikredeType.NUMERICAL);
     }
     
-    public SikredeRecordBuilder field(String fieldName, String value)
+    public RecordBuilder field(String fieldName, String value)
     {
         return field(fieldName, value, SikredeType.ALFANUMERICAL);
     }
     
-    private SikredeRecordBuilder field(String fieldName, Object value, SikredeType sikredeType)
+    private RecordBuilder field(String fieldName, Object value, SikredeType sikredeType)
     {
         checkNotNull(fieldName);
         checkArgument(getFieldType(fieldName) == sikredeType, "Field " + fieldName + " is not " + sikredeType);
         
-        sikredeRecord = sikredeRecord.setField(fieldName, value);
+        record = record.setField(fieldName, value);
         
         return this;
     }
     
-    public SikredeRecord build()
+    public Record build()
     {
-        if(sikredeFields.conformsToSpecifications(sikredeRecord))
+        if (recordSpecification.conformsToSpecifications(record))
         {
-            return sikredeRecord;
+            return record;
         }
         else
         {
@@ -74,15 +73,39 @@ public class SikredeRecordBuilder {
         }
     }
     
+    public Record addDummyFieldsAndBuild()
+    {
+        for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecificationsInCorrectOrder())
+        {
+            if(!record.containsKey(fieldSpecification.name))
+            {
+            if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            {
+                record = record.setField(fieldSpecification.name, "");
+            }
+            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            {
+                record = record.setField(fieldSpecification.name, 0);
+            }
+            else
+            {
+                throw new AssertionError("");
+            }
+            }
+        }
+        return build();
+    }
+    
     private SikredeType getFieldType(String fieldName)
     {
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
-            if(fieldSpecification.name.equals(fieldName))
+            if (fieldSpecification.name.equals(fieldName))
             {
                 return fieldSpecification.type;
             }
         }
+        
         return null;
     }
 }

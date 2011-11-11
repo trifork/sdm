@@ -51,8 +51,7 @@ public class Fetcher
     {
         this.session = checkNotNull(session);
     }
-
-
+    
     @Transactional
     public <T extends TemporalEntity> T fetch(Class<T> type, Object id) throws SQLException
     {

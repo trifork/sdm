@@ -22,24 +22,28 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package com.trifork.stamdata.persistence;
 
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.importer.jobs.sikrede.SikredeFields.SikredeType;
+// TODO: This is where I moved these classes Friday morning
+//import com.trifork.stamdata.persistence.SikredeFields;
+//import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
+//import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
-public class SikredeSqlSchemaCreator {
-    
-    public static String createSqlSchema(SikredeFields sikredeFields)
+public class RecordMySQLTableGenerator
+{
+    public static String createSqlSchema(RecordSpecification recordSpecification)
     {
-        SikredeSqlSchemaCreator creator = new SikredeSqlSchemaCreator(sikredeFields);
+        RecordMySQLTableGenerator creator = new RecordMySQLTableGenerator(recordSpecification);
         return creator.buildSqlSchema();
     }
     
-    private SikredeFields sikredeFields;
+    private RecordSpecification recordSpecification;
     
-    private SikredeSqlSchemaCreator(SikredeFields sikredeFields)
+    private RecordMySQLTableGenerator(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpecification = recordSpecification;
     }
     
     private String buildSqlSchema()
@@ -50,7 +54,7 @@ public class SikredeSqlSchemaCreator {
         
         builder.append("\tSikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY");
         
-        for (SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             if(fieldSpecification.type == SikredeType.NUMERICAL)
             {

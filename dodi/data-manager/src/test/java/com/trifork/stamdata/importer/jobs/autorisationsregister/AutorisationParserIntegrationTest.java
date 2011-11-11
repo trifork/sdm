@@ -69,14 +69,14 @@ public class AutorisationParserIntegrationTest
 	public void should_return_true_if_expected_files_are_present()
 	{
 		File[] files = new File[] { valid };
-		assertTrue(importer.ensureRequiredFileArePresent(files));
+		assertTrue(importer.validateInputStructure(files));
 	}
 
 	@Test
 	public void should_return_false_if_no_file_are_present()
 	{
 		File[] file = new File[] {};
-		assertFalse(importer.ensureRequiredFileArePresent(file));
+		assertFalse(importer.validateInputStructure(file));
 	}
 
 	@SuppressWarnings("unchecked")

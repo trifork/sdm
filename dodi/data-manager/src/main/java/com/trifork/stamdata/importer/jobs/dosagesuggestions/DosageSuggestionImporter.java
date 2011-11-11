@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -56,7 +57,6 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DrugDosageStructureRelation;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.models.TemporalEntity;
 
 
@@ -201,7 +201,7 @@ public class DosageSuggestionImporter implements FileParser
 	}
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean validateInputStructure(File[] input)
 	{
 		// ALL THE FOLLOWING FILES MUST BE PRESENT
 		//

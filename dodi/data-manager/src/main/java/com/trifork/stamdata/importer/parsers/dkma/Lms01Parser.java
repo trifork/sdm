@@ -24,9 +24,9 @@
  */
 package com.trifork.stamdata.importer.parsers.dkma;
 
-import java.io.File;
-
 import com.trifork.stamdata.importer.persistence.Persister;
+
+import java.io.File;
 
 public class Lms01Parser implements FileParser
 {

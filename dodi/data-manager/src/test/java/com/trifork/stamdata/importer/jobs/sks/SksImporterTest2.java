@@ -44,27 +44,27 @@ public class SksImporterTest2
     @Test(expected = IllegalArgumentException.class)
     public void shouldNotAcceptEmptyInputFileSet()
     {
-        importer.ensureRequiredFileArePresent(new File[] {});
+        importer.validateInputStructure(new File[]{});
     }
     
     @Test
     public void shouldAcceptSKSCompleteTxtFile()
     {
         File[] input = Files.toArray(completeTxt);
-        assertTrue(importer.ensureRequiredFileArePresent(input));
+        assertTrue(importer.validateInputStructure(input));
     }
     
     @Test
     public void shouldNotAcceptSKSCompleteXmlFile()
     {
         File[] input = Files.toArray(completeXml);
-        assertFalse(importer.ensureRequiredFileArePresent(input));
+        assertFalse(importer.validateInputStructure(input));
     }
     
     @Test
     public void shouldAcceptSKSDeltaFile()
     {
         File[] input = Files.toArray(delta);
-        assertTrue(importer.ensureRequiredFileArePresent(input));
+        assertTrue(importer.validateInputStructure(input));
     }
 }

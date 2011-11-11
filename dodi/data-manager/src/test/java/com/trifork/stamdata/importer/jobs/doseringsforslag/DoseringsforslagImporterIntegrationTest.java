@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +53,6 @@ import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.models.TemporalEntity;
 
 

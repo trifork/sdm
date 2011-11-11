@@ -25,10 +25,14 @@
 package dk.nsi.stamdata.cpr.medcom;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -38,6 +42,8 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +51,10 @@ import org.junit.runner.RunWith;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
@@ -59,6 +69,8 @@ import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
+import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
+import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
 
 @RunWith(GuiceTestRunner.class)
@@ -79,6 +91,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     private List<Yderregister> yderregistre = Lists.newArrayList();
     private List<SikredeYderRelation> yderrelationer = Lists.newArrayList();
     private List<Person> persons = Lists.newArrayList();
+    private List<Record> sikredeRecords = Lists.newArrayList();
 
     private GetPersonInformationOut response;
     private GetPersonWithHealthCareInformationOut healthCareResponse;
@@ -108,11 +121,20 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
     }
 
+    @Before
+    public void setupDatabase() throws SQLException
+    {
+        String sqlSchema = RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        session.beginTransaction();
+        Connection connection = session.connection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        statement.executeUpdate(sqlSchema);
+    }
 
     @Test(expected = SOAPFaultException.class)
     public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception
     {
-
         request.setPersonCivilRegistrationIdentifier(null);
 
         sendPersonRequest();
@@ -149,7 +171,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     {
         Person person = Factories.createPerson();
         persons.add(person);
-        
+     
         request.setPersonCivilRegistrationIdentifier(person.getCpr());
 
         sendPersonRequest();
@@ -157,9 +179,8 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(response.getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
     }
 
-
     @Test
-    public void requestPersonWithHealthcareInformation() throws Exception
+    public void requestPersonWithHealthcareInformationButNoPublicHealthInsuranceInformation() throws Exception
     {
         Person person1 = Factories.createPerson();
         persons.add(person1);
@@ -173,7 +194,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
         yderrelationer.add(Factories.createSikredeYderRelationFor(person1, yder1));
         yderrelationer.add(Factories.createSikredeYderRelationFor(person2, yder2));
-
+        
         // Having multiple persons ensures that we are selecting the
         // right one.
 
@@ -183,9 +204,42 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
         assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person1.getFornavn()));
         assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue(), is(yder1.getNummer()));
+        
+        // If the sygesikringsgruppe is unknown we defaults to 1
+        assertEquals(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1, healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getPersonPublicHealthInsurance().getPublicHealthInsuranceGroupIdentifier());
     }
 
-
+    @Test
+    public void requestPersonWithFullHealthcareInformation() throws Exception
+    {
+        Person person1 = Factories.createPerson();
+        persons.add(person1);
+        Person person2 = Factories.createPerson();
+        persons.add(person1);
+        
+        Yderregister yder1 = Factories.createYderregister();
+        yderregistre.add(yder1);
+        Yderregister yder2 = Factories.createYderregister();
+        yderregistre.add(yder2);
+        
+        yderrelationer.add(Factories.createSikredeYderRelationFor(person1, yder1));
+        yderrelationer.add(Factories.createSikredeYderRelationFor(person2, yder2));
+        
+        Record createSikredeRecordFor = Factories.createSikredeRecordFor(person1, yder1, "2", new DateTime(Factories.YESTERDAY));
+        sikredeRecords.add(createSikredeRecordFor);
+        
+        // Having multiple persons ensures that we are selecting the
+        // right one.
+        
+        healthCareRequest.setPersonCivilRegistrationIdentifier(person1.getCpr());
+        
+        sendHealthCareRequest();
+        
+        assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person1.getFornavn()));
+        assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue(), is(yder1.getNummer()));
+        assertEquals(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2, healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getPersonPublicHealthInsurance().getPublicHealthInsuranceGroupIdentifier());
+    }
+    
     @Test
     public void requestForExistingPersonWhereHealthCareInformationCouldNotBeFoundReturnsMockData() throws Exception
     {
@@ -220,10 +274,18 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         session.createQuery("DELETE FROM Person").executeUpdate();
         session.createQuery("DELETE FROM SikredeYderRelation").executeUpdate();
         session.createQuery("DELETE FROM Yderregister").executeUpdate();
+        session.connection().createStatement().executeUpdate("DELETE FROM SikredeGenerated");
 
         for (Person person : persons) session.persist(person);
         for (Yderregister yderregister : yderregistre) session.persist(yderregister);
         for (SikredeYderRelation relation : yderrelationer) session.persist(relation);
+                
+        for (Record sikredeRecord: sikredeRecords)
+        {
+            // RecordPersister should be injected
+            RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, session.connection());
+            recordPersister.persistRecordWithValidityDate(sikredeRecord, "CPRnr", new Instant(Factories.YESTERDAY));
+        }
 
         t.commit();
 

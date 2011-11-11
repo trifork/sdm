@@ -36,7 +36,7 @@ public interface FileParser
 	 */
 	String getIdentifier();
 	
-	boolean ensureRequiredFileArePresent(File[] input);
+	boolean validateInputStructure(File[] input);
 	
 	void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception;
 	

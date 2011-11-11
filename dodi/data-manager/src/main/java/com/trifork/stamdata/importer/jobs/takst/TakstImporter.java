@@ -42,7 +42,7 @@ import com.trifork.stamdata.importer.persistence.Persister;
  */
 public class TakstImporter implements FileParser
 {
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean validateInputStructure(File[] input)
 	{
 		final String[] requiredFileNames = new String[] { "system.txt", "lms01.txt", "lms02.txt", "lms03.txt", "lms04.txt", "lms05.txt", "lms07.txt", "lms09.txt", "lms10.txt", "lms11.txt", "lms12.txt", "lms13.txt", "lms14.txt", "lms15.txt", "lms16.txt", "lms17.txt", "lms18.txt", "lms19.txt", "lms20.txt", "lms23.txt", "lms24.txt", "lms25.txt", "lms26.txt", "lms27.txt", "lms28.txt" };
 

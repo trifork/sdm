@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
@@ -36,26 +36,44 @@ import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 public class SikredeRecordToPersonPublicHealthInsuranceTest {
 
     @Test
-    public void testSimpleMappingContainingAllFields() 
+    public void testSimpleMappingContainingAllFieldsInCategory1() 
     {
-        String sygesikringsGruppeKategori = "1";
-        String sygesikringsGruppeStartDato = "20110628";
-        
-        SikredeRecord record = new SikredeRecord();
-        // TODO: rename setField to withField
+        testSimpleMappingContainingAllFieldsHelper("1", PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1, "20110628", 2011, 6, 28);
+    }
+
+    @Test
+    public void testSimpleMappingContainingAllFieldsInCategory2() 
+    {
+        testSimpleMappingContainingAllFieldsHelper("2", PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2, "20110628", 2011, 6, 28);
+    }
+    
+    @Test(expected=IllegalStateException.class)
+    public void testSimpleMappingWithIlleagalSygesikringsgruppe()
+    {
+        testSimpleMappingContainingAllFieldsHelper("3", null, "20110628", 0, 0, 0);
+    }
+    
+    @Test(expected=NumberFormatException.class)
+    public void testSimpleMappingWithIlleagalSygesikringsGruppeStartDato()
+    {
+        testSimpleMappingContainingAllFieldsHelper("1", null, "A0110628", 0, 0, 0);
+    }
+    
+    private void testSimpleMappingContainingAllFieldsHelper(
+            String sygesikringsGruppeKategori, PublicHealthInsuranceGroupIdentifierType expectedCategory,
+            String sygesikringsGruppeStartDato, int expectedYear, int expectedMonth, int expectedDay)
+    {
         // These record names are taken from the document "NSI - NOTUS Sikrede -def.pdf"
-        record = record
+        Record record = new Record()
                 .setField("SSikrGrpKode", sygesikringsGruppeKategori)
                 .setField("SIkraftDatoGrp", sygesikringsGruppeStartDato);
         
         SikredeRecordToPersonPublicHealhInsuranceMapper mapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
-        
         PersonPublicHealthInsuranceType xmlStructurer = mapper.map(record);
         
-        assertEquals(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1, xmlStructurer.getPublicHealthInsuranceGroupIdentifier());
-        assertEquals(2011, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getYear());
-        assertEquals(6, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getMonth());
-        assertEquals(28, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getDay());
-    }
-
+        assertEquals(expectedCategory, xmlStructurer.getPublicHealthInsuranceGroupIdentifier());
+        assertEquals(expectedYear, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getYear());
+        assertEquals(expectedMonth, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getMonth());
+        assertEquals(expectedDay, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getDay());
+    }    
 }

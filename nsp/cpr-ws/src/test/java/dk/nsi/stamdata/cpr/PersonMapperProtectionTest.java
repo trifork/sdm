@@ -29,7 +29,6 @@ import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.CensorProt
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -41,6 +40,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Sets;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -73,11 +73,7 @@ public class PersonMapperProtectionTest
 	private MunicipalityMapper municipalityMapper;
 	private Yderregister yderregister;
 	private SikredeYderRelation sikredeYderRelation;
-	
-	private static final Date TWO_DAYS_AGO = DateTime.now().minusDays(2).toDate();
-	private static final Date YESTERDAY = DateTime.now().minusDays(1).toDate();
-	private static final Date TOMORROW = DateTime.now().plusDays(1).toDate();
-	private static final Date IN_TWO_DAYS = DateTime.now().plusDays(2).toDate();
+	private Record sikredeRecord;
 	
 	@Before
 	public void setUp()
@@ -91,6 +87,7 @@ public class PersonMapperProtectionTest
 		person = Factories.createPerson();
 		yderregister = Factories.createYderregister();
 		sikredeYderRelation = Factories.createSikredeYderRelation();
+		sikredeRecord = Factories.createSikredeRecordFor(person, yderregister, "2", new DateTime(Factories.YESTERDAY));
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)
@@ -111,8 +108,8 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldProtectPersonWithActiveProtectionIfClientIsNotAuthority() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(YESTERDAY);
-		person.setNavnebeskyttelseslettedato(TOMORROW);
+		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
 		
 		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 	}
@@ -120,8 +117,8 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldNotProtectPersonWithActiveProtectionIfClientIsAuthority() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(YESTERDAY);
-		person.setNavnebeskyttelseslettedato(TOMORROW);
+		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
 		
 		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
 	}
@@ -129,8 +126,8 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldAlwaysProtectPersonWithActiveProtectionIfAuthoritiesHaveNoSpecialRights() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(YESTERDAY);
-		person.setNavnebeskyttelseslettedato(TOMORROW);
+		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
 		
 		assertThatPersonIsProtected(mapper(FOR_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
 		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
@@ -139,8 +136,8 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldNotProtectPersonIfProtectionHasNotStartedYet() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(TOMORROW);
-		person.setNavnebeskyttelseslettedato(IN_TWO_DAYS);
+		person.setNavnebeskyttelsestartdato(Factories.TOMORROW);
+		person.setNavnebeskyttelseslettedato(Factories.IN_TWO_DAYS);
 		
 		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
 	}
@@ -148,8 +145,8 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldNotProtectPersonIfProtectionHasEnded() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(TWO_DAYS_AGO);
-		person.setNavnebeskyttelseslettedato(YESTERDAY);
+		person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
+		person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
 		
 		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
 	}
@@ -157,19 +154,19 @@ public class PersonMapperProtectionTest
 	@Test
 	public void shouldProtectPersonHealthCareInfoIfProtectionIsActive() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(YESTERDAY);
-		person.setNavnebeskyttelseslettedato(TOMORROW);
+		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
 		
-		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister));
+		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister, sikredeRecord));
 	}
 	
 	@Test
 	public void shouldNotProtectPersonHealthCareInfoIfProtectionIsNotActive() throws DatatypeConfigurationException
 	{
-		person.setNavnebeskyttelsestartdato(TWO_DAYS_AGO);
-		person.setNavnebeskyttelseslettedato(YESTERDAY);
+		person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
+		person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
 		
-		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister));
+		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister, sikredeRecord));
 	}
 	
 	private void assertThatPersonIsNotProtected(PersonInformationStructureType output)

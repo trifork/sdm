@@ -28,6 +28,7 @@ package com.trifork.stamdata.importer.jobs.sks;
 import java.io.File;
 import java.util.Iterator;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.joda.time.format.DateTimeFormatter;
@@ -39,7 +40,6 @@ import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sks.Institution.InstitutionType;
 import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
 
 /**
  * Parser for the SKS register.
@@ -138,7 +138,7 @@ public class SKSParser implements FileParser
     }
 
     @Override
-    public boolean ensureRequiredFileArePresent(File[] input)
+    public boolean validateInputStructure(File[] input)
     {
         Preconditions.checkNotNull(input, "input");
         Preconditions.checkArgument(input.length > 0, "At least one file should be present at this point.");

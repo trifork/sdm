@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.trifork.stamdata.importer.persistence.Persister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,6 @@ import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.persistence.Dataset;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.TemporalEntity;
 
@@ -79,7 +79,7 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public boolean ensureRequiredFileArePresent(File[] input)
+	public boolean validateInputStructure(File[] input)
 	{
 		return true; // TODO: Check if the required files are there.
 	}
@@ -90,7 +90,7 @@ public class CPRImporter implements FileParser
 		checkNotNull(input);
 		checkNotNull(persister);
 		
-		// TODO: Should this not be done in #ensureRequiredFileArePresent()
+		// TODO: Should this not be done in #validateInputStructure()
 
 		for (File personFile : input)
 		{
