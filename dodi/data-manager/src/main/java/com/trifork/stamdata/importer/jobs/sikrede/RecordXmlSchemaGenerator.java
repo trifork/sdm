@@ -31,61 +31,66 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.trifork.stamdata.persistence.SikredeFields;
-import com.trifork.stamdata.persistence.SikredeRecord;
-import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
-public class SikredeXmlGenerator {
 
-    private SikredeFields sikredeFields;
+public class RecordXmlSchemaGenerator
+{
+    private RecordSpecification recordSpecification;
 
-    public SikredeXmlGenerator(SikredeFields sikredeFields)
+    public RecordXmlSchemaGenerator(RecordSpecification recordSpecification)
     {
-        this.sikredeFields = sikredeFields;
+        this.recordSpecification = recordSpecification;
     }
-    
-    public Document generateXml(SikredeRecord record)
+
+    public Document generateXml(Record record)
     {
-        if(!sikredeFields.conformsToSpecifications(record))
+        if (!recordSpecification.conformsToSpecifications(record))
         {
             // TODO: This message does not inform the user of what went wrong. conformsToSpecification should be supplemented with a method which throws an exception with more information
             throw new IllegalArgumentException("The supplied record does not conform to the specification");
         }
-        
+
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;
-        try {
+
+        try
+        {
             documentBuilder = builderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e)
+        {
             throw new RuntimeException("Unable to configure document builder", e);
         }
-        
+
         Document document = documentBuilder.newDocument();
-        
-        Element sikredeRecordElement = document.createElement("SikredeRecord");
+
+        Element sikredeRecordElement = document.createElement("Record");
         document.appendChild(sikredeRecordElement);
-        
-        for(SikredeFieldSpecification fieldSpecification: sikredeFields.getFieldSpecificationsInCorrectOrder())
+
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             Element fieldElement = document.createElement(fieldSpecification.name);
             fieldElement.setTextContent(valueAsString(record, fieldSpecification));
             sikredeRecordElement.appendChild(fieldElement);
         }
-                
+
         return document;
     }
-    
-    private String valueAsString(SikredeRecord record, SikredeFieldSpecification fieldSpecification)
+
+    private String valueAsString(Record record, FieldSpecification fieldSpecification)
     {
-        if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+        if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
         {
-            return (String) record.get(fieldSpecification.name);
+            return String.valueOf(record.get(fieldSpecification.name));
         }
-        else if(fieldSpecification.type == SikredeType.NUMERICAL)
+        else if (fieldSpecification.type == SikredeType.NUMERICAL)
         {
             return Integer.toString((Integer) record.get(fieldSpecification.name));
-        } 
+        }
         else
         {
             throw new AssertionError("Unknown type: " + fieldSpecification.type);

@@ -42,7 +42,7 @@ import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -362,7 +362,7 @@ public class PersonMapper
 	}
 
 
-	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister, SikredeRecord sikredeRecord) throws DatatypeConfigurationException
+	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister, Record sikredeRecord) throws DatatypeConfigurationException
 	{
 		Preconditions.checkNotNull(person, "person");
 		

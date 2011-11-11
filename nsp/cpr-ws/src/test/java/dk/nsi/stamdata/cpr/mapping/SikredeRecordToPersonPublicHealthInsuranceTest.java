@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
@@ -64,9 +64,9 @@ public class SikredeRecordToPersonPublicHealthInsuranceTest {
             String sygesikringsGruppeStartDato, int expectedYear, int expectedMonth, int expectedDay)
     {
         // These record names are taken from the document "NSI - NOTUS Sikrede -def.pdf"
-        SikredeRecord record = new SikredeRecord()
-                .withField("SSikrGrpKode", sygesikringsGruppeKategori)
-                .withField("SIkraftDatoGrp", sygesikringsGruppeStartDato);
+        Record record = new Record()
+                .setField("SSikrGrpKode", sygesikringsGruppeKategori)
+                .setField("SIkraftDatoGrp", sygesikringsGruppeStartDato);
         
         SikredeRecordToPersonPublicHealhInsuranceMapper mapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
         PersonPublicHealthInsuranceType xmlStructurer = mapper.map(record);

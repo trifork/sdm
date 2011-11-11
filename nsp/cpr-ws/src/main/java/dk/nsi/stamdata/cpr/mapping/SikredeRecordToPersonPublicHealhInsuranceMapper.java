@@ -30,7 +30,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.joda.time.DateTime;
 
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
@@ -41,7 +41,7 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
     private static final String SYGESIKRINGSGRUPPE_1_FIELD_VALUE = "1";
     private static final String SYGESIKRINGSGRUPPE_2_FIELD_VALUE = "2";
 
-    public PersonPublicHealthInsuranceType map(SikredeRecord record)
+    public PersonPublicHealthInsuranceType map(Record record)
     {
         // TODO: If SikredeFields was also available, it would be possible to verify content before mapping
         PersonPublicHealthInsuranceType healthInsuranceType = new ObjectFactory().createPersonPublicHealthInsuranceType();

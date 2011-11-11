@@ -42,7 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Sets;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
@@ -65,7 +65,7 @@ public class PersonHealthCareInfoMapperTest
     private Person person;
     private Yderregister yder;
     private SikredeYderRelation relation;
-    private SikredeRecord sikredeRecord;
+    private Record sikredeRecord;
 
     private PersonWithHealthCareInformationStructureType output;
 

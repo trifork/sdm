@@ -28,18 +28,18 @@ import java.util.HashMap;
 
 import com.google.common.collect.ImmutableMap;
 
-public class SikredeRecord {
-
+public class Record
+{
     ImmutableMap<String, Object> map;
     
-    public SikredeRecord()
+    public Record()
     {
         map = ImmutableMap.of();
     }
     
-    public SikredeRecord withField(String fieldName, Object value)
+    public Record setField(String fieldName, Object value)
     {
-        SikredeRecord copy = new SikredeRecord();
+        Record copy = new Record();
 
         HashMap<String, Object> tempMap = new HashMap<String, Object>(map);
         tempMap.put(fieldName, value);
@@ -53,7 +53,7 @@ public class SikredeRecord {
         return map.get(fieldName);
     }
     
-    public int size()
+    int size()
     {
         return map.size();
     }
@@ -69,20 +69,21 @@ public class SikredeRecord {
     }
 
     @Override
-    public boolean equals(Object obj) 
+    public boolean equals(Object o)
     {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        SikredeRecord other = (SikredeRecord) obj;
-        if (map == null) {
-            if (other.map != null)
-                return false;
-        } else if (!map.equals(other.map))
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Record record = (Record) o;
+
+        if (map != null ? !map.equals(record.map) : record.map != null) return false;
+
         return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return map != null ? map.hashCode() : 0;
     }
 }

@@ -24,45 +24,46 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.collect.ImmutableList;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.ImmutableList;
-import com.trifork.stamdata.persistence.SikredeFields;
-import com.trifork.stamdata.persistence.SikredeRecord;
-import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
-import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
+import static org.junit.Assert.assertEquals;
 
-public class SikredeLineParserTest {
+public class SingleLineRecordParserTest
+{
 
-    SikredeFields exampleSikredeFields;
-    SikredeLineParser exampleSikredeLineParser;
+    RecordSpecification exampleRecordSpecification;
+    SingleLineRecordParser exampleSikredeLineParser;
     
     @Before
     public void setupExampleSikredeFields()
     {
-        exampleSikredeFields = SikredeFields.newSikredeFields(
+        exampleRecordSpecification = RecordSpecification.newSikredeFields(
                 "PostType", SikredeType.NUMERICAL, 2,
                 "TruncatedString", SikredeType.ALFANUMERICAL, 5,
                 "UntruncatedString", SikredeType.ALFANUMERICAL, 6,
                 "NumberWithSpacesForPadding", SikredeType.NUMERICAL, 6);
         
-        exampleSikredeLineParser = new SikredeLineParser(exampleSikredeFields);
+        exampleSikredeLineParser = new SingleLineRecordParser(exampleRecordSpecification);
     }
     
     @Test
     public void testSikredeLineParserParsingASimpleLine() 
     {
         String exampleLine = validateStringsConformToSikredeLengths(
-                exampleSikredeFields, 
+                exampleRecordSpecification,
                     "01",
                  "din  ",
                 "farmor",
                 "    42");
         
-        SikredeRecord record = exampleSikredeLineParser.parseLine(exampleLine);
+        Record record = exampleSikredeLineParser.parseLine(exampleLine);
         
         assertEquals(1, record.get("PostType"));
         assertEquals("din", record.get("TruncatedString"));
@@ -74,7 +75,7 @@ public class SikredeLineParserTest {
     public void testSikredeLineParserParsingALineWithANumberContainingChars() 
     {
         String exampleLine = validateStringsConformToSikredeLengths(
-                exampleSikredeFields, 
+                exampleRecordSpecification,
                 "A1",
                 "din  ",
                 "farmor",
@@ -85,9 +86,9 @@ public class SikredeLineParserTest {
     /*
      * This method is used for validating the test data before the actual test.
      */
-    private String validateStringsConformToSikredeLengths(SikredeFields sikredeFields, String... strings)
+    private String validateStringsConformToSikredeLengths(RecordSpecification recordSpecification, String... strings)
     {
-        ImmutableList<SikredeFieldSpecification> fieldSpecs = sikredeFields.getFieldSpecificationsInCorrectOrder();
+        ImmutableList<FieldSpecification> fieldSpecs = recordSpecification.getFieldSpecificationsInCorrectOrder();
         assertEquals(fieldSpecs.size(), strings.length);
         
         String result = "";

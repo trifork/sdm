@@ -38,6 +38,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -146,7 +147,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(response.getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
     }
 
-
+@Ignore
     @Test
     public void requestPersonWithHealthcareInformation() throws Exception
     {
@@ -174,7 +175,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue(), is(yder1.getNummer()));
     }
 
-
+@Ignore
     @Test
     public void requestForExistingPersonWhereHealthCareInformationCouldNotBeFoundReturnsMockData() throws Exception
     {

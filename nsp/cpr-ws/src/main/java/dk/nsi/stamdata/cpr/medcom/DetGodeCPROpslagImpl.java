@@ -44,9 +44,9 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import com.trifork.stamdata.persistence.SikredeFetcher;
-import com.trifork.stamdata.persistence.SikredeFields;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
@@ -158,7 +158,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr + "-C");
 
-		SikredeRecord sikredeRecord = null;
+		Record sikredeRecord = null;
 		try 
 		{
 		    sikredeRecord = getSikredeRecord(pnr);
@@ -196,12 +196,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	}
 
 
-    private SikredeRecord getSikredeRecord(String pnr) throws SQLException 
+    private Record getSikredeRecord(String pnr) throws SQLException 
     {
-		SikredeFetcher sikredeFetcher = new SikredeFetcher(SikredeFields.SIKREDE_FIELDS_SINGLETON);
-		// FIXME: Instead of using the connection the fetcher could be injected.
-		Connection connection = session.connection();
-        SikredeRecord sikredeRecord = sikredeFetcher.fetchSikredeRecordUsingCpr(connection, pnr);
+        // FIXME: Inject the persister instead, remove dependency on session and connection()
+        RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, session.connection());
+        Record sikredeRecord = recordPersister.fetchSikredeRecordUsingCpr(pnr);
         return sikredeRecord;
     }
 

@@ -40,7 +40,7 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.google.common.collect.Sets;
-import com.trifork.stamdata.persistence.SikredeRecord;
+import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -73,7 +73,7 @@ public class PersonMapperProtectionTest
 	private MunicipalityMapper municipalityMapper;
 	private Yderregister yderregister;
 	private SikredeYderRelation sikredeYderRelation;
-	private SikredeRecord sikredeRecord;
+	private Record sikredeRecord;
 	
 	@Before
 	public void setUp()

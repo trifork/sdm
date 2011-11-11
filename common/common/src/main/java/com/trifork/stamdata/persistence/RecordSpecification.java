@@ -29,15 +29,16 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
-public class SikredeFields {
+public class RecordSpecification
+{
 
-    public enum SikredeType { ALFANUMERICAL, NUMERICAL }
+    public static enum SikredeType { ALFANUMERICAL, NUMERICAL }
     
-    public static final SikredeFields SIKREDE_FIELDS_SINGLETON;
+    public static final RecordSpecification SIKREDE_FIELDS_SINGLETON;
 
     static 
     {
-        SIKREDE_FIELDS_SINGLETON = SikredeFields.newSikredeFields(
+        SIKREDE_FIELDS_SINGLETON = RecordSpecification.newSikredeFields(
                 // Page 1 (6 of 11)
                 "PostType", SikredeType.NUMERICAL, 2,
                 "CPRnr", SikredeType.ALFANUMERICAL, 10,
@@ -59,7 +60,7 @@ public class SikredeFields {
                 "SIkraftDatoYderFrem", SikredeType.ALFANUMERICAL, 8,
                 "SRegDatoYderFrem", SikredeType.ALFANUMERICAL, 8,
                 "SSikrGrpKodeFrem", SikredeType.ALFANUMERICAL, 1,
-                
+
                 // Page 2 (7 of 11)
                 "SIkraftDatoGrpFrem", SikredeType.ALFANUMERICAL, 8,
                 "SRegDatoGrpFrem", SikredeType.ALFANUMERICAL, 8,
@@ -75,19 +76,19 @@ public class SikredeFields {
                 "SBSStatsborgerskab", SikredeType.ALFANUMERICAL, 47,
                 "SSKAdrLinie1", SikredeType.ALFANUMERICAL, 40,
                 "SSKAdrLinie2", SikredeType.ALFANUMERICAL, 40,
-                
+
                 // Page 3 (8 of 11)
                 "SSKBopelsLand", SikredeType.ALFANUMERICAL, 40,
                 "SSKBopelsLAndKode", SikredeType.ALFANUMERICAL, 2,
                 "SSKEmailAdr", SikredeType.ALFANUMERICAL, 50,
-                "SSKFamilieRelation", SikredeType.ALFANUMERICAL, 10, 
+                "SSKFamilieRelation", SikredeType.ALFANUMERICAL, 10,
                 "SSKFodselsdato", SikredeType.ALFANUMERICAL, 10,
                 "SSKGyldigFra", SikredeType.ALFANUMERICAL, 10,
                 "SSKGyldigTil", SikredeType.ALFANUMERICAL, 10,
                 "SSKMobilNr", SikredeType.ALFANUMERICAL, 20,
                 "SSKPostNrBy", SikredeType.ALFANUMERICAL, 40,
                 "SSLForsikringsinstans", SikredeType.ALFANUMERICAL, 21,
-                "SSLForsikringsinstansKode", SikredeType.ALFANUMERICAL, 10, 
+                "SSLForsikringsinstansKode", SikredeType.ALFANUMERICAL, 10,
                 "SSLForsikringsnr", SikredeType.ALFANUMERICAL, 15,
                 "SSLGyldigFra", SikredeType.ALFANUMERICAL, 10,
                 "SSLGyldigTil", SikredeType.ALFANUMERICAL, 10,
@@ -95,13 +96,13 @@ public class SikredeFields {
                 "SSLSocSikretLandKode", SikredeType.ALFANUMERICAL, 2);
     }
     
-    public static class SikredeFieldSpecification
+    public static class FieldSpecification
     {
         public final String name;
         public final SikredeType type;
         public final int length;
         
-        public SikredeFieldSpecification(String name, SikredeType type, int length) 
+        public FieldSpecification(String name, SikredeType type, int length)
         {
             this.name = name;
             this.type = type;
@@ -109,18 +110,18 @@ public class SikredeFields {
         }
     }
     
-    private List<SikredeFieldSpecification> fieldSpecifications;
+    private List<FieldSpecification> fieldSpecifications;
     
-    private SikredeFields()
+    private RecordSpecification()
     {
-        fieldSpecifications = new ArrayList<SikredeFields.SikredeFieldSpecification>();
+        fieldSpecifications = new ArrayList<FieldSpecification>();
     }
     
-    public static SikredeFields newSikredeFields(Object... fieldDefinitions)
+    public static RecordSpecification newSikredeFields(Object... fieldDefinitions)
     {
         assert(fieldDefinitions.length % 3 == 0);
 
-        SikredeFields sikredeFields = new SikredeFields();
+        RecordSpecification recordSpecification = new RecordSpecification();
         
         for(int i = 0; i < fieldDefinitions.length; i += 3)
         {
@@ -128,15 +129,15 @@ public class SikredeFields {
             SikredeType type = (SikredeType) fieldDefinitions[i + 1];
             int length = (Integer) fieldDefinitions[i + 2];
             
-            SikredeFieldSpecification fieldSpecification = new SikredeFieldSpecification(name, type, length);
+            FieldSpecification fieldSpecification = new FieldSpecification(name, type, length);
             
-            sikredeFields.fieldSpecifications.add(fieldSpecification);
+            recordSpecification.fieldSpecifications.add(fieldSpecification);
         }
         
-        return sikredeFields;
+        return recordSpecification;
     }
     
-    public ImmutableList<SikredeFieldSpecification> getFieldSpecificationsInCorrectOrder()
+    public ImmutableList<FieldSpecification> getFieldSpecificationsInCorrectOrder()
     {
         return ImmutableList.copyOf(fieldSpecifications);
     }
@@ -144,21 +145,21 @@ public class SikredeFields {
     public int acceptedTotalLineLength()
     {
         int totalLength = 0;
-        for(SikredeFieldSpecification fieldSpecification: fieldSpecifications)
+        for(FieldSpecification fieldSpecification: fieldSpecifications)
         {
             totalLength += fieldSpecification.length;
         }
         return totalLength;
     }
     
-    public boolean conformsToSpecifications(SikredeRecord values)
+    public boolean conformsToSpecifications(Record values)
     {
-        if(values.size() != fieldSpecifications.size())
+        if (values.size() != fieldSpecifications.size())
         {
             return false;
         }
         
-        for(SikredeFieldSpecification fieldsSpecification: fieldSpecifications)
+        for (FieldSpecification fieldsSpecification: fieldSpecifications)
         {
             if(!values.containsKey(fieldsSpecification.name))
             {

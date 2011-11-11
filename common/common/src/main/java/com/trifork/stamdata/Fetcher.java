@@ -27,7 +27,6 @@ package com.trifork.stamdata;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import org.joda.time.Instant;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.models.TemporalEntity;
-import com.trifork.stamdata.persistence.SikredeRecord;
 import com.trifork.stamdata.persistence.Transactional;
 
 
@@ -54,16 +52,6 @@ public class Fetcher
         this.session = checkNotNull(session);
     }
     
-    
-    public SikredeRecord fetchSikredeRecord(String cprNumber)
-    {
-        // TODO: Connection is deprecated. This is a hibernate module, maybe this method shouldn't be here?
-        Connection connection = session.connection();
-        
-        return null;
-    }
-
-
     @Transactional
     public <T extends TemporalEntity> T fetch(Class<T> type, Object id) throws SQLException
     {

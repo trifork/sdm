@@ -36,12 +36,8 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.when;
 
 public class DirectoryInboxTest
@@ -233,7 +229,9 @@ public class DirectoryInboxTest
 
     private void waitForStabilizationPeriodToPass() throws InterruptedException
     {
-        Thread.sleep(stabilizationPeriod);
+        // We wait twice as long, so the test is less likely to fail.
+        //
+        Thread.sleep(stabilizationPeriod * 2);
     }
 
     private File anEntryNamed(String name)
