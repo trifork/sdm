@@ -73,6 +73,29 @@ public class RecordBuilder
         }
     }
     
+    public Record addDummyFieldsAndBuild()
+    {
+        for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecificationsInCorrectOrder())
+        {
+            if(!record.containsKey(fieldSpecification.name))
+            {
+            if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            {
+                record = record.setField(fieldSpecification.name, "");
+            }
+            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            {
+                record = record.setField(fieldSpecification.name, 0);
+            }
+            else
+            {
+                throw new AssertionError("");
+            }
+            }
+        }
+        return build();
+    }
+    
     private SikredeType getFieldType(String fieldName)
     {
         for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())

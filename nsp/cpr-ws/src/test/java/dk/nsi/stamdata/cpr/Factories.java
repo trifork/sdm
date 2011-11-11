@@ -33,6 +33,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -196,11 +198,13 @@ public class Factories
 
     public static Record createSikredeRecordFor(Person person, Yderregister register, String groupCode, DateTime ikraftDato)
     {
-        return new Record()
-            .setField("CPRnr", person.getCpr())
-            .setField("SYdernr", Integer.toString(register.getNummer()))
-            .setField("SSikrGrpKode", groupCode)
-            .setField("SIkraftDatoGrp", sikredeRecordDateString(ikraftDato));
+        RecordBuilder builder = new RecordBuilder(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        builder
+            .field("CPRnr", person.getCpr())
+            .field("SYdernr", Integer.toString(register.getNummer()))
+            .field("SSikrGrpKode", groupCode)
+            .field("SIkraftDatoGrp", sikredeRecordDateString(ikraftDato));
+        return builder.addDummyFieldsAndBuild();
     }
     
     private static String sikredeRecordDateString(DateTime date) 
