@@ -20,7 +20,7 @@
 
     <filter>
         <filter-name>idcardfilter</filter-name>
-        <filter-class>dk.nsi.dgws.DenGodeWebServiceFilter</filter-class>
+        <filter-class>dk.nsi.stamdata.security.DenGodeWebServiceFilter</filter-class>
         <init-param>
             <param-name>dk.nsi.dgws.sosi.usetestfederation</param-name>
             <param-value>true</param-value>

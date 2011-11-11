@@ -86,13 +86,6 @@
     </dependency>
     
     <!-- DGWS -->
-    
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>dgws-servlet-filter</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>

@@ -30,8 +30,8 @@ import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.authorization.security.SecurityModule;
 import com.trifork.stamdata.persistence.PersistenceFilter;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.dgws.DenGodeWebServiceModule;
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 
 public class WebserviceModule extends ServletModule
 {

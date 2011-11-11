@@ -39,7 +39,7 @@ import com.trifork.stamdata.authorization.models.Authorization;
 import com.trifork.stamdata.authorization.models.AuthorizationDao;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 
-import dk.nsi.dgws.ClientVocesCvr;
+import dk.nsi.stamdata.security.ClientVocesCvr;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationPortType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationRequestType;
 import dk.nsi.stamdata.jaxws.generated.AuthorizationResponseType;

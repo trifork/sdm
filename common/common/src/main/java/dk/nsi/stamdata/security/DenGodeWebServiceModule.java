@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.dgws;
+package dk.nsi.stamdata.security;
 
 import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
 
@@ -33,6 +33,7 @@ import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 
 import dk.sosi.seal.model.SystemIDCard;
+import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
 
 
 public class DenGodeWebServiceModule extends AbstractModule
@@ -56,7 +57,7 @@ public class DenGodeWebServiceModule extends AbstractModule
     @ClientVocesCvr
     public String providesClientVocesCVR(SystemIDCard idCard)
     {
-        if (!idCard.getSystemInfo().getCareProvider().getType().equals(CVR_NUMBER))
+        if (!idCard.getSystemInfo().getCareProvider().getType().equals(SubjectIdentifierTypeValues.CVR_NUMBER))
         {
             throw new IllegalStateException("You cannot inject a client's VOCES CVR if the suplied id card is not using a CVR care provider.");
         }

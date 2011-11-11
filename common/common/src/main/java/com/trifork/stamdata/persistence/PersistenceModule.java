@@ -25,23 +25,24 @@
 
 package com.trifork.stamdata.persistence;
 
-import static com.google.inject.Key.get;
-import static com.google.inject.name.Names.named;
+import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
+import com.google.inject.Singleton;
+import com.google.inject.TypeLiteral;
 
-import java.util.Set;
+import com.trifork.stamdata.Nullable;
 
-import javax.inject.Named;
-
+import dk.nsi.stamdata.security.WhitelistDbInterceptorModule;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.Provides;
-import com.google.inject.Singleton;
-import com.google.inject.TypeLiteral;
-import com.trifork.stamdata.Nullable;
+import javax.inject.Named;
+import java.util.Set;
+
+import static com.google.inject.Key.get;
+import static com.google.inject.name.Names.named;
 
 
 public class PersistenceModule extends AbstractModule

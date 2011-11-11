@@ -42,14 +42,15 @@ import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.persistence.PersistenceModule;
 import com.trifork.stamdata.persistence.Persistent;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.dgws.DenGodeWebServiceModule;
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
+import dk.nsi.stamdata.security.WhitelistDbInterceptorModule;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -121,6 +122,7 @@ public class ComponentController extends GuiceServletContextListener
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
 			install(new DenGodeWebServiceModule());
+            install(new WhitelistDbInterceptorModule());
 		}
 	}
 }

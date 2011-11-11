@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.dgws;
+package dk.nsi.stamdata.security;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;

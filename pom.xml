@@ -32,12 +32,9 @@
 
   <modules>
     <module>common/common</module>
-    <module>common/dgws-filter</module>
     <module>common/performance</module>
     <module>common/testing</module>
-
     <module>dodi/data-manager</module>
-
     <module>nsp/batch-copy-ws</module>
     <module>nsp/authorization-lookup-ws</module>
     <module>nsp/cpr-ws</module>

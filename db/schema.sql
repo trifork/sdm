@@ -1,5 +1,11 @@
 USE sdm_warehouse;
 
+CREATE TABLE whitelist_config (
+  component_name VARCHAR(50) NOT NULL,
+  cvr CHAR(8) NOT NULL,
+  PRIMARY KEY (component_name, cvr)
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
 CREATE TABLE KeyValueStore (
 	ownerId VARCHAR(200) NOT NULL,
 	id VARCHAR(200) NOT NULL,

@@ -36,11 +36,11 @@ import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
 import org.joda.time.DateTime;
 
 import com.sun.xml.ws.developer.SchemaValidation;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
 import dk.nsi.stamdata.jaxws.generated.CprAbbsFacade;
 import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
 import dk.nsi.stamdata.jaxws.generated.CprAbbsResponse;

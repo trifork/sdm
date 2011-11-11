@@ -34,6 +34,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -95,6 +96,16 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
         client = serviceCatalog.getDetGodeCPROpslag();
+
+        org.hibernate.classic.Session session1 = session.getSessionFactory().openSession();
+        Transaction transaction = session1.beginTransaction();
+        SQLQuery sqlQuery = session1.createSQLQuery("REPLACE INTO whitelist_config (component_name, cvr) VALUES(?,?)");
+        sqlQuery.setString(0, "dgcpr");
+        sqlQuery.setString(1, "87654321");
+        sqlQuery.executeUpdate();
+        transaction.commit();
+        session1.close();
+
     }
 
 

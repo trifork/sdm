@@ -22,20 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.config;
+package dk.nsi.stamdata.security;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import com.google.inject.BindingAnnotation;
 
-import java.lang.annotation.*;
-
-import static java.lang.annotation.ElementType.METHOD;
-
 @BindingAnnotation
-@Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Whitelisted
+public @interface ClientVocesCvr
 {
-    String[] value() default "";
-    
+
 }

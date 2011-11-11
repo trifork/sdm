@@ -46,8 +46,8 @@ import com.trifork.stamdata.persistence.PersistenceFilter;
 import com.trifork.stamdata.persistence.PersistenceModule;
 import com.trifork.stamdata.persistence.StatelessPersistenceFilter;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
-import dk.nsi.dgws.DenGodeWebServiceModule;
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 import dk.nsi.stamdata.replication.models.AuthenticationModule;
 import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
 import dk.nsi.stamdata.views.ViewModule;

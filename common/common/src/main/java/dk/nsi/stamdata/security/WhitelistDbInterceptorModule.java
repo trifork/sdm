@@ -22,39 +22,19 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.config;
 
-import com.google.inject.BindingAnnotation;
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-import org.hibernate.Session;
+package dk.nsi.stamdata.security;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 
-@Singleton
-public class WhitelistDbProvider implements Provider<Session>
+
+public class WhitelistDbInterceptorModule extends AbstractModule
 {
-    private Session session;
-
-    @Inject
-    WhitelistDbProvider(Session session)
-	{
-		this.session = session;
-	}
-	
-	@Override
-	public Session get()
-	{
-		return session;
-	}
-	/*
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-	@BindingAnnotation
-	public static @interface Whitelist { }
-	*/
+    public void configure()
+    {
+        WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
+        requestInjection(whitelistInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
+    }
 }

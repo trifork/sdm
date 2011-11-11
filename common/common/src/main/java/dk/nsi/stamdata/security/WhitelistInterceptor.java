@@ -22,48 +22,69 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.config;
+package dk.nsi.stamdata.security;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import com.google.inject.servlet.RequestScoped;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.type.StandardBasicTypes;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.matcher.Matchers;
+import java.util.List;
 
 
+@RequestScoped
 class WhitelistInterceptor implements MethodInterceptor
 {
     @Inject
     private Provider<Session> sessionProvider;
 
+    @Inject @ClientVocesCvr
+    private Provider<String> clientCvrProvider;
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
         Object result;
 
-        Session session = sessionProvider.get();
-//        SQLQuery query = session.createSQLQuery("SELECT cvr FROM WHITELIST WHERE component=?");
+        Whitelisted whitelisted = invocation.getMethod().getAnnotation(Whitelisted.class);
+        String componentName = whitelisted.value();
+        String clientCvr = clientCvrProvider.get();
 
-        if (!session.getTransaction().isActive())
+        Session session = sessionProvider.get();
+        SQLQuery query = session.createSQLQuery("SELECT cvr FROM whitelist_config WHERE component_name=? AND cvr=?");
+        query.setString(0, componentName);
+        query.setString(1, clientCvr);
+        query.addScalar("cvr", StandardBasicTypes.LONG);
+        List cvrs = query.list();
+
+        if (cvrs.size() == 1) {
+            System.err.println("=================>>>>>> " + clientCvr + " FOUND in whitelist for component " + componentName);
+            result = invocation.proceed();
+        } else {
+            System.err.println("----------------->>>>>> " + clientCvr + " not in whitelist for component " + componentName);
+            result = null;
+            //Throw some generic service error containing the component name
+        }
+
+/*        if (!session.getTransaction().isActive())
         {
-                System.err.println("------------> Before calling @Whitelisted method");
+                System.err.println("------------> Before calling @Whitelisted method --- CVR: " + clientCvrProvider.get() + " --- " + componentName );
                 result = invocation.proceed();
                 System.err.println("------------> After calling @Whitelisted method");
                 //session.getTransaction().commit();
         }
         else
         {
-            System.err.println("------------> Before calling @Whitelisted method");
+            System.err.println("------------> Before calling @Whitelisted method --- CVR: " + clientCvrProvider.get() + " --- " + componentName );
             result = invocation.proceed();
             System.err.println("------------> After calling @Whitelisted method");
         }
-
+*/
         return result;
     }
 }

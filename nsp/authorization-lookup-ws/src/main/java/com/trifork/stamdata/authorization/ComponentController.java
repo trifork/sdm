@@ -39,7 +39,7 @@ import com.trifork.stamdata.ConfigurationLoader;
 import com.trifork.stamdata.authorization.models.DbModule;
 import com.trifork.stamdata.authorization.webservice.WebserviceModule;
 
-import dk.nsi.dgws.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
 
 
 public class ComponentController extends GuiceServletContextListener

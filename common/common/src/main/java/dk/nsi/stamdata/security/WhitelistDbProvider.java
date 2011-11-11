@@ -22,25 +22,33 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
+package dk.nsi.stamdata.security;
 
-package dk.nsi.stamdata.config;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import org.hibernate.Session;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.matcher.Matchers;
-
-/**
- * User: frj
- * Date: 11/11/11
- * Time: 8:58 AM
- *
- * @Author frj
- */
-public class WhitelistDbInterceptorModule extends AbstractModule
+@Singleton
+public class WhitelistDbProvider implements Provider<Session>
 {
-    public void configure()
-    {
-        WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
-        requestInjection(whitelistInterceptor);
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
-    }
+    private Session session;
+
+    @Inject
+    WhitelistDbProvider(Session session)
+	{
+		this.session = session;
+	}
+	
+	@Override
+	public Session get()
+	{
+		return session;
+	}
+	/*
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
+	@BindingAnnotation
+	public static @interface Whitelist { }
+	*/
 }

@@ -22,16 +22,18 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.dgws;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package dk.nsi.stamdata.security;
 
 import com.google.inject.BindingAnnotation;
 
-@BindingAnnotation
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ClientVocesCvr
-{
+import java.lang.annotation.*;
 
+@BindingAnnotation
+@Target({ElementType.METHOD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface Whitelisted
+{
+    String value() default "";
+    
 }

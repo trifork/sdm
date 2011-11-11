@@ -121,13 +121,7 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-all</artifactId>
     </dependency>
-    
-    <dependency>
-      <groupId>dk.nsi.stamdata</groupId>
-      <artifactId>dgws-servlet-filter</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
+   
     <dependency>
       <groupId>dk.nsi.stamdata</groupId>
       <artifactId>stamdata-testing</artifactId>

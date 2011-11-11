@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import dk.nsi.stamdata.security.ClientVocesCvr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -42,7 +43,6 @@ import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 
-import dk.nsi.dgws.ClientVocesCvr;
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
