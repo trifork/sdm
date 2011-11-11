@@ -29,6 +29,9 @@ import static org.junit.Assert.assertThat;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.xml.namespace.QName;
@@ -38,13 +41,14 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
@@ -98,11 +102,20 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         client = serviceCatalog.getDetGodeCPROpslag();
     }
 
+    @Before
+    public void setupDatabase() throws SQLException
+    {
+        String sqlSchema = RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        session.beginTransaction();
+        Connection connection = session.connection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        statement.executeUpdate(sqlSchema);
+    }
 
     @Test(expected = SOAPFaultException.class)
     public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception
     {
-
         request.setPersonCivilRegistrationIdentifier(null);
 
         sendPersonRequest();
@@ -147,7 +160,6 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(response.getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
     }
 
-@Ignore
     @Test
     public void requestPersonWithHealthcareInformation() throws Exception
     {
@@ -175,7 +187,6 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerIdentifier().intValue(), is(yder1.getNummer()));
     }
 
-@Ignore
     @Test
     public void requestForExistingPersonWhereHealthCareInformationCouldNotBeFoundReturnsMockData() throws Exception
     {

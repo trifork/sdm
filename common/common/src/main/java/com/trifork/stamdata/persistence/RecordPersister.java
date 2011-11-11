@@ -262,6 +262,13 @@ public class RecordPersister
     {
         PreparedStatement statement = createSelectStatementAsPreparedStatement(connection, "CPRnr", pnr);
         ResultSet resultSet = statement.executeQuery();
-        return createRecordUsingResultSet(resultSet);
+        if(resultSet.next())
+        {
+            return createRecordUsingResultSet(resultSet);
+        }
+        else
+        {
+            return null;
+        }
     }
 }
