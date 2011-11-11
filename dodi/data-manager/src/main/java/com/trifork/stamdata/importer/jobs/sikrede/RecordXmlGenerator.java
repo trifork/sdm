@@ -31,28 +31,25 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
 
-public class RecordXmlSchemaGenerator
+public class RecordXmlGenerator
 {
     private RecordSpecification recordSpecification;
 
-    public RecordXmlSchemaGenerator(RecordSpecification recordSpecification)
+    public RecordXmlGenerator(RecordSpecification recordSpecification)
     {
         this.recordSpecification = recordSpecification;
     }
 
     public Document generateXml(Record record)
     {
-        if (!recordSpecification.conformsToSpecifications(record))
-        {
-            // TODO: This message does not inform the user of what went wrong. conformsToSpecification should be supplemented with a method which throws an exception with more information
-            throw new IllegalArgumentException("The supplied record does not conform to the specification");
-        }
+        Preconditions.checkArgument(recordSpecification.conformsToSpecifications(record), "The supplied record does not conform to the specification");
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder documentBuilder = null;

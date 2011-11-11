@@ -37,10 +37,10 @@ import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
-public class SikredeXmlGeneratorTest {
+public class RecordXmlGeneratorTest {
 
     private RecordSpecification exampleRecordSpecification;
-    private RecordXmlSchemaGenerator exampleXmlGenerator;
+    private RecordXmlGenerator exampleXmlGenerator;
 
     @Before
     public void initialiseVariables()
@@ -48,7 +48,7 @@ public class SikredeXmlGeneratorTest {
         this.exampleRecordSpecification = RecordSpecification.newSikredeFields(
                 "Foo", SikredeType.NUMERICAL, 2,
                 "Bar", SikredeType.ALFANUMERICAL, 10);
-        exampleXmlGenerator = new RecordXmlSchemaGenerator(exampleRecordSpecification);
+        exampleXmlGenerator = new RecordXmlGenerator(exampleRecordSpecification);
     }
     
     @Test
@@ -80,7 +80,7 @@ public class SikredeXmlGeneratorTest {
     public void testEmptySchemaRecordGeneration() throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
     {
         exampleRecordSpecification = RecordSpecification.newSikredeFields();
-        exampleXmlGenerator = new RecordXmlSchemaGenerator(exampleRecordSpecification);
+        exampleXmlGenerator = new RecordXmlGenerator(exampleRecordSpecification);
         RecordBuilder recordBuilder = new RecordBuilder(exampleRecordSpecification);
         Record record = recordBuilder.build();
         Document document = exampleXmlGenerator.generateXml(record);

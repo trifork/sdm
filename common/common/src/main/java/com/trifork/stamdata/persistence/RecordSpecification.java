@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
+import com.trifork.stamdata.Preconditions;
 
 public class RecordSpecification
 {
@@ -152,22 +153,24 @@ public class RecordSpecification
         return totalLength;
     }
     
-    public boolean conformsToSpecifications(Record values)
+    public boolean conformsToSpecifications(Record record)
     {
-        if (values.size() != fieldSpecifications.size())
+        Preconditions.checkNotNull(record);
+        
+        if (record.size() != fieldSpecifications.size())
         {
             return false;
         }
         
         for (FieldSpecification fieldsSpecification: fieldSpecifications)
         {
-            if(!values.containsKey(fieldsSpecification.name))
+            if(!record.containsKey(fieldsSpecification.name))
             {
                 return false;
             }
             else
             {
-                Object value = values.get(fieldsSpecification.name);
+                Object value = record.get(fieldsSpecification.name);
                 
                 if(fieldsSpecification.type == SikredeType.NUMERICAL)
                 {
