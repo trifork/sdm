@@ -83,47 +83,30 @@ public class RecordPersisterTest
     public void testAddingTheSameRecordTwiceButWithNeverTimestamp() throws SQLException 
     {
         RecordBuilder builder = new RecordBuilder(recordSpecification);
-        Record record = builder.field("Foo", 42).field("Moo", "Far").build();
+        Record recordA = builder.field("Foo", 42).field("Moo", "Far").build();
+        Record recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
 
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        persister.persistRecordWithValidityDate(record.setField("Foo", 42), "Moo", theYear2000.toInstant());
+        persister.persistRecordWithValidityDate(recordA, "Moo", theYear2000.toInstant());
         connection.commit();
-        
+
         DateTime theYear2010 = theYear2000.plusYears(10);
-        persister.persistRecordWithValidityDate(record.setField("Foo", 10), "Moo", theYear2010.toInstant());
+        persister.persistRecordWithValidityDate(recordB, "Moo", theYear2010.toInstant());
         connection.commit();
-        
+
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SikredeGenerated");
-        
+
         int recordCount = 0;
-        
         while(resultSet.next())
         {
             recordCount++;
-            
+
             Record sikredeRecord = persister.createRecordUsingResultSet(resultSet);
-            assertEquals("Far", sikredeRecord.get("Moo"));
 
-            Instant validFrom = persister.getValidFrom(resultSet);
-            Instant validTo = persister.getValidTo(resultSet);
-
-            if(sikredeRecord.get("Foo").equals(42))
-            {
-                assertEquals(theYear2000, validFrom);
-                assertEquals(theYear2010, validTo);
-            }
-            else if(sikredeRecord.get("Foo").equals(10))
-            {
-                assertEquals(theYear2010, validFrom);
-                assertEquals(null, validTo);
-            }
-            else
-            {
-                throw new AssertionError("Unexpected value of \"Foo\" in test: " + sikredeRecord.get("Foo"));
-            }
+            assertTrue(recordA.equals(sikredeRecord) || recordB.equals(sikredeRecord));
         }
-        
+
         assertEquals(2, recordCount);
     }
     
@@ -179,8 +162,8 @@ public class RecordPersisterTest
         {
             recordCount++;
             
-            Record sikredeRecord = persister.createRecordUsingResultSet(resultSet);
-            assertEquals("Far", sikredeRecord.get("Moo"));
+            Record dbRecord = persister.createRecordUsingResultSet(resultSet);
+            assertEquals("Far", dbRecord.get("Moo"));
             
             Instant validFrom = persister.getValidFrom(resultSet);
             Instant validTo = persister.getValidTo(resultSet);

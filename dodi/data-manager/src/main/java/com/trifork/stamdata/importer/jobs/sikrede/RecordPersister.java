@@ -207,6 +207,7 @@ public class RecordPersister
      * Assumes the result set is pointing to a record (i.e. that next() was called at least once on the ResultSet
      * @throws SQLException
      */
+    // FIXME: Does not fit on this call.
     Record createRecordUsingResultSet(ResultSet resultSet) throws SQLException
     {
         Preconditions.checkNotNull(resultSet);

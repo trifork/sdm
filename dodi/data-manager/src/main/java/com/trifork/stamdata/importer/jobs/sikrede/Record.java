@@ -30,7 +30,6 @@ import com.google.common.collect.ImmutableMap;
 
 public class Record
 {
-
     ImmutableMap<String, Object> map;
     
     Record()
@@ -67,5 +66,24 @@ public class Record
     Object get(String key)
     {
         return map.get(key);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Record record = (Record) o;
+
+        if (map != null ? !map.equals(record.map) : record.map != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return map != null ? map.hashCode() : 0;
     }
 }
