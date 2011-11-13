@@ -31,6 +31,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -270,5 +271,20 @@ public class RecordPersister
         {
             return null;
         }
+    }
+
+    public List<Record> fetchAllActiveRecords() throws SQLException 
+    {
+        List<Record> records = new ArrayList<Record>();
+        
+        PreparedStatement prepareStatement = connection.prepareStatement("SELECT * FROM SikredeGenerated WHERE ValidTo is NULL");
+        ResultSet resultSet = prepareStatement.executeQuery();
+        while(resultSet.next())
+        {
+            Record record = createRecordUsingResultSet(resultSet);
+            records.add(record);
+        }
+        
+        return records;
     }
 }

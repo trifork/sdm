@@ -22,7 +22,10 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package dk.nsi.stamdata.replication.webservice;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,9 +52,28 @@ public class RecordXmlGenerator
 
     public Document generateXml(Record record)
     {
-        Preconditions.checkArgument(recordSpecification.conformsToSpecifications(record), "The supplied record does not conform to the specification");
+        return generateXml(Arrays.asList(record));
+    }
 
+    public Document generateXml(List<Record> records) 
+    {
+        Document document = createEmptyDocument();
+        
+        Element root = document.createElementNS("http://www.w3.org/2005/Atom", "feed");
+        document.appendChild(root);
+
+        for(Record record : records)
+        {
+            Preconditions.checkArgument(recordSpecification.conformsToSpecifications(record), "The supplied record does not conform to the specification");
+            addRecordToDocument(record, document, root);
+        }
+        return document;
+    }
+
+    private Document createEmptyDocument() 
+    {
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        builderFactory.setNamespaceAware(false);
         DocumentBuilder documentBuilder = null;
 
         try
@@ -63,21 +85,22 @@ public class RecordXmlGenerator
             throw new RuntimeException("Unable to configure document builder", e);
         }
 
-        Document document = documentBuilder.newDocument();
+        return documentBuilder.newDocument();
+    }
 
+    private void addRecordToDocument(Record record, Document document, Element root) 
+    {
         Element sikredeRecordElement = document.createElement("Record");
-        document.appendChild(sikredeRecordElement);
-
+        root.appendChild(sikredeRecordElement);
+        
         for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
         {
             Element fieldElement = document.createElement(fieldSpecification.name);
             fieldElement.setTextContent(valueAsString(record, fieldSpecification));
             sikredeRecordElement.appendChild(fieldElement);
         }
-
-        return document;
     }
-
+    
     private String valueAsString(Record record, FieldSpecification fieldSpecification)
     {
         if (fieldSpecification.type == SikredeType.ALFANUMERICAL)

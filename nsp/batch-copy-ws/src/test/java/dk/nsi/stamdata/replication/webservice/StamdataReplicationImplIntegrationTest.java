@@ -29,6 +29,8 @@ import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +46,7 @@ import javax.xml.xpath.XPathFactory;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,6 +56,11 @@ import org.w3c.dom.Element;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
@@ -87,6 +95,7 @@ public class StamdataReplicationImplIntegrationTest {
     private ClientDao clientDao;
 
     private List<Person> persons = Lists.newArrayList();
+    private List<Record> sikredeRecords = Lists.newArrayList();
     private DateTime now, lastYear, nextYear;
     
     @Before
@@ -162,8 +171,8 @@ public class StamdataReplicationImplIntegrationTest {
 
         createCprPersonRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 0);
+        assertResponseContainsCprAtom();
+        assertResponseContainsExactNumberOfRecords("sdm:person", 0);
     }
 
     @Test
@@ -176,9 +185,9 @@ public class StamdataReplicationImplIntegrationTest {
 
         populateDatabaseAndSendRequest();
 
-        assertResponseContainsAtom();
+        assertResponseContainsCprAtom();
 
-        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         
         String fornavn = "Joakim";
         String efternavn = "And";
@@ -202,8 +211,8 @@ public class StamdataReplicationImplIntegrationTest {
         request.setMaxRecords(2L);
         
         populateDatabaseAndSendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 2);
+        assertResponseContainsCprAtom();
+        assertResponseContainsExactNumberOfRecords("sdm:person", 2);
     }
 
     @Test
@@ -229,21 +238,39 @@ public class StamdataReplicationImplIntegrationTest {
         request.setMaxRecords(1L);
         
         populateDatabaseAndSendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsCprAtom();
+        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("1111111111");
         
         request.setOffset(getOffsetFromAtomEntry());
         sendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsCprAtom();
+        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("2222222222");
         
         request.setOffset(getOffsetFromAtomEntry());
         sendRequest();
-        assertResponseContainsAtom();
-        assertResponseContainsExactNumberOfRecords("person", 1);
+        assertResponseContainsCprAtom();
+        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("3333333333");
+    }
+    
+    @Test
+    public void testSikredeCopy() throws Exception
+    {
+        RecordBuilder builder = new RecordBuilder(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        builder.field("CPRnr", "1234567890");
+        Record record = builder.addDummyFieldsAndBuild();
+        sikredeRecords.add(record);
+        
+        createSikredeReplicationRequest();
+        
+        populateDatabaseAndSendRequest();
+        
+        // TODO: There is no namespace on the Records generated. Is that needed and what should it be?
+        assertResponseContainsSikredeAtom();
+        assertResponseContainsExactNumberOfRecords("Record", 1);
+        assertResponseContainsSikredeWithCpr("1234567890");
     }
 
     @Test
@@ -282,6 +309,14 @@ public class StamdataReplicationImplIntegrationTest {
         request.setOffset("0");
     }
     
+    private void createSikredeReplicationRequest() {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("sikrede");
+        request.setDatatype("sikrede");
+        request.setVersion(1L);
+        request.setOffset("0");
+    }
+    
     private void createSorHospitalRegisterReplicationRequest() {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("sor");
@@ -306,12 +341,18 @@ public class StamdataReplicationImplIntegrationTest {
         request.setOffset("0");
     }
     
-    private void assertResponseContainsAtom() {
+    private void assertResponseContainsCprAtom() {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
         assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
     }
 
+    private void assertResponseContainsSikredeAtom() {
+        assertThat(anyAsElement.getLocalName(), is("feed"));
+        assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
+     //   assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:sikrede/sikrede/v1"));
+    }
+    
     private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException {
         XPathExpression expression = createXpathExpression("//sdm:person[sdm:fornavn='" + givenName + "']/sdm:efternavn");
         String result = expression.evaluate(anyAsElement);
@@ -319,7 +360,7 @@ public class StamdataReplicationImplIntegrationTest {
     }
 
     private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException {
-        XPathExpression expression = createXpathExpression("count(//sdm:person)");
+        XPathExpression expression = createXpathExpression("count(//" + tag + ")");
         String countAsString = expression.evaluate(anyAsElement);
         assertThat(Integer.parseInt(countAsString), is(n));
     }
@@ -330,6 +371,12 @@ public class StamdataReplicationImplIntegrationTest {
         assertThat(result, is(oracleCpr));
     }
 
+    private void assertResponseContainsSikredeWithCpr(String oracleCpr) throws XPathExpressionException {
+        XPathExpression expression = createXpathExpression("//Record/CPRnr");
+        String result = expression.evaluate(anyAsElement);
+        assertThat(result, is(oracleCpr));
+    }
+    
     private String getOffsetFromAtomEntry() throws XPathExpressionException {
         XPathExpression expression = createXpathExpression("//atom:entry/atom:id");
         String atomId = expression.evaluate(anyAsElement);
@@ -353,7 +400,7 @@ public class StamdataReplicationImplIntegrationTest {
         sendRequest();
     }
 
-    private void populateDatabase() {
+    private void populateDatabase() throws SQLException {
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Client").executeUpdate();
@@ -362,12 +409,24 @@ public class StamdataReplicationImplIntegrationTest {
         // Example of subject serial number: CVR:19343634-UID:1234
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
         cvrClient.addPermission(Views.getViewPath(Person.class));
+        cvrClient.addPermission("sikrede/sikrede/v1");
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();
         for (Person person : persons) {
             session.persist(person);
         }
+
+        Connection connection = session.connection();
+        connection.createStatement().executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON));
+        RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, connection);
+        for(Record sikredeRecord: sikredeRecords)
+        {
+            recordPersister.persistRecordWithValidityDate(sikredeRecord, "CPRnr", new Instant(new DateTime().getMillis()));
+        }
+        connection.commit();
+
         t.commit();
     }
 

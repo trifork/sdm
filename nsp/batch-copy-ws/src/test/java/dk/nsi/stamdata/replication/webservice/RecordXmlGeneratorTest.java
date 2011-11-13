@@ -22,12 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.sikrede;
+package dk.nsi.stamdata.replication.webservice;
+
+import java.util.Arrays;
 
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+
+import dk.nsi.stamdata.replication.webservice.RecordXmlGenerator;
 
 import junit.framework.Assert;
 import org.junit.Before;
@@ -59,11 +63,38 @@ public class RecordXmlGeneratorTest {
         Document document = exampleXmlGenerator.generateXml(record);
         
         String expected = 
-                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" + 
+                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + 
+                        "<feed xmlns=\"http://www.w3.org/2005/Atom\">" + 
                         "<Record>"+
                         "<Foo>42</Foo>" + 
                         "<Bar>ABCDEFGH</Bar>" + 
-                        "</Record>";
+                        "</Record>" + 
+                        "</feed>";
+        String actual = serializeDomDocument(document);
+        
+        Assert.assertEquals(expected, actual);
+    }
+    
+    @Test
+    public void testXmlDocumentGenerationWithMultipleRecords() throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
+    {
+        RecordBuilder recordBuilder = new RecordBuilder(exampleRecordSpecification);
+        Record record1 = recordBuilder.field("Foo", 42).field("Bar", "ABCDEFGH").build();
+        Record record2 = recordBuilder.field("Foo", 10).field("Bar", "1234567").build();
+        Document document = exampleXmlGenerator.generateXml(Arrays.asList(record1, record2));
+        
+        String expected = 
+                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + 
+                        "<feed xmlns=\"http://www.w3.org/2005/Atom\">" +
+                        "<Record>"+
+                        "<Foo>42</Foo>" + 
+                        "<Bar>ABCDEFGH</Bar>" + 
+                        "</Record>" + 
+                        "<Record>"+
+                        "<Foo>10</Foo>" + 
+                        "<Bar>1234567</Bar>" + 
+                        "</Record>" + 
+                        "</feed>";
         String actual = serializeDomDocument(document);
         
         Assert.assertEquals(expected, actual);
@@ -86,8 +117,8 @@ public class RecordXmlGeneratorTest {
         Document document = exampleXmlGenerator.generateXml(record);
         
         String expected = 
-                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" + 
-                        "<Record/>";
+                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" + 
+                        "<feed xmlns=\"http://www.w3.org/2005/Atom\"><Record/></feed>";
         String actual = serializeDomDocument(document);
         
         Assert.assertEquals(expected, actual);

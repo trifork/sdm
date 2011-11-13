@@ -91,8 +91,12 @@ public class Client
 
 	public boolean isAuthorizedFor(Class<? extends View> view)
 	{
-	    String viewName = Views.getViewPath(view);
-		return permissions.contains(viewName);
+	    return isAuthorizedFor(Views.getViewPath(view));
+	}
+	
+	public boolean isAuthorizedFor(String viewName)
+	{
+        return permissions.contains(viewName);	    
 	}
 
 	public Set<String> getPermissions()
