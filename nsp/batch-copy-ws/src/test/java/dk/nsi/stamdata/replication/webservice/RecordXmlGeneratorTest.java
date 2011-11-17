@@ -29,9 +29,7 @@ import java.util.Arrays;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
-
-import dk.nsi.stamdata.replication.webservice.RecordXmlGenerator;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 import junit.framework.Assert;
 import org.junit.Before;
@@ -49,9 +47,9 @@ public class RecordXmlGeneratorTest {
     @Before
     public void initialiseVariables()
     {
-        this.exampleRecordSpecification = RecordSpecification.newSikredeFields(
-                "Foo", SikredeType.NUMERICAL, 2,
-                "Bar", SikredeType.ALFANUMERICAL, 10);
+        this.exampleRecordSpecification = RecordSpecification.createSpec(
+                "Foo", RecordSpecification.RecordFieldType.NUMERICAL, 2,
+                "Bar", RecordFieldType.ALPHANUMERICAL, 10);
         exampleXmlGenerator = new RecordXmlGenerator(exampleRecordSpecification);
     }
     
@@ -110,7 +108,7 @@ public class RecordXmlGeneratorTest {
     @Test
     public void testEmptySchemaRecordGeneration() throws ClassCastException, ClassNotFoundException, InstantiationException, IllegalAccessException
     {
-        exampleRecordSpecification = RecordSpecification.newSikredeFields();
+        exampleRecordSpecification = RecordSpecification.createSpec();
         exampleXmlGenerator = new RecordXmlGenerator(exampleRecordSpecification);
         RecordBuilder recordBuilder = new RecordBuilder(exampleRecordSpecification);
         Record record = recordBuilder.build();

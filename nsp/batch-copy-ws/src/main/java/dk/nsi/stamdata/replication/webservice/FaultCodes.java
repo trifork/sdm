@@ -32,4 +32,5 @@ public final class FaultCodes {
     public static final String UNKNOWN_VIEW = "urn:stamdata:unknown-view";
     public static final String IO_ERROR = "urn:stamdata:io-error";
     public static final String UNAUTHORIZED = "urn:stamdata:unauthorized-access";
+    public static final String INTERNAL_ERROR = "urn:stamdata:internal-error";
 }

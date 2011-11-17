@@ -34,6 +34,8 @@ import java.util.Map;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import com.google.common.collect.Lists;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 
 import org.hibernate.Session;
@@ -83,11 +85,11 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao dao, ClientDao clients, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Session session)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Session session)
     {
         this.cvr = cvr;
-        this.dao = dao;
-        this.clients = clients;
+        this.dao = recordDao;
+        this.clients = clientDao;
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
         this.session = session;
@@ -99,7 +101,10 @@ public class StamdataReplicationImpl implements StamdataReplication {
     {
         try
         {
-            if(isSikredeRegister(parameters))
+            // During the transition to the new architecture we will have
+            // to handle some registers differently.
+            //
+            if (isSikredeRegister(parameters))
             {
                 return handleRequestUsingRecords(wsseHeader, medcomHeader, parameters);
             }
@@ -112,37 +117,30 @@ public class StamdataReplicationImpl implements StamdataReplication {
         {
             // Log an throw is normally an anti-pattern, but since
             // exceptions are part of JAX-WS's flow it is "OK" here.
+            //
             logger.warn("The request could not be handled. This is likely the clients mistake.", e);
             
             throw e;
         }
-        catch (RuntimeException e)
+        catch (Exception e)
         {
-            logger.error("An unhandled error occured.", e);
-            
-            throw e;
-        } 
-        catch (SQLException e) 
-        {
-            logger.error("A database error occured");
-
-            throw new RuntimeException(e);
+            throw new ReplicationFault("An unhandled error occurred.", FaultCodes.INTERNAL_ERROR, e);
         }
     }
 
-    private boolean isSikredeRegister(ReplicationRequestType parameters) {
-        return "sikrede".equals(parameters.getRegister()) && "sikrede".equals(parameters.getDatatype()) && (parameters.getVersion() == 1);
+    private boolean isSikredeRegister(ReplicationRequestType parameters)
+    {
+        return "sikrede".equals(parameters.getRegister()) && "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1;
     }
 
-    private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
-            ReplicationRequestType parameters) throws ReplicationFault, SQLException 
+    private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
         try 
         {
             String viewPath = getViewPath(parameters);
 
-            MDC.put("view", viewPath);
-            MDC.put("cvr", cvr);
+            MDC.put("view", String.valueOf(viewPath));
+            MDC.put("cvr", String.valueOf(cvr));
             
             // Validate authentication.
             //
@@ -181,10 +179,17 @@ public class StamdataReplicationImpl implements StamdataReplication {
             logger.info("Records fetched, sending response.");
     
             return response;
-        } catch (ReplicationFault e) {
+        }
+        catch (ReplicationFault e)
+        {
+            // We don't want to wrap replication faults further,
+            // so catch and rethrow them here.
+            //
             throw e;
-        } catch (SQLException e) {
-            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new ReplicationFault("Could not complete the request do to an error.", FaultCodes.INTERNAL_ERROR, e);
         }
         finally
         {
@@ -195,8 +200,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
     }
 
-    private ReplicationResponseType handleRequestUsingHibernateView(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
-            ReplicationRequestType parameters) throws RuntimeException, ReplicationFault 
+    private ReplicationResponseType handleRequestUsingHibernateView(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws RuntimeException, ReplicationFault
     {
         try
         {
@@ -241,16 +245,11 @@ public class StamdataReplicationImpl implements StamdataReplication {
     
             return response;
         }
-        catch (RuntimeException e)
-        {
-            throw e;
-        } catch (ReplicationFault e) {
-            throw e;
-        }
         finally
         {
             // Clean up the thread's MDC.
-            // TODO: This might fit better in a filter or intercepter.
+            // TODO: This might fit better in an interceptor.
+            //
             MDC.remove("view");
             MDC.remove("cvr");
             MDC.remove("offset");
@@ -277,12 +276,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
         
         Document body;
         
-        try {
+        try
+        {
             body = outputWriter.write(requestedView, results);
         }
-        catch (IOException e) {
-            
-            throw new ReplicationFault("A unexpected error occured. Processing stopped.", FaultCodes.IO_ERROR, e);
+        catch (IOException e)
+        {
+            throw new ReplicationFault("A unexpected error occurred. Processing stopped.", FaultCodes.IO_ERROR, e);
         }
         
         return body;
@@ -290,11 +290,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
     
     private Document createSikredeFeed(HistoryOffset offset, int limit) throws SQLException
     {
-        RecordXmlGenerator sikredeXmlGenerator = new RecordXmlGenerator(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
-        RecordPersister persister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, session.connection());
+        RecordXmlGenerator sikredeXmlGenerator = new RecordXmlGenerator(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+        RecordPersister persister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
+
         // FIXME: The persister should respect the offset and the limit. Input form THB on how to handle this nicely.
-        // A first step would be to introduce modfied date to Record persistense (currently missing).
-        List<Record> records = persister.fetchAllActiveRecords();
+        // A first step would be to introduce modified date to Record persistence (currently missing).
+        List<Record> records = Lists.newArrayList(); //persister.fetchAllActiveRecords();
+
         return sikredeXmlGenerator.generateXml(records);
     }
 
@@ -324,8 +326,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
         {
             return new HistoryOffset(parameters.getOffset());
         }
-        catch (Exception e) {
-            
+        catch (Exception e)
+        {
             throw new ReplicationFault("Invalid offset in the request.", FaultCodes.INVALID_OFFSET, e);
         }
     }

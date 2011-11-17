@@ -76,7 +76,7 @@ public class ComponentController extends GuiceServletContextListener
 
             // A previous version of this component used the property
             // 'security' to determine what type of security to use (e.g. none, DGWS, Two-way-SSL).
-            // To avoid the operator (Netic) to have to change deployment (i.e. puppet scripts) we
+            // To avoid Netic to have to change deployment (i.e. puppet scripts) we
             // still support this property.
 
             String useTestSTS = "dgwsTest".equalsIgnoreCase(props.getProperty("security")) ? "true" : "false";

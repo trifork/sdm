@@ -38,7 +38,7 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 
 public class RecordXmlGenerator
@@ -93,7 +93,7 @@ public class RecordXmlGenerator
         Element sikredeRecordElement = document.createElement("Record");
         root.appendChild(sikredeRecordElement);
         
-        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
             Element fieldElement = document.createElement(fieldSpecification.name);
             fieldElement.setTextContent(valueAsString(record, fieldSpecification));
@@ -103,11 +103,11 @@ public class RecordXmlGenerator
     
     private String valueAsString(Record record, FieldSpecification fieldSpecification)
     {
-        if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
+        if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
         {
             return String.valueOf(record.get(fieldSpecification.name));
         }
-        else if (fieldSpecification.type == SikredeType.NUMERICAL)
+        else if (fieldSpecification.type == RecordFieldType.NUMERICAL)
         {
             return Integer.toString((Integer) record.get(fieldSpecification.name));
         }

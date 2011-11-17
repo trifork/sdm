@@ -24,25 +24,20 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigInteger;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Holder;
-import javax.xml.ws.soap.SOAPFaultException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import dk.nsi.stamdata.jaxws.generated.*;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
+import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
+import dk.nsi.stamdata.views.cpr.Person;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
@@ -53,28 +48,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.w3c.dom.Element;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordBuilder;
-import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
+import javax.xml.ws.Holder;
+import javax.xml.ws.soap.SOAPFaultException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
-import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
-import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
-import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
-import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
-import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
-import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
-import dk.nsi.stamdata.replication.models.Client;
-import dk.nsi.stamdata.replication.models.ClientDao;
-import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceTestRunner.class)
 public class StamdataReplicationImplIntegrationTest {
@@ -258,7 +248,7 @@ public class StamdataReplicationImplIntegrationTest {
     @Test
     public void testSikredeCopy() throws Exception
     {
-        RecordBuilder builder = new RecordBuilder(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        RecordBuilder builder = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         builder.field("CPRnr", "1234567890");
         Record record = builder.addDummyFieldsAndBuild();
         sikredeRecords.add(record);
@@ -419,12 +409,14 @@ public class StamdataReplicationImplIntegrationTest {
 
         Connection connection = session.connection();
         connection.createStatement().executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
-        connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON));
-        RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, connection);
-        for(Record sikredeRecord: sikredeRecords)
+        connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
+        RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, connection);
+
+        for (Record sikredeRecord: sikredeRecords)
         {
-            recordPersister.persistRecordWithValidityDate(sikredeRecord, "CPRnr", new Instant(new DateTime().getMillis()));
+            recordPersister.persist(sikredeRecord, "CPRnr", new Instant(new DateTime().getMillis()));
         }
+
         connection.commit();
 
         t.commit();
