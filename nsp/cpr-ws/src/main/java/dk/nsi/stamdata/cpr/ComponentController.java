@@ -80,7 +80,7 @@ public class ComponentController extends GuiceServletContextListener
 			// The white-list controls which clients have access to protected
 			// data and which that do not.
 
-			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class);
+			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule - remove this when tested
 
 			install(new PersistenceModule());
 			
@@ -122,7 +122,7 @@ public class ComponentController extends GuiceServletContextListener
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
 			install(new DenGodeWebServiceModule());
-            install(new WhitelistDbInterceptorModule());
+            //install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
 		}
 	}
 }

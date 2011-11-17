@@ -34,6 +34,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
@@ -86,14 +87,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	// TODO: Session is only used for SikredeFetcher. Maybe that should be injected instead
     private Session session;
 	private final String clientCVR;
+    private WhitelistService whitelistService;
 
-	@Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, Session session, SystemIDCard card)
+    @Inject
+	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, Session session, SystemIDCard card, WhitelistService whitelistService)
 	{
 		this.fetcher = fetcher;
 		this.personMapper = personMapper;
 		this.session = session;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
+        this.whitelistService = whitelistService;
 	}
 
 
@@ -101,7 +104,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	// setting these.
 	@Override
 	@Transactional
-    @Whitelisted("dgcpr")
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
