@@ -30,7 +30,7 @@ import com.google.inject.Singleton;
 import org.hibernate.Session;
 
 @Singleton
-public class WhitelistDbProvider implements Provider<Session>
+public class WhitelistDbProvider implements Provider<WhitelistService>
 {
     private Session session;
 
@@ -41,10 +41,13 @@ public class WhitelistDbProvider implements Provider<Session>
 	}
 	
 	@Override
-	public Session get()
+	public WhitelistService get()
 	{
-		return session;
+		return new WhitelistServiceImpl(session);
 	}
+
+
+
 	/*
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})

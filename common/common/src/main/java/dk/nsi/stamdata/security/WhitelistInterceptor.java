@@ -40,51 +40,31 @@ import java.util.List;
 @RequestScoped
 class WhitelistInterceptor implements MethodInterceptor
 {
-    @Inject
-    private Provider<Session> sessionProvider;
-
     @Inject @ClientVocesCvr
     private Provider<String> clientCvrProvider;
+
+    @Inject
+    private Provider<WhitelistService> whitelistServiceProvider;
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
-        Object result;
+        Whitelisted whitelistedAnnotation = invocation.getMethod().getAnnotation(Whitelisted.class);
+        String serviceName = whitelistedAnnotation.value();
 
-        Whitelisted whitelisted = invocation.getMethod().getAnnotation(Whitelisted.class);
-        String componentName = whitelisted.value();
         String clientCvr = clientCvrProvider.get();
+        WhitelistService whitelistService = whitelistServiceProvider.get();
 
-        Session session = sessionProvider.get();
-        SQLQuery query = session.createSQLQuery("SELECT cvr FROM whitelist_config WHERE component_name=? AND cvr=?");
-        query.setString(0, componentName);
-        query.setString(1, clientCvr);
-        query.addScalar("cvr", StandardBasicTypes.LONG);
-        List cvrs = query.list();
-
-        if (cvrs.size() == 1) {
-            System.err.println("=================>>>>>> " + clientCvr + " FOUND in whitelist for component " + componentName);
+        Object result;
+        if (whitelistService.isCvrWhitelisted(clientCvr, serviceName)) {
             result = invocation.proceed();
         } else {
-            System.err.println("----------------->>>>>> " + clientCvr + " not in whitelist for component " + componentName);
+            System.err.println("----------------->>>>>> " + clientCvr + " not in whitelist for service " + serviceName);
             result = null;
-            //Throw some generic service error containing the component name
+            
+            //TODO: Throw some generic service error containing the component name
         }
 
-/*        if (!session.getTransaction().isActive())
-        {
-                System.err.println("------------> Before calling @Whitelisted method --- CVR: " + clientCvrProvider.get() + " --- " + componentName );
-                result = invocation.proceed();
-                System.err.println("------------> After calling @Whitelisted method");
-                //session.getTransaction().commit();
-        }
-        else
-        {
-            System.err.println("------------> Before calling @Whitelisted method --- CVR: " + clientCvrProvider.get() + " --- " + componentName );
-            result = invocation.proceed();
-            System.err.println("------------> After calling @Whitelisted method");
-        }
-*/
         return result;
     }
 }
