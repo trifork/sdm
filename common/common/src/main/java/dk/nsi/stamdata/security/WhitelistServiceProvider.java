@@ -22,42 +22,36 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.pvit;
+package dk.nsi.stamdata.security;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import java.util.Set;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.Sets;
-import com.google.inject.BindingAnnotation;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
+import org.hibernate.Session;
 
 @Singleton
-public class WhitelistProvider implements Provider<Set<String>>
+public class WhitelistServiceProvider implements Provider<WhitelistService>
 {
-	private final Set<String> entries;
+    private Session session;
 
-	@Inject
-	WhitelistProvider(@Named("whitelist") String whitelistProperty)
+    @Inject
+    WhitelistServiceProvider(Session session)
 	{
-		Iterable<String> values = Splitter.on(",").omitEmptyStrings().trimResults().split(whitelistProperty);
-		entries = Sets.newHashSet(values);
+		this.session = session;
 	}
 	
 	@Override
-	public Set<String> get()
+	public WhitelistService get()
 	{
-		return entries;
+		return new WhitelistServiceImpl(session);
 	}
-	
+
+
+
+	/*
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
 	@BindingAnnotation
 	public static @interface Whitelist { }
+	*/
 }
