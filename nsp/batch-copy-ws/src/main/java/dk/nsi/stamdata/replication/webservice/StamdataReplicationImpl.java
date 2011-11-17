@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jws.WebService;
+import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
 
 import com.google.common.collect.Lists;
@@ -40,6 +41,7 @@ import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 
 import org.hibernate.Session;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -49,6 +51,7 @@ import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordMetadata;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 
@@ -296,9 +299,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
         // FIXME: The persister should respect the offset and the limit. Input form THB on how to handle this nicely.
         // A first step would be to introduce modified date to Record persistence (currently missing).
-        List<Record> records = Lists.newArrayList(); //persister.fetchAllActiveRecords();
+        List<RecordMetadata> records = Lists.newArrayList(); //persister.fetchAllActiveRecords();
 
-        return sikredeXmlGenerator.generateXml(records);
+        try {
+            return sikredeXmlGenerator.generateXml(records, "sikrede", "sikrede", DateTime.now());
+        } catch (TransformerException e) {
+            throw new RuntimeException("Transformer error");
+        }
     }
 
     private Class<? extends View> getViewClass(ReplicationRequestType parameters) throws ReplicationFault

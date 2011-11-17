@@ -24,29 +24,35 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
-import java.util.Arrays;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXSource;
 
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.persistence.RecordMetadata;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
-import com.trifork.stamdata.Preconditions;
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.io.DocumentSource;
+import org.joda.time.DateTime;
+
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
-import org.w3c.dom.Text;
 
 
 public class RecordXmlGenerator
 {
-    public static final String NAMESPACE_URI = "http://www.w3.org/2005/Atom";
+    public static final String ATOM_NAMESPACE_URI = "http://www.w3.org/2005/Atom";
+    public static final String STAMDATA_NAMESPACE_URI = "http://trifork.com/-/stamdata/3.0/cpr";
+    
     private RecordSpecification recordSpecification;
 
     public RecordXmlGenerator(RecordSpecification recordSpecification)
@@ -54,110 +60,51 @@ public class RecordXmlGenerator
         this.recordSpecification = recordSpecification;
     }
 
-    public Document generateXml(Record record)
-    {
-        return generateXml(Arrays.asList(record));
-    }
-
-    public Document generateXml(List<RecordMetadata> records, String register, String datatype)
-    {
-        Document document = createEmptyDocument();
+    public org.w3c.dom.Document generateXml(List<RecordMetadata> records, String register, String datatype, DateTime updated) throws TransformerException
+    {           
+        Document document = DocumentHelper.createDocument();
+        document.setXMLEncoding("utf-8");
         
-        Element root = document.createElementNS(NAMESPACE_URI, "feed");
-        document.appendChild(root);
-
-        String expected =
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                        "<atom:feed xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns=\"http://trifork.com/-/stamdata/3.0/cpr\">" +
-                        "<atom:id>tag:trifork.com,2011:cpr/person/v1</atom:id>" +
-                        "<atom:updated>2011-11-07T09:56:12.278Z</atom:updated>" +
-                        "<atom:title>Stamdata Registry Feed</atom:title>" +
-                        "<atom:author>" +
-                        "<atom:name>National Sundheds IT</atom:name>"+
-                        "</atom:author>" +
-                        "<atom:entry>" +
-                        "<atom:id>tag:trifork.com,2011:sikrede/sikrede/v1/13206597710000000085</atom:id>" +
-                        "<atom:title/>" +
-                        "<atom:updated></atom:updated>" +
-                        "<atom:content type=\"application/xml\">" +
-                        "<RecordType>" +
-                        "<Foo>42</Foo>" +
-                        "<Bar>ABCDEFGH</Bar>" +
-                        "</RecordType>" +
-                        "</atom:content>" +
-                        "</atom:entry>" +
-                        "</atom:feed>";
-
-        addElement(document, root, NAMESPACE_URI, "id", String.format("tag:trifork.com,2011:%s/%s/v1", register, datatype));
-        // FIXME: Use actual updated date
-        addElement(document, root, NAMESPACE_URI, "updated", "2011-11-07T09:56:12.278Z");
-        addElement(document, root, NAMESPACE_URI, "title", "Stamdata Registry Feed");
-        Element author = addElement(document, root, NAMESPACE_URI, "author", null);
-        addElement(document, author, NAMESPACE_URI, "name", "National Sundheds IT");
+        Element root = document.addElement("atom:feed", ATOM_NAMESPACE_URI);
+        
+        addElement(root, ATOM_NAMESPACE_URI, "atom:id", String.format("tag:trifork.com,2011:%s/%s/v1", register, datatype));
+        addElement(root, ATOM_NAMESPACE_URI, "atom:updated", AtomDate.toString(updated.toDate()));
+        addElement(root, ATOM_NAMESPACE_URI, "atom:title", "Stamdata Registry Feed");
+        Element author = addElement(root, ATOM_NAMESPACE_URI, "atom:author", null);
+        addElement(author, ATOM_NAMESPACE_URI, "atom:name", "National Sundheds IT");
         
         for (RecordMetadata metadata : records)
         {
-            Record record = metadata.getRecord();
-            
-            Element entry = addElement(document, root, NAMESPACE_URI, "entry", null);
-            // FIXME: Hardcoded, replace
-            addElement(document, entry, NAMESPACE_URI, "id", "tag:trifork.com,2011:sikrede/sikrede/v1/13206597710000000085");
-            addElement(document, entry, NAMESPACE_URI, "title", null);
+            Element entry = addElement(root, ATOM_NAMESPACE_URI, "atom:entry", null);
+            String atomId = String.format("tag:trifork.com,2011:%s/%s/v1/%d%07d", register, datatype, metadata.getModifiedDate().getMillis(), metadata.getPid());
+            addElement(entry, ATOM_NAMESPACE_URI, "atom:id", atomId);
+            addElement(entry, ATOM_NAMESPACE_URI, "atom:title", null);
 
-            // FIXME: Hardcoded, replace
-            addElement(document, entry, NAMESPACE_URI, "updated", ""); // Use AtomDate.toString(...)
+            addElement(entry, ATOM_NAMESPACE_URI, "atom:updated", AtomDate.toString(metadata.getModifiedDate().toDate()));
             
-            Element content = addElement(document, entry, NAMESPACE_URI, "content", null);
-            content.setAttribute("type", "application/xml");
+            Element content = addElement(entry, ATOM_NAMESPACE_URI, "atom:content", null);
+            content.addAttribute("type", "application/xml");
 
-            // FIXME: Continue tomorrow
+            Element recordElement = addElement(content, STAMDATA_NAMESPACE_URI, recordSpecification.getTable(), null);
+            for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecs())
+            {
+                addElement(recordElement, STAMDATA_NAMESPACE_URI, fieldSpecification.name, valueAsString(metadata.getRecord(), fieldSpecification));
+            }
         }
 
-        return document;
+        return convertToW3C(document);
     }
     
-    private Element addElement(Document document, Element parent, String namespace, String tagName, @Nullable String value)
+    private Element addElement(Element parent, String namespace, String tagName, @Nullable String value)
     {
-        Element element = document.createElementNS(namespace, tagName);
+        Element element = parent.addElement(tagName, namespace);
         if(value != null)
         {
-            element.setNodeValue(value);
+            element.setText(value);
         }
-        parent.appendChild(element);
         return element;
     }
 
-    private Document createEmptyDocument() 
-    {
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        builderFactory.setNamespaceAware(false);
-        DocumentBuilder documentBuilder = null;
-
-        try
-        {
-            documentBuilder = builderFactory.newDocumentBuilder();
-        }
-        catch (ParserConfigurationException e)
-        {
-            throw new RuntimeException("Unable to configure document builder", e);
-        }
-
-        return documentBuilder.newDocument();
-    }
-
-    private void addRecordToDocument(Record record, Document document, Element root) 
-    {
-        Element sikredeRecordElement = document.createElement("Record");
-        root.appendChild(sikredeRecordElement);
-        
-        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
-        {
-            Element fieldElement = document.createElement(fieldSpecification.name);
-            fieldElement.setTextContent(valueAsString(record, fieldSpecification));
-            sikredeRecordElement.appendChild(fieldElement);
-        }
-    }
-    
     private String valueAsString(Record record, FieldSpecification fieldSpecification)
     {
         if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
@@ -172,5 +119,19 @@ public class RecordXmlGenerator
         {
             throw new AssertionError("Unknown type: " + fieldSpecification.type);
         }
+    }
+    
+    private static final TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+
+    public static org.w3c.dom.Document convertToW3C(org.dom4j.Document dom4jdoc) throws TransformerException
+    {
+        SAXSource source = new DocumentSource(dom4jdoc);
+        DOMResult result = new DOMResult();
+
+        Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        
+        transformer.transform(source, result);
+        return (org.w3c.dom.Document) result.getNode();
     }
 }
