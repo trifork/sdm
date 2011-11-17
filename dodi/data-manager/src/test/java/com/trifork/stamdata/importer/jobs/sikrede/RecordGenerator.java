@@ -27,7 +27,7 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 import static org.junit.Assert.assertTrue;
 
@@ -48,15 +48,15 @@ public class RecordGenerator
         }
         
         StringBuilder builder = new StringBuilder();
-        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
-            if(fieldSpecification.type == SikredeType.ALPHANUMERICAL)
+            if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
             {
                 String value = (String) record.get(fieldSpecification.name);
                 builder.append(prefixPadding(' ', fieldSpecification.length - value.length()));
                 builder.append(value);
             }
-            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
                 String value = Integer.toString((Integer) record.get(fieldSpecification.name));
                 builder.append(prefixPadding('0', fieldSpecification.length - value.length()));
@@ -72,15 +72,15 @@ public class RecordGenerator
     
     public String stringFromIncompleteRecord(Record record)
     {
-        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
             if(!record.containsKey(fieldSpecification.name))
             {
-                if(fieldSpecification.type == SikredeType.ALPHANUMERICAL)
+                if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {
                     record = record.setField(fieldSpecification.name, "");
                 }
-                else if(fieldSpecification.type == SikredeType.NUMERICAL)
+                else if(fieldSpecification.type == RecordFieldType.NUMERICAL)
                 {
                     record = record.setField(fieldSpecification.name, 0);
                 } 
@@ -96,10 +96,10 @@ public class RecordGenerator
     
     public String stringRecordFromIncompleteSetOfFields(Object... keysAndValues)
     {
-        return stringFromIncompleteRecord(sikredeRecordFromKeysAndValues(keysAndValues));
+        return stringFromIncompleteRecord(createRecord(keysAndValues));
     }
     
-    public static Record sikredeRecordFromKeysAndValues(Object... keysAndValues)
+    public static Record createRecord(Object... keysAndValues)
     {
         Record record = new Record();
         

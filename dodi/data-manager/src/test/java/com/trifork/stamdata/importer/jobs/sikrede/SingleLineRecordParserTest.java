@@ -24,16 +24,17 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
-
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class SingleLineRecordParserTest
 {
@@ -44,11 +45,11 @@ public class SingleLineRecordParserTest
     @Before
     public void setupExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.newSikredeFields(
-                "PostType", SikredeType.NUMERICAL, 2,
-                "TruncatedString", SikredeType.ALFANUMERICAL, 5,
-                "UntruncatedString", SikredeType.ALFANUMERICAL, 6,
-                "NumberWithSpacesForPadding", SikredeType.NUMERICAL, 6);
+        exampleRecordSpecification = RecordSpecification.createSpec(
+                "PostType", RecordSpecification.RecordFieldType.NUMERICAL, 2,
+                "TruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 5,
+                "UntruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 6,
+                "NumberWithSpacesForPadding", RecordFieldType.NUMERICAL, 6);
         
         exampleSikredeLineParser = new SingleLineRecordParser(exampleRecordSpecification);
     }
@@ -88,14 +89,17 @@ public class SingleLineRecordParserTest
      */
     private String validateStringsConformToSikredeLengths(RecordSpecification recordSpecification, String... strings)
     {
-        ImmutableList<FieldSpecification> fieldSpecs = recordSpecification.getFieldSpecificationsInCorrectOrder();
-        assertEquals(fieldSpecs.size(), strings.length);
+        Iterable<FieldSpecification> fieldSpecs = recordSpecification.getFieldSpecs();
+        assertThat(strings.length, is(Iterables.size(fieldSpecs)));
         
         String result = "";
-        for(int i = 0; i < strings.length; i++)
+        int i = 0;
+        for (FieldSpecification spec : fieldSpecs)
         {
-            assertEquals(fieldSpecs.get(i).length, strings[i].length());
+            assertEquals(spec.length, strings[i].length());
             result = result + strings[i];
+
+            i++;
         }
         
         return result;

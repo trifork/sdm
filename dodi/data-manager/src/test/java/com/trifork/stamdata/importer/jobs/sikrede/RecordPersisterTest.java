@@ -24,8 +24,8 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.SikredeType.ALFANUMERICAL;
-import static com.trifork.stamdata.persistence.RecordSpecification.SikredeType.NUMERICAL;
+import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
+import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -44,8 +44,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.AuditingPersister;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
@@ -62,12 +61,12 @@ public class RecordPersisterTest
     public void setupSikredePersister() throws SQLException
     {
         // TODO: Add test with two identical field names
-        recordSpecification = RecordSpecification.newSikredeFields(
-            "Foo",  NUMERICAL,       2,
-            "Moo",  ALFANUMERICAL,   5
+        recordSpecification = RecordSpecification.createSpec(
+                "Foo", NUMERICAL, 2,
+                "Moo", ALPHANUMERICAL, 5
         );
         
-        connection = MySQLConnectionManager.getConnection();
+        connection = new ConnectionManager().getConnection();
         createSikredeFieldsTableOnDatabase(connection, recordSpecification);
         persister = new RecordPersister(recordSpecification, connection);
     }
@@ -89,11 +88,11 @@ public class RecordPersisterTest
         Record recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
 
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
-        persister.persistRecordWithValidityDate(recordA, "Moo", theYear2000.toInstant());
+        persister.persist(recordA, "Moo", theYear2000.toInstant());
         connection.commit();
 
         DateTime theYear2010 = theYear2000.plusYears(10);
-        persister.persistRecordWithValidityDate(recordB, "Moo", theYear2010.toInstant());
+        persister.persist(recordB, "Moo", theYear2010.toInstant());
         connection.commit();
 
         Statement statement = connection.createStatement();
@@ -120,11 +119,11 @@ public class RecordPersisterTest
         Record recordB = builder.field("Foo", 23).field("Moo", "Bar").build();
         
         Instant theYear2000 = new DateTime(2000, 1, 1, 0, 0).toInstant();
-        persister.persistRecordWithValidityDate(recordA, "Moo", theYear2000);
+        persister.persist(recordA, "Moo", theYear2000);
         connection.commit();
         
         Instant theYear2010 = new DateTime(2010, 1, 1, 0, 0).toInstant();
-        persister.persistRecordWithValidityDate(recordB, "Moo", theYear2010);
+        persister.persist(recordB, "Moo", theYear2010);
         connection.commit();
         
         Statement statement = connection.createStatement();
@@ -149,11 +148,11 @@ public class RecordPersisterTest
         Record record = builder.field("Foo", 42).field("Moo", "Far").build();
         
         Instant theYear2000 = new DateTime(2000, 1, 1, 0, 0).toInstant();
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2000);
+        persister.persist(record, "Moo", theYear2000);
         connection.commit();
         
         Instant theYear2010 = new DateTime(2010, 1, 1, 0, 0).toInstant();
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2010);
+        persister.persist(record, "Moo", theYear2010);
         connection.commit();
         
         Statement statement = connection.createStatement();
@@ -196,10 +195,10 @@ public class RecordPersisterTest
         DateTime theYear2000 = new DateTime(2000, 1, 1, 0, 0);
         DateTime theYear2010 = theYear2000.plusYears(10);
 
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2010.toInstant());
+        persister.persist(record, "Moo", theYear2010.toInstant());
         connection.commit();
         
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2000.toInstant());
+        persister.persist(record, "Moo", theYear2000.toInstant());
         connection.commit();
     }
     
@@ -213,13 +212,13 @@ public class RecordPersisterTest
         DateTime theYear2005 = theYear2000.plusYears(5);
         DateTime theYear2010 = theYear2000.plusYears(10);
         
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2000.toInstant());
+        persister.persist(record, "Moo", theYear2000.toInstant());
         connection.commit();
         
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2010.toInstant());
+        persister.persist(record, "Moo", theYear2010.toInstant());
         connection.commit();
         
-        persister.persistRecordWithValidityDate(record, "Moo", theYear2005.toInstant());
+        persister.persist(record, "Moo", theYear2005.toInstant());
         connection.commit();
     }
     
@@ -235,7 +234,7 @@ public class RecordPersisterTest
     public void testInsertValuesIntoPreparedStatement() throws SQLException
     {
         PreparedStatement mockedPrepareStatement = mock(PreparedStatement.class);
-        Record record = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Moo", "Baz", "Foo", 42);
+        Record record = RecordGenerator.createRecord("Moo", "Baz", "Foo", 42);
         
         persister.populateStatement(mockedPrepareStatement, record, Instant.now());
 
