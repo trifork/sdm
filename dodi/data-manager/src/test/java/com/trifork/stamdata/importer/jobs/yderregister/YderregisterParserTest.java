@@ -24,33 +24,117 @@
  */
 package com.trifork.stamdata.importer.jobs.yderregister;
 
+import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.persistence.RecordPersister;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.mockito.Mockito.*;
 
 public class YderregisterParserTest
 {
+    @Rule public TemporaryFolder folder = new TemporaryFolder();
+
+    private KeyValueStore keyValueStore;
+    private YderregisterParser parser;
+    private RecordPersister persister;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        keyValueStore = mock(KeyValueStore.class);
+        persister = mock(RecordPersister.class);
+        
+        parser = new YderregisterParser(keyValueStore);
+    }
+
     @Test(expected = OutOfSequenceException.class)
-    public void testImportsOutOfSequenceWillResultInAnOutOfSequenceException()
+    public void testImportingOldVersionWillResultInAnOutOfSequenceException() throws Exception
+    {
+        when(keyValueStore.get("version")).thenReturn("00002");
+        File fileSet = createFileSet("00001");
+
+        parser.process(fileSet, persister);
+    }
+
+    @Test(expected = OutOfSequenceException.class)
+    public void testImportingCurrentVersionResultInAnOutOfSequenceException() throws Exception
+    {
+        when(keyValueStore.get("version")).thenReturn("00002");
+        File fileSet = createFileSet("00002");
+
+        parser.process(fileSet, persister);
+    }
+
+    @Test
+    public void testAFileSetWithMultipleVersionNumbersResultsInAParserException()
     {
 
     }
 
     @Test(expected = ParserException.class)
-    public void testMissingFilesResultsInAParserException()
+    public void testMissingFilesResultsInAParserException() throws Exception
     {
+        File fileSet = createFileSet("00001");
+        fileSet.listFiles()[0].delete();
 
+        parser.process(fileSet, persister);
     }
 
     @Test
-    public void testParsesTheVersionFromFileNamesCorrectly()
+    public void testStoresTheVersionFromFileNamesCorrectly() throws Exception
     {
+        String version = "00031";
 
+        File fileSet = createFileSet("00031");
+
+        parser.process(fileSet, persister);
+
+        verify(keyValueStore).put("version", version);
     }
 
-    @Test
-    public void test()
+    //
+    // Helpers
+    //
+
+    public File createFileSet(String ...filenames) throws IOException
     {
-        
+        File root = folder.newFolder("root");
+
+        for (String filename : filenames)
+        {
+            new File(root, filename).createNewFile();
+        }
+
+        return root;
+    }
+
+    public File createFileSet(String version) throws IOException
+    {
+        return createFileSet(getRequiredFilenames(version));
+    }
+
+    public String[] getRequiredFilenames(String version)
+    {
+        int i = 0;
+
+        String[] filenames = new String[5];
+
+        for (String extension : new String[] {"K05", "K40", "K45", "K1025", "K5094"})
+        {
+            // FIXME: What is the first part of the filename? A recipient id maybe?
+
+            filenames[i++] = "SSR1040013" + version + "." + extension + ".xml";
+        }
+
+        return filenames;
     }
 }

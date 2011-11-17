@@ -28,24 +28,18 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
-import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserException;
-import com.trifork.stamdata.importer.parsers.Parsers;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
-import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.persistence.RecordPersister;
 
-import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
-import java.sql.Connection;
 import java.util.List;
 import java.util.Set;
 
@@ -73,11 +67,11 @@ public class YderregisterParser implements Parser
 	{
         // Make sure that all the required file are there.
         //
-        validateInputStructure(input);
+        if (!areRequiredFilesPresent(input)) throw new ParserException("Not all required files were present.");
 
 		String newVersion = extractVersionFromFileSet(input);
 
-        // FIXME: Ensure the import sequence. This cannot be done until we get more information
+        // FIXME: Ensure the import sequence, recipient etc. This cannot be done until we get more information
         // about the filename conversion.
         //
         // Currently we can ensure that we don't import an old version, by looking at the previous
@@ -85,9 +79,7 @@ public class YderregisterParser implements Parser
         //
 		String prevVersion = keyValueStore.get(KEY_STORE_VERSION_KEY);
 
-        // TODO: Ensure the new version has the correct format: yyyyMMdd
-        //
-		if (newVersion.compareTo(prevVersion) > 0) throw new OutOfSequenceException(prevVersion, newVersion);
+		if (prevVersion != null && newVersion.compareTo(prevVersion) <= 0) throw new OutOfSequenceException(prevVersion, newVersion);
 
 		keyValueStore.put(KEY_STORE_VERSION_KEY, newVersion);
 
@@ -101,7 +93,7 @@ public class YderregisterParser implements Parser
 	    }
     }
 
-    public boolean validateInputStructure(File input)
+    public boolean areRequiredFilesPresent(File input)
     {
         // FIXME: The implementation of this class requires
         // the presence of all the file in REQUIRED_FILE_EXTENSIONS.
@@ -133,11 +125,14 @@ public class YderregisterParser implements Parser
 
     private String extractVersionFromFileSet(File input)
     {
+        final int VERSION_START = 10;
+        final int VERSION_END = 15;
+
         String version = null;
         
         for (File file : input.listFiles())
         {
-            String versionInFilename = file.getName().substring(10, 15);
+            String versionInFilename = file.getName().substring(VERSION_START, VERSION_END);
 
             if (version == null)
             {
@@ -148,8 +143,6 @@ public class YderregisterParser implements Parser
                 throw new ParserException(format("The data set contains files with different version numbers. (%s, %s)", version, versionInFilename));
             }
         }
-        
-        if (version == null) throw new ParserException(format("Malformed file set. No version number found."));
         
         return version;
     }
