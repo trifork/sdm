@@ -69,7 +69,7 @@ public class YderregisterParser implements Parser
     }
 
 	@Override
-	public void process(File input, Connection connection, Instant transactionTime) throws Exception
+	public void process(File input, RecordPersister persister) throws Exception
 	{
         // Make sure that all the required file are there.
         //
@@ -93,12 +93,11 @@ public class YderregisterParser implements Parser
 
         // Do the actual importing.
         //
-        RecordPersister newPersister = new RecordPersister(connection, transactionTime);
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 
         for (File file : input.listFiles())
         {
-	        parser.parse(file, new YderregisterSaxEventHandler(newPersister, transactionTime));
+	        parser.parse(file, new YderregisterSaxEventHandler(persister));
 	    }
     }
 

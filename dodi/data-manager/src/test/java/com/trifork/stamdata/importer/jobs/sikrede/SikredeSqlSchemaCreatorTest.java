@@ -51,12 +51,13 @@ public class SikredeSqlSchemaCreatorTest
     {
         String expected = 
                 "CREATE TABLE SikredeGenerated (" + 
-                "SikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY," + 
+                "PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY," +
                 "Foo VARCHAR(10) NOT NULL," +
                 "Bar BIGINT NOT NULL," +
                 "Baz VARCHAR(42) NOT NULL," +
                 "ValidFrom DateTime NOT NULL," +
-                "ValidTo DateTime" + 
+                "ValidTo DateTime," +
+                "ModifiedDate DateTime NOT NULL" +
                 ") ENGINE=InnoDB COLLATE=utf8_bin;";
 
         String result = RecordMySQLTableGenerator.createSqlSchema(exampleRecordSpecification);

@@ -28,6 +28,7 @@ import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
@@ -64,15 +65,15 @@ public class SikredeParserTest
             RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
 
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification, "CPRnr");
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
 
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
             File input = setupExampleFile(recordSpecification);
 
-            sikredeParser.process(input, connection, Instant.now());
+            sikredeParser.process(input, new RecordPersister(connection, Instant.now()));
             
-            assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 0);
+            assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 0, recordSpecification);
         }
         finally
         {
@@ -95,7 +96,7 @@ public class SikredeParserTest
                     "Foo", RecordFieldType.ALPHANUMERICAL, 10);
 
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification, "Foo");
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
 
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
@@ -105,11 +106,11 @@ public class SikredeParserTest
                     RecordGenerator.createRecord("PostType", 10, "Foo", "Bar"),
                     RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz"));
 
-            sikredeParser.process(inbox, connection, Instant.now());
+            sikredeParser.process(inbox, new RecordPersister(connection, Instant.now()));
 
             connection.commit();
 
-            assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 4);
+            assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 4, recordSpecification);
         }
         finally
         {
@@ -132,8 +133,7 @@ public class SikredeParserTest
                     "Foo", RecordFieldType.ALPHANUMERICAL, 10);
             
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser,
-                    recordSpecification, "Foo");
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
             
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
             
@@ -143,7 +143,7 @@ public class SikredeParserTest
                     RecordGenerator.createRecord("PostType", 10, "Foo", "Bar"),
                     RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz"));
             
-            sikredeParser.process(inbox, connection, Instant.now());
+            sikredeParser.process(inbox, new RecordPersister(connection, Instant.now()));
         }
         finally
         {
@@ -159,7 +159,7 @@ public class SikredeParserTest
         Connection connection = new ConnectionManager().getConnection();
         
         Statement setupStatements = connection.createStatement();
-        setupStatements.executeUpdate("DROP TABLE IF EXISTS TestTable");
+        setupStatements.executeUpdate("DROP TABLE IF EXISTS " + recordSpecification.getTable());
         setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
         
         return connection;
@@ -231,10 +231,10 @@ public class SikredeParserTest
         return inbox;
     }
     
-    private void assertNumberOfSikredeGeneratedRecordsInDatabaseIs(Connection connection, int i) throws SQLException 
+    private void assertNumberOfSikredeGeneratedRecordsInDatabaseIs(Connection connection, int i, RecordSpecification spec) throws SQLException
     {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM TestTable");
+        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM " + spec.getTable());
         resultSet.next();
         assertEquals(i, resultSet.getLong(1));
     }

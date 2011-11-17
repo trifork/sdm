@@ -46,7 +46,7 @@ public class SikredeFieldsTester
     }
 
     @Test
-    public void testCorrectNumberOfAlfanumericalFields() 
+    public void testCorrectNumberOfAlphanumericalFields()
     {
         Iterable<FieldSpecification> fieldSpecs = SikredeRecordSpecs.ENTRY_RECORD_SPEC.getFieldSpecs();
         

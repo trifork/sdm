@@ -58,16 +58,12 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private static final String YDER_QNAME = "Yder";
     private static final String PERSON_QNAME = "Person";
 
-    protected String opgDato;
-
     private final RecordPersister persister;
-    private final Instant transactionTime;
     private long recordCount = 0;
 
-    public YderregisterSaxEventHandler(RecordPersister persister, Instant transactionTime)
+    public YderregisterSaxEventHandler(RecordPersister persister)
     {
         this.persister = persister;
-        this.transactionTime = transactionTime;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException

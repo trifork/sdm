@@ -61,29 +61,24 @@ public class SikredeParser implements Parser
     
     private final SingleLineRecordParser recordParser;
     private final RecordSpecification recordSpecification;
-    private final String key;
 
     @Inject
     SikredeParser()
     {
         recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
         recordParser = new SingleLineRecordParser(recordSpecification);
-        key = "CPRnr";
     }
 
     /** For testing only */
-    SikredeParser(SingleLineRecordParser recordParser, RecordSpecification recordSpecification, String key)
+    SikredeParser(SingleLineRecordParser recordParser, RecordSpecification recordSpecification)
     {
         this.recordParser = recordParser;
         this.recordSpecification = recordSpecification;
-        this.key = key;
     }
 
     @Override
-    public void process(File dataSet, Connection connection, Instant transactionTime) throws Exception
+    public void process(File dataSet, RecordPersister persister) throws Exception
     {
-        RecordPersister persister = new RecordPersister(connection, transactionTime);
-
         File[] input = dataSet.listFiles();
         checkArgument(input.length == 1, "Only one file is expected at this point.");
         File file = input[0];
@@ -98,7 +93,7 @@ public class SikredeParser implements Parser
         try
         {
             lines = FileUtils.lineIterator(file, FILE_ENCODING);
-            importFile(lines, persister, transactionTime);
+            importFile(lines, persister);
         }
         finally
         {
@@ -106,7 +101,7 @@ public class SikredeParser implements Parser
         }
     }
     
-    private void importFile(Iterator<String> lines, RecordPersister persister, Instant transactionTime) throws Exception
+    private void importFile(Iterator<String> lines, RecordPersister persister) throws Exception
     {
         Record startRecord = null;
         Record endRecord = null;

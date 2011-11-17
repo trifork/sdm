@@ -24,26 +24,28 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 
-import javax.inject.Inject;
 import java.sql.Connection;
 
 public class ParseTimeManager
 {
     private final Parser parser;
     private final Connection connection;
+    private final Instant transactionTime;
 
     @Inject
-    ParseTimeManager(Parser parser, Connection connection)
+    ParseTimeManager(Parser parser, Connection connection, Instant transactionTime)
     {
         this.parser = parser;
         this.connection = connection;
+        this.transactionTime = transactionTime;
     }
 
-    public void setTimestamp(Instant transactionTime)
+    public void update()
     {
         ImportTimeManager.setLastImportTime(parser.getClass(), transactionTime, connection);
     }

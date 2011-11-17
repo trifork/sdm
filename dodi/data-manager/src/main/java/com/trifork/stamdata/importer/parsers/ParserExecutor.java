@@ -24,10 +24,12 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
+import com.trifork.stamdata.persistence.RecordPersister;
 import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -35,7 +37,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -63,25 +64,21 @@ public class ParserExecutor implements Runnable
 {
     private static final Logger logger = LoggerFactory.getLogger(ParserExecutor.class);
 
-    private static final String LATEST_EXECUTION_TIMESTAMP_KEY = "__latest_execution_timestamp";
-
-    private DateTimeFormatter TIMESTAMP_FORMAT = ISODateTimeFormat.dateTime();
-
     private final Parser parser;
     private final Inbox inbox;
     private final Connection connection;
     private final ParseTimeManager timeManager;
-    private final Instant transactionTime;
+    private final RecordPersister persister;
     private boolean isParserRunning = false;
 
     @Inject
-    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, Instant transactionTime)
+    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, RecordPersister persister)
     {
         this.parser = parser;
         this.inbox = inbox;
         this.connection = connection;
         this.timeManager = timeManager;
-        this.transactionTime = transactionTime;
+        this.persister = persister;
     }
 
     @Override
@@ -138,9 +135,9 @@ public class ParserExecutor implements Runnable
 
             logger.info("Executing parser.");
 
-            parser.process(dataSet, connection, transactionTime);
+            parser.process(dataSet, persister);
 
-            timeManager.setTimestamp(transactionTime);
+            timeManager.update();
 
             // It is important that we commit before
             // we advance the inbox. Since it is not done

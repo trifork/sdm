@@ -57,10 +57,9 @@ public interface Parser
      * You should only log on DEBUG level. See {@linkplain Parser parser}.
      *
      * @param dataSet the root directory of the file set. Data files are contained within the directory.
-     * @param connection A connection that can be used to store records, etc.
-     * @param transactionTime The time to use in timestamps.
+     * @param persister the persister that should be used to store the records.
      * @throws OutOfSequenceException if the data set is out of sequence in the expected order.
      * @throws ParserException if anything parser specific error happens or unexpected happens.
      */
-    void process(File dataSet, Connection connection, Instant transactionTime) throws OutOfSequenceException, ParserException, Exception;
+    void process(File dataSet, RecordPersister persister) throws OutOfSequenceException, ParserException, Exception;
 }

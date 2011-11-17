@@ -27,6 +27,7 @@ package com.trifork.stamdata.importer.parsers;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
+import com.trifork.stamdata.persistence.RecordPersister;
 import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -60,7 +61,7 @@ public class ParserExecutorTest
     private Inbox inbox;
     private Connection connection;
     private ParseTimeManager timeManager;
-    private Instant transactionTime = Instant.now();
+    private RecordPersister persister;
     
     private File RANDOM_FILE = new File("random");
 
@@ -74,17 +75,19 @@ public class ParserExecutorTest
         
         inbox = mock(Inbox.class);
         when(inbox.top()).thenReturn(RANDOM_FILE);
+        
+        persister = mock(RecordPersister.class);
 
         connection = mock(Connection.class);
         timeManager = mock(ParseTimeManager.class);
 
-        executor = new ParserExecutor(parser, inbox, connection, timeManager, transactionTime);
+        executor = new ParserExecutor(parser, inbox, connection, timeManager, persister);
     }
 
     @Test
     public void shouldLockAParserIfItFails() throws Exception
     {
-        doThrow(new RuntimeException()).when(parser).process(any(File.class), any(Connection.class), any(Instant.class));
+        doThrow(new RuntimeException()).when(parser).process(any(File.class), any(RecordPersister.class));
 
         executor.run();
 
@@ -94,7 +97,7 @@ public class ParserExecutorTest
     @Test
     public void shouldRollbackIfItFails() throws Exception
     {
-        doThrow(new RuntimeException()).when(parser).process(any(File.class), any(Connection.class), any(Instant.class));
+        doThrow(new RuntimeException()).when(parser).process(any(File.class), any(RecordPersister.class));
 
         executor.run();
 
@@ -109,7 +112,7 @@ public class ParserExecutorTest
 
         executor.run();
 
-        verify(parser, times(0)).process(any(File.class), any(Connection.class), any(Instant.class));
+        verify(parser, times(0)).process(any(File.class), any(RecordPersister.class));
     }
 
     @Test
@@ -119,7 +122,7 @@ public class ParserExecutorTest
 
         executor.run();
 
-        verify(parser, times(0)).process(any(File.class), any(Connection.class), any(Instant.class));
+        verify(parser, times(0)).process(any(File.class), any(RecordPersister.class));
     }
 
     @Test
@@ -152,7 +155,7 @@ public class ParserExecutorTest
     {
         executor.run();
 
-        verify(timeManager).setTimestamp(transactionTime);
+        verify(timeManager).update();
     }
 
     @Test

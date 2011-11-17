@@ -28,6 +28,7 @@ import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
+import com.trifork.stamdata.persistence.RecordPersister;
 import org.joda.time.Instant;
 
 import java.io.File;
@@ -39,7 +40,7 @@ public class MockParser implements Parser
     private boolean throwOnProcess = false;
 
     @Override
-    public void process(File dataSet, Connection connection, Instant transactionTime) throws OutOfSequenceException, ParserException, Exception
+    public void process(File dataSet, RecordPersister persister) throws OutOfSequenceException, ParserException, Exception
     {
         if (throwOnProcess) throw new RuntimeException("Fake Exception");
     }
