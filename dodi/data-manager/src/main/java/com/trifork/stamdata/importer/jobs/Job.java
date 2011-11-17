@@ -28,7 +28,6 @@ package com.trifork.stamdata.importer.jobs;
 
 import org.joda.time.DateTime;
 
-
 @Deprecated
 public interface Job extends Runnable
 {
@@ -36,25 +35,25 @@ public interface Job extends Runnable
 	 * A unique string that identifies the job.
 	 * 
 	 * This value is used to keep track of when the importer
-	 * was last run. The identifier must also be filesystem safe.
+	 * was last run. The identifier must also be all ascii alphanumeric.
 	 * 
 	 * @return a non empty string.
 	 */
-	String getIdentifier();
+	String identifier();
 
 	/**
 	 * A human readable name.
 	 * 
 	 * This text is displayed in the GUI.
 	 *  
-	 * E.g. CPR Parser or Table Updater.
+	 * E.g. CPR Parser.
 	 * 
 	 * @return a none empty string.
 	 */
 	String getHumanName();
 
 	/**
-	 * Indicated the wether the job is OK or in an error state.
+	 * Indicated the whether the job is OK or in an error state.
 	 * 
 	 * @return false if the job is in an error state.
 	 */
@@ -75,7 +74,7 @@ public interface Job extends Runnable
 	DateTime getLatestRunTime();
 	
 	/**
-	 * Indicated wheather this job has ever previously.
+	 * Indicated whether this job has ever previously.
 	 * 
 	 * @return true if have ever been completed been completed successfully.
 	 */
@@ -87,11 +86,4 @@ public interface Job extends Runnable
 	 * @return true if the job is executing.
 	 */
 	boolean isExecuting();
-	
-	/**
-	 * The cron expression that is used to schedule the job.
-	 * 
-	 * @return a cron expression (NB. there must also be a field indicating seconds).
-	 */
-	String getCronExpression();
 }

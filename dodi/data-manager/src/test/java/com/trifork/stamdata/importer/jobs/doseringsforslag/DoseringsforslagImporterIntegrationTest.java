@@ -45,7 +45,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.DosageSuggestionImporter;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageStructure;
 import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageUnit;
@@ -79,7 +79,7 @@ public class DoseringsforslagImporterIntegrationTest
 	@Before
 	public void setUp() throws SQLException
 	{		
-		connection = MySQLConnectionManager.getConnection();
+		connection = new ConnectionManager().getConnection();
 		
 		// The 'single' files only contain one record each.
 		// This makes it easy to know that is imported and

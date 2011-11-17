@@ -30,11 +30,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
+import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
@@ -44,15 +43,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.SikredeType.ALFANUMERICAL;
 import static java.lang.String.format;
 
 /**
  * @author Jan Buchholdt <jbu@trofork.com>
  */
-public class YderRegisterSaxEventHandler extends DefaultHandler
+public class YderregisterSaxEventHandler extends DefaultHandler
 {
-    private static final Logger logger = LoggerFactory.getLogger(YderRegisterSaxEventHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(YderregisterSaxEventHandler.class);
     private static final String SUPPORTED_INTERFACE_VERSION = "S1040025";
     private static final String EXPECTED_RECIPIENT_ID = "B053";
 
@@ -65,68 +63,11 @@ public class YderRegisterSaxEventHandler extends DefaultHandler
 
     protected String opgDato;
 
-    private final RecordSpecification START_RECORD_TYPE = RecordSpecification.newSikredeFields(
-            "OpgDato", ALFANUMERICAL, 8,
-            "Timestamp", ALFANUMERICAL, 20,
-            "Modt", ALFANUMERICAL, 6,
-            "SnitfladeId", ALFANUMERICAL, 8
-    );
-
-    private final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.newSikredeFields(
-            "HistIdYder", ALFANUMERICAL, 16,
-            "AmtKodeYder", ALFANUMERICAL, 2,
-            "AmtTxtYder", ALFANUMERICAL, 60,
-            "YdernrYder", ALFANUMERICAL, 6,
-            "PrakBetegn", ALFANUMERICAL, 50,
-            // Att
-            "AdrYder", ALFANUMERICAL, 50,
-            "PostnrYder", ALFANUMERICAL, 4,
-            "PostdistYder", ALFANUMERICAL, 20,
-            "TilgDatoYder", ALFANUMERICAL, 8,
-            "AfgDatoYder", ALFANUMERICAL, 8,
-            // OverensKode
-            // OverenskomstTxt
-            // LandsYdertypeKode
-            // LandsYdertypeTxt
-            "HvdSpecKode", ALFANUMERICAL, 2,
-            "HvdSpecTxt", ALFANUMERICAL, 60,
-            // IndberetFormKode
-            // IndberetFormTxt
-            // SelskFormKode
-            // SelskFormTxt
-            // SkatOpl
-            // PrakFormKode
-            // PrakFormTxt
-            // PrakTypeKode
-            // PrakTypeTxt
-            // SamarbFormKode
-            // SamarbFormTxt
-            // PrakKomKode
-            // PrakKomTxt
-            "HvdTlf", ALFANUMERICAL, 8,
-            // Fax
-            "EmailYder", ALFANUMERICAL, 50,
-            "WWW", ALFANUMERICAL, 78
-            // ...
-    );
-
-    private final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.newSikredeFields(
-            "HistIdYder", ALFANUMERICAL, 16,
-            "YdernrPerson", ALFANUMERICAL, 6,
-            "TilgDatoPerson", ALFANUMERICAL, 8,
-            "AfgDatoPerson", ALFANUMERICAL, 8,
-            "CprNr", ALFANUMERICAL, 10,
-            // Navn
-            "PersonrolleKode", ALFANUMERICAL, 2,
-            "PorsonrolleTxt", ALFANUMERICAL, 60
-            // ...
-    );
-
     private final RecordPersister persister;
     private final Instant transactionTime;
     private long recordCount = 0;
 
-    public YderRegisterSaxEventHandler(RecordPersister persister, Instant transactionTime)
+    public YderregisterSaxEventHandler(RecordPersister persister, Instant transactionTime)
     {
         this.persister = persister;
         this.transactionTime = transactionTime;
@@ -169,7 +110,7 @@ public class YderRegisterSaxEventHandler extends DefaultHandler
 
     private void parsePerson(Attributes attributes)
     {
-        Record record = new RecordBuilder(PERSON_RECORD_TYPE)
+        Record record = new RecordBuilder(YderregisterRecordSpecs.PERSON_RECORD_TYPE)
         .field("HistIdPerson", StringUtils.trimToNull(attributes.getValue("HistIdPerson")))
         .field("YdernrPerson", removeLeadingZeroes(attributes.getValue("YdernrPerson")))
         .field("CprNr", StringUtils.trimToNull(attributes.getValue("CprNr")))
@@ -180,7 +121,7 @@ public class YderRegisterSaxEventHandler extends DefaultHandler
 
         try
         {
-            persister.persistRecordWithValidityDate(record, "HistIdPerson", transactionTime);
+            persister.persist(record, "HistIdPerson", transactionTime);
         }
         catch (SQLException e)
         {
@@ -190,7 +131,7 @@ public class YderRegisterSaxEventHandler extends DefaultHandler
 
     private void parseYder(Attributes attributes)
     {
-        Record record = new RecordBuilder(YDER_RECORD_TYPE)
+        Record record = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE)
         .field("HistIdYder", attributes.getValue("HistIdYder"))
         .field("AmtKodeYder", attributes.getValue("AmtKodeYder").trim())
         .field("AmtTxtYder", attributes.getValue("AmtTxtYder").trim())
@@ -209,7 +150,7 @@ public class YderRegisterSaxEventHandler extends DefaultHandler
 
         try
         {
-            persister.persistRecordWithValidityDate(record, "HistIdYder", transactionTime);
+            persister.persist(record, "HistIdYder", transactionTime);
         }
         catch (SQLException e)
         {

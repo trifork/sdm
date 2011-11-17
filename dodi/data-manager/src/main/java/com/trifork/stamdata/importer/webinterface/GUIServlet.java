@@ -50,6 +50,4 @@ public class GUIServlet extends HttpServlet
 	{
 		getServletContext().getRequestDispatcher("/jsp/status.jsp").forward(req, resp);
 	}
-	
-	private static final long serialVersionUID = 0L;
 }

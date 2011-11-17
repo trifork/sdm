@@ -205,7 +205,7 @@ public class CPRImporter implements FileParser
 	void insertVersion(Date calendar, Connection con) throws SQLException
 	{
 		Statement stm = con.createStatement();
-		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toMySQLdate(calendar) + "');";
+		String query = "INSERT INTO PersonIkraft (IkraftDato) VALUES ('" + Dates.toSqlDate(calendar) + "');";
 		stm.execute(query);
 	}
 

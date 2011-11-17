@@ -30,15 +30,14 @@ package com.trifork.stamdata.importer.config;
  * 
  * A parser can use this for keeping sequence and versioning information.
  */
-public interface KeyValueStore {
-
+public interface KeyValueStore
+{
     /**
      * Gets the value for a key.
      * 
      * @param key
      *            the key of the value to look up.
      * @return the value for the key, possibly {@code null}.
-     * @throws Exception 
      */
     String get(String key);
 
@@ -52,7 +51,6 @@ public interface KeyValueStore {
      * @param value
      *            A non-empty string. If null any existing recorded value is
      *            deleted.
-     * @throws Exception 
      */
     void put(String key, String value);
 }

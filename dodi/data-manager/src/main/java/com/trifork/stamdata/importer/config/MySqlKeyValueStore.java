@@ -24,6 +24,8 @@
  */
 package com.trifork.stamdata.importer.config;
 
+import static com.trifork.stamdata.Preconditions.checkArgument;
+import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 import java.sql.Connection;
@@ -32,15 +34,17 @@ import java.sql.SQLException;
 
 import javax.inject.Inject;
 
+import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.importer.parsers.Parser;
+import com.trifork.stamdata.importer.parsers.Parsers;
 
 public class MySqlKeyValueStore implements KeyValueStore
 {
-
     private static final int DB_FIELD_SIZE = 200;
 
+    private final String ownerId;
     private final Connection connection;
-    private String ownerId;
 
     /**
      * Creates a new instance.
@@ -49,27 +53,26 @@ public class MySqlKeyValueStore implements KeyValueStore
      * 
      * @param connection
      *            The connection to use for fetching and storing.
-     * @param ownerId
-     *            The id of the owner, for instance a parser id.
+     * @param owner
+     *            The parser the values stored.
      * @throws SQLException
      *             Thrown if the database is unreachable.
      */
     @Inject
-    MySqlKeyValueStore(Connection connection, String ownerId) throws SQLException
+    MySqlKeyValueStore(Parser owner, Connection connection) throws SQLException
     {
-        this.connection = Preconditions.checkNotNull(connection, "connection");
-        Preconditions.checkArgument(connection.getTransactionIsolation() != Connection.TRANSACTION_NONE, "The connection must have an open transaction.");
+        this.connection = checkNotNull(connection, "connection");
+        checkArgument(connection.getTransactionIsolation() != Connection.TRANSACTION_NONE, "The connection must have an active transaction.");
 
-        Preconditions.checkNotNull(ownerId, "ownerId");
-        Preconditions.checkArgument(ownerId.length() <= DB_FIELD_SIZE, "owerId can max be 200 characters.");
-
-        this.ownerId = Preconditions.checkNotNull(ownerId);
+        this.ownerId = Parsers.getIdentifier(owner);
+        checkArgument(ownerId.length() <= DB_FIELD_SIZE, "The parser's id can max be 200 characters.");
     }
 
     @Override
     public String get(String key)
     {
-        Preconditions.checkNotNull(key, "key");
+        checkNotNull(key, "key");
+        checkArgument(key.length() <= DB_FIELD_SIZE, String.format("Keys can be a maximum of %d characters long.", DB_FIELD_SIZE));
 
         try
         {
@@ -83,18 +86,20 @@ public class MySqlKeyValueStore implements KeyValueStore
     }
 
     @Override
-    public void put(String key, String value)
+    public void put(String key, @Nullable String value)
     {
-        Preconditions.checkNotNull(key, "key");
-        Preconditions.checkArgument(key.length() <= DB_FIELD_SIZE, "key can max be 200 characters.");
+        checkNotNull(key, "key");
+        checkArgument(key.length() <= DB_FIELD_SIZE, "key can max be 200 characters.");
+
         try
         {
             if (value != null)
             {
-                Preconditions.checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be 200 characters.");
+                checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be 200 characters.");
 
                 connection.createStatement().execute(format("INSERT INTO KeyValueStore (owerId, key, value) VALUES ('%s','%s', '%s')", ownerId, key, value));
-            } else
+            }
+            else
             {
                 connection.createStatement().executeUpdate(format("DELETE FROM KeyValueStore WHERE ownerId = '%s' AND key = '%s'", ownerId, key));
             }
@@ -103,10 +108,5 @@ public class MySqlKeyValueStore implements KeyValueStore
         {
             throw new RuntimeException("Error accessing the MySQL key value store.", e);
         }
-    }
-
-    public void remove(String key)
-    {
-        Preconditions.checkNotNull(key, "key");
     }
 }

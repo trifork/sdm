@@ -40,7 +40,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
@@ -67,7 +67,7 @@ public class SORIntegrationTest
 	@Before
 	public void setUp() throws Exception
 	{
-		con = MySQLConnectionManager.getConnection();
+		con = new ConnectionManager().getConnection();
 
 		Statement stmt = con.createStatement();
 		stmt.executeQuery("truncate table Praksis");

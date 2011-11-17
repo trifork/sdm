@@ -39,7 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.Files;
 
@@ -54,7 +54,7 @@ public class SksIntegrationTest
 	{
 		shakFile = FileUtils.toFile(getClass().getClassLoader().getResource("data/sks/SHAKCOMPLETE.TXT"));
 
-		connection = MySQLConnectionManager.getConnection();
+		connection = new ConnectionManager().getConnection();
 
 		Statement stmt = connection.createStatement();
 		stmt.executeQuery("TRUNCATE TABLE Organisation");

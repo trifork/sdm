@@ -24,7 +24,7 @@
  */
 
 
-package com.trifork.stamdata.util;
+package com.trifork.stamdata.importer.util;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,7 +35,7 @@ import org.junit.Test;
 
 import com.trifork.stamdata.importer.util.Dates;
 
-public class DateUtilsTest
+public class DatesTest
 {
 	@Test
 	public void testFormattingToFileNameDateformat() throws Exception
@@ -50,7 +50,7 @@ public class DateUtilsTest
 	{
 		Calendar cal = Calendar.getInstance();
 		cal.set(2009, Calendar.AUGUST, 21, 21, 45, 40);
-		assertEquals("2009-08-21 21:45:40", Dates.toMySQLdate(cal.getTime()));
+		assertEquals("2009-08-21 21:45:40", Dates.toSqlDate(cal.getTime()));
 	}
 
 	@Test

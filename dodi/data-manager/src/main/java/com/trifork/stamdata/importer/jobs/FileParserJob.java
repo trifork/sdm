@@ -42,9 +42,8 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.google.common.collect.Lists;
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
-
 
 @Deprecated
 public class FileParserJob implements Job
@@ -56,17 +55,20 @@ public class FileParserJob implements Job
 
 	private boolean isRunning = false;
 
-	private final FileParser parser;
+	private final Class<? extends FileParser> parser;
 	private final File rootDir;
 
 	private final int minimumImportFrequency;
 
-	public FileParserJob(File rootDir, FileParser importer, int minimumImportFrequency)
+    private final ConnectionManager connectionManager = new ConnectionManager();
+
+	public FileParserJob(File rootDir, Class<? extends FileParser> parser, int minimumImportFrequency)
 	{
 		checkArgument(minimumImportFrequency > 0);
+        
 		this.minimumImportFrequency = minimumImportFrequency;
 		this.rootDir = checkNotNull(rootDir);
-		this.parser = checkNotNull(importer);
+		this.parser = checkNotNull(parser);
 	}
 
 	/**
@@ -80,25 +82,40 @@ public class FileParserJob implements Job
 	    // so they do not get swallowed by the void that is
 	    // Runnable.class, and we never get notified.
 	    
-	    try {
+	    try
+        {
+            FileParser parser = createParserInstance();
+
 	        // Set up a nice logging context so every log entry
 	        // knows which parser we are running.
 	        
 	        MDC.put("parser", parser.getIdentifier());
 	        
-	        internalRun();
+	        internalRun(parser);
 	    }
-	    catch (Exception e) {
-	        
+	    catch (Exception e)
+        {
 	        logger.error("Something went wrong while executing the parser.", e);
 	    }
-	    finally {
-	        
+	    finally
+        {
 	        MDC.clear();
 	    }
 	}
+
+    private FileParser createParserInstance()
+    {
+        try
+        {
+            return parser.newInstance();
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 	
-	private final void internalRun()
+	private final void internalRun(FileParser parser)
 	{
         // Check for rejected files.
         // The parser is in a error state as long as there are files there.
@@ -145,7 +162,7 @@ public class FileParserJob implements Job
 
         // If so parse and import them.
 
-        runParser();
+        runParser(parser);
 	}
 
 	/**
@@ -218,7 +235,7 @@ public class FileParserJob implements Job
 	 * Wraps an import in a database transaction, and handles any errors that
 	 * might occur while parsing a set of files.
 	 */
-	private void runParser()
+	private void runParser(FileParser parser)
 	{
 		moveInputToProcessing();
 
@@ -228,7 +245,7 @@ public class FileParserJob implements Job
 		{
 			logger.info("Starting import.");
 
-			connection = MySQLConnectionManager.getConnection();
+			connection = connectionManager.getConnection();
 
 			parser.parse(getProcessingFiles(), new AuditingPersister(connection), null);
 			ImportTimeManager.setImportTime(parser.getIdentifier(), new Date());
@@ -256,7 +273,7 @@ public class FileParserJob implements Job
 		}
 		finally
 		{
-			MySQLConnectionManager.close(connection);
+			ConnectionManager.close(connection);
 			isRunning = false;
 		}
 	}
@@ -288,7 +305,7 @@ public class FileParserJob implements Job
 
 	public File getInputDir()
 	{
-		File file = new File(rootDir, getIdentifier() + "/input");
+		File file = new File(rootDir, identifier() + "/input");
 		file.mkdirs();
 		return file;
 	}
@@ -300,7 +317,7 @@ public class FileParserJob implements Job
 
 	public File getRejectedDir()
 	{
-		File dir = new File(rootDir, getIdentifier() + "/rejected");
+		File dir = new File(rootDir, identifier() + "/rejected");
 		dir.mkdirs();
 		return dir;
 	}
@@ -312,7 +329,7 @@ public class FileParserJob implements Job
 
 	public File getProcessingDir()
 	{
-		File file = new File(rootDir, getIdentifier() + "/processing");
+		File file = new File(rootDir, identifier() + "/processing");
 		file.mkdirs();
 		return file;
 	}
@@ -365,7 +382,7 @@ public class FileParserJob implements Job
 	@Override
 	public DateTime getLatestRunTime()
 	{
-		return ImportTimeManager.getLastImportTime(parser.getIdentifier());
+		return ImportTimeManager.getLastImportTime(createParserInstance().getIdentifier());
 	}
 
 	/** {@inheritDoc} */
@@ -376,9 +393,9 @@ public class FileParserJob implements Job
 
 	/** {@inheritDoc} */
 	@Override
-	public String getIdentifier()
+	public String identifier()
 	{
-		return parser.getIdentifier();
+		return createParserInstance().getIdentifier();
 	}
 
 	/** {@inheritDoc} */
@@ -397,18 +414,8 @@ public class FileParserJob implements Job
 
 	/** {@inheritDoc} */
 	@Override
-	public String getCronExpression()
-	{
-		// File parsers poll their input directories
-		// every second.
-
-		return "0/1 * * * * ?";
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String getHumanName()
 	{
-		return parser.getHumanName();
+		return createParserInstance().getHumanName();
 	}
 }

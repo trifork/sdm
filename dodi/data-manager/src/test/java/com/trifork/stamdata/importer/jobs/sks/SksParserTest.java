@@ -35,9 +35,9 @@ import com.trifork.stamdata.importer.util.Files;
 
 public class SksParserTest
 {
-    public static File completeTxt = new File("data/sks/SHAKCOMPLETE.TXT");
-    public static File completeXml = new File("data/sks/SHAKCOMPLETE.XML");
-    public static File delta = new File("data/sks/SHAKDELTA.TXT");
+    private static File completeTxt = new File("data/sks/SHAKCOMPLETE.TXT");
+    private static File completeXml = new File("data/sks/SHAKCOMPLETE.XML");
+    private static File delta = new File("data/sks/SHAKDELTA.TXT");
 
     SKSParser importer = new SKSParser();
     

@@ -25,7 +25,7 @@
 
 package com.trifork.stamdata.importer.persistence;
 
-import static com.trifork.stamdata.importer.util.Dates.toMySQLdate;
+import static com.trifork.stamdata.importer.util.Dates.toSqlDate;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -266,7 +266,7 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
     {
         // FIXME: If we don't clean up the memory requirement is enormous 5GB+.
 
-        String sql = "SELECT * FROM " + tablename + " WHERE NOT (ValidTo < '" + toMySQLdate(validFrom) + "' OR ValidFrom > '" + toMySQLdate(validTo) + "')";
+        String sql = "SELECT * FROM " + tablename + " WHERE NOT (ValidTo < '" + toSqlDate(validFrom) + "' OR ValidFrom > '" + toSqlDate(validTo) + "')";
         currentRS = connection.createStatement().executeQuery(sql);
         
         return getCurrentRS().next();
@@ -313,10 +313,10 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         }
 
         sql += ") VALUES (";
-        sql += "'" + toMySQLdate(transactionTime) + "',"; // modifieddate
-        sql += "'" + toMySQLdate(transactionTime) + "',"; // createddate
-        sql += "'" + toMySQLdate(validFrom) + "',"; // validfrom
-        sql += "'" + toMySQLdate(getCurrentRS().getTimestamp("ValidTo")) + "'"; // validTo
+        sql += "'" + toSqlDate(transactionTime) + "',"; // modifieddate
+        sql += "'" + toSqlDate(transactionTime) + "',"; // createddate
+        sql += "'" + toSqlDate(validFrom) + "',"; // validfrom
+        sql += "'" + toSqlDate(getCurrentRS().getTimestamp("ValidTo")) + "'"; // validTo
 
         for (int i = 0; i < outputMethods.size(); i++)
         {
@@ -445,7 +445,7 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
 
     public List<StamdataEntityVersion> findEntitiesInRange(Date validFrom, Date validTo) throws SQLException
     {
-        String sql = "SELECT " + Entities.getOutputFieldName(idMethod) + ", validFrom FROM " + tablename + " WHERE NOT (validTo < '" + toMySQLdate(validFrom) + "' OR validFrom > '" + toMySQLdate(validTo) + "')";
+        String sql = "SELECT " + Entities.getOutputFieldName(idMethod) + ", validFrom FROM " + tablename + " WHERE NOT (validTo < '" + toSqlDate(validFrom) + "' OR validFrom > '" + toSqlDate(validTo) + "')";
         currentRS = connection.createStatement().executeQuery(sql);
 
         List<StamdataEntityVersion> versions = new ArrayList<StamdataEntityVersion>();

@@ -24,7 +24,7 @@
  */
 
 
-package com.trifork.stamdata.persistence;
+package com.trifork.stamdata.importer.persistence;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -37,99 +37,95 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
-import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.models.TemporalEntity;
 
 public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationTest
 {
-	@Test
+    private Connection con;
+    private DatabaseTableWrapper<SDE> table;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        con = new ConnectionManager().getAutoCommitConnection();
+        table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+    }
+
+    @After
+    public void tearDown()
+    {
+        ConnectionManager.closeQuietly(con);
+    }
+
+    @Test
 	public void testFetchVersionsAbeforeB() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
-		SDE a = new SDE(t0, t1);
+        SDE a = new SDE(t0, t1);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t2, t3);
 		assertFalse(found);
-		con.close();
 	}
 
 	@Test
 	public void testFetchVersionsBbeforeA() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t0, t1);
 		assertFalse(found);
-		con.close();
 	}
 
 	@Test
 	public void testFetchVersionsBinA() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t3);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t1, t2);
 		assertTrue(found);
-		con.close();
 	}
 
 	@Test
 	public void testFetchVersionsAinB() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t0, t3);
 		assertTrue(found);
-		con.close();
 	}
 
 	@Test
 	public void testFetchVersionsAoverlapsB() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t2);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t1, t3);
 		assertTrue(found);
-		con.close();
 	}
 
 	@Test
 	public void testFetchVersionsBoverlapsA() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t3);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
 		boolean found = table.fetchEntityConflicts(key, t0, t2);
 		assertTrue(found);
-		con.close();
 	}
 
 	@Test
 	public void testGetValidFromAndTo() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
-
 		SDE a = new SDE(t0, t1);
 		table.insertEntity(a, new Date());
 
@@ -137,15 +133,11 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationT
 		assertTrue(table.fetchEntityConflicts(key, t0, t1));
 		assertEquals(table.getCurrentRowValidFrom().getTime(), t0.getTime());
 		assertEquals(table.getCurrentRowValidTo().getTime(), t1.getTime());
-
-		con.close();
 	}
 
 	@Test
 	public void testCopyCurrentRowButWithChangedValidFrom() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t2, t3);
 		table.insertEntity(a, new Date());
 
@@ -162,70 +154,66 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationT
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t3);
 		assertFalse(table.moveToNextRow());
-		con.close();
 	}
 
 	@Test
 	public void testUpdateValidToOnCurrentRow1() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
-		table.fetchEntityConflicts(key, t0, t1); // Find the row we just
-														// created
+
+        // Find the row we just created.
+		table.fetchEntityConflicts(key, t0, t1);
 		table.updateValidToOnCurrentRow(t2, new Date());
 
-		table.fetchEntityConflicts(key, t0, t1); // We should find it
-														// again.
+        // We should find it again.
+		table.fetchEntityConflicts(key, t0, t1);
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t2);
 		assertFalse(table.moveToNextRow());
-		con.close();
 	}
 
 	@Test
 	public void testUpdateValidToOnCurrentRow_noSideEffects() throws Exception
-	{		
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
+	{
 		SDE a = new SDE(t0, t1);
 		Object key = Entities.getEntityID(a);
 		SDE b = new SDE(t2, t3);
 		table.insertEntity(a, new Date());
 		table.insertEntity(b, new Date());
-		table.fetchEntityConflicts(key, t2, t3); // Find only the 'b' row
-														// we just created
+
+        // Find only the 'b' row we just created.
+		table.fetchEntityConflicts(key, t2, t3);
 		table.updateValidToOnCurrentRow(t4, new Date());
 
-		table.fetchEntityConflicts(key, t0, t1); // Find the 'a' row
+        // Find the 'a' row
+		table.fetchEntityConflicts(key, t0, t1);
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t1);
 		assertFalse(table.moveToNextRow());
-		table.fetchEntityConflicts(key, t2, t3); // Find the 'b' row
+
+        // Find the 'b' row
+		table.fetchEntityConflicts(key, t2, t3);
 		assertEquals(table.getCurrentRowValidFrom(), t2);
 		assertEquals(table.getCurrentRowValidTo(), t4);
 		assertFalse(table.moveToNextRow());
-		con.close();
 	}
 
 	@Test
 	public void testUpdateValidFromOnCurrentRow() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t1, t2);
 		table.insertEntity(a, new Date());
 
 		Object key = Entities.getEntityID(a);
-		
-		table.fetchEntityConflicts(key, t1, t2); // Find the row we just
-														// created
+
+        // Find the row we just created.
+		table.fetchEntityConflicts(key, t1, t2);
 		table.updateValidFromOnCurrentRow(t0, new Date());
 
-		table.fetchEntityConflicts(key, t1, t2); // We should find it
-														// again.
+        // We should find it again.
+		table.fetchEntityConflicts(key, t1, t2);
 		assertEquals(table.getCurrentRowValidFrom(), t0);
 		assertEquals(table.getCurrentRowValidTo(), t2);
 		assertFalse(table.moveToNextRow());
@@ -235,23 +223,19 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationT
 	@Test
 	public void testdataInCurrentRowEquals() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
+
 		table.insertEntity(a, new Date());
 		Object key = Entities.getEntityID(a);
-		table.fetchEntityConflicts(key, t0, t1); // Find the row we just
-														// created
+        // Find the row we just created.
+		table.fetchEntityConflicts(key, t0, t1);
 		assertTrue(table.currentRowEquals(b));
-		con.close();
 	}
 
 	@Test
 	public void testdataInCurrentRowEquals2() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3)
 		{
@@ -263,29 +247,28 @@ public class MySQLTemporalTableIntegrationTest extends AbstractMySQLIntegrationT
 				return "1997-11";
 			}
 		};
+
 		table.insertEntity(a, new Date());
 		
 		Object key = Entities.getEntityID(a);
-		
-		table.fetchEntityConflicts(key, t0, t1); // Find the row we just
-														// created
+
+        // Find the row we just created.
+		table.fetchEntityConflicts(key, t0, t1);
 		assertFalse(table.currentRowEquals(b));
-		con.close();
 	}
 
 	@Test
 	public void testFetchEntityVersions() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		DatabaseTableWrapper<SDE> table = new DatabaseTableWrapper<SDE>(con, SDE.class);
 		SDE a = new SDE(t0, t1);
 		SDE b = new SDE(t2, t3);
+
 		table.insertEntity(a, new Date());
 		table.insertEntity(b, new Date());
 		table.fetchEntitiesInRange(t0, t3);
+
 		assertTrue(table.moveToNextRow());
 		assertFalse(table.moveToNextRow());
-		con.close();
 	}
 
 	@Entity(name = "TakstVersion")

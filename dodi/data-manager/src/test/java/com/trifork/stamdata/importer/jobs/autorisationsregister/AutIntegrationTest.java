@@ -36,7 +36,7 @@ import org.apache.commons.io.FileUtils;
 import org.junit.*;
 
 import com.trifork.stamdata.Entities;
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.*;
 import com.trifork.stamdata.importer.util.Dates;
 import com.trifork.stamdata.models.autorisationsregister.Autorisation;
@@ -92,7 +92,7 @@ public class AutIntegrationTest
 	@Before
 	public void setUp() throws SQLException
 	{
-		connection = MySQLConnectionManager.getConnection();
+		connection = new ConnectionManager().getConnection();
 		connection.createStatement().execute("TRUNCATE TABLE Autorisation");
 		connection.commit();
 	}

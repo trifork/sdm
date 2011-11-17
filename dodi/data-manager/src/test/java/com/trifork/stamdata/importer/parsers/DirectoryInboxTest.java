@@ -25,10 +25,6 @@
 package com.trifork.stamdata.importer.parsers;
 
 import com.google.common.base.Strings;
-import com.trifork.stamdata.importer.jobs.MockParser;
-import com.trifork.stamdata.importer.parsers.DirectoryInbox;
-import com.trifork.stamdata.importer.parsers.ParserContext;
-import com.trifork.stamdata.importer.parsers.Parsers;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
@@ -40,6 +36,7 @@ import java.io.IOException;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -202,6 +199,25 @@ public class DirectoryInboxTest
         inbox.update();
 
         assertThat(inbox.readyCount(), is(0));
+    }
+    
+    @Test
+    public void testThatLockCreatesAFileCalledLOCKEDInTheParsersInboxDirectory() throws IOException
+    {
+        inbox.lock();
+        
+        assertTrue(new File(parserInboxDir, "LOCKED").exists());
+    }
+
+    @Test
+    public void testThatIsLockedReturnsTrueIfAFileCalledLOCKEDIsPresent() throws IOException
+    {
+        // This tests that some kind of internal state is not set by the lock() method
+        // which would be lost if the app was restarted.
+        //
+        folder.newFile("foo/LOCKED");
+        
+        assertTrue(inbox.isLocked());
     }
 
     //

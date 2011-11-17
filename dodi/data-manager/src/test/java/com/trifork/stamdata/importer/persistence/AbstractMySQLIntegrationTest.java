@@ -24,7 +24,7 @@
  */
 
 
-package com.trifork.stamdata.persistence;
+package com.trifork.stamdata.importer.persistence;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -34,7 +34,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 
 
 public class AbstractMySQLIntegrationTest
@@ -49,11 +49,10 @@ public class AbstractMySQLIntegrationTest
 	@Before
 	public void setup() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
-		stmt.executeUpdate("truncate table TakstVersion");
-		stmt.close();
-		con.close();
+		Connection connection = new ConnectionManager().getAutoCommitConnection();
+		connection.createStatement().executeUpdate("truncate table TakstVersion");
+
+		connection.close();
 	}
 
 	@Before
@@ -70,5 +69,6 @@ public class AbstractMySQLIntegrationTest
 	@Test
 	public void dummyTest()
 	{
+        // FIXME: Why is this here exactly.
 	}
 }

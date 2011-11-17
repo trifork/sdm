@@ -24,7 +24,7 @@
  */
 
 
-package com.trifork.stamdata.persistence;
+package com.trifork.stamdata.importer.persistence;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyObject;
