@@ -25,22 +25,29 @@
 package com.trifork.stamdata.importer.parsers;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
-import com.trifork.stamdata.importer.jobs.DirectoryInbox;
-import com.trifork.stamdata.importer.jobs.Inbox;
+import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
+import org.joda.time.Instant;
+
+import javax.inject.Singleton;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 public class ParserModule extends AbstractModule
 {
-    private final ParserInfo parserInfo;
+    private final ParserContext parserContext;
 
-    public ParserModule(ParserInfo parserInfo)
+    public ParserModule(ParserContext parserContext)
     {
-        this.parserInfo = checkNotNull(parserInfo);
+        this.parserContext = checkNotNull(parserContext, "parserContext");
     }
 
-    public static ParserModule using(ParserInfo parserClass)
+    public static ParserModule using(ParserContext parserClass)
     {
         return new ParserModule(parserClass);
     }
@@ -48,9 +55,23 @@ public class ParserModule extends AbstractModule
     @Override
     protected void configure()
     {
-        bind(ParserInfo.class).toInstance(parserInfo);
+        bind(ParserContext.class).toInstance(parserContext);
 
-        bind(Parser.class).to(parserInfo.getParserClass()).in(Scopes.SINGLETON);
+        bind(Parser.class).to(parserContext.getParserClass()).in(Scopes.SINGLETON);
         bind(Inbox.class).to(DirectoryInbox.class).in(Scopes.SINGLETON);
+
+        bind(KeyValueStore.class).to(MySqlKeyValueStore.class);
+
+        bind(Instant.class).toInstance(Instant.now());
+    }
+
+    @Provides
+    @Singleton // Singleton because this module is only used in per parser injectors.
+    private Connection provideConnection() throws SQLException
+    {
+        // We want to use the same connection (transaction) for all the sub-modules
+        // of a parser execution.
+
+        return new ConnectionManager().getConnection();
     }
 }

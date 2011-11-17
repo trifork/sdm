@@ -25,11 +25,11 @@
 package com.trifork.stamdata.importer.parsers;
 
 import com.google.common.collect.*;
+import com.google.inject.Inject;
 import com.trifork.stamdata.Preconditions;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.Instant;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;

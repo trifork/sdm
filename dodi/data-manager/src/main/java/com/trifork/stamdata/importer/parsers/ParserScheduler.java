@@ -25,11 +25,11 @@
 package com.trifork.stamdata.importer.parsers;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Injector;
-import com.trifork.stamdata.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,13 +48,15 @@ public class ParserScheduler
     private final ExecutorService schedulerExecutor;
     private final ExecutorService jobExecutor;
 
-    private final Iterable<ParserInfo> parsers;
+    private final Iterable<ParserContext> parsers;
     private final ConcurrentLinkedQueue<Class<? extends Parser>> inProgress;
 
     private final Injector injector;
 
+    private boolean hasFailed = false;
+
     @Inject
-    ParserScheduler(Injector injector, Set<ParserInfo> parsers)
+    ParserScheduler(Injector injector, Set<ParserContext> parsers)
     {
         this.injector = injector;
 
@@ -77,7 +79,7 @@ public class ParserScheduler
 
     public void start()
     {
-        // The scheduler's loop should run as often as possible.
+        // The scheduler loop should run as often as possible.
         //
         schedulerExecutor.submit(runLoop());
     }
@@ -100,50 +102,87 @@ public class ParserScheduler
             @Override
             public void run()
             {
-                // TODO: There is a tiny chance of 'live locking' here.
-
-                for (ParserInfo parser : Iterables.cycle(parsers))
+                try
                 {
-                    // Only start parsers not already in advance.
-                    //
-                    if (inProgress.contains(parser.getParserClass())) continue;
-                    inProgress.add(parser.getParserClass());
-
-                    // Run the parser, and once it completes (success or otherwise)
-                    // return the parser to the waiting list.
-                    //
-                    executeParser(parser).addListener(freeParser(parser), MoreExecutors.sameThreadExecutor());
+                    loop();
+                }
+                catch (Exception e)
+                {
+                    hasFailed = true;
+                    logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.", e);
                 }
             }
         };
     }
 
-    private Runnable freeParser(final ParserInfo parserInfo)
+    private void loop()
+    {
+        // TODO: There is a tiny chance of 'live locking' here.
+        // This could potentially starve some parsers.
+        //
+        for (ParserContext parser : Iterables.cycle(parsers))
+        {
+            // Only start parsers not already in advance.
+            //
+            if (inProgress.contains(parser.getParserClass())) continue;
+
+            retain(parser);
+
+            // Run the parser, and once it completes (success or otherwise)
+            // release the parser to the waiting list.
+            //
+            ListenableFuture<Void> execution = executeParser(parser);
+
+            execution.addListener(release(parser), MoreExecutors.sameThreadExecutor());
+        }
+    }
+
+    private void retain(ParserContext parserContext)
+    {
+        inProgress.add(parserContext.getParserClass());
+    }
+
+    private ListenableFuture executeParser(ParserContext parserContext)
+    {
+        // Create a child injector for the parser to limit its scope.
+        //
+        Injector parserInjector = injector.createChildInjector(ParserModule.using(parserContext));
+
+        ParserExecutor executor = parserInjector.getInstance(ParserExecutor.class);
+
+        ListenableFutureTask<Void> task = new ListenableFutureTask(executor, null);
+
+        jobExecutor.execute(task);
+
+        return task;
+    }
+
+    private Runnable release(final ParserContext parserContext)
     {
         return new Runnable()
         {
             @Override
             public void run()
             {
-                // Remove the parser so it is no longer in advance.
+                // Remove the parser so it is no longer running.
                 //
-                inProgress.remove(parserInfo.getParserClass());
+                inProgress.remove(parserContext.getParserClass());
             }
         };
     }
 
-    private ListenableFuture executeParser(ParserInfo parserInfo)
+    /**
+     * Gets all scheduled parsers.
+     *
+     * @return a possibly empty set of all parsers.
+     */
+    public Set<ParserContext> getParsers()
     {
-        // Create a child injector for the parser to limit its scope.
-        //
-        Injector parserInjector = injector.createChildInjector(ParserModule.using(parserInfo));
+        return Sets.newHashSet(parsers);
+    }
 
-        ParserExecutor executor = parserInjector.getInstance(ParserExecutor.class);
-
-        ListenableFutureTask<Void> task = new ListenableFutureTask(executor, null);
-
-        jobExecutor.submit(task);
-
-        return task;
+    public boolean isOk()
+    {
+        return !hasFailed;
     }
 }

@@ -24,7 +24,13 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
-import com.trifork.stamdata.importer.jobs.Inbox;
+import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
+import com.trifork.stamdata.importer.jobs.ImportTimeManager;
+import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -32,6 +38,8 @@ import org.slf4j.MDC;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -45,21 +53,33 @@ import java.util.Map;
  *     <li>Check for data and pass it to the parser.</li>
  *     <li>Start and end database transactions.</li>
  *     <li>Set appropriate logging parameters for the parser.</li>
+ *     <li>Update the parsers' import time table.</li>
  *     <li>Catch any exceptions thrown during execution and report the error.</li>
  * </ul>
  */
 public class ParserExecutor implements Runnable
 {
     private static final Logger logger = LoggerFactory.getLogger(ParserExecutor.class);
-    
+
+    private static final String LATEST_EXECUTION_TIMESTAMP_KEY = "__latest_execution_timestamp";
+
+    private DateTimeFormatter TIMESTAMP_FORMAT = ISODateTimeFormat.dateTime();
+
     private final Parser parser;
     private final Inbox inbox;
+    private final Connection connection;
+    private final ParseTimeManager timeManager;
+    private final Instant transactionTime;
+    private boolean isParserRunning = false;
 
     @Inject
-    ParserExecutor(Parser parser, Inbox inbox)
+    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, Instant transactionTime)
     {
         this.parser = parser;
         this.inbox = inbox;
+        this.connection = connection;
+        this.timeManager = timeManager;
+        this.transactionTime = transactionTime;
     }
 
     @Override
@@ -83,6 +103,8 @@ public class ParserExecutor implements Runnable
         {
             logger.error("Parser execution failed!", e);
 
+            ConnectionManager.rollbackQuietly(connection);
+            
             // Further attempts to run this parser will
             // result in noop.
             //
@@ -90,26 +112,43 @@ public class ParserExecutor implements Runnable
         }
         finally
         {
+            ConnectionManager.closeQuietly(connection);
+
             // Pop the logging context.
+            // This might be null.
             //
-            MDC.setContextMap(loggingContext);
+            if (loggingContext != null) MDC.setContextMap(loggingContext);
         }
     }
 
-    private void execute() throws IOException
+    // TODO: A Circuit Breaker Guice interceptor here would make the system very robust.
+    private void execute() throws Exception
     {
-        MDC.put("parser", parser.identifier());
-
-        inbox.update();
+        MDC.put("parser", Parsers.getIdentifier(parser));
 
         File dataSet = checkInbox();
 
         if (dataSet != null)
         {
-            MDC.put("data_set", dataSet.getName());
+            isParserRunning = true;
+
+            MDC.put("input", dataSet.getName());
+
             logger.info("Executing parser.");
 
-            parser.process(dataSet);
+            parser.process(dataSet, connection, transactionTime);
+
+            timeManager.setTimestamp(transactionTime);
+
+            // It is important that we commit before
+            // we advance the inbox. Since it is not done
+            // in a transaction we must make sure that items
+            // are actually stored before removing the item
+            // from the inbox. If removing the item fails
+            // the parser will complain the next time we try
+            // to import the item.
+            //
+            connection.commit();
 
             // Once the import is complete
             // we can remove of the data set
@@ -119,15 +158,31 @@ public class ParserExecutor implements Runnable
 
             logger.info("Import successful.");
         }
-        else
-        {
-            logger.debug("Inbox empty.");
-        }
     }
 
     private File checkInbox() throws IOException
     {
         inbox.update();
         return inbox.top();
+    }
+    
+    public Class<? extends Parser> parser()
+    {
+        return parser.getClass();
+    }
+
+    /**
+     * Indicated if the parser is running or not.
+     * 
+     * An executor can be in one of two states. Running or not running.
+     * If it is just checking the inbox this is not defined as running.
+     * If on the other hand the parser is busy importing files the
+     * executor is said to be running.
+     * 
+     * @return true is the parser is running.
+     */
+    public boolean isParserRunning()
+    {
+        return isParserRunning;
     }
 }
