@@ -80,7 +80,7 @@ public class ComponentController extends GuiceServletContextListener
 			// The white-list controls which clients have access to protected
 			// data and which that do not.
 
-			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class);
+			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule - remove this when tested
 
 			install(new PersistenceModule());
 			
