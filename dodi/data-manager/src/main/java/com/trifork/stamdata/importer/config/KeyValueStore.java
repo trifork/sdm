@@ -29,6 +29,8 @@ package com.trifork.stamdata.importer.config;
  * A key value store for keeping state information.
  * 
  * A parser can use this for keeping sequence and versioning information.
+ *
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public interface KeyValueStore
 {

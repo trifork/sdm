@@ -28,9 +28,7 @@ import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 import javax.inject.Inject;
 
@@ -39,6 +37,9 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.Parsers;
 
+/**
+ * A key value store that uses MySQL to as backend.
+ */
 public class MySqlKeyValueStore implements KeyValueStore
 {
     private static final int DB_FIELD_SIZE = 200;
@@ -76,7 +77,12 @@ public class MySqlKeyValueStore implements KeyValueStore
 
         try
         {
-            ResultSet rs = connection.createStatement().executeQuery(format("SELECT value FROM KeyValueStore WHERE ownerId = `%s` AND key = `%s`", ownerId, key));
+            PreparedStatement statement = connection.prepareStatement("SELECT value FROM KeyValueStore WHERE ownerId = ? AND id = ?");
+            statement.setObject(1, ownerId);
+            statement.setObject(2, key);
+
+            ResultSet rs = statement.executeQuery();
+
             return rs.next() ? rs.getString(1) : null;
         }
         catch (Exception e)
@@ -91,18 +97,29 @@ public class MySqlKeyValueStore implements KeyValueStore
         checkNotNull(key, "key");
         checkArgument(key.length() <= DB_FIELD_SIZE, "key can max be 200 characters.");
 
+        // The databases 'key' column is called 'id' because 'key' is a
+        // keyword in SQL.
+
         try
         {
+            PreparedStatement statement;
+
             if (value != null)
             {
                 checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be 200 characters.");
 
-                connection.createStatement().execute(format("INSERT INTO KeyValueStore (owerId, key, value) VALUES ('%s','%s', '%s')", ownerId, key, value));
+                statement = connection.prepareStatement("INSERT INTO KeyValueStore (ownerId, id, value) VALUES (?, ?, ?)");
+                statement.setObject(3, value);
             }
             else
             {
-                connection.createStatement().executeUpdate(format("DELETE FROM KeyValueStore WHERE ownerId = '%s' AND key = '%s'", ownerId, key));
+                statement = connection.prepareStatement("DELETE FROM KeyValueStore WHERE ownerId = ? AND id = ?");
             }
+
+            statement.setObject(1, ownerId);
+            statement.setObject(2, key);
+
+            statement.executeUpdate();
         }
         catch (Exception e)
         {
