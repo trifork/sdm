@@ -24,33 +24,19 @@
  */
 package com.trifork.stamdata.persistence;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 
 public class Record
 {
-    ImmutableMap<String, Object> map;
-    
-    public Record()
-    {
-        map = ImmutableMap.of();
-    }
-    
-    public Record setField(String fieldName, Object value)
-    {
-        Record copy = new Record();
+    private Map<String, Object> map = Maps.newHashMap();
 
-        HashMap<String, Object> tempMap = new HashMap<String, Object>(map);
-        tempMap.put(fieldName, value);
-        copy.map = ImmutableMap.copyOf(tempMap);
-        
-        return copy;
-    }
-    
-    public Object getField(String fieldName)
+    public Record put(String key, Object value)
     {
-        return map.get(fieldName);
+        map.put(key, value);
+        return this;
     }
     
     int size()
@@ -66,6 +52,11 @@ public class Record
     public Object get(String key)
     {
         return map.get(key);
+    }
+
+    public Set<Map.Entry<String, Object>> fields()
+    {
+        return map.entrySet();
     }
 
     @Override

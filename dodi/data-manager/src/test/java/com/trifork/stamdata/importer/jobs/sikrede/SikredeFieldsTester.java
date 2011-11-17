@@ -83,7 +83,7 @@ public class SikredeFieldsTester
     @Test
     public void testCorrectAcceptedTotalLineLength()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec(
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
                 "Foo", RecordFieldType.NUMERICAL, 10,
                 "Bar", RecordFieldType.ALPHANUMERICAL, 32);
         assertEquals(42, exampleRecordSpecification.acceptedTotalLineLength());
@@ -98,7 +98,7 @@ public class SikredeFieldsTester
     @Test
     public void testConformsToSchemaSpecification()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec(
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
                 "Foo", RecordFieldType.NUMERICAL, 10,
                 "Bar", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 32);
 

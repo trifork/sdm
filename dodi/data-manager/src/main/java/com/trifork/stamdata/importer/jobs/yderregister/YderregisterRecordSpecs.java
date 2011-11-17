@@ -30,14 +30,14 @@ import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldTy
 
 public class YderregisterRecordSpecs
 {
-    public static final RecordSpecification START_RECORD_TYPE = RecordSpecification.createSpec(
+    public static final RecordSpecification START_RECORD_TYPE = RecordSpecification.createSpec("DummyTable", "DummyKey",
             "OpgDato", ALPHANUMERICAL, 8,
             "Timestamp", ALPHANUMERICAL, 20,
             "Modt", ALPHANUMERICAL, 6,
             "SnitfladeId", ALPHANUMERICAL, 8
     );
 
-    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpec(
+    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpec("Yderregister", "HistIdYder",
             "HistIdYder", ALPHANUMERICAL, 16,
             "AmtKodeYder", ALPHANUMERICAL, 2,
             "AmtTxtYder", ALPHANUMERICAL, 60,
@@ -75,8 +75,8 @@ public class YderregisterRecordSpecs
             // ...
     );
 
-    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpec(
-            "HistIdYder", ALPHANUMERICAL, 16,
+    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpec("YderregisterPerson", "HistIdPerson",
+            "HistIdPerson", ALPHANUMERICAL, 16,
             "YdernrPerson", ALPHANUMERICAL, 6,
             "TilgDatoPerson", ALPHANUMERICAL, 8,
             "AfgDatoPerson", ALPHANUMERICAL, 8,

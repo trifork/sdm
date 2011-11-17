@@ -37,6 +37,8 @@ import java.sql.Connection;
  * Generally parsers should never log anything other than on DEBUG level.
  * If something goes wrong the parser must throw an exception and let the
  * caller do the logging.
+ * 
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public interface Parser
 {

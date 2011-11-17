@@ -38,6 +38,9 @@ import java.sql.SQLException;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public class ParserModule extends AbstractModule
 {
     private final ParserContext parserContext;

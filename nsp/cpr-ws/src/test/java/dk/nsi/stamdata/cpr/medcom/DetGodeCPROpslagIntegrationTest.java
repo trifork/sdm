@@ -44,7 +44,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
-import org.joda.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +54,6 @@ import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
 
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
@@ -284,7 +282,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         {
             // RecordPersister should be injected
             RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
-            recordPersister.persist(sikredeRecord, "CPRnr", new Instant(Factories.YESTERDAY));
+            recordPersister.persist(sikredeRecord, "CPRnr");
         }
 
         t.commit();

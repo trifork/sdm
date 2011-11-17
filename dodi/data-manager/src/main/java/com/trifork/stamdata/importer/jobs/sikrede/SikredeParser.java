@@ -82,7 +82,7 @@ public class SikredeParser implements Parser
     @Override
     public void process(File dataSet, Connection connection, Instant transactionTime) throws Exception
     {
-        RecordPersister persister = new RecordPersister(recordSpecification, connection);
+        RecordPersister persister = new RecordPersister(connection, transactionTime);
 
         File[] input = dataSet.listFiles();
         checkArgument(input.length == 1, "Only one file is expected at this point.");
@@ -157,7 +157,7 @@ public class SikredeParser implements Parser
                 if (startRecord == null) throw new ParserException("Start record was not found before first entry.");
 
                 Record record = recordParser.parseLine(line);
-                persister.persist(record, key, transactionTime);
+                persister.persist(record, recordSpecification);
                 
                 numRecords++;
             }
@@ -167,7 +167,7 @@ public class SikredeParser implements Parser
             }
         }
         
-        if (!endRecord.getField("AntPost").equals(numRecords))
+        if (!endRecord.get("AntPost").equals(numRecords))
         {
             throw new ParserException("The number of records that were parsed did not match the total from the end record.");
         }

@@ -65,8 +65,8 @@ public class SikredeRecordToPersonPublicHealthInsuranceTest {
     {
         // These record names are taken from the document "NSI - NOTUS Sikrede -def.pdf"
         Record record = new Record()
-                .setField("SSikrGrpKode", sygesikringsGruppeKategori)
-                .setField("SIkraftDatoGrp", sygesikringsGruppeStartDato);
+                .put("SSikrGrpKode", sygesikringsGruppeKategori)
+                .put("SIkraftDatoGrp", sygesikringsGruppeStartDato);
         
         SikredeRecordToPersonPublicHealhInsuranceMapper mapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
         PersonPublicHealthInsuranceType xmlStructurer = mapper.map(record);

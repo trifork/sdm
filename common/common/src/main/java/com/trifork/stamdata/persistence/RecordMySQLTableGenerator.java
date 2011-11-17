@@ -50,9 +50,9 @@ public class RecordMySQLTableGenerator
     {
         StringBuilder builder = new StringBuilder();
         
-        builder.append("CREATE TABLE SikredeGenerated (\n");
+        builder.append("CREATE TABLE " + recordSpecification.getTable() + " (\n");
         
-        builder.append("\tSikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY");
+        builder.append("\tPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY");
         
         for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
@@ -72,7 +72,9 @@ public class RecordMySQLTableGenerator
         
         builder.append(",\n\tValidFrom DateTime NOT NULL");
         builder.append(",\n\tValidTo DateTime");
-        
+
+        builder.append(",\n\tModifiedDate DateTime NOT NULL");
+
         builder.append("\n) ENGINE=InnoDB COLLATE=utf8_bin;\n");
         
         return builder.toString();

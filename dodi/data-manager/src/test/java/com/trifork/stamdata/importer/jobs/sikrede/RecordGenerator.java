@@ -78,11 +78,11 @@ public class RecordGenerator
             {
                 if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {
-                    record = record.setField(fieldSpecification.name, "");
+                    record = record.put(fieldSpecification.name, "");
                 }
                 else if(fieldSpecification.type == RecordFieldType.NUMERICAL)
                 {
-                    record = record.setField(fieldSpecification.name, 0);
+                    record = record.put(fieldSpecification.name, 0);
                 } 
                 else
                 {
@@ -109,7 +109,7 @@ public class RecordGenerator
         {
             String key = (String) keysAndValues[i];
             Object value = keysAndValues[i+1];
-            record = record.setField(key, value);
+            record = record.put(key, value);
         }
         
         return record;

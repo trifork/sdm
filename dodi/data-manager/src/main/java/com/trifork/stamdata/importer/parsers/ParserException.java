@@ -24,6 +24,9 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public class ParserException extends RuntimeException
 {
     private static final long serialVersionUID = 780632659490028872L;

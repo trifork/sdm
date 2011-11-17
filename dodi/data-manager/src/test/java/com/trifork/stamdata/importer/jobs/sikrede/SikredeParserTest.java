@@ -90,7 +90,7 @@ public class SikredeParserTest
 
         try 
         {
-            RecordSpecification recordSpecification = RecordSpecification.createSpec(
+            RecordSpecification recordSpecification = RecordSpecification.createSpec("TestTable", "Foo",
                     "PostType", RecordFieldType.NUMERICAL, 2,
                     "Foo", RecordFieldType.ALPHANUMERICAL, 10);
 
@@ -127,7 +127,7 @@ public class SikredeParserTest
 
         try
         {
-            RecordSpecification recordSpecification = RecordSpecification.createSpec(
+            RecordSpecification recordSpecification = RecordSpecification.createSpec("TestTable", "Foo",
                     "PostType", RecordFieldType.NUMERICAL, 2,
                     "Foo", RecordFieldType.ALPHANUMERICAL, 10);
             
@@ -159,7 +159,7 @@ public class SikredeParserTest
         Connection connection = new ConnectionManager().getConnection();
         
         Statement setupStatements = connection.createStatement();
-        setupStatements.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        setupStatements.executeUpdate("DROP TABLE IF EXISTS TestTable");
         setupStatements.executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
         
         return connection;
@@ -234,7 +234,7 @@ public class SikredeParserTest
     private void assertNumberOfSikredeGeneratedRecordsInDatabaseIs(Connection connection, int i) throws SQLException 
     {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM SikredeGenerated");
+        ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM TestTable");
         resultSet.next();
         assertEquals(i, resultSet.getLong(1));
     }

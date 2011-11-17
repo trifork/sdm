@@ -33,18 +33,18 @@ public final class SikredeRecordSpecs
 {
     protected SikredeRecordSpecs() {}
 
-    public static final RecordSpecification START_RECORD_SPEC = RecordSpecification.createSpec(
+    public static final RecordSpecification START_RECORD_SPEC = RecordSpecification.createSpec("DummyTable", "DummyKey",
             "PostType", NUMERICAL, 2,
             "OpgDato", ALPHANUMERICAL, 8,
             "Timestamp", ALPHANUMERICAL, 20,
             "Modt", ALPHANUMERICAL, 6,
             "SnitfladeId", ALPHANUMERICAL, 8);
 
-    public static final RecordSpecification END_RECORD_SPEC = RecordSpecification.createSpec(
+    public static final RecordSpecification END_RECORD_SPEC = RecordSpecification.createSpec("DummyTable", "DummyKey",
             "PostType", NUMERICAL, 2,
             "AntPost", NUMERICAL, 8);
 
-    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpec(
+    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpec("SikredeGenerated", "CPRnr",
             // Page 1 (6 of 11)
             "PostType", NUMERICAL, 2,
             "CPRnr", ALPHANUMERICAL, 10,

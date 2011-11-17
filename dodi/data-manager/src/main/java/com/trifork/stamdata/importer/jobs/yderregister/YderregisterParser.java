@@ -93,7 +93,7 @@ public class YderregisterParser implements Parser
 
         // Do the actual importing.
         //
-        RecordPersister newPersister = new RecordPersister(null, connection);
+        RecordPersister newPersister = new RecordPersister(connection, transactionTime);
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 
         for (File file : input.listFiles())

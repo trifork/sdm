@@ -32,6 +32,19 @@ import com.trifork.stamdata.Preconditions;
 
 public class RecordSpecification
 {
+    private final String table;
+    private final String keyColumn;
+
+    public String getTable()
+    {
+        return table;
+    }
+
+    public String getKeyColumn()
+    {
+        return keyColumn;
+    }
+
     public static enum RecordFieldType
     {
         ALPHANUMERICAL,
@@ -54,16 +67,19 @@ public class RecordSpecification
     
     private List<FieldSpecification> fieldSpecifications;
     
-    private RecordSpecification()
+    private RecordSpecification(String table, String keyColumn)
     {
+        this.table = table;
+        this.keyColumn = keyColumn;
+        
         fieldSpecifications = new ArrayList<FieldSpecification>();
     }
     
-    public static RecordSpecification createSpec(Object... fieldDefinitions)
+    public static RecordSpecification createSpec(String table, String keyColumn, Object... fieldDefinitions)
     {
-        assert(fieldDefinitions.length % 3 == 0);
+        Preconditions.checkArgument(fieldDefinitions.length % 3 == 0);
 
-        RecordSpecification recordSpecification = new RecordSpecification();
+        RecordSpecification recordSpecification = new RecordSpecification(table, keyColumn);
         
         for (int i = 0; i < fieldDefinitions.length; i += 3)
         {

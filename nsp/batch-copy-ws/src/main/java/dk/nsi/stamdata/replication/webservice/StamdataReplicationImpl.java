@@ -35,6 +35,7 @@ import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
 import com.google.common.collect.Lists;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 
@@ -291,7 +292,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private Document createSikredeFeed(HistoryOffset offset, int limit) throws SQLException
     {
         RecordXmlGenerator sikredeXmlGenerator = new RecordXmlGenerator(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
-        RecordPersister persister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
+//        RecordFetcher fetcher = new RecordFetcher();
 
         // FIXME: The persister should respect the offset and the limit. Input form THB on how to handle this nicely.
         // A first step would be to introduce modified date to Record persistence (currently missing).

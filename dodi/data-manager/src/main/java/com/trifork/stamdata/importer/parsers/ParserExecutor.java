@@ -56,6 +56,8 @@ import java.util.Map;
  *     <li>Update the parsers' import time table.</li>
  *     <li>Catch any exceptions thrown during execution and report the error.</li>
  * </ul>
+ * 
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserExecutor implements Runnable
 {

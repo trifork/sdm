@@ -40,7 +40,7 @@ public class SikredeSqlSchemaCreatorTest
     @Before
     public void createExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.createSpec(
+        exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
                 "Foo", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 10,
                 "Bar", RecordSpecification.RecordFieldType.NUMERICAL, 5,
                 "Baz", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 42);

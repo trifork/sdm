@@ -29,6 +29,9 @@ import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
 
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public class DataManagerComponentMonitor implements ComponentMonitor
 {
 	private final ConnectionManager dbChecker;

@@ -27,6 +27,9 @@ package com.trifork.stamdata.importer.parsers;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public final class Parsers
 {
     protected Parsers() {}

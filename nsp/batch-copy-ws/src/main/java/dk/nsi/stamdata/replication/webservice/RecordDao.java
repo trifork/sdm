@@ -71,7 +71,7 @@ public class RecordDao
 		// the same
 		// time stamp for each of the records in to batch.
 
-		String SQL = " FROM " + type.getName() + " WHERE ((recordID = :recordID AND modifiedDate > :modifiedDate) OR (recordID > :recordID)) ORDER BY recordID, modifiedDate";
+		String SQL = " FROM " + type.getName() + " WHERE ((recordID > :recordID AND modifiedDate = :modifiedDate) OR (recordID > :recordID) OR (recordID = :recordID AND modifiedDate > :modifiedDate)) ORDER BY recordID, modifiedDate";
 
 		Query query = statelessSession.createQuery(SQL);
 		query.setParameter("recordID", id);

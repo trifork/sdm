@@ -57,6 +57,8 @@ import static com.trifork.stamdata.Preconditions.checkArgument;
  * If locked it will place a file called 'LOCKED' in the inbox directory.
  * This file will have to be remove manually in order to continue, one
  * the problem has been fixed.
+ *
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class DirectoryInbox implements Inbox
 {
@@ -194,8 +196,6 @@ public class DirectoryInbox implements Inbox
     @Override
     public void lock()
     {
-        // Simulate unix touch.
-        //
         try
         {
             lockFile.createNewFile();
@@ -216,7 +216,7 @@ public class DirectoryInbox implements Inbox
 
     private static DirectoryState createState(File directory)
     {
-        checkArgument(directory.isDirectory());
+        checkArgument(directory.isDirectory(), "Cannot create a snapshot state of anything but a directory.");
 
         DirectoryState state = new DirectoryState();
         state.size = FileUtils.sizeOfDirectory(directory);

@@ -410,11 +410,11 @@ public class StamdataReplicationImplIntegrationTest {
         Connection connection = session.connection();
         connection.createStatement().executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
         connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
-        RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, connection);
+        RecordPersister recordPersister = new RecordPersister(connection, new Instant());
 
         for (Record sikredeRecord: sikredeRecords)
         {
-            recordPersister.persist(sikredeRecord, "CPRnr", new Instant(new DateTime().getMillis()));
+            recordPersister.persist(sikredeRecord, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         }
 
         connection.commit();

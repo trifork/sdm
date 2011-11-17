@@ -36,6 +36,8 @@ import java.io.IOException;
  *
  * An inbox is essentially a priority queue with slightly
  * different semantics.
+ * 
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public interface Inbox
 {

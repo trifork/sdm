@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
 
-
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public class ComponentController extends GuiceServletContextListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ComponentController.class);

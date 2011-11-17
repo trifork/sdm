@@ -43,6 +43,9 @@ import org.apache.commons.configuration.CompositeConfiguration;
 
 import java.util.Set;
 
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 public class ComponentModule extends ServletModule
 {
     @Override

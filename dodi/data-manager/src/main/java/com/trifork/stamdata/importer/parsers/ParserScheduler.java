@@ -40,6 +40,8 @@ import java.util.concurrent.*;
 /**
  * New implementation of job manager for Sikrede.
  * All new parsers should use this.
+ * 
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserScheduler
 {

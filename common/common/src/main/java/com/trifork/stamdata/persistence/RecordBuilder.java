@@ -40,7 +40,23 @@ public class RecordBuilder
         this.recordSpecification = recordSpecification;
         record = new Record();
     }
-    
+
+    public RecordBuilder field(String fieldName, Object value)
+    {
+        if (value instanceof Integer)
+        {
+            return field(fieldName, (Integer)value);
+        }
+        else if (value instanceof String)
+        {
+            return field(fieldName, (String)value);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Values in records must be string or integer. field=" + fieldName);
+        }
+    }
+
     public RecordBuilder field(String fieldName, int value)
     {
         return field(fieldName, value, RecordSpecification.RecordFieldType.NUMERICAL);
@@ -56,7 +72,7 @@ public class RecordBuilder
         checkNotNull(fieldName);
         checkArgument(getFieldType(fieldName) == recordFieldType, "Field " + fieldName + " is not " + recordFieldType);
         
-        record = record.setField(fieldName, value);
+        record = record.put(fieldName, value);
         
         return this;
     }
@@ -81,11 +97,11 @@ public class RecordBuilder
             {
             if(fieldSpecification.type == RecordFieldType.ALPHANUMERICAL)
             {
-                record = record.setField(fieldSpecification.name, "");
+                record = record.put(fieldSpecification.name, "");
             }
             else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
-                record = record.setField(fieldSpecification.name, 0);
+                record = record.put(fieldSpecification.name, 0);
             }
             else
             {

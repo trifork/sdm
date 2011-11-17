@@ -45,7 +45,7 @@ public class SingleLineRecordParserTest
     @Before
     public void setupExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.createSpec(
+        exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "TruncatedString",
                 "PostType", RecordSpecification.RecordFieldType.NUMERICAL, 2,
                 "TruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 5,
                 "UntruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 6,

@@ -37,8 +37,6 @@ import com.trifork.stamdata.persistence.RecordPersister;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -50,7 +48,6 @@ import static java.lang.String.format;
  */
 public class YderregisterSaxEventHandler extends DefaultHandler
 {
-    private static final Logger logger = LoggerFactory.getLogger(YderregisterSaxEventHandler.class);
     private static final String SUPPORTED_INTERFACE_VERSION = "S1040025";
     private static final String EXPECTED_RECIPIENT_ID = "B053";
 
@@ -121,7 +118,7 @@ public class YderregisterSaxEventHandler extends DefaultHandler
 
         try
         {
-            persister.persist(record, "HistIdPerson", transactionTime);
+            persister.persist(record, YderregisterRecordSpecs.PERSON_RECORD_TYPE);
         }
         catch (SQLException e)
         {
@@ -150,7 +147,7 @@ public class YderregisterSaxEventHandler extends DefaultHandler
 
         try
         {
-            persister.persist(record, "HistIdYder", transactionTime);
+            persister.persist(record, YderregisterRecordSpecs.YDER_RECORD_TYPE);
         }
         catch (SQLException e)
         {
