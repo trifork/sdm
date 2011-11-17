@@ -29,82 +29,62 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 import java.io.File;
-import java.sql.SQLException;
+import java.sql.Connection;
 import java.util.Iterator;
 
-import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.importer.parsers.Parser;
+import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.joda.time.Instant;
 import org.slf4j.MDC;
 
-import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
-public class SikredeParser implements FileParser
+import javax.inject.Inject;
+
+@ParserInformation(id="sikrede", name="\"Sikrede\"")
+public class SikredeParser implements Parser
 {
-    public static final String ACCEPTED_MODTAGER = "F053";
-    public static final String ACCEPTED_SNITFLADE_ID = "S1061023";
+    public static final String ACCEPTED_RECIPIENT_ID = "F053";
+    public static final String ACCEPTED_INTERFACE_ID = "S1061023";
     
     public static final String FILE_ENCODING = "ISO-8859-1";
-    
+
+    private static final String RECORD_TYPE_START = "00";
     private static final String RECORD_TYPE_ENTRY = "10";
     private static final String RECORD_TYPE_END = "99";
-    private static final String RECORD_TYPE_START = "00";
     
-    static final RecordSpecification START_RECORD_RECORD_SPECIFICATION = RecordSpecification.newSikredeFields(
-            "PostType", SikredeType.NUMERICAL, 2,
-            "OpgDato", SikredeType.ALFANUMERICAL, 8,
-            "Timestamp", SikredeType.ALFANUMERICAL, 20,
-            "Modt", SikredeType.ALFANUMERICAL, 6,
-            "SnitfladeId", SikredeType.ALFANUMERICAL, 8);
-    
-    static final RecordSpecification END_RECORD_RECORD_SPECIFICATION = RecordSpecification.newSikredeFields(
-            "PostType", SikredeType.NUMERICAL, 2,
-            "AntPost", SikredeType.NUMERICAL, 8);
-
-    final SingleLineRecordParser startRecordParser = new SingleLineRecordParser(START_RECORD_RECORD_SPECIFICATION);
-    final SingleLineRecordParser endRecordParser = new SingleLineRecordParser(END_RECORD_RECORD_SPECIFICATION);
-    
-    private final SingleLineRecordParser entryParser;
+    private final SingleLineRecordParser recordParser;
     private final RecordSpecification recordSpecification;
     private final String key;
-    
-    public SikredeParser(SingleLineRecordParser entryParser, RecordSpecification recordSpecification, String key)
+
+    @Inject
+    SikredeParser()
     {
-        this.entryParser = entryParser;
+        recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
+        recordParser = new SingleLineRecordParser(recordSpecification);
+        key = "CPRnr";
+    }
+
+    /** For testing only */
+    SikredeParser(SingleLineRecordParser recordParser, RecordSpecification recordSpecification, String key)
+    {
+        this.recordParser = recordParser;
         this.recordSpecification = recordSpecification;
         this.key = key;
     }
-    
-    @Override
-    public String getIdentifier() 
-    {
-        return "sikrede";
-    }
 
     @Override
-    public String getHumanName() 
+    public void process(File dataSet, Connection connection, Instant transactionTime) throws Exception
     {
-        return "\"Sikrede\" Parser";
-    }
+        RecordPersister persister = new RecordPersister(recordSpecification, connection);
 
-    @Override
-    public boolean validateInputStructure(File[] input)
-    {
-        // FIXME: What are the expected names? We don't want to see unexpected filenames
-        checkNotNull(input);
-        return (input.length == 1);
-    }
-
-    @Override
-    public void parse(File[] input, Persister oldPersister, KeyValueStore keyValueStore) throws Exception
-    {
+        File[] input = dataSet.listFiles();
         checkArgument(input.length == 1, "Only one file is expected at this point.");
         File file = input[0];
         
@@ -112,15 +92,13 @@ public class SikredeParser implements FileParser
         
         // FIXME: Check that files are imported in the right order.
         // We can not do this yet as we do not know what the files are named.
-        
-        RecordPersister persister = new RecordPersister(recordSpecification, oldPersister.getConnection());
 
         LineIterator lines = null;
         
         try
         {
             lines = FileUtils.lineIterator(file, FILE_ENCODING);
-            importFile(lines, persister);
+            importFile(lines, persister, transactionTime);
         }
         finally
         {
@@ -128,15 +106,15 @@ public class SikredeParser implements FileParser
         }
     }
     
-    private void importFile(Iterator<String> lines, RecordPersister persister) throws SQLException
+    private void importFile(Iterator<String> lines, RecordPersister persister, Instant transactionTime) throws Exception
     {
-        // FIXME: If called two times tt would be different!!
-        final Instant transactionTime = Instant.now();
-        
         Record startRecord = null;
         Record endRecord = null;
         
         int numRecords = 0;
+
+        SingleLineRecordParser startRecordParser = new SingleLineRecordParser(SikredeRecordSpecs.START_RECORD_SPEC);
+        SingleLineRecordParser endRecordParser = new SingleLineRecordParser(SikredeRecordSpecs.END_RECORD_SPEC);
         
         for (String line; lines.hasNext();)
         {
@@ -158,14 +136,14 @@ public class SikredeParser implements FileParser
                 
                 // FIXME: Verificer Modt og SnitfladeId jf. dokumentation.
                 //
-                if (!ACCEPTED_MODTAGER.equals(startRecord.get("Modt")))
+                if (!ACCEPTED_RECIPIENT_ID.equals(startRecord.get("Modt")))
                 {
-                    throw new ParserException(format("The receiver id '%s' did not match the expected '%s'.", startRecord.get("Modt"), ACCEPTED_MODTAGER));
+                    throw new ParserException(format("The receiver id '%s' did not match the expected '%s'.", startRecord.get("Modt"), ACCEPTED_RECIPIENT_ID));
                 }
                 
-                if (!ACCEPTED_SNITFLADE_ID.equals(startRecord.get("SnitfladeId")))
+                if (!ACCEPTED_INTERFACE_ID.equals(startRecord.get("SnitfladeId")))
                 {
-                    throw new ParserException(format("The interface id did not match the expected '%s'.", startRecord.get("SnitfladeId"), ACCEPTED_SNITFLADE_ID));
+                    throw new ParserException(format("The interface id did not match the expected '%s'.", startRecord.get("SnitfladeId"), ACCEPTED_INTERFACE_ID));
                 }
             }
             else if (line.startsWith(RECORD_TYPE_END))
@@ -178,8 +156,8 @@ public class SikredeParser implements FileParser
             {
                 if (startRecord == null) throw new ParserException("Start record was not found before first entry.");
 
-                Record record = entryParser.parseLine(line);
-                persister.persistRecordWithValidityDate(record, key, transactionTime);
+                Record record = recordParser.parseLine(line);
+                persister.persist(record, key, transactionTime);
                 
                 numRecords++;
             }

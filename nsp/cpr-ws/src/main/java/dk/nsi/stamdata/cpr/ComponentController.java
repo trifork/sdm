@@ -122,7 +122,7 @@ public class ComponentController extends GuiceServletContextListener
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
 			install(new DenGodeWebServiceModule());
-            install(new WhitelistDbInterceptorModule());
+            //install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
 		}
 	}
 }

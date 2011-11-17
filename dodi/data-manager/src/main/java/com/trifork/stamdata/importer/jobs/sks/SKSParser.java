@@ -28,6 +28,7 @@ package com.trifork.stamdata.importer.jobs.sks;
 import java.io.File;
 import java.util.Iterator;
 
+import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -38,7 +39,6 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.sks.Institution.InstitutionType;
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
 import com.trifork.stamdata.importer.persistence.Dataset;
 
 /**
@@ -246,7 +246,7 @@ public class SKSParser implements FileParser
         }
         else
         {
-            throw new ParserException("SKS parser encountered an unkown operation code. code=" + code);
+            throw new ParserException("SKS parser encountered an unknown operation code. code=" + code);
         }
     }
 }

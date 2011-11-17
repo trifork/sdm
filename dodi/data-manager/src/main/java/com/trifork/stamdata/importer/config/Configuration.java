@@ -39,6 +39,7 @@ import com.trifork.stamdata.importer.ComponentController;
  * 
  * TODO: Static state is a bad idea in general. Send the configuration around instead of using this class.
  */
+@Deprecated
 public class Configuration
 {
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
@@ -56,10 +57,10 @@ public class Configuration
 		try
 		{
 			// Override the default configuration with the one found in
-			// stamdata-importer.properties.
+			// stamdata-data-manager.properties.
 
 			InputStream buildInConfig = getClass().getClassLoader().getResourceAsStream(configName + ".properties");
-			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(ComponentController.DEPLOYMENT_CONFIG_FILE);
+			InputStream deploymentConfig = getClass().getClassLoader().getResourceAsStream(ConfigurationLoader.DEPLOYMENT_CONFIG_FILE);
 
 			properties = new Properties();
 			properties.load(buildInConfig);

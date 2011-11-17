@@ -26,23 +26,29 @@ package com.trifork.stamdata.importer.webinterface;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.ComponentMonitor;
-import com.trifork.stamdata.importer.jobs.JobManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.parsers.ParserScheduler;
 
 public class DataManagerComponentMonitor implements ComponentMonitor
 {
-	private final DatabaseStatus dbChecker;
-	private final JobManager jobManager;
+	private final ConnectionManager dbChecker;
+    private final JobsDecorator jobs;
+    private final ParserScheduler scheduler;
 
-	@Inject
-	DataManagerComponentMonitor(DatabaseStatus dbChecker, JobManager jobManager)
+    @Inject
+	DataManagerComponentMonitor(ConnectionManager dbChecker, JobsDecorator jobs, ParserScheduler scheduler)
 	{
 		this.dbChecker = dbChecker;
-		this.jobManager = jobManager;
-	}
+        this.jobs = jobs;
+        this.scheduler = scheduler;
+    }
 	
 	@Override
     public boolean isOk()
 	{
-		return dbChecker.isAlive() && jobManager.areAllJobsRunning() && !jobManager.areAnyJobsOverdue();
+		return dbChecker.isAvailable()
+            && jobs.areAllJobsRunning()
+            && !jobs.areAnyJobsOverdue()
+            && scheduler.isOk();
 	}
 }

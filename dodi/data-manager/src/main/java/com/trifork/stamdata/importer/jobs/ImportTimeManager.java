@@ -32,81 +32,116 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import com.trifork.stamdata.importer.parsers.Parser;
+import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.Parsers;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.joda.time.Instant;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.util.Dates;
 
 // FIXME (thb): This class serves no purpose and can be refactored into the FileParserJob class.
-public class ImportTimeManager
+public final class ImportTimeManager
 {
-	private static Logger logger = LoggerFactory.getLogger(ImportTimeManager.class);
+    private final static ConnectionManager connectionManager = new ConnectionManager();
 
-	public static DateTime getLastImportTime(String spoolername)
+    public static DateTime getLastImportTime(Class<? extends Parser> parser, Connection connection)
+    {
+        String parserId = Parsers.getIdentifier(parser);
+        return getLastImportTime(parserId);
+    }
+
+	public static DateTime getLastImportTime(String parserId)
 	{
-		// TODO (thb): This should NOT create its own connection but use the file parser job's.
-		
 		Connection connection = null;
-		Statement stmt = null;
 		DateTime result = null;
 
 		try
 		{
-			connection = MySQLConnectionManager.getAutoCommitConnection();
-			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT MAX(importtime) FROM Import WHERE spoolername = '" + spoolername + "'");
-
-			if (rs.next())
-			{
-				// We cannot dump the timestamp directly into the
-				// DateTime or we will get the current date.
-				// We have to check for null first.
-				
-				Timestamp timestamp = rs.getTimestamp(1);
-				
-				if (timestamp != null)
-				{
-					result = new DateTime(timestamp);
-				}
-			}
-			
-			rs.close();
-		}
-		catch (Exception e)
-		{
-			// TODO (thb): Throw, don't log.
-			
-			logger.error("getLastImportTime(" + spoolername + ")", e);
+            connection = connectionManager.getAutoCommitConnection();
+            return getLastImportTime(parserId, connection);
 		}
 		finally
 		{
-			MySQLConnectionManager.close(stmt, connection);
+			ConnectionManager.closeQuietly(connection);
 		}
-		
-		return result;
 	}
 
-	public static void setImportTime(String spoolerName, Date importTime)
+    private static DateTime getLastImportTime(String parserId, Connection connection)
+    {
+        DateTime result = null;
+
+        try
+        {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT MAX(importtime) FROM Import WHERE spoolername = '" + parserId + "'");
+
+            if (rs.next())
+            {
+                // We cannot dump the timestamp directly into the
+                // DateTime or we will get the current date.
+                // We have to check for null first.
+
+                Timestamp timestamp = rs.getTimestamp(1);
+
+                if (timestamp != null)
+                {
+                    result = new DateTime(timestamp);
+                }
+            }
+
+            stmt.close();
+        }
+        catch (Exception e)
+        {
+            throw new ParserException("Could not get the last import time from the database.", e);
+        }
+
+        return result;
+    }
+
+    @Deprecated
+	public static void setImportTime(String parserName, Date importTime)
 	{
-		Connection con = null;
-		Statement stmt = null;
+        // FIXME (thb): This should NOT create its own connection but use the file parser job's.
+        // This will not be rolled back if an error occurs.
+
+        Connection connection = null;
 
 		try
 		{
-			con = MySQLConnectionManager.getAutoCommitConnection();
-			stmt = con.createStatement();
-			stmt.executeUpdate("INSERT INTO Import VALUES ('" + Dates.toMySQLdate(importTime) + "', '" + spoolerName + "')");
-		}
-		catch (Exception e)
-		{
-			// TODO: Throw.
-			logger.error("getLastImportTime(" + spoolerName + ")", e); 
+			connection = connectionManager.getAutoCommitConnection();
+            setLastImportTime(parserName, importTime, connection);
 		}
 		finally
 		{
-			MySQLConnectionManager.close(stmt, con);
+			ConnectionManager.closeQuietly(connection);
 		}
 	}
+    
+    public static void setLastImportTime(Class<? extends Parser> parserClass, Instant transactionTime, Connection connection)
+    {
+        String parserId = Parsers.getIdentifier(parserClass);
+        setLastImportTime(parserId, transactionTime.toDate(), connection);
+    }
+
+    private static void setLastImportTime(String parserId, Date transactionTime, Connection connection)
+    {
+        Statement stmt = null;
+
+        try
+        {
+            stmt = connection.createStatement();
+            stmt.executeUpdate("INSERT INTO Import VALUES ('" + Dates.toSqlDate(transactionTime) + "', '" + parserId + "')");
+        }
+        catch (Exception e)
+        {
+            throw new ParserException("Could not set the import time in the database.", e);
+        }
+        finally
+        {
+
+        }
+    }
 }

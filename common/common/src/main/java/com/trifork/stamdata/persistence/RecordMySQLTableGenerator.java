@@ -27,9 +27,9 @@ package com.trifork.stamdata.persistence;
 // TODO: This is where I moved these classes Friday morning
 //import com.trifork.stamdata.persistence.SikredeFields;
 //import com.trifork.stamdata.persistence.SikredeFields.SikredeFieldSpecification;
-//import com.trifork.stamdata.persistence.SikredeFields.SikredeType;
+//import com.trifork.stamdata.persistence.SikredeFields.RecordFieldType;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 public class RecordMySQLTableGenerator
 {
@@ -54,13 +54,13 @@ public class RecordMySQLTableGenerator
         
         builder.append("\tSikredePID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY");
         
-        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
-            if(fieldSpecification.type == SikredeType.NUMERICAL)
+            if(fieldSpecification.type == RecordFieldType.NUMERICAL)
             {
                 builder.append(String.format(",\n\t%s BIGINT NOT NULL", fieldSpecification.name));
             }
-            else if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            else if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
             {
                 builder.append(String.format(",\n\t%s VARCHAR(%d) NOT NULL", fieldSpecification.name, fieldSpecification.length));
             }

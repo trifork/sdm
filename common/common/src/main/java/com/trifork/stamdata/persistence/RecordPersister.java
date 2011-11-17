@@ -39,7 +39,7 @@ import org.joda.time.Instant;
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 //FIXME: This class has all the fetcher methods I moved Friday morning ;( Will have to be moved
 public class RecordPersister
@@ -53,7 +53,7 @@ public class RecordPersister
         this.connection = connection;
     }
 
-    public void persistRecordWithValidityDate(Record record, String key, Instant transactionTime) throws SQLException
+    public void persist(Record record, String key, Instant transactionTime) throws SQLException
     {
         PreparedStatement statement = createSelectStatementAsPreparedStatement(connection, key, record.getField(key));
         ResultSet resultSet = statement.executeQuery();
@@ -62,7 +62,7 @@ public class RecordPersister
         Record recordThatIsCurrentlyValid = null;
         int numberOfRecordsWithSameKey = 0;
 
-        // FIXME: I think not all cases are taken into account here.
+        // FIXME: I think not all cases are taken into account here, what about transactionTime == validFrom/validTo?
 
         while (resultSet.next())
         {
@@ -79,7 +79,7 @@ public class RecordPersister
                 // It is not permitted to insert records with a timestamp before the end time of other records (except the case where valid to is not set)
                 if (transactionTime.isBefore(getValidTo(resultSet)))
                 {
-                    throw new IllegalArgumentException("The supplied timestamp is earlier than the valid to time of a record with the same key alread present in the database");
+                    throw new IllegalArgumentException("The supplied timestamp is earlier than the valid to time of a record with the same key already present in the database");
                 }
             }
             else
@@ -144,7 +144,7 @@ public class RecordPersister
         List<String> fieldNames = Lists.newArrayList();
         List<String> questionMarks = Lists.newArrayList();
 
-        for(FieldSpecification fieldSpecification: recordSpec.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification: recordSpec.getFieldSpecs())
         {
             fieldNames.add(fieldSpecification.name);
             questionMarks.add("?");
@@ -172,19 +172,19 @@ public class RecordPersister
 
         int index = 1;
 
-        for (FieldSpecification fieldSpecification: recordSpec.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpec.getFieldSpecs())
         {
-            if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            if (fieldSpecification.type == RecordFieldType.ALPHANUMERICAL)
             {
                 preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
             }
-            else if (fieldSpecification.type == SikredeType.NUMERICAL)
+            else if (fieldSpecification.type == RecordFieldType.NUMERICAL)
             {
                 preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
             }
             else
             {
-                throw new AssertionError("SikredeType was not set correctly in Sikrede specification");
+                throw new AssertionError("RecordType was not set correctly in the specification");
             }
 
             index++;
@@ -209,7 +209,7 @@ public class RecordPersister
      * Assumes the result set is pointing to a record (i.e. that next() was called at least once on the ResultSet
      * @throws SQLException
      */
-    public // FIXME: Does not fit on this call.
+    public // FIXME: This method does not fit on a "Persister" class, at least not a public method.
     Record createRecordUsingResultSet(ResultSet resultSet) throws SQLException
     {
         Preconditions.checkNotNull(resultSet);
@@ -218,16 +218,16 @@ public class RecordPersister
 
         RecordBuilder builder = new RecordBuilder(recordSpec);
 
-        for(FieldSpecification fieldSpec : recordSpec.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpec : recordSpec.getFieldSpecs())
         {
             String key = fieldSpec.name;
-            
-            if (fieldSpec.type == SikredeType.NUMERICAL)
+
+            if (fieldSpec.type == RecordFieldType.NUMERICAL)
             {
                 // TODO: Explicit check of returned type
                 builder.field(key, resultSet.getInt(key));
             }
-            else if (fieldSpec.type == SikredeType.ALFANUMERICAL)
+            else if (fieldSpec.type == RecordFieldType.ALPHANUMERICAL)
             {
                 builder.field(key, resultSet.getString(key));
             }
@@ -258,17 +258,11 @@ public class RecordPersister
         statement.setObject(2, record.get(key));
     }
 
-    public Record fetchSikredeRecordUsingCpr(String pnr) throws SQLException 
+    // FIXME: Register specific info.
+    public Record fetchSikredeRecordUsingCpr(String pnr) throws SQLException
     {
         PreparedStatement statement = createSelectStatementAsPreparedStatement(connection, "CPRnr", pnr);
         ResultSet resultSet = statement.executeQuery();
-        if(resultSet.next())
-        {
-            return createRecordUsingResultSet(resultSet);
-        }
-        else
-        {
-            return null;
-        }
+        return createRecordUsingResultSet(resultSet);
     }
 }

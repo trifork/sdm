@@ -36,6 +36,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public interface Persister
 {
 	/**

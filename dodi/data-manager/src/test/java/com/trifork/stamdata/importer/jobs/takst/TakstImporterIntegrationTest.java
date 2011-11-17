@@ -43,7 +43,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.jobs.takst.model.Doseringskode;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.Dates;
@@ -55,13 +55,13 @@ public class TakstImporterIntegrationTest
 	@After
 	public void cleanup() throws Exception
 	{
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
-		Statement stmt = con.createStatement();
+		Connection connection = new ConnectionManager().getAutoCommitConnection();
+		Statement stmt = connection.createStatement();
 
 		stmt.executeQuery("TRUNCATE TABLE LaegemiddelDoseringRef");
 		stmt.executeQuery("TRUNCATE TABLE TakstVersion");
 
-		MySQLConnectionManager.close(stmt, con);
+		ConnectionManager.closeQuietly(connection);
 	}
 
 	@Test
@@ -101,7 +101,7 @@ public class TakstImporterIntegrationTest
 		TakstDataset<Doseringskode> dataset = new TakstDataset<Doseringskode>(takst, dk, Doseringskode.class);
 		takst.addDataset(dataset, Doseringskode.class);
 
-		Connection con = MySQLConnectionManager.getAutoCommitConnection();
+		Connection con = new ConnectionManager().getAutoCommitConnection();
 
 		AuditingPersister persister = new AuditingPersister(con);
 		

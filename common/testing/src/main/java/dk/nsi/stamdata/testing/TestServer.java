@@ -25,10 +25,15 @@
 package dk.nsi.stamdata.testing;
 
 import java.io.File;
+import java.net.URL;
 
+import org.junit.Assert;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
+
+import static java.lang.String.format;
+import static org.junit.Assert.assertTrue;
 
 
 public class TestServer
@@ -52,9 +57,12 @@ public class TestServer
         SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(port);
 
-        String rootDir = new File(".").getAbsolutePath();
+        File war = new File("." , warPath);
+        Assert.assertTrue(new File(war, "WEB-INF/web.xml").exists());
+        System.out.println("webapp: " + war.getAbsolutePath());
+        
+        context.setWar(war.getAbsolutePath());
 
-        context.setWar(rootDir + "/" + warPath);
         context.setContextPath(contextPath);
         server.setHandler(context);
         server.addConnector(connector);
@@ -102,5 +110,10 @@ public class TestServer
 
         server.destroy();
         server = null;
+    }
+
+    public void join() throws InterruptedException
+    {
+        server.join();
     }
 }

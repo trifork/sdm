@@ -26,9 +26,15 @@ package com.trifork.stamdata.importer.jobs.yderregister;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
+import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
+import com.trifork.stamdata.importer.parsers.Parser;
+import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.Parsers;
+import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.importer.persistence.Persister;
 import com.trifork.stamdata.persistence.RecordPersister;
 
@@ -39,70 +45,35 @@ import org.joda.time.format.ISODateTimeFormat;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
+import java.sql.Connection;
 import java.util.List;
 import java.util.Set;
 
 import static java.lang.String.format;
 
 
-public class YderregisterParser implements FileParser
+@ParserInformation(id = "yderregister", name = "Yderregisteret")
+public class YderregisterParser implements Parser
 {
     private static final String KEY_STORE_VERSION_KEY = "version";
     private static final DateTimeFormatter VERSION_DATE_FORMAT = ISODateTimeFormat.basicDate();
 
 	private static final List<String> REQUIRED_FILE_EXTENSIONS = ImmutableList.of("K05", "K40", "K45", "K1025", "K5094");
 
-    @Override
-	public String getIdentifier()
-	{
-        // WARNING: Be careful not to change this after the first run.
-        // If you do this, you will have to change any external reference
-        // to it too. Such as mentions in the database.
-        //
-		return "yderregister";
-	}
+    private final KeyValueStore keyValueStore;
+
+    @Inject
+    YderregisterParser(KeyValueStore keyValueStore)
+    {
+        this.keyValueStore = keyValueStore;
+    }
 
 	@Override
-	public String getHumanName()
+	public void process(File input, Connection connection, Instant transactionTime) throws Exception
 	{
-		return "Yderregister Parser";
-	}
-
-    @Override
-    public boolean validateInputStructure(File[] input)
-	{
-        // FIXME: The original implementation of this class requires
-        // the presence of all the file in REQUIRED_FILE_EXTENSIONS.
-        // It seems however that there only are records in the 'K05'.
+        // Make sure that all the required file are there.
         //
-        // This class could be considerable easier to understand if
-        // we only have to check the single file.
-
-		Set<String> found = Sets.newHashSet();
-
-		for (File file : input)
-		{
-			String filename = file.getName();
-            
-			if (filename.indexOf('.') != filename.lastIndexOf('.'))
-			{
-                int extensionStart = filename.indexOf('.') + 1;
-                int extensionEnd = filename.lastIndexOf('.');
-                String extension = filename.substring(extensionStart, extensionEnd);
-
-                boolean added = found.add(extension);
-
-                if (!added) throw new ParserException(format("Multiple files with extension '%s'.", extension));
-			}
-		}
-
-		return found.containsAll(REQUIRED_FILE_EXTENSIONS);
-	}
-
-	@Override
-	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
-	{
-        Instant transactionTime = Instant.now();
+        validateInputStructure(input);
 
 		String newVersion = extractVersionFromFileSet(input);
 
@@ -116,29 +87,56 @@ public class YderregisterParser implements FileParser
 
         // TODO: Ensure the new version has the correct format: yyyyMMdd
         //
-		if (newVersion.compareTo(prevVersion) > 0)
-		{
-			throw new ParserException(format("The received version '%s' of the register is not in sequence. Current version is '%s'.", newVersion, prevVersion));
-		}
+		if (newVersion.compareTo(prevVersion) > 0) throw new OutOfSequenceException(prevVersion, newVersion);
 
-		keyValueStore.put(KEY_STORE_VERSION_KEY, prevVersion);
+		keyValueStore.put(KEY_STORE_VERSION_KEY, newVersion);
 
-        // Do the actual import.
+        // Do the actual importing.
         //
-        RecordPersister newPersister = new RecordPersister(null, persister.getConnection());
+        RecordPersister newPersister = new RecordPersister(null, connection);
         SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
 
-        for (File file : input)
+        for (File file : input.listFiles())
         {
-	        parser.parse(file, new YderRegisterSaxEventHandler(newPersister, transactionTime));
+	        parser.parse(file, new YderregisterSaxEventHandler(newPersister, transactionTime));
 	    }
     }
 
-    private String extractVersionFromFileSet(File[] input)
+    public boolean validateInputStructure(File input)
+    {
+        // FIXME: The implementation of this class requires
+        // the presence of all the file in REQUIRED_FILE_EXTENSIONS.
+        // It seems however that there only are records in the 'K05'.
+        //
+        // This class could be considerable easier to understand if
+        // we only have to check the single file.
+
+        Set<String> found = Sets.newHashSet();
+
+        for (File file : input.listFiles())
+        {
+            String filename = file.getName();
+
+            if (filename.indexOf('.') != filename.lastIndexOf('.'))
+            {
+                int extensionStart = filename.indexOf('.') + 1;
+                int extensionEnd = filename.lastIndexOf('.');
+                String extension = filename.substring(extensionStart, extensionEnd);
+
+                boolean added = found.add(extension);
+
+                if (!added) throw new ParserException(format("Multiple files with extension '%s'.", extension));
+            }
+        }
+
+        return found.containsAll(REQUIRED_FILE_EXTENSIONS);
+    }
+
+    private String extractVersionFromFileSet(File input)
     {
         String version = null;
         
-        for (File file : input)
+        for (File file : input.listFiles())
         {
             String versionInFilename = file.getName().substring(10, 15);
 

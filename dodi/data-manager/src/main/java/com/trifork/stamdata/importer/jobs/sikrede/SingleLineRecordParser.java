@@ -24,11 +24,15 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
+
+import static com.trifork.stamdata.Preconditions.checkArgument;
+import static java.lang.String.format;
 
 public class SingleLineRecordParser
 {
@@ -41,24 +45,22 @@ public class SingleLineRecordParser
     
     public Record parseLine(String line)
     {
-        if (line.length() != recordSpecification.acceptedTotalLineLength())
-        {
-            throw new IllegalArgumentException("Supplied line had length " + line.length() + " but only lines of length " + recordSpecification.acceptedTotalLineLength() + " are accepted");
-        }
-        
+        checkArgument(line.length() == recordSpecification.acceptedTotalLineLength(),
+                format("Supplied line had length %s but only lines of length %d are accepted", line.length(), recordSpecification.acceptedTotalLineLength()));
+
         RecordBuilder builder = new RecordBuilder(recordSpecification);
 
         int offset = 0;
 
-        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
             String subString = line.substring(offset, offset + fieldSpecification.length);
             
-            if (fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            if (fieldSpecification.type == RecordFieldType.ALPHANUMERICAL)
             {
                 builder.field(fieldSpecification.name, subString.trim());
             }
-            else if (fieldSpecification.type == SikredeType.NUMERICAL)
+            else if (fieldSpecification.type == RecordFieldType.NUMERICAL)
             {
                 // This will potentially throw a runtime exception on bad input.
                 //
@@ -66,7 +68,7 @@ public class SingleLineRecordParser
             }
             else
             {
-                throw new AssertionError("Should match exactly one of the types alfanumerical or numerical.");
+                throw new AssertionError("Should match exactly one of the types alphanumerical or numerical.");
             }
             
             offset += fieldSpecification.length;

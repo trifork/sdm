@@ -39,7 +39,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 
@@ -55,7 +55,7 @@ public class AutorisationParserIntegrationTest
 	@Before
 	public void setUp() throws Exception
 	{
-		connection = MySQLConnectionManager.getConnection();
+		connection = new ConnectionManager().getConnection();
 	}
 
 	@After

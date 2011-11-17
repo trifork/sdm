@@ -25,6 +25,7 @@
 
 package com.trifork.stamdata;
 
+// TODO: This class should instead return a, possibly empty, list of errors.
 public interface ComponentMonitor
 {
     /**

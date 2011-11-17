@@ -26,24 +26,24 @@ package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static org.junit.Assert.*;
 
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
 
-public class SikredeSqlSchemaCreatorTest {
-
+public class SikredeSqlSchemaCreatorTest
+{
     private RecordSpecification exampleRecordSpecification;
     
     @Before
     public void createExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.newSikredeFields(
-                "Foo", SikredeType.ALFANUMERICAL, 10,
-                "Bar", SikredeType.NUMERICAL, 5,
-                "Baz", SikredeType.ALFANUMERICAL, 42);
+        exampleRecordSpecification = RecordSpecification.createSpec(
+                "Foo", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 10,
+                "Bar", RecordSpecification.RecordFieldType.NUMERICAL, 5,
+                "Baz", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 42);
     }
     
     @Test
@@ -58,6 +58,7 @@ public class SikredeSqlSchemaCreatorTest {
                 "ValidFrom DateTime NOT NULL," +
                 "ValidTo DateTime" + 
                 ") ENGINE=InnoDB COLLATE=utf8_bin;";
+
         String result = RecordMySQLTableGenerator.createSqlSchema(exampleRecordSpecification);
         
         assertEquals(expected, result.replaceAll("\n", "").replaceAll("\t", ""));
@@ -66,6 +67,8 @@ public class SikredeSqlSchemaCreatorTest {
     @Test
     public void testPrintOfActualSchema()
     {
-        System.out.println(RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON));
+        // FIXME: What is this actually testing?
+        //
+        System.out.println(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
     }
 }

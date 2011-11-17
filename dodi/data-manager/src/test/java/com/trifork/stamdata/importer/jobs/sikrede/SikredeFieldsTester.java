@@ -24,55 +24,54 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableList;
-
+import com.google.common.collect.Iterables;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import org.junit.Test;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 // FIXME: These tests should be moved to common
-public class SikredeFieldsTester {
-
+public class SikredeFieldsTester
+{
     @Test
     public void testCorrectNumberOfFields() 
     {
-        ImmutableList<FieldSpecification> fieldSpecs = RecordSpecification.SIKREDE_FIELDS_SINGLETON.getFieldSpecificationsInCorrectOrder();
-        assertEquals(48, fieldSpecs.size());
+        Iterable<FieldSpecification> fieldSpecs = SikredeRecordSpecs.ENTRY_RECORD_SPEC.getFieldSpecs();
+        assertThat(Iterables.size(fieldSpecs), is(48));
     }
 
     @Test
     public void testCorrectNumberOfAlfanumericalFields() 
     {
-        ImmutableList<FieldSpecification> fieldSpecs = RecordSpecification.SIKREDE_FIELDS_SINGLETON.getFieldSpecificationsInCorrectOrder();
+        Iterable<FieldSpecification> fieldSpecs = SikredeRecordSpecs.ENTRY_RECORD_SPEC.getFieldSpecs();
         
-        int alfanumericalFields = 0;
+        int alphanumericalFields = 0;
+
         for(FieldSpecification spec : fieldSpecs)
         {
-            if(spec.type == SikredeType.ALFANUMERICAL)
+            if(spec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
             {
-                alfanumericalFields++;
+                alphanumericalFields++;
             }
         }
         
-        assertEquals(47, alfanumericalFields);
+        assertEquals(47, alphanumericalFields);
     }
     
     @Test
     public void testCorrectNumberOfNumericalFields() 
     {
-        ImmutableList<FieldSpecification> fieldSpecs = RecordSpecification.SIKREDE_FIELDS_SINGLETON.getFieldSpecificationsInCorrectOrder();
+        Iterable<FieldSpecification> fieldSpecs = SikredeRecordSpecs.ENTRY_RECORD_SPEC.getFieldSpecs();
         
         int numericalFields = 0;
         for(FieldSpecification spec : fieldSpecs)
         {
-            if(spec.type == SikredeType.NUMERICAL)
+            if(spec.type == RecordFieldType.NUMERICAL)
             {
                 numericalFields++;
             }
@@ -84,31 +83,31 @@ public class SikredeFieldsTester {
     @Test
     public void testCorrectAcceptedTotalLineLength()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.newSikredeFields(
-                "Foo", SikredeType.NUMERICAL, 10,
-                "Bar", SikredeType.ALFANUMERICAL, 32);
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec(
+                "Foo", RecordFieldType.NUMERICAL, 10,
+                "Bar", RecordFieldType.ALPHANUMERICAL, 32);
         assertEquals(42, exampleRecordSpecification.acceptedTotalLineLength());
     }
     
     @Test
     public void testCorrectAcceptedTotalLineLengthForSingleton()
     {
-        assertEquals(629, RecordSpecification.SIKREDE_FIELDS_SINGLETON.acceptedTotalLineLength());
+        assertEquals(629, SikredeRecordSpecs.ENTRY_RECORD_SPEC.acceptedTotalLineLength());
     }
     
     @Test
     public void testConformsToSchemaSpecification()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.newSikredeFields(
-                "Foo", SikredeType.NUMERICAL, 10,
-                "Bar", SikredeType.ALFANUMERICAL, 32);
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec(
+                "Foo", RecordFieldType.NUMERICAL, 10,
+                "Bar", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 32);
 
-        Record correctValues = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "12345678901234567890123456789012");
-        Record correctValuesWhereBarIsShorter = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "123456789012345678901234567890");
-        Record missingFoo = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Bar", "12345678901234567890123456789012");
-        Record fooIsNotNumerical = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", "Baz", "Bar", "12345678901234567890123456789012");
-        Record barIsTooLong = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
-        Record containsUnknownKey = SikredeRecordStringGenerator.sikredeRecordFromKeysAndValues("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
+        Record correctValues = RecordGenerator.createRecord("Foo", 42, "Bar", "12345678901234567890123456789012");
+        Record correctValuesWhereBarIsShorter = RecordGenerator.createRecord("Foo", 42, "Bar", "123456789012345678901234567890");
+        Record missingFoo = RecordGenerator.createRecord("Bar", "12345678901234567890123456789012");
+        Record fooIsNotNumerical = RecordGenerator.createRecord("Foo", "Baz", "Bar", "12345678901234567890123456789012");
+        Record barIsTooLong = RecordGenerator.createRecord("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
+        Record containsUnknownKey = RecordGenerator.createRecord("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
         
         assertTrue(exampleRecordSpecification.conformsToSpecifications(correctValues));
         assertTrue(exampleRecordSpecification.conformsToSpecifications(correctValuesWhereBarIsShorter));

@@ -28,7 +28,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import com.google.common.base.Preconditions;
-import com.trifork.stamdata.importer.parsers.dkma.ParserException;
+import com.trifork.stamdata.importer.parsers.ParserException;
 
 public class Files
 {

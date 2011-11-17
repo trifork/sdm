@@ -35,6 +35,7 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import dk.nsi.stamdata.security.WhitelistService;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
@@ -203,7 +204,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     private Record getSikredeRecord(String pnr) throws SQLException 
     {
         // FIXME: Inject the persister instead, remove dependency on session and connection()
-        RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, session.connection());
+        RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
         Record sikredeRecord = recordPersister.fetchSikredeRecordUsingCpr(pnr);
         return sikredeRecord;
     }

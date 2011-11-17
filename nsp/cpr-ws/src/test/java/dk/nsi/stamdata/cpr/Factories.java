@@ -24,6 +24,7 @@
  */
 package dk.nsi.stamdata.cpr;
 
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
@@ -198,7 +199,7 @@ public class Factories
 
     public static Record createSikredeRecordFor(Person person, Yderregister register, String groupCode, DateTime ikraftDato)
     {
-        RecordBuilder builder = new RecordBuilder(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        RecordBuilder builder = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         builder
             .field("CPRnr", person.getCpr())
             .field("SYdernr", Integer.toString(register.getNummer()))

@@ -40,7 +40,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.trifork.stamdata.importer.config.MySQLConnectionManager;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 import com.trifork.stamdata.importer.util.Dates;
 
@@ -60,7 +60,7 @@ public class DataLayerIntegrationTest
     @Before
     public void setUp() throws Exception
     {
-        connection = MySQLConnectionManager.getAutoCommitConnection();
+        connection = new ConnectionManager().getAutoCommitConnection();
 
         statement = connection.createStatement();
         statement.execute("truncate table TakstVersion");

@@ -1,20 +1,16 @@
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
-import ch.qos.logback.core.ConsoleAppender
-import ch.qos.logback.core.status.OnConsoleStatusListener
 import ch.qos.logback.core.rolling.RollingFileAppender
-import static ch.qos.logback.classic.Level.INFO
-import static ch.qos.logback.core.spi.FilterReply.ACCEPT
-import static ch.qos.logback.core.spi.FilterReply.DENY
 import ch.qos.logback.core.rolling.TimeBasedRollingPolicy
+import static ch.qos.logback.classic.Level.INFO
 
 def LOGS_DIR = System.getProperty("jboss.server.log.dir")
-def LOG_FILE = "stamdata-data-manager-ws.log"
+def LOG_FILE = "stamdata-data-manager.log"
 
 appender("ROLLING", RollingFileAppender) {
     file = "${LOGS_DIR}/${LOG_FILE}"
 
     encoder(PatternLayoutEncoder) {
-        pattern = "%d [%-4level] %msg [thread=%thread, %mdc]%n"
+        pattern = "%d [%-4level] %msg [thread=%thread] [%mdc]%n"
     }
 
     rollingPolicy(TimeBasedRollingPolicy) {

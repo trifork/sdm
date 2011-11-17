@@ -38,6 +38,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -69,7 +70,6 @@ import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
 
@@ -124,7 +124,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     @Before
     public void setupDatabase() throws SQLException
     {
-        String sqlSchema = RecordMySQLTableGenerator.createSqlSchema(RecordSpecification.SIKREDE_FIELDS_SINGLETON);
+        String sqlSchema = RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         session.beginTransaction();
         Connection connection = session.connection();
         Statement statement = connection.createStatement();
@@ -283,8 +283,8 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         for (Record sikredeRecord: sikredeRecords)
         {
             // RecordPersister should be injected
-            RecordPersister recordPersister = new RecordPersister(RecordSpecification.SIKREDE_FIELDS_SINGLETON, session.connection());
-            recordPersister.persistRecordWithValidityDate(sikredeRecord, "CPRnr", new Instant(Factories.YESTERDAY));
+            RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
+            recordPersister.persist(sikredeRecord, "CPRnr", new Instant(Factories.YESTERDAY));
         }
 
         t.commit();

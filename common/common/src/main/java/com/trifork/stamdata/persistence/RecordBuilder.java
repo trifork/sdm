@@ -28,7 +28,7 @@ import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.SikredeType;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 public class RecordBuilder
 {
@@ -43,18 +43,18 @@ public class RecordBuilder
     
     public RecordBuilder field(String fieldName, int value)
     {
-        return field(fieldName, value, SikredeType.NUMERICAL);
+        return field(fieldName, value, RecordSpecification.RecordFieldType.NUMERICAL);
     }
     
     public RecordBuilder field(String fieldName, String value)
     {
-        return field(fieldName, value, SikredeType.ALFANUMERICAL);
+        return field(fieldName, value, RecordSpecification.RecordFieldType.ALPHANUMERICAL);
     }
     
-    private RecordBuilder field(String fieldName, Object value, SikredeType sikredeType)
+    private RecordBuilder field(String fieldName, Object value, RecordSpecification.RecordFieldType recordFieldType)
     {
         checkNotNull(fieldName);
-        checkArgument(getFieldType(fieldName) == sikredeType, "Field " + fieldName + " is not " + sikredeType);
+        checkArgument(getFieldType(fieldName) == recordFieldType, "Field " + fieldName + " is not " + recordFieldType);
         
         record = record.setField(fieldName, value);
         
@@ -75,15 +75,15 @@ public class RecordBuilder
     
     public Record addDummyFieldsAndBuild()
     {
-        for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecs())
         {
             if(!record.containsKey(fieldSpecification.name))
             {
-            if(fieldSpecification.type == SikredeType.ALFANUMERICAL)
+            if(fieldSpecification.type == RecordFieldType.ALPHANUMERICAL)
             {
                 record = record.setField(fieldSpecification.name, "");
             }
-            else if(fieldSpecification.type == SikredeType.NUMERICAL)
+            else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
                 record = record.setField(fieldSpecification.name, 0);
             }
@@ -96,9 +96,9 @@ public class RecordBuilder
         return build();
     }
     
-    private SikredeType getFieldType(String fieldName)
+    private RecordSpecification.RecordFieldType getFieldType(String fieldName)
     {
-        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecificationsInCorrectOrder())
+        for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
             if (fieldSpecification.name.equals(fieldName))
             {

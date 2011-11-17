@@ -41,6 +41,7 @@ import java.io.OutputStreamWriter;
  *
  * @author Jan Buchholdt <jbu@trifork.com>
  */
+@Deprecated
 public class SplitCPRFile
 {
 	private static final String END_RECORD = "999";
