@@ -26,22 +26,21 @@
 
 package com.trifork.stamdata.importer.config;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Jan Buchholdt <jbu@trifork.com>
  */
-public class MySQLConnectionManager
+public class ConnectionManager
 {
-	private static final Logger logger = LoggerFactory.getLogger(MySQLConnectionManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 	
-	public static Connection getConnection() throws SQLException
+	public Connection getConnection() throws SQLException
 	{
 		try
 		{
@@ -58,58 +57,83 @@ public class MySQLConnectionManager
 		return connection;
 	}
 
-	public static Connection getAutoCommitConnection()
+    public boolean isAvailable()
+    {
+        Connection connection = null;
+
+        try
+        {
+            connection = getAutoCommitConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT 1");
+            rs.next();
+            return 1 == rs.getInt(1);
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        finally
+        {
+            closeQuietly(connection);
+        }
+    }
+
+	public Connection getAutoCommitConnection()
 	{
 		try
 		{
-			Connection con = getConnection();
-			con.setAutoCommit(true);
-			return con;
+			Connection connection = getConnection();
+			connection.setAutoCommit(true);
+
+			return connection;
 		}
 		catch (Exception e)
 		{
-			logger.error("Error creating MySQL database connection", e);
+			throw new RuntimeException("Could not create database connection.", e);
 		}
-		
-		return null;
 	}
 
-	public static String getDBName()
+	public String getDBName()
 	{
 		return Configuration.getString("db.database");
 	}
 
 	public static void close(Connection connection)
 	{
+        Preconditions.checkNotNull(connection, "connection");
+
 		try
 		{
-			if (connection != null)
-			{
-				connection.close();
-			}
+            connection.close();
 		}
 		catch (Exception e)
 		{
-			logger.error("Could not close connection", e);
+			throw new RuntimeException("Could not close connection.", e);
 		}
 	}
 
-	public static void close(Statement statement, Connection connection)
+	public static void closeQuietly(@Nullable Connection connection)
 	{
 		try
 		{
-			if (statement != null)
-			{
-				statement.close();
-			}
+            if (connection != null) close(connection);
 		}
 		catch (Exception e)
 		{
-			logger.error("Could not close db statement.", e);
-		}
-		finally
-		{
-			close(connection);
+            // Ignore
 		}
 	}
+
+    public static void rollbackQuietly(@Nullable Connection connection)
+    {
+        try
+        {
+            if (connection != null) connection.rollback();
+        }
+        catch (SQLException e)
+        {
+            // Ignore
+        }
+    }
 }
