@@ -39,24 +39,11 @@ import com.trifork.stamdata.Preconditions;
 
 public class Dates
 {
-    public static final DateTimeZone DANISH_TIMEZONE = DateTimeZone.forID("Europe/Copenhagen");
-    
-	public static final Date THE_BEGINNING_OF_TIME = toDate(0,0,0);
 	public static final Date THE_END_OF_TIME = toDate(2999, 12, 31);
 
+    // FIXME: SimpleDateFormat is not thread safe! Use DateTimeFormatter instead.
 	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
 	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
-
-	/**
-	 * @param long1 a date string with the format: yyyyMMdd.
-	 * @return a String representing the ISO 8601 date without time zone.
-	 * @throws ParseException 
-	 */
-	public static Date toISO8601date(String dateString) throws ParseException
-	{
-		SimpleDateFormat informat = new SimpleDateFormat("yyyyMMdd");
-		return informat.parse(dateString);
-	}
 	
 	public static String toDateStringISO8601(Date date)
     {
@@ -96,6 +83,7 @@ public class Dates
 		return cal.getTime();
 	}
 
+    @Deprecated
 	public static Date toCalendar(java.sql.Date date)
 	{
 		if (date == null) return null;
@@ -105,7 +93,8 @@ public class Dates
 		return cal.getTime();
 	}
 
-	public static String toMySQLdate(Date date)
+    @Deprecated
+	public static String toSqlDate(Date date)
 	{
 		Preconditions.checkNotNull(date);
 
