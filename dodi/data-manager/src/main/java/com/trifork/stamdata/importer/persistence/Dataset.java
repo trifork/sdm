@@ -40,6 +40,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public class Dataset<T extends TemporalEntity>
 {
     private static final Logger logger = LoggerFactory.getLogger(Dataset.class);

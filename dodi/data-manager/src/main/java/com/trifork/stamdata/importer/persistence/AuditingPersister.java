@@ -46,6 +46,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public class AuditingPersister implements Persister
 {
 	private static final Logger logger = LoggerFactory.getLogger(AuditingPersister.class);

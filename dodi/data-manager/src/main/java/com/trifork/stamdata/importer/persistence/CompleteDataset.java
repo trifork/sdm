@@ -39,6 +39,7 @@ import com.trifork.stamdata.models.TemporalEntity;
  * 
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public class CompleteDataset<T extends TemporalEntity> extends Dataset<T>
 {
 	private final Date ValidFrom;

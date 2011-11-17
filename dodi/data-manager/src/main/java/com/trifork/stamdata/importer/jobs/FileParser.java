@@ -29,10 +29,11 @@ import java.io.File;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.persistence.Persister;
 
+@Deprecated // Use Parser instead.
 public interface FileParser
 {
 	/**
-	 * @see Job#getIdentifier()
+	 * @see Job#identifier()
 	 */
 	String getIdentifier();
 	

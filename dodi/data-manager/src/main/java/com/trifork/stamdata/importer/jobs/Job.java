@@ -29,6 +29,7 @@ package com.trifork.stamdata.importer.jobs;
 import org.joda.time.DateTime;
 
 
+@Deprecated
 public interface Job extends Runnable
 {
 	/**

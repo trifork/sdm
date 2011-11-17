@@ -46,6 +46,7 @@ import com.trifork.stamdata.importer.config.MySQLConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 
+@Deprecated
 public class FileParserJob implements Job
 {
 	private static final Logger logger = LoggerFactory.getLogger(FileParserJob.class);

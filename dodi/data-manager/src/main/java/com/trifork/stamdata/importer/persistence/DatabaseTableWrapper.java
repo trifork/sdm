@@ -45,6 +45,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public class DatabaseTableWrapper<T extends TemporalEntity>
 {
     private final PreparedStatement insertRecordStmt;

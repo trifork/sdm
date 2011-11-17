@@ -37,6 +37,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
  */
+@Deprecated
 public abstract class AbstractStamdataEntity implements TemporalEntity
 {
 	public Object getKey()
