@@ -26,29 +26,42 @@
 
 package com.trifork.stamdata.importer.jobs;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.trifork.stamdata.importer.config.OldParserContext;
+import com.trifork.stamdata.importer.parsers.ParserScheduler;
+
+import javax.inject.Named;
+import java.io.File;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.google.inject.Inject;
-
-
+@Deprecated
 public class JobManager
 {
-	private final List<Job> jobs;
-	private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final Set<Job> jobs = Sets.newHashSet();
 
-	@Inject
-	JobManager(List<Job> jobs) throws Exception
+    private final File rootDir;
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+    private final ParserScheduler scheduler;
+
+    @Inject
+	JobManager(Set<OldParserContext> configurations, @Named("rootDir") String rootDir, ParserScheduler scheduler) throws Exception
 	{
-		// Clone the set of jobs.
+        this.scheduler = scheduler;
 
-		this.jobs = Collections.synchronizedList(new ArrayList<Job>(jobs));
-	}
+        // Clone the set of jobs.
+        //
+        this.rootDir = new File(rootDir);
+
+        for (OldParserContext config : configurations)
+		{
+            FileParserJob job = new FileParserJob(this.rootDir, config.parserClass, config.minimumImportFrequency);
+            jobs.add(job);
+        }
+    }
 
 	public void start() throws Exception
 	{
@@ -58,8 +71,8 @@ public class JobManager
 
 		// Schedule all the jobs.
 
-		for (Job job : jobs)
-		{
+        for (Job job : jobs)
+        {
 			executor.scheduleWithFixedDelay(job, 0, 1, TimeUnit.SECONDS);
 		}
 	}
@@ -89,8 +102,8 @@ public class JobManager
 		return false;
 	}
 
-	public Iterator<Job> getJobIterator()
+	public Iterable<Job> getJobIterator()
 	{
-		return jobs.iterator();
+		return jobs;
 	}
 }
