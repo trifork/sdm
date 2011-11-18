@@ -27,19 +27,19 @@ package com.trifork.stamdata.importer.jobs.yderregister;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;
 
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.Instant;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import javax.inject.Inject;
 
 import static java.lang.String.format;
 
@@ -49,10 +49,11 @@ import static java.lang.String.format;
 public class YderregisterSaxEventHandler extends DefaultHandler
 {
     private static final String SUPPORTED_INTERFACE_VERSION = "S1040025";
-    private static final String EXPECTED_RECIPIENT_ID = "B053";
+    private static final String EXPECTED_RECIPIENT_ID = "F053";
 
     protected final DateFormat datoFormatter = new SimpleDateFormat("yyyyMMdd");
 
+    private static final String ROOT_QNAME = "etds1040025XML";
     private static final String START_QNAME = "Start";
     private static final String END_QNAME = "Slut";
     private static final String YDER_QNAME = "Yder";
@@ -61,7 +62,8 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private final RecordPersister persister;
     private long recordCount = 0;
 
-    public YderregisterSaxEventHandler(RecordPersister persister)
+    @Inject
+    YderregisterSaxEventHandler(RecordPersister persister)
     {
         this.persister = persister;
     }
@@ -84,6 +86,10 @@ public class YderregisterSaxEventHandler extends DefaultHandler
         else if (END_QNAME.equals(qName))
         {
             parseEndRecord(attributes, recordCount);
+        }
+        else if (ROOT_QNAME.equals(qName))
+        {
+            // ignore the root
         }
         else
         {
@@ -175,22 +181,5 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private String removeLeadingZeroes(String valueToStrip)
     {
         return valueToStrip.replaceFirst("^0+(?!$)", "");
-    }
-
-    public Date getDateFromOpgDato(String opgDato)
-    {
-        // TODO (thb): Use a SimpleDateFormat here. Why would you return null? Shouldn't it throw an exception. Ask Jan Buchholdt.
-
-        try
-        {
-            int year = new Integer(opgDato.substring(0, 4));
-            int month = new Integer(opgDato.substring(4, 6));
-            int date = new Integer(opgDato.substring(6, 8));
-            return new GregorianCalendar(year, month - 1, date).getTime();
-        }
-        catch (NumberFormatException e)
-        {
-            return null;
-        }
     }
 }

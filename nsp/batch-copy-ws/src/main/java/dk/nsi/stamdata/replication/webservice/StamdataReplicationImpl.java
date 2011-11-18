@@ -36,12 +36,13 @@ import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
 
-import com.google.common.collect.Lists;
 import com.trifork.stamdata.persistence.RecordFetcher;
+import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 
-import org.hibernate.Session;
+import dk.nsi.stamdata.views.sor.Yder;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.slf4j.Logger;
@@ -52,10 +53,7 @@ import org.w3c.dom.Document;
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordMetadata;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
@@ -84,22 +82,17 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final ClientDao clients;
 
     private final AtomFeedWriter outputWriter;
-
-    // FIXME: Session is only needed to create a RecordPersister and it's pretty hacky at that, as we just need a connection
-    // The RecordPersister should be injected instead!
-    private Session session;
     private final Provider<RecordFetcher> fetchers;
 
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Session session, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
     {
         this.cvr = cvr;
         this.dao = recordDao;
         this.clients = clientDao;
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
-        this.session = session;
         this.fetchers = fetchers;
     }
     
@@ -112,7 +105,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // During the transition to the new architecture we will have
             // to handle some registers differently.
             //
-            if (isSikredeRegister(parameters))
+            if (isRecordRegister(parameters))
             {
                 return handleRequestUsingRecords(wsseHeader, medcomHeader, parameters);
             }
@@ -136,9 +129,11 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
     }
 
-    private boolean isSikredeRegister(ReplicationRequestType parameters)
+    private boolean isRecordRegister(ReplicationRequestType parameters)
     {
-        return "sikrede".equals(parameters.getRegister()) && "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1;
+        return ("sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
@@ -169,13 +164,24 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // Fetch the records from the database and
             // fill the output structure.
             //
-            Document feedDocument = createSikredeFeed(offset, limit);
+            RecordSpecification recordSpecification = null;
+            if("sikrede".equals(parameters.getRegister()))
+            {
+                recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
+            }
+            else if ("yder".equals(parameters.getDatatype()))
+            {
+                recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
+            }
+            else
+            {
+                recordSpecification = YderregisterRecordSpecs.PERSON_RECORD_TYPE;
+            }
+            Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
     
             // Construct the output container.
             //
             ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
-            
-            System.out.println("Feed document: " + feedDocument.getFirstChild().getLocalName());
             
             response.setAny(feedDocument.getFirstChild());
             
@@ -296,21 +302,19 @@ public class StamdataReplicationImpl implements StamdataReplication {
         return body;
     }
     
-    private Document createSikredeFeed(HistoryOffset offset, int limit) throws SQLException
+    private Document createFeed(RecordSpecification spec, ReplicationRequestType parameters, HistoryOffset offset, int limit) throws SQLException
     {
-        RecordXmlGenerator xmlGenerator = new RecordXmlGenerator(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+        RecordXmlGenerator xmlGenerator = new RecordXmlGenerator(spec);
         RecordFetcher fetcher = this.fetchers.get();
-
-        // FIXME: Make work for Yderregister.
 
         long pid = Long.parseLong(offset.getRecordID());
         Instant modifiedDate = new Instant(offset.getModifiedDate());
         
-        List<RecordMetadata> records = fetcher.fetchSince(SikredeRecordSpecs.ENTRY_RECORD_SPEC, pid, modifiedDate, limit);
+        List<RecordMetadata> records = fetcher.fetchSince(spec, pid, modifiedDate, limit);
 
         try
         {
-            return xmlGenerator.generateXml(records, "sikrede", "sikrede", DateTime.now());
+            return xmlGenerator.generateXml(records, parameters.getRegister(), parameters.getDatatype(), DateTime.now());
         }
         catch (TransformerException e)
         {

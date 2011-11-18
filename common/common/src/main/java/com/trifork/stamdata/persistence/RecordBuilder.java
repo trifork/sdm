@@ -70,7 +70,7 @@ public class RecordBuilder
     private RecordBuilder field(String fieldName, Object value, RecordSpecification.RecordFieldType recordFieldType)
     {
         checkNotNull(fieldName);
-        checkArgument(getFieldType(fieldName) == recordFieldType, "Field " + fieldName + " is not " + recordFieldType);
+        checkArgument(value == null || getFieldType(fieldName) == recordFieldType, "Field " + fieldName + " is not " + recordFieldType);
         
         record = record.put(fieldName, value);
         
@@ -97,7 +97,7 @@ public class RecordBuilder
             {
             if(fieldSpecification.type == RecordFieldType.ALPHANUMERICAL)
             {
-                record = record.put(fieldSpecification.name, "");
+                record = record.put(fieldSpecification.name, "D");
             }
             else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {

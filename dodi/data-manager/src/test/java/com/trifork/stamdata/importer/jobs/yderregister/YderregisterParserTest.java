@@ -28,19 +28,24 @@ import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import javax.inject.Provider;
+import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
-@Ignore
 public class YderregisterParserTest
 {
     @Rule public TemporaryFolder folder = new TemporaryFolder();
@@ -48,6 +53,9 @@ public class YderregisterParserTest
     private KeyValueStore keyValueStore;
     private YderregisterParser parser;
     private RecordPersister persister;
+    private Provider<YderregisterSaxEventHandler> saxHandlerProvider;
+    private YderregisterSaxEventHandler saxHandler;
+    private SAXParser saxParser;
 
     @Before
     public void setUp() throws Exception
@@ -55,7 +63,13 @@ public class YderregisterParserTest
         keyValueStore = mock(KeyValueStore.class);
         persister = mock(RecordPersister.class);
         
-        parser = new YderregisterParser(keyValueStore);
+        saxHandlerProvider = mock(Provider.class);
+        saxHandler = mock(YderregisterSaxEventHandler.class);
+        saxParser = mock(SAXParser.class);
+
+        when(saxHandlerProvider.get()).thenReturn(saxHandler);
+        
+        parser = new YderregisterParser(keyValueStore, saxParser, saxHandlerProvider);
     }
 
     @Test(expected = OutOfSequenceException.class)
@@ -76,10 +90,16 @@ public class YderregisterParserTest
         parser.process(fileSet, persister);
     }
 
-    @Test
-    public void testAFileSetWithMultipleVersionNumbersResultsInAParserException()
+    @Test(expected = ParserException.class)
+    public void testAFileSetWithMultipleVersionNumbersResultsInAParserException() throws Exception
     {
+        File fileSet = createFileSet("00001");
+        File fileWithOtherVersion = fileSet.listFiles()[0];
+        String newFileName = fileWithOtherVersion.getAbsolutePath().replace("00001", "00002");
 
+        FileUtils.moveFile(fileWithOtherVersion, new File(newFileName));
+
+        parser.process(fileSet, persister);
     }
 
     @Test(expected = ParserException.class)
@@ -96,12 +116,36 @@ public class YderregisterParserTest
     {
         String version = "00031";
 
-        File fileSet = createFileSet("00031");
+        File fileSet = createFileSet(version);
 
         parser.process(fileSet, persister);
 
         verify(keyValueStore).put("version", version);
     }
+
+    @Test
+    public void testThatAllFilesArePassedToTheParser() throws Exception
+    {
+        File fileSet = createFileSet("00001");
+
+        parser.process(fileSet, persister);
+
+        for (File file :fileSet.listFiles())
+        {
+            verify(saxParser).parse(file, saxHandler);
+        }
+    }
+
+    @Test(expected = ParserException.class)
+    public void shouldThrowParserExceptionIfParserFailed() throws Exception, SAXException
+    {
+        doThrow(new SAXException("Random Sax exception")).when(saxParser).parse(any(File.class), eq(saxHandler));
+
+        File fileSet = createFileSet("00001");
+
+        parser.process(fileSet, persister);
+    }
+    
 
     //
     // Helpers

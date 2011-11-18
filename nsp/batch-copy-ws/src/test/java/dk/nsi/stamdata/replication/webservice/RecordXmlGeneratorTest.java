@@ -93,10 +93,10 @@ public class RecordXmlGeneratorTest {
         "<atom:title/>" +
         "<atom:updated>" + modifiedDateInString + "</atom:updated>" +
         "<atom:content type=\"application/xml\">" +
-        "<RecordType xmlns=\"http://trifork.com/-/stamdata/3.0/cpr\">" +
+        "<sikrede xmlns=\"http://trifork.com/-/stamdata/3.0/sikrede\">" +
         "<Foo>42</Foo>" +
         "<Bar>ABCDEFGH</Bar>" +
-        "</RecordType>" +
+        "</sikrede>" +
         "</atom:content>" +
         "</atom:entry>" +
         "</atom:feed>";

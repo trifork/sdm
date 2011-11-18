@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs.yderregister;
+package com.trifork.stamdata.specs;
 
 import com.trifork.stamdata.persistence.RecordSpecification;
 
@@ -83,7 +83,7 @@ public class YderregisterRecordSpecs
             "CprNr", ALPHANUMERICAL, 10,
             // Navn
             "PersonrolleKode", ALPHANUMERICAL, 2,
-            "PorsonrolleTxt", ALPHANUMERICAL, 60
+            "PersonrolleTxt", ALPHANUMERICAL, 60
             // ...
     );
 }

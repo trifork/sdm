@@ -51,7 +51,7 @@ import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 public class RecordXmlGenerator
 {
     public static final String ATOM_NAMESPACE_URI = "http://www.w3.org/2005/Atom";
-    public static final String STAMDATA_NAMESPACE_URI = "http://trifork.com/-/stamdata/3.0/cpr";
+    public static final String STAMDATA_NAMESPACE_URI_PREFIX = "http://trifork.com/-/stamdata/3.0/";
     
     private RecordSpecification recordSpecification;
 
@@ -61,7 +61,9 @@ public class RecordXmlGenerator
     }
 
     public org.w3c.dom.Document generateXml(List<RecordMetadata> records, String register, String datatype, DateTime updated) throws TransformerException
-    {           
+    {
+        String stamdataNamespaceUri = STAMDATA_NAMESPACE_URI_PREFIX + register;
+
         Document document = DocumentHelper.createDocument();
         document.setXMLEncoding("utf-8");
         
@@ -85,10 +87,10 @@ public class RecordXmlGenerator
             Element content = addElement(entry, ATOM_NAMESPACE_URI, "atom:content", null);
             content.addAttribute("type", "application/xml");
 
-            Element recordElement = addElement(content, STAMDATA_NAMESPACE_URI, recordSpecification.getTable(), null);
+            Element recordElement = addElement(content, stamdataNamespaceUri, datatype, null);
             for(FieldSpecification fieldSpecification : recordSpecification.getFieldSpecs())
             {
-                addElement(recordElement, STAMDATA_NAMESPACE_URI, fieldSpecification.name, valueAsString(metadata.getRecord(), fieldSpecification));
+                addElement(recordElement, stamdataNamespaceUri, fieldSpecification.name, valueAsString(metadata.getRecord(), fieldSpecification));
             }
         }
 
@@ -107,7 +109,11 @@ public class RecordXmlGenerator
 
     private String valueAsString(Record record, FieldSpecification fieldSpecification)
     {
-        if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+        if(record.get(fieldSpecification.name) == null)
+        {
+            return "";
+        }
+        else if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
         {
             return String.valueOf(record.get(fieldSpecification.name));
         }

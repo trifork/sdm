@@ -27,18 +27,15 @@ package dk.nsi.stamdata.replication.webservice;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordBuilder;
-import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
-import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.*;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.jaxws.generated.*;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
 import dk.nsi.stamdata.views.Views;
 import dk.nsi.stamdata.views.cpr.Person;
-import org.dom4j.io.DocumentSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
@@ -48,13 +45,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.util.JAXBSource;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -65,6 +60,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Connection;
@@ -95,7 +91,8 @@ public class StamdataReplicationImplIntegrationTest
     private ClientDao clientDao;
 
     private List<Person> persons = Lists.newArrayList();
-    private List<Record> sikredeRecords = Lists.newArrayList();
+    private RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
+    private List<Record> records = Lists.newArrayList();
     private DateTime now, lastYear, nextYear;
 
     @Before
@@ -273,21 +270,54 @@ public class StamdataReplicationImplIntegrationTest
         RecordBuilder builder = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         builder.field("CPRnr", "1234567890");
         Record record = builder.addDummyFieldsAndBuild();
-        sikredeRecords.add(record);
+        records.add(record);
 
-        createSikredeReplicationRequest();
+        createSikredeReplicationRequest("sikrede", "sikrede");
+        populateDatabaseAndSendRequest();
+
+        assertResponseContainsRecordAtom("sikrede", "sikrede");
+        assertResponseContainsExactNumberOfRecords("sikrede:sikrede", 1);
+        assertResponseContainsValueOnXPath("//sikrede:sikrede/sikrede:CPRnr", "1234567890");
+    }
+
+     @Test
+    public void testYderregisterCopy() throws Exception
+    {
+        recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
+        Record record = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE).field("HistIdYder", "1234567890123456").addDummyFieldsAndBuild();
+        records.add(record);
+
+        createSikredeReplicationRequest("yderregister", "yder");
 
         populateDatabaseAndSendRequest();
 
+        assertResponseContainsRecordAtom("yderregister", "yder");
+        assertResponseContainsExactNumberOfRecords("yder:yder", 1);
+        assertResponseContainsValueOnXPath("//yder:yder/yder:HistIdYder", "1234567890123456");
+    }
+
+    @Test
+   public void testYderregisterPersonCopy() throws Exception
+   {
+       recordSpecification = YderregisterRecordSpecs.PERSON_RECORD_TYPE;
+       Record record = new RecordBuilder(recordSpecification).field("HistIdPerson", "1234").addDummyFieldsAndBuild();
+       records.add(record);
+
+       createSikredeReplicationRequest("yderregister", "person");
+
+       populateDatabaseAndSendRequest();
+
+       assertResponseContainsRecordAtom("yderregister", "person");
+       assertResponseContainsExactNumberOfRecords("yder:person", 1);
+       assertResponseContainsValueOnXPath("//yder:person/yder:HistIdPerson", "1234");
+   }
+
+    private String anyElementAsString() throws TransformerException
+    {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         transformer.transform(new DOMSource(anyAsElement), new StreamResult(byteArrayOutputStream));
-        System.out.println(new String(byteArrayOutputStream.toByteArray()));
-
-        // TODO: There is no namespace on the Records generated. Is that needed and what should it be?
-        assertResponseContainsSikredeAtom();
-        assertResponseContainsExactNumberOfRecords("sdm:SikredeGenerated", 1);
-        assertResponseContainsSikredeWithCpr("1234567890");
+        return new String(byteArrayOutputStream.toByteArray());
     }
 
     @Test
@@ -327,11 +357,11 @@ public class StamdataReplicationImplIntegrationTest
         request.setOffset("0");
     }
 
-    private void createSikredeReplicationRequest()
+    private void createSikredeReplicationRequest(String register, String datatype)
     {
         request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister("sikrede");
-        request.setDatatype("sikrede");
+        request.setRegister(register);
+        request.setDatatype(datatype);
         request.setVersion(1L);
         request.setOffset("0");
     }
@@ -370,11 +400,11 @@ public class StamdataReplicationImplIntegrationTest
         assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
     }
 
-    private void assertResponseContainsSikredeAtom()
+    private void assertResponseContainsRecordAtom(String register, String datatype)
     {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:sikrede/sikrede/v1"));
+        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:" + register + "/" + datatype + "/v1"));
     }
 
     private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException
@@ -398,11 +428,11 @@ public class StamdataReplicationImplIntegrationTest
         assertThat(result, is(oracleCpr));
     }
 
-    private void assertResponseContainsSikredeWithCpr(String oracleCpr) throws XPathExpressionException
+    private void assertResponseContainsValueOnXPath(String xPath, String oracle) throws XPathExpressionException
     {
-        XPathExpression expression = createXpathExpression("//sdm:SikredeGenerated/sdm:CPRnr");
+        XPathExpression expression = createXpathExpression(xPath);
         String result = expression.evaluate(anyAsElement);
-        assertThat(result, is(oracleCpr));
+        assertThat(result, is(oracle));
     }
 
     private String getOffsetFromAtomEntry() throws XPathExpressionException
@@ -418,7 +448,9 @@ public class StamdataReplicationImplIntegrationTest
         NamespaceContext context = new NamespaceContextMap(
                 "krs", "http://nsi.dk/2011/10/21/StamdataKrs/",
                 "atom", "http://www.w3.org/2005/Atom",
-                "sdm", "http://trifork.com/-/stamdata/3.0/cpr");
+                "sdm", "http://trifork.com/-/stamdata/3.0/cpr",
+                "sikrede", "http://trifork.com/-/stamdata/3.0/sikrede",
+                "yder", "http://trifork.com/-/stamdata/3.0/yderregister");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         xpath.setNamespaceContext(context);
@@ -442,6 +474,8 @@ public class StamdataReplicationImplIntegrationTest
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
         cvrClient.addPermission(Views.getViewPath(Person.class));
         cvrClient.addPermission("sikrede/sikrede/v1");
+        cvrClient.addPermission("yderregister/yder/v1");
+        cvrClient.addPermission("yderregister/person/v1");
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();
@@ -451,13 +485,13 @@ public class StamdataReplicationImplIntegrationTest
         }
 
         Connection connection = session.connection();
-        connection.createStatement().executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
-        connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
+        connection.createStatement().executeUpdate("DROP TABLE IF EXISTS " + recordSpecification.getTable());
+        connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
         RecordPersister recordPersister = new RecordPersister(connection, new Instant());
 
-        for (Record sikredeRecord : sikredeRecords)
+        for (Record sikredeRecord : records)
         {
-            recordPersister.persist(sikredeRecord, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+            recordPersister.persist(sikredeRecord, recordSpecification);
         }
 
         t.commit();

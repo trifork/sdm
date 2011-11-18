@@ -32,8 +32,12 @@ import com.trifork.stamdata.importer.config.DataOwnerId;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
 import org.joda.time.Instant;
+import org.xml.sax.SAXException;
 
 import javax.inject.Singleton;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -78,5 +82,11 @@ public class ParserModule extends AbstractModule
         // of a parser execution.
 
         return new ConnectionManager().getConnection();
+    }
+
+    @Provides // Needed by YderregisterParser
+    private SAXParser provideSaxParser() throws SAXException, ParserConfigurationException
+    {
+        return SAXParserFactory.newInstance().newSAXParser();
     }
 }

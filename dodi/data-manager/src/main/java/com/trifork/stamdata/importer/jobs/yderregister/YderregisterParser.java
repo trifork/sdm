@@ -27,6 +27,7 @@ package com.trifork.stamdata.importer.jobs.yderregister;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
+import javax.inject.Provider;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.Parser;
@@ -36,6 +37,7 @@ import com.trifork.stamdata.persistence.RecordPersister;
 
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -55,11 +57,15 @@ public class YderregisterParser implements Parser
 	private static final List<String> REQUIRED_FILE_EXTENSIONS = ImmutableList.of("K05", "K40", "K45", "K1025", "K5094");
 
     private final KeyValueStore keyValueStore;
+    private final SAXParser saxParser;
+    private final Provider<YderregisterSaxEventHandler> saxEventHandlers;
 
     @Inject
-    YderregisterParser(KeyValueStore keyValueStore)
+    YderregisterParser(KeyValueStore keyValueStore, SAXParser saxParser, Provider<YderregisterSaxEventHandler> saxEventHandlers)
     {
         this.keyValueStore = keyValueStore;
+        this.saxParser = saxParser;
+        this.saxEventHandlers = saxEventHandlers;
     }
 
 	@Override
@@ -71,7 +77,7 @@ public class YderregisterParser implements Parser
 
 		String newVersion = extractVersionFromFileSet(input);
 
-        // FIXME: Ensure the import sequence, recipient etc. This cannot be done until we get more information
+        // TODO: Ensure the import sequence, recipient etc. This cannot be done until we get more information
         // about the filename conversion.
         //
         // Currently we can ensure that we don't import an old version, by looking at the previous
@@ -85,17 +91,22 @@ public class YderregisterParser implements Parser
 
         // Do the actual importing.
         //
-        SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-
         for (File file : input.listFiles())
         {
-	        parser.parse(file, new YderregisterSaxEventHandler(persister));
+            try
+            {
+    	        saxParser.parse(file, saxEventHandlers.get());
+            }
+            catch (Exception e)
+            {
+                throw new ParserException(e);
+            }
 	    }
     }
 
     public boolean areRequiredFilesPresent(File input)
     {
-        // FIXME: The implementation of this class requires
+        // TODO: The implementation of this class requires
         // the presence of all the file in REQUIRED_FILE_EXTENSIONS.
         // It seems however that there only are records in the 'K05'.
         //
