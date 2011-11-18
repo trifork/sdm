@@ -193,7 +193,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 		return output;
 	}
 
-
+	
+	@Transactional
     private Record getSikredeRecord(String pnr) throws SQLException 
     {
         return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC);

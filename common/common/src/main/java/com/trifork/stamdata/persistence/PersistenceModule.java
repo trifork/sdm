@@ -32,7 +32,6 @@ import com.google.inject.TypeLiteral;
 
 import com.trifork.stamdata.Nullable;
 
-import dk.nsi.stamdata.security.WhitelistDbInterceptorModule;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
@@ -138,6 +137,7 @@ public class PersistenceModule extends AbstractModule
     {
         return factory.openStatelessSession();
     }
+    
     
     @Provides
     @Deprecated
