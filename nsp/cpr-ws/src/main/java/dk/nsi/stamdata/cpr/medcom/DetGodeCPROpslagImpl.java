@@ -83,7 +83,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     private final RecordFetcher recordFetcher;
     private final PersonMapper personMapper;
 	private final String clientCVR;
-    private WhitelistService whitelistService;
 
     @Inject
 	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, WhitelistService whitelistService)
@@ -92,7 +91,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         this.recordFetcher = recordFetcher;
         this.personMapper = personMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
-        this.whitelistService = whitelistService;
 	}
 
 
