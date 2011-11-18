@@ -35,7 +35,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import com.trifork.stamdata.persistence.*;
-import dk.nsi.stamdata.security.WhitelistService;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
@@ -83,16 +82,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     private final RecordFetcher recordFetcher;
     private final PersonMapper personMapper;
 	private final String clientCVR;
-    private WhitelistService whitelistService;
 
     @Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, WhitelistService whitelistService)
+	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card)
 	{
 		this.fetcher = fetcher;
         this.recordFetcher = recordFetcher;
         this.personMapper = personMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
-        this.whitelistService = whitelistService;
 	}
 
 

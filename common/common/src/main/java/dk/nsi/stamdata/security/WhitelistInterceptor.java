@@ -49,8 +49,8 @@ class WhitelistInterceptor implements MethodInterceptor
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable
     {
-        Object result;
-
+        return invocation.proceed();
+/*
         Whitelisted whitelisted = invocation.getMethod().getAnnotation(Whitelisted.class);
         String componentName = whitelisted.value();
         String clientCvr = clientCvrProvider.get();
@@ -70,6 +70,7 @@ class WhitelistInterceptor implements MethodInterceptor
             result = null;
             //Throw some generic service error containing the component name
         }
+*/
 
 /*        if (!session.getTransaction().isActive())
         {
@@ -85,7 +86,7 @@ class WhitelistInterceptor implements MethodInterceptor
             System.err.println("------------> After calling @Whitelisted method");
         }
 */
-        return result;
+//        return result;
     }
 }
 

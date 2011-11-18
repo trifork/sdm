@@ -72,7 +72,6 @@ import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
 import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
-@Ignore
 @RunWith(GuiceTestRunner.class)
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
 {
