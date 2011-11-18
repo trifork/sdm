@@ -34,14 +34,14 @@ import com.trifork.stamdata.importer.parsers.ParserScheduler;
  */
 public class DataManagerComponentMonitor implements ComponentMonitor
 {
-	private final ConnectionManager dbChecker;
+	private final ConnectionManager connectionManager;
     private final JobsDecorator jobs;
     private final ParserScheduler scheduler;
 
     @Inject
-	DataManagerComponentMonitor(ConnectionManager dbChecker, JobsDecorator jobs, ParserScheduler scheduler)
+	DataManagerComponentMonitor(ConnectionManager connectionManager, JobsDecorator jobs, ParserScheduler scheduler)
 	{
-		this.dbChecker = dbChecker;
+		this.connectionManager = connectionManager;
         this.jobs = jobs;
         this.scheduler = scheduler;
     }
@@ -49,7 +49,7 @@ public class DataManagerComponentMonitor implements ComponentMonitor
 	@Override
     public boolean isOk()
 	{
-		return dbChecker.isAvailable()
+		return connectionManager.isAvailable()
             && jobs.areAllJobsRunning()
             && !jobs.areAnyJobsOverdue()
             && scheduler.isOk();

@@ -25,7 +25,7 @@
 package com.trifork.stamdata.importer.jobs.yderregister;
 
 import com.google.common.collect.Maps;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;

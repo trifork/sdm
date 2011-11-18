@@ -43,14 +43,12 @@ public class JobsDecorator
 {
     private final ParserScheduler scheduler;
     private final JobManager jobManager;
-    private final Injector injector;
 
     @Inject
-    JobsDecorator(ParserScheduler scheduler, JobManager jobManager, Injector injector) {
+    JobsDecorator(ParserScheduler scheduler, JobManager jobManager) {
 
         this.scheduler = scheduler;
         this.jobManager = jobManager;
-        this.injector = injector;
     }
 
     public Iterable<Job> getJobs()
@@ -114,7 +112,7 @@ public class JobsDecorator
         @Override
         public boolean isOK()
         {
-            return context.isOK(injector);
+            return context.isOK();
         }
 
         @Override

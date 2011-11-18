@@ -25,7 +25,7 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordPersister;

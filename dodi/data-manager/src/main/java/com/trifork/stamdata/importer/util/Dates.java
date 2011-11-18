@@ -57,11 +57,6 @@ public class Dates
 		return formatter.format(date);
 	}
 
-	/**
-	 * @param year
-	 * @param month (1-12)
-	 * @param date (1-31)
-	 */
 	public static Date toDate(int year, int month, int date)
 	{
 		Calendar cal = Calendar.getInstance();
@@ -70,11 +65,6 @@ public class Dates
 		return cal.getTime();
 	}
 
-	/**
-	 * @param year
-	 * @param month (1-12)
-	 * @param date (1-31)
-	 */
 	public static Date toDate(int year, int month, int date, int hours, int minutes, int secs)
 	{
 		Calendar cal = Calendar.getInstance();

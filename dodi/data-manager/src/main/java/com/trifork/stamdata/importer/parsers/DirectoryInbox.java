@@ -27,6 +27,7 @@ package com.trifork.stamdata.importer.parsers;
 import com.google.common.collect.*;
 import com.google.inject.Inject;
 import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.importer.config.DataOwnerId;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.Instant;
 
@@ -74,12 +75,12 @@ public class DirectoryInbox implements Inbox
     private final int stabilizationPeriod;
 
     @Inject
-    DirectoryInbox(@Named("rootDir") String root, ParserContext parserContext, @Named("file.stabilization.period") int stabilizationPeriod) throws IOException
+    DirectoryInbox(@Named("rootDir") String root, @DataOwnerId String dataOwnerId, @Named("file.stabilization.period") int stabilizationPeriod) throws IOException
     {
         Preconditions.checkArgument(stabilizationPeriod >= 0, "stabilizationPeriod must be a non-negative number.");
         this.stabilizationPeriod = stabilizationPeriod;
 
-        this.inboxDirectory = new File(root, parserContext.identifier());
+        this.inboxDirectory = new File(root, dataOwnerId);
         this.lockFile = new File(inboxDirectory, "LOCKED");
 
         // Make sure the directory exists.

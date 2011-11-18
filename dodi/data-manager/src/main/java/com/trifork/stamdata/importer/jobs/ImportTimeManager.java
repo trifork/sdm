@@ -33,7 +33,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 import com.trifork.stamdata.importer.parsers.Parser;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.parsers.Parsers;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;

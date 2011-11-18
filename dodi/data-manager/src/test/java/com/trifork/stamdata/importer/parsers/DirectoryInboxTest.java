@@ -38,7 +38,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class DirectoryInboxTest
 {
@@ -46,20 +45,16 @@ public class DirectoryInboxTest
 
     private final int stabilizationPeriod = 50;
 
-    private final String parserId = "foo";
+    private final String dataOwnerId = "foo";
 
-    private File parserInboxDir;
+    private File inboxDir;
     private DirectoryInbox inbox;
 
     @Before
     public void setUp() throws Exception
     {
-        Class<MockParser> parserClass = MockParser.class;
-        ParserContext parserContext = mock(ParserContext.class);
-        when(parserContext.identifier()).thenReturn(Parsers.getIdentifier(parserClass));
-
-        parserInboxDir = folder.newFolder(parserId);
-        inbox = new DirectoryInbox(folder.getRoot().getAbsolutePath(), parserContext, stabilizationPeriod);
+        inboxDir = folder.newFolder(dataOwnerId);
+        inbox = new DirectoryInbox(folder.getRoot().getAbsolutePath(), dataOwnerId, stabilizationPeriod);
     }
 
     @Test
@@ -206,7 +201,7 @@ public class DirectoryInboxTest
     {
         inbox.lock();
         
-        assertTrue(new File(parserInboxDir, "LOCKED").exists());
+        assertTrue(new File(inboxDir, "LOCKED").exists());
     }
 
     @Test
@@ -226,14 +221,14 @@ public class DirectoryInboxTest
 
     private File createSubDirectory(String name)
     {
-        File file = new File(parserInboxDir.getPath() + File.separatorChar + name);
-        if (!file.exists()) folder.newFolder(parserInboxDir.getName() + File.separatorChar + name);
+        File file = new File(inboxDir.getPath() + File.separatorChar + name);
+        if (!file.exists()) folder.newFolder(inboxDir.getName() + File.separatorChar + name);
         return file;
     }
 
     private File createFile(String name, int size) throws Exception
     {
-        File file = folder.newFile(parserInboxDir.getName()+ "/" + name);
+        File file = folder.newFile(inboxDir.getName()+ "/" + name);
         FileUtils.write(file, Strings.repeat("X", size));
         return file;
     }
@@ -256,6 +251,6 @@ public class DirectoryInboxTest
 
     private File anEntryNamed(String name)
     {
-        return new File(parserInboxDir, name);
+        return new File(inboxDir, name);
     }
 }

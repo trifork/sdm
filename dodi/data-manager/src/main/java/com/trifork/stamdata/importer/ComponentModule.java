@@ -37,6 +37,7 @@ import com.trifork.stamdata.importer.config.ParserConfiguration;
 import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserContext;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.parsers.ParserModule;
 import com.trifork.stamdata.importer.webinterface.DataManagerComponentMonitor;
 import com.trifork.stamdata.importer.webinterface.GUIServlet;
 import org.apache.commons.configuration.CompositeConfiguration;
@@ -51,12 +52,14 @@ public class ComponentModule extends ServletModule
     @Override
     protected void configureServlets()
     {
+        install(new ParserModule());
+
         final CompositeConfiguration config = ConfigurationLoader.loadConfiguration();
 
         // Parse the properties from the configuration files.
         //
         final Set<OldParserContext> parsers = ParserConfiguration.getOldConfiguredParsers(config);
-        final Set<ParserContext> newParsers = ParserConfiguration.getConfiguredParsers(config);
+        final Set<ParserContext> newParsers = ParserConfiguration.getConfiguredParsers(config, binder());
 
         // HACK: Because we are not using the ConfigurationLoader (yet!) we cannot easily bind properties
         // to named constants.
@@ -76,7 +79,7 @@ public class ComponentModule extends ServletModule
 
         serve("/").with(GUIServlet.class);
 
-        // Bind the required dependencies.
+        // Bind the services.
         //
         bind(JobManager.class).in(Scopes.SINGLETON);
         bind(ParserScheduler.class).in(Scopes.SINGLETON);

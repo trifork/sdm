@@ -22,7 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.parsers;
+package com.trifork.stamdata.importer.parsers.exceptions;
 
 /**
  * @author Thomas Børlum <thb@trifork.com>

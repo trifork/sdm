@@ -25,6 +25,7 @@
 package com.trifork.stamdata.importer.config;
 
 import com.google.common.collect.Sets;
+import com.google.inject.Binder;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserContext;
@@ -66,7 +67,7 @@ public class ParserConfiguration
         return parsers;
     }
 
-    public static Set<ParserContext> getConfiguredParsers(final CompositeConfiguration config)
+    public static Set<ParserContext> getConfiguredParsers(final CompositeConfiguration config, Binder binder)
     {
         Set<ParserContext> parsers = Sets.newHashSet();
 
@@ -84,7 +85,11 @@ public class ParserConfiguration
                 Class<? extends Parser> parserClass = Class.forName(values[0].trim()).asSubclass(Parser.class);
                 int minimumImportFrequency = Integer.parseInt(values[1].trim());
 
-                parsers.add(new ParserContext(parserClass, minimumImportFrequency));
+                ParserContext context = new ParserContext(parserClass, minimumImportFrequency);
+
+                binder.requestInjection(context);
+
+                parsers.add(context);
             }
             catch (ClassNotFoundException e)
             {

@@ -24,12 +24,20 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
 import org.joda.time.DateTime;
 
 public class ParserContext
 {
+    @Inject
+    private ParserScope scope;
+    
+    @Inject
+    private Provider<Inbox> inboxProvider;
+
     private Class<? extends Parser> parserClass;
     private int minimumImportFrequency;
     private boolean isRunning = false;
@@ -93,14 +101,19 @@ public class ParserContext
         return Parsers.getIdentifier(getParserClass());
     }
 
-    public boolean isOK(Injector injector)
+    public boolean isOK()
     {
-        // HACK: The inbox should not be here. Make a ParserManager class that knows stuff like this.
-
-        Injector childInjector = injector.createChildInjector(ParserModule.using(this));
-        Inbox inbox = childInjector.getInstance(Inbox.class);
+        scope.enter(this);
         
-        return !inbox.isLocked();
+        try
+        {
+            Inbox inbox = inboxProvider.get();
+            return !inbox.isLocked();
+        }
+        finally
+        {
+            scope.exit();    
+        }
     }
 
     public String getHumanName()
@@ -111,10 +124,5 @@ public class ParserContext
     public boolean isRunning()
     {
         return isRunning;
-    }
-
-    public void setIsRunning(boolean isRunning)
-    {
-        this.isRunning = isRunning;
     }
 }

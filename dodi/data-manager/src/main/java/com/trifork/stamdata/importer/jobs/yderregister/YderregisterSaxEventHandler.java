@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;

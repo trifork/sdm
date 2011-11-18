@@ -28,7 +28,7 @@ package com.trifork.stamdata.importer.jobs.sks;
 import java.io.File;
 import java.util.Iterator;
 
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;

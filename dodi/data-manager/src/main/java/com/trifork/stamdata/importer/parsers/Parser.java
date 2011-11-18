@@ -24,12 +24,11 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
-import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
-import org.joda.time.Instant;
 
 import java.io.File;
-import java.sql.Connection;
 
 /**
  * A parser that imports files and stores the data in a database.

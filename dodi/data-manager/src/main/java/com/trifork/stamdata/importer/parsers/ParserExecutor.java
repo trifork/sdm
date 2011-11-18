@@ -26,13 +26,8 @@ package com.trifork.stamdata.importer.parsers;
 
 import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
-import com.trifork.stamdata.importer.jobs.ImportTimeManager;
+import com.trifork.stamdata.importer.parsers.annotations.ParserScoped;
 import com.trifork.stamdata.persistence.RecordPersister;
-import org.joda.time.Instant;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -40,7 +35,6 @@ import org.slf4j.MDC;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -60,6 +54,7 @@ import java.util.Map;
  * 
  * @author Thomas Børlum <thb@trifork.com>
  */
+@ParserScoped
 public class ParserExecutor implements Runnable
 {
     private static final Logger logger = LoggerFactory.getLogger(ParserExecutor.class);

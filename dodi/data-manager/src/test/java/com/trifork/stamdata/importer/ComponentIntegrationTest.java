@@ -46,10 +46,9 @@ public class ComponentIntegrationTest
     }
 
     @Test
-    public void testThatAfterStartUpTheStatusPageReturnsStatus200()
+    public void testThatAfterStartUpTheStatusPageReturnsStatus200() throws InterruptedException
     {
         // FIXME: Make rest call to /status expect 200.
 
-        
     }
 }

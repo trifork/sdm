@@ -29,38 +29,37 @@ import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.Key;
+import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import java.util.*;
 import java.util.concurrent.*;
 
 /**
- * New implementation of job manager for Sikrede.
- * All new parsers should use this.
- * 
  * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserScheduler
 {
     private static final Logger logger = LoggerFactory.getLogger(ParserScheduler.class);
 
-    private final ExecutorService schedulerExecutor;
+    private final ScheduledExecutorService schedulerExecutor;
     private final ExecutorService jobExecutor;
+
+    private final ParserScope scope;
 
     private final Iterable<ParserContext> parsers;
     private final ConcurrentLinkedQueue<Class<? extends Parser>> inProgress;
 
-    private final Injector injector;
-
-    private boolean hasFailed = false;
+    private final Provider<ParserExecutor> executors;
 
     @Inject
-    ParserScheduler(Injector injector, Set<ParserContext> parsers)
+    ParserScheduler(Provider<ParserExecutor> executors, Set<ParserContext> parsers, ParserScope scope)
     {
-        this.injector = injector;
+        this.executors = executors;
+        this.scope = scope;
 
         // There are two collections for parsers. One with parsers that are
         // in advance and the other for a list of all parsers.
@@ -70,7 +69,7 @@ public class ParserScheduler
 
         // We only need a single thread to check for new files to import.
         //
-        schedulerExecutor = Executors.newSingleThreadExecutor();
+        schedulerExecutor = Executors.newSingleThreadScheduledExecutor();
 
         // There is no particular reason for the thread pool readyCount.
         // Good rule of thumb is to use the number of cores plus one.
@@ -81,9 +80,10 @@ public class ParserScheduler
 
     public void start()
     {
-        // The scheduler loop should run as often as possible.
+        // The scheduler loop quite often.
+        // Don't run continuously or we'll hog a lot of CPU.
         //
-        schedulerExecutor.submit(runLoop());
+        schedulerExecutor.scheduleWithFixedDelay(runLoop(), 0, 1, TimeUnit.SECONDS);
     }
 
     public void stop()
@@ -108,10 +108,14 @@ public class ParserScheduler
                 {
                     loop();
                 }
-                catch (Exception e)
+                catch (Throwable t)
                 {
-                    hasFailed = true;
-                    logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.", e);
+                    // Parser exceptions such as input errors should never
+                    // make it out here. If something does it must be a fatal
+                    // error, and we stop execution.
+                    //
+                    schedulerExecutor.shutdownNow();
+                    logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.",  t);
                 }
             }
         };
@@ -122,11 +126,14 @@ public class ParserScheduler
         // TODO: There is a tiny chance of 'live locking' here.
         // This could potentially starve some parsers.
         //
-        for (ParserContext parser : Iterables.cycle(parsers))
+        for (ParserContext parser : parsers)
         {
-            // Only start parsers not already in advance.
+            // Only start parsers not already in progress.
             //
-            if (inProgress.contains(parser.getParserClass())) continue;
+            if (inProgress.contains(parser.getParserClass()))
+            {
+                continue;
+            }
 
             retain(parser);
 
@@ -139,24 +146,27 @@ public class ParserScheduler
         }
     }
 
+    private ListenableFuture executeParser(ParserContext parserContext)
+    {
+        scope.enter(parserContext);
+
+        try
+        {
+            ListenableFutureTask<Void> task = new ListenableFutureTask(executors.get(), null);
+
+            jobExecutor.execute(task);
+
+            return task;
+        }
+        finally
+        {
+          scope.exit();
+        }
+    }
+
     private void retain(ParserContext parserContext)
     {
         inProgress.add(parserContext.getParserClass());
-    }
-
-    private ListenableFuture executeParser(ParserContext parserContext)
-    {
-        // Create a child injector for the parser to limit its scope.
-        //
-        Injector parserInjector = injector.createChildInjector(ParserModule.using(parserContext));
-
-        ParserExecutor executor = parserInjector.getInstance(ParserExecutor.class);
-
-        ListenableFutureTask<Void> task = new ListenableFutureTask(executor, null);
-
-        jobExecutor.execute(task);
-
-        return task;
     }
 
     private Runnable release(final ParserContext parserContext)
@@ -185,6 +195,6 @@ public class ParserScheduler
 
     public boolean isOk()
     {
-        return !hasFailed;
+        return !schedulerExecutor.isTerminated();
     }
 }

@@ -29,16 +29,14 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static java.lang.String.format;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.Iterator;
 
 import com.trifork.stamdata.importer.parsers.Parser;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.joda.time.Instant;
 import org.slf4j.MDC;
 
 import com.trifork.stamdata.persistence.Record;

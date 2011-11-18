@@ -25,19 +25,15 @@
 package com.trifork.stamdata.importer.jobs.yderregister;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.Mockito;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 
 import javax.inject.Provider;
 import javax.xml.parsers.SAXParser;

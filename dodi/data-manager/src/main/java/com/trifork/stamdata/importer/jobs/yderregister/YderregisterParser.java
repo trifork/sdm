@@ -29,18 +29,16 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import javax.inject.Provider;
 import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
+import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.Parser;
-import com.trifork.stamdata.importer.parsers.ParserException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.persistence.RecordPersister;
 
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Set;
