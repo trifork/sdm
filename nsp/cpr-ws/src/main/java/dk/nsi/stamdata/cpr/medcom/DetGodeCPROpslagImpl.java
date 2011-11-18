@@ -84,7 +84,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private final String clientCVR;
 
     @Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, WhitelistService whitelistService)
+	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card)
 	{
 		this.fetcher = fetcher;
         this.recordFetcher = recordFetcher;
