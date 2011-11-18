@@ -34,13 +34,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: borlum
- * Date: 11/17/11
- * Time: 12:50 PM
- * To change this template use File | Settings | File Templates.
- */
+
 public class RecordFetcher
 {
     private final Connection connection;
@@ -74,6 +68,7 @@ public class RecordFetcher
                 "PID > ? OR " +
                 "(PID = ? AND ModifiedDate > ?) " +
                 "ORDER BY PID, ModifiedDate LIMIT %d", recordSpecification.getTable(), limit);
+
         PreparedStatement preparedStatement = connection.prepareStatement(queryString);
 
         Timestamp fromModifiedDateAsTimestamp = new Timestamp(fromModifiedDate.getMillis());

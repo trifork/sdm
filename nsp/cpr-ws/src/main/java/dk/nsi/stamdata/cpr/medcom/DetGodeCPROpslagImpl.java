@@ -34,6 +34,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import com.trifork.stamdata.persistence.*;
 import dk.nsi.stamdata.security.WhitelistService;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.Whitelisted;
@@ -47,10 +48,6 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
@@ -83,18 +80,17 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
 	private final Fetcher fetcher;
-	private final PersonMapper personMapper;
-	// TODO: Session is only used for SikredeFetcher. Maybe that should be injected instead
-    private Session session;
+    private final RecordFetcher recordFetcher;
+    private final PersonMapper personMapper;
 	private final String clientCVR;
     private WhitelistService whitelistService;
 
     @Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, PersonMapper personMapper, Session session, SystemIDCard card, WhitelistService whitelistService)
+	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, WhitelistService whitelistService)
 	{
 		this.fetcher = fetcher;
-		this.personMapper = personMapper;
-		this.session = session;
+        this.recordFetcher = recordFetcher;
+        this.personMapper = personMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
         this.whitelistService = whitelistService;
 	}
@@ -203,10 +199,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
     private Record getSikredeRecord(String pnr) throws SQLException 
     {
-        // FIXME: Inject the persister instead, remove dependency on session and connection()
-        RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
-        Record sikredeRecord = recordPersister.fetchSikredeRecordUsingCpr(pnr);
-        return sikredeRecord;
+        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
     }
 
 

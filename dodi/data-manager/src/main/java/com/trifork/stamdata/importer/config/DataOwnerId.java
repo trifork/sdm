@@ -22,34 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer;
+package com.trifork.stamdata.importer.config;
 
-import dk.nsi.stamdata.testing.TestServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import com.google.inject.BindingAnnotation;
 
-public class ComponentIntegrationTest
-{
-    private TestServer server;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-    @Before
-    public void setUp() throws Exception
-    {
-        server = new TestServer().start();
-    }
-
-    @After
-    public void tearDown() throws Exception
-    {
-        server.stop();
-    }
-
-    @Test
-    public void testThatAfterStartUpTheStatusPageReturnsStatus200()
-    {
-        // FIXME: Make rest call to /status expect 200.
-
-        
-    }
-}
+@BindingAnnotation
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
+public @interface DataOwnerId {}

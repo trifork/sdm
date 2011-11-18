@@ -31,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Provider;
 import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
@@ -42,6 +43,7 @@ import dk.nsi.stamdata.security.ClientVocesCvr;
 
 import org.hibernate.Session;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -86,10 +88,11 @@ public class StamdataReplicationImpl implements StamdataReplication {
     // FIXME: Session is only needed to create a RecordPersister and it's pretty hacky at that, as we just need a connection
     // The RecordPersister should be injected instead!
     private Session session;
+    private final Provider<RecordFetcher> fetchers;
 
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Session session)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Session session, Provider<RecordFetcher> fetchers)
     {
         this.cvr = cvr;
         this.dao = recordDao;
@@ -97,6 +100,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
         this.session = session;
+        this.fetchers = fetchers;
     }
     
 
@@ -294,16 +298,22 @@ public class StamdataReplicationImpl implements StamdataReplication {
     
     private Document createSikredeFeed(HistoryOffset offset, int limit) throws SQLException
     {
-        RecordXmlGenerator sikredeXmlGenerator = new RecordXmlGenerator(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
-//        RecordFetcher fetcher = new RecordFetcher();
+        RecordXmlGenerator xmlGenerator = new RecordXmlGenerator(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+        RecordFetcher fetcher = this.fetchers.get();
 
-        // FIXME: The persister should respect the offset and the limit. Input form THB on how to handle this nicely.
-        // A first step would be to introduce modified date to Record persistence (currently missing).
-        List<RecordMetadata> records = Lists.newArrayList(); //persister.fetchAllActiveRecords();
+        // FIXME: Make work for Yderregister.
 
-        try {
-            return sikredeXmlGenerator.generateXml(records, "sikrede", "sikrede", DateTime.now());
-        } catch (TransformerException e) {
+        long pid = Long.parseLong(offset.getRecordID());
+        Instant modifiedDate = new Instant(offset.getModifiedDate());
+        
+        List<RecordMetadata> records = fetcher.fetchSince(SikredeRecordSpecs.ENTRY_RECORD_SPEC, pid, modifiedDate, limit);
+
+        try
+        {
+            return xmlGenerator.generateXml(records, "sikrede", "sikrede", DateTime.now());
+        }
+        catch (TransformerException e)
+        {
             throw new RuntimeException("Transformer error");
         }
     }

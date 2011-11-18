@@ -24,6 +24,8 @@
  */
 package com.trifork.stamdata.importer.parsers.annotations;
 
+import com.google.inject.BindingAnnotation;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

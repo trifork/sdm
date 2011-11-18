@@ -48,17 +48,12 @@ import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(Parsers.class)
 public class MySqlKeyValueStoreTest
 {
     private Connection connection;
 
     private final String owner1Id = "default_owner";
-    private Parser owner1;
-
     private final String owner2Id = "other_owner";
-    private Parser owner2;
 
     private MySqlKeyValueStore owner1Store;
     private MySqlKeyValueStore owner2Store;
@@ -67,17 +62,9 @@ public class MySqlKeyValueStoreTest
     public void setUp() throws Exception
     {
         connection = new ConnectionManager().getConnection();
-        owner1 = mock(Parser.class);
-        owner2 = mock(Parser.class);
 
-        // Stub out the static methods in "Parsers".
-        //
-        PowerMockito.mockStatic(Parsers.class);
-        when(Parsers.getIdentifier(owner1)).thenReturn(owner1Id);
-        when(Parsers.getIdentifier(owner2)).thenReturn(owner2Id);
-
-        owner1Store = new MySqlKeyValueStore(owner1, connection);
-        owner2Store = new MySqlKeyValueStore(owner2, connection);
+        owner1Store = new MySqlKeyValueStore(owner1Id, connection);
+        owner2Store = new MySqlKeyValueStore(owner2Id, connection);
     }
 
     @After

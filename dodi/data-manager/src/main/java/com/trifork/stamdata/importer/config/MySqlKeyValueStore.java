@@ -30,12 +30,9 @@ import static java.lang.String.format;
 
 import java.sql.*;
 
-import javax.inject.Inject;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.importer.parsers.Parser;
-import com.trifork.stamdata.importer.parsers.Parsers;
 
 /**
  * A key value store that uses MySQL to as backend.
@@ -44,7 +41,7 @@ public class MySqlKeyValueStore implements KeyValueStore
 {
     private static final int DB_FIELD_SIZE = 200;
 
-    private final String ownerId;
+    private final String dataOwnerId;
     private final Connection connection;
 
     /**
@@ -54,19 +51,19 @@ public class MySqlKeyValueStore implements KeyValueStore
      * 
      * @param connection
      *            The connection to use for fetching and storing.
-     * @param owner
-     *            The parser the values stored.
+     * @param dataOwnerId
+     *            An identifier that identifies the owner of the stored data.
      * @throws SQLException
      *             Thrown if the database is unreachable.
      */
     @Inject
-    MySqlKeyValueStore(Parser owner, Connection connection) throws SQLException
+    MySqlKeyValueStore(@DataOwnerId String dataOwnerId, Connection connection) throws SQLException
     {
         this.connection = checkNotNull(connection, "connection");
         checkArgument(connection.getTransactionIsolation() != Connection.TRANSACTION_NONE, "The connection must have an active transaction.");
 
-        this.ownerId = Parsers.getIdentifier(owner);
-        checkArgument(ownerId.length() <= DB_FIELD_SIZE, "The parser's id can max be 200 characters.");
+        this.dataOwnerId = checkNotNull(dataOwnerId, "dataOwnerId");
+        checkArgument(this.dataOwnerId.length() <= DB_FIELD_SIZE, "The parser's id can max be 200 characters.");
     }
 
     @Override
@@ -78,7 +75,7 @@ public class MySqlKeyValueStore implements KeyValueStore
         try
         {
             PreparedStatement statement = connection.prepareStatement("SELECT value FROM KeyValueStore WHERE ownerId = ? AND id = ?");
-            statement.setObject(1, ownerId);
+            statement.setObject(1, dataOwnerId);
             statement.setObject(2, key);
 
             ResultSet rs = statement.executeQuery();
@@ -116,7 +113,7 @@ public class MySqlKeyValueStore implements KeyValueStore
                 statement = connection.prepareStatement("DELETE FROM KeyValueStore WHERE ownerId = ? AND id = ?");
             }
 
-            statement.setObject(1, ownerId);
+            statement.setObject(1, dataOwnerId);
             statement.setObject(2, key);
 
             statement.executeUpdate();

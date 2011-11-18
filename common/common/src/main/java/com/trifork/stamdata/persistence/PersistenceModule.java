@@ -39,6 +39,7 @@ import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
 import javax.inject.Named;
+import java.sql.Connection;
 import java.util.Set;
 
 import static com.google.inject.Key.get;
@@ -136,5 +137,12 @@ public class PersistenceModule extends AbstractModule
     protected StatelessSession provideStatelessSession(SessionFactory factory)
     {
         return factory.openStatelessSession();
+    }
+    
+    @Provides
+    @Deprecated
+    protected Connection provideConnection(Session session)
+    {
+        return session.connection();
     }
 }

@@ -38,6 +38,7 @@ import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
 import dk.nsi.stamdata.views.Views;
 import dk.nsi.stamdata.views.cpr.Person;
+import org.dom4j.io.DocumentSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
@@ -47,15 +48,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.util.JAXBSource;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayOutputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Connection;
@@ -67,7 +76,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceTestRunner.class)
-public class StamdataReplicationImplIntegrationTest {
+public class StamdataReplicationImplIntegrationTest
+{
     public static final String WHITELISTED_CVR = "12345678";
     public static final String NON_WHITELISTED_CVR = "87654321";
     private boolean isClientAuthority = false;
@@ -78,7 +88,7 @@ public class StamdataReplicationImplIntegrationTest {
     private ReplicationRequestType request;
     private ReplicationResponseType response;
     private Element anyAsElement;
-    
+
     @Inject
     private Session session;
     @Inject
@@ -87,9 +97,10 @@ public class StamdataReplicationImplIntegrationTest {
     private List<Person> persons = Lists.newArrayList();
     private List<Record> sikredeRecords = Lists.newArrayList();
     private DateTime now, lastYear, nextYear;
-    
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         server = new TestServer().port(8986).contextPath("/").start();
 
         URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication?wsdl");
@@ -98,7 +109,7 @@ public class StamdataReplicationImplIntegrationTest {
 
         service.setHandlerResolver(new SealNamespaceResolver());
         client = service.getStamdataReplication();
-        
+
         now = DateTime.now();
         lastYear = now.minusYears(1);
         nextYear = now.plusYears(1);
@@ -107,57 +118,65 @@ public class StamdataReplicationImplIntegrationTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() throws Exception
+    {
         server.stop();
     }
 
     // Tests
 
     @Test(expected = SOAPFaultException.class)
-    public void requestWithoutAnyReplicationTypeGivesSenderSoapFault() throws Exception {
+    public void requestWithoutAnyReplicationTypeGivesSenderSoapFault() throws Exception
+    {
 
         request = new ReplicationRequestType();
         populateDatabaseAndSendRequest();
     }
 
     @Test
-    public void basicQueryDoesNotRaiseAnException() throws Exception {
-        
+    public void basicQueryDoesNotRaiseAnException() throws Exception
+    {
+
         createCprPersonRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
     }
 
     @Test(expected = ReplicationFault.class)
-    public void cvrThatIsNotWhitelistedRaisesAnException() throws Exception {
+    public void cvrThatIsNotWhitelistedRaisesAnException() throws Exception
+    {
 
         createCprPersonRegisterReplicationRequest();
         isClientAuthority = false;
         populateDatabaseAndSendRequest();
     }
-    
+
     @Test(expected = ReplicationFault.class)
-    public void cvrThatIsWhitelistedForAnotherRegisterRaisesAnException() throws Exception {
+    public void cvrThatIsWhitelistedForAnotherRegisterRaisesAnException() throws Exception
+    {
 
         createSorHospitalRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
     }
 
     @Test(expected = ReplicationFault.class)
-    public void requestToAnUnexistingRegisterAndDatatypeRaisesAnException() throws Exception {
-    
+    public void requestToAnUnexistingRegisterAndDatatypeRaisesAnException() throws Exception
+    {
+
         createUnexistingRegisterAndDatatypeReplicationRequest();
         populateDatabaseAndSendRequest();
     }
-    
+
     @Test(expected = ReplicationFault.class)
-    public void requestToAnExistingRegisterButUnexistingDatatypeRaisesAnException() throws Exception {
+    public void requestToAnExistingRegisterButUnexistingDatatypeRaisesAnException() throws Exception
+    {
 
         createExistingRegisterButUnexistingDatatypeReplicationRequest();
         populateDatabaseAndSendRequest();
     }
-    
+
     @Test
-    public void basicQueryOnEmptyDatabaseReturnsZeroResults() throws Exception {
+    public void basicQueryOnEmptyDatabaseReturnsZeroResults() throws Exception
+    {
 
         createCprPersonRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
@@ -166,7 +185,8 @@ public class StamdataReplicationImplIntegrationTest {
     }
 
     @Test
-    public void basicQueryOnNonEmptyDatabaseReturnsOneResult() throws Exception {
+    public void basicQueryOnNonEmptyDatabaseReturnsOneResult() throws Exception
+    {
 
         createCprPersonRegisterReplicationRequest();
 
@@ -178,44 +198,46 @@ public class StamdataReplicationImplIntegrationTest {
         assertResponseContainsCprAtom();
 
         assertResponseContainsExactNumberOfRecords("sdm:person", 1);
-        
+
         String fornavn = "Joakim";
         String efternavn = "And";
         assertResponseContainsPersonWithSurNameMatchingGivenName(fornavn, efternavn);
     }
 
     @Test
-    public void personsArePagedAccordingToParameter() throws Exception {
+    public void personsArePagedAccordingToParameter() throws Exception
+    {
 
         createCprPersonRegisterReplicationRequest();
-        
+
         Person a = createDonaldDuckPerson(now, lastYear, nextYear);
         a.cpr = "1111111111";
         persons.add(a);
-        
+
         Person b = createDonaldDuckPerson(now, lastYear, nextYear);
         b.cpr = "2222222222";
         persons.add(b);
 
         request.setOffset("0");
         request.setMaxRecords(2L);
-        
+
         populateDatabaseAndSendRequest();
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 2);
     }
 
     @Test
-    public void personsAreCorrectlyPaged() throws Exception {
-        
+    public void personsAreCorrectlyPaged() throws Exception
+    {
+
         createCprPersonRegisterReplicationRequest();
-        
+
         DateTime yesterday = now.minusDays(1);
-        
+
         Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
         a.cpr = "1111111111";
         persons.add(a);
-        
+
         Person b = createDonaldDuckPerson(yesterday, lastYear, nextYear);
         b.cpr = "2222222222";
         persons.add(b);
@@ -226,25 +248,25 @@ public class StamdataReplicationImplIntegrationTest {
 
         request.setOffset("0");
         request.setMaxRecords(1L);
-        
+
         populateDatabaseAndSendRequest();
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("1111111111");
-        
+
         request.setOffset(getOffsetFromAtomEntry());
         sendRequest();
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("2222222222");
-        
+
         request.setOffset(getOffsetFromAtomEntry());
         sendRequest();
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 1);
         assertResponseContainsPersonWithCpr("3333333333");
     }
-    
+
     @Test
     public void testSikredeCopy() throws Exception
     {
@@ -252,14 +274,19 @@ public class StamdataReplicationImplIntegrationTest {
         builder.field("CPRnr", "1234567890");
         Record record = builder.addDummyFieldsAndBuild();
         sikredeRecords.add(record);
-        
+
         createSikredeReplicationRequest();
-        
+
         populateDatabaseAndSendRequest();
-        
+
+        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        transformer.transform(new DOMSource(anyAsElement), new StreamResult(byteArrayOutputStream));
+        System.out.println(new String(byteArrayOutputStream.toByteArray()));
+
         // TODO: There is no namespace on the Records generated. Is that needed and what should it be?
         assertResponseContainsSikredeAtom();
-        assertResponseContainsExactNumberOfRecords("Record", 1);
+        assertResponseContainsExactNumberOfRecords("sdm:SikredeGenerated", 1);
         assertResponseContainsSikredeWithCpr("1234567890");
     }
 
@@ -269,114 +296,127 @@ public class StamdataReplicationImplIntegrationTest {
         URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication?wsdl");
         QName serviceName = new QName("http://nsi.dk/2011/10/21/StamdataKrs/", "StamdataReplicationService");
 
-        for(int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
             StamdataReplicationService service = new StamdataReplicationService(wsdlLocation, serviceName);
 
             service.setHandlerResolver(new SealNamespaceResolver());
-            client = service.getStamdataReplication();    
+            client = service.getStamdataReplication();
         }
     }
-    
+
     @Test
     public void testThatWeAreAbleToHandleMoreThanTwentyConnectionsInSuccession() throws Exception
     {
         createCprPersonRegisterReplicationRequest();
         populateDatabaseAndSendRequest();
-        for(int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
             sendRequest();
         }
     }
 
     // Helper methods
-    
-    private void createCprPersonRegisterReplicationRequest() {
+
+    private void createCprPersonRegisterReplicationRequest()
+    {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("cpr");
         request.setDatatype("person");
         request.setVersion(1L);
         request.setOffset("0");
     }
-    
-    private void createSikredeReplicationRequest() {
+
+    private void createSikredeReplicationRequest()
+    {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("sikrede");
         request.setDatatype("sikrede");
         request.setVersion(1L);
         request.setOffset("0");
     }
-    
-    private void createSorHospitalRegisterReplicationRequest() {
+
+    private void createSorHospitalRegisterReplicationRequest()
+    {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("sor");
         request.setDatatype("sygehus");
         request.setVersion(1L);
         request.setOffset("0");
     }
-    
-    private void createUnexistingRegisterAndDatatypeReplicationRequest() {
+
+    private void createUnexistingRegisterAndDatatypeReplicationRequest()
+    {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("foo");
         request.setDatatype("bar");
         request.setVersion(1L);
         request.setOffset("0");
     }
-    
-    private void createExistingRegisterButUnexistingDatatypeReplicationRequest() {
+
+    private void createExistingRegisterButUnexistingDatatypeReplicationRequest()
+    {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("sor");
         request.setDatatype("bar");
         request.setVersion(1L);
         request.setOffset("0");
     }
-    
-    private void assertResponseContainsCprAtom() {
+
+    private void assertResponseContainsCprAtom()
+    {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
         assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
     }
 
-    private void assertResponseContainsSikredeAtom() {
+    private void assertResponseContainsSikredeAtom()
+    {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-     //   assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:sikrede/sikrede/v1"));
+        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:sikrede/sikrede/v1"));
     }
-    
-    private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException {
+
+    private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException
+    {
         XPathExpression expression = createXpathExpression("//sdm:person[sdm:fornavn='" + givenName + "']/sdm:efternavn");
         String result = expression.evaluate(anyAsElement);
         assertThat(result, is(surName));
     }
 
-    private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException {
+    private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException
+    {
         XPathExpression expression = createXpathExpression("count(//" + tag + ")");
         String countAsString = expression.evaluate(anyAsElement);
         assertThat(Integer.parseInt(countAsString), is(n));
     }
 
-    private void assertResponseContainsPersonWithCpr(String oracleCpr) throws XPathExpressionException {
+    private void assertResponseContainsPersonWithCpr(String oracleCpr) throws XPathExpressionException
+    {
         XPathExpression expression = createXpathExpression("//sdm:person/sdm:cpr");
         String result = expression.evaluate(anyAsElement);
         assertThat(result, is(oracleCpr));
     }
 
-    private void assertResponseContainsSikredeWithCpr(String oracleCpr) throws XPathExpressionException {
-        XPathExpression expression = createXpathExpression("//Record/CPRnr");
+    private void assertResponseContainsSikredeWithCpr(String oracleCpr) throws XPathExpressionException
+    {
+        XPathExpression expression = createXpathExpression("//sdm:SikredeGenerated/sdm:CPRnr");
         String result = expression.evaluate(anyAsElement);
         assertThat(result, is(oracleCpr));
     }
-    
-    private String getOffsetFromAtomEntry() throws XPathExpressionException {
+
+    private String getOffsetFromAtomEntry() throws XPathExpressionException
+    {
         XPathExpression expression = createXpathExpression("//atom:entry/atom:id");
         String atomId = expression.evaluate(anyAsElement);
         String[] tokens = atomId.split("/");
         return tokens[tokens.length - 1];
     }
 
-    private XPathExpression createXpathExpression(String expression) throws XPathExpressionException {
+    private XPathExpression createXpathExpression(String expression) throws XPathExpressionException
+    {
         NamespaceContext context = new NamespaceContextMap(
-                "krs", "http://nsi.dk/2011/10/21/StamdataKrs/", 
+                "krs", "http://nsi.dk/2011/10/21/StamdataKrs/",
                 "atom", "http://www.w3.org/2005/Atom",
                 "sdm", "http://trifork.com/-/stamdata/3.0/cpr");
         XPathFactory factory = XPathFactory.newInstance();
@@ -384,18 +424,20 @@ public class StamdataReplicationImplIntegrationTest {
         xpath.setNamespaceContext(context);
         return xpath.compile(expression);
     }
-    
-    private void populateDatabaseAndSendRequest() throws Exception {
+
+    private void populateDatabaseAndSendRequest() throws Exception
+    {
         populateDatabase();
         sendRequest();
     }
 
-    private void populateDatabase() throws SQLException {
+    private void populateDatabase() throws SQLException
+    {
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Client").executeUpdate();
         session.createSQLQuery("DELETE FROM Client_permissions").executeUpdate();
-        
+
         // Example of subject serial number: CVR:19343634-UID:1234
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
         cvrClient.addPermission(Views.getViewPath(Person.class));
@@ -403,7 +445,8 @@ public class StamdataReplicationImplIntegrationTest {
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();
-        for (Person person : persons) {
+        for (Person person : persons)
+        {
             session.persist(person);
         }
 
@@ -412,26 +455,27 @@ public class StamdataReplicationImplIntegrationTest {
         connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
         RecordPersister recordPersister = new RecordPersister(connection, new Instant());
 
-        for (Record sikredeRecord: sikredeRecords)
+        for (Record sikredeRecord : sikredeRecords)
         {
             recordPersister.persist(sikredeRecord, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         }
 
-        connection.commit();
-
         t.commit();
     }
 
-    private void sendRequest() throws Exception, ReplicationFault {
+    private void sendRequest() throws Exception, ReplicationFault
+    {
         Holder<Security> securityHeader;
         Holder<Header> medcomHeader;
 
-        if (isClientAuthority) {
+        if (isClientAuthority)
+        {
             SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil
                     .getVocesTrustedSecurityWrapper(WHITELISTED_CVR);
             securityHeader = secutityHeadersNotWhitelisted.getSecurity();
             medcomHeader = secutityHeadersNotWhitelisted.getMedcomHeader();
-        } else {
+        } else
+        {
             SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(NON_WHITELISTED_CVR);
             securityHeader = securityHeaders.getSecurity();
             medcomHeader = securityHeaders.getMedcomHeader();
@@ -443,7 +487,8 @@ public class StamdataReplicationImplIntegrationTest {
 
     // StamdataPersonLookupIntegrationTest contains a "Factories" class that we
     // would rather use
-    private Person createDonaldDuckPerson(DateTime modifiedDate, DateTime validFrom, DateTime validTo) {
+    private Person createDonaldDuckPerson(DateTime modifiedDate, DateTime validFrom, DateTime validTo)
+    {
         String cpr = "0102451234";
         String koen = "M";
         String fornavn = "Joakim";

@@ -28,6 +28,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.config.DataOwnerId;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
 import org.joda.time.Instant;
@@ -59,6 +60,7 @@ public class ParserModule extends AbstractModule
     protected void configure()
     {
         bind(ParserContext.class).toInstance(parserContext);
+        bindConstant().annotatedWith(DataOwnerId.class).to(parserContext.identifier());
 
         bind(Parser.class).to(parserContext.getParserClass()).in(Scopes.SINGLETON);
         bind(Inbox.class).to(DirectoryInbox.class).in(Scopes.SINGLETON);

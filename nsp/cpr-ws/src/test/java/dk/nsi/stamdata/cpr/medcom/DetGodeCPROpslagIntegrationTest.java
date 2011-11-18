@@ -44,7 +44,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -70,7 +72,7 @@ import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
 import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
 import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
-
+@Ignore
 @RunWith(GuiceTestRunner.class)
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
 {
@@ -108,6 +110,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
         client = serviceCatalog.getDetGodeCPROpslag();
 
+        /*
         org.hibernate.classic.Session session1 = session.getSessionFactory().openSession();
         Transaction transaction = session1.beginTransaction();
         SQLQuery sqlQuery = session1.createSQLQuery("REPLACE INTO whitelist_config (component_name, cvr) VALUES(?,?)");
@@ -116,7 +119,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         sqlQuery.executeUpdate();
         transaction.commit();
         session1.close();
-
+        */
     }
 
     @Before
@@ -281,8 +284,8 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         for (Record sikredeRecord: sikredeRecords)
         {
             // RecordPersister should be injected
-            RecordPersister recordPersister = new RecordPersister(SikredeRecordSpecs.ENTRY_RECORD_SPEC, session.connection());
-            recordPersister.persist(sikredeRecord, "CPRnr");
+            RecordPersister recordPersister = new RecordPersister(session.connection(), Instant.now());
+            recordPersister.persist(sikredeRecord, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         }
 
         t.commit();

@@ -29,6 +29,7 @@ import com.trifork.stamdata.importer.parsers.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -39,6 +40,7 @@ import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
+@Ignore
 public class YderregisterParserTest
 {
     @Rule public TemporaryFolder folder = new TemporaryFolder();

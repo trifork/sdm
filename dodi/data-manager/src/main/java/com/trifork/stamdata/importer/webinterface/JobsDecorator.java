@@ -72,26 +72,22 @@ public class JobsDecorator
 
     public boolean areAnyJobsOverdue()
     {
-        return Iterables.find(getJobs(), new Predicate<Job>()
+        for (Job job : getJobs())
         {
-            @Override
-            public boolean apply(Job input)
-            {
-                return input.isOverdue();
-            }
-        }) != null;
+            if (job.isOverdue()) return true;
+        }
+
+        return false;
     }
 
     public boolean areAllJobsRunning()
     {
-        return Iterables.find(getJobs(), new Predicate<Job>()
+        for (Job job : getJobs())
         {
-            @Override
-            public boolean apply(Job input)
-            {
-                return !input.isExecuting();
-            }
-        }) == null;
+            if (!job.isOK()) return false;
+        }
+
+        return true;
     }
 
     private class ParserContextDecorator implements Job
