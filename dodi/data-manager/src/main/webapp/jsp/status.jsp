@@ -3,11 +3,11 @@
 <%@ page import="com.trifork.stamdata.importer.jobs.Job"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="com.trifork.stamdata.importer.webinterface.DatabaseStatus"%>
 <%@ page import="com.trifork.stamdata.importer.webinterface.JobsDecorator"%>
+<%@ page import="com.trifork.stamdata.importer.config.ConnectionManager" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	boolean isDBAlive = injector.getInstance(DatabaseStatus.class).isAvailable();
+	boolean isDBAlive = injector.getInstance(ConnectionManager.class).isAvailable();
 	JobsDecorator jobs = injector.getInstance(JobsDecorator.class);
 %>
 
