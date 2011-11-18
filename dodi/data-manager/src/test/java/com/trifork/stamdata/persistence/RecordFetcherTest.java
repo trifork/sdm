@@ -24,22 +24,24 @@
  */
 package com.trifork.stamdata.persistence;
 
-import com.trifork.stamdata.importer.config.ConnectionManager;
+import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
+import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
+import static org.junit.Assert.assertEquals;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import java.math.BigInteger;
-import java.sql.*;
-import java.util.List;
-
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import com.google.inject.Provider;
+import com.trifork.stamdata.importer.config.ConnectionManager;
 
 public class RecordFetcherTest
 {
@@ -62,7 +64,9 @@ public class RecordFetcherTest
         createRecordFieldsTableOnDatabase(connection, recordSpecification);
         transactionTime = new DateTime(2011, 5, 29, 0, 0, 0).toInstant();
         persister = new RecordPersister(connection, transactionTime);
-        fetcher = new RecordFetcher(connection);
+        Provider mockedProvider = Mockito.mock(Provider.class);
+        Mockito.when(mockedProvider.get()).thenReturn(connection);
+        fetcher = new RecordFetcher(mockedProvider);
     }
 
     @After

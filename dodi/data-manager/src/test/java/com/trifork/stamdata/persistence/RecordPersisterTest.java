@@ -45,7 +45,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import com.google.inject.Provider;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 
 public class RecordPersisterTest
@@ -69,7 +71,9 @@ public class RecordPersisterTest
         createSikredeFieldsTableOnDatabase(connection, recordSpecification);
         transactionTime = new DateTime(2011, 5, 29, 0, 0, 0).toInstant();
         persister = new RecordPersister(connection, transactionTime);
-        fetcher = new RecordFetcher(connection);
+        Provider provider = Mockito.mock(Provider.class);
+        Mockito.when(provider.get()).thenReturn(connection);
+        fetcher = new RecordFetcher(provider);
     }
 
     @After

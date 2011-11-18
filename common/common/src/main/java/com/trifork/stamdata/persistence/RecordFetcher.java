@@ -24,31 +24,35 @@
  */
 package com.trifork.stamdata.persistence;
 
-import com.trifork.stamdata.Nullable;
-import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
-import org.joda.time.Instant;
-
-import javax.inject.Inject;
-import java.math.BigInteger;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import org.joda.time.Instant;
+
+import com.google.inject.Provider;
 
 
 public class RecordFetcher
 {
-    private final Connection connection;
+    private final Provider<Connection> connection;
 
     @Inject
-    RecordFetcher(Connection connection)
+    RecordFetcher(Provider<Connection> connection)
     {
         this.connection = connection;
     }
-
+    
     public Record fetchCurrent(String key, RecordSpecification recordSpecification) throws SQLException
     {
         String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), recordSpecification.getKeyColumn());
-        PreparedStatement preparedStatement = connection.prepareStatement(queryString);
+        PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
         preparedStatement.setObject(1, key);
         ResultSet resultSet = preparedStatement.executeQuery();
         if (resultSet.next())
@@ -69,7 +73,7 @@ public class RecordFetcher
                 "(PID = ? AND ModifiedDate > ?) " +
                 "ORDER BY PID, ModifiedDate LIMIT %d", recordSpecification.getTable(), limit);
 
-        PreparedStatement preparedStatement = connection.prepareStatement(queryString);
+        PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
 
         Timestamp fromModifiedDateAsTimestamp = new Timestamp(fromModifiedDate.getMillis());
         preparedStatement.setObject(1, fromPID);
