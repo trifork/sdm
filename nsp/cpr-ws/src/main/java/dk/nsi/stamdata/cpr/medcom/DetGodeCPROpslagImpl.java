@@ -35,7 +35,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import com.trifork.stamdata.persistence.*;
-import dk.nsi.stamdata.security.WhitelistService;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
