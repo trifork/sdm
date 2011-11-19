@@ -144,6 +144,11 @@
             <version>6.1.5</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.jayway.restassured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>1.4</version>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 </project>

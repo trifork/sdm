@@ -22,21 +22,26 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer;
+package com.trifork.stamdata.importer.webinterface;
 
 import dk.nsi.stamdata.testing.TestServer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ComponentIntegrationTest
+import static com.jayway.restassured.RestAssured.get;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+public class WebInterfaceIntegrationTest
 {
+    private int port = 8632;
     private TestServer server;
 
     @Before
     public void setUp() throws Exception
     {
-        server = new TestServer().start();
+        server = new TestServer().port(port).start();
     }
 
     @After
@@ -49,6 +54,13 @@ public class ComponentIntegrationTest
     public void testThatAfterStartUpTheStatusPageReturnsStatus200() throws InterruptedException
     {
         // FIXME: Make rest call to /status expect 200.
+        
+        assertThat(get("http://127.0.0.1:8632/status").statusCode(), is(200));
+    }
 
+    @Test
+    public void testThatAfterStartUpTheMonitoringPageReturnsStatus200()
+    {
+        assertThat(get("http://127.0.0.1:8632/").statusCode(), is(200));
     }
 }
