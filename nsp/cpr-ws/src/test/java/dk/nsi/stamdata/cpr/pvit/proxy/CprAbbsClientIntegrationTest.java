@@ -29,9 +29,7 @@ import static junit.framework.Assert.assertEquals;
 import java.net.MalformedURLException;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
@@ -40,14 +38,14 @@ import dk.nsi.stamdata.dgws.SecurityWrapper;
 public class CprAbbsClientIntegrationTest {
 
     private static final String SERVICE_URL = "http://localhost:8099/cprabbs/service/cprabbs";
-    private CprAbbsStubJettyServer server;
-    private SecurityWrapper securityHeaders;
+    private static CprAbbsStubJettyServer server;
+    private static SecurityWrapper securityHeaders;
 
-    private CprSubscriptionClient client;
+    private static CprSubscriptionClient client;
 
 
-    @Before
-    public void setupSecurityHeaders() throws Exception {
+    @BeforeClass
+    public static void setupSecurityHeaders() throws Exception {
 
         securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("22345678", "foo", "bar");
 
@@ -58,8 +56,8 @@ public class CprAbbsClientIntegrationTest {
     }
 
 
-    @After
-    public void stopServer() throws Exception {
+    @AfterClass
+    public static void stopServer() throws Exception {
 
         server.stopServer();
     }
