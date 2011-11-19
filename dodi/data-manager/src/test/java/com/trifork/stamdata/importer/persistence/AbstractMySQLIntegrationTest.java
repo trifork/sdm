@@ -37,7 +37,7 @@ import org.junit.Test;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 
 
-public class AbstractMySQLIntegrationTest
+public abstract class AbstractMySQLIntegrationTest
 {
 	protected Date t0;
 	protected Date t1;
