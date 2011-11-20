@@ -64,6 +64,7 @@ public class ParserExecutorTest
     private RecordPersister persister;
     
     private File RANDOM_FILE = new File("random");
+    private ParserContext context;
 
     @Before
     public void setUp() throws Exception
@@ -81,7 +82,9 @@ public class ParserExecutorTest
         connection = mock(Connection.class);
         timeManager = mock(ParseTimeManager.class);
 
-        executor = new ParserExecutor(parser, inbox, connection, timeManager, persister);
+        context = mock(ParserContext.class);
+
+        executor = new ParserExecutor(parser, inbox, connection, timeManager, persister, context);
     }
 
     @Test
@@ -92,6 +95,18 @@ public class ParserExecutorTest
         executor.run();
 
         verify(inbox).lock();
+    }
+
+    @Test
+    public void shouldSetTheIsRunningFlagOnTheContextIfTheInboxIsNotEmpty()
+    {
+        // TODO
+    }
+
+    @Test
+    public void shouldNotSetTheIsRunningFlagOnTheContextIfTheInboxIsEmpty()
+    {
+        // TODO
     }
 
     @Test
