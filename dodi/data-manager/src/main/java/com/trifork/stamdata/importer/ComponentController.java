@@ -24,6 +24,7 @@
  */
 package com.trifork.stamdata.importer;
 
+import com.google.common.io.Files;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
+import java.io.File;
 
 /**
  * The entry point for the Data Manager component.
@@ -52,17 +54,29 @@ public class ComponentController extends GuiceServletContextListener
 {
 	private static final Logger logger = LoggerFactory.getLogger(ComponentController.class);
 
+    private static final String PARSER_INBOX_ROOT_DIR_PROP = "jboss.server.data.dir";
+    
 	private Injector injector;
 
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent)
 	{
+        // In order to support both production and development environments
+        // we have to use the same names for system properties. For instance
+        // 
+        if (System.getProperty(PARSER_INBOX_ROOT_DIR_PROP) == null)
+        {
+            System.setProperty(PARSER_INBOX_ROOT_DIR_PROP, Files.createTempDir().getAbsolutePath());
+        }
+        
+        logger.info("Parser inbox root is set to: {}", System.getProperty(PARSER_INBOX_ROOT_DIR_PROP));
+
 		// We have to call the super method to allow Guice to initialize
 		// itself.
         //
 		super.contextInitialized(servletContextEvent);
 
-		// Start the jobs.
+		// Start the internal services.
         //
 		try
 		{
@@ -91,10 +105,17 @@ public class ComponentController extends GuiceServletContextListener
 		{
 			// We'll just log the error here and allow the rest of the
 			// system to shut down.
-
+            //
 			logger.error("Could not stop the running services.", e);
 		}
 
+        // Not sure that it actually makes a difference to not keep
+        // a reference to the injector anymore. But, it doesn't hurt.
+        //
+        injector = null;
+
+        // Allow Guice to wrap up.
+        //
 		super.contextDestroyed(servletContextEvent);
 
         logger.info("Stamdata Data Manager [Shutdown]");
