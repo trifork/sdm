@@ -24,8 +24,10 @@
  */
 package com.trifork.stamdata.importer.config;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Binder;
+import com.google.inject.TypeLiteral;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserContext;
@@ -36,7 +38,7 @@ import java.util.Set;
 public class ParserConfiguration
 {
     @Deprecated
-    public static Set<OldParserContext> getOldConfiguredParsers(final CompositeConfiguration config)
+    public static void bindOldParsers(CompositeConfiguration config, Binder binder)
     {
         Set<OldParserContext> parsers = Sets.newHashSet();
 
@@ -49,7 +51,7 @@ public class ParserConfiguration
                 throw new RuntimeException("All parsers must be configured with an expected import frequency. " + line);
             }
 
-             OldParserContext parser = new OldParserContext();
+            OldParserContext parser = new OldParserContext();
 
             try
             {
@@ -64,10 +66,10 @@ public class ParserConfiguration
             parsers.add(parser);
         }
 
-        return parsers;
+        binder.bind(new TypeLiteral<Set<OldParserContext>>() {}).toInstance(ImmutableSet.copyOf(parsers));
     }
 
-    public static Set<ParserContext> getConfiguredParsers(final CompositeConfiguration config, Binder binder)
+    public static void bindParsers(CompositeConfiguration config, Binder binder)
     {
         Set<ParserContext> parsers = Sets.newHashSet();
 
@@ -87,6 +89,11 @@ public class ParserConfiguration
 
                 ParserContext context = new ParserContext(parserClass, minimumImportFrequency);
 
+                // Currently the context needs access to the the parser's inbox to check if
+                // it is locked so we have to inject it.
+                //
+                // TODO: This is not particularly pretty.
+                //
                 binder.requestInjection(context);
 
                 parsers.add(context);
@@ -97,6 +104,6 @@ public class ParserConfiguration
             }
         }
 
-        return parsers;
+        binder.bind(new TypeLiteral<Set<ParserContext>>() {}).toInstance(ImmutableSet.copyOf(parsers));
     }
 }
