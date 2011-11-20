@@ -31,6 +31,13 @@ import org.joda.time.Instant;
 
 import java.sql.Connection;
 
+/**
+ * Used to keep track of when a parser was last run.
+ *
+ * This class is used to make the ImportTimeManager injectable.
+ * In the future the ImportTimeManager should not be used directly
+ * and is scheduled for removal.
+ */
 public class ParseTimeManager
 {
     private final Parser parser;
@@ -48,10 +55,5 @@ public class ParseTimeManager
     public void update()
     {
         ImportTimeManager.setLastImportTime(parser.getClass(), transactionTime, connection);
-    }
-
-    public DateTime getTimestamp()
-    {
-        return ImportTimeManager.getLastImportTime(parser.getClass(), connection);
     }
 }
