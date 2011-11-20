@@ -25,10 +25,8 @@
 package com.trifork.stamdata.importer.webinterface;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.trifork.stamdata.importer.jobs.Job;
 import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserContext;
@@ -108,13 +106,13 @@ public class JobsDecorator
         @Override
         public String getHumanName()
         {
-            return context.getHumanName();
+            return context.name();
         }
 
         @Override
         public boolean isOK()
         {
-            return context.isOK();
+            return context.isOk();
         }
 
         @Override
@@ -126,7 +124,7 @@ public class JobsDecorator
         @Override
         public DateTime getLatestRunTime()
         {
-            return context.getLatestRunTime();
+            return context.latestRunTime();
         }
 
         @Override
