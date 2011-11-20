@@ -64,16 +64,17 @@ public class ParserExecutor implements Runnable
     private final Connection connection;
     private final ParseTimeManager timeManager;
     private final RecordPersister persister;
-    private boolean isParserRunning = false;
+    private final ParserContext context;
 
     @Inject
-    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, RecordPersister persister)
+    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, RecordPersister persister, ParserContext context)
     {
         this.parser = parser;
         this.inbox = inbox;
         this.connection = connection;
         this.timeManager = timeManager;
         this.persister = persister;
+        this.context = context;
     }
 
     @Override
@@ -106,6 +107,10 @@ public class ParserExecutor implements Runnable
         }
         finally
         {
+            // Make absolutely sure that the parser is not marked as running.
+            //
+            context.isRunning(false);
+
             ConnectionManager.closeQuietly(connection);
 
             // Pop the logging context.
@@ -124,7 +129,7 @@ public class ParserExecutor implements Runnable
 
         if (dataSet != null)
         {
-            isParserRunning = true;
+            context.isRunning(true);
 
             MDC.put("input", dataSet.getName());
 
@@ -163,20 +168,5 @@ public class ParserExecutor implements Runnable
     public Class<? extends Parser> parser()
     {
         return parser.getClass();
-    }
-
-    /**
-     * Indicated if the parser is running or not.
-     * 
-     * An executor can be in one of two states. Running or not running.
-     * If it is just checking the inbox this is not defined as running.
-     * If on the other hand the parser is busy importing files the
-     * executor is said to be running.
-     * 
-     * @return true is the parser is running.
-     */
-    public boolean isParserRunning()
-    {
-        return isParserRunning;
     }
 }

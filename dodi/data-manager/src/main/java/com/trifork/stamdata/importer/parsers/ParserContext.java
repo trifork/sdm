@@ -25,7 +25,6 @@
 package com.trifork.stamdata.importer.parsers;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
 import org.joda.time.DateTime;
@@ -71,7 +70,7 @@ public class ParserContext
      */
     public boolean isOverdue()
     {
-        return hasBeenRun() && getNextDeadline().isBeforeNow();
+        return hasBeenRun() && nextDeadline().isBeforeNow();
     }
 
     /**
@@ -82,21 +81,19 @@ public class ParserContext
      *
      * @return the timestamp with the deadline.
      */
-    public DateTime getNextDeadline()
+    public DateTime nextDeadline()
     {
-        return getLatestRunTime().plusDays(minimumImportFrequency).toDateMidnight().toDateTime();
+        return latestRunTime().plusDays(minimumImportFrequency).toDateMidnight().toDateTime();
     }
 
-    public DateTime getLatestRunTime()
+    public DateTime latestRunTime()
     {
-        // TODO: There are two ways the last run time is stored.
-
         return ImportTimeManager.getLastImportTime(identifier());
     }
 
     public boolean hasBeenRun()
     {
-        return getLatestRunTime() != null;
+        return latestRunTime() != null;
     }
 
     public String identifier()
@@ -104,7 +101,7 @@ public class ParserContext
         return Parsers.getIdentifier(getParserClass());
     }
 
-    public boolean isOK()
+    public boolean isOk()
     {
         scope.enter(this);
         
@@ -119,7 +116,7 @@ public class ParserContext
         }
     }
 
-    public String getHumanName()
+    public String name()
     {
         return Parsers.getName(parserClass);
     }
@@ -127,5 +124,10 @@ public class ParserContext
     public boolean isRunning()
     {
         return isRunning;
+    }
+
+    void isRunning(boolean isRunning)
+    {
+        this.isRunning = isRunning;
     }
 }
