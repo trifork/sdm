@@ -39,6 +39,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import static com.trifork.stamdata.Preconditions.checkArgument;
+import static com.trifork.stamdata.Preconditions.checkState;
 
 /**
  * Uses a file system directory as inbox.
@@ -63,7 +64,7 @@ import static com.trifork.stamdata.Preconditions.checkArgument;
  */
 public class DirectoryInbox implements Inbox
 {
-    private static final ConcurrentMap<String, DirectoryState> sizeHistory = new MapMaker().expireAfterAccess(10, TimeUnit.MINUTES).makeMap();
+    private static final ConcurrentMap<String, InboxState> sizeHistory = new MapMaker().expireAfterAccess(10, TimeUnit.MINUTES).makeMap();
 
     private final File inboxDirectory;
     private final File lockFile;
@@ -101,7 +102,7 @@ public class DirectoryInbox implements Inbox
     @Override
     public File top()
     {
-        Preconditions.checkState(!isLocked(), "The inbox is locked.");
+        checkState(!isLocked(), "The inbox is locked.");
 
         return dataSets.peek();
     }
@@ -109,10 +110,10 @@ public class DirectoryInbox implements Inbox
     @Override
     public void advance() throws IOException
     {
-        Preconditions.checkState(!isLocked(), "The inbox is locked.");
+        checkState(!isLocked(), "The inbox is locked.");
 
         File element = top();
-        Preconditions.checkState(element != null, "You must not call advance when no data sets are present.");
+        checkState(element != null, "You must not call advance when no data sets are present.");
 
         // First we have to successfully delete the
         // directory physically.
@@ -136,7 +137,7 @@ public class DirectoryInbox implements Inbox
     @Override
     public int readyCount()
     {
-        Preconditions.checkState(!isLocked(), "The inbox is locked.");
+        checkState(!isLocked(), "The inbox is locked.");
 
         return dataSets.size();
     }
@@ -144,7 +145,7 @@ public class DirectoryInbox implements Inbox
     @Override
     public void update() throws IOException
     {
-        Preconditions.checkState(!isLocked(), "The inbox is locked.");
+        checkState(!isLocked(), "The inbox is locked.");
 
         final Ordering FILENAME_ORDERING = Ordering.usingToString();
 
@@ -167,8 +168,8 @@ public class DirectoryInbox implements Inbox
             //
             if (element.isFile()) continue;
 
-            DirectoryState previousState = sizeHistory.get(element.getPath());
-            DirectoryState currentState = createState(element);
+            InboxState previousState = sizeHistory.get(element.getPath());
+            InboxState currentState = createState(element);
 
             if (previousState == null || currentState.size != previousState.size)
             {
@@ -215,18 +216,18 @@ public class DirectoryInbox implements Inbox
         return lockFile.exists();
     }
 
-    private static DirectoryState createState(File directory)
+    private static InboxState createState(File directory)
     {
-        checkArgument(directory.isDirectory(), "Cannot create a snapshot state of anything but a directory.");
+        checkArgument(directory.isDirectory(), "Cannot create a snapshot state of anything but a directory. file=%s", directory.getAbsolutePath());
 
-        DirectoryState state = new DirectoryState();
+        InboxState state = new InboxState();
         state.size = FileUtils.sizeOfDirectory(directory);
         state.timestamp = Instant.now();
 
         return state;
     }
 
-    private static class DirectoryState
+    private static class InboxState
     {
         Long size = null;
         Instant timestamp = null;
