@@ -59,7 +59,7 @@ public class RecordPersisterTest
     private RecordFetcher fetcher;
 
     @Before
-    public void setupSikredePersister() throws SQLException
+    public void setUp() throws SQLException
     {
         // TODO: Add test with two identical field names
         recordSpecification = RecordSpecification.createSpec("SikredeTest", "Moo",
@@ -77,12 +77,9 @@ public class RecordPersisterTest
     }
 
     @After
-    public void closeConnection() throws SQLException
+    public void tearDown() throws SQLException
     {
-        if(connection != null)
-        {
-            connection.close();
-        }
+        ConnectionManager.closeQuietly(connection);
     }
     
     @Test
