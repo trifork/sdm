@@ -38,6 +38,8 @@ import org.joda.time.DateTime;
 /**
  * Uses both the old job manager and the new job scheduler to
  * list all running jobs.
+ *
+ * TODO: This could be merged with the DataManagerComponentMonitor class.
  */
 public class JobsDecorator
 {

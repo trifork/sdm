@@ -39,6 +39,8 @@ import java.util.*;
 import java.util.concurrent.*;
 
 /**
+ * A service that given a set parser configurations dispatches an executor for the parse.
+ *
  * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserScheduler

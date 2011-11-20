@@ -30,6 +30,9 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
 import org.joda.time.DateTime;
 
+/**
+ * A light-weight descriptor that describes the state and configuration of a parser.
+ */
 public class ParserContext
 {
     @Inject

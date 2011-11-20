@@ -42,6 +42,11 @@ import javax.xml.parsers.SAXParserFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Provides the bindings needed for a parser execution.
+ *
+ * Object in this module are all bound in {@link ParserScope}.
+ */
 public class ParserModule extends AbstractModule
 {
     @Override

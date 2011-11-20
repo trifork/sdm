@@ -28,6 +28,8 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 
 /**
+ * Utility methods for working with classes that implement the {@link Parser} interface.
+ *
  * @author Thomas Børlum <thb@trifork.com>
  */
 public final class Parsers

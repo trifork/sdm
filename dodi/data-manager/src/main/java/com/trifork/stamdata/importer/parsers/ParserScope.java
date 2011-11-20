@@ -35,9 +35,11 @@ import java.util.Map;
 import static com.google.common.base.Preconditions.checkState;
 
 /**
+ * Used to scope objects to a parser execution.
+ *
  * Scopes a single execution of a block of code. Apply this scope with a
- * try/finally block: <pre><code>
- * <p/>
+ * try/finally block:
+ * <pre><code>
  *   scope.enter();
  *   try {
  *     // explicitly seed some seed objects...
@@ -47,7 +49,6 @@ import static com.google.common.base.Preconditions.checkState;
  *     scope.exit();
  *   }
  * </code></pre>
- * <p/>
  * The scope can be initialized with one or more seed values by calling
  * <code>seed(key, value)</code> before the injector will be called upon to
  * provide for this key. A typical use is for a servlet filter to enter/exit the

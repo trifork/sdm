@@ -36,6 +36,16 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletContextEvent;
 
 /**
+ * The entry point for the Data Manager component.
+ *
+ * Responsibilities:
+ *
+ * <ul>
+ *     <li>Configure the Guice Injector</li>
+ *     <li>Make sure required system properties are set.</li>
+ *     <li>Startup and shutdown any internal services.</li>
+ * </ul>
+ *
  * @author Thomas Børlum <thb@trifork.com>
  */
 public class ComponentController extends GuiceServletContextListener

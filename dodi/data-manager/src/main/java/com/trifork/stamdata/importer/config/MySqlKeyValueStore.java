@@ -36,6 +36,8 @@ import com.trifork.stamdata.Nullable;
 
 /**
  * A key value store that uses MySQL to as backend.
+ *
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class MySqlKeyValueStore implements KeyValueStore
 {

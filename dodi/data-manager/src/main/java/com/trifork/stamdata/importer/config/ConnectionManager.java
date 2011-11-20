@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Jan Buchholdt <jbu@trifork.com>
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class ConnectionManager
 {

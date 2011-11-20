@@ -37,7 +37,7 @@ import com.google.inject.Singleton;
 
 
 /**
- * Status servlet for the importer, shows information about the running
+ * Monitoring servlet for the data manager, shows information about the running
  * jobs.
  * 
  * @author Thomas Børlum <thb@trifork.com>

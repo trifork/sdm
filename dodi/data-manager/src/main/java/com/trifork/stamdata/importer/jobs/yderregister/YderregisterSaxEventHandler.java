@@ -45,6 +45,7 @@ import static java.lang.String.format;
 
 /**
  * @author Jan Buchholdt <jbu@trofork.com>
+ * @author Thomas Børlum <thb@trofork.com>
  */
 public class YderregisterSaxEventHandler extends DefaultHandler
 {
