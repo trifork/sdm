@@ -65,7 +65,7 @@ public class MySqlKeyValueStore implements KeyValueStore
         checkArgument(connection.getTransactionIsolation() != Connection.TRANSACTION_NONE, "The connection must have an active transaction.");
 
         this.dataOwnerId = checkNotNull(dataOwnerId, "dataOwnerId");
-        checkArgument(this.dataOwnerId.length() <= DB_FIELD_SIZE, "The parser's id can max be 200 characters.");
+        checkArgument(this.dataOwnerId.length() <= DB_FIELD_SIZE, "The parser's id can max be %d characters.", DB_FIELD_SIZE);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class MySqlKeyValueStore implements KeyValueStore
     public void put(String key, @Nullable String value)
     {
         checkNotNull(key, "key");
-        checkArgument(key.length() <= DB_FIELD_SIZE, "key can max be 200 characters.");
+        checkArgument(key.length() <= DB_FIELD_SIZE, "key can max be %d characters.", DB_FIELD_SIZE);
 
         // The databases 'key' column is called 'id' because 'key' is a
         // keyword in SQL.
@@ -105,7 +105,7 @@ public class MySqlKeyValueStore implements KeyValueStore
 
             if (value != null)
             {
-                checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be 200 characters.");
+                checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be %d characters.", DB_FIELD_SIZE);
 
                 statement = connection.prepareStatement("INSERT INTO KeyValueStore (ownerId, id, value) VALUES (?, ?, ?)");
                 statement.setObject(3, value);
