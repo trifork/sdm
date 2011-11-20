@@ -46,6 +46,8 @@ import java.sql.SQLException;
  * Provides the bindings needed for a parser execution.
  *
  * Object in this module are all bound in {@link ParserScope}.
+ *
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserModule extends AbstractModule
 {
