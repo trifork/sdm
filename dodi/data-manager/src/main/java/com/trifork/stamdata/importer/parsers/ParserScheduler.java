@@ -26,6 +26,7 @@ package com.trifork.stamdata.importer.parsers;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -90,6 +91,11 @@ public class ParserScheduler
 
     public void stop()
     {
+        shutdown();
+    }
+
+    private void shutdown()
+    {
         // Don't schedule any more jobs.
         //
         schedulerExecutor.shutdownNow();
@@ -116,7 +122,8 @@ public class ParserScheduler
                     // make it out here. If something does it must be a fatal
                     // error, and we stop execution.
                     //
-                    schedulerExecutor.shutdownNow();
+                    shutdown();
+
                     logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.",  t);
                 }
             }
@@ -150,6 +157,9 @@ public class ParserScheduler
 
     private ListenableFuture executeParser(ParserContext parserContext)
     {
+        // Each parser is executed in its own scope. Thus any shared instances
+        // will be available only to this parser and only for this execution.
+        //
         scope.enter(parserContext);
 
         try
@@ -162,7 +172,7 @@ public class ParserScheduler
         }
         finally
         {
-          scope.exit();
+            scope.exit();
         }
     }
 
