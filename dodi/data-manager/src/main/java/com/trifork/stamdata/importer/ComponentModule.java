@@ -44,6 +44,9 @@ import org.apache.commons.configuration.CompositeConfiguration;
 
 import java.util.Set;
 
+import static com.trifork.stamdata.importer.config.ParserConfiguration.bindOldParsers;
+import static com.trifork.stamdata.importer.config.ParserConfiguration.bindParsers;
+
 /**
  * @author Thomas Børlum <thb@trifork.com>
  */
@@ -56,21 +59,17 @@ public class ComponentModule extends ServletModule
 
         final CompositeConfiguration config = ConfigurationLoader.loadConfiguration();
 
-        // Parse the properties from the configuration files.
+        // Bind the configured parsers.
+        // TODO: The parsers' classes should not be named in the configuration file.
         //
-        final Set<OldParserContext> parsers = ParserConfiguration.getOldConfiguredParsers(config);
-        final Set<ParserContext> newParsers = ParserConfiguration.getConfiguredParsers(config, binder());
+        bindParsers(config, binder());
+        bindOldParsers(config, binder());
 
-        // HACK: Because we are not using the ConfigurationLoader (yet!) we cannot easily bind properties
+        // HACK: Because we are not using the shared ConfigurationLoader (yet!) we cannot easily bind properties
         // to named constants.
         //
         bindConstant().annotatedWith(Names.named("rootDir")).to(config.getString("rootDir"));
         bindConstant().annotatedWith(Names.named("file.stabilization.period")).to(config.getInt("file.stabilization.period"));
-
-        // Bind the configured parser. (The old parser configurations will be phased out)
-        //
-        bind(new TypeLiteral<Set<OldParserContext>>() {}).toInstance(ImmutableSet.copyOf(parsers));
-        bind(new TypeLiteral<Set<ParserContext>>() {}).toInstance(ImmutableSet.copyOf(newParsers));
 
         // Serve the status servlet.
         //
