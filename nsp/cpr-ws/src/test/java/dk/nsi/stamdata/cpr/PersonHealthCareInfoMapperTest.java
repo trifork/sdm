@@ -46,8 +46,6 @@ import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
 import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
 import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
@@ -63,8 +61,8 @@ public class PersonHealthCareInfoMapperTest
     private static final String UKENDT = "UKENDT";
 
     private Person person;
-    private SikredeYderRelation relation;
     private Record sikredeRecord;
+    private Record yderRecord;
 
     private PersonWithHealthCareInformationStructureType output;
 
@@ -73,9 +71,8 @@ public class PersonHealthCareInfoMapperTest
     public void setUp()
     {
         person = Factories.createPerson();
-        yder = Factories.createYderregister();
-        relation = Factories.createSikredeYderRelation();
-        sikredeRecord = Factories.createSikredeRecordFor(person, yder, "2", new DateTime(Factories.YESTERDAY));
+        yderRecord = Factories.createYderRecord("1234");
+        sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
     }
 
     private void doMapping() throws DatatypeConfigurationException
@@ -84,7 +81,7 @@ public class PersonHealthCareInfoMapperTest
         Set<String> whitelist = Sets.newHashSet();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
-        output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, relation, yder, sikredeRecord);
+        output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
     }
 
 
@@ -101,7 +98,7 @@ public class PersonHealthCareInfoMapperTest
     @Test
     public void itInsertsDummyDataIfTheYderDataIsMissing() throws DatatypeConfigurationException
     {
-        yder = null;
+        yderRecord = null;
 
         doMapping();
 
@@ -114,8 +111,8 @@ public class PersonHealthCareInfoMapperTest
     public void itInsertsDummyDataIfThePersonIsProtectedAndDataIsMissing() throws DatatypeConfigurationException
     {
         person = Factories.createPersonWithAddressProtection();
-        yder = null;
-        relation = null;
+        yderRecord = null;
+        sikredeRecord = null;
 
         doMapping();
 
@@ -137,24 +134,10 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Test
-    public void itInsertsDummyDataIfTheRelationDataIsMissing() throws DatatypeConfigurationException
-    {
-        relation = null;
-        sikredeRecord = null;
-
-        doMapping();
-
-        assertThatGeneralPractitionerIsRealData();
-        assertThatRelationIsDummy();
-    }
-
-
-    @Test
     public void itInsertsDummyDataIfBothAreMissing() throws DatatypeConfigurationException
     {
-        relation = null;
         sikredeRecord = null;
-        yder = null;
+        yderRecord = null;
 
         doMapping();
 
@@ -181,13 +164,13 @@ public class PersonHealthCareInfoMapperTest
     {
         AssociatedGeneralPractitionerStructureType g = output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure();
 
-        assertThat(g.getAssociatedGeneralPractitionerOrganisationName(), is(yder.getNavn()));
-        assertThat(g.getDistrictName(), is(yder.getBynavn()));
-        assertThat(g.getStandardAddressIdentifier(), is(yder.getVejnavn() + ", " + yder.getPostnummer() + " " + yder.getBynavn()));
-        assertThat(g.getAssociatedGeneralPractitionerIdentifier().intValue(), is(yder.getNummer()));
-        assertThat(g.getTelephoneSubscriberIdentifier(), is(yder.getTelefon()));
-        assertThat(g.getPostCodeIdentifier(), is(yder.getPostnummer()));
-        assertThat(g.getEmailAddressIdentifier(), is(yder.getEmail()));
+        assertThat(g.getAssociatedGeneralPractitionerOrganisationName(), is(yderRecord.get("PrakBetegn")));
+        assertThat(g.getDistrictName(), is(yderRecord.get("PostdistYder")));
+        assertThat(g.getStandardAddressIdentifier(), is(yderRecord.get("AdrYder")));
+        assertThat(g.getAssociatedGeneralPractitionerIdentifier(), is(new BigInteger((String) yderRecord.get("YdernrYder"))));
+        assertThat(g.getTelephoneSubscriberIdentifier(), is(yderRecord.get("HvdTlf")));
+        assertThat(g.getPostCodeIdentifier(), is(yderRecord.get("PostnrYder")));
+        assertThat(g.getEmailAddressIdentifier(), is(yderRecord.get("EmailYder")));
     }
 
 

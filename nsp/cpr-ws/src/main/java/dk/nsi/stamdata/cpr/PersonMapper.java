@@ -47,9 +47,9 @@ import com.trifork.stamdata.persistence.Record;
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.mapping.SikredeRecordToPersonPublicHealhInsuranceMapper;
+import dk.nsi.stamdata.cpr.mapping.YderregisterRecordToAssociatedGeneralPractitionerMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.jaxws.generated.AddressAccessType;
 import dk.nsi.stamdata.jaxws.generated.AddressCompleteType;
@@ -362,7 +362,7 @@ public class PersonMapper
 	}
 
 
-	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable SikredeYderRelation sikredeYderRelation, @Nullable Yderregister yderregister, Record sikredeRecord) throws DatatypeConfigurationException
+	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable Record sikredeRecord, @Nullable Record yderRecord) throws DatatypeConfigurationException
 	{
 		Preconditions.checkNotNull(person, "person");
 		
@@ -382,13 +382,14 @@ public class PersonMapper
 		{
 			associatedGeneralPractitioner = createDummyPractitioner(ADRESSEBESKYTTET);
 		}
-		else if (yderregister == null)
+		else if (yderRecord == null)
 		{
 			associatedGeneralPractitioner = createDummyPractitioner(UKENDT);
 		}
 		else
 		{
-			associatedGeneralPractitioner = createPractitioner(yderregister);
+		    YderregisterRecordToAssociatedGeneralPractitionerMapper yderregisterRecordToAssociatedGeneralPractitionerMapper = new YderregisterRecordToAssociatedGeneralPractitionerMapper();
+		    associatedGeneralPractitioner = yderregisterRecordToAssociatedGeneralPractitionerMapper.map(yderRecord);
 		}
 		
 		personHealthCareInformation.setAssociatedGeneralPractitionerStructure(associatedGeneralPractitioner);
@@ -412,24 +413,6 @@ public class PersonMapper
 		personHealthCareInformation.setPersonPublicHealthInsurance(personPublicHealthInsurance);
 
 		return personWithHealthCare;
-	}
-
-
-	private AssociatedGeneralPractitionerStructureType createPractitioner(Yderregister yderregister)
-	{
-		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner = new AssociatedGeneralPractitionerStructureType();
-		associatedGeneralPractitioner.setAssociatedGeneralPractitionerIdentifier(BigInteger.valueOf(yderregister.getNummer()));
-		associatedGeneralPractitioner.setAssociatedGeneralPractitionerOrganisationName(yderregister.getNavn());
-		associatedGeneralPractitioner.setDistrictName(yderregister.getBynavn());
-		associatedGeneralPractitioner.setEmailAddressIdentifier(yderregister.getEmail());
-		associatedGeneralPractitioner.setPostCodeIdentifier(yderregister.getPostnummer());
-
-		String address = yderregister.getVejnavn() + ", " + yderregister.getPostnummer() + " " + yderregister.getBynavn();
-
-		associatedGeneralPractitioner.setStandardAddressIdentifier(address);
-		associatedGeneralPractitioner.setTelephoneSubscriberIdentifier(yderregister.getTelefon());
-
-		return associatedGeneralPractitioner;
 	}
 
 

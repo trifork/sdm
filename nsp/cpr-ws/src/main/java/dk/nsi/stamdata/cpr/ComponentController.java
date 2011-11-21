@@ -50,7 +50,6 @@ import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
-import dk.nsi.stamdata.security.WhitelistDbInterceptorModule;
 
 
 public class ComponentController extends GuiceServletContextListener

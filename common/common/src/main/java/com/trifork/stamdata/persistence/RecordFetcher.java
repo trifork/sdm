@@ -49,9 +49,9 @@ public class RecordFetcher
         this.connection = connection;
     }
     
-    public Record fetchCurrent(String key, RecordSpecification recordSpecification) throws SQLException
+    public Record fetchCurrent(String key, RecordSpecification recordSpecification, String lookupColumn) throws SQLException
     {
-        String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), recordSpecification.getKeyColumn());
+        String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), lookupColumn);
         PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
         preparedStatement.setObject(1, key);
         ResultSet resultSet = preparedStatement.executeQuery();
@@ -63,6 +63,11 @@ public class RecordFetcher
         {
             return null;
         }
+    }
+    
+    public Record fetchCurrent(String key, RecordSpecification recordSpecification) throws SQLException
+    {
+        return fetchCurrent(key, recordSpecification, recordSpecification.getKeyColumn());
     }
 
     public List<RecordMetadata> fetchSince(RecordSpecification recordSpecification, long fromPID, Instant fromModifiedDate, int limit) throws SQLException

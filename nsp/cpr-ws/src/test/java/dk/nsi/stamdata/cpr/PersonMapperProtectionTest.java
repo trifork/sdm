@@ -45,8 +45,6 @@ import com.trifork.stamdata.persistence.Record;
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
@@ -71,8 +69,7 @@ public class PersonMapperProtectionTest
 	
 	private Set<String> whitelist;
 	private MunicipalityMapper municipalityMapper;
-	private Yderregister yderregister;
-	private SikredeYderRelation sikredeYderRelation;
+	private Record yderRecord;
 	private Record sikredeRecord;
 	
 	@Before
@@ -85,9 +82,8 @@ public class PersonMapperProtectionTest
 		
 		municipalityMapper = new MunicipalityMapper();
 		person = Factories.createPerson();
-		yderregister = Factories.createYderregister();
-		sikredeYderRelation = Factories.createSikredeYderRelation();
-		sikredeRecord = Factories.createSikredeRecordFor(person, yderregister, "2", new DateTime(Factories.YESTERDAY));
+		yderRecord = Factories.createYderRecord("1234");
+		sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
 	}
 	
 	public PersonMapper mapper(boolean isClientAnAuthority)
@@ -157,7 +153,7 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
 		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
 		
-		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister, sikredeRecord));
+		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
 	}
 	
 	@Test
@@ -166,7 +162,7 @@ public class PersonMapperProtectionTest
 		person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
 		person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
 		
-		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeYderRelation, yderregister, sikredeRecord));
+		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
 	}
 	
 	private void assertThatPersonIsNotProtected(PersonInformationStructureType output)
@@ -186,6 +182,6 @@ public class PersonMapperProtectionTest
 	
 	private void assertThatHealthCareInfoIsNotProtected(PersonWithHealthCareInformationStructureType output)
 	{
-		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderregister.getBynavn()));
+		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderRecord.get("PostdistYder")));
 	}
 }

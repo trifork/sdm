@@ -25,6 +25,8 @@
 package dk.nsi.stamdata.cpr;
 
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.models.Yderregister;
@@ -35,7 +37,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
-import com.trifork.stamdata.persistence.RecordSpecification;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -197,14 +198,27 @@ public class Factories
     }
 
 
-    public static Record createSikredeRecordFor(Person person, Yderregister register, String groupCode, DateTime ikraftDato)
+    public static Record createSikredeRecordFor(Person person, Record yderRecord, String groupCode, DateTime ikraftDato)
     {
         RecordBuilder builder = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         builder
             .field("CPRnr", person.getCpr())
-            .field("SYdernr", Integer.toString(register.getNummer()))
+            .field("SYdernr", yderRecord.get("YdernrYder"))
             .field("SSikrGrpKode", groupCode)
             .field("SIkraftDatoGrp", sikredeRecordDateString(ikraftDato));
+        return builder.addDummyFieldsAndBuild();
+    }
+    
+    public static Record createYderRecord(String ydernummer)
+    {
+        RecordBuilder builder = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE)
+                                    .field("YdernrYder", ydernummer)
+                                    .field("PrakBetegn", "Klinikken")
+                                    .field("PostdistYder", "Århus")
+                                    .field("EmailYder", "test@example.com")
+                                    .field("PostnrYder", "8000")
+                                    .field("AdrYder", "Margrethepladsen 44, 8000 Århus")
+                                    .field("HvdTlf", "12345678");
         return builder.addDummyFieldsAndBuild();
     }
     

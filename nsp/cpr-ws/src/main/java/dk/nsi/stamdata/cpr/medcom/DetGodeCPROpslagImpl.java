@@ -26,7 +26,6 @@ package dk.nsi.stamdata.cpr.medcom;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.jws.WebParam;
@@ -34,12 +33,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
-import com.trifork.stamdata.persistence.*;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import dk.nsi.stamdata.cpr.models.Yderregister;
-import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,12 +42,16 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordFetcher;
+import com.trifork.stamdata.persistence.Transactional;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
 import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
@@ -153,8 +151,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		Person person = fetchPersonWithPnr(pnr);
 
-		SikredeYderRelation sikredeYderRelation = fetchSikredeYderRelationWithPnr(pnr + "-C");
-
 		Record sikredeRecord = null;
 		try 
 		{
@@ -165,22 +161,28 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
             throw SoapUtils.newServerErrorFault(e);		    
 		}
         
+		Record yderRecord = null;
+		if(sikredeRecord != null)
+		{
+		    try
+		    {
+		        yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"));
+		    }
+	        catch (SQLException e)
+	        {
+	            throw SoapUtils.newServerErrorFault(e);         
+	        }
+		}
+		
 		// If the relation is not found we have to use fake data to satisfy the
 		// output format.
-		
-		Yderregister yderregister = null;
-		
-		if (sikredeYderRelation != null)
-		{
-		    yderregister = fetchYderregisterForPnr(sikredeYderRelation.getYdernummer());
-		}
 		
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
 		PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
 
 		try
 		{
-			personWithHealthCareInformation = personMapper.map(person, sikredeYderRelation, yderregister, sikredeRecord);
+			personWithHealthCareInformation = personMapper.map(person, sikredeRecord, yderRecord);
 		}
 		catch (DatatypeConfigurationException e)
 		{
@@ -196,9 +198,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Transactional
     private Record getSikredeRecord(String pnr) throws SQLException 
     {
-        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC, "CPRnr");
     }
 
+	@Transactional
+	private Record getYderRecord(String ydernummer) throws SQLException 
+	{
+	    return recordFetcher.fetchCurrent(ydernummer, YderregisterRecordSpecs.YDER_RECORD_TYPE, "YdernrYder");
+	}
 
 	// HELPERS
 
@@ -233,40 +240,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 
 	// HELPERS
-
-	private SikredeYderRelation fetchSikredeYderRelationWithPnr(String pnr)
-	{
-		checkNotNull(pnr, "pnr");
-		SikredeYderRelation sikredeYderRelation = null;
-
-		try
-		{
-			sikredeYderRelation = fetcher.fetch(SikredeYderRelation.class, pnr);
-		}
-		catch (Exception e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
-
-		return sikredeYderRelation;
-
-	}
-
-
-	private Yderregister fetchYderregisterForPnr(int ydernummer)
-	{
-		Yderregister yderregister = null;
-		try
-		{
-			yderregister = fetcher.fetch(Yderregister.class, ydernummer);
-		}
-		catch (Exception e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
-		return yderregister;
-	}
-
 
 	private void checkInputParameters(@Nullable String pnr)
 	{
