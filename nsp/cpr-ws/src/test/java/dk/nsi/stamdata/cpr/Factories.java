@@ -28,8 +28,6 @@ import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -131,59 +129,6 @@ public class Factories
         person.setValidTo(TOMORROW);
 
         return person;
-    }
-
-
-    public static SikredeYderRelation createSikredeYderRelation()
-    {
-        SikredeYderRelation relation = new SikredeYderRelation();
-        relation.setCpr(generateRandomCPR());
-        relation.setYdernummer(1234);
-        relation.setGruppeKodeIkraftDato(YESTERDAY);
-        relation.setGruppekodeRegistreringDato(TWO_DAYS_AGO);
-        relation.setSikringsgruppeKode('2');
-        relation.setType("C");
-        relation.setId(relation.getCpr() + "-" + relation.getType());
-        relation.setYdernummerIkraftDato(YESTERDAY);
-        relation.setYdernummerRegistreringDato(TWO_DAYS_AGO);
-        relation.setModifiedDate(TWO_DAYS_AGO);
-        relation.setCreatedDate(TWO_DAYS_AGO);
-        relation.setValidFrom(YESTERDAY);
-        relation.setValidTo(TOMORROW);
-        return relation;
-    }
-
-
-    public static SikredeYderRelation createSikredeYderRelationFor(Person person, Yderregister register)
-    {
-        SikredeYderRelation relation = createSikredeYderRelation();
-        
-        relation.setCpr(person.getCpr());
-        relation.setYdernummer(register.getNummer());
-        relation.setId(relation.getCpr() + "-" + relation.getType());
-        
-        return relation;
-    }
-
-
-    public static Yderregister createYderregister()
-    {
-        Yderregister yderregister = new Yderregister();
-
-        yderregister.setBynavn("Århus");
-        yderregister.setEmail("test@example.com");
-        yderregister.setNavn("Klinikken");
-        yderregister.setNummer(random.nextInt(9999));
-        yderregister.setPostnummer("8000");
-        yderregister.setTelefon("12345678");
-        yderregister.setVejnavn("Margrethepladsen 44, 8000 Århus");
-
-        yderregister.setModifiedDate(TWO_DAYS_AGO);
-        yderregister.setCreatedDate(TWO_DAYS_AGO);
-        yderregister.setValidFrom(YESTERDAY);
-        yderregister.setValidTo(TOMORROW);
-
-        return yderregister;
     }
 
 

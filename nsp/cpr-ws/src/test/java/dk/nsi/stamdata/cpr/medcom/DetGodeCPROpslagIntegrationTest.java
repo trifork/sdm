@@ -61,8 +61,6 @@ import com.trifork.stamdata.persistence.RecordPersister;
 
 import dk.nsi.stamdata.cpr.Factories;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;

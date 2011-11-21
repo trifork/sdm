@@ -45,8 +45,6 @@ import com.trifork.stamdata.persistence.Persistent;
 import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
 import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
@@ -87,8 +85,6 @@ public class ComponentController extends GuiceServletContextListener
 			
 			Multibinder<Object> persistentClasses = Multibinder.newSetBinder(binder(), Object.class, Persistent.class); 
 			persistentClasses.addBinding().to(Person.class);
-			persistentClasses.addBinding().to(SikredeYderRelation.class);
-			persistentClasses.addBinding().to(Yderregister.class);
 		}
 	}
 

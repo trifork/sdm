@@ -49,7 +49,6 @@ import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.mapping.SikredeRecordToPersonPublicHealhInsuranceMapper;
 import dk.nsi.stamdata.cpr.mapping.YderregisterRecordToAssociatedGeneralPractitionerMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
 import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.jaxws.generated.AddressAccessType;
 import dk.nsi.stamdata.jaxws.generated.AddressCompleteType;
@@ -432,33 +431,6 @@ public class PersonMapper
 
 		return associatedGeneralPractitioner;
 	}
-
-
-	public PersonPublicHealthInsuranceType createPublicHealthInsurance(SikredeYderRelation sikredeYderRelation) throws DatatypeConfigurationException
-	{
-		PersonPublicHealthInsuranceType personPublicHealthInsurance = new PersonPublicHealthInsuranceType();
-
-		personPublicHealthInsurance.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(sikredeYderRelation.getGruppeKodeIkraftDato()));
-		PublicHealthInsuranceGroupIdentifierType publicHealthInsuranceGroupIdentifier;
-
-		char code = sikredeYderRelation.getSikringsgruppeKode();
-
-		Preconditions.checkState(code == '1' || code == '2', "SikredeYderRelation for cpr" + sikredeYderRelation.getCpr() + " and yder " + sikredeYderRelation.getYdernummer() + " has unsupported group code " + sikredeYderRelation.getSikringsgruppeKode() + ". Cannot proceed with request");
-
-		if (sikredeYderRelation.getSikringsgruppeKode() == '1')
-		{
-			publicHealthInsuranceGroupIdentifier = PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
-		}
-		else
-		{
-			publicHealthInsuranceGroupIdentifier = PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
-		}
-
-		personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(publicHealthInsuranceGroupIdentifier);
-
-		return personPublicHealthInsurance;
-	}
-
 
 	public PersonPublicHealthInsuranceType createDummyPublicHealthInsurance(String placeholderText) throws DatatypeConfigurationException
 	{
