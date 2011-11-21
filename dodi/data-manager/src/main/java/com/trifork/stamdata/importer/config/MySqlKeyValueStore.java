@@ -59,7 +59,7 @@ public class MySqlKeyValueStore implements KeyValueStore
      *             Thrown if the database is unreachable.
      */
     @Inject
-    MySqlKeyValueStore(@DataOwnerId String dataOwnerId, Connection connection) throws SQLException
+    MySqlKeyValueStore(@OwnerIdentifier String dataOwnerId, Connection connection) throws SQLException
     {
         this.connection = checkNotNull(connection, "connection");
         checkArgument(connection.getTransactionIsolation() != Connection.TRANSACTION_NONE, "The connection must have an active transaction.");

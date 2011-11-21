@@ -63,7 +63,6 @@ public class PersonHealthCareInfoMapperTest
     private static final String UKENDT = "UKENDT";
 
     private Person person;
-    private Yderregister yder;
     private SikredeYderRelation relation;
     private Record sikredeRecord;
 

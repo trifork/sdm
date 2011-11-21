@@ -29,18 +29,21 @@ import com.google.common.collect.Sets;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import com.trifork.stamdata.importer.jobs.FileParser;
+import com.trifork.stamdata.importer.jobs.FileParserJob;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserContext;
+import com.trifork.stamdata.importer.parsers.ParserState;
 import org.apache.commons.configuration.CompositeConfiguration;
 
+import java.io.File;
 import java.util.Set;
 
 public class ParserConfiguration
 {
     @Deprecated
-    public static void bindOldParsers(CompositeConfiguration config, Binder binder)
+    private static Set<FileParserJob> bindOldParsers(CompositeConfiguration config, File rootDir)
     {
-        Set<OldParserContext> parsers = Sets.newHashSet();
+        Set<FileParserJob> parsers = Sets.newHashSet();
 
         for (String line : config.getStringArray("parser"))
         {
@@ -51,25 +54,28 @@ public class ParserConfiguration
                 throw new RuntimeException("All parsers must be configured with an expected import frequency. " + line);
             }
 
-            OldParserContext parser = new OldParserContext();
+            Class<? extends FileParser> parserClass;
 
             try
             {
-                parser.parserClass = Class.forName(values[0].trim()).asSubclass(FileParser.class);
+                parserClass = Class.forName(values[0].trim()).asSubclass(FileParser.class);
             }
             catch (ClassNotFoundException e)
             {
                 throw new RuntimeException(e);
             }
 
-            parser.minimumImportFrequency = Integer.parseInt(values[1].trim());
-            parsers.add(parser);
+            int minimumImportFrequency = Integer.parseInt(values[1].trim());
+
+            FileParserJob job = new FileParserJob(rootDir, parserClass, minimumImportFrequency);
+
+            parsers.add(job);
         }
 
-        binder.bind(new TypeLiteral<Set<OldParserContext>>() {}).toInstance(ImmutableSet.copyOf(parsers));
+        return parsers;
     }
 
-    public static void bindParsers(CompositeConfiguration config, Binder binder)
+    private static Set<ParserContext> bindNewParsers(CompositeConfiguration config, Binder binder)
     {
         Set<ParserContext> parsers = Sets.newHashSet();
 
@@ -87,16 +93,16 @@ public class ParserConfiguration
                 Class<? extends Parser> parserClass = Class.forName(values[0].trim()).asSubclass(Parser.class);
                 int minimumImportFrequency = Integer.parseInt(values[1].trim());
 
-                ParserContext context = new ParserContext(parserClass, minimumImportFrequency);
+                ParserContext descriptor = new ParserContext(parserClass, minimumImportFrequency);
 
                 // Currently the context needs access to the the parser's inbox to check if
                 // it is locked so we have to inject it.
                 //
                 // TODO: This is not particularly pretty.
                 //
-                binder.requestInjection(context);
+                binder.requestInjection(descriptor);
 
-                parsers.add(context);
+                parsers.add(descriptor);
             }
             catch (ClassNotFoundException e)
             {
@@ -104,6 +110,21 @@ public class ParserConfiguration
             }
         }
 
-        binder.bind(new TypeLiteral<Set<ParserContext>>() {}).toInstance(ImmutableSet.copyOf(parsers));
+        return parsers;
+    }
+
+    public static void bindParsers(CompositeConfiguration config, File rootDir, Binder binder)
+    {
+        Set<FileParserJob> oldParsers = bindOldParsers(config, rootDir);
+        Set<ParserContext> newParsers = bindNewParsers(config, binder);
+
+        binder.bind(new TypeLiteral<Set<FileParserJob>>() {}).toInstance(ImmutableSet.copyOf(oldParsers));
+        binder.bind(new TypeLiteral<Set<ParserContext>>() {}).toInstance(ImmutableSet.copyOf(newParsers));
+
+        Set<ParserState> states = Sets.newHashSet();
+        states.addAll(oldParsers);
+        states.addAll(newParsers);
+
+        binder.bind(new TypeLiteral<Set<ParserState>>() {}).toInstance(states);
     }
 }

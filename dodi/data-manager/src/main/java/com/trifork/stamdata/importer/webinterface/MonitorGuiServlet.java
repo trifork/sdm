@@ -43,7 +43,7 @@ import com.google.inject.Singleton;
  * @author Thomas Børlum <thb@trifork.com>
  */
 @Singleton
-public class GUIServlet extends HttpServlet
+public class MonitorGuiServlet extends HttpServlet
 {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException

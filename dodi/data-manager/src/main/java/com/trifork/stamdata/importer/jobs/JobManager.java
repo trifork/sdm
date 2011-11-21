@@ -26,10 +26,8 @@
 
 package com.trifork.stamdata.importer.jobs;
 
-import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-import com.trifork.stamdata.importer.config.OldParserContext;
-import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.parsers.annotations.InboxRootPath;
 
 import javax.inject.Named;
 import java.io.File;
@@ -38,29 +36,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-@Deprecated
+@Deprecated // Use the ParserScheduler instead.
 public class JobManager
 {
-    private final Set<Job> jobs = Sets.newHashSet();
+    private final Set<FileParserJob> jobs;
 
     private final File rootDir;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private final ParserScheduler scheduler;
 
     @Inject
-	JobManager(Set<OldParserContext> configurations, @Named("rootDir") String rootDir, ParserScheduler scheduler) throws Exception
+	JobManager(Set<FileParserJob> jobs, @InboxRootPath String rootDir) throws Exception
 	{
-        this.scheduler = scheduler;
-
-        // Clone the set of jobs.
-        //
         this.rootDir = new File(rootDir);
-
-        for (OldParserContext config : configurations)
-		{
-            FileParserJob job = new FileParserJob(this.rootDir, config.parserClass, config.minimumImportFrequency);
-            jobs.add(job);
-        }
+        this.jobs = jobs;
     }
 
 	public void start() throws Exception
@@ -71,7 +59,7 @@ public class JobManager
 
 		// Schedule all the jobs.
 
-        for (Job job : jobs)
+        for (FileParserJob job : jobs)
         {
 			executor.scheduleWithFixedDelay(job, 0, 1, TimeUnit.SECONDS);
 		}
@@ -84,9 +72,9 @@ public class JobManager
 
 	public boolean areAllJobsRunning()
 	{
-		for (Job job : jobs)
+		for (FileParserJob job : jobs)
 		{
-			if (!job.isOK()) return false;
+			if (!job.isLocked()) return false;
 		}
 
 		return true;
@@ -94,7 +82,7 @@ public class JobManager
 
 	public boolean areAnyJobsOverdue()
 	{
-		for (Job job : jobs)
+		for (FileParserJob job : jobs)
 		{
 			if (job.isOverdue()) return true;
 		}
@@ -102,7 +90,7 @@ public class JobManager
 		return false;
 	}
 
-	public Iterable<Job> getJobIterator()
+	public Iterable<FileParserJob> getJobIterator()
 	{
 		return jobs;
 	}

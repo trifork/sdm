@@ -30,15 +30,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-/**
- * User: frj
- * Date: 9/20/11
- * Time: 1:06 PM
- *
- * @Author frj
- */
 @Entity
-public class Yderregister extends BaseTemporalEntity {
+public class Yderregister extends BaseTemporalEntity
+{
     private int nummer;
     private String navn;
     private String vejnavn;

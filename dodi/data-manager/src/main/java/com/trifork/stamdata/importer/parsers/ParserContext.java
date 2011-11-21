@@ -29,10 +29,7 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.importer.jobs.ImportTimeManager;
 import org.joda.time.DateTime;
 
-/**
- * A light-weight descriptor that describes the state and configuration of a parser.
- */
-public class ParserContext
+public class ParserContext implements ParserState
 {
     @Inject
     private ParserScope scope;
@@ -55,60 +52,51 @@ public class ParserContext
         return parserClass;
     }
 
-    public int getMinimumImportFrequency()
+    @Override
+    public int minimumImportFrequency()
     {
         return minimumImportFrequency;
     }
 
-    /**
-     * Indicated whether a file delivery is overdue.
-     *
-     * If no files have previously been imported, this method always returns
-     * false.
-     *
-     * @return true if the parser expected files but has not received any.
-     */
+    @Override
     public boolean isOverdue()
     {
         return hasBeenRun() && nextDeadline().isBeforeNow();
     }
 
-    /**
-     * The deadline for when the next files have to have been imported.
-     *
-     * The returned date will always be at midnight to avoid the day of time
-     * slipping every time a new batch is imported.
-     *
-     * @return the timestamp with the deadline.
-     */
+    @Override
     public DateTime nextDeadline()
     {
         return latestRunTime().plusDays(minimumImportFrequency).toDateMidnight().toDateTime();
     }
 
+    @Override
     public DateTime latestRunTime()
     {
         return ImportTimeManager.getLastImportTime(identifier());
     }
 
+    @Override
     public boolean hasBeenRun()
     {
         return latestRunTime() != null;
     }
 
+    @Override
     public String identifier()
     {
         return Parsers.getIdentifier(getParserClass());
     }
 
-    public boolean isOk()
+    @Override
+    public boolean isLocked()
     {
         scope.enter(this);
         
         try
         {
             Inbox inbox = inboxProvider.get();
-            return !inbox.isLocked();
+            return inbox.isLocked();
         }
         finally
         {
@@ -116,17 +104,19 @@ public class ParserContext
         }
     }
 
+    @Override
     public String name()
     {
         return Parsers.getName(parserClass);
     }
 
-    public boolean isRunning()
+    @Override
+    public boolean isInProgress()
     {
         return isRunning;
     }
 
-    void isRunning(boolean isRunning)
+    public void isInProgress(boolean isRunning)
     {
         this.isRunning = isRunning;
     }

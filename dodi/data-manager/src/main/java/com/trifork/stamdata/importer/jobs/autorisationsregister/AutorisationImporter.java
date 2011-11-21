@@ -67,13 +67,13 @@ public class AutorisationImporter implements FileParser
 	}
 
 	@Override
-	public String getIdentifier()
+	public String identifier()
 	{
 		return "autorisationsregister";
 	}
 
 	@Override
-	public String getHumanName()
+	public String name()
 	{
 		return "Autorisationsregisteret Parser";
 	}

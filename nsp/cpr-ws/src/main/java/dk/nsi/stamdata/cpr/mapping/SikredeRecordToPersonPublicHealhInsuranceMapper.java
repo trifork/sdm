@@ -47,12 +47,14 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
         PersonPublicHealthInsuranceType healthInsuranceType = new ObjectFactory().createPersonPublicHealthInsuranceType();
 
         // The key SSikrGrpKode is taken from "NSI - NOTUS Sikrede - def"
+        //
         Object sSikrGrpKodeFieldValue = record.get("SSikrGrpKode");
-        if(SYGESIKRINGSGRUPPE_1_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
+
+        if (SYGESIKRINGSGRUPPE_1_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
         {
             healthInsuranceType.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1);
         }
-        else if(SYGESIKRINGSGRUPPE_2_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
+        else if (SYGESIKRINGSGRUPPE_2_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
         {
             healthInsuranceType.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2);
         }
@@ -62,10 +64,13 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
         }
         
         // The key SIkraftDatoGrp is taken from "NSI - NOTUS Sikrede - def"
+        //
         String sIkraftDatoGrp = (String) record.get("SIkraftDatoGrp");
+
         int year = Integer.parseInt(sIkraftDatoGrp.substring(0, 4));
         int month = Integer.parseInt(sIkraftDatoGrp.substring(4, 6));
         int day = Integer.parseInt(sIkraftDatoGrp.substring(6, 8));
+
         healthInsuranceType.setPublicHealthInsuranceGroupStartDate(newXMLGregorianCalendar(year, month, day));
         
         return healthInsuranceType;

@@ -31,6 +31,7 @@ import com.google.inject.Stage;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.webinterface.WebInterfaceModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,6 +125,6 @@ public class ComponentController extends GuiceServletContextListener
 	@Override
 	protected Injector getInjector()
 	{
-		return injector = Guice.createInjector(Stage.PRODUCTION, new ComponentModule());
+		return injector = Guice.createInjector(Stage.PRODUCTION, new ComponentModule(), new WebInterfaceModule());
 	}
 }

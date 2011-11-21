@@ -111,13 +111,13 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private void parsePerson(Attributes attributes)
     {
         Record record = new RecordBuilder(YderregisterRecordSpecs.PERSON_RECORD_TYPE)
-        .field("HistIdPerson", StringUtils.trimToNull(attributes.getValue("HistIdPerson")))
+        .field("HistIdPerson", getValue(attributes, "HistIdPerson"))
         .field("YdernrPerson", removeLeadingZeroes(attributes.getValue("YdernrPerson")))
-        .field("CprNr", StringUtils.trimToNull(attributes.getValue("CprNr")))
-        .field("TilgDatoPerson", StringUtils.trimToNull(attributes.getValue("TilgDatoPerson")))
-        .field("AfgDatoPerson", StringUtils.trimToNull(attributes.getValue("AfgDatoPerson")))
-        .field("PersonrolleKode", StringUtils.trimToNull(attributes.getValue("PersonrolleKode")))
-        .field("PersonrolleTxt", StringUtils.trimToNull(attributes.getValue("PersonrolleTxt"))).build();
+        .field("CprNr", getValue(attributes, "CprNr"))
+        .field("TilgDatoPerson", getValue(attributes, "TilgDatoPerson"))
+        .field("AfgDatoPerson", getValue(attributes, "AfgDatoPerson"))
+        .field("PersonrolleKode", getValue(attributes, "PersonrolleKode"))
+        .field("PersonrolleTxt", getValue(attributes, "PersonrolleTxt")).build();
 
         try
         {
@@ -132,21 +132,21 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private void parseYder(Attributes attributes)
     {
         Record record = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE)
-        .field("HistIdYder", attributes.getValue("HistIdYder"))
-        .field("AmtKodeYder", attributes.getValue("AmtKodeYder").trim())
-        .field("AmtTxtYder", attributes.getValue("AmtTxtYder").trim())
+        .field("HistIdYder", getValue(attributes, "HistIdYder"))
+        .field("AmtKodeYder", getValue(attributes, "AmtKodeYder"))
+        .field("AmtTxtYder", getValue(attributes, "AmtTxtYder"))
         .field("YdernrYder", removeLeadingZeroes(attributes.getValue("YdernrYder")))
-        .field("PrakBetegn", attributes.getValue("PrakBetegn").trim())
-        .field("AdrYder", attributes.getValue("AdrYder").trim())
-        .field("PostnrYder", attributes.getValue("PostnrYder").trim())
-        .field("PostdistYder", attributes.getValue("PostdistYder").trim())
-        .field("AfgDatoYder", attributes.getValue("AfgDatoYder").trim())
-        .field("TilgDatoYder", attributes.getValue("TilgDatoYder").trim())
-        .field("HvdSpecKode", attributes.getValue("HvdSpecKode").trim())
-        .field("HvdSpecTxt", attributes.getValue("HvdSpecTxt").trim())
-        .field("HvdTlf", attributes.getValue("HvdTlf").trim())
-        .field("EmailYder", attributes.getValue("EmailYder").trim())
-        .field("WWW", attributes.getValue("WWW").trim()).build();
+        .field("PrakBetegn", getValue(attributes, "PrakBetegn"))
+        .field("AdrYder", getValue(attributes, "AdrYder"))
+        .field("PostnrYder", getValue(attributes, "PostnrYder"))
+        .field("PostdistYder", getValue(attributes, "PostdistYder"))
+        .field("AfgDatoYder", getValue(attributes, "AfgDatoYder"))
+        .field("TilgDatoYder", getValue(attributes, "TilgDatoYder"))
+        .field("HvdSpecKode", getValue(attributes, "HvdSpecKode"))
+        .field("HvdSpecTxt", getValue(attributes, "HvdSpecTxt"))
+        .field("HvdTlf", getValue(attributes, "HvdTlf"))
+        .field("EmailYder", getValue(attributes, "EmailYder"))
+        .field("WWW", getValue(attributes, "WWW")).build();
 
         try
         {
@@ -158,16 +158,22 @@ public class YderregisterSaxEventHandler extends DefaultHandler
         }
     }
 
+    private String getValue(Attributes attributes, String name)
+    {
+        String value = attributes.getValue(name);
+        return StringUtils.trimToNull(value);
+    }
+
     private void parseStartElement(Attributes att) throws SAXException
     {
-        String receiverId = att.getValue("Modt").trim();
+        String receiverId = getValue(att, "Modt");
 
         if (!EXPECTED_RECIPIENT_ID.equals(receiverId))
         {
             throw new ParserException(format("The recipient id in the file '%s' did not match the expected '%s'.", receiverId, EXPECTED_RECIPIENT_ID));
         }
 
-        String interfaceId = att.getValue("SnitfladeId").trim();
+        String interfaceId = getValue(att, "SnitfladeId");
 
         if (!SUPPORTED_INTERFACE_VERSION.equals(interfaceId))
         {

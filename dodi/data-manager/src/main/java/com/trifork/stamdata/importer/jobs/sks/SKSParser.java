@@ -126,13 +126,13 @@ public class SKSParser implements FileParser
     private static final DateTimeFormatter dateFormat = ISODateTimeFormat.basicDate();
 
     @Override
-    public String getIdentifier()
+    public String identifier()
     {
         return "sks";
     }
 
     @Override
-    public String getHumanName()
+    public String name()
     {
         return "SKS Parser";
     }

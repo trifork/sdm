@@ -24,19 +24,16 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
-import com.google.inject.Key;
 import com.google.inject.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.Set;
 import java.util.concurrent.*;
 
 /**
@@ -155,25 +152,37 @@ public class ParserScheduler
         }
     }
 
-    private ListenableFuture executeParser(ParserContext parserContext)
+    private ListenableFuture executeParser(ParserContext context)
     {
-        // Each parser is executed in its own scope. Thus any shared instances
-        // will be available only to this parser and only for this execution.
-        //
-        scope.enter(parserContext);
+        ListenableFutureTask<Void> task = new ListenableFutureTask(scopedExecution(context), null);
 
-        try
+        jobExecutor.execute(task);
+
+        return task;
+    }
+
+    private Runnable scopedExecution(final ParserContext context)
+    {
+        return new Runnable()
         {
-            ListenableFutureTask<Void> task = new ListenableFutureTask(executors.get(), null);
+            @Override
+            public void run()
+            {
+                // Each parser is executed in its own scope. Thus any shared instances
+                // will be available only to this parser and only for this execution.
+                //
+                scope.enter(context);
 
-            jobExecutor.execute(task);
-
-            return task;
-        }
-        finally
-        {
-            scope.exit();
-        }
+                try
+                {
+                    executors.get().run();
+                }
+                finally
+                {
+                    scope.exit();
+                }
+            }
+        };
     }
 
     private void retain(ParserContext parserContext)
@@ -193,16 +202,6 @@ public class ParserScheduler
                 inProgress.remove(parserContext.getParserClass());
             }
         };
-    }
-
-    /**
-     * Gets all scheduled parsers.
-     *
-     * @return a possibly empty set of all parsers.
-     */
-    public Set<ParserContext> getParsers()
-    {
-        return Sets.newHashSet(parsers);
     }
 
     public boolean isOk()

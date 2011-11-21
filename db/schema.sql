@@ -1152,57 +1152,58 @@ CREATE TABLE Yder (
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 
-CREATE TABLE YderLoebenummer (
-	YderLoebenummerPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY	,
-	Loebenummer BIGINT(12) NOT NULL
-) ENGINE=InnoDB COLLATE=utf8_bin;
-
-
 CREATE TABLE Yderregister (
-	YderregisterPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	
-	Nummer VARCHAR(30) NOT NULL,
-	
-	Telefon VARCHAR(10),
-	Navn VARCHAR(256),
-	Vejnavn VARCHAR(100),
-	Postnummer VARCHAR(10),
-	Bynavn VARCHAR(30),
-	AmtNummer BIGINT(12),
-	Email VARCHAR(100),
-	Www VARCHAR(100),
-	HovedSpecialeKode VARCHAR(100),
-	HovedSpecialeTekst VARCHAR(100),
-	HistID VARCHAR(100),
+	PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 
-	CreatedDate DATETIME NOT NULL,
+	HistIdYder VARCHAR(16) NOT NULL,
+	
+    AmtKodeYder VARCHAR(2),
+    AmtTxtYder VARCHAR(60),
+    YdernrYder VARCHAR(6),
+    PrakBetegn VARCHAR(50),
+    AdrYder VARCHAR(50),
+    PostnrYder VARCHAR(4),
+    PostdistYder VARCHAR(20),
+    TilgDatoYder VARCHAR(8),
+    AfgDatoYder VARCHAR(8),
+
+    HvdSpecKode VARCHAR(2),
+    HvdSpecTxt VARCHAR(60),
+    HvdTlf VARCHAR(8),
+
+    EmailYder VARCHAR(50),
+    WWW VARCHAR(78),
+    
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME NOT NULL,
+	ValidTo DATETIME,
 	
-	INDEX (YderregisterPID, ModifiedDate),
-	INDEX (Nummer, ValidTo, ValidFrom)
+	INDEX (PID, ModifiedDate),
+	INDEX (HistIdYder, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 
 CREATE TABLE YderregisterPerson (
-	YderregisterPersonPID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	
-	Id VARCHAR(20) NOT NULL, -- Consists of CPR + Nummer (TODO: Strange that Nummer is 30 long?)
-	
-	Nummer VARCHAR(30) NOT NULL,
-	CPR CHAR(10),
-	personrolleKode CHAR(2),
-	personrolleTxt VARCHAR(200),
-	HistIDPerson VARCHAR(100),
+	HistIdPerson VARCHAR(16) NOT NULL,
 
-	CreatedDate DATETIME NOT NULL,
+	YdernrPerson VARCHAR(6) NOT NULL,
+
+	TilgDatoPerson CHAR(8) NOT NULL,
+	AfgDatoPerson CHAR(8),
+
+	CprNr CHAR(10) NOT NULL,
+
+	PersonrolleKode CHAR(2),
+	PersonrolleTxt VARCHAR(60),
+
 	ModifiedDate DATETIME NOT NULL,
 	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME NOT NULL,
+	ValidTo DATETIME,
 	
-	INDEX (YderregisterPersonPID, ModifiedDate),
-	INDEX (Id, ValidTo, ValidFrom)
+	INDEX (PID, ModifiedDate),
+	INDEX (HistIdPerson, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 

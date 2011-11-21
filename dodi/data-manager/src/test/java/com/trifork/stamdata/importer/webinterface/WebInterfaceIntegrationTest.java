@@ -29,6 +29,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.ServerSocket;
+
 import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -51,10 +53,8 @@ public class WebInterfaceIntegrationTest
     }
 
     @Test
-    public void testThatAfterStartUpTheStatusPageReturnsStatus200() throws InterruptedException
+    public void testThatAfterStartUpTheStatusPageReturnsStatus200()
     {
-        // FIXME: Make rest call to /status expect 200.
-        
         assertThat(get("http://127.0.0.1:8632/status").statusCode(), is(200));
     }
 

@@ -73,7 +73,7 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public String getIdentifier()
+	public String identifier()
 	{
 		return "cpr";
 	}
@@ -210,7 +210,7 @@ public class CPRImporter implements FileParser
 	}
 
 	@Override
-	public String getHumanName()
+	public String name()
 	{
 		return "CPR Parser";
 	}

@@ -27,7 +27,8 @@ package com.trifork.stamdata.importer.parsers;
 import com.google.common.collect.*;
 import com.google.inject.Inject;
 import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.importer.config.DataOwnerId;
+import com.trifork.stamdata.importer.config.OwnerIdentifier;
+import com.trifork.stamdata.importer.parsers.annotations.InboxRootPath;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.Instant;
 
@@ -76,7 +77,7 @@ public class DirectoryInbox implements Inbox
     private final int stabilizationPeriod;
 
     @Inject
-    DirectoryInbox(@Named("rootDir") String root, @DataOwnerId String dataOwnerId, @Named("file.stabilization.period") int stabilizationPeriod) throws IOException
+    DirectoryInbox(@InboxRootPath String root, @OwnerIdentifier String dataOwnerId, @Named("file.stabilization.period") int stabilizationPeriod) throws IOException
     {
         Preconditions.checkArgument(stabilizationPeriod >= 0, "stabilizationPeriod must be a non-negative number.");
         this.stabilizationPeriod = stabilizationPeriod;
@@ -220,16 +221,20 @@ public class DirectoryInbox implements Inbox
     {
         checkArgument(directory.isDirectory(), "Cannot create a snapshot state of anything but a directory. file=%s", directory.getAbsolutePath());
 
-        InboxState state = new InboxState();
-        state.size = FileUtils.sizeOfDirectory(directory);
-        state.timestamp = Instant.now();
+        long size = FileUtils.sizeOfDirectory(directory);
+        InboxState state = new InboxState(size);
 
         return state;
     }
 
     private static class InboxState
     {
-        Long size = null;
-        Instant timestamp = null;
+        public InboxState(long size)
+        {
+            this.size = size;
+        }
+
+        final long size;
+        final Instant timestamp = Instant.now();
     }
 }
