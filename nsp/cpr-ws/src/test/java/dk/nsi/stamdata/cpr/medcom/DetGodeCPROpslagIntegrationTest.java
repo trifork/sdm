@@ -271,9 +271,8 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Person").executeUpdate();
-        session.createQuery("DELETE FROM SikredeYderRelation").executeUpdate();
-        session.createQuery("DELETE FROM Yderregister").executeUpdate();
         session.connection().createStatement().executeUpdate("DELETE FROM SikredeGenerated");
+        session.connection().createStatement().executeUpdate("DELETE FROM Yderregister");
 
         for (Person person : persons) session.persist(person);
                 

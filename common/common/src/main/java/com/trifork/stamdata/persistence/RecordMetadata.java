@@ -24,10 +24,7 @@
  */
 package com.trifork.stamdata.persistence;
 
-import org.joda.time.DateTime;
 import org.joda.time.Instant;
-
-import java.math.BigInteger;
 
 /**
  * Created by IntelliJ IDEA.

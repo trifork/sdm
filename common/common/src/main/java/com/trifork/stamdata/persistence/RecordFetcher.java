@@ -51,17 +51,31 @@ public class RecordFetcher
     
     public Record fetchCurrent(String key, RecordSpecification recordSpecification, String lookupColumn) throws SQLException
     {
-        String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), lookupColumn);
-        PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
-        preparedStatement.setObject(1, key);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if (resultSet.next())
-        {
-            return createRecordFromResultSet(recordSpecification, resultSet);
+        PreparedStatement preparedStatement = null;
+        try {
+            String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), lookupColumn);
+            preparedStatement = connection.get().prepareStatement(queryString);
+            preparedStatement.setObject(1, key);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+            {
+                return createRecordFromResultSet(recordSpecification, resultSet);
+            }
+            else
+            {
+                return null;
+            }
         }
-        else
+        catch (SQLException e)
         {
-            return null;
+            throw e;
+        }
+        finally
+        {
+            if(preparedStatement != null)
+            {
+                preparedStatement.close();
+            }
         }
     }
     
@@ -89,7 +103,7 @@ public class RecordFetcher
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-        List<RecordMetadata> result = new ArrayList();
+        List<RecordMetadata> result = new ArrayList<RecordMetadata>();
         while(resultSet.next())
         {
             Instant validFrom = new Instant(resultSet.getTimestamp("ValidFrom"));
