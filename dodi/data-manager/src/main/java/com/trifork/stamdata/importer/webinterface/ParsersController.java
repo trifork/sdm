@@ -25,6 +25,7 @@
 package com.trifork.stamdata.importer.webinterface;
 
 import com.google.inject.Inject;
+import com.sun.jersey.api.JResponse;
 import com.trifork.stamdata.importer.parsers.ParserState;
 import com.trifork.stamdata.importer.parsers.annotations.InboxRootPath;
 
@@ -33,8 +34,13 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.util.Set;
+
+import static javax.ws.rs.core.Response.ok;
+import static javax.ws.rs.core.Response.status;
+import static javax.ws.rs.core.Response.Status.NOT_FOUND;
 
 @Path("/")
 @Produces(MediaType.APPLICATION_JSON)
@@ -58,9 +64,24 @@ public class ParsersController
 
     @GET
     @Path("/{id}")
-    public ParserState show(@PathParam("id") String id)
+    public Response show(@PathParam("id") String id)
     {
-        return getParserById(id);
+        ParserState parser = getParserById(id);
+
+        return parser == null
+                ? status(NOT_FOUND).build()
+                : ok(parser).build();
+    }
+
+    @GET @Path("/{id}/inbox")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response inboxPath(@PathParam("id") String id)
+    {
+        ParserState parser = getParserById(id);
+
+        return parser == null
+                ? status(NOT_FOUND).build()
+                : ok(new File(inboxRoot, id).getAbsolutePath()).build();
     }
 
     //
@@ -78,11 +99,5 @@ public class ParsersController
         }
 
         return null;
-    }
-
-    @GET @Path("/{id}/inbox")
-    public String inboxPath(@PathParam("id") String id)
-    {
-        return new File(inboxRoot, id).getAbsolutePath();
     }
 }
