@@ -70,6 +70,7 @@ public abstract class FileParserIntegrationTest
         statement.execute("TRUNCATE TABLE KeyValueStore");
         statement.execute("TRUNCATE TABLE Import");
         statement.execute("TRUNCATE TABLE YderregisterPerson");
+        statement.execute("TRUNCATE TABLE Sikrede");
 
         statement.close();
     }
