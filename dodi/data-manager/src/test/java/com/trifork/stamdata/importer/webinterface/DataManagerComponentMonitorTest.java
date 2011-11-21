@@ -26,6 +26,7 @@ package com.trifork.stamdata.importer.webinterface;
 
 import com.google.common.collect.Sets;
 import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
 import com.trifork.stamdata.importer.parsers.ParserState;
 import org.junit.Before;
@@ -47,6 +48,7 @@ public class DataManagerComponentMonitorTest
     private DataManagerComponentMonitor monitor;
     private ConnectionManager connectionManager;
     private ParserScheduler scheduler;
+    private JobManager manager;
 
     @Before
     public void setUp() throws Exception
@@ -62,8 +64,13 @@ public class DataManagerComponentMonitorTest
 
         scheduler = mock(ParserScheduler.class);
         when(scheduler.isOk()).thenReturn(true);
+
+        when(scheduler.isOk()).thenReturn(true);
         
-        monitor = new DataManagerComponentMonitor(connectionManager, parsers, scheduler);
+        manager = mock(JobManager.class);
+        when(manager.isOk()).thenReturn(true);
+        
+        monitor = new DataManagerComponentMonitor(connectionManager, parsers, scheduler, manager);
     }
     
     @Test

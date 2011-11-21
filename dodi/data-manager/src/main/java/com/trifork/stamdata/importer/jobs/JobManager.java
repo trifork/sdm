@@ -41,13 +41,11 @@ public class JobManager
 {
     private final Set<FileParserJob> jobs;
 
-    private final File rootDir;
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     @Inject
-	JobManager(Set<FileParserJob> jobs, @InboxRootPath String rootDir) throws Exception
+	JobManager(Set<FileParserJob> jobs) throws Exception
 	{
-        this.rootDir = new File(rootDir);
         this.jobs = jobs;
     }
 
@@ -70,28 +68,8 @@ public class JobManager
 		executor.shutdownNow();
 	}
 
-	public boolean areAllJobsRunning()
-	{
-		for (FileParserJob job : jobs)
-		{
-			if (!job.isLocked()) return false;
-		}
-
-		return true;
-	}
-
-	public boolean areAnyJobsOverdue()
-	{
-		for (FileParserJob job : jobs)
-		{
-			if (job.isOverdue()) return true;
-		}
-
-		return false;
-	}
-
-	public Iterable<FileParserJob> getJobIterator()
-	{
-		return jobs;
-	}
+    public boolean isOk()
+    {
+        return !executor.isTerminated();
+    }
 }

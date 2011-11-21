@@ -27,6 +27,7 @@ package com.trifork.stamdata.importer.webinterface;
 import com.google.inject.Inject;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
 import com.trifork.stamdata.importer.parsers.ParserState;
 
@@ -40,13 +41,15 @@ public class DataManagerComponentMonitor implements ComponentMonitor
 	private final ConnectionManager connectionManager;
     private final Set<ParserState> parsers;
     private final ParserScheduler scheduler;
+    private final JobManager manager;
 
     @Inject
-	DataManagerComponentMonitor(ConnectionManager connectionManager, Set<ParserState> parsers, ParserScheduler scheduler)
+	DataManagerComponentMonitor(ConnectionManager connectionManager, Set<ParserState> parsers, ParserScheduler scheduler, JobManager manager)
 	{
 		this.connectionManager = connectionManager;
         this.parsers = parsers;
         this.scheduler = scheduler;
+        this.manager = manager;
     }
 	
 	@Override
@@ -55,7 +58,8 @@ public class DataManagerComponentMonitor implements ComponentMonitor
 		return connectionManager.isAvailable()
             && areAllJobsRunning()
             && !areAnyJobsOverdue()
-            && scheduler.isOk();
+            && scheduler.isOk()
+            && manager.isOk();
 	}
 
     public boolean areAnyJobsOverdue()
