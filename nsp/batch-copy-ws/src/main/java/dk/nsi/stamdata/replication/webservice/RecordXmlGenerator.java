@@ -41,6 +41,9 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.DocumentSource;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
@@ -50,6 +53,7 @@ import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 public class RecordXmlGenerator
 {
+    private static final DateTime END_OF_TIME = new DateTime(2999, 12, 31, 0, 0, 0, DateTimeZone.UTC);
     public static final String ATOM_NAMESPACE_URI = "http://www.w3.org/2005/Atom";
     public static final String STAMDATA_NAMESPACE_URI_PREFIX = "http://trifork.com/-/stamdata/3.0/";
     
@@ -92,6 +96,17 @@ public class RecordXmlGenerator
             {
                 addElement(recordElement, stamdataNamespaceUri, fieldSpecification.name, valueAsString(metadata.getRecord(), fieldSpecification));
             }
+            DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
+            addElement(recordElement, stamdataNamespaceUri, "ValidFrom", metadata.getValidFrom().toString(formatter));
+            if(metadata.getValidTo() == null)
+            {
+                addElement(recordElement, stamdataNamespaceUri, "ValidTo", END_OF_TIME.toString(formatter));
+            }
+            else
+            {
+                addElement(recordElement, stamdataNamespaceUri, "ValidTo", metadata.getValidTo().toString(formatter));
+            }
+            addElement(recordElement, stamdataNamespaceUri, "ModifiedDate", metadata.getModifiedDate().toString(formatter));
         }
 
         return convertToW3C(document);
