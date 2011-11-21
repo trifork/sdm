@@ -27,9 +27,8 @@ package com.trifork.stamdata.importer.parsers;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Provides;
-import com.google.inject.ScopeAnnotation;
 import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.importer.config.DataOwnerId;
+import com.trifork.stamdata.importer.config.OwnerIdentifier;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.config.MySqlKeyValueStore;
 import com.trifork.stamdata.importer.parsers.annotations.ParserScoped;
@@ -97,7 +96,7 @@ public class ParserModule extends AbstractModule
     }
 
     @Provides
-    @DataOwnerId
+    @OwnerIdentifier
     private String provideDataOwnerId(ParserContext context)
     {
         return context.identifier();

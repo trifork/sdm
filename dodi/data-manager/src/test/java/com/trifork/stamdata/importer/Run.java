@@ -22,13 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.config;
+package com.trifork.stamdata.importer;
 
-import com.trifork.stamdata.importer.jobs.FileParser;
+import dk.nsi.stamdata.testing.TestServer;
 
-@Deprecated
-public class OldParserContext
+public class Run
 {
-    public Class<? extends FileParser> parserClass;
-    public int minimumImportFrequency;
+    public static void main(String[] args) throws Exception
+    {
+        TestServer server = new TestServer().port(8877);
+        server.warPath("dodi/data-manager/" + server.warPath());
+        server.start().join();
+    }
 }

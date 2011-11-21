@@ -109,7 +109,7 @@ public class ParserExecutor implements Runnable
         {
             // Make absolutely sure that the parser is not marked as running.
             //
-            context.isRunning(false);
+            context.isInProgress(false);
 
             ConnectionManager.closeQuietly(connection);
 
@@ -129,7 +129,7 @@ public class ParserExecutor implements Runnable
 
         if (dataSet != null)
         {
-            context.isRunning(true);
+            context.isInProgress(true);
 
             MDC.put("input", dataSet.getName());
 

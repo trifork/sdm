@@ -28,6 +28,9 @@ import com.google.inject.Inject;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.parsers.ParserState;
+
+import java.util.Set;
 
 /**
  * @author Thomas Børlum <thb@trifork.com>
@@ -35,14 +38,14 @@ import com.trifork.stamdata.importer.parsers.ParserScheduler;
 public class DataManagerComponentMonitor implements ComponentMonitor
 {
 	private final ConnectionManager connectionManager;
-    private final JobsDecorator jobs;
+    private final Set<ParserState> parsers;
     private final ParserScheduler scheduler;
 
     @Inject
-	DataManagerComponentMonitor(ConnectionManager connectionManager, JobsDecorator jobs, ParserScheduler scheduler)
+	DataManagerComponentMonitor(ConnectionManager connectionManager, Set<ParserState> parsers, ParserScheduler scheduler)
 	{
 		this.connectionManager = connectionManager;
-        this.jobs = jobs;
+        this.parsers = parsers;
         this.scheduler = scheduler;
     }
 	
@@ -50,8 +53,38 @@ public class DataManagerComponentMonitor implements ComponentMonitor
     public boolean isOk()
 	{
 		return connectionManager.isAvailable()
-            && jobs.areAllJobsRunning()
-            && !jobs.areAnyJobsOverdue()
+            && areAllJobsRunning()
+            && !areAnyJobsOverdue()
             && scheduler.isOk();
 	}
+
+    public boolean areAnyJobsOverdue()
+    {
+        for (ParserState job : parsers)
+        {
+            if (job.isOverdue()) return true;
+        }
+
+        return false;
+    }
+
+    public boolean areAllJobsRunning()
+    {
+        for (ParserState job : parsers)
+        {
+            if (job.isLocked()) return false;
+        }
+
+        return true;
+    }
+
+    public Iterable<ParserState> getJobs()
+    {
+        return parsers;
+    }
+
+    public boolean isDatabaseAvailable()
+    {
+        return connectionManager.isAvailable();
+    }
 }

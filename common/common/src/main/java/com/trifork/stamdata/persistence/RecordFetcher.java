@@ -44,7 +44,7 @@ public class RecordFetcher
     private final Provider<Connection> connection;
 
     @Inject
-    RecordFetcher(Provider<Connection> connection)
+    public RecordFetcher(Provider<Connection> connection)
     {
         this.connection = connection;
     }

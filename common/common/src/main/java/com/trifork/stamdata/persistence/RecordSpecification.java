@@ -30,6 +30,9 @@ import java.util.List;
 import com.google.common.collect.ImmutableList;
 import com.trifork.stamdata.Preconditions;
 
+/**
+ * @author Thomas G. Kristensen <tgk@trifork.com>
+ */
 public class RecordSpecification
 {
     private final String table;
@@ -64,15 +67,15 @@ public class RecordSpecification
             this.length = length;
         }
     }
-    
-    private List<FieldSpecification> fieldSpecifications;
+
+    private final List<FieldSpecification> fields;
     
     private RecordSpecification(String table, String keyColumn)
     {
         this.table = table;
         this.keyColumn = keyColumn;
         
-        fieldSpecifications = new ArrayList<FieldSpecification>();
+        fields = new ArrayList<FieldSpecification>();
     }
     
     public static RecordSpecification createSpec(String table, String keyColumn, Object... fieldDefinitions)
@@ -89,7 +92,7 @@ public class RecordSpecification
             
             FieldSpecification fieldSpecification = new FieldSpecification(name, type, length);
             
-            recordSpecification.fieldSpecifications.add(fieldSpecification);
+            recordSpecification.fields.add(fieldSpecification);
         }
         
         return recordSpecification;
@@ -97,13 +100,13 @@ public class RecordSpecification
     
     public Iterable<FieldSpecification> getFieldSpecs()
     {
-        return ImmutableList.copyOf(fieldSpecifications);
+        return ImmutableList.copyOf(fields);
     }
     
     public int acceptedTotalLineLength()
     {
         int totalLength = 0;
-        for(FieldSpecification fieldSpecification: fieldSpecifications)
+        for(FieldSpecification fieldSpecification: fields)
         {
             totalLength += fieldSpecification.length;
         }
@@ -112,16 +115,16 @@ public class RecordSpecification
     
     public boolean conformsToSpecifications(Record record)
     {
-        Preconditions.checkNotNull(record);
+        Preconditions.checkNotNull(record, "record");
         
-        if (record.size() != fieldSpecifications.size())
+        if (record.size() != fields.size())
         {
             return false;
         }
         
-        for (FieldSpecification fieldsSpecification: fieldSpecifications)
+        for (FieldSpecification fieldsSpecification: fields)
         {
-            if(!record.containsKey(fieldsSpecification.name))
+            if (!record.containsKey(fieldsSpecification.name))
             {
                 return false;
             }
@@ -129,23 +132,24 @@ public class RecordSpecification
             {
                 Object value = record.get(fieldsSpecification.name);
                 
-                if(fieldsSpecification.type == RecordFieldType.NUMERICAL)
+                if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
                 {
-                    if(!(value instanceof Integer))
+                    if (!(value instanceof Integer))
                     {
                         return false;
                     }
                 }
                 else if (fieldsSpecification.type == RecordFieldType.ALPHANUMERICAL)
                 {
-                    if(!(value instanceof String))
+                    if (value != null && !(value instanceof String))
                     {
                         return false;
                     }
-                    else
+                    else if (value != null)
                     {
-                        String valueAsString = (String) value;
-                        if(valueAsString.length() > fieldsSpecification.length)
+                        String valueAsString = String.valueOf(value);
+                        
+                        if (valueAsString.length() > fieldsSpecification.length)
                         {
                             return false;
                         }

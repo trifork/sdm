@@ -63,7 +63,7 @@ import static com.google.common.base.Preconditions.checkState;
  *
  * @author Jesse Wilson
  * @author Fedor Karpelevitch
- * @author Thomas Børlum
+ * @author Thomas Børlum <thb@trifork.com>
  */
 public class ParserScope implements Scope
 {

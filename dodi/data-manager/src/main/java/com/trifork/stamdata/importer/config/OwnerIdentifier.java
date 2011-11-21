@@ -34,4 +34,4 @@ import java.lang.annotation.Target;
 @BindingAnnotation
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
-public @interface DataOwnerId {}
+public @interface OwnerIdentifier {}

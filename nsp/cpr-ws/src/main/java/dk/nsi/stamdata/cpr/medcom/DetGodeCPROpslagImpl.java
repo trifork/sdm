@@ -36,6 +36,7 @@ import javax.xml.ws.Holder;
 
 import com.trifork.stamdata.persistence.*;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.security.Whitelisted;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
@@ -53,7 +54,6 @@ import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.models.SikredeYderRelation;
-import dk.nsi.stamdata.cpr.models.Yderregister;
 import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
 import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
@@ -91,7 +91,6 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
         this.personMapper = personMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
 	}
-
 
 	// TODO: Headers should be set to outgoing. See BRS for correct way of
 	// setting these.

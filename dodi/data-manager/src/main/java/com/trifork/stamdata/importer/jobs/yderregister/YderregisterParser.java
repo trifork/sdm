@@ -45,7 +45,9 @@ import java.util.Set;
 
 import static java.lang.String.format;
 
-
+/**
+ * @author Thomas Børlum <thb@trifork.com>
+ */
 @ParserInformation(id = "yderregister", name = "Yderregisteret")
 public class YderregisterParser implements Parser
 {
@@ -141,7 +143,16 @@ public class YderregisterParser implements Parser
         
         for (File file : input.listFiles())
         {
-            String versionInFilename = file.getName().substring(VERSION_START, VERSION_END);
+            String versionInFilename;
+
+            try
+            {
+                versionInFilename = file.getName().substring(VERSION_START, VERSION_END);
+            }
+            catch (StringIndexOutOfBoundsException e)
+            {
+                throw new ParserException(String.format("Problem in file '%s'.", file.getAbsolutePath()), e);
+            }
 
             if (version == null)
             {

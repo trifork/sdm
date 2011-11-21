@@ -43,7 +43,6 @@ public class TestServer
     private int port = 8972;
     private String warPath = "src/main/webapp/";
 
-
     public TestServer()
     {
         server = new Server();
@@ -58,7 +57,7 @@ public class TestServer
         connector.setPort(port);
 
         File war = new File("." , warPath);
-        Assert.assertTrue(new File(war, "WEB-INF/web.xml").exists());
+        assertTrue(new File(war, "WEB-INF/web.xml").getAbsolutePath(), new File(war, "WEB-INF/web.xml").exists());
         System.out.println("webapp: " + war.getAbsolutePath());
         
         context.setWar(war.getAbsolutePath());
@@ -98,6 +97,11 @@ public class TestServer
         this.warPath = warPath;
         
         return this;
+    }
+
+    public String warPath()
+    {
+        return warPath;
     }
 
 

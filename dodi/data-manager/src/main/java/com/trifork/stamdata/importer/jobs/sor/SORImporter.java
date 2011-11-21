@@ -47,13 +47,13 @@ public class SORImporter implements FileParser
 	private static final Logger logger = LoggerFactory.getLogger(SORImporter.class);
 
 	@Override
-	public String getIdentifier()
+	public String identifier()
 	{
 		return "sor";
 	}
 
 	@Override
-	public String getHumanName()
+	public String name()
 	{
 		return "SOR Parser";
 	}

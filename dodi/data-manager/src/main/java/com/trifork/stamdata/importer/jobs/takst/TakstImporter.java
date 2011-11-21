@@ -67,13 +67,13 @@ public class TakstImporter implements FileParser
 		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[] {}));
 	}
 	
-	public String getIdentifier()
+	public String identifier()
 	{
 		return "dkma";
 	}
 
 	@Override
-	public String getHumanName()
+	public String name()
 	{
 		return "DKMA";
 	}

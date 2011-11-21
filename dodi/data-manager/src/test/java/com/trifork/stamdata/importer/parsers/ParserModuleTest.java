@@ -27,11 +27,10 @@ package com.trifork.stamdata.importer.parsers;
 
 import com.google.inject.*;
 import com.trifork.stamdata.importer.ComponentModule;
-import com.trifork.stamdata.importer.config.DataOwnerId;
+import com.trifork.stamdata.importer.config.OwnerIdentifier;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import org.joda.time.Instant;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,7 +38,6 @@ import java.sql.Connection;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -112,7 +110,7 @@ public class ParserModuleTest
         
         scope.enter(context);
         
-        String dataOwnerId = injector.getInstance(Key.get(String.class, DataOwnerId.class));
+        String dataOwnerId = injector.getInstance(Key.get(String.class, OwnerIdentifier.class));
         
         assertThat(dataOwnerId, is("bar"));
     }

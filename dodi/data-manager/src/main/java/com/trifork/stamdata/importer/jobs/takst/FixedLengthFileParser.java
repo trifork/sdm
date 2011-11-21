@@ -101,7 +101,7 @@ public class FixedLengthFileParser
 			results.add(entity);
 		}
 		
-		logger.info("Number of lines in file. lineCount={} file={} resultCount={}", new Object[]{ count, configuration.getFilename(), results.size()});
+		logger.debug("Number of lines in file. lineCount={} file={} resultCount={}", new Object[]{ count, configuration.getFilename(), results.size()});
 
 		return results;
 	}

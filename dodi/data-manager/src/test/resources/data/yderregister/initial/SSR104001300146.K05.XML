@@ -1,6 +1,6 @@
-﻿<etds1040013XML>
-    <Start OpgDato="20100607" Timestamp="20100607040003822138" Modt="B084  " SnitfladeId="S1040013"></Start>
-  <Yder HistIdYder="043DDD1A6BE6C5BF" AmtKodeYder="84" YdernrYder="004219" PrakBetegn="Jørgen Vagn Nielsen                               " AdrYder="Store Kongensgade 96,4.                           " PostnrYder="1264" PostdistYder="København K         " TilgDatoYder="19780701" AfgDatoYder="        " HvdSpecKode="80" HvdSpecTxt="Almen lægegerning                                           " HvdTlf="33112299" EmailYder="klinik@33112299.dk                                " WWW="www.plib.dk                                                                   ">
+﻿<etds1040025XML>
+    <Start OpgDato="20100607" Timestamp="20100607040003822138" Modt="F053  " SnitfladeId="S1040025"></Start>
+    <Yder HistIdYder="043DDD1A6BE6C5BF" AmtKodeYder="84" YdernrYder="004219" PrakBetegn="Jørgen Vagn Nielsen                               " AdrYder="Store Kongensgade 96,4.                           " PostnrYder="1264" PostdistYder="København K         " TilgDatoYder="19780701" AfgDatoYder="        " HvdSpecKode="80" HvdSpecTxt="Almen lægegerning                                           " HvdTlf="33112299" EmailYder="klinik@33112299.dk                                " WWW="www.plib.dk                                                                   ">
         <Person HistIdPerson="499E5A2D6BE6C5BF" YdernrPerson="004219" TilgDatoPerson="19780701" AfgDatoPerson="        " CprNr="1234567890" PersonrolleKode="11" PersonrolleTxt="Ejer                                                        "></Person>
     </Yder>
     <Yder HistIdYder="0433514B17DFC5BF" AmtKodeYder="84" YdernrYder="015458" PrakBetegn="Karles Eriksen &amp; Jan-Helge Larsen                 " AdrYder="Alberts Vænge 7                                   " PostnrYder="2620" PostdistYder="Albertslund         " TilgDatoYder="19901001" AfgDatoYder="        " HvdSpecKode="80" HvdSpecTxt="Almen lægegerning                                           " HvdTlf="43649343" EmailYder="p015458_ke@darwin.dk                              " WWW="                                                                              ">
@@ -45,5 +45,5 @@
     <Yder HistIdYder="06A0F9491ADFC5BF" AmtKodeYder="84" YdernrYder="015555" PrakBetegn="Søren Fjællegaard                                 " AdrYder="Rosenhøj 37,st tv.                                " PostnrYder="2650" PostdistYder="Hvidovre            " TilgDatoYder="19910801" AfgDatoYder="        " HvdSpecKode="80" HvdSpecTxt="Almen lægegerning                                           " HvdTlf="36473933" EmailYder="soerenfjaellegaard@dadlnet.dk                     " WWW="                                                                              ">
         <Person HistIdPerson="03CEA6571ADFC5BF" YdernrPerson="015555" TilgDatoPerson="19910801" AfgDatoPerson="        " CprNr="1234567910" PersonrolleKode="11" PersonrolleTxt="Ejer                                                        "></Person>
     </Yder>
-      <Slut AntPost="00000048"></Slut>
-</etds1040013XML>
+    <Slut AntPost="00000012"></Slut>
+</etds1040025XML>

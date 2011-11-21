@@ -24,69 +24,87 @@
  */
 package com.trifork.stamdata.importer.webinterface;
 
+import com.google.common.collect.Sets;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.parsers.ParserState;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Set;
+
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.isNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class DataManagerComponentMonitorTest
 {
+    private Set<ParserState> parsers;
     private DataManagerComponentMonitor monitor;
-    private JobsDecorator jobs;
-    private ConnectionManager dbStatus;
+    private ConnectionManager connectionManager;
     private ParserScheduler scheduler;
 
     @Before
     public void setUp() throws Exception
     {
-        jobs = mock(JobsDecorator.class);
-        dbStatus = mock(ConnectionManager.class);
-        scheduler = mock(ParserScheduler.class);
+        ParserState parser = mock(ParserState.class);
+        when(parser.isLocked()).thenReturn(false);
+        
+        parsers = Sets.newHashSet();
+        parsers.add(parser);
+        
+        connectionManager = mock(ConnectionManager.class);
+        when(connectionManager.isAvailable()).thenReturn(true);
 
-        when(jobs.areAnyJobsOverdue()).thenReturn(false);
-        when(jobs.areAllJobsRunning()).thenReturn(true);
-        when(dbStatus.isAvailable()).thenReturn(true);
+        scheduler = mock(ParserScheduler.class);
         when(scheduler.isOk()).thenReturn(true);
         
-        monitor = new DataManagerComponentMonitor(dbStatus, jobs, scheduler);
+        monitor = new DataManagerComponentMonitor(connectionManager, parsers, scheduler);
     }
     
     @Test
     public void shouldReturnTrueIfAllIsWell()
     {
-        assertTrue(monitor.isOk());
+        assertThat(monitor.isOk(), is(true));
     }
 
     @Test
     public void shouldReturnFalseIfSchedulerHasFailed()
     {
         when(scheduler.isOk()).thenReturn(false);
-        assertFalse(monitor.isOk());
+
+        assertThat(monitor.isOk(), is(false));
     }
 
     @Test
     public void shouldReturnFalseIfNoDbIsDown()
     {
-        when(dbStatus.isAvailable()).thenReturn(false);
-        assertFalse(monitor.isOk());
+        when(connectionManager.isAvailable()).thenReturn(false);
+
+        assertThat(monitor.isOk(), is(false));
     }
 
     @Test
-    public void shouldReturnFalseIfJobsHaveFailed()
+    public void shouldReturnFalseIfAnyParsersAreLocked()
     {
-        when(jobs.areAllJobsRunning()).thenReturn(false);
-        assertFalse(monitor.isOk());
+        ParserState parser = mock(ParserState.class);
+        when(parser.isLocked()).thenReturn(true);
+        parsers.add(parser);
+
+        assertThat(monitor.isOk(), is(false));
     }
     
     @Test
     public void shouldReturnFalseIfJobsAreOverdue()
     {
-        when(jobs.areAnyJobsOverdue()).thenReturn(true);
-        assertFalse(monitor.isOk());
+        ParserState parser = mock(ParserState.class);
+        when(parser.isOverdue()).thenReturn(true);
+        parsers.add(parser);
+
+        assertThat(monitor.isOk(), is(false));
     }
 }

@@ -1,14 +1,11 @@
-<%@ page
-	import="com.google.inject.Injector"%>
-<%@ page import="com.trifork.stamdata.importer.jobs.Job"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<%@ page import="com.trifork.stamdata.importer.webinterface.JobsDecorator"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.google.inject.Injector"%>
 <%@ page import="com.trifork.stamdata.importer.config.ConnectionManager" %>
+<%@ page import="com.trifork.stamdata.importer.webinterface.DataManagerComponentMonitor" %>
+<%@ page import="com.trifork.stamdata.importer.parsers.ParserState" %>
 <%
 	Injector injector = (Injector) pageContext.getServletContext().getAttribute(Injector.class.getName());
-	boolean isDBAlive = injector.getInstance(ConnectionManager.class).isAvailable();
-	JobsDecorator jobs = injector.getInstance(JobsDecorator.class);
+    DataManagerComponentMonitor monitor = injector.getInstance(DataManagerComponentMonitor.class);
 %>
 
 <!DOCTYPE html>
@@ -24,18 +21,16 @@
 		<div id="header">
 			<img alt="" src="images/bg_logo_png.png" />
 		</div>
-
-		<h2>Komponentstatus:</h2>
 		<%
 			String status;
 			String message;
 
-			if (!isDBAlive)
+			if (!monitor.isDatabaseAvailable())
 			{
 				status = "error";
 				message = "Fejl. Kan ikke forbinde til databasen. Se logfilen.";
 			}
-			else if (jobs.areAllJobsRunning())
+			else if (monitor.areAllJobsRunning())
 			{
 				status = "ok";
 				message = "OK. Programmet kører stabilt.";
@@ -55,7 +50,7 @@
 		</div>
 
 		<%
-			if (jobs.areAnyJobsOverdue())
+			if (monitor.areAnyJobsOverdue())
 			{
 		%>
 		<div class="warning job">En eller flere parsere har ikke
@@ -64,9 +59,9 @@
 			}
 		%>
 
-		<h2>Liste over processer:</h2>
+		<h2>Parser Status</h2>
 		<%
-			for (Job job : jobs.getJobs())
+			for (ParserState job : monitor.getJobs())
 			{
 				String jobStatus = "ok";
 
@@ -75,11 +70,11 @@
 					jobStatus = "warning";
 				}
 
-                if (job.isExecuting())
+                if (job.isInProgress())
 				{
 					jobStatus = "executing";
 				}
-				else if (!job.isOK())
+				else if (job.isLocked())
 				{
 					jobStatus = "error";
 				}
@@ -89,7 +84,7 @@
 				<%
                 if (job.hasBeenRun())
                 {
-                    out.print("Seneste kørsel: <b>" + job.getLatestRunTime().toString("dd.MM.yyyy") + "</b>");
+                    out.print("Seneste kørsel: <b>" + job.latestRunTime().toString("dd.MM.yyyy") + "</b>");
                 }
                 else
                 {
@@ -97,7 +92,7 @@
                 }
 				%>
 			</div>
-			<b><%=job.getHumanName()%></b>
+			<b><%=job.name()%></b>
 		</div>
 		<%
 			}

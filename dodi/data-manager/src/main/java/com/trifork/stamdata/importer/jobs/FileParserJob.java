@@ -35,6 +35,7 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.List;
 
+import com.trifork.stamdata.importer.parsers.ParserState;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.persistence.AuditingPersister;
 
 @Deprecated
-public class FileParserJob implements Job
+public class FileParserJob implements ParserState, Runnable
 {
 	private static final Logger logger = LoggerFactory.getLogger(FileParserJob.class);
 
@@ -89,7 +90,7 @@ public class FileParserJob implements Job
 	        // Set up a nice logging context so every log entry
 	        // knows which parser we are running.
 	        
-	        MDC.put("parser", parser.getIdentifier());
+	        MDC.put("parser", parser.identifier());
 	        
 	        internalRun(parser);
 	    }
@@ -120,7 +121,7 @@ public class FileParserJob implements Job
         // Check for rejected files.
         // The parser is in a error state as long as there are files there.
 
-        if (!isOK()) return;
+        if (!isLocked()) return;
 
         // Check if there are any files to import,
         // ignoring any unimportant files such as '.DS_Store'.
@@ -248,7 +249,7 @@ public class FileParserJob implements Job
 			connection = connectionManager.getConnection();
 
 			parser.parse(getProcessingFiles(), new AuditingPersister(connection), null);
-			ImportTimeManager.setImportTime(parser.getIdentifier(), new Date());
+			ImportTimeManager.setImportTime(parser.identifier(), new Date());
 
 			connection.commit();
 
@@ -352,70 +353,56 @@ public class FileParserJob implements Job
 		return result.toArray(new File[] {});
 	}
 
-	/**
-	 * Indicated wheather a file delivery is overdue.
-	 * 
-	 * If no files have previously been imported, this method always returns
-	 * false.
-	 * 
-	 * @return true if the parser expected files but has not received any.
-	 */
 	public boolean isOverdue()
 	{
-		return hasBeenRun() && getNextDeadline().isBeforeNow();
+		return hasBeenRun() && nextDeadline().isBeforeNow();
 	}
 
-	/**
-	 * The deadline for when the next files have to have been imported.
-	 * 
-	 * The returned date will always be at midnight to avoid the day of time
-	 * slipping everytime a new batch is imported.
-	 * 
-	 * @return the timestamp with the deadline.
-	 */
-	public DateTime getNextDeadline()
+    @Override
+	public DateTime nextDeadline()
 	{
-		return getLatestRunTime().plusDays(minimumImportFrequency).toDateMidnight().toDateTime();
+		return latestRunTime().plusDays(minimumImportFrequency).toDateMidnight().toDateTime();
 	}
 
-	/** {@inheritDoc} */
+    @Override
+    public int minimumImportFrequency()
+    {
+        return minimumImportFrequency;
+    }
+
 	@Override
-	public DateTime getLatestRunTime()
+	public DateTime latestRunTime()
 	{
-		return ImportTimeManager.getLastImportTime(createParserInstance().getIdentifier());
+		return ImportTimeManager.getLastImportTime(createParserInstance().identifier());
 	}
 
-	/** {@inheritDoc} */
+    @Override
 	public boolean hasBeenRun()
 	{
-		return getLatestRunTime() != null;
+		return latestRunTime() != null;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public String identifier()
 	{
-		return createParserInstance().getIdentifier();
+		return createParserInstance().identifier();
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public boolean isOK()
+	public boolean isLocked()
 	{
-		return isRejectedDirEmpty();
+		return !isRejectedDirEmpty();
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public boolean isExecuting()
+	public boolean isInProgress()
 	{
 		return isRunning;
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public String getHumanName()
+	public String name()
 	{
-		return createParserInstance().getHumanName();
+		return createParserInstance().name();
 	}
 }

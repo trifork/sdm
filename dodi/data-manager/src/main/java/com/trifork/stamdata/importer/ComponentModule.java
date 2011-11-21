@@ -24,27 +24,18 @@
  */
 package com.trifork.stamdata.importer;
 
-import com.google.common.collect.ImmutableSet;
 import com.google.inject.Scopes;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
-import com.trifork.stamdata.ComponentMonitor;
-import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.importer.config.ConfigurationLoader;
-import com.trifork.stamdata.importer.config.OldParserContext;
-import com.trifork.stamdata.importer.config.ParserConfiguration;
 import com.trifork.stamdata.importer.jobs.JobManager;
-import com.trifork.stamdata.importer.parsers.ParserContext;
-import com.trifork.stamdata.importer.parsers.ParserScheduler;
 import com.trifork.stamdata.importer.parsers.ParserModule;
-import com.trifork.stamdata.importer.webinterface.DataManagerComponentMonitor;
-import com.trifork.stamdata.importer.webinterface.GUIServlet;
+import com.trifork.stamdata.importer.parsers.ParserScheduler;
+import com.trifork.stamdata.importer.parsers.annotations.InboxRootPath;
 import org.apache.commons.configuration.CompositeConfiguration;
 
-import java.util.Set;
+import java.io.File;
 
-import static com.trifork.stamdata.importer.config.ParserConfiguration.bindOldParsers;
 import static com.trifork.stamdata.importer.config.ParserConfiguration.bindParsers;
 
 /**
@@ -55,28 +46,22 @@ public class ComponentModule extends ServletModule
     @Override
     protected void configureServlets()
     {
-        install(new ParserModule());
-
         final CompositeConfiguration config = ConfigurationLoader.loadConfiguration();
+        
+        // HACK: Because we are not using the shared ConfigurationLoader (yet!) we cannot easily bind properties
+        // to named constants.
+        //
+        String rootDir = config.getString("rootDir");
+        
+        bindConstant().annotatedWith(InboxRootPath.class).to(rootDir);
+        bindConstant().annotatedWith(Names.named("file.stabilization.period")).to(config.getInt("file.stabilization.period"));
 
         // Bind the configured parsers.
         // TODO: The parsers' classes should not be named in the configuration file.
         //
-        bindParsers(config, binder());
-        bindOldParsers(config, binder());
+        bindParsers(config, new File(rootDir), binder());
 
-        // HACK: Because we are not using the shared ConfigurationLoader (yet!) we cannot easily bind properties
-        // to named constants.
-        //
-        bindConstant().annotatedWith(Names.named("rootDir")).to(config.getString("rootDir"));
-        bindConstant().annotatedWith(Names.named("file.stabilization.period")).to(config.getInt("file.stabilization.period"));
-
-        // Serve the status servlet.
-        //
-        bind(ComponentMonitor.class).to(DataManagerComponentMonitor.class);
-        install(new MonitoringModule());
-
-        serve("/").with(GUIServlet.class);
+        install(new ParserModule());
 
         // Bind the services.
         //

@@ -22,21 +22,16 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package com.trifork.stamdata.importer.jobs;
+package com.trifork.stamdata.importer.parsers.annotations;
 
-import java.io.File;
+import com.google.inject.BindingAnnotation;
 
-import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.persistence.Persister;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@Deprecated // Use Parser instead.
-public interface FileParser
-{
-	String identifier();
-
-    String name();
-	
-	boolean validateInputStructure(File[] input);
-	
-	void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception;
-}
+@BindingAnnotation
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD})
+public @interface InboxRootPath {}

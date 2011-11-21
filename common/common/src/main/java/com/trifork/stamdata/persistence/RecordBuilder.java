@@ -30,6 +30,9 @@ import static com.trifork.stamdata.Preconditions.checkNotNull;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
+/**
+ * @author Thomas G. Kristensen <tgk@trifork.com>
+ */
 public class RecordBuilder
 {
     private RecordSpecification recordSpecification;

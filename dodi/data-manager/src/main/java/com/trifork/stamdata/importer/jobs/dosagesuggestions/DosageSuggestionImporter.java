@@ -244,13 +244,13 @@ public class DosageSuggestionImporter implements FileParser
 	}
 
 	@Override
-	public String getIdentifier()
+	public String identifier()
 	{
 		return "doseringsforslag";
 	}
 
 	@Override
-	public String getHumanName()
+	public String name()
 	{
 		return "Doseringsforslag Parser";
 	}
