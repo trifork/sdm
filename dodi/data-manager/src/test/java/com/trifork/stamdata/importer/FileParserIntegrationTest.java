@@ -96,7 +96,7 @@ public abstract class FileParserIntegrationTest
      * @param inboxToCopy a directory containing the files to copy.
      * @throws IOException thrown if the files could not be copied.
      */
-    protected void placeInInbox(File inboxToCopy, boolean useSubdirectory) throws IOException
+    protected void placeInInbox(File inboxToCopy, boolean useSubdirectory) throws IOException, InterruptedException
     {
         checkNotNull(parserId, "parserId");
         checkNotNull(inboxToCopy, "inboxToCopy");
@@ -106,7 +106,7 @@ public abstract class FileParserIntegrationTest
 
         if (useSubdirectory)
         {
-            String subDirName = "moss";
+            String subDirName = Instant.now().toString(ISODateTimeFormat.dateTime());
             destination = new File(getInboxPath(), subDirName);
         }
         else
@@ -120,6 +120,10 @@ public abstract class FileParserIntegrationTest
         FileUtils.copyDirectory(inboxToCopy, destination);
 
         assertThat(destination.exists(), is(true));
+
+        Thread.sleep(10000);
+
+        while (isInProgress()) { Thread.sleep(500); }
     }
     
     private File getInboxPath()

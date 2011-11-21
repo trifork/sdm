@@ -60,10 +60,6 @@ public class YderregisterIntegrationTest extends FileParserIntegrationTest
 
         placeInInbox(fileSet1, true);
 
-        Thread.sleep(10000);
-
-        while (isInProgress()) { Thread.sleep(500); }
-
         assertThat(isLocked(), is(false));
 
         assertRecordCount("Yderregister", 12);
