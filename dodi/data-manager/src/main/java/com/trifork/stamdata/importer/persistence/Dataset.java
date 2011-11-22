@@ -95,13 +95,10 @@ public class Dataset<T extends TemporalEntity>
 		
 		if (previousValue != null)
 		{
-		    // DO NOT CHANGE THIS TO 'WARN' IT IS AN ERROR.
-		    //
-		    // We might not be able to fix this for the given register but it should
-		    // be handled in the future. At least it should be an conscious choice
-		    // that we ignore double keys in a register.
-		    
-		    logger.error("Two entries in a single import contains the same id. type={}, id={}", type.getSimpleName(), id);
+            // FIXME: This is actually and error, but it has always been this way.
+            // Double keys should not happen.
+
+		    logger.warn("Two entries in a single import contains the same id. type={}, id={}", type.getSimpleName(), id);
 		}
 	}
 }

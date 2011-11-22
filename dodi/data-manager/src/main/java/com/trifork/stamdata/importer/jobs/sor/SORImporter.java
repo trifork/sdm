@@ -27,14 +27,17 @@
 package com.trifork.stamdata.importer.jobs.sor;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.xml.parsers.*;
 
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
 import org.slf4j.*;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -79,38 +82,35 @@ public class SORImporter implements FileParser
 	{
 		for (File file : files)
 		{
+            MDC.put("filename", file.getName());
+            
 			SORDataSets dataSets = parse(file);
 			persister.persistCompleteDataset(dataSets.getPraksisDS());
 			persister.persistCompleteDataset(dataSets.getYderDS());
 			persister.persistCompleteDataset(dataSets.getSygehusDS());
 			persister.persistCompleteDataset(dataSets.getSygehusAfdelingDS());
 			persister.persistCompleteDataset(dataSets.getApotekDS());
+
+            MDC.remove("filename");
 		}
 	}
 
-	public static SORDataSets parse(File file) throws Exception
-	{
+	public static SORDataSets parse(File file) throws SAXException, ParserConfigurationException, IOException
+    {
 		SORDataSets dataSets = new SORDataSets();
 		SOREventHandler handler = new SOREventHandler(dataSets);
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 
-		try
-		{
-			SAXParser parser = factory.newSAXParser();
+        SAXParser parser = factory.newSAXParser();
 
-			if (file.getName().toLowerCase().endsWith("xml"))
-			{
-				parser.parse(file, handler);
-			}
-			else
-			{
-				logger.warn("Can only parse files with extension 'xml'! The file is ignored. file={}", file.getAbsolutePath());
-			}
-		}
-		catch (Exception e)
-		{
-			throw new Exception("Error parsing data from file: " + file.getAbsolutePath(), e);
-		}
+        if (file.getName().toLowerCase().endsWith("xml"))
+        {
+            parser.parse(file, handler);
+        }
+        else
+        {
+            logger.warn("Can only parse files with extension 'xml'! The file is ignored. file={}", file.getAbsolutePath());
+        }
 
 		return dataSets;
 	}

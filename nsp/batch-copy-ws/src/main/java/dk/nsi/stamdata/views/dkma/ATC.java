@@ -62,11 +62,9 @@ public class ATC extends View
 	@XmlTransient
 	private Date modifiedDate;
 
-	@XmlTransient
 	@Temporal(TIMESTAMP)
 	protected Date validFrom;
 
-	@XmlTransient
 	@Temporal(TIMESTAMP)
 	protected Date validTo;
 

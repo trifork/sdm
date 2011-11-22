@@ -54,7 +54,7 @@ public class Administrationsvej extends View
 	private BigInteger recordID;
 
 	@Column(name = "AdministrationsvejKode")
-	private String id;
+	protected String id;
 
 	@Column(name = "AdministrationsvejTekst")
 	protected String tekst;

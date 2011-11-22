@@ -43,8 +43,8 @@ import dk.nsi.stamdata.replication.webservice.HistoryOffset;
 @XmlType(namespace=STAMDATA_3_0 + "/common")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlAccessorOrder(XmlAccessOrder.UNDEFINED)
-public abstract class View {
-
+public abstract class View
+{
 	public abstract String getId();
 
 	public abstract BigInteger getRecordID();
@@ -56,8 +56,8 @@ public abstract class View {
 	 *
 	 * @see HistoryOffset
 	 */
-	public String getOffset() {
-
+	public String getOffset()
+    {
 		return new HistoryOffset(getRecordID().toString(), getUpdated()).toString();
 	}
 }
