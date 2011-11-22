@@ -43,7 +43,7 @@ public final class SikredeRecordSpecs
             field("PostType", 2).numerical().doNotPersist(),
             field("AntPost", 8).numerical());
     
-    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpecification("SikredeGenerated", "CPRnr", 
+    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpecification("Sikrede", "CPRnr", 
             // Page 1 (6 of 11)
             field("PostType", 2).numerical().doNotPersist(),
             field("CPRnr", 10),

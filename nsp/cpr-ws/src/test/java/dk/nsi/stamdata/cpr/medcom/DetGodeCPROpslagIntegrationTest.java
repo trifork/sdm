@@ -107,17 +107,6 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
 
         client = serviceCatalog.getDetGodeCPROpslag();
-
-        /*
-        org.hibernate.classic.Session session1 = session.getSessionFactory().openSession();
-        Transaction transaction = session1.beginTransaction();
-        SQLQuery sqlQuery = session1.createSQLQuery("REPLACE INTO whitelist_config (component_name, cvr) VALUES(?,?)");
-        sqlQuery.setString(0, "dgcpr");
-        sqlQuery.setString(1, "87654321");
-        sqlQuery.executeUpdate();
-        transaction.commit();
-        session1.close();
-        */
     }
 
     @Before
@@ -127,7 +116,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         session.beginTransaction();
         Connection connection = session.connection();
         Statement statement = connection.createStatement();
-        statement.executeUpdate("DROP TABLE IF EXISTS SikredeGenerated");
+        statement.executeUpdate("DROP TABLE IF EXISTS " + SikredeRecordSpecs.ENTRY_RECORD_SPEC.getTable());
         statement.executeUpdate(sqlSchema);
     }
 
@@ -271,7 +260,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Person").executeUpdate();
-        session.connection().createStatement().executeUpdate("DELETE FROM SikredeGenerated");
+        session.connection().createStatement().executeUpdate("DELETE FROM " + SikredeRecordSpecs.ENTRY_RECORD_SPEC.getTable());
         session.connection().createStatement().executeUpdate("DELETE FROM Yderregister");
 
         for (Person person : persons) session.persist(person);
