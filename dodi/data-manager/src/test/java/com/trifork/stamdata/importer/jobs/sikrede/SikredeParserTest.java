@@ -34,10 +34,12 @@ import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+
 import org.joda.time.Instant;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -48,6 +50,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -77,6 +81,9 @@ public class SikredeParserTest
             sikredeParser.process(input, new RecordPersister(connection, Instant.now()));
             
             assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 0, recordSpecification);
+            
+            List<String> expectedList = Arrays.asList();
+            Mockito.verify(mockedBrsUpdater).syncAssignedDoctorTable(Matchers.eq(expectedList));
         }
         finally
         {
@@ -116,6 +123,9 @@ public class SikredeParserTest
             connection.commit();
 
             assertNumberOfSikredeGeneratedRecordsInDatabaseIs(connection, 4, recordSpecification);
+            
+            List<String> expectedList = Arrays.asList("1234567890", "1234567890", "1234567890", "1234567890");
+            Mockito.verify(mockedBrsUpdater).syncAssignedDoctorTable(Matchers.eq(expectedList));
         }
         finally
         {
