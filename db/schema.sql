@@ -1152,59 +1152,102 @@ CREATE TABLE Yder (
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 
+-- "Sikrede"
+--
+CREATE TABLE Sikrede (
+	PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	CPRnr VARCHAR(10),
+	SYdernr VARCHAR(6),
+	SIkraftDatoYder VARCHAR(8),
+	SRegDatoYder VARCHAR(8),
+	SSikrGrpKode VARCHAR(1),
+	SIkraftDatoGrp VARCHAR(8),
+	SRegDatoGrp VARCHAR(8),
+	SSikrKomKode VARCHAR(3),
+	SIkraftDatoKomKode VARCHAR(3),
+	SYdernrGl VARCHAR(6),
+	SIkraftDatoYderGl VARCHAR(8),
+	SRegDatoYderGl VARCHAR(8),
+	SSikrGrpKodeGl VARCHAR(1),
+	SIkraftDatoGrpGl VARCHAR(8),
+	SRegDatoGrpGl VARCHAR(8),
+	SYdernrFrem VARCHAR(6),
+	SIkraftDatoYderFrem VARCHAR(8),
+	SRegDatoYderFrem VARCHAR(8),
+	SSikrGrpKodeFrem VARCHAR(1),
+	SIkraftDatoGrpFrem VARCHAR(8),
+	SRegDatoGrpFrem VARCHAR(8),
+	SKon VARCHAR(1),
+	SAlder VARCHAR(3),
+	SFolgerskabsPerson VARCHAR(10),
+	SStatus VARCHAR(2),
+	SBevisDato VARCHAR(8),
+	PNavn VARCHAR(34),
+	SBSStatsborgerskabKode VARCHAR(2),
+	SBSStatsborgerskab VARCHAR(47),
+	SSKAdrLinie1 VARCHAR(40),
+	SSKAdrLinie2 VARCHAR(40),
+	SSKBopelsLand VARCHAR(40),
+	SSKBopelsLAndKode VARCHAR(2),
+	SSKEmailAdr VARCHAR(50),
+	SSKFamilieRelation VARCHAR(10),
+	SSKFodselsdato VARCHAR(10),
+	SSKGyldigFra VARCHAR(10),
+	SSKGyldigTil VARCHAR(10),
+	SSKMobilNr VARCHAR(20),
+	SSKPostNrBy VARCHAR(40),
+	SSLForsikringsinstans VARCHAR(21),
+	SSLForsikringsinstansKode VARCHAR(10),
+	SSLForsikringsnr VARCHAR(15),
+	SSLGyldigFra VARCHAR(10),
+	SSLGyldigTil VARCHAR(10),
+	SSLSocSikretLand VARCHAR(47),
+	SSLSocSikretLandKode VARCHAR(2),
+	ValidFrom DateTime NOT NULL,
+	ValidTo DateTime,
+	ModifiedDate DateTime NOT NULL
+) ENGINE=InnoDB COLLATE=utf8_bin;
+
+-- Yderregister - yder
+--
 CREATE TABLE Yderregister (
 	PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-
-	HistIdYder VARCHAR(16) NOT NULL,
-	
-    AmtKodeYder VARCHAR(2),
-    AmtTxtYder VARCHAR(60),
-    YdernrYder VARCHAR(6),
-    PrakBetegn VARCHAR(50),
-    AdrYder VARCHAR(50),
-    PostnrYder VARCHAR(4),
-    PostdistYder VARCHAR(20),
-    TilgDatoYder VARCHAR(8),
-    AfgDatoYder VARCHAR(8),
-
-    HvdSpecKode VARCHAR(2),
-    HvdSpecTxt VARCHAR(60),
-    HvdTlf VARCHAR(8),
-
-    EmailYder VARCHAR(50),
-    WWW VARCHAR(78),
-    
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	
-	INDEX (PID, ModifiedDate),
-	INDEX (HistIdYder, ValidTo, ValidFrom)
+	HistIdYder VARCHAR(16),
+	AmtKodeYder VARCHAR(2),
+	AmtTxtYder VARCHAR(60),
+	YdernrYder VARCHAR(6),
+	PrakBetegn VARCHAR(50),
+	AdrYder VARCHAR(50),
+	PostnrYder VARCHAR(4),
+	PostdistYder VARCHAR(20),
+	TilgDatoYder VARCHAR(8),
+	AfgDatoYder VARCHAR(8),
+	HvdSpecKode VARCHAR(2),
+	HvdSpecTxt VARCHAR(60),
+	HvdTlf VARCHAR(8),
+	EmailYder VARCHAR(50),
+	WWW VARCHAR(78),
+	ValidFrom DateTime NOT NULL,
+	ValidTo DateTime,
+	ModifiedDate DateTime NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
-
+-- Yderregister - person
+--
 CREATE TABLE YderregisterPerson (
 	PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY,
-	
-	HistIdPerson VARCHAR(16) NOT NULL,
-
-	YdernrPerson VARCHAR(6) NOT NULL,
-
-	TilgDatoPerson CHAR(8) NOT NULL,
-	AfgDatoPerson CHAR(8),
-
-	CprNr CHAR(10) NOT NULL,
-
-	PersonrolleKode CHAR(2),
+	HistIdPerson VARCHAR(16),
+	YdernrPerson VARCHAR(6),
+	TilgDatoPerson VARCHAR(8),
+	AfgDatoPerson VARCHAR(8),
+	CprNr VARCHAR(10),
+	PersonrolleKode VARCHAR(2),
 	PersonrolleTxt VARCHAR(60),
-
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME,
-	
-	INDEX (PID, ModifiedDate),
-	INDEX (HistIdPerson, ValidTo, ValidFrom)
+	ValidFrom DateTime NOT NULL,
+	ValidTo DateTime,
+	ModifiedDate DateTime NOT NULL
 ) ENGINE=InnoDB COLLATE=utf8_bin;
+
 
 -- This table is to be replicated to the BRS db schema.
 -- It is populated by stamdata, but not read by stamdata.

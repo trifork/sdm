@@ -29,7 +29,10 @@ import static com.trifork.stamdata.persistence.RecordSpecification.field;
 import static org.junit.Assert.*;
 
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
@@ -70,8 +73,8 @@ public class SikredeSqlSchemaCreatorTest
     @Test
     public void testPrintOfActualSchema()
     {
-        // FIXME: What is this actually testing?
-        //
         System.out.println(RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC));
+        System.out.println(RecordMySQLTableGenerator.createSqlSchema(YderregisterRecordSpecs.YDER_RECORD_TYPE));
+        System.out.println(RecordMySQLTableGenerator.createSqlSchema(YderregisterRecordSpecs.PERSON_RECORD_TYPE));
     }
 }
