@@ -24,37 +24,37 @@
  */
 package com.trifork.stamdata.specs;
 
-import com.trifork.stamdata.persistence.RecordSpecification;
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 public class YderregisterRecordSpecs
 {
-    public static final RecordSpecification START_RECORD_TYPE = RecordSpecification.createSpec("DummyTable", "DummyKey",
-            "OpgDato", ALPHANUMERICAL, 8,
-            "Timestamp", ALPHANUMERICAL, 20,
-            "Modt", ALPHANUMERICAL, 6,
-            "SnitfladeId", ALPHANUMERICAL, 8
+    public static final RecordSpecification START_RECORD_TYPE = RecordSpecification.createSpecification("DummyTable", "DummyKey",
+            field("OpgDato", 8),
+            field("Timestamp", 20),
+            field("Modt", 6),
+            field("SnitfladeId", 8)
     );
 
-    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpec("Yderregister", "HistIdYder",
-            "HistIdYder", ALPHANUMERICAL, 16,
-            "AmtKodeYder", ALPHANUMERICAL, 2,
-            "AmtTxtYder", ALPHANUMERICAL, 60,
-            "YdernrYder", ALPHANUMERICAL, 6,
-            "PrakBetegn", ALPHANUMERICAL, 50,
+    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpecification("Yderregister", "HistIdYder",
+            field("HistIdYder", 16),
+            field("AmtKodeYder", 2),
+            field("AmtTxtYder", 60),
+            field("YdernrYder", 6),
+            field("PrakBetegn", 50),
             // Att
-            "AdrYder", ALPHANUMERICAL, 50,
-            "PostnrYder", ALPHANUMERICAL, 4,
-            "PostdistYder", ALPHANUMERICAL, 20,
-            "TilgDatoYder", ALPHANUMERICAL, 8,
-            "AfgDatoYder", ALPHANUMERICAL, 8,
+            field("AdrYder", 50),
+            field("PostnrYder", 4),
+            field("PostdistYder", 20),
+            field("TilgDatoYder", 8),
+            field("AfgDatoYder", 8),
             // OverensKode
             // OverenskomstTxt
             // LandsYdertypeKode
             // LandsYdertypeTxt
-            "HvdSpecKode", ALPHANUMERICAL, 2,
-            "HvdSpecTxt", ALPHANUMERICAL, 60,
+            field("HvdSpecKode", 2),
+            field("HvdSpecTxt", 60),
             // IndberetFormKode
             // IndberetFormTxt
             // SelskFormKode
@@ -68,22 +68,22 @@ public class YderregisterRecordSpecs
             // SamarbFormTxt
             // PrakKomKode
             // PrakKomTxt
-            "HvdTlf", ALPHANUMERICAL, 8,
+            field("HvdTlf", 8),
             // Fax
-            "EmailYder", ALPHANUMERICAL, 50,
-            "WWW", ALPHANUMERICAL, 78
+            field("EmailYder", 50),
+            field("WWW", 78)
             // ...
     );
 
-    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpec("YderregisterPerson", "HistIdPerson",
-            "HistIdPerson", ALPHANUMERICAL, 16,
-            "YdernrPerson", ALPHANUMERICAL, 6,
-            "TilgDatoPerson", ALPHANUMERICAL, 8,
-            "AfgDatoPerson", ALPHANUMERICAL, 8,
-            "CprNr", ALPHANUMERICAL, 10,
+    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpecification("YderregisterPerson", "HistIdPerson",
+            field("HistIdPerson", 16),
+            field("YdernrPerson", 6),
+            field("TilgDatoPerson", 8),
+            field("AfgDatoPerson", 8),
+            field("CprNr", 10),
             // Navn
-            "PersonrolleKode", ALPHANUMERICAL, 2,
-            "PersonrolleTxt", ALPHANUMERICAL, 60
+            field("PersonrolleKode", 2),
+            field("PersonrolleTxt", 60)
             // ...
     );
 }

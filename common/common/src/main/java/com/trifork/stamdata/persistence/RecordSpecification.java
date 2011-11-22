@@ -25,6 +25,7 @@
 package com.trifork.stamdata.persistence;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -54,21 +55,52 @@ public class RecordSpecification
         NUMERICAL
     }
     
+    public static enum Modifiers
+    {
+        DO_NOT_PERSIST;
+    }
+    
     public static class FieldSpecification
     {
         public final String name;
         public final RecordFieldType type;
         public final int length;
+        public final boolean persistField;
         
-        public FieldSpecification(String name, RecordFieldType type, int length)
+        public FieldSpecification(String name, RecordFieldType type, int length, boolean persistField)
         {
             this.name = name;
             this.type = type;
             this.length = length;
+            this.persistField = persistField;
+        }
+
+        /**
+         * Returns a copy of the field with a numerical entry
+         */
+        public FieldSpecification numerical()
+        {
+            return new FieldSpecification(name, RecordFieldType.NUMERICAL, length, persistField);
+        }
+        
+        /**
+         * Returns a copy of the field that will not be persisted
+         */
+        public FieldSpecification doNotPersist()
+        {
+            return new FieldSpecification(name, type, length, false);
         }
     }
+    
+    /**
+     * Creates an alphanumerical field that will be persisted
+     */
+    public static FieldSpecification field(String name, int length)
+    {
+        return new FieldSpecification(name, RecordFieldType.ALPHANUMERICAL, length, true);
+    }
 
-    private final List<FieldSpecification> fields;
+    private List<FieldSpecification> fields;
     
     private RecordSpecification(String table, String keyColumn)
     {
@@ -78,22 +110,11 @@ public class RecordSpecification
         fields = new ArrayList<FieldSpecification>();
     }
     
-    public static RecordSpecification createSpec(String table, String keyColumn, Object... fieldDefinitions)
+    public static RecordSpecification createSpecification(String tableName, String keyColumnName, FieldSpecification... fieldSpecifications)
     {
-        Preconditions.checkArgument(fieldDefinitions.length % 3 == 0);
-
-        RecordSpecification recordSpecification = new RecordSpecification(table, keyColumn);
+        RecordSpecification recordSpecification = new RecordSpecification(tableName, keyColumnName);
         
-        for (int i = 0; i < fieldDefinitions.length; i += 3)
-        {
-            String name = (String) fieldDefinitions[i + 0];
-            RecordFieldType type = (RecordFieldType) fieldDefinitions[i + 1];
-            int length = (Integer) fieldDefinitions[i + 2];
-            
-            FieldSpecification fieldSpecification = new FieldSpecification(name, type, length);
-            
-            recordSpecification.fields.add(fieldSpecification);
-        }
+        recordSpecification.fields = Arrays.asList(fieldSpecifications);
         
         return recordSpecification;
     }
@@ -117,47 +138,45 @@ public class RecordSpecification
     {
         Preconditions.checkNotNull(record, "record");
         
-        if (record.size() != fields.size())
-        {
-            return false;
-        }
-        
         for (FieldSpecification fieldsSpecification: fields)
         {
-            if (!record.containsKey(fieldsSpecification.name))
+            if(fieldsSpecification.persistField)
             {
-                return false;
-            }
-            else
-            {
-                Object value = record.get(fieldsSpecification.name);
-                
-                if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
+                if (!record.containsKey(fieldsSpecification.name))
                 {
-                    if (!(value instanceof Integer))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
-                else if (fieldsSpecification.type == RecordFieldType.ALPHANUMERICAL)
+                else
                 {
-                    if (value != null && !(value instanceof String))
+                    Object value = record.get(fieldsSpecification.name);
+                    
+                    if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
                     {
-                        return false;
-                    }
-                    else if (value != null)
-                    {
-                        String valueAsString = String.valueOf(value);
-                        
-                        if (valueAsString.length() > fieldsSpecification.length)
+                        if (!(value instanceof Integer))
                         {
                             return false;
                         }
                     }
-                }
-                else
-                {
-                    throw new AssertionError("Field specification is in illegal state. Type must be set.");
+                    else if (fieldsSpecification.type == RecordFieldType.ALPHANUMERICAL)
+                    {
+                        if (value != null && !(value instanceof String))
+                        {
+                            return false;
+                        }
+                        else if (value != null)
+                        {
+                            String valueAsString = String.valueOf(value);
+                            
+                            if (valueAsString.length() > fieldsSpecification.length)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new AssertionError("Field specification is in illegal state. Type must be set.");
+                    }
                 }
             }
         }

@@ -24,80 +24,79 @@
  */
 package com.trifork.stamdata.specs;
 
-import com.trifork.stamdata.persistence.RecordSpecification;
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
+import com.trifork.stamdata.persistence.RecordSpecification;
 
 public final class SikredeRecordSpecs
 {
     protected SikredeRecordSpecs() {}
-
-    public static final RecordSpecification START_RECORD_SPEC = RecordSpecification.createSpec("DummyTable", "DummyKey",
-            "PostType", NUMERICAL, 2,
-            "OpgDato", ALPHANUMERICAL, 8,
-            "Timestamp", ALPHANUMERICAL, 20,
-            "Modt", ALPHANUMERICAL, 6,
-            "SnitfladeId", ALPHANUMERICAL, 8);
-
-    public static final RecordSpecification END_RECORD_SPEC = RecordSpecification.createSpec("DummyTable", "DummyKey",
-            "PostType", NUMERICAL, 2,
-            "AntPost", NUMERICAL, 8);
-
-    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpec("SikredeGenerated", "CPRnr",
+    
+    public static final RecordSpecification START_RECORD_SPEC = RecordSpecification.createSpecification("DummyTable", "DummyKey", 
+            field("PostType", 2).numerical().doNotPersist(),
+            field("OpgDato", 8),
+            field("Timestamp", 20),
+            field("Modt", 6),
+            field("SnitfladeId", 8));
+    
+    public static final RecordSpecification END_RECORD_SPEC = RecordSpecification.createSpecification("DummyTable", "DummyKey", 
+            field("PostType", 2).numerical().doNotPersist(),
+            field("AntPost", 8).numerical());
+    
+    public static final RecordSpecification ENTRY_RECORD_SPEC = RecordSpecification.createSpecification("SikredeGenerated", "CPRnr", 
             // Page 1 (6 of 11)
-            "PostType", NUMERICAL, 2,
-            "CPRnr", ALPHANUMERICAL, 10,
-            "SYdernr", ALPHANUMERICAL, 6,
-            "SIkraftDatoYder", ALPHANUMERICAL, 8,
-            "SRegDatoYder", ALPHANUMERICAL, 8,
-            "SSikrGrpKode", ALPHANUMERICAL, 1,
-            "SIkraftDatoGrp", ALPHANUMERICAL, 8,
-            "SRegDatoGrp", ALPHANUMERICAL, 8,
-            "SSikrKomKode", ALPHANUMERICAL, 3,
-            "SIkraftDatoKomKode", ALPHANUMERICAL, 3,
-            "SYdernrGI", ALPHANUMERICAL, 6,
-            "SIkraftDatoYderGI", ALPHANUMERICAL, 8,
-            "SRegDatoYderGI", ALPHANUMERICAL, 8,
-            "SSikrGrpKodeGI", ALPHANUMERICAL, 1,
-            "SIkraftDatoGrpGI", ALPHANUMERICAL, 8,
-            "SRegDatoGrpGI", ALPHANUMERICAL, 8,
-            "SYdernrFrem", ALPHANUMERICAL, 6,
-            "SIkraftDatoYderFrem", ALPHANUMERICAL, 8,
-            "SRegDatoYderFrem", ALPHANUMERICAL, 8,
-            "SSikrGrpKodeFrem", ALPHANUMERICAL, 1,
+            field("PostType", 2).numerical().doNotPersist(),
+            field("CPRnr", 10),
+            field("SYdernr", 6),
+            field("SIkraftDatoYder", 8),
+            field("SRegDatoYder", 8),
+            field("SSikrGrpKode", 1),
+            field("SIkraftDatoGrp", 8),
+            field("SRegDatoGrp", 8),
+            field("SSikrKomKode", 3),
+            field("SIkraftDatoKomKode", 3),
+            field("SYdernrGI", 6),
+            field("SIkraftDatoYderGI", 8),
+            field("SRegDatoYderGI", 8),
+            field("SSikrGrpKodeGI", 1),
+            field("SIkraftDatoGrpGI", 8),
+            field("SRegDatoGrpGI", 8),
+            field("SYdernrFrem", 6),
+            field("SIkraftDatoYderFrem", 8),
+            field("SRegDatoYderFrem", 8),
+            field("SSikrGrpKodeFrem", 1),
 
             // Page 2 (7 of 11)
-            "SIkraftDatoGrpFrem", ALPHANUMERICAL, 8,
-            "SRegDatoGrpFrem", ALPHANUMERICAL, 8,
-            "SKon", ALPHANUMERICAL, 1,
-            "SAlder", ALPHANUMERICAL, 3,
-            "SFolgerskabsPerson", ALPHANUMERICAL, 10,
-            "SStatus", ALPHANUMERICAL, 2,
-            "SBevisDato", ALPHANUMERICAL, 8,
+            field("SIkraftDatoGrpFrem", 8),
+            field("SRegDatoGrpFrem", 8),
+            field("SKon", 1),
+            field("SAlder", 3),
+            field("SFolgerskabsPerson", 10),
+            field("SStatus", 2),
+            field("SBevisDato", 8),
             // ...
-            "PNavn", ALPHANUMERICAL, 34,
+            field("PNavn", 34),
             // ...
-            "SBSStatsborgerskabKode", ALPHANUMERICAL, 2,
-            "SBSStatsborgerskab", ALPHANUMERICAL, 47,
-            "SSKAdrLinie1", ALPHANUMERICAL, 40,
-            "SSKAdrLinie2", ALPHANUMERICAL, 40,
+            field("SBSStatsborgerskabKode", 2),
+            field("SBSStatsborgerskab", 47),
+            field("SSKAdrLinie1", 40),
+            field("SSKAdrLinie2", 40),
 
             // Page 3 (8 of 11)
-            "SSKBopelsLand", ALPHANUMERICAL, 40,
-            "SSKBopelsLAndKode", ALPHANUMERICAL, 2,
-            "SSKEmailAdr", ALPHANUMERICAL, 50,
-            "SSKFamilieRelation", ALPHANUMERICAL, 10,
-            "SSKFodselsdato", ALPHANUMERICAL, 10,
-            "SSKGyldigFra", ALPHANUMERICAL, 10,
-            "SSKGyldigTil", ALPHANUMERICAL, 10,
-            "SSKMobilNr", ALPHANUMERICAL, 20,
-            "SSKPostNrBy", ALPHANUMERICAL, 40,
-            "SSLForsikringsinstans", ALPHANUMERICAL, 21,
-            "SSLForsikringsinstansKode", ALPHANUMERICAL, 10,
-            "SSLForsikringsnr", ALPHANUMERICAL, 15,
-            "SSLGyldigFra", ALPHANUMERICAL, 10,
-            "SSLGyldigTil", ALPHANUMERICAL, 10,
-            "SSLSocSikretLand", ALPHANUMERICAL, 47,
-            "SSLSocSikretLandKode", ALPHANUMERICAL, 2);
+            field("SSKBopelsLand", 40),
+            field("SSKBopelsLAndKode", 2),
+            field("SSKEmailAdr", 50),
+            field("SSKFamilieRelation", 10),
+            field("SSKFodselsdato", 10),
+            field("SSKGyldigFra", 10),
+            field("SSKGyldigTil", 10),
+            field("SSKMobilNr", 20),
+            field("SSKPostNrBy", 40),
+            field("SSLForsikringsinstans", 21),
+            field("SSLForsikringsinstansKode", 10),
+            field("SSLForsikringsnr", 15),
+            field("SSLGyldigFra", 10),
+            field("SSLGyldigTil", 10),
+            field("SSLSocSikretLand", 47),
+            field("SSLSocSikretLandKode", 2));
 }

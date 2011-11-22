@@ -24,13 +24,14 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import org.joda.time.Instant;
@@ -91,9 +92,9 @@ public class SikredeParserTest
 
         try 
         {
-            RecordSpecification recordSpecification = RecordSpecification.createSpec("TestTable", "Foo",
-                    "PostType", RecordFieldType.NUMERICAL, 2,
-                    "Foo", RecordFieldType.ALPHANUMERICAL, 10);
+            RecordSpecification recordSpecification = RecordSpecification.createSpecification("TestTable", "Foo",
+                    field("PostType", 2).numerical().doNotPersist(),
+                    field("Foo", 10));
 
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
             SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
@@ -128,9 +129,9 @@ public class SikredeParserTest
 
         try
         {
-            RecordSpecification recordSpecification = RecordSpecification.createSpec("TestTable", "Foo",
-                    "PostType", RecordFieldType.NUMERICAL, 2,
-                    "Foo", RecordFieldType.ALPHANUMERICAL, 10);
+            RecordSpecification recordSpecification = RecordSpecification.createSpecification("TestTable", "Foo",
+                    field("PostType", 2).numerical().doNotPersist(),
+                    field("Foo", 10));
             
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
             SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);

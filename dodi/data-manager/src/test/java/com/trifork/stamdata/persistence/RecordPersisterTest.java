@@ -24,14 +24,11 @@
  */
 package com.trifork.stamdata.persistence;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -62,9 +59,9 @@ public class RecordPersisterTest
     public void setUp() throws SQLException
     {
         // TODO: Add test with two identical field names
-        recordSpecification = RecordSpecification.createSpec("SikredeTest", "Moo",
-                "Foo", NUMERICAL, 2,
-                "Moo", ALPHANUMERICAL, 5
+        recordSpecification = RecordSpecification.createSpecification("SikredeTest", "Moo",
+                field("Foo", 2).numerical(),
+                field("Moo", 5)
         );
         
         connection = new ConnectionManager().getConnection();

@@ -24,6 +24,8 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import com.google.common.collect.Iterables;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
@@ -83,9 +85,9 @@ public class SikredeFieldsTester
     @Test
     public void testCorrectAcceptedTotalLineLength()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
-                "Foo", RecordFieldType.NUMERICAL, 10,
-                "Bar", RecordFieldType.ALPHANUMERICAL, 32);
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpecification("SikredeGenerated", "Foo",
+                field("Foo", 10).numerical(),
+                field("Bar", 32));
         assertEquals(42, exampleRecordSpecification.acceptedTotalLineLength());
     }
     
@@ -98,22 +100,20 @@ public class SikredeFieldsTester
     @Test
     public void testConformsToSchemaSpecification()
     {
-        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
-                "Foo", RecordFieldType.NUMERICAL, 10,
-                "Bar", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 32);
+        RecordSpecification exampleRecordSpecification = RecordSpecification.createSpecification("SikredeGenerated", "Foo",
+                field("Foo", 10).numerical(),   
+                field("Bar", 32));
 
         Record correctValues = RecordGenerator.createRecord("Foo", 42, "Bar", "12345678901234567890123456789012");
         Record correctValuesWhereBarIsShorter = RecordGenerator.createRecord("Foo", 42, "Bar", "123456789012345678901234567890");
         Record missingFoo = RecordGenerator.createRecord("Bar", "12345678901234567890123456789012");
         Record fooIsNotNumerical = RecordGenerator.createRecord("Foo", "Baz", "Bar", "12345678901234567890123456789012");
         Record barIsTooLong = RecordGenerator.createRecord("Foo", 42, "Bar", "1234567890123456789012345678901234567890");
-        Record containsUnknownKey = RecordGenerator.createRecord("Foo", 42, "Bar", "12345678901234567890123456789012", "Baz", "Foobar");
         
         assertTrue(exampleRecordSpecification.conformsToSpecifications(correctValues));
         assertTrue(exampleRecordSpecification.conformsToSpecifications(correctValuesWhereBarIsShorter));
         assertFalse(exampleRecordSpecification.conformsToSpecifications(missingFoo));
         assertFalse(exampleRecordSpecification.conformsToSpecifications(fooIsNotNumerical));
         assertFalse(exampleRecordSpecification.conformsToSpecifications(barIsTooLong));
-        assertFalse(exampleRecordSpecification.conformsToSpecifications(containsUnknownKey));
     }
 }

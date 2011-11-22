@@ -24,6 +24,8 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import java.util.Arrays;
 
 import javax.xml.transform.TransformerException;
@@ -32,7 +34,6 @@ import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordMetadata;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 import junit.framework.Assert;
 
@@ -54,9 +55,9 @@ public class RecordXmlGeneratorTest {
     @Before
     public void initialiseVariables()
     {
-        this.exampleRecordSpecification = RecordSpecification.createSpec("RecordType", "Dummy",
-                "Foo", RecordFieldType.NUMERICAL, 2,
-                "Bar", RecordFieldType.ALPHANUMERICAL, 10);
+        this.exampleRecordSpecification = RecordSpecification.createSpecification("RecordType", "Dummy",
+                field("Foo", 2).numerical(),
+                field("Bar", 10));
         exampleXmlGenerator = new RecordXmlGenerator(exampleRecordSpecification);
     }
     

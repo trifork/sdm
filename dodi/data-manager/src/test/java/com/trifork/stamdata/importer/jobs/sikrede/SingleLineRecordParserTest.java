@@ -24,11 +24,12 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import com.google.common.collect.Iterables;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
-import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -45,11 +46,11 @@ public class SingleLineRecordParserTest
     @Before
     public void setupExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "TruncatedString",
-                "PostType", RecordSpecification.RecordFieldType.NUMERICAL, 2,
-                "TruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 5,
-                "UntruncatedString", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 6,
-                "NumberWithSpacesForPadding", RecordFieldType.NUMERICAL, 6);
+        exampleRecordSpecification = RecordSpecification.createSpecification("ExampleSikrede", "TruncatedString",
+                field("PostType",2).numerical().doNotPersist(),
+                field("TruncatedString", 5),
+                field("UntruncatedString", 6),
+                field("NumberWithSpacesForPadding", 6).numerical());
         
         exampleSikredeLineParser = new SingleLineRecordParser(exampleRecordSpecification);
     }

@@ -124,20 +124,23 @@ public class RecordFetcher
 
         for (RecordSpecification.FieldSpecification fieldSpec : recordSpecification.getFieldSpecs())
         {
-            String fieldName = fieldSpec.name;
+            if(fieldSpec.persistField)
+            {
+                String fieldName = fieldSpec.name;
 
-            if (fieldSpec.type == RecordSpecification.RecordFieldType.NUMERICAL)
-            {
-                // TODO: Explicit check of returned type
-                builder.field(fieldName, resultSet.getInt(fieldName));
-            }
-            else if (fieldSpec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
-            {
-                builder.field(fieldName, resultSet.getString(fieldName));
-            }
-            else
-            {
-                throw new AssertionError("Invalid field specifier used");
+                if (fieldSpec.type == RecordSpecification.RecordFieldType.NUMERICAL)
+                {
+                    // TODO: Explicit check of returned type
+                    builder.field(fieldName, resultSet.getInt(fieldName));
+                }
+                else if (fieldSpec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+                {
+                    builder.field(fieldName, resultSet.getString(fieldName));
+                }
+                else
+                {
+                    throw new AssertionError("Invalid field specifier used");
+                }
             }
         }
 

@@ -60,7 +60,6 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Connection;
@@ -312,7 +311,7 @@ public class StamdataReplicationImplIntegrationTest
        assertResponseContainsValueOnXPath("//yder:person/yder:HistIdPerson", "1234");
    }
 
-    private String anyElementAsString() throws TransformerException
+    public String anyElementAsString() throws TransformerException
     {
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

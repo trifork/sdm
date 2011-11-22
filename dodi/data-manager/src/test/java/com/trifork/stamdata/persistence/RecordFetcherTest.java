@@ -24,8 +24,8 @@
  */
 package com.trifork.stamdata.persistence;
 
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.ALPHANUMERICAL;
-import static com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType.NUMERICAL;
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
@@ -55,9 +55,9 @@ public class RecordFetcherTest
     public void setup() throws SQLException
     {
         // TODO: Add test with two identical field names
-        recordSpecification = RecordSpecification.createSpec("SikredeTest", "Moo",
-                "Foo", NUMERICAL, 2,
-                "Moo", ALPHANUMERICAL, 5
+        recordSpecification = RecordSpecification.createSpecification("SikredeTest", "Moo",
+                field("Foo", 2).numerical(),
+                field("Moo", 5)
         );
         
         connection = new ConnectionManager().getConnection();

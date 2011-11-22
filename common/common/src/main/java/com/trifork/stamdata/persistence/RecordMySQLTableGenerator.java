@@ -56,17 +56,20 @@ public class RecordMySQLTableGenerator
         
         for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
         {
-            if(fieldSpecification.type == RecordFieldType.NUMERICAL)
+            if(fieldSpecification.persistField)
             {
-                builder.append(String.format(",\n\t%s BIGINT NOT NULL", fieldSpecification.name));
-            }
-            else if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
-            {
-                builder.append(String.format(",\n\t%s VARCHAR(%d) NOT NULL", fieldSpecification.name, fieldSpecification.length));
-            }
-            else
-            {
-                throw new AssertionError("Field specification must have a type.");
+                if(fieldSpecification.type == RecordFieldType.NUMERICAL)
+                {
+                    builder.append(String.format(",\n\t%s BIGINT", fieldSpecification.name));
+                }
+                else if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+                {
+                    builder.append(String.format(",\n\t%s VARCHAR(%d)", fieldSpecification.name, fieldSpecification.length));
+                }
+                else
+                {
+                    throw new AssertionError("Field specification must have a type.");
+                }
             }
         }
         

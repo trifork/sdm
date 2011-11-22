@@ -24,6 +24,8 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.persistence.RecordSpecification.field;
+
 import static org.junit.Assert.*;
 
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
@@ -40,10 +42,10 @@ public class SikredeSqlSchemaCreatorTest
     @Before
     public void createExampleSikredeFields()
     {
-        exampleRecordSpecification = RecordSpecification.createSpec("SikredeGenerated", "Foo",
-                "Foo", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 10,
-                "Bar", RecordSpecification.RecordFieldType.NUMERICAL, 5,
-                "Baz", RecordSpecification.RecordFieldType.ALPHANUMERICAL, 42);
+        exampleRecordSpecification = RecordSpecification.createSpecification("SikredeGenerated", "Foo",
+                field("Foo", 10),
+                field("Bar", 5).numerical(),
+                field("Baz", 42));
     }
     
     @Test
@@ -52,9 +54,9 @@ public class SikredeSqlSchemaCreatorTest
         String expected = 
                 "CREATE TABLE SikredeGenerated (" + 
                 "PID BIGINT(15) AUTO_INCREMENT NOT NULL PRIMARY KEY," +
-                "Foo VARCHAR(10) NOT NULL," +
-                "Bar BIGINT NOT NULL," +
-                "Baz VARCHAR(42) NOT NULL," +
+                "Foo VARCHAR(10)," +
+                "Bar BIGINT," +
+                "Baz VARCHAR(42)," +
                 "ValidFrom DateTime NOT NULL," +
                 "ValidTo DateTime," +
                 "ModifiedDate DateTime NOT NULL" +

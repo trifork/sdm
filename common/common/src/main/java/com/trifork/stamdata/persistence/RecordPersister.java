@@ -85,20 +85,23 @@ public class RecordPersister
 
         for (FieldSpecification fieldSpecification: recordSpec.getFieldSpecs())
         {
-            if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+            if(fieldSpecification.persistField)
             {
-                preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
-            }
-            else if (fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
-            {
-                preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
-            }
-            else
-            {
-                throw new AssertionError("RecordType was not set correctly in the specification");
-            }
+                if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+                {
+                    preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
+                }
+                else if (fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
+                {
+                    preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
+                }
+                else
+                {
+                    throw new AssertionError("RecordType was not set correctly in the specification");
+                }
 
-            index++;
+                index++;
+            }
         }
 
         preparedStatement.setTimestamp(index++, new Timestamp(transactionTime.getMillis()));
@@ -116,8 +119,11 @@ public class RecordPersister
 
         for (FieldSpecification fieldSpecification: specification.getFieldSpecs())
         {
-            fieldNames.add(fieldSpecification.name);
-            questionMarks.add("?");
+            if(fieldSpecification.persistField)
+            {
+                fieldNames.add(fieldSpecification.name);
+                questionMarks.add("?");
+            }
         }
 
         fieldNames.add("ValidFrom");
