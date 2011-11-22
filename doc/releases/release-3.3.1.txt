@@ -1,0 +1,79 @@
+Stamdata 3.3.1 – Release Notes
+==============================
+
+Database
+========
+
+Der lavet ændringer i to af stamdatas parsere: Yderregisteret og "Sikrede".
+Der har været ønske fra Lakeside om at navne på felterne i databasen er iden-
+tiske dem i kilderegisteret.
+
+Tabellerne:
+
+    Sikrede
+    SikredeYderRelation
+    SaerligSundhedskort
+
+    YderLoebenummer
+    Yderregister
+    YderregisterPerson
+
+skal slettes (droppes) fra databasen. De erstattes med nye udgaver for:
+
+    Sikrede
+    Yderregister
+    YderregisterPerson
+
+og helt nye tabeller:
+
+    KeyValueStore
+
+Database ændringerne påvirker de fleste komponenter i stamdata og det
+anbefales at alle komponenter redeploys.
+
+JBoss
+=====
+
+Pt. bruger Stamdata Data Manager Jersey REST API som laver konflikt med
+JBosses indbyggede RESTeasy deployer. Som en løsning kan mappen:
+
+    ${JBOSS_ROOT}/servers/default/deployers/resteasy.deployer
+
+flyttes til:
+
+    ${JBOSS_ROOT}/servers/default/deployers/resteasy.deployer.backup
+
+Dette er selvfølgelig ikke en optimal løsning, da der skal ændres i
+delte. I fremtiden vi en alternativ løsning blive muligvis blive brugt.
+
+Ændringer i Inferstruktur
+=========================
+
+Der er ændringer til hvordan man fodre stamdata med nye register udtræk.
+Ændringerne gælder kun for de to opdaterede (Sikrede og Yderregisteret).
+For at forbedre fejl-håndtering af import af registre i forkert rækkefølge og
+at kunne understøtte kommende udvidelser af stamdatas data-manager.
+
+Førhen har alle parsere forventet data bliver lagt i sin inbox, f.eks.:
+
+    ${JBOSS_DATA_DIR}/stamdata/sikrede/input/<file.txt>
+
+nu forventer (de to nye) data at blive lagt i undermapper af deres rod-mappe:
+
+    ${JBOSS_DATA_DIR}/stamdata/sikrede/2011-11-21T20:11:21.S231Z/<file.txt>
+    ${JBOSS_DATA_DIR}/stamdata/sikrede/2011-11-21T20:12:12.S131Z/<file.txt>
+
+Undermappernes navne er underordnede. De importeres i leksikografisk orden,
+og det vil derfor være oplagt at lægge dem så undermappernes navne er tids-
+stempler som vist i eksemplet. Altså skal man for de to nye parsere ikke lægge
+filerne i den mappe der hedder "input". Det vil dog forsat virke at lægge dem
+i en mappe der hedder "input".
+
+Håndtering af fejl er også ændret. Før blev fejlede filer blevet lagt i
+parserens "rejected" mappe. I stedet bliver der nu lagt en fil ved navn
+"LOCKED" i parserens inbox, f.eks.:
+
+    ${JBOSS_DATA_DIR}/stamdata/sikrede/LOCKED
+
+Parseren vil ikke forsætte før denne fil er slettet manuelt. Fejl-beskeden
+kan findes i loggen.
