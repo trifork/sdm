@@ -38,6 +38,7 @@ import org.joda.time.Instant;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -66,7 +67,8 @@ public class SikredeParserTest
             RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
 
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
+            BrsUpdater mockedBrsUpdater = Mockito.mock(BrsUpdater.class);
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification, mockedBrsUpdater);
 
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
@@ -94,18 +96,20 @@ public class SikredeParserTest
         {
             RecordSpecification recordSpecification = RecordSpecification.createSpecification("TestTable", "Foo",
                     field("PostType", 2).numerical().doNotPersist(),
+                    field("CPRnr", 10),
                     field("Foo", 10));
 
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
+            BrsUpdater mockedBrsUpdater = Mockito.mock(BrsUpdater.class);
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification, mockedBrsUpdater);
 
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
 
             File inbox = setupExampleFile(recordSpecification,
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "1234567890"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "ABCDEFGHIJ"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "Bar"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz"));
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "1234567890", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "ABCDEFGHIJ", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "Bar", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz", "CPRnr", "1234567890"));
 
             sikredeParser.process(inbox, new RecordPersister(connection, Instant.now()));
 
@@ -131,18 +135,20 @@ public class SikredeParserTest
         {
             RecordSpecification recordSpecification = RecordSpecification.createSpecification("TestTable", "Foo",
                     field("PostType", 2).numerical().doNotPersist(),
+                    field("CPRnr", 10),
                     field("Foo", 10));
             
             SingleLineRecordParser entryParser = new SingleLineRecordParser(recordSpecification);
-            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification);
+            BrsUpdater mockedBrsUpdater = Mockito.mock(BrsUpdater.class);
+            SikredeParser sikredeParser = new SikredeParser(entryParser, recordSpecification, mockedBrsUpdater);
             
             connection = setupSikredeGeneratedDatabaseAndConnection(recordSpecification);
             
             File inbox = setupExampleFileWithIllegalReceiverId(recordSpecification,
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "1234567890"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "ABCDEFGHIJ"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "Bar"),
-                    RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz"));
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "1234567890", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "ABCDEFGHIJ", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "Bar", "CPRnr", "1234567890"),
+                    RecordGenerator.createRecord("PostType", 10, "Foo", "BarBaz", "CPRnr", "1234567890"));
             
             sikredeParser.process(inbox, new RecordPersister(connection, Instant.now()));
         }

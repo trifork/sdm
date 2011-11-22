@@ -30,7 +30,11 @@ import static java.lang.String.format;
 
 import java.io.File;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
@@ -60,18 +64,20 @@ public class SikredeParser implements Parser
     private final SingleLineRecordParser recordParser;
     private final RecordSpecification recordSpecification;
 
+    private final BrsUpdater brsUpdater;
+    
     @Inject
-    SikredeParser()
+    SikredeParser(BrsUpdater brsUpdater)
     {
-        recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
-        recordParser = new SingleLineRecordParser(recordSpecification);
+        this(new SingleLineRecordParser(SikredeRecordSpecs.ENTRY_RECORD_SPEC), SikredeRecordSpecs.ENTRY_RECORD_SPEC, brsUpdater);
     }
 
     /** For testing only */
-    SikredeParser(SingleLineRecordParser recordParser, RecordSpecification recordSpecification)
+    SikredeParser(SingleLineRecordParser recordParser, RecordSpecification recordSpecification, BrsUpdater brsUpdater)
     {
         this.recordParser = recordParser;
         this.recordSpecification = recordSpecification;
+        this.brsUpdater = brsUpdater;
     }
 
     @Override
@@ -101,6 +107,10 @@ public class SikredeParser implements Parser
     
     private void importFile(Iterator<String> lines, RecordPersister persister) throws Exception
     {
+        // A set containing all CPR numbers that have changed.
+        //
+        List<String> cprChanged = Lists.newArrayList();
+        
         Record startRecord = null;
         Record endRecord = null;
         
@@ -150,6 +160,10 @@ public class SikredeParser implements Parser
                 if (startRecord == null) throw new ParserException("Start record was not found before first entry.");
 
                 Record record = recordParser.parseLine(line);
+                
+                String cpr = (String)record.get("CPRnr");
+                cprChanged.add(cpr);
+                
                 persister.persist(record, recordSpecification);
                 
                 numRecords++;
@@ -164,5 +178,7 @@ public class SikredeParser implements Parser
         {
             throw new ParserException("The number of records that were parsed did not match the total from the end record.");
         }
+        
+        brsUpdater.syncAssignedDoctorTable(cprChanged);
     }
 }
