@@ -109,8 +109,6 @@ public class SikredeParser implements Parser
     {
         // A set containing all CPR numbers that have changed.
         //
-        List<String> cprChanged = Lists.newArrayList();
-        
         Record startRecord = null;
         Record endRecord = null;
         
@@ -161,8 +159,7 @@ public class SikredeParser implements Parser
 
                 Record record = recordParser.parseLine(line);
                 
-                String cpr = (String)record.get("CPRnr");
-                cprChanged.add(cpr);
+                brsUpdater.updateRecord(record);
                 
                 persister.persist(record, recordSpecification);
                 
@@ -178,7 +175,5 @@ public class SikredeParser implements Parser
         {
             throw new ParserException("The number of records that were parsed did not match the total from the end record.");
         }
-        
-        brsUpdater.syncAssignedDoctorTable(cprChanged);
     }
 }
