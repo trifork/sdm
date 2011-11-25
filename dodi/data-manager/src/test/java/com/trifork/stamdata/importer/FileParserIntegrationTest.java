@@ -129,13 +129,13 @@ public abstract class FileParserIntegrationTest
     
     private File getInboxPath()
     {
-        String inboxPath = get(getParserURL() + "/inbox").andReturn().print();
+        String inboxPath = get(getParserURL() + "&info=inbox").andReturn().print();
         return new File(inboxPath);
     }
     
     private String getParserURL()
     {
-        return "http://127.0.0.1:" + port + "/parsers/" + parserId;
+        return "http://127.0.0.1:" + port + "/parsers?id=" + parserId;
     }
     
     protected File getDirectory(String path)

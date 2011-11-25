@@ -25,39 +25,29 @@
 package com.trifork.stamdata.importer.webinterface;
 
 
-import com.google.common.collect.Maps;
-import com.sun.jersey.api.json.JSONConfiguration;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
+import com.google.inject.servlet.ServletModule;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.MonitoringModule;
 
-import java.util.Map;
-
 /**
- * Wrapper that routes requests to Jersey.
+ * Binds servlets to paths.
  */
-public class WebInterfaceModule extends JerseyServletModule
+public class WebInterfaceModule extends ServletModule
 {
     @Override
     protected void configureServlets()
     {
-        // Must configure at least one JAX-RS resource or the
-        // server will fail to start.
-        //
-        bind(ParsersController.class);
-
-        Map<String, String> initParams = Maps.newHashMap();
-        initParams.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-        serve("/parsers/*").with(GuiceContainer.class, initParams);
-
-        // Legacy
-        //
         // Serve the status servlet.
         //
         bind(ComponentMonitor.class).to(DataManagerComponentMonitor.class);
         install(new MonitoringModule());
 
+        // Serve a REST API for the parsers (mainly for testing).
+        //
+        serve("/parsers").with(ParserServlet.class);
+
+        // Serve the GUI.
+        //
         serve("/").with(MonitorGuiServlet.class);
     }
 }
