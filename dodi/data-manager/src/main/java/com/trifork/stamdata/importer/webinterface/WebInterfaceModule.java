@@ -25,28 +25,31 @@
 package com.trifork.stamdata.importer.webinterface;
 
 
-import com.google.inject.servlet.ServletModule;
+import com.google.common.collect.Maps;
+import com.sun.jersey.api.json.JSONConfiguration;
+import com.sun.jersey.guice.JerseyServletModule;
+import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 import com.trifork.stamdata.ComponentMonitor;
 import com.trifork.stamdata.MonitoringModule;
+
+import java.util.Map;
 
 /**
  * Wrapper that routes requests to Jersey.
  */
-public class WebInterfaceModule extends ServletModule
+public class WebInterfaceModule extends JerseyServletModule
 {
     @Override
     protected void configureServlets()
     {
-        // FIXME: Jersey has been disabled because it conflicts with RESTeasy on JBoss.
-
         // Must configure at least one JAX-RS resource or the
         // server will fail to start.
         //
-        //bind(ParsersController.class);
+        bind(ParsersController.class);
 
-        //Map<String, String> initParams = Maps.newHashMap();
-        //initParams.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
-        //serve("/parsers/*").with(GuiceContainer.class, initParams);
+        Map<String, String> initParams = Maps.newHashMap();
+        initParams.put(JSONConfiguration.FEATURE_POJO_MAPPING, "true");
+        serve("/parsers/*").with(GuiceContainer.class, initParams);
 
         // Legacy
         //

@@ -33,7 +33,7 @@ import java.io.File;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-@Ignore("RESTeasy is conflicting with Jersey. This will be re-enabled once that is fixed.")
+@Ignore("Ignored until we get some propper test data.")
 public class SikredeIntegrationTest extends FileParserIntegrationTest
 {
     public SikredeIntegrationTest()
