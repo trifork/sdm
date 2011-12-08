@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.Holder;
 
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -54,6 +55,7 @@ import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsStubJettyServer;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
+import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
 import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscriptionService;
@@ -73,10 +75,12 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	
 	private CprAbbsRequestType request = new CprAbbsRequestType();
 	private PersonLookupResponseType response;
-	
-	private String CHANGED_PERSON_CPR1 = "0101822231";
-	private String CHANGED_PERSON_CPR2 = "0101821234";
-	private String OTHER_CPR = "2705842246";
+
+	private static final String CHANGED_PERSON_CPR1 = "0101822231";
+	private static final String CHANGED_PERSON_CPR2 = "0101821234";
+	private static final String OTHER_CPR = "2705842246";
+	private static final String MESSAGE_ID = "42foobar";
+    private Holder<Header> medcomHeader;
 
 
 	@Before
@@ -113,6 +117,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 		
 		assertThat(response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier(), is(CHANGED_PERSON_CPR1));
 	    assertThat(response.getPersonInformationStructure().get(1).getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier(), is(CHANGED_PERSON_CPR2));
+	    
+	    assertThat(medcomHeader.value.getLinking().getInResponseToMessageID(), is(MESSAGE_ID));
 	}
 
 
@@ -134,6 +140,10 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
         
         SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(CLIENT_CVR, "foo", "bar");
         StamdataPersonLookupWithSubscription client = serviceCatalog.getStamdataPersonLookupWithSubscription();
-        response = client.getSubscribedPersonDetails(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
+        
+        medcomHeader = securityHeaders.getMedcomHeader();
+        medcomHeader.value.getLinking().setMessageID(MESSAGE_ID);
+        
+        response = client.getSubscribedPersonDetails(securityHeaders.getSecurity(), medcomHeader, request);
     }
 }

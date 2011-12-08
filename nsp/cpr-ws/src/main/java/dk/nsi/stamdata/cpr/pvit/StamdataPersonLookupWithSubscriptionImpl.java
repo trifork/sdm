@@ -87,6 +87,8 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
         {
             List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader, medcomHeader, new DateTime(request.getSince()));
 
+            SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+            
             response = stamdataPersonResponseFinder.answerCivilRegistrationNumberListPersonRequest(clientCVR, changedCprs);
         }
         catch (SQLException e)
