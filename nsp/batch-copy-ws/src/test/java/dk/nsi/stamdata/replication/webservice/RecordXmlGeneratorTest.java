@@ -81,18 +81,18 @@ public class RecordXmlGeneratorTest {
         String expected = 
         "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" +
         "<atom:feed xmlns:atom=\"http://www.w3.org/2005/Atom\">" +
-        "<atom:id>tag:trifork.com,2011:sikrede/sikrede/v1</atom:id>" +
+        "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1</atom:id>" +
         "<atom:updated>"+ updatedDateInString + "</atom:updated>" +
         "<atom:title>Stamdata Registry Feed</atom:title>" +
         "<atom:author>" +
         "<atom:name>National Sundheds IT</atom:name>"+
         "</atom:author>" +
         "<atom:entry>" +
-        "<atom:id>tag:trifork.com,2011:sikrede/sikrede/v1/11676096000000000010</atom:id>" +
+        "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1/11676096000000000010</atom:id>" +
         "<atom:title/>" +
         "<atom:updated>" + modifiedDateInString + "</atom:updated>" +
         "<atom:content type=\"application/xml\">" +
-        "<sikrede xmlns=\"http://trifork.com/-/stamdata/3.0/sikrede\">" +
+        "<sikrede xmlns=\"http://nsi.dk/-/stamdata/3.0/sikrede\">" +
         "<Foo>42</Foo>" +
         "<Bar>ABCDEFGH</Bar>" +
         "<ValidFrom>2004-12-31T23:00:00.000Z</ValidFrom>" +
@@ -128,18 +128,18 @@ public class RecordXmlGeneratorTest {
         String expected = 
                 "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" +
                         "<atom:feed xmlns:atom=\"http://www.w3.org/2005/Atom\">" +
-                        "<atom:id>tag:trifork.com,2011:sikrede/sikrede/v1</atom:id>" +
+                        "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1</atom:id>" +
                         "<atom:updated>"+ updatedDateInString + "</atom:updated>" +
                         "<atom:title>Stamdata Registry Feed</atom:title>" +
                         "<atom:author>" +
                         "<atom:name>National Sundheds IT</atom:name>"+
                         "</atom:author>" +
                         "<atom:entry>" +
-                        "<atom:id>tag:trifork.com,2011:sikrede/sikrede/v1/11676096000000000010</atom:id>" +
+                        "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1/11676096000000000010</atom:id>" +
                         "<atom:title/>" +
                         "<atom:updated>" + modifiedDateInString + "</atom:updated>" +
                         "<atom:content type=\"application/xml\">" +
-                        "<sikrede xmlns=\"http://trifork.com/-/stamdata/3.0/sikrede\">" +
+                        "<sikrede xmlns=\"http://nsi.dk/-/stamdata/3.0/sikrede\">" +
                         "<Foo>42</Foo>" +
                         "<Bar>ABCDEFGH</Bar>" +
                         "<ValidFrom>2004-12-31T23:00:00.000Z</ValidFrom>" +

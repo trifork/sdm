@@ -396,14 +396,14 @@ public class StamdataReplicationImplIntegrationTest
     {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
+        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:nsi.dk,2011:cpr/person/v1"));
     }
 
     private void assertResponseContainsRecordAtom(String register, String datatype)
     {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:" + register + "/" + datatype + "/v1"));
+        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:nsi.dk,2011:" + register + "/" + datatype + "/v1"));
     }
 
     private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException
@@ -447,9 +447,9 @@ public class StamdataReplicationImplIntegrationTest
         NamespaceContext context = new NamespaceContextMap(
                 "krs", "http://nsi.dk/2011/10/21/StamdataKrs/",
                 "atom", "http://www.w3.org/2005/Atom",
-                "sdm", "http://trifork.com/-/stamdata/3.0/cpr",
-                "sikrede", "http://trifork.com/-/stamdata/3.0/sikrede",
-                "yder", "http://trifork.com/-/stamdata/3.0/yderregister");
+                "sdm", "http://nsi.dk/-/stamdata/3.0/cpr",
+                "sikrede", "http://nsi.dk/-/stamdata/3.0/sikrede",
+                "yder", "http://nsi.dk/-/stamdata/3.0/yderregister");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         xpath.setNamespaceContext(context);

@@ -55,7 +55,7 @@ public class RecordXmlGenerator
 {
     private static final DateTime END_OF_TIME = new DateTime(2999, 12, 31, 0, 0, 0, DateTimeZone.UTC);
     public static final String ATOM_NAMESPACE_URI = "http://www.w3.org/2005/Atom";
-    public static final String STAMDATA_NAMESPACE_URI_PREFIX = "http://trifork.com/-/stamdata/3.0/";
+    public static final String STAMDATA_NAMESPACE_URI_PREFIX = "http://nsi.dk/-/stamdata/3.0/";
     
     private RecordSpecification recordSpecification;
 
@@ -73,7 +73,7 @@ public class RecordXmlGenerator
         
         Element root = document.addElement("atom:feed", ATOM_NAMESPACE_URI);
         
-        addElement(root, ATOM_NAMESPACE_URI, "atom:id", String.format("tag:trifork.com,2011:%s/%s/v1", register, datatype));
+        addElement(root, ATOM_NAMESPACE_URI, "atom:id", String.format("tag:nsi.dk,2011:%s/%s/v1", register, datatype));
         addElement(root, ATOM_NAMESPACE_URI, "atom:updated", AtomDate.toString(updated.toDate()));
         addElement(root, ATOM_NAMESPACE_URI, "atom:title", "Stamdata Registry Feed");
         Element author = addElement(root, ATOM_NAMESPACE_URI, "atom:author", null);
@@ -82,7 +82,7 @@ public class RecordXmlGenerator
         for (RecordMetadata metadata : records)
         {
             Element entry = addElement(root, ATOM_NAMESPACE_URI, "atom:entry", null);
-            String atomId = String.format("tag:trifork.com,2011:%s/%s/v1/%d%07d", register, datatype, metadata.getModifiedDate().getMillis(), metadata.getPid());
+            String atomId = String.format("tag:nsi.dk,2011:%s/%s/v1/%d%07d", register, datatype, metadata.getModifiedDate().getMillis(), metadata.getPid());
             addElement(entry, ATOM_NAMESPACE_URI, "atom:id", atomId);
             addElement(entry, ATOM_NAMESPACE_URI, "atom:title", null);
 

@@ -154,7 +154,7 @@ public class StamdataReplicationIdCardLevelAttackTest {
     private void assertResponseContainsAtom() {
         assertThat(anyAsElement.getLocalName(), is("feed"));
         assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:trifork.com,2011:cpr/person/v1"));
+        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:nsi.dk,2011:cpr/person/v1"));
     }
 
     private static Map<Integer, AuthenticationLevel> mapFromIntegerLevelToEnum;

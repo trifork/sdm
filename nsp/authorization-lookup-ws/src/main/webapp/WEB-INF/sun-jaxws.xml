@@ -3,7 +3,7 @@
 
 	<!-- This binding is for AuthorizationService SOAP 1.1 -->
 	<endpoint name="DetGodeCprOpslag" wsdl="WEB-INF/wsdl/Authorization.wsdl"
-		service="{http://trifork.com/-/stamdata/3.0}AuthorizationService"
-		port="{http://trifork.com/-/stamdata/3.0}AuthorizationPort"
+		service="{http://nsi.dk/-/stamdata/3.0}AuthorizationService"
+		port="{http://nsi.dk/-/stamdata/3.0}AuthorizationPort"
 		implementation="com.trifork.stamdata.authorization.webservice.AuthorizationLookupImpl" url-pattern="/service/AuthorizationService" />
 </endpoints>

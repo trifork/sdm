@@ -68,7 +68,7 @@ public class AtomFeedWriter
 	 * The tag prefix is used to create unique id's for the entities. This is a
 	 * well defined scheme, and you should not change it, not even the year.
 	 */
-	private static final String TAG_PREFIX = "tag:trifork.com,2011:";
+	private static final String TAG_PREFIX = "tag:nsi.dk,2011:";
 
 	private final ViewXmlHelper viewXmlHelper;
 
