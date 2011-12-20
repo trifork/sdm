@@ -54,7 +54,7 @@ public final class SikredeRecordSpecs
             field("SIkraftDatoGrp", 8),
             field("SRegDatoGrp", 8),
             field("SSikrKomKode", 3),
-            field("SIkraftDatoKomKode", 3),
+            field("SIkraftDatoKomKode", 8),
             field("SYdernrGl", 6),
             field("SIkraftDatoYderGl", 8),
             field("SRegDatoYderGl", 8),

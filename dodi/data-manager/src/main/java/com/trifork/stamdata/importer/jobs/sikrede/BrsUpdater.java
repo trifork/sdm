@@ -31,6 +31,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.joda.time.DateTime;
 
@@ -48,12 +49,12 @@ public class BrsUpdater {
     {
         this.connection = connection;
     }
-
+    
     public void updateRecord(Record record) throws SQLException
     {
         String hashedCpr = hashCpr((String) record.get("CPRnr"));
         
-        updateExistingRelationship(hashedCpr, (String) record.get("SYdernrGi"), parseSikredeRecordDate((String) record.get("SIkraftDatoYderGi")), parseSikredeRecordDate((String) record.get("SIkraftDatoYder")));
+        updateExistingRelationship(hashedCpr, (String) record.get("SYdernrGl"), parseSikredeRecordDate((String) record.get("SIkraftDatoYderGl")), parseSikredeRecordDate((String) record.get("SIkraftDatoYder")));
         insertRelationship(hashedCpr, (String) record.get("SYdernr"), parseSikredeRecordDate((String) record.get("SIkraftDatoYder")), null);
     }
     

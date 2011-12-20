@@ -1164,7 +1164,7 @@ CREATE TABLE Sikrede (
 	SIkraftDatoGrp VARCHAR(8),
 	SRegDatoGrp VARCHAR(8),
 	SSikrKomKode VARCHAR(3),
-	SIkraftDatoKomKode VARCHAR(3),
+	SIkraftDatoKomKode VARCHAR(8),
 	SYdernrGl VARCHAR(6),
 	SIkraftDatoYderGl VARCHAR(8),
 	SRegDatoYderGl VARCHAR(8),
@@ -1265,7 +1265,5 @@ CREATE TABLE AssignedDoctor ( -- Sikrede
 
   reference varchar(40) NOT NULL,
 
-  PRIMARY KEY (pk),
-  -- This unique index is ONLY PRESENT IN STAMDATA - it is used to determine which rows to REPLACE or INSERT
-  UNIQUE INDEX(patientCpr, assignedFrom)
+  PRIMARY KEY (pk)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
