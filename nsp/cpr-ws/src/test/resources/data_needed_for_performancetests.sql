@@ -3,7 +3,7 @@ USE sdm_warehouse
 # Dump of table Person
 # ------------------------------------------------------------
 
-TRUNCATE TABLE person;
+TRUNCATE TABLE Person;
 
 LOCK TABLES `Person` WRITE;
 
