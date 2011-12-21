@@ -59,21 +59,23 @@ public class RecordPersister
         Preconditions.checkNotNull(specification);
         Preconditions.checkArgument(specification.conformsToSpecifications(record));
 
+        /*
         PreparedStatement statement = connection.prepareStatement(format("UPDATE %s SET validTo = ?, modifiedDate = ? WHERE %s = ? AND validTo IS NULL", specification.getTable(), specification.getKeyColumn()));
         statement.setObject(1, transactionTime.toDate());
         statement.setObject(2, transactionTime.toDate());
         statement.setObject(3, record.get(specification.getKeyColumn()));
+        statement.close();
+        */
 
-        // TODO: The persister currently does not prolong valid to on records that are identical.
-        // This is not too much of a problem since currently all imported registers using this persister
-        // use delta files (which should only contain changed records).
+        // Data dumps from Yderregister and "Sikrede" contains history information and are therefore handled
+        // differently from all other register types. The data contained in each input record is appended directly
+        // to the database instead of updating existing records.
 
         PreparedStatement insertRecordStatement = connection.prepareStatement(createInsertStatementSql(specification));
 
         populateInsertStatement(insertRecordStatement, record, specification);
         insertRecordStatement.execute();
 
-        statement.close();
         insertRecordStatement.close();
     }
 
