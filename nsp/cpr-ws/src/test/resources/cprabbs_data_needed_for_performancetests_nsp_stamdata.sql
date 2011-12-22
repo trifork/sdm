@@ -1,0 +1,12 @@
+USE nsp_stamdata;
+
+TRUNCATE TABLE ChangesToCPR;
+
+LOCK TABLES `ChangesToCPR` WRITE;
+
+INSERT INTO `ChangesToCPR` (`CPR`, `ModifiedDate`)
+VALUES
+	('1212121234','2010-10-06 14:48:50');
+
+UNLOCK TABLES;
+
