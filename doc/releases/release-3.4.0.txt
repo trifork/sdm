@@ -1,0 +1,24 @@
+Stamdata 3.4.0 – Release Notes
+==============================
+
+Testdata
+========
+
+Der er tilføjet testdata som modtaget i forbindelse med NSPSUPPORT-23.
+Metadata i de udleverede filer stemte ikke overens med den oprindelige aftale
+på aftalenummer. Derfor er dette rettet i filerne. Derudover manglede der
+enkelte filer der beskriver antallet af poster og kørselstidspunkt. Der er 
+derfor oprettet falske versioner af disse.
+
+Testen er slået fra, da data indeholdte tags for "Øvrige specialer", hvilket 
+ikke er understøttet af denne klient. Bemærk at tagget ej heller er valgt i
+papirene for aftalen.
+
+CPR Abbs klient
+===============
+
+Den oprindelige klient havde problemer når den blev kørt i en web context.
+Hverken deployment på JBoss eller Jetty virkede. Dette skyltes den var 
+implementeret ved hjælp af JAX-WS. I dette release er der lavet en ny 
+implementation af klienten der ikke benytter JAX-WS.
+
