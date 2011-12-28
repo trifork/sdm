@@ -52,7 +52,7 @@ public class CprAbbsClientIntegrationTest {
         server = new CprAbbsStubJettyServer();
         server.startServer(8099);
 
-        client = new CprSubscriptionClient(SERVICE_URL);
+        client = new CprSubscriptionClient("localhost", "8099", "/cprabbs/service/cprabbs");
     }
 
 

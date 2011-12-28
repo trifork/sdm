@@ -24,71 +24,104 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.xml.namespace.QName;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.ws.Holder;
 
 import org.joda.time.DateTime;
 
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 import com.trifork.stamdata.persistence.Transactional;
 
-import dk.nsi.stamdata.jaxws.generated.CprAbbsFacade;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsFacadeService;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsResponse;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.Security;
 
 
 public class CprSubscriptionClient
 {
-    public static final String ENDPOINT_PROPERTY_NAME = "cprabbs.service.endpoint.url";
-    private final URL wsdlLocation;
-    private static final QName SERVICE_QNAME = new QName("http://nsi.dk/cprabbs/2011/10", "CprAbbsFacadeService");
+    private static final String MARSHALLER_PROP = "com.sun.xml.bind.namespacePrefixMapper";
 
+    public static final String HOST_PROPERTY_NAME = "cprabbs.service.endpoint.host";
+    public static final String PORT_PROPERTY_NAME = "cprabbs.service.endpoint.port";
+    public static final String PATH_PROPERTY_NAME = "cprabbs.service.endpoint.path";
+    
+    private String host;
+    private int port;
+    private String path;
 
     @Inject
-    CprSubscriptionClient(@Named(ENDPOINT_PROPERTY_NAME) String cprabbsServiceUrl) throws MalformedURLException
+    CprSubscriptionClient(@Named(HOST_PROPERTY_NAME) String host, @Named(PORT_PROPERTY_NAME) String port, @Named(PATH_PROPERTY_NAME) String path) throws MalformedURLException
     {
-        this.wsdlLocation = new URL(cprabbsServiceUrl + "?wsdl");
+        this.host = host;
+        this.port = Integer.parseInt(port);
+        this.path = path;
     }
-
-
+    
     @Transactional
     public List<String> getChangedCprs(Holder<Security> wsseHeader, Holder<Header> medcomHeader, DateTime since) throws CprAbbsException
     {
-        CprAbbsFacadeService serviceCatalog = new CprAbbsFacadeService(wsdlLocation, SERVICE_QNAME);
-
-        serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
-
-        CprAbbsFacade client = serviceCatalog.getCprAbbsSoapBinding();
-
-        CprAbbsRequestType request = new CprAbbsRequestType();
-
-        if (since != null)
-        {
-            request.setSince(since.toCalendar(Locale.getDefault()));
+        String header = createDgwsHeaderString(wsseHeader, medcomHeader);
+        
+        String body = createCprAbbsRequestBody(since);
+        
+        SimpleSoapBuilder simpleSoapBuilder = new SimpleSoapBuilder();
+        String soapCallMessage = simpleSoapBuilder.createSoapMessage(header, body);
+        
+        PostXml postXml = new PostXml();
+        String result;
+        try {
+            result = postXml.postXml(host, port, path, soapCallMessage);
+        } catch (IOException e) {
+            throw new CprAbbsException(e);
         }
+        
+        CprAbbsResponseParser responseParser = new CprAbbsResponseParser();
+        return responseParser.extractCprNumbers(result);
+    }
 
-        CprAbbsResponse response;
-
-        try
-        {
-            response = client.getChangedCprs(wsseHeader, medcomHeader, request);
+    private String createDgwsHeaderString(Holder<Security> wsseHeader, Holder<Header> medcomHeader) throws CprAbbsException {
+        String wsseHeaderAsString;
+        String medcomHeaderAsString;
+        try {
+            wsseHeaderAsString = marshalJaxbToString(Security.class, wsseHeader.value);
+            medcomHeaderAsString = marshalJaxbToString(Header.class, medcomHeader.value);
+        } catch (JAXBException e) {
+            throw new CprAbbsException(e);
         }
-        catch (DGWSFault dgwsFault)
-        {
-            throw new CprAbbsException(dgwsFault);
-        }
+        String header = wsseHeaderAsString + medcomHeaderAsString;
+        return header;
+    }
 
-        return response.getChangedCprs();
+    private String createCprAbbsRequestBody(DateTime since) {
+        CprAbbsBodyBuilder cprAbbsBodyBuilder = new CprAbbsBodyBuilder();
+        String body = null;
+        if(since == null)
+        {
+            body = cprAbbsBodyBuilder.createCprAbbsSoapBody();
+        }
+        else
+        {
+            body = cprAbbsBodyBuilder.createCprAbbsSoapBody(since);
+        }
+        return body;
+    }
+    
+    private String marshalJaxbToString(Class<?> clazz, Object jaxbObject) throws JAXBException
+    {
+        // TODO: Marshallers are expensive. Consider pooling them (see Behandlingsrelationsservice)
+        JAXBContext jaxbContext = JAXBContext.newInstance(clazz);
+        Marshaller marshaller = jaxbContext.createMarshaller();
+        marshaller.setProperty("jaxb.fragment", true);
+        marshaller.setProperty(MARSHALLER_PROP, new SealNamespacePrefixMapper());
+        StringWriter stringWriter = new StringWriter();
+        marshaller.marshal(jaxbObject, stringWriter);
+        return stringWriter.toString();
     }
 }

@@ -24,15 +24,29 @@
  */
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
-
-/**
- * Signals an exception while calling the BRS CPR Subscription service
- */
-public class CprAbbsException extends Exception {
+public class SimpleSoapBuilder 
+{
+    private static final String XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+    private static final String SOAP_NAMESPACE = "http://schemas.xmlsoap.org/soap/envelope/";
     
-    public CprAbbsException(Exception cause) {
-		super(cause);
-	}
-
-    private static final long serialVersionUID = 0L;
+    public String createSoapMessage(String header, String body)
+    {
+        StringBuilder builder = new StringBuilder();
+        
+        builder.append(XML_HEADER);
+        
+        builder.append("<soap:Envelope xmlns:soap=\"" + SOAP_NAMESPACE + "\">");
+        
+        builder.append("<soap:Header>");
+        builder.append(header);
+        builder.append("</soap:Header>");
+        
+        builder.append("<soap:Body>");
+        builder.append(body);
+        builder.append("</soap:Body>");
+        
+        builder.append("</soap:Envelope>");
+        
+        return builder.toString();
+    }
 }
