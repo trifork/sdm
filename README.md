@@ -47,12 +47,14 @@ Nedenstående er taget fra dokumentationen "Performance test" der endnu ikke er 
 Inden man kører test skal man konfigurere stamdata komponenterne til at køre i development mode. 
 Dette gøres ved at i filerne:
 
-     $JBOSS_HOME/server/default/config/stamdata-authorization-lookup-ws.properties
-     $JBOSS_HOME/server/default/config/stamdata-batch-copy-ws.properties
+     $JBOSS_HOME/server/default/conf/stamdata-authorization-lookup-ws.properties
+     $JBOSS_HOME/server/default/conf/stamdata-batch-copy-ws.properties
 
 Sæt følgende property:
 
     security=dgwsTest
+og
+    subjectSerialNumbers=CVR:19343634-UID:1234
 
 Dette gør at komponenterne godkender requests med ID Kort underskrevet af Test STS’en.
 Når filerne er ændret skal Jboss genstartes.
@@ -62,9 +64,9 @@ Dette gøres ved at oprette et element med "name" sat til "Region Syd" og "subje
 Aflæs det generede id og brug dette som "client_id" i en ny indgang i tabellen "Client_permissions". 
 Denne skal have værdien "cpr/person/v1" i feltet "permission".
 
-Performance tests køres ved at køre følgende kommandoer fra roden af stamdata’s kildekode:
+Performance tests køres ved at køre følgende kommandoer fra common/performance i stamdata’s kildekode:
 
-mvn -Pperformancetest integration-test side site -Dhostname=<host> -Dport=<port>
+mvn -Pperformancetest integration-test site -Dhostname=<host> -Dport=<port>
 
 Hvor host er adressen på cnsp serveren.
 HTML rapporter bliver lagt i performance-tests/target/site/ når test er færdige.
@@ -73,3 +75,4 @@ Version af dokument
 -------------------
 
 0.1 2011-10-28 Første version af dokumentet /tgk@trifork.com
+0.2 2011-12-29 Mindre ændringer af stavefejl /tgk@trifork.com
