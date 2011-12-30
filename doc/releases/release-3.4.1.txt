@@ -1,0 +1,11 @@
+Stamdata 3.4.1 – Release Notes
+==============================
+
+Performancetest
+===============
+
+Henrik Thuesen fra Arosii havde problemer med udførelse af performancetests.
+Det viste sig der var nogle mindre problemer i test-scriptet. Dette release
+retter disse samt dele af dokumentationen der omhandler udførelse af 
+performancetests.
+
