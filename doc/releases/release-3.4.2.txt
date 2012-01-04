@@ -1,0 +1,9 @@
+Stamdata 3.4.2 – Release Notes
+==============================
+
+Performancetest
+===============
+
+Der var problemer med c3p0 thread poolen der ikke lukke alle forbindelser.
+Dette førte til starvation på thread poolen. Lib'et er blevet nedgraderet
+til 0.8.5.2 (fra 0.9.1) hvilket afhjalp problemet.
