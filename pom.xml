@@ -96,6 +96,11 @@
         </exclusions>
       </dependency>
       <dependency>
+      <groupId>c3p0</groupId>
+  		<artifactId>c3p0</artifactId>
+  		<version>0.8.5.2</version>
+	  </dependency>
+      <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
         <version>${jboss6.hibernate.version}</version>

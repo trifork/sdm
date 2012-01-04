@@ -53,12 +53,13 @@ public class PersistenceFilter implements Filter
 		// Each request is wrapped in a transaction.
 
 		Session session = null;
-
+		Transaction transaction = null;
+		
 		try
 		{
 			session = sessionProvider.get();
 			session.beginTransaction();
-			Transaction transaction = session.beginTransaction();
+			transaction = session.beginTransaction();
 			transaction.setTimeout(5);
 
 			chain.doFilter(request, response);
@@ -69,16 +70,23 @@ public class PersistenceFilter implements Filter
 		{
 			try
 			{
-				session.getTransaction().rollback();
+			    if (transaction != null)
+			    {
+			        transaction.rollback();
+			    }
 			}
 			catch (Exception ex)
 			{
-
+			    ex.printStackTrace();
 			}
 			
 			// Let other filters handle the exception.
 			
 			throw new ServletException(e);
+		}
+		finally
+		{
+		    
 		}
 	}
 

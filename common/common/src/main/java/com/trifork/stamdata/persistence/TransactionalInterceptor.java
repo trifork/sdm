@@ -67,10 +67,18 @@ class TransactionalInterceptor implements MethodInterceptor
                 }
                 catch (Exception ex)
                 {
-
+                    ex.printStackTrace();
                 }
                 
                 throw e;
+            }
+            finally
+            {
+                if(session != null)
+                {
+                    // TODO: If this is closed, unit tests fail - why?
+//                    session.close();
+                }
             }
         }
         else
