@@ -111,8 +111,12 @@ public class PersistenceModule extends AbstractModule
         // TODO: Make this configurable.
 
         config.setProperty("hibernate.c3p0.min_size", "5");
-        config.setProperty("hibernate.c3p0.max_size", "20");
+        config.setProperty("hibernate.c3p0.max_size", "100");
         config.setProperty("hibernate.c3p0.timeout", "200");
+        
+        // See debug information
+//        config.setProperty("hibernate.c3p0.unreturnedConnectionTimeout", "2");
+//        config.setProperty("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
 
         // Lastly register all the entities.
 

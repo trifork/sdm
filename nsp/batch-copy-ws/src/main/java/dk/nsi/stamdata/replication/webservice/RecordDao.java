@@ -33,7 +33,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.hibernate.StatelessSession;
+import org.hibernate.Session;
 
 import com.google.inject.Inject;
 
@@ -41,12 +41,12 @@ import dk.nsi.stamdata.views.View;
 
 public class RecordDao
 {
-	private final StatelessSession statelessSession;
+	private final Session session;
 
 	@Inject
-	RecordDao(StatelessSession statelessSession)
+	RecordDao(Session session)
 	{
-		this.statelessSession = checkNotNull(statelessSession);
+		this.session = checkNotNull(session);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,7 +73,7 @@ public class RecordDao
 
 		String SQL = " FROM " + type.getName() + " WHERE ((recordID > :recordID AND modifiedDate = :modifiedDate) OR (recordID > :recordID) OR (recordID = :recordID AND modifiedDate > :modifiedDate)) ORDER BY recordID, modifiedDate";
 
-		Query query = statelessSession.createQuery(SQL);
+        Query query = session.createQuery(SQL);
 		query.setParameter("recordID", id);
 		query.setParameter("modifiedDate", modifiedDate);
 		query.setMaxResults(limit);
