@@ -24,26 +24,18 @@
  */
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import com.google.inject.Provider;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.importer.FileParserIntegrationTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.persistence.RecordFetcher;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.google.inject.Provider;
+import com.trifork.stamdata.importer.FileParserIntegrationTest;
 
 @Ignore
 public class YderregisterNspSupport23IntegrationTest extends FileParserIntegrationTest

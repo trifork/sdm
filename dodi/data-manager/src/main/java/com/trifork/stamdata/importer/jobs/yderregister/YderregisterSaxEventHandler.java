@@ -62,6 +62,8 @@ public class YderregisterSaxEventHandler extends DefaultHandler
 
     private final RecordPersister persister;
     private long recordCount = 0;
+    
+    private String versionNumber = null;
 
     @Inject
     YderregisterSaxEventHandler(RecordPersister persister)
@@ -179,6 +181,10 @@ public class YderregisterSaxEventHandler extends DefaultHandler
         {
             throw new ParserException(format("The interface id in the file '%s' did not match the expected '%s'.", interfaceId, SUPPORTED_INTERFACE_VERSION));
         }
+        
+        // This number is used to check the sequence once the parser is done.
+        //
+        versionNumber = getValue(att, "OpgDato");
     }
 
     /**
@@ -188,5 +194,10 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private String removeLeadingZeroes(String valueToStrip)
     {
         return valueToStrip.replaceFirst("^0+(?!$)", "");
+    }
+
+    public String GetVersionFromFileSet()
+    {
+        return versionNumber;
     }
 }

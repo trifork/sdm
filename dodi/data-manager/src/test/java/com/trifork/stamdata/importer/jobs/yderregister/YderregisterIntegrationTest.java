@@ -24,30 +24,19 @@
  */
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import com.google.inject.Provider;
-import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.importer.FileParserIntegrationTest;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
-import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.persistence.RecordFetcher;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.trifork.stamdata.importer.FileParserIntegrationTest;
 
 public class YderregisterIntegrationTest extends FileParserIntegrationTest
 {
-    private Provider connections;
-
     public YderregisterIntegrationTest()
     {
         super("yderregister");
@@ -56,13 +45,13 @@ public class YderregisterIntegrationTest extends FileParserIntegrationTest
     @Test
     public void testThatASeriesOfYderregisterDataSetsCanBeImportedResultingInTheExpectedDataInTheDatabase() throws IOException, InterruptedException, SQLException
     {
-        File fileSet1 = getDirectory("data/yderregister/initial");
+        File fileSet1 = getDirectory("data/yderregister/DATA_FROM_CSC");
 
         placeInInbox(fileSet1, true);
 
         assertThat(isLocked(), is(false));
 
-        assertRecordCount("Yderregister", 12);
-        assertRecordCount("YderregisterPerson", 21);
+        assertRecordCount("Yderregister", 58);
+        assertRecordCount("YderregisterPerson", 54);
     }
 }
