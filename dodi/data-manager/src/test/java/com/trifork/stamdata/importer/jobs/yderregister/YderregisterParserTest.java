@@ -24,23 +24,25 @@
  */
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
-import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
-import com.trifork.stamdata.persistence.RecordPersister;
-import org.apache.commons.io.FileUtils;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.inject.Provider;
+import javax.xml.parsers.SAXParser;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.xml.sax.SAXException;
 
-import javax.inject.Provider;
-import javax.xml.parsers.SAXParser;
-import java.io.File;
-import java.io.IOException;
-
-import static org.mockito.Mockito.*;
+import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
+import com.trifork.stamdata.persistence.RecordPersister;
 
 public class YderregisterParserTest
 {
@@ -87,18 +89,6 @@ public class YderregisterParserTest
     }
 
     @Test(expected = ParserException.class)
-    public void testAFileSetWithMultipleVersionNumbersResultsInAParserException() throws Exception
-    {
-        File fileSet = createFileSet("00001");
-        File fileWithOtherVersion = fileSet.listFiles()[0];
-        String newFileName = fileWithOtherVersion.getAbsolutePath().replace("00001", "00002");
-
-        FileUtils.moveFile(fileWithOtherVersion, new File(newFileName));
-
-        parser.process(fileSet, persister);
-    }
-
-    @Test(expected = ParserException.class)
     public void testMissingFilesResultsInAParserException() throws Exception
     {
         File fileSet = createFileSet("00001");
@@ -108,7 +98,7 @@ public class YderregisterParserTest
     }
 
     @Test
-    public void testStoresTheVersionFromFileNamesCorrectly() throws Exception
+    public void testStoresTheVersionFromStartRecordCorrectly() throws Exception
     {
         String version = "00031";
 
@@ -126,57 +116,30 @@ public class YderregisterParserTest
 
         parser.process(fileSet, persister);
 
-        for (File file :fileSet.listFiles())
+        for (File file : fileSet.listFiles())
         {
             verify(saxParser).parse(file, saxHandler);
         }
     }
 
-    @Test(expected = ParserException.class)
-    public void shouldThrowParserExceptionIfParserFailed() throws Exception, SAXException
-    {
-        doThrow(new SAXException("Random Sax exception")).when(saxParser).parse(any(File.class), eq(saxHandler));
-
-        File fileSet = createFileSet("00001");
-
-        parser.process(fileSet, persister);
-    }
-    
-
     //
     // Helpers
     //
 
-    public File createFileSet(String ...filenames) throws IOException
+    public File createFileSet(String filename, String version) throws IOException
     {
         File root = folder.newFolder("root");
 
-        for (String filename : filenames)
-        {
-            new File(root, filename).createNewFile();
-        }
-
+        File file = new File(root, filename);
+        file.createNewFile();
+        
+        when(saxHandler.GetVersionFromFileSet()).thenReturn(version);
+        
         return root;
     }
 
     public File createFileSet(String version) throws IOException
     {
-        return createFileSet(getRequiredFilenames(version));
-    }
-
-    public String[] getRequiredFilenames(String version)
-    {
-        int i = 0;
-
-        String[] filenames = new String[5];
-
-        for (String extension : new String[] {"K05", "K40", "K45", "K1025", "K5094"})
-        {
-            // FIXME: What is the first part of the filename? A recipient id maybe?
-
-            filenames[i++] = "SSR1040013" + version + "." + extension + ".xml";
-        }
-
-        return filenames;
+        return createFileSet("M.S1040025.SB025.xml", version);
     }
 }

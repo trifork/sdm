@@ -24,11 +24,20 @@
  */
 package com.trifork.stamdata.importer.jobs.yderregister;
 
-import com.google.common.collect.Maps;
-import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordBuilder;
-import com.trifork.stamdata.persistence.RecordPersister;
+import static com.trifork.stamdata.specs.YderregisterRecordSpecs.PERSON_RECORD_TYPE;
+import static com.trifork.stamdata.specs.YderregisterRecordSpecs.YDER_RECORD_TYPE;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
@@ -36,18 +45,11 @@ import org.mockito.stubbing.Answer;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.trifork.stamdata.specs.YderregisterRecordSpecs.PERSON_RECORD_TYPE;
-import static com.trifork.stamdata.specs.YderregisterRecordSpecs.YDER_RECORD_TYPE;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import com.google.common.collect.Maps;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordPersister;
 
 public class YderregisterSaxEventHandlerTest
 {
@@ -74,7 +76,7 @@ public class YderregisterSaxEventHandlerTest
     {
         eventHandler.startElement(null, null, ROOT_TAG, null);
 
-        writeStartElement(INTERFACE_ID, RECIPIENT_ID);
+        writeStartElement(INTERFACE_ID, RECIPIENT_ID, "00001");
 
         writeRecordElement(createYderRecord("0433514B17DFC5BF"));
 
@@ -88,7 +90,7 @@ public class YderregisterSaxEventHandlerTest
     {
         eventHandler.startElement(null, null, ROOT_TAG, null);
 
-        writeStartElement(INTERFACE_ID, RECIPIENT_ID);
+        writeStartElement(INTERFACE_ID, RECIPIENT_ID, "00001");
 
         Record yderRecord = createYderRecord("0433514B17DFC5BF");
         Record person1 = createPersonRecord("C31C77B63CDDC5BF");
@@ -110,7 +112,7 @@ public class YderregisterSaxEventHandlerTest
     {
         eventHandler.startElement(null, null, ROOT_TAG, null);
 
-        writeStartElement(INTERFACE_ID, "B012");
+        writeStartElement(INTERFACE_ID, "B012", "00001");
     }
 
     @Test(expected = ParserException.class)
@@ -118,16 +120,30 @@ public class YderregisterSaxEventHandlerTest
     {
         eventHandler.startElement(null, null, ROOT_TAG, null);
 
-        writeStartElement("S2140021", RECIPIENT_ID);
+        writeStartElement("S2140021", RECIPIENT_ID, "00001");
+    }
+    
+    @Test
+    public void testVersionNumberIsExtracted() throws SAXException
+    {
+        eventHandler.startElement(null, null, ROOT_TAG, null);
+
+        writeStartElement(INTERFACE_ID, RECIPIENT_ID, "00032");
+        
+        writeEndElement("0");
+
+        eventHandler.endElement(null, null, ROOT_TAG);
+        
+        assertThat(eventHandler.GetVersionFromFileSet(), Matchers.is("00032"));
     }
 
     //
     // Helpers
     //
 
-    public void writeStartElement(String interfaceId, String recipientId) throws SAXException
+    public void writeStartElement(String interfaceId, String recipientId, String version) throws SAXException
     {
-        eventHandler.startElement(null, null, START_TAG, createAttributes("SnitfladeId", interfaceId, "Modt", recipientId));
+        eventHandler.startElement(null, null, START_TAG, createAttributes("SnitfladeId", interfaceId, "Modt", recipientId, "OpgDato", version));
         eventHandler.endElement(null, null, START_TAG);
     }
 
@@ -139,24 +155,24 @@ public class YderregisterSaxEventHandlerTest
 
     public Record createYderRecord(String histId)
     {
-            return new RecordBuilder(YDER_RECORD_TYPE)
-                    .field("HistIdYder", histId).addDummyFieldsAndBuild();
+        return new RecordBuilder(YDER_RECORD_TYPE).field("HistIdYder", histId).addDummyFieldsAndBuild();
     }
 
     public Record createPersonRecord(String histId)
     {
-        return new RecordBuilder(PERSON_RECORD_TYPE)
-                .field("HistIdPerson", histId).addDummyFieldsAndBuild();
+        return new RecordBuilder(PERSON_RECORD_TYPE).field("HistIdPerson", histId).addDummyFieldsAndBuild();
     }
 
     public void writeRecordElement(Record yderRecord, Record ... personRecords) throws SAXException
     {
         eventHandler.startElement(null, null, YDER_TAG, createAttributes(yderRecord));
+        
         for(Record personRecord: personRecords)
         {
             eventHandler.startElement(null, null, PERSON_TAG, createAttributes(personRecord));
             eventHandler.endElement(null, null, PERSON_TAG);
         }
+        
         eventHandler.endElement(null, null, YDER_TAG);
     }
 
