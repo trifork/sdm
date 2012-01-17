@@ -121,7 +121,7 @@ public class FileParserJob implements ParserState, Runnable
         // Check for rejected files.
         // The parser is in a error state as long as there are files there.
 
-        if (!isLocked()) return;
+        if (isLocked()) return;
 
         // Check if there are any files to import,
         // ignoring any unimportant files such as '.DS_Store'.
