@@ -1,0 +1,8 @@
+Stamdata 3.4.3 – Release Notes
+==============================
+
+Parsere
+=======
+Dette release indeholder en bugfix der sørger for at alle parsere kan parse nye filer.
+
+
