@@ -1,0 +1,8 @@
+Stamdata 3.4.4 Release Notes
+============================
+
+AutReg
+======
+AutReg havde brug for l¾ngere fornavne. Det er nu udvidet i databaseskemaet.
+
+

@@ -215,7 +215,7 @@ CREATE TABLE autreg (
   id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   
   cpr CHAR(10) NOT NULL,
-  given_name VARCHAR(50) NOT NULL,
+  given_name VARCHAR(100) NOT NULL,
   surname VARCHAR(100) NOT NULL,
   
   aut_id CHAR(5) NOT NULL,
