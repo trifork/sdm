@@ -19,7 +19,11 @@ Dette gøres lettest ved at køre et target fra maven scripts.
 Dette target antager at der er en fungerende MySQL database på localhost, samt at denne har en bruger "sdm" med kodeordet "papkasse".
 Hvis dette er tilfældet vil følgende kommando oprette de fornødne databaser samt foretage unit såvel som integrationstest
 
-    mvn -Dmaven.test.failure.ignore=false clean verify -PdropAndCreateDB
+    mvn -Dmaven.test.failure.ignore=false clean verify -PdropAndCreateDB -Ddb.username=<bruger> -Ddb.password=<kodeord>
+
+hvor <bruger> og <kodeord> er for en bruger der har ret til at slette oprette 
+databaser. Som standard er de sat til "root" uden kodeord.
+
 
 Code coverage
 -------------

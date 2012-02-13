@@ -16,6 +16,8 @@
   </scm>
 
   <properties>
+	<db.username>root</db.username>
+	<db.password></db.password>
     <war.slf4j.version>1.6.2</war.slf4j.version>
     <jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
     <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
@@ -549,12 +551,6 @@
                 <scope>runtime</scope>
               </dependency>
             </dependencies>
-            <configuration>
-              <driver>com.mysql.jdbc.Driver</driver>
-              <url>jdbc:mysql:///sdm_warehouse</url>
-              <username>sdm</username>
-              <password>papkasse</password>
-            </configuration>
             <executions>
               <execution>
                 <phase>pre-integration-test</phase>
@@ -562,6 +558,10 @@
                   <goal>execute</goal>
                 </goals>
                 <configuration>
+	              <driver>com.mysql.jdbc.Driver</driver>
+	              <url>jdbc:mysql:///mysql</url>
+	              <username>${db.username}</username>
+				  <password>${db.password}</password>
                   <autocommit>true</autocommit>
                   <srcFiles>
                     <srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
