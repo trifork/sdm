@@ -27,6 +27,8 @@ package dk.nsi.stamdata.replication;
 
 import static com.google.inject.name.Names.bindProperties;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
@@ -109,7 +111,12 @@ public class ComponentController extends GuiceServletContextListener
             // The mandatory SLA filter.
             //
             bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
-            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class);
+            Map<String, String> filterParams = new HashMap<String, String>();
+            filterParams.put("appName", COMPONENT_NAME);
+            filterParams.put("shortAppName", COMPONENT_NAME);
+            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class, filterParams);
+            
+            
             
             // Inserts IP and other goodies into the MDC.
             //
