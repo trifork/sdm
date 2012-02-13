@@ -89,8 +89,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
         Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
 
 	    cprAbbsServer = new CprAbbsStubJettyServer();
-        cprAbbsServer.startServer(8099);
-		
+        cprAbbsServer.startServer();
+
 		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
 	    cprsToReturnForCvrs.put(CLIENT_CVR, Lists.newArrayList(CHANGED_PERSON_CPR1, CHANGED_PERSON_CPR2));
 	    CprAbbsFacadeStubImplementation.cprsToReturnForCvrs = cprsToReturnForCvrs;
@@ -100,7 +100,9 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	@After
 	public void tearDown() throws Exception
 	{
-		cprAbbsServer.stopServer();
+        if (cprAbbsServer != null) {
+            cprAbbsServer.stopServer();
+        }
 	}
 
 

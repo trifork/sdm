@@ -27,16 +27,24 @@ package dk.nsi.stamdata.cpr.pvit.proxy;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
+import java.util.Properties;
 
 public class CprAbbsStubJettyServer {
 
     private Server server;
-
-    public void startServer(int desiredPort) throws Exception
+    private int desiredPort = 0;
+    
+    public void startServer() throws Exception
     {
+        Properties properties = new Properties();
+        properties.load(new BufferedReader(new FileReader("src/test/resources/test-config.properties")));
+        int desiredPort = Integer.parseInt(properties.getProperty("cprabbs.service.endpoint.port"));
+
         if (!available(desiredPort))
         {
             // Wait n seconds and try again.
@@ -59,6 +67,10 @@ public class CprAbbsStubJettyServer {
 
         server.start();
     }
+    
+    public int getPort() throws Exception {
+        return desiredPort;
+    }
 
     public void stopServer() throws Exception {
         if (server != null && server.isRunning()) {
@@ -68,7 +80,7 @@ public class CprAbbsStubJettyServer {
     }
 
 
-    private boolean waitSecondsForPort(int port, long milliseconds) {
+    private boolean waitSecondsForPort( long milliseconds, int port) {
 
         long t0, t1;
         t0 = System.currentTimeMillis();
@@ -125,7 +137,7 @@ public class CprAbbsStubJettyServer {
         return false;
     }
 
-    public int getAvailableLocalPort() throws IOException {
+    public static int getAvailableLocalPort() throws IOException {
         int actualPort;
         ServerSocket serverSocket = new ServerSocket(0);
         serverSocket.setReuseAddress(true);

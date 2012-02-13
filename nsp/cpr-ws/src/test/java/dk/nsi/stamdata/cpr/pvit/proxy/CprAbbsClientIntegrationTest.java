@@ -50,9 +50,9 @@ public class CprAbbsClientIntegrationTest {
         securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper("22345678", "foo", "bar");
 
         server = new CprAbbsStubJettyServer();
-        server.startServer(8099);
+        server.startServer();
 
-        client = new CprSubscriptionClient("localhost", "8099", "/cprabbs/service/cprabbs");
+        client = new CprSubscriptionClient("localhost", Integer.toString(server.getPort()), "/cprabbs/service/cprabbs");
     }
 
 
