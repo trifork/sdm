@@ -37,7 +37,6 @@ import dk.nsi.stamdata.dgws.SecurityWrapper;
 
 public class CprAbbsClientIntegrationTest {
 
-    private static final String SERVICE_URL = "http://localhost:8099/cprabbs/service/cprabbs";
     private static CprAbbsStubJettyServer server;
     private static SecurityWrapper securityHeaders;
 
