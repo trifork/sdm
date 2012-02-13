@@ -66,6 +66,8 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 	public static final QName PVIT_WITH_SUBSCRIPTIONS_SERVICE = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupWithSubscriptionService");
 	public static final String CLIENT_CVR = "12345678";
 
+    private static final int PORT = 8190;
+    
 	@Inject
 	private Session session;
 
@@ -89,7 +91,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
         Guice.createInjector(Stage.DEVELOPMENT, new ComponentModule()).injectMembers(this);
 
 	    cprAbbsServer = new CprAbbsStubJettyServer();
-		cprAbbsServer.startServer(8099);
+		cprAbbsServer.startServer(PORT);
 		
 		Map<String, List<String>> cprsToReturnForCvrs = Maps.newHashMap();
 	    cprsToReturnForCvrs.put(CLIENT_CVR, Lists.newArrayList(CHANGED_PERSON_CPR1, CHANGED_PERSON_CPR2));
@@ -134,7 +136,7 @@ public class StamdataPersonLookupWithSubscriptionIntegrationTest extends Abstrac
 
         session.getTransaction().commit();
         
-        URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookupWithSubscription?wsdl");
+        URL wsdlLocation = new URL("http://localhost:" + PORT + "/service/StamdataPersonLookupWithSubscription?wsdl");
         StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(wsdlLocation, PVIT_WITH_SUBSCRIPTIONS_SERVICE);
         serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
         

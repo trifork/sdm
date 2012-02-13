@@ -35,17 +35,19 @@ public class CprAbbsStubJettyServer {
 
     private Server server;
 
-    public void startServer(int desiredPort) throws Exception {
-        if (!available(desiredPort)) {
+    public void startServer(int desiredPort) throws Exception
+    {
+        if (!available(desiredPort))
+        {
+            // Wait n seconds and try again.
 
-            //wait n seconds and try again
-            if (!waitSecondsForPort(3000, desiredPort)) {
-
-                if (!waitSecondsForPort(1000, desiredPort)) {
+            if (!waitSecondsForPort(3000, desiredPort))
+            {
+                if (!waitSecondsForPort(1000, desiredPort))
+                {
                     throw new RuntimeException("Port " + desiredPort + " is not available - Jetty server cannot be started");
                 }
             }
-
         }
 
         server = new Server(desiredPort);
@@ -71,7 +73,8 @@ public class CprAbbsStubJettyServer {
         long t0, t1;
         t0 = System.currentTimeMillis();
 
-        do {
+        do
+        {
             t1 = System.currentTimeMillis();
         }
         while (t1 - t0 < milliseconds);
@@ -89,8 +92,10 @@ public class CprAbbsStubJettyServer {
      *
      * @param port the port to check for availability
      */
-    public static boolean available(int port) {
-        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
+    public static boolean available(int port)
+    {
+        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER)
+        {
             throw new IllegalArgumentException("Invalid start port: " + port);
         }
 
