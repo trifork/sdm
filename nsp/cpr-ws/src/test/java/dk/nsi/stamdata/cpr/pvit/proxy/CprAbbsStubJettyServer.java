@@ -28,6 +28,7 @@ import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramSocket;
@@ -38,12 +39,16 @@ public class CprAbbsStubJettyServer {
 
     private Server server;
     private int desiredPort = 0;
-    
-    public void startServer() throws Exception
-    {
+
+    public CprAbbsStubJettyServer() throws IOException {
         Properties properties = new Properties();
         properties.load(new BufferedReader(new FileReader("src/test/resources/test-config.properties")));
-        int desiredPort = Integer.parseInt(properties.getProperty("cprabbs.service.endpoint.port"));
+        this.desiredPort = Integer.parseInt(properties.getProperty("cprabbs.service.endpoint.port"));
+
+    }
+
+    public void startServer() throws Exception
+    {
 
         if (!available(desiredPort))
         {
