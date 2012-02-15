@@ -32,8 +32,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
@@ -41,7 +41,6 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Sets;
 import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
@@ -78,10 +77,9 @@ public class PersonHealthCareInfoMapperTest
     private void doMapping() throws DatatypeConfigurationException
     {
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
-        Set<String> whitelist = Sets.newHashSet();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
-        output = new PersonMapper(whitelist, idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
+        output = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
     }
 
 

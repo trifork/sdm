@@ -33,13 +33,11 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigInteger;
-import java.util.Set;
+import java.util.Collections;
 
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
@@ -396,9 +394,8 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
     private void doMap() throws Exception
     {
 
-        Set<String> whiteList = Sets.newHashSet();
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
-        PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);
+        PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
         output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
     }

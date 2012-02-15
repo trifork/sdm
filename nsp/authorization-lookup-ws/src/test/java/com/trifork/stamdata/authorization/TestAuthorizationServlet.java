@@ -29,11 +29,14 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.xml.namespace.QName;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -70,6 +73,9 @@ public class TestAuthorizationServlet
     
     @Inject
     Session session;
+
+    @Inject
+    Connection connection;
     
     private AuthorizationRequestType request = new ObjectFactory().createAuthorizationRequestType();
     private AuthorizationResponseType response = null;
@@ -78,6 +84,11 @@ public class TestAuthorizationServlet
     @Before
     public void setUp() throws Exception
     {
+        connection.setAutoCommit(false);
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("INSERT IGNORE INTO whitelist_config SET component_name='"+ WhitelistService.DEFAULT_SERVICE_NAME +"', cvr='" + WHITELISTED_CVR + "'");
+        connection.commit();
+
          server = new TestServer().start();
     }
 

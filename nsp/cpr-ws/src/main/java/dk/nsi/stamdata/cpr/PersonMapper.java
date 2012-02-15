@@ -28,12 +28,12 @@ import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBE
 
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
@@ -49,7 +49,7 @@ import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.mapping.SikredeRecordToPersonPublicHealhInsuranceMapper;
 import dk.nsi.stamdata.cpr.mapping.YderregisterRecordToAssociatedGeneralPractitionerMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
+
 import dk.nsi.stamdata.jaxws.generated.AddressAccessType;
 import dk.nsi.stamdata.jaxws.generated.AddressCompleteType;
 import dk.nsi.stamdata.jaxws.generated.AddressPostalType;
@@ -78,9 +78,11 @@ public class PersonMapper
 	private static final String UKENDT = "UKENDT";
 
 	private static final int AUTHORITY_CODE_LENGTH = 4;
+    private static final String SERVICE_NAME_DGCPR = WhitelistService.DEFAULT_SERVICE_NAME;//"dgcpr";
+    private WhitelistService whitelistService;
 
 
-	public static enum ServiceProtectionLevel
+    public static enum ServiceProtectionLevel
 	{
 		AlwaysCensorProtectedData,
 		CensorProtectedDataForNonAuthorities
@@ -97,19 +99,17 @@ public class PersonMapper
 	private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
 	private static final String PROTECTED_CPR = "0000000000";
 
-	private final Set<String> whitelist;
 	private final SystemIDCard idCard;
 
 	private final MunicipalityMapper munucipalityMapper;
 
 
 	@Inject
-	PersonMapper(@Whitelist Set<String> whitelist, SystemIDCard idCard, MunicipalityMapper munucipalityMapper)
+	PersonMapper(WhitelistService whitelistService, SystemIDCard idCard, MunicipalityMapper munucipalityMapper)
 	{
 		// Once we get this far the filter should have gotten rid of id cards
 		// that are not CVR authenticated System ID Cards.
-
-		this.whitelist = whitelist;
+        this.whitelistService = whitelistService;
 		this.idCard = idCard;
 		this.munucipalityMapper = munucipalityMapper;
 	}
@@ -512,7 +512,7 @@ public class PersonMapper
 
 		String clientCVR = idCard.getSystemInfo().getCareProvider().getID();
 
-		return whitelist.contains(clientCVR);
+		return whitelistService.isCvrWhitelisted(clientCVR, SERVICE_NAME_DGCPR);
 	}
 
 

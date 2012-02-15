@@ -24,12 +24,77 @@
  */
 package dk.nsi.stamdata.security;
 
-/**
- * User: frj
- * Date: 11/16/11
- * Time: 2:47 PM
- *
- * @Author frj
- */
-public class WhitelistServiceImpl {
+import org.hibernate.*;
+import org.hibernate.type.StandardBasicTypes;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class WhitelistServiceImpl implements WhitelistService {
+
+    private static final String QUERY_IS_CVR_WHITELISTED = "SELECT cvr FROM whitelist_config WHERE component_name=? AND cvr=?";
+    private static final String QUERY_GET_ALL_WHITELISTED = "SELECT cvr FROM whitelist_config WHERE component_name=?";
+
+    private Connection con;
+    private final PreparedStatement getAllWhitelisted;
+    private final PreparedStatement isCVRWhitelisted;
+
+    public WhitelistServiceImpl(Connection con) {
+        this.con = con;
+        try {
+            this.con.setReadOnly(true);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Unable to set Read Only on connection", e);
+        }
+
+        try {
+            getAllWhitelisted = con.prepareStatement(QUERY_GET_ALL_WHITELISTED);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Unable to prepare statement", e);
+        }
+        try {
+            isCVRWhitelisted = con.prepareStatement(QUERY_IS_CVR_WHITELISTED);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Unable to prepare statement", e);
+        }
+    }
+
+    @Override
+    public List<String> getWhitelist(String serviceName) {
+        List<String> cvrs = new ArrayList<String>();
+        try {
+            getAllWhitelisted.setString(1, serviceName);
+            ResultSet resultSet = getAllWhitelisted.executeQuery();
+            while (resultSet.next()) {
+                cvrs.add(resultSet.getString("cvr"));
+            }
+            resultSet.close();
+            return cvrs;
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get whitelisted CVR numbers using prepared statement", e);
+        }
+
+    }
+
+    @Override
+    public boolean isCvrWhitelisted(String cvr, String serviceName) {
+        List<String> cvrs = new ArrayList<String>();
+        try {
+            isCVRWhitelisted.setString(1, serviceName);
+            isCVRWhitelisted.setString(2, cvr);
+            ResultSet resultSet = isCVRWhitelisted.executeQuery();
+            while (resultSet.next()) {
+                cvrs.add(resultSet.getString("cvr"));
+            }
+            resultSet.close();
+            return cvrs.size() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to check if CVR is whitelisted using prepared statement", e);
+        }
+
+    }
 }

@@ -32,6 +32,8 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.List;
 
 import javax.xml.datatype.XMLGregorianCalendar;
@@ -39,6 +41,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -88,10 +91,19 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     @Inject
     private Session session;
 
+    @Inject
+    private Connection connection;
+
 
     @Before
     public void setUp() throws Exception
     {
+        connection.setAutoCommit(false);
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("INSERT IGNORE INTO whitelist_config SET component_name='"+ WhitelistService.DEFAULT_SERVICE_NAME +"', cvr='" + WHITELISTED_CVR + "'");
+        connection.commit();
+
+
         URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookup?wsdl");
         serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE_QNAME);
 

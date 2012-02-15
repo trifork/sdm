@@ -39,6 +39,9 @@ import org.hibernate.cfg.Configuration;
 
 import javax.inject.Named;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 import java.util.Set;
 
 import static com.google.inject.Key.get;
@@ -143,10 +146,26 @@ public class PersistenceModule extends AbstractModule
     }
     
     
-    @Provides
+/*    @Provides
     @Deprecated
     protected Connection provideConnection(Session session)
     {
         return session.connection();
+    }
+    */
+
+    @Provides
+    protected Connection provideConnection(@Named(JDBC_URL_PROP) String jdbcURL, @Named(DB_USERNAME_PROP) String username, @Nullable @Named(DB_PASSWORD_PROP) String password)
+    {
+        Properties connectionProps = new Properties();
+        connectionProps.put("user", username);
+        connectionProps.put("password", password);
+        try {
+            return DriverManager.
+                    getConnection(jdbcURL,
+                                  connectionProps);
+        } catch (SQLException e) {
+            throw  new RuntimeException("Cannot get connection", e);
+        }
     }
 }

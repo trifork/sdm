@@ -22,33 +22,33 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.security;
+package dk.nsi.stamdata.cpr;
 
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-import org.hibernate.Session;
+import dk.nsi.stamdata.security.WhitelistService;
 
-@Singleton
-public class WhitelistDbProvider implements Provider<Session>
-{
-    private Session session;
+import java.util.List;
 
-    @Inject
-    WhitelistDbProvider(Session session)
-	{
-		this.session = session;
-	}
-	
-	@Override
-	public Session get()
-	{
-		return session;
-	}
-	/*
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-	@BindingAnnotation
-	public static @interface Whitelist { }
-	*/
+/**
+ * User: frj
+ * Date: 11/17/11
+ * Time: 1:05 PM
+ *
+ * @Author frj
+ */
+public class StubWhitelistService implements WhitelistService {
+    private List<String> cvrs;
+
+    public StubWhitelistService(List<String> cvrs) {
+        this.cvrs = cvrs;
+    }
+
+    @Override
+    public List<String> getWhitelist(String serviceName) {
+        return cvrs;
+    }
+
+    @Override
+    public boolean isCvrWhitelisted(String cvr, String serviceName) {
+        return getWhitelist(serviceName).contains(cvr);
+    }
 }

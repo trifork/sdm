@@ -29,10 +29,14 @@ import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.CensorProt
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +71,7 @@ public class PersonMapperProtectionTest
 	
 	private static final String CENSORED = "ADRESSEBESKYTTET";
 	
-	private Set<String> whitelist;
+	private WhitelistService whitelist;
 	private MunicipalityMapper municipalityMapper;
 	private Record yderRecord;
 	private Record sikredeRecord;
@@ -75,8 +79,7 @@ public class PersonMapperProtectionTest
 	@Before
 	public void setUp()
 	{
-		whitelist = Sets.newHashSet(WHITELISTED_CVR);
-		
+        whitelist = new StubWhitelistService(Collections.singletonList(WHITELISTED_CVR));
 		nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 		
@@ -184,4 +187,5 @@ public class PersonMapperProtectionTest
 	{
 		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderRecord.get("PostdistYder")));
 	}
+    
 }

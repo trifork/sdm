@@ -28,7 +28,6 @@ package com.trifork.stamdata.authorization.webservice;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
@@ -48,6 +47,7 @@ import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.security.WhitelistService;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
@@ -56,12 +56,12 @@ import dk.sosi.seal.model.constants.FaultCodeValues;
 @SchemaValidation
 public class AuthorizationLookupImpl implements AuthorizationPortType
 {
-	private final Set<String> whitelist;
+	private final WhitelistService whitelist;
 	private final AuthorizationDao authorizationDao;
     private final String cvr;
 
 	@Inject
-	AuthorizationLookupImpl(@ClientVocesCvr String cvr, Set<String> whitelist, AuthorizationDao authorizationDao)
+	AuthorizationLookupImpl(@ClientVocesCvr String cvr, WhitelistService whitelist, AuthorizationDao authorizationDao)
 	{
 		this.cvr = cvr;
         this.authorizationDao = authorizationDao;
@@ -73,7 +73,7 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
 	        Holder<Header> medcomHeader, AuthorizationRequestType parameters)
 	        throws DGWSFault {
 
-        if (!whitelist.contains(cvr))
+        if (!whitelist.isCvrWhitelisted(cvr, WhitelistService.DEFAULT_SERVICE_NAME))
         {
             throw new DGWSFault("The request CVR number is not authorized to use this service.", FaultCodeValues.NOT_AUTHORIZED);
         }

@@ -42,11 +42,8 @@ import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.persistence.PersistenceModule;
 import com.trifork.stamdata.persistence.Persistent;
 
-import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
-import dk.nsi.stamdata.security.DenGodeWebServiceModule;
+import dk.nsi.stamdata.security.*;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.cpr.pvit.WhitelistProvider;
-import dk.nsi.stamdata.cpr.pvit.WhitelistProvider.Whitelist;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
 
 
@@ -77,7 +74,8 @@ public class ComponentController extends GuiceServletContextListener
 			// The white-list controls which clients have access to protected
 			// data and which that do not.
 
-			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule - remove this when tested
+//			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule in ServiceModule - remove this when tested
+            bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
 
 			install(new PersistenceModule());
 			
@@ -117,7 +115,7 @@ public class ComponentController extends GuiceServletContextListener
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
 			install(new DenGodeWebServiceModule());
-            //install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
+            install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
 		}
 	}
 }

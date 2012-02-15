@@ -24,15 +24,16 @@
  */
 package com.trifork.stamdata.authorization.security;
 
-import static com.trifork.stamdata.authorization.security.WhitelistProvider.SET_OF_STRINGS;
-
 import com.google.inject.AbstractModule;
+import dk.nsi.stamdata.security.WhitelistService;
+import dk.nsi.stamdata.security.WhitelistServiceProvider;
 
 public class SecurityModule extends AbstractModule {
 
     @Override
     protected void configure()
     {
-        bind(SET_OF_STRINGS).toProvider(WhitelistProvider.class);
+        bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
+//        bind(SET_OF_STRINGS).toProvider(WhitelistProvider.class);
     }
 }

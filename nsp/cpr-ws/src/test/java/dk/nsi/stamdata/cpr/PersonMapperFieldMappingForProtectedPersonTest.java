@@ -32,15 +32,13 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
+import java.util.Collections;
 import java.util.Date;
-import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.google.common.collect.Sets;
 
 import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
@@ -324,11 +322,10 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
     private void doMap() throws Exception
     {
-        Set<String> whiteList = Sets.newHashSet();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678", AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 
-        PersonMapper personMapper = new PersonMapper(whiteList, idCard, municipalityMapper);
+        PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
         output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
     }
