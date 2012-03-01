@@ -71,6 +71,7 @@ public class ParserExecutorTest
     {
         parser = mock(Parser.class);
         mockStatic(Parsers.class);
+        when(Parsers.getIdentifier(any(Parser.class))).thenReturn("foo");
         when(Parsers.getIdentifier(any(Class.class))).thenReturn("foo");
         when(Parsers.getName(any(Class.class))).thenReturn("Foo");
         
