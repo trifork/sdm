@@ -132,9 +132,11 @@ public class StamdataReplicationIdCardLevelAttackTest {
     private void populateDatabase() {
         Transaction t = session.beginTransaction();
 
-        session.createQuery("DELETE FROM Client").executeUpdate();
-        session.createSQLQuery("DELETE FROM Client_permissions").executeUpdate();
-        
+        session.createSQLQuery("SET foreign_key_checks = 0");
+        session.createSQLQuery("DELETE FROM  Client_permissions").executeUpdate();
+        session.createSQLQuery("DELETE FROM  Client").executeUpdate();
+        session.createSQLQuery("SET foreign_key_checks = 1");
+
         // Example of subject serial number: CVR:19343634-UID:1234
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
         cvrClient.addPermission(Views.getViewPath(Person.class));
