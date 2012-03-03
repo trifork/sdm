@@ -26,6 +26,11 @@
 			<version>${project.version}</version>
 		</dependency>
 
+        <dependency>
+            <groupId>dk.sdsd.nsp</groupId>
+            <artifactId>nsp-util</artifactId>
+        </dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -41,13 +46,6 @@
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.6</version>
-			<exclusions>
-				<!-- WE USE THE 'jcl-over-slf4j' ADAPTER FOR SLF4J -->
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -55,30 +53,13 @@
 			<artifactId>hibernate-core</artifactId>
 		</dependency>
 
-		<!-- Logging -->
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-            <version>${war.slf4j.version}</version>
-            <scope>compile</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-            <version>${war.slf4j.version}</version>
-		    <scope>runtime</scope>
-        </dependency>
-    
+        <!-- Logging -->
         <dependency>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <scope>compile</scope> <!-- This is needed on Jboss in order for us to be able to log to a different file than server.log with log4j -->
         </dependency>
-        <dependency>
-          <groupId>org.codehaus.groovy</groupId>
-          <artifactId>groovy</artifactId>
-        </dependency>
+
 
 		<!-- Test -->
 

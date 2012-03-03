@@ -26,9 +26,8 @@ package dk.nsi.stamdata.cpr;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -37,7 +36,7 @@ import com.trifork.stamdata.persistence.Transactional;
 
 public class ComponentMonitorImpl implements ComponentMonitor
 {
-	private static final Logger logger = LoggerFactory.getLogger(ComponentMonitorImpl.class);
+	private static final Logger logger = Logger.getLogger(ComponentMonitorImpl.class);
 	private final Provider<Session> sessions;
 	
 	@Inject

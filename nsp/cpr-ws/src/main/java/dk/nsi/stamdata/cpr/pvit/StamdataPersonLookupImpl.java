@@ -31,9 +31,6 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
@@ -48,6 +45,7 @@ import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
+import org.apache.log4j.Logger;
 
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup")
@@ -55,7 +53,7 @@ import dk.sosi.seal.model.constants.FaultCodeValues;
 @SchemaValidation
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
 {
-    private final static Logger logger = LoggerFactory.getLogger(StamdataPersonLookupImpl.class);
+    private final static Logger logger = Logger.getLogger(StamdataPersonLookupImpl.class);
 
     private final String clientCVR;
     private final StamdataPersonResponseFinder stamdataPersonResponseFinder;

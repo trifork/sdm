@@ -45,6 +45,9 @@ import com.trifork.stamdata.persistence.Persistent;
 import dk.nsi.stamdata.security.*;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -53,8 +56,21 @@ public class ComponentController extends GuiceServletContextListener
 	private static final String DISPLAY_SOAP_FAULT_STACK_TRACE = "com.sun.xml.ws.fault.SOAPFaultBuilder.disableCaptureStackTrace";
 	public static final String COMPONENT_NAME = "stamdata-cpr-ws";
 
+    private static Logger logger;
 
-	@Override
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        super.contextDestroyed(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Shutdown]");
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        super.contextInitialized(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Started]");
+    }
+
+    @Override
 	protected Injector getInjector()
 	{
 		return Guice.createInjector(Stage.PRODUCTION, new ComponentModule(), new ServiceModule());
@@ -70,13 +86,14 @@ public class ComponentController extends GuiceServletContextListener
 			// dependencies.
 
 			bindProperties(binder(), ConfigurationLoader.loadForName(COMPONENT_NAME));
+            getLogger().info("Configuring ComponentModule for " + COMPONENT_NAME);
 
 			// The white-list controls which clients have access to protected
 			// data and which that do not.
 
 //			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule in ServiceModule - remove this when tested
             bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
-
+            getLogger().info("Installing PersistenceModule");
 			install(new PersistenceModule());
 			
 			// Bind the classes that Hibernate needs to manager.
@@ -94,7 +111,7 @@ public class ComponentController extends GuiceServletContextListener
 		{
 			// We don't want JAX-WS to expose the stack trace
 			// when an exception occurs.
-
+            getLogger().info("Configuring ServiceModule for " + COMPONENT_NAME);
 			System.setProperty(DISPLAY_SOAP_FAULT_STACK_TRACE, "false");
 			
 			// To make sure the property for the CPR ABBS end-point is set
@@ -107,6 +124,7 @@ public class ComponentController extends GuiceServletContextListener
 			// All monitor pages are bound to the URL /status.
 
 			bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
+            getLogger().info("Installing MonitoringModule");
 			install(new MonitoringModule());
 
 			// Filter everything through the DGWS filter,
@@ -114,8 +132,18 @@ public class ComponentController extends GuiceServletContextListener
 
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
+            getLogger().info("Installing DenGodeWebServiceModule");
 			install(new DenGodeWebServiceModule());
+            getLogger().info("Installing WhitelistDbInterceptorModule");
             install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
 		}
 	}
+
+    private static Logger getLogger()
+    {
+        if (logger == null) {
+            logger = Logger.getLogger(ComponentController.class);
+        }
+        return logger;
+    }
 }

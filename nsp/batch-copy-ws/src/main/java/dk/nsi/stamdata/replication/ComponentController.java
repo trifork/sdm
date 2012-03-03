@@ -31,8 +31,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import ch.qos.logback.classic.helpers.MDCInsertingServletFilter;
-
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -54,11 +52,27 @@ import dk.nsi.stamdata.replication.models.AuthenticationModule;
 import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
 import dk.nsi.stamdata.views.ViewModule;
 import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
 
 
 public class ComponentController extends GuiceServletContextListener
 {
     private static final String COMPONENT_NAME = "stamdata-batch-copy-ws";
+    private static Logger logger;
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        super.contextDestroyed(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Shutdown]");
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        super.contextInitialized(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Started]");
+    }
 
 
     @Override
@@ -74,6 +88,7 @@ public class ComponentController extends GuiceServletContextListener
         protected void configure()
         {
             Properties props = ConfigurationLoader.loadForName(COMPONENT_NAME);
+
             bindProperties(binder(), props);
 
             // A previous version of this component used the property
@@ -83,9 +98,12 @@ public class ComponentController extends GuiceServletContextListener
 
             String useTestSTS = "dgwsTest".equalsIgnoreCase(props.getProperty("security")) ? "true" : "false";
             bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to(useTestSTS);
-            
+
+            getLogger().info("Installing ViewModule");
             install(new ViewModule());
+            getLogger().info("Installing PersistenceModule");
             install(new PersistenceModule());
+            getLogger().info("Installing AuthenticationModule");
             install(new AuthenticationModule());
         }
     }
@@ -104,10 +122,14 @@ public class ComponentController extends GuiceServletContextListener
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(StatelessPersistenceFilter.class);
             
             bind(ComponentMonitor.class).to(ComponentMonitorImpl.class);
+            getLogger().info("Installing MonitoringModule");
             install(new MonitoringModule());
             
+
+/*
             // Logging
-            
+            getLogger().info("Configuring SLALoggingServletFilter");
+
             // The mandatory SLA filter.
             //
             bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
@@ -115,17 +137,24 @@ public class ComponentController extends GuiceServletContextListener
             filterParams.put("appName", COMPONENT_NAME);
             filterParams.put("shortAppName", COMPONENT_NAME);
             filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class, filterParams);
+
+            Moved to web.xml for simplicity
+/*
+*/
+
             
-            
-            
-            // Inserts IP and other goodies into the MDC.
-            //
-            bind(MDCInsertingServletFilter.class).in(Scopes.SINGLETON);
-            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(MDCInsertingServletFilter.class);
             
             // Security
-            
+            getLogger().info("Installing DenGodeWebServiceModule");
             install(new DenGodeWebServiceModule());
         }
+    }
+
+    private static Logger getLogger()
+    {
+        if (logger == null) {
+            logger = Logger.getLogger(ComponentController.class);
+        }
+        return logger;
     }
 }

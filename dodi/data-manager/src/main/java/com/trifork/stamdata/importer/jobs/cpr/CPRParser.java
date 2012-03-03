@@ -42,9 +42,6 @@ import java.util.Formatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.jobs.cpr.models.BarnRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.ForaeldreMyndighedRelation;
 import com.trifork.stamdata.importer.jobs.cpr.models.Klarskriftadresse;
@@ -52,13 +49,14 @@ import com.trifork.stamdata.importer.jobs.cpr.models.NavneBeskyttelse;
 import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
+import org.apache.log4j.Logger;
 
 
 public class CPRParser
 {
 	private static final String FILE_ENCODING = "ISO-8859-1";
 
-	private static final Logger logger = LoggerFactory.getLogger(CPRParser.class);
+	private static final Logger logger = Logger.getLogger(CPRParser.class);
 
 	private static final int END_RECORD = 999;
 	private static final String EMPTY_DATE_STRING = "000000000000";
@@ -380,14 +378,14 @@ public class CPRParser
 			}
 			else
 			{
-				logger.error("Unexpected date format={}", date);
+				logger.error("Unexpected date format=" + date);
 				return date;
 			}
 		}
 
 		if (logger.isDebugEnabled() && !fixedDate.equals(date))
 		{
-			logger.debug("Fixing CPR date from={} to={}", date, fixedDate);
+			logger.debug("Fixing CPR date from="+date+" to=" + fixedDate);
 		}
 
 		return fixedDate;

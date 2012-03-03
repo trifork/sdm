@@ -33,8 +33,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.Fetcher;
@@ -45,11 +43,12 @@ import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
 import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
+import org.apache.log4j.Logger;
 
 
 public class StamdataPersonResponseFinder
 {
-    private final static Logger logger = LoggerFactory.getLogger(StamdataPersonResponseFinder.class);
+    private final static Logger logger = Logger.getLogger(StamdataPersonResponseFinder.class);
 
     private final Fetcher fetcher;
     private final PersonMapper personMapper;
@@ -72,7 +71,7 @@ public class StamdataPersonResponseFinder
         Person person = fetcher.fetch(Person.class, cpr);
         boolean wasFound = (person != null);
 
-        logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[] { cvr, cpr, wasFound });
+        logger.info("type=auditlog, client_cvr="+cvr+", requested_cpr="+cpr+", record_was_returned="+wasFound);
 
         if (wasFound)
         {
@@ -94,7 +93,7 @@ public class StamdataPersonResponseFinder
             Person person = fetcher.fetch(Person.class, cpr);
             boolean wasFound = (person != null);
 
-            logger.info("type=auditlog, client_cvr={}, requested_cpr={}, record_was_returned={}", new Object[] { cvr, cpr, wasFound });
+            logger.info("type=auditlog, client_cvr="+cvr+", requested_cpr="+cpr+", record_was_returned="+wasFound);
 
             if (wasFound)
             {
@@ -114,11 +113,11 @@ public class StamdataPersonResponseFinder
 
         List<Person> persons = fetcher.fetch(Person.class, "Foedselsdato", birthDate.toGregorianCalendar().getTime());
 
-        logger.info("type=auditlog, client_cvr={}, search_birthday_param={}", cvr, birthDate.toGregorianCalendar());
+        logger.info("type=auditlog, client_cvr="+cvr+", search_birthday_param=" + birthDate.toGregorianCalendar());
 
         for (Person person : persons)
         {
-            logger.info("type=auditlog, client_cvr={}, cpr_of_returned_person={}", cvr, person.getCpr());
+            logger.info("type=auditlog, client_cvr="+cvr+", cpr_of_returned_person="+person.getCpr());
 
             personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
         }
@@ -143,11 +142,11 @@ public class StamdataPersonResponseFinder
             columnValuePairs.put("Mellemnavn", namePerson.getPersonMiddleName());
         }
 
-        logger.info("type=auditlog, client_cvr={}, requested_name={} {} {}", new Object[] { cvr, namePerson.getPersonGivenName(), namePerson.getPersonMiddleName(), namePerson.getPersonSurnameName() });
+        logger.info("type=auditlog, client_cvr="+cvr+", requested_name="+namePerson.getPersonGivenName()+" "+namePerson.getPersonMiddleName()+" "+namePerson.getPersonSurnameName());
 
         for (Person person : fetcher.fetch(Person.class, columnValuePairs))
         {
-            logger.info("type=auditlog, client_cvr={}, cvr_of_returned_person={}", cvr, person.getCpr());
+            logger.info("type=auditlog, client_cvr="+cvr+", cvr_of_returned_person="+person.getCpr());
 
             personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
         }

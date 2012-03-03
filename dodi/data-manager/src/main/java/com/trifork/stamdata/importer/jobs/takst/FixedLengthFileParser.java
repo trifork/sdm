@@ -32,17 +32,16 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
 
 
 public class FixedLengthFileParser
 {
 	public static final String FILE_ENCODING = "CP865";
 
-	protected static final Logger logger = LoggerFactory.getLogger(FixedLengthFileParser.class);
+	protected static final Logger logger = Logger.getLogger(FixedLengthFileParser.class);
 
 	private final File[] input;
 
@@ -53,7 +52,7 @@ public class FixedLengthFileParser
 
 	public <T extends TakstEntity> List<T> parse(FixedLengthParserConfiguration<T> configuration, Class<T> type) throws Exception
 	{
-		logger.debug("Parsing file={}", configuration.getFilename());
+		logger.debug("Parsing file=" + configuration.getFilename());
 		
 		File file = TakstParser.getFileByName(configuration.getFilename(), input);
 		LineIterator lines = FileUtils.lineIterator(file, FILE_ENCODING);
@@ -101,7 +100,7 @@ public class FixedLengthFileParser
 			results.add(entity);
 		}
 		
-		logger.debug("Number of lines in file. lineCount={} file={} resultCount={}", new Object[]{ count, configuration.getFilename(), results.size()});
+		logger.debug("Number of lines in file. lineCount="+count+" file="+configuration.getFilename()+" resultCount=" + results.size());
 
 		return results;
 	}

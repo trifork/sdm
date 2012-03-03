@@ -29,10 +29,8 @@ package com.trifork.stamdata.importer.config;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.ComponentController;
+import org.apache.log4j.Logger;
 
 /**
  * @author Jan Buchholdt <jbu@trifork.com>
@@ -42,7 +40,7 @@ import com.trifork.stamdata.importer.ComponentController;
 @Deprecated
 public class Configuration
 {
-	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
+	private static Logger logger = Logger.getLogger(Configuration.class);
 	private static Configuration defaultInstance = new Configuration();
 
 	private Properties properties;

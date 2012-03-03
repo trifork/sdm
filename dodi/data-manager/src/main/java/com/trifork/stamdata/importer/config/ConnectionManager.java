@@ -30,8 +30,7 @@ import java.sql.*;
 
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 /**
  * @author Jan Buchholdt <jbu@trifork.com>
@@ -39,7 +38,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConnectionManager
 {
-	private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
+	private static final Logger logger = Logger.getLogger(ConnectionManager.class);
 	
 	public Connection getConnection() throws SQLException
 	{

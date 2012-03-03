@@ -4,6 +4,14 @@
 	version="2.4">
 	<display-name>Stamdata CPR Service</display-name>
 
+    <listener>
+        <listener-class>com.trifork.stamdata.util.Log4jInitServletListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>log4j-config-file</param-name>
+        <param-value>log4j-stamdata-cpr-ws.properties</param-value>
+    </context-param>
+
 	<listener>
 		<listener-class>dk.nsi.stamdata.cpr.ComponentController</listener-class>
 	</listener>
@@ -51,4 +59,5 @@
 		<servlet-name>JAXWSServlet</servlet-name>
 		<url-pattern>/service/*</url-pattern>
 	</servlet-mapping>
+
 </web-app>

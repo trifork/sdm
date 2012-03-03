@@ -43,11 +43,10 @@ import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 
 import dk.nsi.stamdata.views.sor.Yder;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import org.w3c.dom.Document;
 
 import com.google.inject.Inject;
@@ -72,7 +71,7 @@ import dk.nsi.stamdata.views.Views;
 @SchemaValidation
 public class StamdataReplicationImpl implements StamdataReplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(StamdataReplicationImpl.class);
+    private static final Logger logger = Logger.getLogger(StamdataReplicationImpl.class);
     
     private static final int MAX_RECORD_LIMIT = 2000;
     

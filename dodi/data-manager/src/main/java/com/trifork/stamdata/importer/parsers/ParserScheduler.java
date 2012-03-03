@@ -24,14 +24,12 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
-import com.google.common.collect.Sets;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListenableFutureTask;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.Set;
 import java.util.concurrent.*;
@@ -41,9 +39,8 @@ import java.util.concurrent.*;
  *
  * @author Thomas Børlum <thb@trifork.com>
  */
-public class ParserScheduler
-{
-    private static final Logger logger = LoggerFactory.getLogger(ParserScheduler.class);
+public class ParserScheduler {
+    private static final Logger logger = Logger.getLogger(ParserScheduler.class);
 
     private final ScheduledExecutorService schedulerExecutor;
     private final ExecutorService jobExecutor;
@@ -56,8 +53,7 @@ public class ParserScheduler
     private final Provider<ParserExecutor> executors;
 
     @Inject
-    ParserScheduler(Provider<ParserExecutor> executors, Set<ParserContext> parsers, ParserScope scope)
-    {
+    ParserScheduler(Provider<ParserExecutor> executors, Set<ParserContext> parsers, ParserScope scope) {
         this.executors = executors;
         this.scope = scope;
 
@@ -78,21 +74,18 @@ public class ParserScheduler
         jobExecutor = Executors.newFixedThreadPool(numberOfThreads);
     }
 
-    public void start()
-    {
+    public void start() {
         // The scheduler loop quite often.
         // Don't run continuously or we'll hog a lot of CPU.
         //
         schedulerExecutor.scheduleWithFixedDelay(runLoop(), 0, 1, TimeUnit.SECONDS);
     }
 
-    public void stop()
-    {
+    public void stop() {
         shutdown();
     }
 
-    private void shutdown()
-    {
+    private void shutdown() {
         // Don't schedule any more jobs.
         //
         schedulerExecutor.shutdownNow();
@@ -102,42 +95,33 @@ public class ParserScheduler
         jobExecutor.shutdownNow();
     }
 
-    private Runnable runLoop()
-    {
-        return new Runnable()
-        {
+    private Runnable runLoop() {
+        return new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     loop();
-                }
-                catch (Throwable t)
-                {
+                } catch (Throwable t) {
                     // Parser exceptions such as input errors should never
                     // make it out here. If something does it must be a fatal
                     // error, and we stop execution.
                     //
                     shutdown();
 
-                    logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.",  t);
+                    logger.error("The scheduler crashed. This is a fatal error. Execution has stopped.", t);
                 }
             }
         };
     }
 
-    private void loop()
-    {
+    private void loop() {
         // TODO: There is a tiny chance of 'live locking' here.
         // This could potentially starve some parsers.
         //
-        for (ParserContext parser : parsers)
-        {
+        for (ParserContext parser : parsers) {
             // Only start parsers not already in progress.
             //
-            if (inProgress.contains(parser.getParserClass()))
-            {
+            if (inProgress.contains(parser.getParserClass())) {
                 continue;
             }
 
@@ -152,8 +136,7 @@ public class ParserScheduler
         }
     }
 
-    private ListenableFuture executeParser(ParserContext context)
-    {
+    private ListenableFuture executeParser(ParserContext context) {
         ListenableFutureTask<Void> task = new ListenableFutureTask(scopedExecution(context), null);
 
         jobExecutor.execute(task);
@@ -161,42 +144,32 @@ public class ParserScheduler
         return task;
     }
 
-    private Runnable scopedExecution(final ParserContext context)
-    {
-        return new Runnable()
-        {
+    private Runnable scopedExecution(final ParserContext context) {
+        return new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 // Each parser is executed in its own scope. Thus any shared instances
                 // will be available only to this parser and only for this execution.
                 //
                 scope.enter(context);
 
-                try
-                {
+                try {
                     executors.get().run();
-                }
-                finally
-                {
+                } finally {
                     scope.exit();
                 }
             }
         };
     }
 
-    private void retain(ParserContext parserContext)
-    {
+    private void retain(ParserContext parserContext) {
         inProgress.add(parserContext.getParserClass());
     }
 
-    private Runnable release(final ParserContext parserContext)
-    {
-        return new Runnable()
-        {
+    private Runnable release(final ParserContext parserContext) {
+        return new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 // Remove the parser so it is no longer running.
                 //
                 inProgress.remove(parserContext.getParserClass());
@@ -204,8 +177,7 @@ public class ParserScheduler
         };
     }
 
-    public boolean isOk()
-    {
+    public boolean isOk() {
         return !schedulerExecutor.isTerminated();
     }
 }

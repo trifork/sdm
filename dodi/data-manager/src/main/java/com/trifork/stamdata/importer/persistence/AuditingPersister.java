@@ -34,13 +34,11 @@ import java.util.List;
 
 import javax.persistence.Entity;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.importer.persistence.DatabaseTableWrapper.StamdataEntityVersion;
 import com.trifork.stamdata.models.TemporalEntity;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 
 /**
@@ -49,7 +47,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 @Deprecated
 public class AuditingPersister implements Persister
 {
-	private static final Logger logger = LoggerFactory.getLogger(AuditingPersister.class);
+	private static final Logger logger = Logger.getLogger(AuditingPersister.class);
 
 	protected Connection connection;
 	protected Date transactionTime;
@@ -99,7 +97,7 @@ public class AuditingPersister implements Persister
 
 		int insertedCount = 0;
 		
-		logger.info("Dataset contains rows={}", dataset.getEntities().size());
+		logger.info("Dataset contains rows=" + dataset.getEntities().size());
 		
 		for (T record : dataset.getEntities())
 		{
@@ -286,7 +284,7 @@ public class AuditingPersister implements Persister
 		
 		table.close();
 		
-		logger.info("Persist complete. rows={}", insertedCount);
+		logger.info("Persist complete. rows=" + insertedCount);
 	}
 
 	public <T extends TemporalEntity> DatabaseTableWrapper<T> getTable(Class<T> clazz) throws SQLException

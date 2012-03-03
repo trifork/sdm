@@ -32,8 +32,8 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
 import com.trifork.stamdata.importer.webinterface.WebInterfaceModule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import org.apache.log4j.Logger;
 
 import javax.servlet.ServletContextEvent;
 import java.io.File;
@@ -53,7 +53,7 @@ import java.io.File;
  */
 public class ComponentController extends GuiceServletContextListener
 {
-	private static final Logger logger = LoggerFactory.getLogger(ComponentController.class);
+	private static Logger logger;
 
     private static final String PARSER_INBOX_ROOT_DIR_PROP = "jboss.server.data.dir";
     
@@ -62,6 +62,7 @@ public class ComponentController extends GuiceServletContextListener
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent)
 	{
+
         // In order to support both production and development environments
         // we have to use the same names for system properties. For instance
         // 
@@ -70,7 +71,7 @@ public class ComponentController extends GuiceServletContextListener
             System.setProperty(PARSER_INBOX_ROOT_DIR_PROP, Files.createTempDir().getAbsolutePath());
         }
         
-        logger.info("Parser inbox root is set to: {}", System.getProperty(PARSER_INBOX_ROOT_DIR_PROP));
+        getLogger().info("Parser inbox root is set to: " + System.getProperty(PARSER_INBOX_ROOT_DIR_PROP));
 
 		// We have to call the super method to allow Guice to initialize
 		// itself.
@@ -79,6 +80,7 @@ public class ComponentController extends GuiceServletContextListener
 
 		// Start the internal services.
         //
+
 		try
 		{
 			injector.getInstance(JobManager.class).start();
@@ -91,7 +93,7 @@ public class ComponentController extends GuiceServletContextListener
 			throw new RuntimeException("Could not start the services.", e);
 		}
 
-        logger.info("Stamdata Data Manager [Started]");
+        getLogger().info("Stamdata Data Manager [Started]");
 	}
 
 	@Override
@@ -107,7 +109,7 @@ public class ComponentController extends GuiceServletContextListener
 			// We'll just log the error here and allow the rest of the
 			// system to shut down.
             //
-			logger.error("Could not stop the running services.", e);
+			getLogger().error("Could not stop the running services.", e);
 		}
 
         // Not sure that it actually makes a difference to not keep
@@ -119,7 +121,7 @@ public class ComponentController extends GuiceServletContextListener
         //
 		super.contextDestroyed(servletContextEvent);
 
-        logger.info("Stamdata Data Manager [Shutdown]");
+        getLogger().info("Stamdata Data Manager [Shutdown]");
 	}
 
 	@Override
@@ -127,4 +129,13 @@ public class ComponentController extends GuiceServletContextListener
 	{
 		return injector = Guice.createInjector(Stage.PRODUCTION, new ComponentModule(), new WebInterfaceModule());
 	}
+
+    private static Logger getLogger()
+    {
+        if (logger == null) {
+            //Initialize the logger - this allows the ServletListener that configures the application to have Log4J configured before we enter ComponentController. This is not a problem in this class since contextInitialized is only called once - when the context is initializing
+            logger = Logger.getLogger(ComponentController.class);
+        }
+        return logger;
+    }
 }

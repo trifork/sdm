@@ -24,29 +24,24 @@
  */
 
 
-package com.trifork.stamdata.importer.jobs.takst;
+package com.trifork.stamdata.importer.tools;
 
-import java.util.Date;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
-import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
-import com.trifork.stamdata.importer.util.Dates;
-import org.apache.log4j.Logger;
+/**
+ * User: frj
+ * Date: 3/1/12
+ * Time: 11:46 PM
+ *
+ * @Author frj
+ */
+public class SLALoggerHolder {
 
+    private static final SLALogger SLA_LOGGER = new SLALogConfig("stamdata-data-manager","stamdata-data-manager").getSLALogger();
 
-public abstract class TakstEntity extends AbstractStamdataEntity
-{
-	protected Takst takst;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    public static SLALogger getSLALogger() {
+        return SLA_LOGGER;
+    }
 
-	@Override
-	public Date getValidFrom()
-	{
-		return takst.getValidFrom();
-	}
-
-	@Override
-	public Date getValidTo()
-	{
-		return Dates.THE_END_OF_TIME;
-	}
 }

@@ -75,35 +75,18 @@
       <artifactId>commons-io</artifactId>
     </dependency>
 
-    <!-- Logging -->
-    <!-- 
-     | This component doesn't use the provided
-     | SLF4J but a newer version and Logback.
-     | Other components should be migrated to
-     | do the same.
-    -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${war.slf4j.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl-over-slf4j</artifactId>
-      <version>${war.slf4j.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy</artifactId>
-    </dependency>
+      <!-- Logging -->
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <scope>compile</scope> <!-- This is needed on Jboss in order for us to be able to log to a different file than server.log with log4j -->
+      </dependency>
+      <!-- Hibernate uses slf4j logging -->
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.1</version>
+      </dependency>
 
     <!-- Test -->
 

@@ -50,7 +50,7 @@ public class ComponentMonitorIntegrationTest {
 
     @After
     public void tearDown() throws Exception {
-        server.stop();
+      server.stop();
     }
 
     @Test

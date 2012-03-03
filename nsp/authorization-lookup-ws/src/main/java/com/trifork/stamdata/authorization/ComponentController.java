@@ -40,11 +40,28 @@ import com.trifork.stamdata.authorization.models.DbModule;
 import com.trifork.stamdata.authorization.webservice.WebserviceModule;
 
 import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
+import org.apache.log4j.Logger;
+
+import javax.servlet.ServletContextEvent;
 
 
 public class ComponentController extends GuiceServletContextListener
 {
 	private static final String COMPONENT_NAME = "stamdata-authorization-lookup-ws";
+
+    private static Logger logger;
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        super.contextDestroyed(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Shutdown]");
+    }
+
+    @Override
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        super.contextInitialized(servletContextEvent);
+        getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Started]");
+    }
 
 	@Override
 	protected Injector getInjector()
@@ -59,6 +76,7 @@ public class ComponentController extends GuiceServletContextListener
         protected void configure()
         {
             Properties properties = ConfigurationLoader.loadForName(COMPONENT_NAME);
+            getLogger().info("Loaded configuration for component: " + COMPONENT_NAME);
             bindProperties(binder(), properties);
             
             // A previous version of this component used the property
@@ -67,9 +85,18 @@ public class ComponentController extends GuiceServletContextListener
             // still support this property.
 
             String useTestSTS = "dgwsTest".equalsIgnoreCase(properties.getProperty("security")) ? "true" : "false";
+            getLogger().info("Using TestSTS: " + useTestSTS);
             bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to(useTestSTS);
             
             install(new DbModule());
         }
 	}
+    
+    private static Logger getLogger()
+    {
+        if (logger == null) {
+            logger = Logger.getLogger(ComponentController.class);
+        }
+        return logger;
+    }
 }

@@ -32,11 +32,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
 import com.trifork.stamdata.importer.util.Dates;
+import org.apache.log4j.Logger;
 
 
 @Entity
@@ -54,7 +52,7 @@ public class Sygehus extends AbstractStamdataEntity
 	private Long sorNummer;
 	private Date validFrom;
 	private Date validTo;
-    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
+    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
 
 	@Column
 	public String getNavn()

@@ -24,17 +24,26 @@
  */
 package com.trifork.stamdata.importer;
 
+import com.google.inject.Provides;
 import com.google.inject.Scopes;
+import com.google.inject.Singleton;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.ServletModule;
+import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.importer.config.ConfigurationLoader;
 import com.trifork.stamdata.importer.jobs.JobManager;
 import com.trifork.stamdata.importer.parsers.ParserModule;
 import com.trifork.stamdata.importer.parsers.ParserScheduler;
 import com.trifork.stamdata.importer.parsers.annotations.InboxRootPath;
+import com.trifork.stamdata.persistence.Persistent;
+import dk.sdsd.nsp.slalog.api.SLALogConfig;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.hibernate.SessionFactory;
 
+import javax.inject.Named;
 import java.io.File;
+import java.util.Set;
 
 import static com.trifork.stamdata.importer.config.ParserConfiguration.bindParsers;
 

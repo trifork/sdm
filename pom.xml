@@ -18,8 +18,8 @@
   <properties>
 	<db.username>root</db.username>
 	<db.password></db.password>
-    <war.slf4j.version>1.6.2</war.slf4j.version>
-    <jboss6.slf4j.version>1.5.3</jboss6.slf4j.version>
+
+    <log4j.version>1.2.14</log4j.version>
     <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
     <jboss6.xalan.version>2.7.1</jboss6.xalan.version>
     <jboss6.jaxws.version>2.2</jboss6.jaxws.version>
@@ -72,18 +72,14 @@
         <version>3.2.3</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <!-- Can only be used with SLF4J 1.6.3 -->
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>0.9.30</version>
-      </dependency>
-      <dependency>
-        <!-- For logback configuration -->
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy</artifactId>
-        <version>1.8.3</version>
-      </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
       <!-- Hibernate -->
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -181,6 +177,7 @@
         <version>${hamcrest.version}</version>
         <scope>test</scope>
       </dependency>
+
       <!-- MySQL & Hibernate -->
       <dependency>
         <groupId>mysql</groupId>
@@ -640,7 +637,9 @@
 						<version>2.9</version>
 						<configuration>
 							<systemPropertyVariables>
-								<jboss.server.log.dir>${java.io.tmpdir}</jboss.server.log.dir>
+								<!--jboss.server.log.dir>${java.io.tmpdir}</jboss.server.log.dir-->
+								<jboss.server.log.dir>${basedir}</jboss.server.log.dir>
+                                <jboss.server.config.url>${basedir}/src/main/resources/</jboss.server.config.url>
 							</systemPropertyVariables>
                             <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=512m</argLine>
 						</configuration>

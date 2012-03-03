@@ -31,11 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.Entities;
 import com.trifork.stamdata.models.TemporalEntity;
+import org.apache.log4j.Logger;
 
 /**
  * @author Rune Skou Larsen <rsj@trifork.com>
@@ -43,7 +41,7 @@ import com.trifork.stamdata.models.TemporalEntity;
 @Deprecated
 public class Dataset<T extends TemporalEntity>
 {
-    private static final Logger logger = LoggerFactory.getLogger(Dataset.class);
+    private static final Logger logger = Logger.getLogger(Dataset.class);
     
 	private final Map<Object, T> entities = new HashMap<Object, T>();
 	private final Class<T> type;
@@ -98,7 +96,7 @@ public class Dataset<T extends TemporalEntity>
             // FIXME: This is actually and error, but it has always been this way.
             // Double keys should not happen.
 
-		    logger.warn("Two entries in a single import contains the same id. type={}, id={}", type.getSimpleName(), id);
+		    logger.warn("Two entries in a single import contains the same id. type="+type.getSimpleName()+", id=" + id);
 		}
 	}
 }

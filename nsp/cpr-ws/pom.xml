@@ -41,19 +41,18 @@
       <artifactId>hamcrest-all</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${jboss6.slf4j.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
-      <version>${jboss6.slf4j.version}</version>
-      <scope>test</scope>
-    </dependency>
+      <!-- Logging -->
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <scope>compile</scope> <!-- This is needed on Jboss in order for us to be able to log to a different file than server.log with log4j -->
+      </dependency>
+      <dependency>
+          <!-- Hibernate uses slf4j logging -->
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.1</version>
+      </dependency>
 
     <dependency>
       <groupId>com.google.inject.extensions</groupId>

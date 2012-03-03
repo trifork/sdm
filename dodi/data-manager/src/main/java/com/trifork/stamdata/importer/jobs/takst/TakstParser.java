@@ -36,9 +36,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.importer.jobs.takst.model.ATCKoderOgTekst;
@@ -109,12 +106,13 @@ import com.trifork.stamdata.importer.jobs.takst.model.Udleveringsbestemmelser;
 import com.trifork.stamdata.importer.jobs.takst.model.UdleveringsbestemmelserFactory;
 import com.trifork.stamdata.importer.persistence.Dataset;
 import com.trifork.stamdata.importer.util.Dates;
+import org.apache.log4j.Logger;
 
 
 public class TakstParser
 {
 	private static final String SUPPORTED_TAKST_VERSION = "12.0";
-	protected static Logger logger = LoggerFactory.getLogger(TakstParser.class);
+	protected static Logger logger = Logger.getLogger(TakstParser.class);
 
 	private <T extends TakstEntity> void add(Takst takst, FixedLengthFileParser parser, FixedLengthParserConfiguration<T> config, Class<T> type) throws Exception
 	{
@@ -141,7 +139,7 @@ public class TakstParser
 		String systemline = getSystemLine(input);
 		String version = getVersion(systemline);
 
-		if (!SUPPORTED_TAKST_VERSION.equals(version)) logger.warn("Parsing unsupported of the takst! supported={}, actual={}", version, SUPPORTED_TAKST_VERSION);
+		if (!SUPPORTED_TAKST_VERSION.equals(version)) logger.warn("Parsing unsupported of the takst! supported="+version+", actual=" + SUPPORTED_TAKST_VERSION);
 
 		Date fromDate = getValidFromDate(systemline);
 
@@ -242,7 +240,7 @@ public class TakstParser
 
 			if (adminVej == null)
 			{
-				logger.warn("Unknown route of administration, code not found in LMS11. code={}", code);
+				logger.warn("Unknown route of administration, code not found in LMS11. code=" + code);
 			}
 			else
 			{

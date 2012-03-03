@@ -37,13 +37,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import com.google.inject.servlet.ServletModule;
+import org.apache.log4j.Logger;
 
 public class MonitoringModule extends ServletModule
 {
@@ -76,7 +74,7 @@ public class MonitoringModule extends ServletModule
 		StatusServlet(Provider<ComponentMonitor> monitor)
 		{
 			this.monitor = monitor;
-			this.logger = LoggerFactory.getLogger(monitor.getClass());
+			this.logger = Logger.getLogger(monitor.getClass());
 		}
 		
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException

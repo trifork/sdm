@@ -26,15 +26,14 @@ package com.trifork.stamdata.importer.config;
 
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.net.URL;
 
 @Deprecated
 public class ConfigurationLoader
 {
-    private static final Logger logger = LoggerFactory.getLogger(ConfigurationLoader.class);
+    private static final Logger logger = Logger.getLogger(ConfigurationLoader.class);
     
     public static final String BUILDIN_CONFIG_FILE = "config.properties";
     public static final String DEPLOYMENT_CONFIG_FILE = "stamdata-data-manager.properties";
@@ -59,11 +58,11 @@ public class ConfigurationLoader
             if (deploymentConfigurationFile != null)
             {
                 configuration.addConfiguration(new PropertiesConfiguration(deploymentConfigurationFile));
-                logger.info("Configuration file '{}' loaded.", deploymentConfigurationFile);
+                logger.info("Configuration file '"+deploymentConfigurationFile+"' loaded.");
             }
             else
             {
-                logger.warn("Configuration file '{}' could not be found. Using default configuration.", DEPLOYMENT_CONFIG_FILE);
+                logger.warn("Configuration file '"+DEPLOYMENT_CONFIG_FILE+"' could not be found. Using default configuration.");
             }
 
             // Add any missing properties from the defaults.

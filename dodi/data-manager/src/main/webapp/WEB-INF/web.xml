@@ -4,6 +4,14 @@
 	version="2.4">
 	<display-name>Stamdata Data Manager</display-name>
 
+    <listener>
+        <listener-class>com.trifork.stamdata.util.Log4jInitServletListener</listener-class>
+    </listener>
+    <context-param>
+        <param-name>log4j-config-file</param-name>
+        <param-value>log4j-stamdata-data-manager.properties</param-value>
+    </context-param>
+
 	<listener>
 		<listener-class>com.trifork.stamdata.importer.ComponentController</listener-class>
 	</listener>
@@ -17,4 +25,5 @@
 		<filter-name>Guice Filter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+
 </web-app>

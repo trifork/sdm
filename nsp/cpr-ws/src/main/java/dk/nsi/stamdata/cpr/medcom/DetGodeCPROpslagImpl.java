@@ -34,8 +34,6 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
@@ -63,6 +61,7 @@ import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.sosi.seal.model.SystemIDCard;
+import org.apache.log4j.Logger;
 
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag")
@@ -70,7 +69,7 @@ import dk.sosi.seal.model.SystemIDCard;
 @SchemaValidation
 public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 {
-	private static final Logger logger = LoggerFactory.getLogger(DetGodeCPROpslagImpl.class);
+	private static final Logger logger = Logger.getLogger(DetGodeCPROpslagImpl.class);
 
 	private static final String NS_DET_GODE_CPR_OPSLAG = "http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/";
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd";
@@ -256,7 +255,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 	private void logAccess(String requestedCPR) throws DGWSFault
 	{
-		logger.info("type=auditlog, service=stamdata-cpr, client_cvr={}, requested_cpr={}", clientCVR, requestedCPR);
+		logger.info("type=auditlog, service=stamdata-cpr, client_cvr="+clientCVR+", requested_cpr="+requestedCPR);
 	}
 
 }

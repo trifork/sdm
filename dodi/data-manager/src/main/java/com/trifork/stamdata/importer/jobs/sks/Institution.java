@@ -32,15 +32,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.trifork.stamdata.importer.persistence.AbstractStamdataEntity;
+import org.apache.log4j.Logger;
 
 @Entity(name = "Organisation")
 public class Institution extends AbstractStamdataEntity
 {
-    public final Logger logger = LoggerFactory.getLogger(AbstractStamdataEntity.class);
+    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
     
 	private Date validFrom;
 	private Date validTo;
