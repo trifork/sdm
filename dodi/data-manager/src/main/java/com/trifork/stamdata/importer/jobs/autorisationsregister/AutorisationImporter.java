@@ -27,6 +27,7 @@
 package com.trifork.stamdata.importer.jobs.autorisationsregister;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,10 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.StringTokenizer;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.persistence.Persister;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.joda.time.DateTime;
@@ -82,6 +86,10 @@ public class AutorisationImporter implements FileParser
 	@Override
 	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
+
+        SLALogItem slaLogItem = getSLALogger().createLogItem("AutorisationImporter", "All Files");
+
+        try {
 		// Make sure the file set has not been imported before.
 		// Check what the previous highest version is (the ValidFrom column).
 
@@ -97,7 +105,7 @@ public class AutorisationImporter implements FileParser
 
 		if (previousVersion != null && !currentVersion.isAfter(previousVersion.getTime()))
 		{
-			throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + currentVersion + "'.");
+            throw new Exception("The version of autorisationsregister that was placed for import was out of order. current_version='" + previousVersion + "', new_version='" + currentVersion + "'.");
 		}
 
 		for (File file : files)
@@ -114,6 +122,15 @@ public class AutorisationImporter implements FileParser
 		statement.executeUpdate("INSERT INTO autreg (cpr, given_name, surname, aut_id, edu_id) SELECT cpr, Fornavn, Efternavn, Autorisationsnummer, UddannelsesKode FROM Autorisation WHERE ValidFrom <= NOW() AND ValidTo > NOW();");
 
 		statement.close();
+
+        slaLogItem.setCallResultOk();
+        slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("AutorisationImporter failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+
+            throw  e;
+        }
 	}
 
 	protected DateTime getDateFromFilename(String filename)

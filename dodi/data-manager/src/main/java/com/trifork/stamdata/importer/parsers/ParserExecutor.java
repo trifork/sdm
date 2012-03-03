@@ -24,40 +24,42 @@
  */
 package com.trifork.stamdata.importer.parsers;
 
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.annotations.ParserScoped;
 import com.trifork.stamdata.persistence.RecordPersister;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 /**
  * Pushes data sets to the parsers from their inbox and works as a safety net for the parser.
- * 
+ * <p/>
  * Parser executors will check for ready data sets in the parsers inbox and if any are ready
  * start a transaction.
- *
+ * <p/>
  * <h2>Responsibilities</h2>
  * <ul>
- *     <li>Check for data and pass it to the parser.</li>
- *     <li>Start and end database transactions.</li>
- *     <li>Set appropriate logging parameters for the parser.</li>
- *     <li>Update the parsers' import time table.</li>
- *     <li>Catch any exceptions thrown during execution and report the error.</li>
+ * <li>Check for data and pass it to the parser.</li>
+ * <li>Start and end database transactions.</li>
+ * <li>Set appropriate logging parameters for the parser.</li>
+ * <li>Update the parsers' import time table.</li>
+ * <li>Catch any exceptions thrown during execution and report the error.</li>
  * </ul>
- * 
+ *
  * @author Thomas Børlum <thb@trifork.com>
  */
 @ParserScoped
-public class ParserExecutor implements Runnable
-{
-    private static final Logger logger = LoggerFactory.getLogger(ParserExecutor.class);
+public class ParserExecutor implements Runnable {
+    private static final Logger logger = Logger.getLogger(ParserExecutor.class);
 
     private final Parser parser;
     private final Inbox inbox;
@@ -67,8 +69,7 @@ public class ParserExecutor implements Runnable
     private final ParserContext context;
 
     @Inject
-    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, RecordPersister persister, ParserContext context)
-    {
+    ParserExecutor(Parser parser, Inbox inbox, Connection connection, ParseTimeManager timeManager, RecordPersister persister, ParserContext context) {
         this.parser = parser;
         this.inbox = inbox;
         this.connection = connection;
@@ -78,35 +79,33 @@ public class ParserExecutor implements Runnable
     }
 
     @Override
-    public void run()
-    {
+    public void run() {
         // Push the logging context.
         //
-        Map<String, String> loggingContext = MDC.getCopyOfContextMap();
-        
+        Map<String, String> loggingContext = new HashMap<String, String>();
+        Hashtable<String, String> startContext = MDC.getContext();
+        if (startContext != null) {
+            loggingContext.putAll(startContext);
+        }
+
         // It is important that we catch everything
         // so we know if an import goes pare-shaped.
         //
         // If so we can rollback the transaction and
         // report the error.
         //
-        try
-        {
+        try {
             if (!inbox.isLocked()) execute();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             logger.error("Parser execution failed!", e);
 
             ConnectionManager.rollbackQuietly(connection);
-            
+
             // Further attempts to run this parser will
             // result in noop.
             //
             inbox.lock();
-        }
-        finally
-        {
+        } finally {
             // Make absolutely sure that the parser is not marked as running.
             //
             context.isInProgress(false);
@@ -116,19 +115,27 @@ public class ParserExecutor implements Runnable
             // Pop the logging context.
             // This might be null.
             //
-            if (loggingContext != null) MDC.setContextMap(loggingContext);
+            if (MDC.getContext() != null) MDC.getContext().clear();
+
+            if (loggingContext != null) {
+                //MDC.setContextMap(loggingContext);
+                for (String key : loggingContext.keySet()) {
+                    MDC.put(key, loggingContext.get(key));
+                }
+            }
         }
     }
 
     // TODO: A Circuit Breaker Guice interceptor here would make the system very robust.
-    private void execute() throws Exception
-    {
-        MDC.put("parser", Parsers.getIdentifier(parser));
+    private void execute() throws Exception {
+        String parserIdentifier = Parsers.getIdentifier(parser);
+        MDC.put("parser", parserIdentifier);
 
         File dataSet = checkInbox();
 
-        if (dataSet != null)
-        {
+        if (dataSet != null) {
+            SLALogItem slaLogItem = getSLALogger().createLogItem("Executing parser " + parserIdentifier, parser.getClass().getCanonicalName());
+            try {
             context.isInProgress(true);
 
             MDC.put("input", dataSet.getName());
@@ -156,17 +163,25 @@ public class ParserExecutor implements Runnable
             inbox.advance();
 
             logger.info("Import successful.");
+                
+                slaLogItem.setCallResultOk();
+                slaLogItem.store();
+                
+            } catch (Exception e) {
+                slaLogItem.setCallResultError("Parser " + parserIdentifier + " failed - Cause: " + e.getMessage());
+                slaLogItem.store();
+
+                throw e;
+            }
         }
     }
 
-    private File checkInbox() throws IOException
-    {
+    private File checkInbox() throws IOException {
         inbox.update();
         return inbox.top();
     }
-    
-    public Class<? extends Parser> parser()
-    {
+
+    public Class<? extends Parser> parser() {
         return parser.getClass();
     }
 }

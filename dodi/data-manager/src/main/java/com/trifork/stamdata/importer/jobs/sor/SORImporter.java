@@ -26,17 +26,23 @@
 
 package com.trifork.stamdata.importer.jobs.sor;
 
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
+
 import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.*;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
-import org.slf4j.*;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.xml.sax.SAXException;
 
 
@@ -47,7 +53,7 @@ import org.xml.sax.SAXException;
  */
 public class SORImporter implements FileParser
 {
-	private static final Logger logger = LoggerFactory.getLogger(SORImporter.class);
+	private static final Logger logger = Logger.getLogger(SORImporter.class);
 
 	@Override
 	public String identifier()
@@ -80,7 +86,9 @@ public class SORImporter implements FileParser
 	@Override
 	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
-		for (File file : files)
+        SLALogItem slaLogItem = getSLALogger().createLogItem("SORImporter", "All files");
+        try {
+        for (File file : files)
 		{
             MDC.put("filename", file.getName());
             
@@ -93,6 +101,14 @@ public class SORImporter implements FileParser
 
             MDC.remove("filename");
 		}
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("SORImporter failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+            
+            throw e;
+        }
 	}
 
 	public static SORDataSets parse(File file) throws SAXException, ParserConfigurationException, IOException
@@ -109,7 +125,7 @@ public class SORImporter implements FileParser
         }
         else
         {
-            logger.warn("Can only parse files with extension 'xml'! The file is ignored. file={}", file.getAbsolutePath());
+            logger.warn("Can only parse files with extension 'xml'! The file is ignored. file=" + file.getAbsolutePath());
         }
 
 		return dataSets;

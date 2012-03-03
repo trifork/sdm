@@ -25,11 +25,16 @@
 
 package com.trifork.stamdata.importer.jobs.sks;
 
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
+
 import java.io.File;
 import java.util.Iterator;
 
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.importer.persistence.Persister;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.joda.time.format.DateTimeFormatter;
@@ -125,6 +130,7 @@ public class SKSParser implements FileParser
 
     private static final DateTimeFormatter dateFormat = ISODateTimeFormat.basicDate();
 
+
     @Override
     public String identifier()
     {
@@ -157,6 +163,8 @@ public class SKSParser implements FileParser
     @Override
     public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
     {
+        SLALogItem slaLogItem = getSLALogger().createLogItem("SKSParser", "1");
+        try {
         Preconditions.checkArgument(files.length == 1, "Only one file should be present at this point.");
         
         // TODO: Check sequence.
@@ -173,6 +181,14 @@ public class SKSParser implements FileParser
         catch (Exception e)
         {
             LineIterator.closeQuietly(lines);
+        }
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("SKSParser failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+
+            throw e;
         }
     }
     

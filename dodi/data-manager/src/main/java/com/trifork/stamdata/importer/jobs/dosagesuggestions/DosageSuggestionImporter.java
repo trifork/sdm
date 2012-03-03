@@ -26,14 +26,23 @@
 
 package com.trifork.stamdata.importer.jobs.dosagesuggestions;
 
-import static com.trifork.stamdata.importer.util.Dates.THE_END_OF_TIME;
-import static org.slf4j.LoggerFactory.getLogger;
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.inject.Inject;
+import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.jobs.FileParser;
+import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.*;
+import com.trifork.stamdata.importer.persistence.CompleteDataset;
+import com.trifork.stamdata.importer.persistence.Persister;
+import com.trifork.stamdata.models.TemporalEntity;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
+import org.apache.log4j.Logger;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -42,216 +51,194 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.trifork.stamdata.importer.persistence.Persister;
-import org.slf4j.Logger;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.jobs.FileParser;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageRecord;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageStructure;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageUnit;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DosageVersion;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.Drug;
-import com.trifork.stamdata.importer.jobs.dosagesuggestions.models.DrugDosageStructureRelation;
-import com.trifork.stamdata.importer.persistence.CompleteDataset;
-import com.trifork.stamdata.models.TemporalEntity;
+import static com.trifork.stamdata.importer.util.Dates.THE_END_OF_TIME;
 
 
 /**
  * Importer for drug dosage suggestions data.
  */
-public class DosageSuggestionImporter implements FileParser
-{
-	private static final Logger logger = getLogger(DosageSuggestionImporter.class);
+public class DosageSuggestionImporter implements FileParser {
+    private static final Logger logger = Logger.getLogger(DosageSuggestionImporter.class);
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception
-	{
-		// METADATA FILE
-		//
-		// The file contains information about the validity period
-		// of the data.
+    @SuppressWarnings("unchecked")
+    @Override
+    public void parse(File[] files, Persister persister, KeyValueStore keyValueStore) throws Exception {
 
-		DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
-		CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), THE_END_OF_TIME);
-		versionDataset.add(version);
+        SLALogItem slaLogItem = getSLALogger().createLogItem("DosageSuggestionImporter", "All Files");
+        try {
+            // METADATA FILE
+            //
+            // The file contains information about the validity period
+            // of the data.
 
-		// CHECK PREVIOUS VERSION
-		//
-		// Check that the version in imported in
-		// sequence and that we haven't missed one.
+            DosageVersion version = parseVersionFile(getFile(files, "DosageVersion.json"));
+            CompleteDataset<DosageVersion> versionDataset = new CompleteDataset<DosageVersion>(DosageVersion.class, version.getValidFrom(), THE_END_OF_TIME);
+            versionDataset.add(version);
 
-		Connection connection = persister.getConnection();
+            // CHECK PREVIOUS VERSION
+            //
+            // Check that the version in imported in
+            // sequence and that we haven't missed one.
 
-		Statement versionStatement = connection.createStatement();
-		ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
+            Connection connection = persister.getConnection();
 
-		if (!queryResults.next())
-		{
-			throw new Exception("SQL statement returned no rows, expected NULL or int value.");
-		}
+            Statement versionStatement = connection.createStatement();
+            ResultSet queryResults = versionStatement.executeQuery("SELECT MAX(releaseNumber) FROM DosageVersion");
 
-		int maxVersion = queryResults.getInt(1);
+            if (!queryResults.next()) {
+                throw new Exception("SQL statement returned no rows, expected NULL or int value.");
+            }
 
-		if (queryResults.wasNull())
-		{
-			logger.warn("No previous version of Dosage Suggestion registry found, assuming initial import.");
-		}
-		else if (version.getReleaseNumber() != maxVersion + 1)
-		{
-			throw new Exception("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
-		}
+            int maxVersion = queryResults.getInt(1);
 
-		version.setVersion(version.getReleaseDate());
+            if (queryResults.wasNull()) {
+                logger.warn("No previous version of Dosage Suggestion registry found, assuming initial import.");
+            } else if (version.getReleaseNumber() != maxVersion + 1) {
+                throw new Exception("The Dosage Suggestion files are out of sequence! Expected " + (maxVersion + 1) + ", but was " + version.getReleaseNumber() + ".");
+            }
 
-		// OTHER FILES
-		//
-		// There are data files and relation file.
-		// Relation files act as one-to-one etc. relations.
-		//
-		// This data source represents the 'whole truth' for
-		// the validity period. That means that complete
-		// datasets will be used for persisting, and no existing
-		// records will be valid in the period.
-		//
-		// We have to declare the <T> types explicitly since GSon
-		// (Java is stupid) can't get the runtime types otherwise.
+            version.setVersion(version.getReleaseDate());
 
-		Type type;
+            // OTHER FILES
+            //
+            // There are data files and relation file.
+            // Relation files act as one-to-one etc. relations.
+            //
+            // This data source represents the 'whole truth' for
+            // the validity period. That means that complete
+            // datasets will be used for persisting, and no existing
+            // records will be valid in the period.
+            //
+            // We have to declare the <T> types explicitly since GSon
+            // (Java is stupid) can't get the runtime types otherwise.
 
-		type = new TypeToken<Map<String, Collection<Drug>>>()
-		{}.getType();
-		CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
-		setValidityPeriod(drugs, version);
+            Type type;
 
-		type = new TypeToken<Map<String, Collection<DosageUnit>>>()
-		{}.getType();
-		CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
-		setValidityPeriod(units, version);
+            type = new TypeToken<Map<String, Collection<Drug>>>() {
+            }.getType();
+            CompleteDataset<?> drugs = parseDataFile(getFile(files, "Drugs.json"), "drugs", version, Drug.class, type);
+            setValidityPeriod(drugs, version);
 
-		type = new TypeToken<Map<String, Collection<DosageStructure>>>()
-		{}.getType();
-		CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
-		setValidityPeriod(structures, version);
+            type = new TypeToken<Map<String, Collection<DosageUnit>>>() {
+            }.getType();
+            CompleteDataset<?> units = parseDataFile(getFile(files, "DosageUnits.json"), "dosageUnits", version, DosageUnit.class, type);
+            setValidityPeriod(units, version);
 
-		type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>()
-		{}.getType();
-		CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
-		setValidityPeriod(relations, version);
+            type = new TypeToken<Map<String, Collection<DosageStructure>>>() {
+            }.getType();
+            CompleteDataset<?> structures = parseDataFile(getFile(files, "DosageStructures.json"), "dosageStructures", version, DosageStructure.class, type);
+            setValidityPeriod(structures, version);
 
-		// PERSIST THE DATA
+            type = new TypeToken<Map<String, Collection<DrugDosageStructureRelation>>>() {
+            }.getType();
+            CompleteDataset<?> relations = parseDataFile(getFile(files, "DrugsDosageStructures.json"), "drugsDosageStructures", version, DrugDosageStructureRelation.class, type);
+            setValidityPeriod(relations, version);
 
-		persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
+            // PERSIST THE DATA
 
-		logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
-	}
+            persister.persistCompleteDataset(versionDataset, drugs, structures, units, relations);
 
-	/**
-	 * Parses Version.json files.
-	 */
-	private DosageVersion parseVersionFile(File file) throws FileNotFoundException
-	{
-		Reader reader = new InputStreamReader(new FileInputStream(file));
+            logger.info("Dosage Suggestion Registry v" + version.getReleaseNumber() + " was successfully imported.");
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("DosageSuggestionImporter failed - Cause: " + e.getMessage());
+            slaLogItem.store();
 
-		Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-		Type type = new TypeToken<Map<String, DosageVersion>>()
-		{}.getType();
+            throw e;
+        }
+    }
 
-		Map<String, DosageVersion> versions = gson.fromJson(reader, type);
+    /**
+     * Parses Version.json files.
+     */
+    private DosageVersion parseVersionFile(File file) throws FileNotFoundException {
+        Reader reader = new InputStreamReader(new FileInputStream(file));
 
-		return versions.get("version");
-	}
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+        Type type = new TypeToken<Map<String, DosageVersion>>() {
+        }.getType();
 
-	/**
-	 * Parses other data files.
-	 */
-	private <T extends TemporalEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException
-	{
-		Reader reader = new InputStreamReader(new FileInputStream(file));
+        Map<String, DosageVersion> versions = gson.fromJson(reader, type);
 
-		Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
+        return versions.get("version");
+    }
 
-		CompleteDataset<T> dataset = new CompleteDataset<T>(type, version.getValidFrom(), version.getValidTo());
+    /**
+     * Parses other data files.
+     */
+    private <T extends TemporalEntity> CompleteDataset<T> parseDataFile(File file, String root, DosageVersion version, Class<T> type, Type collectionType) throws FileNotFoundException {
+        Reader reader = new InputStreamReader(new FileInputStream(file));
 
-		for (T structure : parsedData.get(root))
-		{
-			dataset.add(structure);
-		}
+        Map<String, List<T>> parsedData = new Gson().fromJson(reader, collectionType);
 
-		return dataset;
-	}
+        CompleteDataset<T> dataset = new CompleteDataset<T>(type, version.getValidFrom(), version.getValidTo());
 
-	/**
-	 * HACK: These dates should be taken from the complete data set. There is no
-	 * reason why we set dates on each record.
-	 */
-	@SuppressWarnings("unchecked")
-	private void setValidityPeriod(CompleteDataset<?> dataset, DosageVersion version)
-	{
-		CompleteDataset<? extends DosageRecord> records = (CompleteDataset<? extends DosageRecord>) dataset;
+        for (T structure : parsedData.get(root)) {
+            dataset.add(structure);
+        }
 
-		for (DosageRecord record : records.getEntities())
-		{
-			record.setVersion(version.getValidFrom());
-		}
-	}
+        return dataset;
+    }
 
-	@Override
-	public boolean validateInputStructure(File[] input)
-	{
-		// ALL THE FOLLOWING FILES MUST BE PRESENT
-		//
-		// The import will fail if not all of the files can be found.
+    /**
+     * HACK: These dates should be taken from the complete data set. There is no
+     * reason why we set dates on each record.
+     */
+    @SuppressWarnings("unchecked")
+    private void setValidityPeriod(CompleteDataset<?> dataset, DosageVersion version) {
+        CompleteDataset<? extends DosageRecord> records = (CompleteDataset<? extends DosageRecord>) dataset;
 
-		boolean present = true;
+        for (DosageRecord record : records.getEntities()) {
+            record.setVersion(version.getValidFrom());
+        }
+    }
 
-		present &= getFile(input, "DosageStructures.json") != null;
-		present &= getFile(input, "DosageUnits.json") != null;
-		present &= getFile(input, "Drugs.json") != null;
-		present &= getFile(input, "DrugsDosageStructures.json") != null;
-		present &= getFile(input, "DosageVersion.json") != null;
+    @Override
+    public boolean validateInputStructure(File[] input) {
+        // ALL THE FOLLOWING FILES MUST BE PRESENT
+        //
+        // The import will fail if not all of the files can be found.
 
-		return present;
-	}
+        boolean present = true;
 
-	/**
-	 * Searches the provided file array for a specific file name.
-	 * 
-	 * @param files the list of files to search.
-	 * @param name the file name of the file to return.
-	 * 
-	 * @return the file with the specified name or null if no file is found.
-	 */
-	private File getFile(File[] files, String name)
-	{
-		File result = null;
+        present &= getFile(input, "DosageStructures.json") != null;
+        present &= getFile(input, "DosageUnits.json") != null;
+        present &= getFile(input, "Drugs.json") != null;
+        present &= getFile(input, "DrugsDosageStructures.json") != null;
+        present &= getFile(input, "DosageVersion.json") != null;
 
-		for (File file : files)
-		{
+        return present;
+    }
 
-			if (file.getName().equals(name))
-			{
-				result = file;
-				break;
-			}
-		}
+    /**
+     * Searches the provided file array for a specific file name.
+     *
+     * @param files the list of files to search.
+     * @param name  the file name of the file to return.
+     * @return the file with the specified name or null if no file is found.
+     */
+    private File getFile(File[] files, String name) {
+        File result = null;
 
-		return result;
-	}
+        for (File file : files) {
 
-	@Override
-	public String identifier()
-	{
-		return "doseringsforslag";
-	}
+            if (file.getName().equals(name)) {
+                result = file;
+                break;
+            }
+        }
 
-	@Override
-	public String name()
-	{
-		return "Doseringsforslag Parser";
-	}
+        return result;
+    }
+
+    @Override
+    public String identifier() {
+        return "doseringsforslag";
+    }
+
+    @Override
+    public String name() {
+        return "Doseringsforslag Parser";
+    }
 }

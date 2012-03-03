@@ -26,14 +26,19 @@
 
 package com.trifork.stamdata.importer.jobs.takst;
 
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
+
 import java.io.File;
 import java.util.Map;
 
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.persistence.CompleteDataset;
 import com.trifork.stamdata.importer.persistence.Persister;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.api.SLALogger;
 
 /**
  * Parser for the DKMA register. Also known as 'Taksten'.
@@ -42,6 +47,7 @@ import com.trifork.stamdata.importer.persistence.Persister;
  */
 public class TakstImporter implements FileParser
 {
+
 	public boolean validateInputStructure(File[] input)
 	{
 		final String[] requiredFileNames = new String[] { "system.txt", "lms01.txt", "lms02.txt", "lms03.txt", "lms04.txt", "lms05.txt", "lms07.txt", "lms09.txt", "lms10.txt", "lms11.txt", "lms12.txt", "lms13.txt", "lms14.txt", "lms15.txt", "lms16.txt", "lms17.txt", "lms18.txt", "lms19.txt", "lms20.txt", "lms23.txt", "lms24.txt", "lms25.txt", "lms26.txt", "lms27.txt", "lms28.txt" };
@@ -63,8 +69,18 @@ public class TakstImporter implements FileParser
 	
 	public void parse(File[] input, Persister persister, KeyValueStore keyValueStore) throws Exception
 	{
+        SLALogItem slaLogItem = getSLALogger().createLogItem("TakstImporter", "All");
+        try {
 		Takst takst = new TakstParser().parseFiles(input);
 		persister.persistCompleteDataset(takst.getDatasets().toArray(new CompleteDataset[] {}));
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("TakstImporter failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+            
+            throw e;
+        }
 	}
 	
 	public String identifier()
