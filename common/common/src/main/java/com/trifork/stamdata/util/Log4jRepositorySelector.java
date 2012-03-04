@@ -39,9 +39,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  *
@@ -80,7 +82,7 @@ public class Log4jRepositorySelector implements RepositorySelector {
         }
 
         Hierarchy hierarchy = new Hierarchy(new RootLogger(Level.DEBUG));
-        loadLog4JConfig(log4jConfigurationPath, hierarchy);
+        loadLog4JConfig(log4jConfigurationPath, servletContext, hierarchy);
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         repositories.put(loader, hierarchy);
     }
@@ -90,16 +92,46 @@ public class Log4jRepositorySelector implements RepositorySelector {
     }
 
     // load log4j.xml from WEB-INF
-    private static void loadLog4JConfig(String log4FilePath,
+    private static void loadLog4JConfig(String log4FilePath, ServletContext context,
                                         Hierarchy hierarchy) throws ServletException {
         try {
 
-            if (!log4FilePath.endsWith(".xml")) {
-                PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
-                propertyConfigurator.doConfigure(log4FilePath, hierarchy);
+            File log4jConfig = new File(log4FilePath);
+            if (log4jConfig.exists() && log4jConfig.canRead()) {
+                if (!log4FilePath.endsWith(".xml")) {
+                    PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
+                    propertyConfigurator.doConfigure(log4FilePath, hierarchy);
+                } else {
+                    DOMConfigurator domConfigurator = new DOMConfigurator();
+                    domConfigurator.doConfigure(log4FilePath,  hierarchy);
+                }
+                
             } else {
-                DOMConfigurator domConfigurator = new DOMConfigurator();
-                domConfigurator.doConfigure(log4FilePath,  hierarchy);
+
+                String log4jFileName = log4FilePath.substring(log4FilePath.lastIndexOf("/") + 1);
+
+                InputStream log4jConfigIS = context.getClass().getClassLoader().getResourceAsStream(log4jFileName);
+
+                if (log4jConfigIS == null) {
+                    System.out.println("ERROR: Failed loading '"+ log4jFileName +"' from path '"+log4FilePath+"' and from classpath. Log4J will not be configured for servlet module " + context.getServletContextName());
+                } else {
+                    System.out.println("INFO: No Log4J configuration found in path '"+log4FilePath+"' - falling back to configure module from classpath");
+                    System.out.println("INFO: Configuring Log4J for module '"+context.getServletContextName()+"' from configuration file '"+log4jFileName+"' loaded from classpath");
+
+                    if (!log4FilePath.endsWith(".xml")) {
+                        Properties properties = new Properties();
+                        properties.load(log4jConfigIS);
+                        PropertyConfigurator propertyConfigurator = new PropertyConfigurator();
+                        propertyConfigurator.doConfigure(properties, hierarchy);
+                    } else {
+                        Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(log4jConfigIS);
+                        DOMConfigurator conf = new DOMConfigurator();
+                        conf.doConfigure(doc.getDocumentElement(), hierarchy);
+                    }
+
+                }
+
+                
             }
         } catch (Exception e) {
             throw new ServletException(e);
