@@ -58,7 +58,8 @@ Sæt følgende property:
 
     security=dgwsTest
 og
-    subjectSerialNumbers=CVR:19343634-UID:1234
+    tilføj en række til whitelist_config tabellen i stamdata databasen med component_name='SDM' og cvr=19343634:
+    INSERT IGNORE INTO whitelist_config SET component_name='SDM', cvr='19343634';
 
 Dette gør at komponenterne godkender requests med ID Kort underskrevet af Test STS’en.
 Når filerne er ændret skal Jboss genstartes.
@@ -80,3 +81,4 @@ Version af dokument
 
 0.1 2011-10-28 Første version af dokumentet /tgk@trifork.com
 0.2 2011-12-29 Mindre ændringer af stavefejl /tgk@trifork.com
+0.3 2012-03-04 Ændret subjectSerialNumbers property til at være en række i whitelist_config i databasen.
