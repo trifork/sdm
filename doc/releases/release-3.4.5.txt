@@ -1,0 +1,12 @@
+Stamdata 3.4.5 Release Notes
+============================
+
+NSPSUPPORT-33: SDM batch-copy-ws nspsla log konfiguration
+
+NSPSUPPORT-34: Whitelisting i database frem for properties filer, inklusiv dokumentationsrettelser
+
+NSPSUPPORT-38 (25): Log konfiguration skiftet fra SLF4J/Logback til standard Log4j og log4j kan loades 
+               fra ${jboss.server.config.url}. Findes den ikke der loades default fra classpath.
+
+NSPSUPPORT-39 (25): nsp-util version 1.0.8 - inkl SLA Logning konfigurationsmuligheder per modul
+
