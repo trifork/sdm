@@ -7,7 +7,7 @@
   <groupId>dk.nsi.stamdata</groupId>
   <artifactId>stamdata-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.4.5-SNAPSHOT</version>
+  <version>3.4.5</version>
 
   <scm>
     <connection>scm:git:git@github.com:trifork/sdm.git</connection>
@@ -17,7 +17,7 @@
 
   <properties>
 	<db.username>root</db.username>
-	<db.password></db.password>
+	<db.password />
 
     <log4j.version>1.2.14</log4j.version>
     <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
