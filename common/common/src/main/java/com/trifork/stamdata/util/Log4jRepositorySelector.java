@@ -110,13 +110,11 @@ public class Log4jRepositorySelector implements RepositorySelector {
 
                 String log4jFileName = log4FilePath.substring(log4FilePath.lastIndexOf("/") + 1);
 
-                InputStream log4jConfigIS = context.getClass().getClassLoader().getResourceAsStream(log4jFileName);
 
-                if (log4jConfigIS == null) {
-                    System.out.println("ERROR: Failed loading '"+ log4jFileName +"' from path '"+log4FilePath+"' and from classpath. Log4J will not be configured for servlet module " + context.getServletContextName());
-                } else {
-                    System.out.println("INFO: No Log4J configuration found in path '"+log4FilePath+"' - falling back to configure module from classpath");
-                    System.out.println("INFO: Configuring Log4J for module '"+context.getServletContextName()+"' from configuration file '"+log4jFileName+"' loaded from classpath");
+                InputStream log4jConfigIS = getLog4jConfigInputStream(context, log4jFileName);
+
+                if (log4jConfigIS != null) {
+                    System.out.println("INFO: Configuring Log4J for module '"+context.getServletContextName()+"' from configuration file '"+log4jFileName+"' loaded from classpath. (To override default config, place a file with the same name in ${jboss.server.config.url})");
 
                     if (!log4FilePath.endsWith(".xml")) {
                         Properties properties = new Properties();
@@ -129,13 +127,26 @@ public class Log4jRepositorySelector implements RepositorySelector {
                         conf.doConfigure(doc.getDocumentElement(), hierarchy);
                     }
 
+                } else {
+                    System.err.println("ERROR: Failed loading '"+ log4jFileName +"' from path '"+log4FilePath+"' and from classpath. Log4J will not be configured for servlet module " + context.getServletContextName());
                 }
 
-                
+
             }
         } catch (Exception e) {
             throw new ServletException(e);
         }
+    }
+
+    private static InputStream getLog4jConfigInputStream(ServletContext context, String log4jFileName) {
+        InputStream log4jConfigIS = context.getResourceAsStream("/" + log4jFileName);
+        if (log4jConfigIS == null) {
+            log4jConfigIS = context.getResourceAsStream("/WEB-INF/classes/" + log4jFileName);
+        }
+        if (log4jConfigIS == null) {
+            log4jConfigIS = context.getClass().getClassLoader().getResourceAsStream(log4jFileName);
+        }
+        return log4jConfigIS;
     }
 
 
