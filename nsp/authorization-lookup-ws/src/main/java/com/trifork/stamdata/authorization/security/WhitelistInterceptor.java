@@ -22,24 +22,26 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.security;
+package com.trifork.stamdata.authorization.security;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
 import com.google.inject.servlet.RequestScoped;
+import dk.nsi.stamdata.jaxws.generated.DGWSFault;
+import dk.nsi.stamdata.security.ClientVocesCvr;
+import dk.nsi.stamdata.security.WhitelistService;
+import dk.nsi.stamdata.security.Whitelisted;
+import dk.sosi.seal.model.constants.FaultCodeValues;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.type.StandardBasicTypes;
-
-import java.util.List;
+import org.apache.log4j.Logger;
 
 
 @RequestScoped
 class WhitelistInterceptor implements MethodInterceptor
 {
+    private static Logger logger = Logger.getLogger(WhitelistInterceptor.class);
     @Inject @ClientVocesCvr
     private Provider<String> clientCvrProvider;
 
@@ -59,10 +61,10 @@ class WhitelistInterceptor implements MethodInterceptor
         if (whitelistService.isCvrWhitelisted(clientCvr, serviceName)) {
             result = invocation.proceed();
         } else {
-            System.err.println("----------------->>>>>> " + clientCvr + " not in whitelist for service " + serviceName);
+            logger.error("CVR '" + clientCvr + "' is not in whitelist for component name " + serviceName);
             result = null;
-            
-            //TODO: Throw some generic service error containing the component name
+
+            throw new DGWSFault("The request CVR number is not authorized to use this service.", FaultCodeValues.NOT_AUTHORIZED);
         }
 
         return result;

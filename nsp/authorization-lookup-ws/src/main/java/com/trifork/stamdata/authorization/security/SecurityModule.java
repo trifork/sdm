@@ -25,8 +25,10 @@
 package com.trifork.stamdata.authorization.security;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.matcher.Matchers;
 import dk.nsi.stamdata.security.WhitelistService;
 import dk.nsi.stamdata.security.WhitelistServiceProvider;
+import dk.nsi.stamdata.security.Whitelisted;
 
 public class SecurityModule extends AbstractModule {
 
@@ -34,6 +36,9 @@ public class SecurityModule extends AbstractModule {
     protected void configure()
     {
         bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
-//        bind(SET_OF_STRINGS).toProvider(WhitelistProvider.class);
+
+        WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
+        requestInjection(whitelistInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
     }
 }

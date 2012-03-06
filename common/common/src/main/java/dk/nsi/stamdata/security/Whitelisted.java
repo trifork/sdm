@@ -34,6 +34,6 @@ import java.lang.annotation.*;
 @Inherited
 public @interface Whitelisted
 {
-    String value() default "";
+    String value() default WhitelistService.DEFAULT_SERVICE_NAME;
     
 }

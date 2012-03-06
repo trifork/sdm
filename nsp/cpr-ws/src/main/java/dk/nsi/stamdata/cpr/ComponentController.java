@@ -33,6 +33,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Stage;
 import com.google.inject.TypeLiteral;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.google.inject.servlet.ServletModule;
@@ -42,6 +43,7 @@ import com.trifork.stamdata.MonitoringModule;
 import com.trifork.stamdata.persistence.PersistenceModule;
 import com.trifork.stamdata.persistence.Persistent;
 
+import dk.nsi.stamdata.cpr.security.SecurityModule;
 import dk.nsi.stamdata.security.*;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
@@ -88,11 +90,6 @@ public class ComponentController extends GuiceServletContextListener
 			bindProperties(binder(), ConfigurationLoader.loadForName(COMPONENT_NAME));
             getLogger().info("Configuring ComponentModule for " + COMPONENT_NAME);
 
-			// The white-list controls which clients have access to protected
-			// data and which that do not.
-
-//			bind(A_SET_OF_STRINGS).annotatedWith(Whitelist.class).toProvider(WhitelistProvider.class); //TODO: FRJ - replaced by methodinterceptor and WhitelistDbInterceptorModule in ServiceModule - remove this when tested
-            bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
             getLogger().info("Installing PersistenceModule");
 			install(new PersistenceModule());
 			
@@ -127,15 +124,19 @@ public class ComponentController extends GuiceServletContextListener
             getLogger().info("Installing MonitoringModule");
 			install(new MonitoringModule());
 
+
+            //Install whitelist service modules
+            getLogger().info("Installing SecurityModule");
+            install(new SecurityModule());
+
+
 			// Filter everything through the DGWS filter,
 			// but exclude the status page.
-
 			filterRegex("(?!/status)/.*").through(DenGodeWebServiceFilter.class);
 
             getLogger().info("Installing DenGodeWebServiceModule");
 			install(new DenGodeWebServiceModule());
-            getLogger().info("Installing WhitelistDbInterceptorModule");
-            install(new WhitelistDbInterceptorModule()); // Enable this to get "whitelist from database" features scheduled for 2.1 release
+
 		}
 	}
 

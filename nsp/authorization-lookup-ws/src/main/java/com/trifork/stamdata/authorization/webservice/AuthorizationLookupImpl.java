@@ -48,6 +48,7 @@ import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.security.WhitelistService;
+import dk.nsi.stamdata.security.Whitelisted;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
@@ -69,15 +70,11 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
 	}
 
 	@Override
+    @Whitelisted
 	public AuthorizationResponseType authorization(Holder<Security> wsseHeader,
 	        Holder<Header> medcomHeader, AuthorizationRequestType parameters)
 	        throws DGWSFault {
 
-        if (!whitelist.isCvrWhitelisted(cvr, WhitelistService.DEFAULT_SERVICE_NAME))
-        {
-            throw new DGWSFault("The request CVR number is not authorized to use this service.", FaultCodeValues.NOT_AUTHORIZED);
-        }
-        
         List<Authorization> authorizations = authorizationDao.getAuthorizations(parameters.getCpr());
 
         AuthorizationResponseType response = new ObjectFactory().createAuthorizationResponseType();

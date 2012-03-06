@@ -22,17 +22,26 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-
-package dk.nsi.stamdata.security;
+package dk.nsi.stamdata.cpr.security;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.matcher.Matchers;
+import dk.nsi.stamdata.security.WhitelistService;
+import dk.nsi.stamdata.security.WhitelistServiceProvider;
+import dk.nsi.stamdata.security.Whitelisted;
 
+/**
+ * SecuriyModule responsible for providing Whitelist service and interceptor
+ *
+ * @Author frj
+ */
+public class SecurityModule extends AbstractModule {
 
-public class WhitelistDbInterceptorModule extends AbstractModule
-{
-    public void configure()
+    @Override
+    protected void configure()
     {
+        bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
+
         WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
         requestInjection(whitelistInterceptor);
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
