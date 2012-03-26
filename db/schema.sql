@@ -1274,3 +1274,27 @@ CREATE TABLE AssignedDoctor ( -- Sikrede
 
   PRIMARY KEY (pk)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
+
+-- Bemyndigelser
+--
+CREATE TABLE `Bemyndigelse` (
+   BemyndigelsePID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	
+  `kode` VARCHAR(255) NOT NULL,
+  `bemyndigende_cpr` VARCHAR(10) NOT NULL,
+  `bemyndigede_cpr` VARCHAR(10) NOT NULL,
+  `bemyndigede_cvr` VARCHAR(10) NULL DEFAULT NULL,
+  `system` VARCHAR(255) NOT NULL,
+  `arbejdsfunktion_id` BIGINT NOT NULL,
+  `rettighed_id` BIGINT NOT NULL,
+  `status_id` BIGINT NOT NULL,
+  `godkendelsesdato` datetime DEFAULT NULL,
+  
+	CreatedDate DATETIME NOT NULL,
+	ModifiedDate DATETIME NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidTo DATETIME NOT NULL,
+	
+	INDEX (BemyndigelsePID, ModifiedDate),
+	INDEX (kode, ValidTo, ValidFrom)
+) ENGINE=InnoDB COLLATE=utf8_bin;
