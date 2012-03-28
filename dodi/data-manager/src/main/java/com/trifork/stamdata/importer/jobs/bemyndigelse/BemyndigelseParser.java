@@ -12,7 +12,6 @@ import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
 
 @ParserInformation(id = "bemyndigelse", name = "Bemyndigelse")
 public class BemyndigelseParser implements Parser {
@@ -38,7 +37,7 @@ public class BemyndigelseParser implements Parser {
         
     }
     
-    private File checkRequiredFiles(File dir) {
+    File checkRequiredFiles(File dir) {
         
        checkNotNull(dir);
        
@@ -46,7 +45,7 @@ public class BemyndigelseParser implements Parser {
            
            String fileName = file.getName();
            
-           if (fileName.matches("TODO")) {
+           if (fileName.matches("^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$")) {
                return file;
            }
        }
