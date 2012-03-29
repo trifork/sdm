@@ -35,25 +35,34 @@ import java.net.Socket;
 public class PostXml {
 
     public String postXml(String hostname, int port, String path, String xmlData) throws IOException {
-        InetAddress addr = InetAddress.getByName(hostname);
-        Socket sock = new Socket(addr, port);
+        
+        Socket sock = null;
+        try {
+            InetAddress addr = InetAddress.getByName(hostname);
+            sock = new Socket(addr, port);
 
-        BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF-8"));
-        wr.write("POST " + path + " HTTP/1.0\r\n");
-        wr.write("Content-Length: " + xmlData.length() + "\r\n");
-        wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
-        wr.write("\r\n");
+            BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(sock.getOutputStream(), "UTF-8"));
+            wr.write("POST " + path + " HTTP/1.0\r\n");
+            wr.write("Content-Length: " + xmlData.length() + "\r\n");
+            wr.write("Content-Type: text/xml; charset=\"utf-8\"\r\n");
+            wr.write("\r\n");
 
-        wr.write(xmlData);
-        wr.flush();
+            wr.write(xmlData);
+            wr.flush();
 
-        BufferedReader rd = new BufferedReader(new InputStreamReader(sock.getInputStream()));
-        String line;
-        String result = "";
-        while ((line = rd.readLine()) != null) {
-            result += line + "\n";
+            BufferedReader rd = new BufferedReader(new InputStreamReader(sock.getInputStream()));
+            String line;
+            String result = "";
+            while ((line = rd.readLine()) != null) {
+                result += line + "\n";
+            }
+
+            return result;
+            
+        } finally {
+            if(sock != null) {
+                sock.close();
+            }
         }
-
-        return result;
     }
 }
