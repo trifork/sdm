@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-db_host_dodi=192.168.72.139
-db_host_nsp=192.168.72.140
+db_host_dodi=192.168.72.142
+db_host_nsp=192.168.72.141
 
 db_username=trifork
 db_password=CrevCuen
