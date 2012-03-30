@@ -23,3 +23,4 @@ release.properties
 *.iws
 Dokumentation
 .DS_Store
+_install/

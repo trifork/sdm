@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
-db_host_dodi=192.168.72.142
-db_host_nsp=192.168.72.141
+db_host_dodi=tri-test-niab81
+db_host_nsp=tri-test-niab82
+
 
 db_username=trifork
 db_password=CrevCuen
@@ -134,3 +135,14 @@ tar czf sdm_${dodi_dir}.tar.gz ${dodi_dir}
 echo
 echo "Done - results are available in ${install_dir}"
 find . -name "*.tar.gz"
+
+echo
+echo "Copying files to vm's"
+scp sdm_${dodi_dir}.tar.gz ${db_host_dodi}:~
+scp sdm_${nsp_dir}.tar.gz ${db_host_nsp}:~
+
+
+echo
+echo "Files uploaded to ${db_host_dodi} and ${db_host_nsp} 
+	- Log in to the systems and extract the tar.gz files
+	- Go into the created folder and execute the *_install.sh scripts" 
