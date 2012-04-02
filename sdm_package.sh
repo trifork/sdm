@@ -58,7 +58,7 @@ cp dodi/data-manager/target/stamdata-data-manager-*-SNAPSHOT.war ${dodi_install_
 echo "CREATE DATABASE stamdata;" > ${dodi_sql_stamdata_dir}/create_db_stamdata.sql
 echo "GRANT ALL ON stamdata.* TO '${db_username}'@'%';" >> ${dodi_sql_stamdata_dir}/create_db_stamdata.sql
 cp db/schema.sql ${dodi_sql_stamdata_dir}
-sed "s|USE sdm_warehouse|-- USE sdm_warehouse|g" "${dodi_sql_stamdata_dir}/schema.sql" > "${dodi_sql_stamdata_dir}/schema.sql"
+sed -i.orig "s|USE sdm_warehouse|-- USE sdm_warehouse|g" "${dodi_sql_stamdata_dir}/schema.sql"
 
 echo "db.url = jdbc:mysql://${db_host_dodi}/
 #db.user = stamdata_rw
@@ -72,7 +72,8 @@ db.database = stamdata
 echo "CREATE DATABASE stamdata;" > ${nsp_sql_stamdata_dir}/create_db_stamdata.sql
 echo "GRANT ALL ON stamdata.* TO '${db_username}'@'%';" >> ${nsp_sql_stamdata_dir}/create_db_stamdata.sql
 cp db/schema.sql ${nsp_sql_stamdata_dir}
-sed "s|USE sdm_warehouse|-- USE sdm_warehouse|g" "${nsp_sql_stamdata_dir}/schema.sql" > "${nsp_sql_stamdata_dir}/schema.sql"
+sed -i.orig "s|USE sdm_warehouse|-- USE sdm_warehouse|g" "${nsp_sql_stamdata_dir}/schema.sql"
+
 
 ## #Installer NSP komponenter
 

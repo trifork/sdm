@@ -13,7 +13,7 @@ db_password=CrevCuen
 
 jboss_dir=/pack/jboss/server/default/
 jboss_conf_dir=${jboss_dir}/conf
-jboss_conf_url=file:${jboss_conf_dir}
+jboss_conf_url=file:${jboss_conf_dir}/
 jboss_log_dir=${jboss_dir}/log
 jboss_deploy_dir=${jboss_dir}/deploy
 
@@ -30,17 +30,16 @@ else
 fi
 
 
-
 ## Create the trifork database user
 num_users=$(${mysql_admin_connect} -D mysql -N -e "select count(*) from user where user='${db_username}';" | grep 0 || true)
 if [ "${num_users}" != "0" ]; then
-	echo "DROP USER 'trifork'@'%';" > sql/drop_trifork_user.sql
-	${mysql_admin_connect} < sql/drop_trifork_user.sql
+	#echo "DROP USER 'trifork'@'%';" > sql/drop_trifork_user.sql
+	#${mysql_admin_connect} < sql/drop_trifork_user.sql
+	echo "User trifork already present on this MySQL instance"
+else 
+	echo "Creating user trifork"
+	${mysql_admin_connect} < sql/create_trifork_mysql_user.sql
 fi
-
-echo "Creating user trifork"
-${mysql_admin_connect} < sql/create_trifork_mysql_user.sql
-
 
 
 echo "DROP DATABASE IF EXISTS stamdata;" > sql/stamdata/drop_db_stamdata.sql
