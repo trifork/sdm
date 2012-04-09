@@ -1,12 +1,11 @@
 #!/bin/bash
 set -e
+set -u
 
-db_host_dodi=tri-test-niab81
-db_host_nsp=tri-test-niab82
+if [ -f "niab_config.cfg" ]; then
+	source niab_config.cfg
+fi
 
-
-db_username=trifork
-db_password=CrevCuen
 
 install_dir=_install
 rm -rf ${install_dir}/*
@@ -41,6 +40,10 @@ mkdir -p ${nsp_sql_stamdata_dir}
 
 cp sdm_nsp_install.sh ${nsp_install_dir}
 cp sdm_dodi_install.sh ${dodi_install_dir}
+cp niab_config.cfg ${nsp_install_dir}
+cp niab_config.cfg ${dodi_install_dir}
+cp install.sh ${nsp_install_dir}
+cp install.sh ${dodi_install_dir}
 
 ## On both DoDi-db and NSP-db
 echo "CREATE USER '${db_username}'@'%' IDENTIFIED BY '${db_password}';" > ${nsp_sql_dir}/create_trifork_mysql_user.sql
@@ -142,8 +145,15 @@ echo "Copying files to vm's"
 scp sdm_${dodi_dir}.tar.gz ${db_host_dodi}:~
 scp sdm_${nsp_dir}.tar.gz ${db_host_nsp}:~
 
+ssh ${db_host_dodi} "tar zxf sdm_${dodi_dir}.tar.gz"
+#echo "Installing SDM Data Manager on DODI System"
+#ssh ${db_host_dodi} "cd ${dodi_dir};sudo ./sdm_dodi_install.sh"
+
+ssh ${db_host_nsp} "tar zxf sdm_${nsp_dir}.tar.gz"
+#echo "Installing SDM Components on NSP System"
+#ssh ${db_host_nsp} "cd ${nsp_dir};sudo ./sdm_nsp_install.sh"
 
 echo
 echo "Files uploaded to ${db_host_dodi} and ${db_host_nsp} 
-	- Log in to the systems and extract the tar.gz files
-	- Go into the created folder and execute the *_install.sh scripts" 
+	- Log in to the systems, go to the ${dodi_dir} or ${nsp_dir} folder 
+	- and execute the sdm_*_install.sh scripts using sudo" 
