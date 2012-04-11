@@ -61,6 +61,8 @@ import static org.junit.Assert.*;
 public class StamdataPersonLookupWithSubscriptionNSPSupport {
 
     public static final String[] CLIENT_CVRS = { "12345678", "22334455", "33445566", "44556677"};
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "nspnetic";
 
     final String endpoint = "http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription";
 
@@ -70,9 +72,9 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
     public void setUp() throws Exception
     {
         //TODO: See https://wall.trifork.com/display/tripub/Trifork+VM%27er+til+SDM+og+BRS for info on how to get the private key to allow passwordless ssh
-        //TODO: This should never be done like this, but this test is only intented to be used while troubleshooting nspsuppport-48
+        //WARNING FIXME: This should NEVER be done like this, but this test is only intended to be used while troubleshooting nspsuppport-48
 
-        ProcessBuilder processBuilder = new ProcessBuilder("ssh", "nsp", "/pack/mysql/bin/mysql -u root -pnspnetic register_notifications -N -e \"DELETE FROM State WHERE cvr='22334455';\"");
+        ProcessBuilder processBuilder = new ProcessBuilder("ssh", "nsp", "/pack/mysql/bin/mysql -u "+ DB_USER +" -p"+ DB_PASS +" register_notifications -N -e \"DELETE FROM State WHERE cvr='22334455';\"");
 
         client = createClient(endpoint);
     }
