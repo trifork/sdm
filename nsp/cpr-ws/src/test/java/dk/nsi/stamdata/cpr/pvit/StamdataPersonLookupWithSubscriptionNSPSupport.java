@@ -34,6 +34,7 @@ import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
 import dk.nsi.stamdata.jaxws.generated.*;
+import org.apache.log.util.OutputStreamLogger;
 import org.hibernate.Session;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
@@ -43,6 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.xml.namespace.QName;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
@@ -75,6 +77,24 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
         //WARNING FIXME: This should NEVER be done like this, but this test is only intended to be used while troubleshooting nspsuppport-48
 
         ProcessBuilder processBuilder = new ProcessBuilder("ssh", "nsp", "/pack/mysql/bin/mysql -u "+ DB_USER +" -p"+ DB_PASS +" register_notifications -N -e \"DELETE FROM State WHERE cvr='22334455';\"");
+        processBuilder.redirectErrorStream(true);
+
+        Process process = processBuilder.start();
+
+        InputStream shellIn = process.getInputStream();
+        int shellExitStatus = process.waitFor();
+        
+        String response = convertStreamToStr(shellIn);
+
+        if (0 == shellExitStatus) {
+            System.out.println(response);
+        } else {
+            System.err.println(response);
+            fail("Failed deleting row from register_notifications.State");
+        }
+
+        shellIn.close();
+        process.destroy();
 
         client = createClient(endpoint);
     }
@@ -131,4 +151,26 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
     {
         return DGWSHeaderUtil.getVocesTrustedSecurityWrapper(clientCVR, "Test", "SDM");
     }
+
+    public static String convertStreamToStr(InputStream is) throws IOException {
+        if (is != null) {
+            Writer writer = new StringWriter();
+            char[] buffer = new char[1024];
+            try {
+                Reader reader = new BufferedReader(new InputStreamReader(is,
+                                                                         "UTF-8"));
+                int n;
+                while ((n = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, n);
+                }
+            } finally {
+                is.close();
+            }
+            return writer.toString();
+        }
+        else {
+            return "";
+        }
+    }
+
 }
