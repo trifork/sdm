@@ -30,6 +30,7 @@ import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
 import dk.nsi.stamdata.jaxws.generated.*;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,6 +39,9 @@ import org.junit.runner.RunWith;
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
@@ -47,26 +51,44 @@ import static org.junit.Assert.*;
 @RunWith(GuiceTestRunner.class)
 public class StamdataPersonLookupWithSubscriptionNSPSupport {
 
+
+
     final String endpoint = "http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription";
-    public static final String CLIENT_CVR = "12345678";
+    public static final String[] CLIENT_CVRS = { "12345678", "22334455", "33445566", "44556677"};
+
+
 
     private StamdataPersonLookupWithSubscription client;
-    private SecurityWrapper headers;
 
     @Before
     public void setUp() throws Exception
     {
         client = createClient(endpoint);
-        headers = createHeaders(CLIENT_CVR);
+
     }
 
 
     @Test
     public void doQuery() throws Exception {
         CprAbbsRequestType query = new CprAbbsRequestType();
-        PersonLookupResponseType response = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
-        //0102194925
-         assertTrue(response.getPersonInformationStructure().size() != 0);
+        DateTime dt = new DateTime(2012, 2, 9, 10, 0);
+        query.setSince(dt.toGregorianCalendar());
+        for (String clientCvr : CLIENT_CVRS) {
+            SecurityWrapper headers = createHeaders(clientCvr);
+            try {
+
+                PersonLookupResponseType response = client.getSubscribedPersonDetails(headers.getSecurity(), headers.getMedcomHeader(), query);
+                List<PersonInformationStructureType> personInformationStructure = response.getPersonInformationStructure();
+                assertNotNull("PersonInformationStructure should never be null, it should at least be an empty list", personInformationStructure);
+                System.out.println("getSubscribedPersonDetails - using CVR: " + clientCvr + ", since: " + dt.toString() + " ---> Fandt " + personInformationStructure.size() + " opdaterede personer");
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+                fail("Failed getting subscribedPersonDetails - using CVR: " + clientCvr + " Exception: " + e.getMessage());
+
+            }
+
+        }
+
 
     }
 
@@ -87,6 +109,6 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
 
     private SecurityWrapper createHeaders(String clientCVR) throws Exception
     {
-        return DGWSHeaderUtil.getVocesTrustedSecurityWrapper(clientCVR, "foo", "bar");
+        return DGWSHeaderUtil.getVocesTrustedSecurityWrapper(clientCVR, "Test", "SDM");
     }
 }
