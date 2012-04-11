@@ -26,17 +26,11 @@
 
 package dk.nsi.stamdata.cpr.pvit;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Stage;
-import dk.nsi.stamdata.cpr.ComponentController;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
 import dk.nsi.stamdata.jaxws.generated.*;
-import org.apache.log.util.OutputStreamLogger;
-import org.hibernate.Session;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,22 +41,16 @@ import javax.xml.namespace.QName;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 @Ignore
 @RunWith(GuiceTestRunner.class)
 public class StamdataPersonLookupWithSubscriptionNSPSupport {
 
-    public static final String[] CLIENT_CVRS = { "12345678", "22334455", "33445566", "44556677"};
+    public static final String[] CLIENT_CVRS = {"12345678", "22334455", "33445566", "44556677"};
     private static final String DB_USER = "root";
     private static final String DB_PASS = "nspnetic";
 
@@ -71,19 +59,19 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
     private StamdataPersonLookupWithSubscription client;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         //TODO: See https://wall.trifork.com/display/tripub/Trifork+VM%27er+til+SDM+og+BRS for info on how to get the private key to allow passwordless ssh
         //WARNING FIXME: This should NEVER be done like this, but this test is only intended to be used while troubleshooting nspsuppport-48
 
-        ProcessBuilder processBuilder = new ProcessBuilder("ssh", "nsp", "/pack/mysql/bin/mysql -u "+ DB_USER +" -p"+ DB_PASS +" register_notifications -N -e \"DELETE FROM State WHERE cvr='22334455';\"");
+        ProcessBuilder processBuilder = new ProcessBuilder("ssh", "-q", "nsp", "/pack/mysql/bin/mysql --show-warnings -v -u " + DB_USER + " -p" + DB_PASS + " register_notifications -N -e \"DELETE FROM State WHERE cvr='22334455';\"");
+
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
 
         InputStream shellIn = process.getInputStream();
         int shellExitStatus = process.waitFor();
-        
+
         String response = convertStreamToStr(shellIn);
 
         if (0 == shellExitStatus) {
@@ -118,7 +106,7 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
                                                "Navn: " + personInformationStructureType.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName() + " " +
                                                personInformationStructureType.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonMiddleName() + " " +
                                                personInformationStructureType.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonSurnameName()
-                                       + " ]"
+                                               + " ]"
                     );
                 }
             } catch (DGWSFault e) {
@@ -132,8 +120,7 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
 
     }
 
-    private StamdataPersonLookupWithSubscription createClient(String endpointURL) throws MalformedURLException
-    {
+    private StamdataPersonLookupWithSubscription createClient(String endpointURL) throws MalformedURLException {
         StamdataPersonLookupWithSubscriptionService serviceCatalog = new StamdataPersonLookupWithSubscriptionService(new URL(endpointURL + "?wsdl"), new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupWithSubscriptionService"));
 
         // SEAL enforces that the XML prefixes are exactly
@@ -147,8 +134,7 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
         return client;
     }
 
-    private SecurityWrapper createHeaders(String clientCVR) throws Exception
-    {
+    private SecurityWrapper createHeaders(String clientCVR) throws Exception {
         return DGWSHeaderUtil.getVocesTrustedSecurityWrapper(clientCVR, "Test", "SDM");
     }
 
@@ -167,8 +153,7 @@ public class StamdataPersonLookupWithSubscriptionNSPSupport {
                 is.close();
             }
             return writer.toString();
-        }
-        else {
+        } else {
             return "";
         }
     }
