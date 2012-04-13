@@ -410,7 +410,7 @@
                 <value>false</value>
               </property>
             </sysproperties>
-            <jMeterRemoteLocation>http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip</jMeterRemoteLocation>
+            <jMeterRemoteLocation>http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.6.zip</jMeterRemoteLocation>
           </configuration>
         </plugin>
       </plugins>

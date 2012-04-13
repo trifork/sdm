@@ -1,0 +1,6 @@
+Stamdata 3.4.7 Release Notes
+============================
+
+NSPSUPPORT-48: Enkeltopslagsservice for CPR test fejler med falsk positiv på integrationstest med CPR abonnementsservice
+	Fejlrettelsen var isoleret til at opgradere JMeter fra 2.4.0 til 2.6.0.
+
