@@ -36,6 +36,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import dk.sosi.seal.model.IDCardValidator;
 import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -137,6 +138,7 @@ public final class DGWSHeaderUtil
     {
         Request request = factory.createNewRequest(false, null);
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(cvr, auth);
+//        SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(cvr, auth, careProviderName, itSystemName);
         request.setIDCard(idCard);
         return request;
     }

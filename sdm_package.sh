@@ -93,6 +93,7 @@ echo "db.connection.jdbcURL=jdbc:mysql://${db_host_nsp}/stamdata
 db.connection.username=${db_username}
 #stamdata_replication
 db.connection.password=${db_password}
+security=dgwsTest
 " > ${nsp_install_conf_dir}/stamdata-batch-copy-ws.properties
 
 
@@ -105,6 +106,7 @@ echo "db.connection.jdbcURL=jdbc:mysql://${db_host_nsp}/stamdata
 db.connection.username=${db_username}
 #db.connection.username=authorization_r
 db.connection.password=${db_password}
+security=dgwsTest
 " > ${nsp_install_conf_dir}/stamdata-authorization-lookup-ws.properties
 
 
@@ -119,14 +121,27 @@ db.connection.username=${db_username}
 #db.connection.username=cpr_ws_r
 db.connection.password=${db_password}
 
-// Denne URL definerer end-pointet hvor BRS ABBS service kan nås.
-cprabbs.service.endpoint.host=http://${db_host_dodi}
+// Denne URL definerer end-pointet hvor CPRABBS service kan nås.
+cprabbs.service.endpoint.host=${db_host_nsp}
 cprabbs.service.endpoint.port=8080
 cprabbs.service.endpoint.path=/cprabbs/service/cprabbs
 
 //Use the SOSI test federation
 useSOSITestFederation=true
 " > ${nsp_install_conf_dir}/stamdata-cpr-ws.properties
+
+
+echo "log4j.rootLogger=INFO, FILE
+
+log4j.appender.FILE=org.apache.log4j.RollingFileAppender
+log4j.appender.FILE.File=\${jboss.server.log.dir}/stamdata-cpr-ws.log
+log4j.appender.FILE.MaxFileSize=10MB
+log4j.appender.FILE.MaxBackupIndex=200
+log4j.appender.FILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.FILE.layout.ConversionPattern=%d %-5p [%t] %c - %m%n
+
+log4j.logger.dk.nsi.stamdata.cpr.pvit=DEBUG
+" > ${nsp_install_conf_dir}/log4j-stamdata-cpr-ws.properties
 
 
 cd ${install_dir}

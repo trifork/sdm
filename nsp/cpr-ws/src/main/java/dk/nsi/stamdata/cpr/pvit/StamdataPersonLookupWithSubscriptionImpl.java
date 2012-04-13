@@ -32,6 +32,8 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import dk.nsi.stamdata.jaxws.generated.*;
+import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import com.sun.xml.ws.developer.SchemaValidation;
@@ -42,12 +44,6 @@ import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprAbbsException;
 import dk.nsi.stamdata.cpr.pvit.proxy.CprSubscriptionClient;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
-import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
-import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
@@ -57,6 +53,8 @@ import dk.sosi.seal.model.constants.FaultCodeValues;
 @SchemaValidation
 public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonLookupWithSubscription
 {
+    private static final Logger logger = Logger.getLogger(StamdataPersonLookupWithSubscriptionImpl.class);
+
     private final String clientCVR;
     private StamdataPersonResponseFinder stamdataPersonResponseFinder;
     private CprSubscriptionClient abbsClient;
@@ -88,15 +86,18 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
             List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader, medcomHeader, new DateTime(request.getSince()));
 
             SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
-            
+
+            logger.debug("CVR '" + clientCVR + "' fetching Person data for " + changedCprs.size() + " people that have updated data since: "  + request.getSince());
             response = stamdataPersonResponseFinder.answerCivilRegistrationNumberListPersonRequest(clientCVR, changedCprs);
         }
         catch (SQLException e)
         {
+            logger.error(e.getMessage() + " - Throwing DGWSFault", e);
             throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
         }
         catch (CprAbbsException e)
         {
+            logger.error(e.getMessage() + " - Throwing DGWSFault", e);
             throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
         }
 

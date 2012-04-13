@@ -170,7 +170,7 @@
                 </property>
               </jmeterVariables>
               <jMeterRemoteLocation>
-                http://archive.eu.apache.org/dist/jakarta/jmeter/binaries/jakarta-jmeter-2.4.zip
+                  http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.6.zip
               </jMeterRemoteLocation>
             </configuration>
             <executions>

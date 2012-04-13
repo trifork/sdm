@@ -180,11 +180,10 @@
         </dependency>
 
 
-		<dependency>
-			<groupId>dk.sosi.seal</groupId>
-			<artifactId>seal-jboss6</artifactId>
-			<version>2.1.0</version>
-		</dependency>
+        <dependency>
+            <groupId>dk.sosi.seal</groupId>
+            <artifactId>seal</artifactId>
+        </dependency>
 
 		<dependency>
 			<groupId>apache</groupId>

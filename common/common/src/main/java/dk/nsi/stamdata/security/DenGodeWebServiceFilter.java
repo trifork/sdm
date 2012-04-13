@@ -125,6 +125,8 @@ public class DenGodeWebServiceFilter implements Filter
 		factory = new SOSIFactory(federation, new EmptyCredentialVault(), properties);
 	
 		dgwsLevels = getNistLevel(filterConfig);
+
+        logger.info("Init filter using federation type: " + federation.getClass());
 	}
 
 	private boolean shouldWeUseTestFederation(FilterConfig filterConfig)
@@ -182,7 +184,7 @@ public class DenGodeWebServiceFilter implements Filter
 		// having to send DGWS stuff along with the call we
 		// make a little hack that pass these called through.
 
-		if ("wsdl".equals(httpRequest.getQueryString()))
+		if ("wsdl".equalsIgnoreCase(httpRequest.getQueryString()))
 		{
 			chain.doFilter(request, response);
 			return;
@@ -193,7 +195,7 @@ public class DenGodeWebServiceFilter implements Filter
 			// Rip out the ID Card and cram it into the request context.
 
 			final String xml = IOUtils.toString(httpRequest.getReader());
-			httpRequest.getPathInfo();
+            httpRequest.getPathInfo();
 			
 			// NB. SEAL throws an exception if the id card is not valid in time
 			// or invalid in some other way.

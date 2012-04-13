@@ -52,24 +52,45 @@ public class StamdataPersonLookupWithSubscriptionSampler extends AbstractJavaSam
     private static final String ENDPOINT_URL_PARAM = "EndpointURL";
     private static final String CLIENT_CVR_PARAM = "ClientCVR";
 
+    private static final String SERVICE_URL = "/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription";
+    private static final String DEFAULT_ENDPOINT = "http://localhost:8080" + SERVICE_URL;
+    private static final String DEFAULT_CLIENT_CVR = "12345678";
 
     @Override
     public Arguments getDefaultParameters()
     {
         Arguments args = new Arguments();
 
-        args.addArgument(ENDPOINT_URL_PARAM, "http://localhost:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription");
-        args.addArgument(CLIENT_CVR_PARAM, "12345678");
+        args.addArgument(ENDPOINT_URL_PARAM, DEFAULT_ENDPOINT);
+        args.addArgument(CLIENT_CVR_PARAM, DEFAULT_CLIENT_CVR);
 
         return args;
     }
 
+    public static void  main(String[] args) {
+        StamdataPersonLookupWithSubscriptionSampler sampler = new StamdataPersonLookupWithSubscriptionSampler();
+        String serviceEndpoint, cvr;
+
+        String hostnameProperty = System.getProperty("hostname");
+        String portProperty = System.getProperty("port", "8080");
+        String cvrProperty = System.getProperty("clientcvr");
+
+        serviceEndpoint = hostnameProperty == null ? DEFAULT_ENDPOINT : "http://" + hostnameProperty + ":" + portProperty + SERVICE_URL;
+        cvr = cvrProperty == null ? DEFAULT_CLIENT_CVR : cvrProperty;
+
+
+        sampler.runTest(serviceEndpoint, cvr);
+    }
 
     @Override
     public SampleResult runTest(JavaSamplerContext context)
     {
         String endpointURL = context.getParameter(ENDPOINT_URL_PARAM);
         String clientCVR = context.getParameter(CLIENT_CVR_PARAM);
+        return runTest(endpointURL, clientCVR);
+    }
+
+    private SampleResult runTest(String endpointURL, String clientCVR) {
 
         SampleResult result = new SampleResult();
 
