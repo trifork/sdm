@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="sdm" resourceRoot="" soapui-version="3.5" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="StamdataPersonLookupWithSubscriptionSoapBinding" type="wsdl" bindingName="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookupWithSubscriptionSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?wsdl"><con:part><con:url>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?wsdl</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<wsdl:definitions targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:tns="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:cprabbs="http://nsi.dk/cprabbs/2011/10" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+  <wsdl:types>
+    <!--Den gode webservice schemas.-->
+    <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <xs:include schemaLocation="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=19"/>
+    </xs:schema>
+    <xs:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+      <xs:include schemaLocation="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=15"/>
+    </xs:schema>
+    <!--CPR Subscription schemas-->
+    <xs:schema targetNamespace="http://nsi.dk/cprabbs/2011/10">
+      <xs:include schemaLocation="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=5"/>
+    </xs:schema>
+    <!--The request and response schemas.-->
+    <xs:schema targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/">
+      <xs:include schemaLocation="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=18"/>
+    </xs:schema>
+    <!--NB: This is added to avoid JAX-WS mapping date to XMLGregorialCalendar, which does not play nice with SEAL.-->
+    <xs:schema targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/" jaxb:version="2.1" elementFormDefault="qualified" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb">
+      <xs:annotation>
+        <xs:appinfo>
+          <jaxb:globalBindings>
+            <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime" parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime" printMethod="javax.xml.bind.DatatypeConverter.printDateTime"/>
+          </jaxb:globalBindings>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="PersonLookupIn">
+    <wsdl:part name="wsseHeader" element="wsse:Security"/>
+    <wsdl:part name="medcomHeader" element="dgws:Header"/>
+    <wsdl:part name="parameters" element="cprabbs:CprAbbsRequest"/>
+  </wsdl:message>
+  <wsdl:message name="PersonLookupOut">
+    <wsdl:part name="wsseHeader" element="wsse:Security"/>
+    <wsdl:part name="medcomHeader" element="dgws:Header"/>
+    <wsdl:part name="parameters" element="tns:PersonLookupResponse"/>
+  </wsdl:message>
+  <wsdl:message name="DGWSFault">
+    <wsdl:part name="fault" element="dgws:FaultCode"/>
+  </wsdl:message>
+  <wsdl:portType name="StamdataPersonLookupWithSubscription">
+    <wsdl:operation name="getSubscribedPersonDetails">
+      <wsdl:input message="tns:PersonLookupIn"/>
+      <wsdl:output message="tns:PersonLookupOut"/>
+      <wsdl:fault message="tns:DGWSFault" name="DGWSFault"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="StamdataPersonLookupWithSubscriptionSoapBinding" type="tns:StamdataPersonLookupWithSubscription">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+    <wsdl:operation name="getSubscribedPersonDetails">
+      <soap:operation soapAction="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="parameters"/>
+        <soap:header message="tns:PersonLookupIn" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:PersonLookupIn" part="medcomHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="parameters"/>
+        <soap:header message="tns:PersonLookupOut" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:PersonLookupOut" part="medcomHeader" use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="DGWSFault">
+        <soap:fault name="DGWSFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="StamdataPersonLookupWithSubscriptionService">
+    <wsdl:port name="StamdataPersonLookupWithSubscription" binding="tns:StamdataPersonLookupWithSubscriptionSoapBinding">
+      <soap:address location="http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=19</con:url><con:content><![CDATA[<soapenv:Envelope id="Envelope" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <soapenv:Header>
+    <wsse:Security>
+      <wsu:Timestamp>
+        <wsu:Created>2012-04-10T06:16:23Z</wsu:Created>
+      </wsu:Timestamp>
+    </wsse:Security>
+    <medcom:Header>
+      <medcom:SecurityLevel>1</medcom:SecurityLevel>
+      <medcom:Linking>
+        <medcom:FlowID>0</medcom:FlowID>
+        <medcom:MessageID>AAABNprlWkVk7W25wpLTNFNPU0k=</medcom:MessageID>
+        <medcom:InResponseToMessageID>0</medcom:InResponseToMessageID>
+      </medcom:Linking>
+    </medcom:Header>
+  </soapenv:Header>
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>Server</faultcode>
+      <detail>
+        <medcom:FaultCode>processing_problem</medcom:FaultCode>
+      </detail>
+      <faultstring>An unexpected error occured while proccessing the request.</faultstring>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:content><con:type>http://schemas.xmlsoap.org/soap/envelope/</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=15</con:url><con:content><![CDATA[<soapenv:Envelope id="Envelope" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <soapenv:Header>
+    <wsse:Security>
+      <wsu:Timestamp>
+        <wsu:Created>2012-04-10T06:16:24Z</wsu:Created>
+      </wsu:Timestamp>
+    </wsse:Security>
+    <medcom:Header>
+      <medcom:SecurityLevel>1</medcom:SecurityLevel>
+      <medcom:Linking>
+        <medcom:FlowID>0</medcom:FlowID>
+        <medcom:MessageID>AAABNprlW0mevMk4PM1HpFNPU0k=</medcom:MessageID>
+        <medcom:InResponseToMessageID>0</medcom:InResponseToMessageID>
+      </medcom:Linking>
+    </medcom:Header>
+  </soapenv:Header>
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>Server</faultcode>
+      <detail>
+        <medcom:FaultCode>processing_problem</medcom:FaultCode>
+      </detail>
+      <faultstring>An unexpected error occured while proccessing the request.</faultstring>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:content><con:type>http://schemas.xmlsoap.org/soap/envelope/</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=5</con:url><con:content><![CDATA[<soapenv:Envelope id="Envelope" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <soapenv:Header>
+    <wsse:Security>
+      <wsu:Timestamp>
+        <wsu:Created>2012-04-10T06:16:24Z</wsu:Created>
+      </wsu:Timestamp>
+    </wsse:Security>
+    <medcom:Header>
+      <medcom:SecurityLevel>1</medcom:SecurityLevel>
+      <medcom:Linking>
+        <medcom:FlowID>0</medcom:FlowID>
+        <medcom:MessageID>AAABNprlW4U+x2lpV1BYL1NPU0k=</medcom:MessageID>
+        <medcom:InResponseToMessageID>0</medcom:InResponseToMessageID>
+      </medcom:Linking>
+    </medcom:Header>
+  </soapenv:Header>
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>Server</faultcode>
+      <detail>
+        <medcom:FaultCode>processing_problem</medcom:FaultCode>
+      </detail>
+      <faultstring>An unexpected error occured while proccessing the request.</faultstring>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:content><con:type>http://schemas.xmlsoap.org/soap/envelope/</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription?xsd=18</con:url><con:content><![CDATA[<soapenv:Envelope id="Envelope" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <soapenv:Header>
+    <wsse:Security>
+      <wsu:Timestamp>
+        <wsu:Created>2012-04-10T06:16:24Z</wsu:Created>
+      </wsu:Timestamp>
+    </wsse:Security>
+    <medcom:Header>
+      <medcom:SecurityLevel>1</medcom:SecurityLevel>
+      <medcom:Linking>
+        <medcom:FlowID>0</medcom:FlowID>
+        <medcom:MessageID>AAABNprlW70G9Vk8nxgdjFNPU0k=</medcom:MessageID>
+        <medcom:InResponseToMessageID>0</medcom:InResponseToMessageID>
+      </medcom:Linking>
+    </medcom:Header>
+  </soapenv:Header>
+  <soapenv:Body>
+    <soapenv:Fault>
+      <faultcode>Server</faultcode>
+      <detail>
+        <medcom:FaultCode>processing_problem</medcom:FaultCode>
+      </detail>
+      <faultstring>An unexpected error occured while proccessing the request.</faultstring>
+    </soapenv:Fault>
+  </soapenv:Body>
+</soapenv:Envelope>]]></con:content><con:type>http://schemas.xmlsoap.org/soap/envelope/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription</con:endpoint><con:endpoint>http://dhcp-51.dyn81-161.trifork.com:8088/mockStamdataPersonLookupWithSubscriptionSoapBinding</con:endpoint><con:endpoint>http://nsp15-app01.nsp-test.netic.dk:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails" name="getSubscribedPersonDetails" bindingOperationName="getSubscribedPersonDetails" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns="http://nsi.dk/cprabbs/2011/10">
+   <soapenv:Header>
+      <dgws:Header/>
+      <oas:Security/>
+   </soapenv:Header>
+   <soapenv:Body>
+      <ns:CprAbbsRequest/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails"/><con:wsrmConfig version="1.2"/></con:call><con:call name="tcpdump-request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://nsp15-app01.nsp-test.netic.dk:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header>
+    <ns9:Security xmlns:ns10="http://nsi.dk/cprabbs/2011/10" xmlns:ns11="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns12="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns14="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/" xmlns:ns15="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns16="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns19="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/" xmlns:ns2="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:ns20="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/" xmlns:ns21="http://www.w3.org/2000/09/xmldsig#" xmlns:ns22="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns23="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:ns3="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" xmlns:ns4="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" xmlns:ns5="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns6="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" xmlns:ns7="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns8="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns9="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <wsu:Timestamp xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+        <wsu:Created>2012-03-22T14:22:58Z</wsu:Created>
+      </wsu:Timestamp>
+      <saml:Assertion xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" IssueInstant="2012-03-22T14:17:58Z" Version="2.0" id="IDCard">
+        <saml:Issuer>TheSOSILibrary</saml:Issuer>
+        <saml:Subject>
+          <saml:NameID Format="medcom:other">123</saml:NameID>
+          <saml:SubjectConfirmation>
+            <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:2.0:cm:holder-of-key</saml:ConfirmationMethod>
+            <saml:SubjectConfirmationData>
+              <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+                <ds:KeyName>OCESSignature</ds:KeyName>
+              </ds:KeyInfo>
+            </saml:SubjectConfirmationData>
+          </saml:SubjectConfirmation>
+        </saml:Subject>
+        <saml:Conditions NotBefore="2012-03-22T14:17:58Z" NotOnOrAfter="2012-03-23T14:17:58Z"/>
+        <saml:AttributeStatement id="IDCardData">
+          <saml:Attribute Name="sosi:IDCardID">
+            <saml:AttributeValue>CF+mTHCl0oD+1uP86OV//w==&#13;
+</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:IDCardVersion">
+            <saml:AttributeValue>1.0.1</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:IDCardType">
+            <saml:AttributeValue>system</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:AuthenticationLevel">
+            <saml:AttributeValue>3</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:OCESCertHash">
+            <saml:AttributeValue>pFQXTvhBFAsCwPy2VkYI6GDTnFQ=&#13;
+</saml:AttributeValue>
+          </saml:Attribute>
+        </saml:AttributeStatement>
+        <saml:AttributeStatement id="SystemLog">
+          <saml:Attribute Name="medcom:ITSystemName">
+            <saml:AttributeValue>ACME Pro</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="medcom:CareProviderID" NameFormat="medcom:cvrnumber">
+            <saml:AttributeValue>12345678</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="medcom:CareProviderName">
+            <saml:AttributeValue>dk</saml:AttributeValue>
+          </saml:Attribute>
+        </saml:AttributeStatement>
+        <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" id="OCESSignature">
+          <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <ds:Reference URI="#IDCard">
+              <ds:Transforms>
+                <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+              </ds:Transforms>
+              <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+              <ds:DigestValue>csl8JAtKFNkhhrKC5OZAC0jJ1MA=</ds:DigestValue>
+            </ds:Reference>
+          </ds:SignedInfo>
+          <ds:SignatureValue>h9bfs+JLIdA1lEGfQmXZuXQoTa0tVKOsZEMQvyHFvLYvq/fcX1g7iClnCQrEMbAqDwqanZKSFVQAYrO+etecKgKGmUAkyHom3gR3PXbuM9sfNBIQlcbjvepRBR29WkQpH+9lBweEcB6BMtsrvqvAHU1Dc4Go+818UeRlpSBB4u0Wg=</ds:SignatureValue>
+          <ds:KeyInfo>
+            <ds:X509Data>
+              <ds:X509Certificate>MIIFBjCCBG+gAwIBAgIEQDeviTANBgkqhkiG9w0BAQUFADA/MQswCQYDVQQGEwJESzEMMAoGA1UEChMDVERDMSIwIAYDVQQDExlUREMgT0NFUyBTeXN0ZW10ZXN0IENBIElJMB4XDTEwMTExMDEzMjUwMFoXDTEyMTExMDEzNTUwMFowgYMxCzAJBgNVBAYTAkRLMSgwJgYDVQQKEx9EYW5za2UgUmVnaW9uZXIgLy8gQ1ZSOjU1ODMyMjE4MUowIQYDVQQDExpEYW5za2UgUmVnaW9uZXIgLSBTT1NJIFNUUzAlBgNVBAUTHkNWUjo1NTgzMjIxOC1VSUQ6MTE2MzQ0NzM2ODYyNzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAuw7xSHEdBuhZZDhpPrW3OZ1qEXSf5GHC/Q/mYguyd+pFmUwPico+dLOTroKlTem3LsNgkIJRbKidTaEamyrt/VSg3sH3rVsYh3Cs9jgpMs2N6BJzIkRcmpiFWhMZcej++mZsntxiG2QyVKXj+bYPPV/El4xzeTqwyAYOgAIwn+sCAwEAAaOCAsgwggLEMA4GA1UdDwEB/wQEAwIDuDArBgNVHRAEJDAigA8yMDEwMTExMDEzMjUwMFqBDzIwMTIxMTEwMTM1NTAwWjBGBggrBgEFBQcBAQQ6MDgwNgYIKwYBBQUHMAGGKmh0dHA6Ly90ZXN0Lm9jc3AuY2VydGlmaWthdC5kay9vY3NwL3N0YXR1czCCAQMGA1UdIASB+zCB+DCB9QYJKQEBAQEBAQEDMIHnMC8GCCsGAQUFBwIBFiNodHRwOi8vd3d3LmNlcnRpZmlrYXQuZGsvcmVwb3NpdG9yeTCBswYIKwYBBQUHAgIwgaYwChYDVERDMAMCAQEagZdUREMgVGVzdCBDZXJ0aWZpa2F0ZXIgZnJhIGRlbm5lIENBIHVkc3RlZGVzIHVuZGVyIE9JRCAxLjEuMS4xLjEuMS4xLjEuMS4zLiBUREMgVGVzdCBDZXJ0aWZpY2F0ZXMgZnJvbSB0aGlzIENBIGFyZSBpc3N1ZWQgdW5kZXIgT0lEIDEuMS4xLjEuMS4xLjEuMS4xLjMuMBcGCWCGSAGG+EIBDQQKFghvcmdhbldldAYjAdBgNVHREEFjAUgRJkcmlmdHZhZ3RAZGFuaWQuZGswgZcGA1UdHwSBjzCBjDBXoFWgU6RRME8xCzAJBgNVBAYTAkRLMQwwCgYDVQQKEwNUREMxIjAgBgNVBAMTGVREQyBPQ0VTIFN5c3RlbXRlc3QgQ0EgSUkxDjAMBgNVBAMTBUNSTDI1MDGgL6AthitodHRwOi8vdGVzdC5jcmwub2Nlcy5jZXJ0aWZpa2F0LmRrL29jZXMuY3JsMB8GA1UdIwQYMBaAFByYCUcaTDi5EMUEKVvx9E6Aasx+MB0GA1UdDgQWBBSNZVo8u8hK4bUxiYRFXitISMp4GDAJBgNVHRMEAjAAMBkGCSqGSIb2fQdBAAQMMAobBFY3LjEDAgOoMA0GCSqGSIb3DQEBBQUAA4GBACcHdr74A1eDrbIyoAfuRdIkMZ183sxlcsONxUz9q5kOS97vOdwzWIgCqWD3L2C/+Bd9uFw2krcVwsN9IS++FiRPiswOWBUDAt6gR649sKWtlDF9mEscCizBh5F5oZdVGXMiFfXucbEU4tB4JwltbQva6+8FdPzgtgB+3+vgYxpc</ds:X509Certificate>
+            </ds:X509Data>
+          </ds:KeyInfo>
+        </ds:Signature>
+      </saml:Assertion>
+    </ns9:Security>
+    <ns2:Header xmlns:ns10="http://nsi.dk/cprabbs/2011/10" xmlns:ns11="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns12="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns14="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/" xmlns:ns15="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns16="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns19="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/" xmlns:ns2="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:ns20="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/" xmlns:ns21="http://www.w3.org/2000/09/xmldsig#" xmlns:ns22="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns23="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:ns3="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" xmlns:ns4="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" xmlns:ns5="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns6="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" xmlns:ns7="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns8="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns9="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <medcom:SecurityLevel xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">3</medcom:SecurityLevel>
+      <medcom:Linking xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+        <medcom:FlowID>71b59245-876b-497f-a1bd-3d9679d765c4</medcom:FlowID>
+        <medcom:MessageID>AAABNjrJ/8W+vHzAsXyQhVNPU0k=&#13;
+</medcom:MessageID>
+      </medcom:Linking>
+      <medcom:RequireNonRepudiationReceipt xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">no</medcom:RequireNonRepudiationReceipt>
+    </ns2:Header>
+  </S:Header>
+  <S:Body>
+    <ns10:CprAbbsRequest xmlns:ns10="http://nsi.dk/cprabbs/2011/10" xmlns:ns11="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:ns12="http://rep.oio.dk/itst.dk/xml/schemas/2006/01/17/" xmlns:ns13="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:ns14="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/" xmlns:ns15="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/" xmlns:ns16="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/" xmlns:ns17="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" xmlns:ns18="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" xmlns:ns19="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/" xmlns:ns2="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:ns20="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/" xmlns:ns21="http://www.w3.org/2000/09/xmldsig#" xmlns:ns22="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns23="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:ns3="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" xmlns:ns4="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" xmlns:ns5="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:ns6="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" xmlns:ns7="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:ns8="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ns9="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+  </S:Body>
+</S:Envelope>
+]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:testSuite name="StamdataPersonLookupWithSubscriptionSoapBinding TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getSubscribedPersonDetails TestCase" searchProperties="true"><con:settings/><con:testStep type="request" name="getSubscribedPersonDetails"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>StamdataPersonLookupWithSubscriptionSoapBinding</con:interface><con:operation>getSubscribedPersonDetails</con:operation><con:request name="getSubscribedPersonDetails"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://tri-test-niab82:8080/stamdata-cpr-ws/service/StamdataPersonLookupWithSubscription</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns="http://nsi.dk/cprabbs/2011/10">
+   <soapenv:Header>
+      <dgws:Header/>
+      <oas:Security/>
+   </soapenv:Header>
+   <soapenv:Body>
+      <ns:CprAbbsRequest/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig action="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:loadTest name="LoadTest 1"><con:settings/><con:threadCount>5</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>true</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval></con:loadTest><con:properties/></con:testCase><con:properties/></con:testSuite><con:mockService port="8088" path="/mockStamdataPersonLookupWithSubscriptionSoapBinding" host="dhcp-51.dyn81-161.trifork.com" name="StamdataPersonLookupWithSubscriptionSoapBinding MockService"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:mockOperation name="getSubscribedPersonDetails" interface="StamdataPersonLookupWithSubscriptionSoapBinding" operation="getSubscribedPersonDetails"><con:settings/><con:dispatchStyle>SEQUENCE</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Response 1" encoding="UTF-8"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:stam="http://nsi.dk/2011/09/23/StamdataCpr/">
+   <soapenv:Header>
+      <dgws:Header/>
+      <oas:Security/>
+   </soapenv:Header>
+   <soapenv:Body>
+      <stam:PersonLookupResponse/>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/2011/09/23/StamdataCpr/getSubscribedPersonDetails"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/></con:mockService><con:properties/><con:wssContainer/></con:soapui-project>

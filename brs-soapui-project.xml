@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="brs" resourceRoot="" soapui-version="3.5" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="CprAbbsSoapBinding" type="wsdl" bindingName="{http://nsi.dk/cprabbs/2011/10}CprAbbsSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://tri-test-niab82:8080/cprabbs/service/cprabbs?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://tri-test-niab82:8080/cprabbs/service/cprabbs?wsdl"><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?wsdl</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<definitions targetNamespace="http://nsi.dk/cprabbs/2011/10" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:tns="http://nsi.dk/cprabbs/2011/10">
+  <types>
+    <xsd:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+      <xsd:include schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=6"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="urn:oasis:names:tc:SAML:2.0:assertion">
+      <xsd:include schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=5"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+      <xsd:include schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=4"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://nsi.dk/cprabbs/2011/10">
+      <xsd:include schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=1"/>
+      <xsd:include schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=2"/>
+    </xsd:schema>
+  </types>
+  <message name="cprAbbsRequest">
+    <part name="wsseHeader" element="wsse:Security"/>
+    <part name="medcomHeader" element="medcom:Header"/>
+    <part name="cprAbbsRequest" element="tns:CprAbbsRequest"/>
+  </message>
+  <message name="cprAbbsResponse">
+    <part name="wsseHeader" element="wsse:Security"/>
+    <part name="medcomHeader" element="medcom:Header"/>
+    <part name="cprAbbsResponse" element="tns:CprAbbsResponse"/>
+  </message>
+  <message name="DGWSFault">
+    <part name="fault" element="medcom:FaultCode"/>
+  </message>
+  <portType name="CprAbbsFacade">
+    <operation name="getChangedCprs">
+      <input message="tns:cprAbbsRequest" name="cprAbbsResponse"/>
+      <output message="tns:cprAbbsResponse" name="cprAbbsResponse"/>
+      <fault message="tns:DGWSFault" name="DGWSFault"/>
+    </operation>
+  </portType>
+  <binding name="CprAbbsSoapBinding" type="tns:CprAbbsFacade">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getChangedCprs">
+      <soap:operation soapAction="http://nsi.dk/cprabbs/2011/10/getChangedCprs"/>
+      <input name="cprAbbsRequest">
+        <soap:header message="tns:cprAbbsRequest" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:cprAbbsRequest" part="medcomHeader" use="literal"/>
+        <soap:body use="literal" parts="cprAbbsRequest"/>
+      </input>
+      <output name="cprAbbsResponse">
+        <soap:header message="tns:cprAbbsResponse" part="wsseHeader" use="literal"/>
+        <soap:header message="tns:cprAbbsResponse" part="medcomHeader" use="literal"/>
+        <soap:body use="literal" parts="cprAbbsResponse"/>
+      </output>
+      <fault name="DGWSFault">
+        <soap:fault name="DGWSFault" use="literal"/>
+      </fault>
+    </operation>
+  </binding>
+  <service name="CprAbbsFacadeService">
+    <port binding="tns:CprAbbsSoapBinding" name="CprAbbsSoapBinding">
+      <soap:address location="http://tri-test-niab82:8080/cprabbs/service/cprabbs"/>
+    </port>
+  </service>
+</definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=6</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<xs:schema elementFormDefault="qualified" targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=7"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=3"/>
+  <xs:import namespace="urn:oasis:names:tc:SAML:2.0:assertion" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=5"/>
+  <xs:element name="Security">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsu:Timestamp" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="saml:Assertion" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsernameToken">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsse:Username" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="wsse:Password" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Username" type="xs:NCName"/>
+  <xs:element name="Password" type="xs:NCName"/>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=7</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <xs:element name="Timestamp">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="wsu:Created"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Created" type="xs:dateTime"/>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=3</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<xs:schema targetNamespace="http://www.w3.org/2000/09/xmldsig#" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:element name="Signature">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ds:SignedInfo"/>
+        <xs:element ref="ds:SignatureValue"/>
+        <xs:element ref="ds:KeyInfo"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:NCName" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SignedInfo">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ds:CanonicalizationMethod"/>
+        <xs:element ref="ds:SignatureMethod"/>
+        <xs:element ref="ds:Reference" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CanonicalizationMethod">
+    <xs:complexType>
+      <xs:attribute name="Algorithm" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+            <xs:enumeration value="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SignatureMethod">
+    <xs:complexType>
+      <xs:attribute name="Algorithm" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Reference">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ds:Transforms" minOccurs="0"/>
+        <xs:element ref="ds:DigestMethod"/>
+        <xs:element ref="ds:DigestValue"/>
+      </xs:sequence>
+      <xs:attribute name="URI" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Transforms">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element name="Transform">
+          <xs:complexType>
+            <xs:attribute name="Algorithm" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DigestMethod">
+    <xs:complexType>
+      <xs:attribute name="Algorithm" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:anyURI">
+            <xs:enumeration value="http://www.w3.org/2000/09/xmldsig#sha1"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DigestValue" type="xs:base64Binary"/>
+  <xs:element name="SignatureValue" type="xs:base64Binary"/>
+  <xs:element name="KeyInfo">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="ds:KeyName"/>
+        <xs:sequence>
+          <xs:element ref="ds:X509Data"/>
+        </xs:sequence>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="KeyName" type="xs:NMTOKEN"/>
+  <xs:element name="X509Data">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="ds:X509Certificate"/>
+        <xs:element ref="ds:KeyName"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="X509Certificate" type="xs:base64Binary"/>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=5</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<xs:schema targetNamespace="urn:oasis:names:tc:SAML:2.0:assertion" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <xs:import namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=6"/>
+  <xs:import namespace="http://www.w3.org/2000/09/xmldsig#" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=3"/>
+  <xs:element name="Assertion" type="saml:AssertionType"/>
+  <xs:complexType name="AssertionType">
+    <xs:sequence>
+      <xs:element ref="saml:Issuer"/>
+      <xs:element ref="saml:Subject"/>
+      <xs:element ref="saml:Conditions"/>
+      <xs:element ref="saml:AttributeStatement" maxOccurs="3"/>
+      <xs:element ref="ds:Signature" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="IssueInstant" type="xs:dateTime" use="required"/>
+    <xs:attribute name="Version" type="xs:decimal" use="required"/>
+    <xs:attribute name="id" type="xs:NCName" use="required"/>
+  </xs:complexType>
+  <xs:element name="Issuer" type="xs:NCName"/>
+  <xs:element name="Subject">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="saml:NameID"/>
+        <xs:element ref="saml:SubjectConfirmation" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NameID" type="saml:NameIDType"/>
+  <xs:complexType name="NameIDType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Format" type="saml:SubjectIdentifierType" use="required"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="SubjectConfirmation">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="saml:ConfirmationMethod"/>
+        <xs:element ref="saml:SubjectConfirmationData"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConfirmationMethod">
+    <xs:simpleType>
+      <xs:restriction base="xs:anyURI">
+        <xs:enumeration value="urn:oasis:names:tc:SAML:2.0:cm:holder-of-key"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="SubjectConfirmationData">
+    <xs:complexType>
+      <xs:choice>
+        <xs:element ref="ds:KeyInfo"/>
+        <xs:element ref="wsse:UsernameToken"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Conditions">
+    <xs:complexType>
+      <xs:attribute name="NotBefore" type="xs:dateTime" use="required"/>
+      <xs:attribute name="NotOnOrAfter" type="xs:dateTime" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AttributeStatement">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="saml:Attribute" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NCName">
+            <xs:enumeration value="IDCardData"/>
+            <xs:enumeration value="UserLog"/>
+            <xs:enumeration value="SystemLog"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Attribute">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="saml:AttributeValue"/>
+      </xs:sequence>
+      <xs:attribute name="Name" use="required">
+        <xs:simpleType>
+          <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="sosi:IDCardID"/>
+            <xs:enumeration value="sosi:IDCardVersion"/>
+            <xs:enumeration value="sosi:IDCardType"/>
+            <xs:enumeration value="sosi:AuthenticationLevel"/>
+            <xs:enumeration value="sosi:OCESCertHash"/>
+            <xs:enumeration value="medcom:UserCivilRegistrationNumber"/>
+            <xs:enumeration value="medcom:UserGivenName"/>
+            <xs:enumeration value="medcom:UserSurName"/>
+            <xs:enumeration value="medcom:UserEmailAddress"/>
+            <xs:enumeration value="medcom:UserRole"/>
+            <xs:enumeration value="medcom:UserOccupation"/>
+            <xs:enumeration value="medcom:UserAuthorizationCode"/>
+            <xs:enumeration value="medcom:CareProviderID"/>
+            <xs:enumeration value="medcom:CareProviderName"/>
+            <xs:enumeration value="medcom:ITSystemName"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+      <xs:attribute name="NameFormat" type="saml:SubjectIdentifierType"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AttributeValue" type="xs:string"/>
+  <xs:simpleType name="SubjectIdentifierType">
+    <xs:restriction base="xs:anyURI">
+      <xs:enumeration value="medcom:cprnumber"/>
+      <xs:enumeration value="medcom:ynumber"/>
+      <xs:enumeration value="medcom:pnumber"/>
+      <xs:enumeration value="medcom:skscode"/>
+      <xs:enumeration value="medcom:cvrnumber"/>
+      <xs:enumeration value="medcom:communalnumber"/>
+      <xs:enumeration value="medcom:locationnumber"/>
+      <xs:enumeration value="medcom:itsystemname"/>
+      <xs:enumeration value="medcom:other"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=4</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<xs:schema elementFormDefault="qualified" targetNamespace="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+  <xs:element name="Linking">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="medcom:FlowID" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:MessageID" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="medcom:InResponseToMessageID" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FlowID" type="xs:string"/>
+  <xs:element name="MessageID" type="xs:string"/>
+  <xs:element name="InResponseToMessageID" type="xs:string"/>
+  <xs:element name="Priority">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="AKUT"/>
+        <xs:enumeration value="HASTER"/>
+        <xs:enumeration value="RUTINE"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="RequireNonRepudiationReceipt">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="yes"/>
+        <xs:enumeration value="no"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="FlowStatus">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="flow_running"/>
+        <xs:enumeration value="flow_finalized_succesfully"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="SecurityLevel">
+    <xs:simpleType>
+      <xs:restriction base="xs:int">
+        <xs:enumeration value="1"/>
+        <xs:enumeration value="2"/>
+        <xs:enumeration value="3"/>
+        <xs:enumeration value="4"/>
+        <xs:enumeration value="5"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="TimeOut">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="5"/>
+        <xs:enumeration value="30"/>
+        <xs:enumeration value="480"/>
+        <xs:enumeration value="1440"/>
+        <xs:enumeration value="unbound"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="Header">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="medcom:SecurityLevel" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:TimeOut" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:Linking" minOccurs="1" maxOccurs="1"/>
+        <xs:element ref="medcom:FlowStatus" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:Priority" minOccurs="0" maxOccurs="1"/>
+        <xs:element ref="medcom:RequireNonRepudiationReceipt" minOccurs="0" maxOccurs="1"/>
+      </xs:sequence>
+      <!--Added by SEAL-->
+      <xs:anyAttribute namespace="##other" processContents="lax"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FaultCode">
+    <xs:simpleType>
+      <xs:restriction base="xs:string">
+        <xs:enumeration value="sosigw_no_valid_idcard_in_request"/>
+        <xs:enumeration value="sosigw_missing_signinginfo_in_request"/>
+        <xs:enumeration value="sosigw_syntax_error_in_request"/>
+        <xs:enumeration value="sosigw_awaiting_signing"/>
+        <xs:enumeration value="sosigw_no_valid_idcard_in_cache"/>
+        <xs:enumeration value="sosigw_access_denied"/>
+        <xs:enumeration value="sosigw_internal_error"/>
+        <xs:enumeration value="sosigw_proxy_error"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=1</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<schema elementFormDefault="qualified" targetNamespace="http://nsi.dk/cprabbs/2011/10" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <element name="CprAbbsRequest">
+    <complexType>
+      <sequence>
+        <element name="since" type="xsd:dateTime" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=2</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<schema elementFormDefault="qualified" targetNamespace="http://nsi.dk/cprabbs/2011/10" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/">
+  <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" schemaLocation="http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=8"/>
+  <element name="CprAbbsResponse">
+    <complexType>
+      <sequence>
+        <element name="changedCprs" type="cpr:PersonCivilRegistrationIdentifierType" minOccurs="0" maxOccurs="unbounded"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>http://tri-test-niab82:8080/cprabbs/service/cprabbs?xsd=8</con:url><con:content><![CDATA[<!--Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-.-->
+<schema targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" elementFormDefault="qualified" version="1.1" xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns="http://www.w3.org/2001/XMLSchema">
+  <element name="PersonCivilRegistrationIdentifier" type="cpr:PersonCivilRegistrationIdentifierType">
+    <annotation>
+      <documentation>CivilRegistrationNumber  (PNR)
+				
+				Description:
+				Unique identification of a person
+				
+				The Civil Registration System contains:
+				-	Data on persons, who after 1968 April 2nd Danish registry of citizens. 
+				      As for Greenland the corresponding date is 1972 may 1st.
+				-	Danish citizens living outside Denmark (who must pay duty and ATP)
+				      has also been given a civil registration number.
+				-	Civil registration numbers are also assigned for other administrative purposes.    
+				
+				 
+				Value space:
+				The civil registration number consists of two parts.
+				The first part is the valid birthday in the form DDMMYY.
+				The following part is a serial number of four digits.
+				The civil registration number may also hold the value 0000000000.
+				This value is used where the civil registration number is required but unknown.
+				
+				Lifecycle:
+				The civil registration number is generated and assigned at birth, entry and change of civil registration number of for administrative reasons.
+				The civil registration number may be assigned via hospitals.
+				
+				The civil registration number is not to be deleted.
+				
+				Remarks:
+				1994 June 11th the civil registration number was changed according to this description.</documentation>
+    </annotation>
+  </element>
+  <simpleType name="PersonCivilRegistrationIdentifierType">
+    <restriction base="string">
+      <pattern value="((((0[1-9]|1[0-9]|2[0-9]|3[0-1])(01|03|05|07|08|10|12))|((0[1-9]|1[0-9]|2[0-9]|30)(04|06|09|11))|((0[1-9]|1[0-9]|2[0-9])(02)))[0-9]{6})|0000000000"/>
+    </restriction>
+  </simpleType>
+</schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://tri-test-niab82:8080/cprabbs/service/cprabbs</con:endpoint><con:endpoint>http://nsp15-app01.nsp-test.netic.dk:8080/cprabbs/service/cprabbs</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://nsi.dk/cprabbs/2011/10/getChangedCprs" name="getChangedCprs" bindingOperationName="getChangedCprs" outputName="cprAbbsResponse" inputName="cprAbbsRequest" receivesAttachments="false" sendsAttachments="false" anonymous="optional" type="Request-Response"><con:settings/><con:call name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://tri-test-niab82:8080/cprabbs/service/cprabbs</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd" xmlns:oas="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:oas1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:urn="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:xd="http://www.w3.org/2000/09/xmldsig#">
+   <soapenv:Header>
+      <dgws:Header>
+         <dgws:Linking>
+            <dgws:MessageID>?</dgws:MessageID>
+         </dgws:Linking>
+      </dgws:Header>
+      <oas:Security id="?">
+         <oas1:Timestamp>
+            <oas1:Created>?</oas1:Created>
+         </oas1:Timestamp>
+      </oas:Security>
+   
+      <dgws:Header>
+         <!--Optional:-->
+         <dgws:SecurityLevel>?</dgws:SecurityLevel>
+         <!--Optional:-->
+         <dgws:TimeOut>?</dgws:TimeOut>
+         <dgws:Linking>
+            <!--Optional:-->
+            <dgws:FlowID>?</dgws:FlowID>
+            <dgws:MessageID>?</dgws:MessageID>
+            <!--Optional:-->
+            <dgws:InResponseToMessageID>?</dgws:InResponseToMessageID>
+         </dgws:Linking>
+         <!--Optional:-->
+         <dgws:FlowStatus>?</dgws:FlowStatus>
+         <!--Optional:-->
+         <dgws:Priority>?</dgws:Priority>
+         <!--Optional:-->
+         <dgws:RequireNonRepudiationReceipt>?</dgws:RequireNonRepudiationReceipt>
+      </dgws:Header>
+      <oas:Security id="?">
+         <oas1:Timestamp>
+            <oas1:Created>?</oas1:Created>
+         </oas1:Timestamp>
+         <!--Optional:-->
+         <urn:Assertion IssueInstant="?" Version="?" id="?">
+            <urn:Issuer>?</urn:Issuer>
+            <urn:Subject>
+               <urn:NameID Format="?">?</urn:NameID>
+               <!--Optional:-->
+               <urn:SubjectConfirmation>
+                  <urn:ConfirmationMethod>?</urn:ConfirmationMethod>
+                  <urn:SubjectConfirmationData>
+                     <!--You have a CHOICE of the next 2 items at this level-->
+                     <xd:KeyInfo>
+                        <!--You have a CHOICE of the next 2 items at this level-->
+                        <xd:KeyName>?</xd:KeyName>
+                        <xd:X509Data>
+                           <!--You have a CHOICE of the next 2 items at this level-->
+                           <xd:X509Certificate>cid:361571621939</xd:X509Certificate>
+                           <xd:KeyName>?</xd:KeyName>
+                        </xd:X509Data>
+                     </xd:KeyInfo>
+                     <oas:UsernameToken>
+                        <oas:Username>?</oas:Username>
+                        <oas:Password>?</oas:Password>
+                     </oas:UsernameToken>
+                  </urn:SubjectConfirmationData>
+               </urn:SubjectConfirmation>
+            </urn:Subject>
+            <urn:Conditions NotBefore="?" NotOnOrAfter="?"/>
+            <!--1 to 3 repetitions:-->
+            <urn:AttributeStatement id="?">
+               <!--1 or more repetitions:-->
+               <urn:Attribute Name="?" NameFormat="?">
+                  <urn:AttributeValue>?</urn:AttributeValue>
+               </urn:Attribute>
+            </urn:AttributeStatement>
+            <!--Optional:-->
+            <xd:Signature id="?">
+               <xd:SignedInfo>
+                  <xd:CanonicalizationMethod Algorithm="?"/>
+                  <xd:SignatureMethod Algorithm="?"/>
+                  <!--1 or more repetitions:-->
+                  <xd:Reference URI="?">
+                     <!--Optional:-->
+                     <xd:Transforms>
+                        <xd:Transform Algorithm="?"/>
+                     </xd:Transforms>
+                     <xd:DigestMethod Algorithm="?"/>
+                     <xd:DigestValue>cid:1084399198508</xd:DigestValue>
+                  </xd:Reference>
+               </xd:SignedInfo>
+               <xd:SignatureValue>cid:293414600001</xd:SignatureValue>
+               <xd:KeyInfo>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <xd:KeyName>?</xd:KeyName>
+                  <xd:X509Data>
+                     <!--You have a CHOICE of the next 2 items at this level-->
+                     <xd:X509Certificate>cid:508758373799</xd:X509Certificate>
+                     <xd:KeyName>?</xd:KeyName>
+                  </xd:X509Data>
+               </xd:KeyInfo>
+            </xd:Signature>
+         </urn:Assertion>
+         <!--Optional:-->
+         <xd:Signature id="?">
+            <xd:SignedInfo>
+               <xd:CanonicalizationMethod Algorithm="?"/>
+               <xd:SignatureMethod Algorithm="?"/>
+               <!--1 or more repetitions:-->
+               <xd:Reference URI="?">
+                  <!--Optional:-->
+                  <xd:Transforms>
+                     <xd:Transform Algorithm="?"/>
+                  </xd:Transforms>
+                  <xd:DigestMethod Algorithm="?"/>
+                  <xd:DigestValue>cid:74070642656</xd:DigestValue>
+               </xd:Reference>
+            </xd:SignedInfo>
+            <xd:SignatureValue>cid:833971040581</xd:SignatureValue>
+            <xd:KeyInfo>
+               <!--You have a CHOICE of the next 2 items at this level-->
+               <xd:KeyName>?</xd:KeyName>
+               <xd:X509Data>
+                  <!--You have a CHOICE of the next 2 items at this level-->
+                  <xd:X509Certificate>cid:247450618632</xd:X509Certificate>
+                  <xd:KeyName>?</xd:KeyName>
+               </xd:X509Data>
+            </xd:KeyInfo>
+         </xd:Signature>
+      </oas:Security>
+   </soapenv:Header>
+   <soapenv:Body/>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/cprabbs/2011/10/getChangedCprs"/><con:wsrmConfig version="1.2"/></con:call><con:call name="tcpdump"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://tri-test-niab82:8080/cprabbs/service/cprabbs</con:endpoint><con:request><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header>
+    <wsse:Security xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+      <wsu:Timestamp>
+        <wsu:Created>2012-03-22T14:22:52Z</wsu:Created>
+      </wsu:Timestamp>
+      <saml:Assertion IssueInstant="2012-03-22T14:17:52Z" Version="2.0" id="IDCard">
+        <saml:Issuer>TheSOSILibrary</saml:Issuer>
+        <saml:Subject>
+          <saml:NameID Format="medcom:other">123</saml:NameID>
+          <saml:SubjectConfirmation>
+            <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:2.0:cm:holder-of-key</saml:ConfirmationMethod>
+            <saml:SubjectConfirmationData>
+              <ds:KeyInfo>
+                <ds:KeyName>OCESSignature</ds:KeyName>
+              </ds:KeyInfo>
+            </saml:SubjectConfirmationData>
+          </saml:SubjectConfirmation>
+        </saml:Subject>
+        <saml:Conditions NotBefore="2012-03-22T14:17:52Z" NotOnOrAfter="2012-03-23T14:17:52Z"/>
+        <saml:AttributeStatement id="IDCardData">
+          <saml:Attribute Name="sosi:IDCardID">
+            <saml:AttributeValue>qxTIW/dnDh8EZdV2A6yyEQ==
+</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:IDCardVersion">
+            <saml:AttributeValue>1.0.1</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:IDCardType">
+            <saml:AttributeValue>system</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:AuthenticationLevel">
+            <saml:AttributeValue>3</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="sosi:OCESCertHash">
+            <saml:AttributeValue>pFQXTvhBFAsCwPy2VkYI6GDTnFQ=
+</saml:AttributeValue>
+          </saml:Attribute>
+        </saml:AttributeStatement>
+        <saml:AttributeStatement id="SystemLog">
+          <saml:Attribute Name="medcom:ITSystemName">
+            <saml:AttributeValue>ACME Pro</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="medcom:CareProviderID" NameFormat="medcom:cvrnumber">
+            <saml:AttributeValue>22334455</saml:AttributeValue>
+          </saml:Attribute>
+          <saml:Attribute Name="medcom:CareProviderName">
+            <saml:AttributeValue>dk</saml:AttributeValue>
+          </saml:Attribute>
+        </saml:AttributeStatement>
+        <ds:Signature id="OCESSignature">
+          <ds:SignedInfo>
+            <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+            <ds:Reference URI="#IDCard">
+              <ds:Transforms>
+                <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+              </ds:Transforms>
+              <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+              <ds:DigestValue>AHbjxMy+UPVd+J6mEIB/oerwDvA=</ds:DigestValue>
+            </ds:Reference>
+          </ds:SignedInfo>
+          <ds:SignatureValue>l3lcm5dvHTxPrE9U5GNAARYa2m8YURryv6byuBwIfCrD7h40TFAxIOrlFikbTOFAOiAgaB5Jw3q7nTa7EH/EDzc76mnv3IRxsN2jtQBNgd5uksqBDa/gW72ZvDbdG0kpTYnHXn1oFZFbbEDU3Y8oEDSuhHmXBfMlbKuTEhc51bg=</ds:SignatureValue>
+          <ds:KeyInfo>
+            <ds:X509Data>
+              <ds:X509Certificate>MIIFBjCCBG+gAwIBAgIEQDeviTANBgkqhkiG9w0BAQUFADA/MQswCQYDVQQGEwJESzEMMAoGA1UEChMDVERDMSIwIAYDVQQDExlUREMgT0NFUyBTeXN0ZW10ZXN0IENBIElJMB4XDTEwMTExMDEzMjUwMFoXDTEyMTExMDEzNTUwMFowgYMxCzAJBgNVBAYTAkRLMSgwJgYDVQQKEx9EYW5za2UgUmVnaW9uZXIgLy8gQ1ZSOjU1ODMyMjE4MUowIQYDVQQDExpEYW5za2UgUmVnaW9uZXIgLSBTT1NJIFNUUzAlBgNVBAUTHkNWUjo1NTgzMjIxOC1VSUQ6MTE2MzQ0NzM2ODYyNzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAuw7xSHEdBuhZZDhpPrW3OZ1qEXSf5GHC/Q/mYguyd+pFmUwPico+dLOTroKlTem3LsNgkIJRbKidTaEamyrt/VSg3sH3rVsYh3Cs9jgpMs2N6BJzIkRcmpiFWhMZcej++mZsntxiG2QyVKXj+bYPPV/El4xzeTqwyAYOgAIwn+sCAwEAAaOCAsgwggLEMA4GA1UdDwEB/wQEAwIDuDArBgNVHRAEJDAigA8yMDEwMTExMDEzMjUwMFqBDzIwMTIxMTEwMTM1NTAwWjBGBggrBgEFBQcBAQQ6MDgwNgYIKwYBBQUHMAGGKmh0dHA6Ly90ZXN0Lm9jc3AuY2VydGlmaWthdC5kay9vY3NwL3N0YXR1czCCAQMGA1UdIASB+zCB+DCB9QYJKQEBAQEBAQEDMIHnMC8GCCsGAQUFBwIBFiNodHRwOi8vd3d3LmNlcnRpZmlrYXQuZGsvcmVwb3NpdG9yeTCBswYIKwYBBQUHAgIwgaYwChYDVERDMAMCAQEagZdUREMgVGVzdCBDZXJ0aWZpa2F0ZXIgZnJhIGRlbm5lIENBIHVkc3RlZGVzIHVuZGVyIE9JRCAxLjEuMS4xLjEuMS4xLjEuMS4zLiBUREMgVGVzdCBDZXJ0aWZpY2F0ZXMgZnJvbSB0aGlzIENBIGFyZSBpc3N1ZWQgdW5kZXIgT0lEIDEuMS4xLjEuMS4xLjEuMS4xLjMuMBcGCWCGSAGG+EIBDQQKFghvcmdhbldlYjAdBgNVHREEFjAUgRJkcmlmdHZhZ3RAZGFuaWQuZGswgZcGA1UdHwSBjzCBjDBXoFWgU6RRME8xCzAJBgNVBAYTAkRLMQwwCgYDVQQKEwNUREMxIjAgBgNVBAMTGVREQyBPQ0VTIFN5c3RlbXRlc3QgQ0EgSUkxDjAMBgNVBAMTBUNSTDI1MDGgL6AthitodHRwOi8vdGVzdC5jcmwub2Nlcy5jZXJ0aWZpa2F0LmRrL29jZXMuY3JsMB8GA1UdIwQYMBaAFByYCUcaTDi5EMUEKVvx9E6Aasx+MB0GA1UdDgQWBBSNZVo8u8hK4bUxiYRFXitISMp4GDAJBgNVHRMEAjAAMBkGCSqGSIb2fQdBAAQMMAobBFY3LjEDAgOoMA0GCSqGSIb3DQEBBQUAA4GBACcHdr74A1eDrbIyoAfuRdIkMZ183sxlcsONxUz9q5kOS97vOdwzWIgCqWD3L2C/+Bd9uFw2krcVwsN9IS++FiRPiswOWBUDAt6gR649sKWtlDF9mEscCizBh5F5oZdVGXMiFfXucbEU4tB4JwltbQva6+8FdPzgtgB+3+vgYxpc</ds:X509Certificate>
+            </ds:X509Data>
+          </ds:KeyInfo>
+        </ds:Signature>
+      </saml:Assertion>
+    </wsse:Security>
+    <medcom:Header xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+      <medcom:SecurityLevel>3</medcom:SecurityLevel>
+      <medcom:Linking>
+        <medcom:FlowID>86d39c5e-6dd4-4a64-aacc-33b646652b80</medcom:FlowID>
+        <medcom:MessageID>AAABNjrJ52uw2RR9AZrDulNPU0k=
+</medcom:MessageID>
+      </medcom:Linking>
+      <medcom:RequireNonRepudiationReceipt>no</medcom:RequireNonRepudiationReceipt>
+    </medcom:Header>
+  </soap:Header>
+  <soap:Body>
+    <cprabbs:CprAbbsRequest xmlns:cprabbs="http://nsi.dk/cprabbs/2011/10">
+      <cprabbs:since>2012-03-22T15:22:52.620+01:00</cprabbs:since>
+    </cprabbs:CprAbbsRequest>
+  </soap:Body>
+</soap:Envelope>
+]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/cprabbs/2011/10/getChangedCprs"/><con:wsrmConfig version="1.2"/></con:call><con:call name="junit_test_request"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://tri-test-niab82:8080/cprabbs/service/cprabbs</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Header>
+      <wsse:Security xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+         <wsu:Timestamp>
+            <wsu:Created>2012-04-12T08:06:17Z</wsu:Created>
+         </wsu:Timestamp>
+         <saml:Assertion IssueInstant="2012-04-12T08:01:17Z" Version="2.0" id="IDCard">
+            <saml:Issuer>TheSOSILibrary</saml:Issuer>
+            <saml:Subject>
+               <saml:NameID Format="medcom:other">123</saml:NameID>
+               <saml:SubjectConfirmation>
+                  <saml:ConfirmationMethod>urn:oasis:names:tc:SAML:2.0:cm:holder-of-key</saml:ConfirmationMethod>
+                  <saml:SubjectConfirmationData>
+                     <ds:KeyInfo>
+                        <ds:KeyName>OCESSignature</ds:KeyName>
+                     </ds:KeyInfo>
+                  </saml:SubjectConfirmationData>
+               </saml:SubjectConfirmation>
+            </saml:Subject>
+            <saml:Conditions NotBefore="2012-04-12T08:01:17Z" NotOnOrAfter="2012-04-13T08:01:17Z"/>
+            <saml:AttributeStatement id="IDCardData">
+               <saml:Attribute Name="sosi:IDCardID">
+                  <saml:AttributeValue>htLKT9KlLQiawonJ2T/vdA==</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="sosi:IDCardVersion">
+                  <saml:AttributeValue>1.0.1</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="sosi:IDCardType">
+                  <saml:AttributeValue>system</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="sosi:AuthenticationLevel">
+                  <saml:AttributeValue>3</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="sosi:OCESCertHash">
+                  <saml:AttributeValue>pFQXTvhBFAsCwPy2VkYI6GDTnFQ=</saml:AttributeValue>
+               </saml:Attribute>
+            </saml:AttributeStatement>
+            <saml:AttributeStatement id="SystemLog">
+               <saml:Attribute Name="medcom:ITSystemName">
+                  <saml:AttributeValue>ACME Pro</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="medcom:CareProviderID" NameFormat="medcom:cvrnumber">
+                  <saml:AttributeValue>44556677</saml:AttributeValue>
+               </saml:Attribute>
+               <saml:Attribute Name="medcom:CareProviderName">
+                  <saml:AttributeValue>dk</saml:AttributeValue>
+               </saml:Attribute>
+            </saml:AttributeStatement>
+            <ds:Signature id="OCESSignature">
+               <ds:SignedInfo>
+                  <ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                  <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+                  <ds:Reference URI="#IDCard">
+                     <ds:Transforms>
+                        <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+                        <ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+                     </ds:Transforms>
+                     <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+                     <ds:DigestValue>ZPqQ05kgFrHwu687YRhsCHqi62g=</ds:DigestValue>
+                  </ds:Reference>
+               </ds:SignedInfo>
+               <ds:SignatureValue>twRVExkosWBaJ1BxSqX3eBG32co3EJh2pdVVm5rJ4aysHwnW7zbkv3pntSwwcssptW+4P+OjUeT1cYBbSKyh2WFlGWlWH4GNG2pAAzBaIvuImZtFvQD7fJXDv5BpAJqtJ3qERrJCE4Li75sz9OM9vFVvqsGilh92bSoSGN4IH8k=</ds:SignatureValue>
+               <ds:KeyInfo>
+                  <ds:X509Data>
+                     <ds:X509Certificate>MIIFBjCCBG+gAwIBAgIEQDeviTANBgkqhkiG9w0BAQUFADA/MQswCQYDVQQGEwJESzEMMAoGA1UEChMDVERDMSIwIAYDVQQDExlUREMgT0NFUyBTeXN0ZW10ZXN0IENBIElJMB4XDTEwMTExMDEzMjUwMFoXDTEyMTExMDEzNTUwMFowgYMxCzAJBgNVBAYTAkRLMSgwJgYDVQQKEx9EYW5za2UgUmVnaW9uZXIgLy8gQ1ZSOjU1ODMyMjE4MUowIQYDVQQDExpEYW5za2UgUmVnaW9uZXIgLSBTT1NJIFNUUzAlBgNVBAUTHkNWUjo1NTgzMjIxOC1VSUQ6MTE2MzQ0NzM2ODYyNzCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEAuw7xSHEdBuhZZDhpPrW3OZ1qEXSf5GHC/Q/mYguyd+pFmUwPico+dLOTroKlTem3LsNgkIJRbKidTaEamyrt/VSg3sH3rVsYh3Cs9jgpMs2N6BJzIkRcmpiFWhMZcej++mZsntxiG2QyVKXj+bYPPV/El4xzeTqwyAYOgAIwn+sCAwEAAaOCAsgwggLEMA4GA1UdDwEB/wQEAwIDuDArBgNVHRAEJDAigA8yMDEwMTExMDEzMjUwMFqBDzIwMTIxMTEwMTM1NTAwWjBGBggrBgEFBQcBAQQ6MDgwNgYIKwYBBQUHMAGGKmh0dHA6Ly90ZXN0Lm9jc3AuY2VydGlmaWthdC5kay9vY3NwL3N0YXR1czCCAQMGA1UdIASB+zCB+DCB9QYJKQEBAQEBAQEDMIHnMC8GCCsGAQUFBwIBFiNodHRwOi8vd3d3LmNlcnRpZmlrYXQuZGsvcmVwb3NpdG9yeTCBswYIKwYBBQUHAgIwgaYwChYDVERDMAMCAQEagZdUREMgVGVzdCBDZXJ0aWZpa2F0ZXIgZnJhIGRlbm5lIENBIHVkc3RlZGVzIHVuZGVyIE9JRCAxLjEuMS4xLjEuMS4xLjEuMS4zLiBUREMgVGVzdCBDZXJ0aWZpY2F0ZXMgZnJvbSB0aGlzIENBIGFyZSBpc3N1ZWQgdW5kZXIgT0lEIDEuMS4xLjEuMS4xLjEuMS4xLjMuMBcGCWCGSAGG+EIBDQQKFghvcmdhbldlYjAdBgNVHREEFjAUgRJkcmlmdHZhZ3RAZGFuaWQuZGswgZcGA1UdHwSBjzCBjDBXoFWgU6RRME8xCzAJBgNVBAYTAkRLMQwwCgYDVQQKEwNUREMxIjAgBgNVBAMTGVREQyBPQ0VTIFN5c3RlbXRlc3QgQ0EgSUkxDjAMBgNVBAMTBUNSTDI1MDGgL6AthitodHRwOi8vdGVzdC5jcmwub2Nlcy5jZXJ0aWZpa2F0LmRrL29jZXMuY3JsMB8GA1UdIwQYMBaAFByYCUcaTDi5EMUEKVvx9E6Aasx+MB0GA1UdDgQWBBSNZVo8u8hK4bUxiYRFXitISMp4GDAJBgNVHRMEAjAAMBkGCSqGSIb2fQdBAAQMMAobBFY3LjEDAgOoMA0GCSqGSIb3DQEBBQUAA4GBACcHdr74A1eDrbIyoAfuRdIkMZ183sxlcsONxUz9q5kOS97vOdwzWIgCqWD3L2C/+Bd9uFw2krcVwsN9IS++FiRPiswOWBUDAt6gR649sKWtlDF9mEscCizBh5F5oZdVGXMiFfXucbEU4tB4JwltbQva6+8FdPzgtgB+3+vgYxpc</ds:X509Certificate>
+                  </ds:X509Data>
+               </ds:KeyInfo>
+            </ds:Signature>
+         </saml:Assertion>
+      </wsse:Security>
+      <medcom:Header xmlns:medcom="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd">
+         <medcom:SecurityLevel>3</medcom:SecurityLevel>
+         <medcom:Linking>
+            <medcom:FlowID>c3788358-8b41-4c07-a375-7a8524ea0af3</medcom:FlowID>
+            <medcom:MessageID>AAABNqWWrqmv5QU0iKvbpVNPU0k=</medcom:MessageID>
+         </medcom:Linking>
+         <medcom:RequireNonRepudiationReceipt>no</medcom:RequireNonRepudiationReceipt>
+      </medcom:Header>
+   </soap:Header>
+   <soap:Body>
+      <cprabbs:CprAbbsRequest xmlns:cprabbs="http://nsi.dk/cprabbs/2011/10">
+         <cprabbs:since>2012-04-12T10:06:13.449+02:00</cprabbs:since>
+      </cprabbs:CprAbbsRequest>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://nsi.dk/cprabbs/2011/10/getChangedCprs"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>
