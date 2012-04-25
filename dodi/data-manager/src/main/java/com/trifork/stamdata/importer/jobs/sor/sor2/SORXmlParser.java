@@ -32,13 +32,12 @@ import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.RecordPersister;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
-import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.xml.sax.SAXException;
 
+import javax.inject.Provider;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import java.io.File;
 import java.io.IOException;
 
@@ -49,12 +48,16 @@ import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 public class SORXmlParser implements Parser {
 //    private static final Logger logger = Logger.getLogger(SORXmlParser.class);
 
-    private SORFullEventHandler handler = new SORFullEventHandler();
-    private SAXParserFactory factory = SAXParserFactory.newInstance();
-
+    private final SAXParser saxParser;
+    private final Provider<SORFullEventHandler> saxEventHandlers;
 
     @Inject
     RecordPersister sorPersister;
+    
+    public SORXmlParser(SAXParser saxParser, Provider<SORFullEventHandler> saxEventHandlers) {
+    	this.saxParser = saxParser;
+        this.saxEventHandlers = saxEventHandlers;
+    }
 
     @Override
     public void process(File dataSet, RecordPersister persister) throws OutOfSequenceException, ParserException, Exception {
@@ -83,10 +86,9 @@ public class SORXmlParser implements Parser {
 
         MDC.put("filename", file.getName());
 
-        SAXParser parser = factory.newSAXParser();
-
         if (file.getName().toLowerCase().endsWith("xml")) {
-            parser.parse(file, handler);
+            SORFullEventHandler eventHandler = saxEventHandlers.get();
+            saxParser.parse(file, eventHandler);
         } else {
             //logger.warn("Can only parse files with extension 'xml'! The file is ignored. file=" + file.getAbsolutePath());
         }

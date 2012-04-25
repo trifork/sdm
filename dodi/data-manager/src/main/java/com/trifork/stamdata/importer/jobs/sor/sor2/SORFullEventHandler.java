@@ -25,32 +25,28 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2;
 
-import com.sun.istack.SAXException2;
-import com.trifork.stamdata.importer.jobs.sor.SORImporter;
-import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.AddressInformation;
-import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.EanLocationCode;
-import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.InstitutionOwner;
-import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.SorStatus;
-import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.VirtualAddressInformation;
-import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 public class SORFullEventHandler extends DefaultHandler {
 
 	private static final Logger logger = Logger.getLogger(SORFullEventHandler.class);
+	private final RecordPersister persister;
 	
     private String characterContent;
 
@@ -66,7 +62,7 @@ public class SORFullEventHandler extends DefaultHandler {
     private final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
     private final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
     
-    // SorStatusType element children
+/*    // SorStatusType element children
     private final String FROM_DATE = "FromDate";
     private final String TO_DATE = "ToDate";
     private final String UPDATED_AT_DATE = "UpdatedAt";
@@ -102,7 +98,7 @@ public class SORFullEventHandler extends DefaultHandler {
     private final String POSTCODE_IDENTIFIER = "dkcc2005:PostCodeIdentifier";
     private final String DISTRICT_NAME = "dkcc2005:DistrictName";
     private final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
-    
+*/    
     private SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
 
 /*    private InstitutionOwner currentInstitutionOwner;
@@ -114,6 +110,12 @@ public class SORFullEventHandler extends DefaultHandler {
     
     //private ArrayList<InstitutionOwner> institutionOwners;
     private ArrayList<RecordBuilder> institutionOwners;
+    
+	@Inject
+    SORFullEventHandler(RecordPersister persister)
+    {
+        this.persister = persister;
+    }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
@@ -165,29 +167,44 @@ public class SORFullEventHandler extends DefaultHandler {
             // institutionOwners.add(currentInstitutionOwner);
             
         	// System.out.println("Institution parsed: " + currentInstitutionOwner);
-        	// currentInstitutionOwner = null;
-        } else if (currentInstitutionOwner != null ) {
+        	try
+	        {
+	            persister.persist(currentInstitutionOwnerRecord.build(), SorFullRecordSpecs.INSTITUTIONS_EJER);
+	        }
+	        catch (SQLException e)
+	        {
+	            throw new SAXException(e);
+	        }
+        	currentInstitutionOwnerRecord = null;
+        } else if (currentInstitutionOwnerRecord != null ) {
         	if (ENTITY_NAME.equals(qName)) {
-        		currentInstitutionOwner.setEntityName(characterContent);
+        		//currentInstitutionOwner.setEntityName(characterContent);
+        		currentInstitutionOwnerRecord.field("entityName", characterContent);
         	} else if (SOR_IDENTIFIER.equals(qName)) {
-        		currentInstitutionOwner.setSorIdentifier(Long.valueOf(characterContent));
+        		//currentInstitutionOwner.setSorIdentifier(Long.valueOf(characterContent));
+        		currentInstitutionOwnerRecord.field("sorIdentifier", Integer.valueOf(characterContent));
         	} else if (OWNER_TYPE.equals(qName)) {
-        		currentInstitutionOwner.setOwnerType(Long.valueOf(characterContent));
+        		//currentInstitutionOwner.setOwnerType(Long.valueOf(characterContent));
+        		currentInstitutionOwnerRecord.field("ownerType", Integer.valueOf(characterContent));
         	} else if (SOR_STATUS.equals(qName)) {
-        		currentInstitutionOwner.setSorStatus(currentSorStatus);
-        		currentSorStatus = null;
+        		// currentInstitutionOwner.setSorStatus(currentSorStatus);
+        		// currentSorStatus = null;
+        		// TODO FIXME
         	} else if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
-        		currentInstitutionOwner.setEanLocationCode(currentLocationCode);
-        		currentInstitutionOwner = null;
+        		// currentInstitutionOwner.setEanLocationCode(currentLocationCode);
+        		// currentInstitutionOwner = null;
+        		// TODO FIXME
         	} else if (POSTAL_ADDRESS_INFO.equals(qName)) {
-        		currentInstitutionOwner.setPostalAddressInformation(currentAddress);
-        		currentAddress = null;
+        		// currentInstitutionOwner.setPostalAddressInformation(currentAddress);
+        		// currentAddress = null;
+        		// TODO FIXME
         	} else if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
-        		currentInstitutionOwner.setVirtualAddressInformation(currentVirtualInformation);
-        		currentVirtualInformation = null;
+        		// currentInstitutionOwner.setVirtualAddressInformation(currentVirtualInformation);
+        		// currentVirtualInformation = null;
+        		// TODO FIXME
         	}
         }
-        if (currentSorStatus != null) {
+/*        if (currentSorStatus != null) {
         	if (FROM_DATE.equals(qName)) {
         		currentSorStatus.setFromDate(parseISO8601Date(characterContent));
     		} else if (TO_DATE.equals(qName)) {
@@ -259,12 +276,10 @@ public class SORFullEventHandler extends DefaultHandler {
         	} else if (FAX_NUMBER_IDENTIFIER.equals(qName)) {
         		currentVirtualInformation.setFaxNumberIdentifier(characterContent);
         	}
-        }
+        }*/
         super.endElement(uri, localName, qName);
         
     }
-
-
 
 	private Date parseISO8601Date(String strDate) throws SAXException {
 		try {
