@@ -30,7 +30,8 @@ public class InstitutionOwner {
 
     private long sorIdentifier;
 
-    private String entityName;
+	private String entityName;
+    
     private long ownerType;
 
     private EanLocationCode eanLocationCode;
@@ -41,6 +42,72 @@ public class InstitutionOwner {
 
     private SorStatus sorStatus;
 
-    public InstitutionOwner() {
-    }
+    public String getEntityName() {
+		return entityName;
+	}
+
+	public void setEntityName(String entityName) {
+		this.entityName = entityName;
+	}
+
+	public long getOwnerType() {
+		return ownerType;
+	}
+
+	public void setOwnerType(long ownerType) {
+		this.ownerType = ownerType;
+	}
+
+	public EanLocationCode getEanLocationCode() {
+		return eanLocationCode;
+	}
+
+	public void setEanLocationCode(EanLocationCode eanLocationCode) {
+		this.eanLocationCode = eanLocationCode;
+	}
+
+	public PostalAddressInformation getPostalAddressInformation() {
+		return postalAddressInformation;
+	}
+
+	public void setPostalAddressInformation(
+			PostalAddressInformation postalAddressInformation) {
+		this.postalAddressInformation = postalAddressInformation;
+	}
+
+	public VirtualAddressInformation getVirtualAddressInformation() {
+		return virtualAddressInformation;
+	}
+
+	public void setVirtualAddressInformation(
+			VirtualAddressInformation virtualAddressInformation) {
+		this.virtualAddressInformation = virtualAddressInformation;
+	}
+
+	public SorStatus getSorStatus() {
+		return sorStatus;
+	}
+
+	public void setSorStatus(SorStatus sorStatus) {
+		this.sorStatus = sorStatus;
+	}
+    
+	public long getSorIdentifier() {
+		return sorIdentifier;
+	}
+
+	public void setSorIdentifier(long sorIdentifier) {
+		this.sorIdentifier = sorIdentifier;
+	}
+
+	@Override
+	public String toString() {
+		return "InstitutionOwner [sorIdentifier=" + sorIdentifier
+				+ ", entityName=" + entityName + ", ownerType=" + ownerType
+				+ ", eanLocationCode=" + eanLocationCode
+				+ ", postalAddressInformation=" + postalAddressInformation
+				+ ", virtualAddressInformation=" + virtualAddressInformation
+				+ ", sorStatus=" + sorStatus + "]";
+	}
+
 }

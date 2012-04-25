@@ -45,10 +45,9 @@ import java.io.IOException;
 import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 
-@ParserInformation(id = "", name = "")
+@ParserInformation(id = "sor", name = "\"Sor\"")
 public class SORXmlParser implements Parser {
-    private static final Logger logger = Logger.getLogger(SORXmlParser.class);
-
+//    private static final Logger logger = Logger.getLogger(SORXmlParser.class);
 
     private SORFullEventHandler handler = new SORFullEventHandler();
     private SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -89,7 +88,7 @@ public class SORXmlParser implements Parser {
         if (file.getName().toLowerCase().endsWith("xml")) {
             parser.parse(file, handler);
         } else {
-            logger.warn("Can only parse files with extension 'xml'! The file is ignored. file=" + file.getAbsolutePath());
+            //logger.warn("Can only parse files with extension 'xml'! The file is ignored. file=" + file.getAbsolutePath());
         }
     }
 }

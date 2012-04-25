@@ -26,4 +26,7 @@
 package com.trifork.stamdata.importer.jobs.sor.sor2;
 
 public class SORFullImporter {
+	
+	
+	
 }
