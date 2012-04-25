@@ -26,4 +26,34 @@
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
 public class VirtualAddressInformation {
+	
+	private String emailAddressIdentifier;
+	private String website;
+	private String telephoneNumberIdentifier;
+	private String faxNumberIdentifier;
+	
+	public String getEmailAddressIdentifier() {
+		return emailAddressIdentifier;
+	}
+	public void setEmailAddressIdentifier(String emailAddressIdentifier) {
+		this.emailAddressIdentifier = emailAddressIdentifier;
+	}
+	public String getWebsite() {
+		return website;
+	}
+	public void setWebsite(String website) {
+		this.website = website;
+	}
+	public String getTelephoneNumberIdentifier() {
+		return telephoneNumberIdentifier;
+	}
+	public void setTelephoneNumberIdentifier(String telephoneNumberIdentifier) {
+		this.telephoneNumberIdentifier = telephoneNumberIdentifier;
+	}
+	public String getFaxNumberIdentifier() {
+		return faxNumberIdentifier;
+	}
+	public void setFaxNumberIdentifier(String faxNumberIdentifier) {
+		this.faxNumberIdentifier = faxNumberIdentifier;
+	}
 }

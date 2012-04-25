@@ -150,5 +150,23 @@ public class AddressInformation {
         this.suiteIdentifier = suiteIdentifier;
     }
 
+	@Override
+	public String toString() {
+		return "AddressInformation [stairway=" + stairway
+				+ ", mailDeliverySublocationIdentifier="
+				+ mailDeliverySublocationIdentifier + ", streetName="
+				+ streetName + ", streetNameForAddressingName="
+				+ streetNameForAddressingName + ", streetBuildingIdentifier="
+				+ streetBuildingIdentifier + ", floorIdentifier="
+				+ floorIdentifier + ", suiteIdentifier=" + suiteIdentifier
+				+ ", districtSubdivisionIdentifier="
+				+ districtSubdivisionIdentifier + ", postOfficeBoxIdentifier="
+				+ postOfficeBoxIdentifier + ", postCodeIdentifier="
+				+ postCodeIdentifier + ", districtName=" + districtName
+				+ ", countryIdentificationCode=" + countryIdentificationCode
+				+ ", countryIdentificationScheme="
+				+ countryIdentificationScheme + "]";
+	}
 
+    
 }

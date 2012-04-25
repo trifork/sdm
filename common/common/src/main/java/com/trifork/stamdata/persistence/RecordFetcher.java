@@ -137,6 +137,10 @@ public class RecordFetcher
                 {
                     builder.field(fieldName, resultSet.getString(fieldName));
                 }
+                else if (fieldSpec.type == RecordSpecification.RecordFieldType.DATE)
+                {
+                    builder.field(fieldName, resultSet.getDate(fieldName));
+                }
                 else
                 {
                     throw new AssertionError("Invalid field specifier used");

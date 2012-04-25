@@ -26,6 +26,7 @@ package com.trifork.stamdata.persistence;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.google.common.collect.ImmutableList;
@@ -52,7 +53,8 @@ public class RecordSpecification
     public static enum RecordFieldType
     {
         ALPHANUMERICAL,
-        NUMERICAL
+        NUMERICAL,
+        DATE
     }
     
     public static enum Modifiers
@@ -81,6 +83,15 @@ public class RecordSpecification
         public FieldSpecification numerical()
         {
             return new FieldSpecification(name, RecordFieldType.NUMERICAL, length, persistField);
+        }
+        
+        /**
+         * 
+         * @return a copy of the field with a date entry
+         */
+        public FieldSpecification date()
+        {
+            return new FieldSpecification(name, RecordFieldType.DATE, length, persistField);
         }
         
         /**
@@ -171,6 +182,13 @@ public class RecordSpecification
                             {
                                 return false;
                             }
+                        }
+                    }
+                    else if (fieldsSpecification.type == RecordFieldType.DATE)
+                    {
+                        if (!(value instanceof Date))
+                        {
+                            return false;
                         }
                     }
                     else
