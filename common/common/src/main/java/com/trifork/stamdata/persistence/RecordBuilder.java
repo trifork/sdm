@@ -27,8 +27,6 @@ package com.trifork.stamdata.persistence;
 import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-import java.sql.Date;
-
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
@@ -56,10 +54,6 @@ public class RecordBuilder
         {
             return field(fieldName, (String)value);
         }
-        else if (value instanceof Date)
-        {
-            return field(fieldName, (Date)value);
-        }
         else
         {
             throw new IllegalArgumentException("Values in records must be string or integer. field=" + fieldName);
@@ -74,11 +68,6 @@ public class RecordBuilder
     public RecordBuilder field(String fieldName, String value)
     {
         return field(fieldName, value, RecordSpecification.RecordFieldType.ALPHANUMERICAL);
-    }
-    
-    public RecordBuilder field(String fieldName, Date value)
-    {
-        return field(fieldName, value, RecordSpecification.RecordFieldType.DATE);
     }
     
     private RecordBuilder field(String fieldName, Object value, RecordSpecification.RecordFieldType recordFieldType)
@@ -116,10 +105,6 @@ public class RecordBuilder
             else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
                 record = record.put(fieldSpecification.name, 0);
-            }
-            else if(fieldSpecification.type == RecordSpecification.RecordFieldType.DATE)
-            {
-                record = record.put(fieldSpecification.name, "DATE");
             }
             else
             {

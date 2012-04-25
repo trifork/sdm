@@ -42,10 +42,10 @@ public class SorFullRecordSpecs {
 			);
 	
 	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SorStatus", "pk",
-				field("fromDate", 10).date(),
-				field("toDate",10).date(),
-				field("updatedAt",10).date(),
-				field("firstFromDate",10).date()
+				field("fromDate", 10),
+				field("toDate",10),
+				field("updatedAt",10),
+				field("firstFromDate",10)
 			);	
 	
 }

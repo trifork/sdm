@@ -30,7 +30,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Date;
 import java.util.List;
 
 import com.google.inject.Inject;
@@ -97,10 +96,6 @@ public class RecordPersister
                 else if (fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
                     preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
-                }
-                else if (fieldSpecification.type == RecordSpecification.RecordFieldType.DATE)
-                {
-                    preparedStatement.setDate(index, (Date) record.get(fieldSpecification.name));
                 }
                 else
                 {
