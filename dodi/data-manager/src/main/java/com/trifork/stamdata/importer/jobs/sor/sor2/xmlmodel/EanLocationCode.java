@@ -36,6 +36,7 @@ public class EanLocationCode {
 	private long ediAdministrator;
 	private String sorNote;
 	private SorStatus sorStatus;
+
 	public long getEanLocationCode() {
 		return eanLocationCode;
 	}

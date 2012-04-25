@@ -25,6 +25,6 @@
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
 public class GeographicalParent {
-    private Long sorIdentifier; //can be null
+    private Long geographicalParentSorIdentifier; //can be null
     private long geographicalParentRelation;
 }

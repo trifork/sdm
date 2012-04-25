@@ -34,8 +34,9 @@ public class HealthInstitution {
     private long institutionType; //required
     private String pharmacyIdentifier; //String up to 20 chars, can be null
     private String shakIdentifier; //String 4-7 characters, can be null
+
     private OptionalEanLocationCode optionalEanLocationCode;
-    private GeographicalParent geographicalParent; //can be null
+    private GeographicalParent geographicalParent; //can be null - Angiver hvilken geografisk tilknytning enheden har. Enten: Selvstændig geografisk placering (1), Den organisatoriske mor (2), Anden geografisk mor (3), Ingen geografisk placering (4), Ukendt geografisk placering (5).
 
     private AddressInformation postalAddressInformation;
     private AddressInformation visitingAddressInformation;
