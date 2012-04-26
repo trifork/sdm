@@ -74,6 +74,7 @@ public class RecordSpecification
             this.length = length;
             this.persistField = persistField;
         }
+        
 
         /**
          * Returns a copy of the field with a numerical entry
@@ -152,7 +153,7 @@ public class RecordSpecification
                     
                     if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
                     {
-                        if (!(value instanceof Integer))
+                        if (!(value instanceof Long))
                         {
                             return false;
                         }

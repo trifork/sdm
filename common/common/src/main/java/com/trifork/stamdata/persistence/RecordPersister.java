@@ -95,7 +95,7 @@ public class RecordPersister
                 }
                 else if (fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
-                    preparedStatement.setInt(index, (Integer) record.get(fieldSpecification.name));
+                    preparedStatement.setLong(index, (Long) record.get(fieldSpecification.name));
                 }
                 else
                 {

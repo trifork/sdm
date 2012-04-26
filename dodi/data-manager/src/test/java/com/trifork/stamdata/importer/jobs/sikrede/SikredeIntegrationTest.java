@@ -24,14 +24,15 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
-import com.trifork.stamdata.importer.FileParserIntegrationTest;
-import org.junit.Ignore;
-import org.junit.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.junit.Ignore;
+import org.junit.Test;
+
+import com.trifork.stamdata.importer.FileParserIntegrationTest;
 
 @Ignore("Ignored until we get some propper test data.")
 public class SikredeIntegrationTest extends FileParserIntegrationTest

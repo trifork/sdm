@@ -134,7 +134,7 @@ public class RecordXmlGenerator
         }
         else if (fieldSpecification.type == RecordFieldType.NUMERICAL)
         {
-            return Integer.toString((Integer) record.get(fieldSpecification.name));
+            return Long.toString((Long) record.get(fieldSpecification.name));
         }
         else
         {

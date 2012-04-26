@@ -27,6 +27,7 @@ package com.trifork.stamdata.persistence;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -131,8 +132,9 @@ public class RecordFetcher
                 if (fieldSpec.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
                     // TODO: Explicit check of returned type
-                    builder.field(fieldName, resultSet.getInt(fieldName));
-                }
+                	long fieldVal = resultSet.getLong(fieldName);
+                    builder.field(fieldName, fieldVal);
+                } 
                 else if (fieldSpec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {
                     builder.field(fieldName, resultSet.getString(fieldName));

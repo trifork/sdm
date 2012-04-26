@@ -44,7 +44,7 @@ import java.io.IOException;
 import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 
-@ParserInformation(id = "sor", name = "\"Sor\"")
+@ParserInformation(id = "sor", name = "Sor")
 public class SORXmlParser implements Parser {
 //    private static final Logger logger = Logger.getLogger(SORXmlParser.class);
 
@@ -54,6 +54,7 @@ public class SORXmlParser implements Parser {
     @Inject
     RecordPersister sorPersister;
     
+    @Inject
     public SORXmlParser(SAXParser saxParser, Provider<SORFullEventHandler> saxEventHandlers) {
     	this.saxParser = saxParser;
         this.saxEventHandlers = saxEventHandlers;
@@ -63,13 +64,18 @@ public class SORXmlParser implements Parser {
     public void process(File dataSet, RecordPersister persister) throws OutOfSequenceException, ParserException, Exception {
         SLALogItem slaLogItem = getSLALogger().createLogItem(getClass().getSimpleName(), "dataSet");
 
+        File fileToParse = null;
         File[] input = dataSet.listFiles();
-        checkArgument(input.length == 1, "Only one file is expected at this point.");
-        File file = input[0];
+        //checkArgument(input.length == 1, "Only one file is expected at this point.");
+        for (File fullXml : input) {
+        	if ("SOR_FULL2.xml".equals(fullXml.getName())) {
+        		fileToParse = fullXml;
+        	}
+        }
 
 
         try {
-            parseFile(file);
+            parseFile(fileToParse);
 
             slaLogItem.setCallResultOk();
             slaLogItem.store();

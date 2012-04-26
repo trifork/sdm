@@ -26,6 +26,8 @@
 
 package com.trifork.stamdata.importer.jobs.sor2;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -33,6 +35,7 @@ import java.io.File;
 
 import javax.inject.Provider;
 import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
@@ -40,57 +43,33 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import com.trifork.stamdata.importer.FileParserIntegrationTest;
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORFullEventHandler;
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlParser;
+import com.trifork.stamdata.importer.jobs.yderregister.YderregisterSaxEventHandler;
 import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
-public class Sor2ParserTest
+public class Sor2ParserTest extends FileParserIntegrationTest
 {
 
-	@Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
-	
-	private SORXmlParser parser;
-    private RecordPersister persister;
-    private Provider<SORFullEventHandler> saxHandlerProvider;
-    private SORFullEventHandler saxHandler;
-    private SAXParser saxParser;
-
-	private File inbox1;
-	private File inbox2;
-
-	public File getFile(String path)
+	public Sor2ParserTest()
 	{
-		return FileUtils.toFile(getClass().getClassLoader().getResource(path));
-	}
-
-	@Before
-	public void setUp() throws Exception
-	{
-		File full1 = getFile("data/sor/SOR_FULL.xml");
-		File full2 = getFile("data/sor/SOR_FULL2.xml");
-		
-		inbox1 = temporaryFolder.newFolder("full1");
-		inbox2 = temporaryFolder.newFolder("full2");
-		
-		FileUtils.copyFileToDirectory(full1, inbox1);
-		FileUtils.copyFileToDirectory(full2, inbox2);
-		
-        persister = mock(RecordPersister.class);
-        
-        saxHandlerProvider = mock(Provider.class);
-        saxHandler = mock(SORFullEventHandler.class);
-        saxParser = mock(SAXParser.class);
-
-        when(saxHandlerProvider.get()).thenReturn(saxHandler);
-        
-        parser = new SORXmlParser(saxParser, saxHandlerProvider);
+		super("sor");
     }
 
 	@Test
 	public void testParser1() throws Exception
 	{
-		long timeStart = System.currentTimeMillis();
+        File fileSet1 = getDirectory("data/sor");
+
+        placeInInbox(fileSet1, true);
+         
+        assertThat(isLocked(), is(false));
+
+//        assertRecordCount("Yderregister", 58);
+//        assertRecordCount("YderregisterPerson", 54);
+		/*long timeStart = System.currentTimeMillis();
 		parser.process(inbox1, persister);
 		
 		long timeEnd = System.currentTimeMillis();
@@ -99,7 +78,7 @@ public class Sor2ParserTest
 		timeStart = System.currentTimeMillis();
 		parser.process(inbox2, persister);
 		timeEnd = System.currentTimeMillis();
-		System.out.println("full2 file took: " + (timeEnd-timeStart) + " ms");
+		System.out.println("full2 file took: " + (timeEnd-timeStart) + " ms");*/
 	}
 
 }

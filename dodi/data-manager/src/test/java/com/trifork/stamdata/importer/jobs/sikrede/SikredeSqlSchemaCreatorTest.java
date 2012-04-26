@@ -25,18 +25,15 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static com.trifork.stamdata.persistence.RecordSpecification.field;
-
-import static org.junit.Assert.*;
-
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 public class SikredeSqlSchemaCreatorTest
 {
