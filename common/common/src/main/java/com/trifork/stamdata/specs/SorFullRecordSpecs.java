@@ -49,7 +49,7 @@ public class SorFullRecordSpecs {
 			);
 
     public static final RecordSpecification HEALTH_INSTITUTION_RECORD_TYPE = RecordSpecification.createSpecification("HealthInstitution", "SorIdentifier",
-                field("SorIdentifier", 20).numerical(), // TODO: Skal denne være String i stedet? Den første komponent kan blive lige så lang som der er cifre i antallet af enheder:  SOR-kode der relaterer til enheden. Genereres automatisk. En SOR-kode består af fire komponenter: - Fortløbende nummer - Namespace (7 cifre: "1000016") - Partition-ID (2 cifre) - Checksum-ciffer (1 cifre). Den første mulige SOR-kode er dermed '11000016002'.
+                field("SorIdentifier", 20).numerical(), //Den første komponent kan blive lige så lang som der er cifre i antallet af enheder:  SOR-kode der relaterer til enheden. Genereres automatisk. En SOR-kode består af fire komponenter: - Fortløbende nummer - Namespace (7 cifre: "1000016") - Partition-ID (2 cifre) - Checksum-ciffer (1 cifre). Den første mulige SOR-kode er dermed '11000016002'.
                 field("EntityName", 60),
                 field("InstitutionType", 8).numerical(),
                 field("PharmacyIdentifier", 20),
@@ -58,9 +58,15 @@ public class SorFullRecordSpecs {
                 //,field("VisitingAddressInformation")
                 //,field("VirtualAddressInformation")
                 ,field("OptionalEanLocationCode", 20).numerical()
+                ,
                 ,field("GeographicalParentRelation", 8).numerical() //Angiver hvilken geografisk tilknytning enheden har. Enten: Selvstændig geografisk placering (1), Den organisatoriske mor (2), Anden geografisk mor (3), Ingen geografisk placering (4), Ukendt geografisk placering (5).
                 ,field("GeographicalParentSorIdentifier", 8).numerical() //Angiver enhedens geografiske mor.
-                //,field("SorStatus")
+
+                //,field("SorStatus") //FromDate - Angiver dato for hvornår den sidste ændring gælder fra.,
+                //,field("SorStatus") //ToDate - "Lukke dato" - Angiver den sidste gyldige dato for enheden/lokationsnummeret. Ikke obligatorisk. ,
+                //,field("SorStatus") //UpdatedAt - Angiver dato for hvornår enheden sidst er ændret.
+                //,field("SorStatus") //FirstFromDate - Angiver dato for hvornår enheden er gældende fra.
+
                 //,field("ReplacesEntityCollection") //this is a list of SorIdentifier
                 //,field("ReplacedByEntityCollection") //this is a list of SorIdentifier
     );
