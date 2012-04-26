@@ -25,6 +25,13 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static com.trifork.stamdata.persistence.RecordSpecification.field;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 import com.google.common.collect.Iterables;
 import com.trifork.stamdata.persistence.Record;
@@ -32,10 +39,6 @@ import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 // FIXME: These tests should be moved to common
 public class SikredeFieldsTester

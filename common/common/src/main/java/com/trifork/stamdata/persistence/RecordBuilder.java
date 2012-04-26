@@ -46,9 +46,9 @@ public class RecordBuilder
 
     public RecordBuilder field(String fieldName, Object value)
     {
-        if (value instanceof Integer)
+        if (value instanceof Long)
         {
-            return field(fieldName, (Integer)value);
+            return field(fieldName, (Long)value);
         }
         else if (value instanceof String)
         {
@@ -56,11 +56,11 @@ public class RecordBuilder
         }
         else
         {
-            throw new IllegalArgumentException("Values in records must be string or integer. field=" + fieldName);
+            throw new IllegalArgumentException("Values in records must be string or long. field=" + fieldName);
         }
     }
 
-    public RecordBuilder field(String fieldName, int value)
+    public RecordBuilder field(String fieldName, long value)
     {
         return field(fieldName, value, RecordSpecification.RecordFieldType.NUMERICAL);
     }

@@ -30,6 +30,8 @@ import com.trifork.stamdata.importer.config.ConnectionManager;
 import com.trifork.stamdata.importer.parsers.annotations.ParserScoped;
 import com.trifork.stamdata.persistence.RecordPersister;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
@@ -132,8 +134,9 @@ public class ParserExecutor implements Runnable {
         MDC.put("parser", parserIdentifier);
 
         File dataSet = checkInbox();
-
+        System.out.println("Inbox checked - DataSet: " + (dataSet != null ? StringUtils.join(dataSet.list(), ", ") : null));
         if (dataSet != null) {
+        	System.out.println("Executing parser " + parserIdentifier + " -- " + parser.getClass().getCanonicalName());
             SLALogItem slaLogItem = getSLALogger().createLogItem("Executing parser " + parserIdentifier, parser.getClass().getCanonicalName());
             try {
             context.isInProgress(true);

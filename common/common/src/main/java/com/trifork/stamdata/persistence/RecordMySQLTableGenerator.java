@@ -60,7 +60,11 @@ public class RecordMySQLTableGenerator
             {
                 if(fieldSpecification.type == RecordFieldType.NUMERICAL)
                 {
-                    builder.append(String.format(",\n\t%s BIGINT", fieldSpecification.name));
+                	if (fieldSpecification.length > 0) {
+                		builder.append(String.format(",\n\t%s BIGINT(%d)", fieldSpecification.name, fieldSpecification.length));
+                	} else {
+                		throw new AssertionError("Field length cannot be set to zero.");
+                	}
                 }
                 else if(fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {

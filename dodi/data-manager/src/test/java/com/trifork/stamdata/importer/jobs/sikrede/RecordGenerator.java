@@ -24,12 +24,12 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static org.junit.Assert.assertTrue;
+
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
-
-import static org.junit.Assert.assertTrue;
 
 public class RecordGenerator
 {
@@ -58,7 +58,7 @@ public class RecordGenerator
             }
             else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
-                String value = Integer.toString((Integer) record.get(fieldSpecification.name));
+                String value = Long.toString((Long) record.get(fieldSpecification.name));
                 builder.append(prefixPadding('0', fieldSpecification.length - value.length()));
                 builder.append(value);
             }

@@ -64,7 +64,7 @@ public class SingleLineRecordParser
             {
                 // This will potentially throw a runtime exception on bad input.
                 //
-                builder.field(fieldSpecification.name, Integer.parseInt(subString.trim()));
+                builder.field(fieldSpecification.name, Long.parseLong(subString.trim()));
             }
             else
             {

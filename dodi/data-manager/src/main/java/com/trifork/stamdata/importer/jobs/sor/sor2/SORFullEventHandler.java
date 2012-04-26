@@ -112,6 +112,7 @@ public class SORFullEventHandler extends DefaultHandler {
     private ArrayList<RecordBuilder> institutionOwners;
     
 	@Inject
+	public
     SORFullEventHandler(RecordPersister persister)
     {
         this.persister = persister;
@@ -182,10 +183,10 @@ public class SORFullEventHandler extends DefaultHandler {
         		currentInstitutionOwnerRecord.field("entityName", characterContent);
         	} else if (SOR_IDENTIFIER.equals(qName)) {
         		//currentInstitutionOwner.setSorIdentifier(Long.valueOf(characterContent));
-        		currentInstitutionOwnerRecord.field("sorIdentifier", Integer.valueOf(characterContent));
+        		currentInstitutionOwnerRecord.field("sorIdentifier", Long.valueOf(characterContent));
         	} else if (OWNER_TYPE.equals(qName)) {
         		//currentInstitutionOwner.setOwnerType(Long.valueOf(characterContent));
-        		currentInstitutionOwnerRecord.field("ownerType", Integer.valueOf(characterContent));
+        		currentInstitutionOwnerRecord.field("ownerType", Long.valueOf(characterContent));
         	} else if (SOR_STATUS.equals(qName)) {
         		// currentInstitutionOwner.setSorStatus(currentSorStatus);
         		// currentSorStatus = null;

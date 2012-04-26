@@ -25,22 +25,7 @@
 package com.trifork.stamdata.importer.jobs.sikrede;
 
 import static com.trifork.stamdata.persistence.RecordSpecification.field;
-
-import com.trifork.stamdata.importer.config.ConnectionManager;
-import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
-
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-
-import org.joda.time.Instant;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.mockito.Matchers;
-import org.mockito.Mockito;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,10 +35,20 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import org.joda.time.Instant;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.mockito.Mockito;
+
+import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 
 
 public class SikredeParserTest

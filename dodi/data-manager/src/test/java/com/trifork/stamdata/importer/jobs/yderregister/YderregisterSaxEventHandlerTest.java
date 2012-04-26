@@ -64,7 +64,6 @@ public class YderregisterSaxEventHandlerTest
     private RecordPersister persister;
     private YderregisterSaxEventHandler eventHandler;
 
-    @Before
     public void setUp() throws Exception
     {
         persister = mock(RecordPersister.class);

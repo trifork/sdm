@@ -29,7 +29,10 @@ import com.trifork.stamdata.Service;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import dk.nsi.stamdata.testing.TestServer;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.joda.time.format.ISODateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
@@ -107,7 +110,16 @@ public abstract class FileParserIntegrationTest
 
         if (useSubdirectory)
         {
-            String subDirName = Instant.now().toString(ISODateTimeFormat.dateTime());
+        	DateTimeFormatter dtf = new DateTimeFormatterBuilder()
+            .appendYear(4, 4)
+            .appendMonthOfYear(2)
+            .appendDayOfMonth(2)
+            .appendHourOfDay(2)
+            .appendMinuteOfHour(2)
+            .appendSecondOfMinute(2)
+            .toFormatter();
+
+            String subDirName = Instant.now().toString(dtf);
             destination = new File(getInboxPath(), subDirName);
         }
         else
@@ -119,10 +131,12 @@ public abstract class FileParserIntegrationTest
         System.out.println(destination.getAbsolutePath());
 
         FileUtils.copyDirectory(inboxToCopy, destination);
+        
+        System.out.println("Test files: " + StringUtils.join(destination.list(), ",")); 
 
         assertThat(destination.exists(), is(true));
 
-        Thread.sleep(10000);
+        Thread.sleep(100000);
 
         while (isInProgress()) { Thread.sleep(500); }
     }
