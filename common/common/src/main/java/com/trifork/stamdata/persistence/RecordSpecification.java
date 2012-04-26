@@ -52,7 +52,8 @@ public class RecordSpecification
     public static enum RecordFieldType
     {
         ALPHANUMERICAL,
-        NUMERICAL
+        NUMERICAL,
+        FOREIGN_KEY
     }
     
     public static enum Modifiers
@@ -98,6 +99,20 @@ public class RecordSpecification
     public static FieldSpecification field(String name, int length)
     {
         return new FieldSpecification(name, RecordFieldType.ALPHANUMERICAL, length, true);
+    }
+
+    public static FieldSpecification field(RecordSpecification recordSpecification)
+    {
+        String name =  recordSpecification.getTable() + "Id";
+        int fieldLength = 0;
+
+        Iterable<FieldSpecification> fieldSpecs = recordSpecification.getFieldSpecs();
+        for (FieldSpecification fieldSpec : fieldSpecs) {
+            if (recordSpecification.getKeyColumn().equals(fieldSpec.name)) {
+                fieldLength = fieldSpec.length;
+            }
+        }
+        return new FieldSpecification(name, RecordFieldType.FOREIGN_KEY, fieldLength, true);
     }
 
     private List<FieldSpecification> fields;
