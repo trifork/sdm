@@ -89,13 +89,22 @@ public class RecordPersister
         {
             if(fieldSpecification.persistField)
             {
-                if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
+            	Object fieldVal = record.get(fieldSpecification.name);
+            	if (fieldSpecification.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {
-                    preparedStatement.setString(index, (String) record.get(fieldSpecification.name));
+            		if (fieldVal == null && fieldSpecification.allowNull) {
+                		preparedStatement.setNull(index, java.sql.Types.VARCHAR);
+                	} else {
+                		preparedStatement.setString(index, (String) fieldVal);
+                	}
                 }
                 else if (fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
-                    preparedStatement.setLong(index, (Long) record.get(fieldSpecification.name));
+                	if (fieldVal == null && fieldSpecification.allowNull) {
+                		preparedStatement.setNull(index, java.sql.Types.BIGINT);
+                	} else {
+                		preparedStatement.setLong(index, (Long) fieldVal);
+                	}
                 }
                 else
                 {

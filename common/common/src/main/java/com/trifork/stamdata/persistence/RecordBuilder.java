@@ -60,7 +60,7 @@ public class RecordBuilder
         }
     }
 
-    public RecordBuilder field(String fieldName, long value)
+    public RecordBuilder field(String fieldName, Long value)
     {
         return field(fieldName, value, RecordSpecification.RecordFieldType.NUMERICAL);
     }

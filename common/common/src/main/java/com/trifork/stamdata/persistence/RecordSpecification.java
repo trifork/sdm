@@ -67,13 +67,15 @@ public class RecordSpecification
         public final RecordFieldType type;
         public final int length;
         public final boolean persistField;
+        public final boolean allowNull;
         
-        public FieldSpecification(String name, RecordFieldType type, int length, boolean persistField)
+        public FieldSpecification(String name, RecordFieldType type, int length, boolean persistField, boolean allowNull)
         {
             this.name = name;
             this.type = type;
             this.length = length;
             this.persistField = persistField;
+            this.allowNull = allowNull;
         }
         
 
@@ -82,7 +84,7 @@ public class RecordSpecification
          */
         public FieldSpecification numerical()
         {
-            return new FieldSpecification(name, RecordFieldType.NUMERICAL, length, persistField);
+            return new FieldSpecification(name, RecordFieldType.NUMERICAL, length, persistField, false);
         }
         
         /**
@@ -90,7 +92,14 @@ public class RecordSpecification
          */
         public FieldSpecification doNotPersist()
         {
-            return new FieldSpecification(name, type, length, false);
+            return new FieldSpecification(name, type, length, false, allowNull);
+        }
+        /**
+         * Returns a copy of the field that allow null value
+         */
+        public FieldSpecification doAllowNull()
+        {
+            return new FieldSpecification(name, type, length, persistField, true);
         }
     }
     
@@ -99,7 +108,7 @@ public class RecordSpecification
      */
     public static FieldSpecification field(String name, int length)
     {
-        return new FieldSpecification(name, RecordFieldType.ALPHANUMERICAL, length, true);
+        return new FieldSpecification(name, RecordFieldType.ALPHANUMERICAL, length, true, false);
     }
 
     public static FieldSpecification field(RecordSpecification recordSpecification)
@@ -113,7 +122,7 @@ public class RecordSpecification
                 fieldLength = fieldSpec.length;
             }
         }
-        return new FieldSpecification(name, RecordFieldType.FOREIGN_KEY, fieldLength, true);
+        return new FieldSpecification(name, RecordFieldType.FOREIGN_KEY, fieldLength, true, false);
     }
 
     private List<FieldSpecification> fields;
@@ -160,13 +169,23 @@ public class RecordSpecification
             {
                 if (!record.containsKey(fieldsSpecification.name))
                 {
-                    return false;
+                	if (fieldsSpecification.allowNull == false)
+                	{
+                		return false;
+                	}
                 }
                 else
                 {
                     Object value = record.get(fieldsSpecification.name);
                     
-                    if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
+                    if (value == null)
+                    {
+                    	if (fieldsSpecification.allowNull == false)
+                    	{
+                    		return false;
+                    	}
+                    }
+                    else if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
                     {
                         if (!(value instanceof Long))
                         {

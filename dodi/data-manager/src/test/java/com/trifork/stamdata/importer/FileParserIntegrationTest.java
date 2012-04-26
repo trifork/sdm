@@ -25,7 +25,6 @@
 package com.trifork.stamdata.importer;
 
 import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.Service;
 import com.trifork.stamdata.importer.config.ConnectionManager;
 import dk.nsi.stamdata.testing.TestServer;
 import org.apache.commons.io.FileUtils;
@@ -33,7 +32,6 @@ import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 
@@ -74,6 +72,8 @@ public abstract class FileParserIntegrationTest
         statement.execute("TRUNCATE TABLE Import");
         statement.execute("TRUNCATE TABLE YderregisterPerson");
         statement.execute("TRUNCATE TABLE Sikrede");
+        statement.execute("TRUNCATE TABLE SORSorStatus");
+        statement.execute("TRUNCATE TABLE SORInstitutionOwner");
 
         statement.close();
     }
@@ -136,7 +136,7 @@ public abstract class FileParserIntegrationTest
 
         assertThat(destination.exists(), is(true));
 
-        Thread.sleep(100000);
+        Thread.sleep(60000);
 
         while (isInProgress()) { Thread.sleep(500); }
     }

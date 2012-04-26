@@ -2,26 +2,15 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
+CREATE SCHEMA IF NOT EXISTS `sdm_warehouse` DEFAULT CHARACTER SET utf8 COLLATE utf8_bin ;
+USE `sdm_warehouse` ;
 
 -- -----------------------------------------------------
--- Table `SorStatus`
+-- Table `sdm_warehouse`.`SOREanLocationCode`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `SorStatus` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
-  `fromDate` DATE NOT NULL ,
-  `toDate` DATE NULL DEFAULT NULL ,
-  `updatedAt` DATE NULL DEFAULT NULL ,
-  `firstFromDate` DATE NOT NULL ,
-  PRIMARY KEY (`pk`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
+DROP TABLE IF EXISTS `sdm_warehouse`.`SOREanLocationCode` ;
 
-
--- -----------------------------------------------------
--- Table `EanLocationCode`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `EanLocationCode` (
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOREanLocationCode` (
   `pk` BIGINT NOT NULL AUTO_INCREMENT ,
   `eanLocationCode` BIGINT NOT NULL ,
   `onlyInternalIndicator` CHAR NOT NULL ,
@@ -31,23 +20,20 @@ CREATE  TABLE IF NOT EXISTS `EanLocationCode` (
   `communicationSupplier` BIGINT NOT NULL ,
   `regionCode` BIGINT NOT NULL ,
   `ediAdministrator` BIGINT NOT NULL ,
-  `ediAdministrator` BIGINT NOT NULL ,
   `sorNote` VARCHAR(254) NULL DEFAULT NULL ,
   `sorStatusId` BIGINT NULL DEFAULT NULL ,
-  PRIMARY KEY (`pk`) ,
-  INDEX `fk_sorStatus` (`sorStatusId` ASC) ,
-  CONSTRAINT `fk_sorStatus`
-    FOREIGN KEY (`sorStatusId` )
-    REFERENCES `SorStatus` (`pk` ))
+  PRIMARY KEY (`pk`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
 
 
 -- -----------------------------------------------------
--- Table `CountryIdentificationCodeType`
+-- Table `sdm_warehouse`.`SORCountryIdentificationCodeType`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `CountryIdentificationCodeType` (
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORCountryIdentificationCodeType` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORCountryIdentificationCodeType` (
   `pk` BIGINT NOT NULL AUTO_INCREMENT ,
   `scheme` ENUM('iso3166-alpha2','iso3166-alpha3','un-numeric3','imk') NOT NULL ,
   PRIMARY KEY (`pk`) )
@@ -55,9 +41,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `PostalAddressInformation`
+-- Table `sdm_warehouse`.`SORPostalAddressInformation`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `PostalAddressInformation` (
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORPostalAddressInformation` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORPostalAddressInformation` (
   `pk` BIGINT NOT NULL AUTO_INCREMENT ,
   `mailDeliverySublocationIdentifier` VARCHAR(34) NULL ,
   `streetName` VARCHAR(40) NOT NULL ,
@@ -76,16 +64,18 @@ CREATE  TABLE IF NOT EXISTS `PostalAddressInformation` (
   INDEX `fk_countryIdentitifationCodeTypeScheme` (`countryIdentificationCodeTypeId` ASC) ,
   CONSTRAINT `fk_countryIdentitifationCodeTypeScheme`
     FOREIGN KEY (`countryIdentificationCodeTypeId` )
-    REFERENCES `CountryIdentificationCodeType` (`pk` )
+    REFERENCES `sdm_warehouse`.`SORCountryIdentificationCodeType` (`pk` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `VirtualAddressInformation`
+-- Table `sdm_warehouse`.`SORVirtualAddressInformation`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `VirtualAddressInformation` (
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` (
   `pk` BIGINT NOT NULL AUTO_INCREMENT ,
   `emailAddressIdentifier` VARCHAR(254) NULL ,
   `website` VARCHAR(254) NULL ,
@@ -96,40 +86,61 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `InstitutionOwner`
+-- Table `sdm_warehouse`.`SORInstitutionOwner`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `InstitutionOwner` (
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORInstitutionOwner` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORInstitutionOwner` (
   `pk` BIGINT NOT NULL AUTO_INCREMENT ,
   `sorIdentifier` BIGINT NOT NULL ,
   `entityName` VARCHAR(60) NOT NULL ,
   `ownerType` BIGINT NOT NULL ,
   `eanLocationCodeId` BIGINT NULL DEFAULT NULL ,
-  `postalAddressInformationId` BIGINT NOT NULL ,
-  `virtualAddressInformationId` BIGINT NOT NULL ,
-  `sorStatusId` BIGINT NOT NULL ,
+  `postalAddressInformationId` BIGINT NULL ,
+  `virtualAddressInformationId` BIGINT NULL ,
+  `sorStatusId` BIGINT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
   PRIMARY KEY (`pk`) ,
   INDEX `fk_eanLocationCode` (`eanLocationCodeId` ASC) ,
   INDEX `fk_postalAddressInformation` (`postalAddressInformationId` ASC) ,
   INDEX `fk_virtualAddressInformation` (`virtualAddressInformationId` ASC) ,
-  INDEX `fk_sorStatus` (`sorStatusId` ASC) ,
   CONSTRAINT `fk_eanLocationCode`
     FOREIGN KEY (`eanLocationCodeId` )
-    REFERENCES `EanLocationCode` (`pk` ),
+    REFERENCES `sdm_warehouse`.`SOREanLocationCode` (`pk` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_postalAddressInformation`
     FOREIGN KEY (`postalAddressInformationId` )
-    REFERENCES `PostalAddressInformation` (`pk` )
+    REFERENCES `sdm_warehouse`.`SORPostalAddressInformation` (`pk` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_virtualAddressInformation`
     FOREIGN KEY (`virtualAddressInformationId` )
-    REFERENCES `VirtualAddressInformation` (`pk` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_sorStatus`
-    FOREIGN KEY (`sorStatusId` )
-    REFERENCES `SorStatus` (`pk` )
+    REFERENCES `sdm_warehouse`.`SORVirtualAddressInformation` (`pk` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `sdm_warehouse`.`SORSorStatus`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORSorStatus` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORSorStatus` (
+  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
+  `fromDate` DATE NOT NULL ,
+  `toDate` DATE NULL DEFAULT NULL ,
+  `updatedAt` DATE NULL DEFAULT NULL ,
+  `firstFromDate` DATE NOT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedTime` DATETIME NULL ,
+  PRIMARY KEY (`pk`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;

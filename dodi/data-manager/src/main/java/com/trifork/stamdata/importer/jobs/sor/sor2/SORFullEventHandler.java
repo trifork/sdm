@@ -62,13 +62,13 @@ public class SORFullEventHandler extends DefaultHandler {
     private final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
     private final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
     
-/*    // SorStatusType element children
+    // SorStatusType element children
     private final String FROM_DATE = "FromDate";
     private final String TO_DATE = "ToDate";
     private final String UPDATED_AT_DATE = "UpdatedAt";
     private final String FIRST_FROM_DATE = "FirstFromDate";
     
-    // VirtualAddressInformation children
+/*    // VirtualAddressInformation children
     private final String EMAIL_ADDRESS_IDENTIFIER = "EmailAddressIdentifier";
     private final String WEBSITE = "Website";
     private final String TELEPHONE_NUMBER_IDENTIFIER = "TelephoneNumberIdentifier";
@@ -106,7 +106,8 @@ public class SORFullEventHandler extends DefaultHandler {
     private EanLocationCode currentLocationCode;
     private AddressInformation currentAddress;
     private VirtualAddressInformation currentVirtualInformation;*/
-    RecordBuilder currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
+    private RecordBuilder currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
+    private RecordBuilder currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
     
     //private ArrayList<InstitutionOwner> institutionOwners;
     private ArrayList<RecordBuilder> institutionOwners;
@@ -131,17 +132,15 @@ public class SORFullEventHandler extends DefaultHandler {
         }
 
         if (INSTITUTION_OWNER.equals(qName)) {
-            /*currentInstitutionOwner = new InstitutionOwner();
-            institutionOwners.add(currentInstitutionOwner);*/
             currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
             institutionOwners.add(currentInstitutionOwnerRecord);
         }
         
-        /*if (currentInstitutionOwner != null) {
+        if (currentInstitutionOwnerRecord != null) {
         	if (SOR_STATUS.equals(qName)) {
-        		currentSorStatus = new SorStatus();
+        		currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
         	}
-        	if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+        	/*if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
         		currentLocationCode = new EanLocationCode();
         	}
         	if (POSTAL_ADDRESS_INFO.equals(qName)) {
@@ -149,8 +148,8 @@ public class SORFullEventHandler extends DefaultHandler {
         	}
         	if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
         		currentVirtualInformation = new VirtualAddressInformation();
-        	}
-        }*/
+        	}*/
+        }
 
         super.startElement(uri, localName, qName, atts);
     }
@@ -179,13 +178,10 @@ public class SORFullEventHandler extends DefaultHandler {
         	currentInstitutionOwnerRecord = null;
         } else if (currentInstitutionOwnerRecord != null ) {
         	if (ENTITY_NAME.equals(qName)) {
-        		//currentInstitutionOwner.setEntityName(characterContent);
         		currentInstitutionOwnerRecord.field("entityName", characterContent);
         	} else if (SOR_IDENTIFIER.equals(qName)) {
-        		//currentInstitutionOwner.setSorIdentifier(Long.valueOf(characterContent));
         		currentInstitutionOwnerRecord.field("sorIdentifier", Long.valueOf(characterContent));
         	} else if (OWNER_TYPE.equals(qName)) {
-        		//currentInstitutionOwner.setOwnerType(Long.valueOf(characterContent));
         		currentInstitutionOwnerRecord.field("ownerType", Long.valueOf(characterContent));
         	} else if (SOR_STATUS.equals(qName)) {
         		// currentInstitutionOwner.setSorStatus(currentSorStatus);
@@ -205,18 +201,18 @@ public class SORFullEventHandler extends DefaultHandler {
         		// TODO FIXME
         	}
         }
-/*        if (currentSorStatus != null) {
+        if (currentSorStatusRecord != null) {
         	if (FROM_DATE.equals(qName)) {
-        		currentSorStatus.setFromDate(parseISO8601Date(characterContent));
+        		currentSorStatusRecord.field("fromDate", characterContent);
     		} else if (TO_DATE.equals(qName)) {
-    			currentSorStatus.setToDate(parseISO8601Date(characterContent));
+    			currentSorStatusRecord.field("toDate", characterContent);
     		} else if (UPDATED_AT_DATE.equals(qName)) {
-    			currentSorStatus.setUpdatedAt(parseISO8601Date(characterContent));
+    			currentSorStatusRecord.field("updatedAt", characterContent);
     		} else if (FIRST_FROM_DATE.equals(qName)) {
-    			currentSorStatus.setFirstFromDate(parseISO8601Date(characterContent));
+    			currentSorStatusRecord.field("firstFromDate", characterContent);
     		}
         }
-        if (currentLocationCode != null) {
+        /*if (currentLocationCode != null) {
         	if (EAN_LOCATION_CODE.endsWith(qName)) {
         		currentLocationCode.setEanLocationCode(Long.valueOf(characterContent));
         	} else if (ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
@@ -281,14 +277,6 @@ public class SORFullEventHandler extends DefaultHandler {
         super.endElement(uri, localName, qName);
         
     }
-
-	private Date parseISO8601Date(String strDate) throws SAXException {
-		try {
-			return dateFormat.parse(strDate);
-		} catch (ParseException e) {
-			throw new SAXException(e);
-		}
-	}
 
     @Override
     public void characters(char[] chars, int start, int length) throws SAXException {
