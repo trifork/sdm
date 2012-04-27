@@ -81,12 +81,14 @@ public class SORFullEventHandler extends DefaultHandler {
         	if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
         		currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
         	}
+        	if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName) && currentAddressInformationRecord != null) {
+        		String scheme = atts.getValue("scheme");
+        		currentAddressInformationRecord.field("countryIdentificationCodeScheme", SORFullEventHandler.countrySchemeStringToInt(scheme));
+        	}
         }
 
         super.startElement(uri, localName, qName, atts);
     }
-
-
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
@@ -181,7 +183,6 @@ public class SORFullEventHandler extends DefaultHandler {
         	} else if (SORXmlTagNames.DISTRICT_NAME.equals(qName)) {
         		currentAddressInformationRecord.field("districtName", characterContent);
         	} else if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName)) {
-        		// TODO How to get attribute from element
         		currentAddressInformationRecord.field("countryIdentificationCode", characterContent);
         	}
         }
@@ -198,6 +199,21 @@ public class SORFullEventHandler extends DefaultHandler {
         }
         super.endElement(uri, localName, qName);
         
+    }
+    
+    public static long countrySchemeStringToInt(String schemeName) throws SAXException
+    {
+    	if (schemeName.equals("iso3166-alpha2")) {
+    		return 0;
+    	} else if (schemeName.equals("iso3166-alpha3")) {
+    		return 1;
+    	} else if (schemeName.equals("un-numeric3")) {
+    		return 2;
+    	} else if (schemeName.equals("imk")) {
+    		return 3;
+    	} else {
+    		throw new SAXException("Unrecognized country scheme value");
+    	}
     }
     
     private void setBoolField(RecordBuilder rb, String fieldName, String value) 

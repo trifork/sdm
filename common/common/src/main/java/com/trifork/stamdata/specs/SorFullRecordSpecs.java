@@ -72,8 +72,8 @@ public class SorFullRecordSpecs {
 				field("postOfficeBoxIdentifier", 4).numerical().doAllowNull(),
 				field("postCodeIdentifier", 4).numerical(),
 				field("districtName", 34),
-				// TODO FK : field("countryIdentificationCodeTypeId", 10).numerical(),
-				field("countryIdentificationCode", 10),
+				field("countryIdentificationCodeScheme", 1).numerical().doAllowNull(),
+				field("countryIdentificationCode", 12).doAllowNull(),
 				field("stairway", 40).doAllowNull()
 			);
 	
