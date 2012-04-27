@@ -84,6 +84,8 @@ public class SorFullRecordSpecs {
 				field("faxNumberIdentifier", 20).doAllowNull()
 			);
 	
+//	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("", keyColumnName, fieldSpecifications)
+	
     public static final RecordSpecification HEALTH_INSTITUTION_RECORD_TYPE = RecordSpecification.createSpecification("SORHealthInstitution", "SorIdentifier",
                 field("SorIdentifier", 20).numerical(), //Den første komponent kan blive lige så lang som der er cifre i antallet af enheder:  SOR-kode der relaterer til enheden. Genereres automatisk. En SOR-kode består af fire komponenter: - Fortløbende nummer - Namespace (7 cifre: "1000016") - Partition-ID (2 cifre) - Checksum-ciffer (1 cifre). Den første mulige SOR-kode er dermed '11000016002'.
                 field("EntityName", 60),
