@@ -31,17 +31,12 @@ import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -52,65 +47,11 @@ public class SORFullEventHandler extends DefaultHandler {
 	
     private String characterContent;
 
-    private final String INSTITUTION_OWNER_ENTITY = "InstitutionOwnerEntity";
-    private final String INSTITUTION_OWNER = "InstitutionOwner";
-
-    // 
-    private final String SOR_IDENTIFIER = "SorIdentifier";
-    private final String ENTITY_NAME = "EntityName";
-    private final String OWNER_TYPE = "OwnerType";
-    private final String SOR_STATUS = "SorStatus";
-    private final String EAN_LOCATION_CODE_ENTITY = "EanLocationCodeEntity";
-    private final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
-    private final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
-    
-    // SorStatusType element children
-    private final String FROM_DATE = "FromDate";
-    private final String TO_DATE = "ToDate";
-    private final String UPDATED_AT_DATE = "UpdatedAt";
-    private final String FIRST_FROM_DATE = "FirstFromDate";
-    
-    // VirtualAddressInformation children
-    private final String EMAIL_ADDRESS_IDENTIFIER = "EmailAddressIdentifier";
-    private final String WEBSITE = "Website";
-    private final String TELEPHONE_NUMBER_IDENTIFIER = "TelephoneNumberIdentifier";
-    private final String FAX_NUMBER_IDENTIFIER = "FaxNumberIdentifier";
-
-    // EanLocationCodeEntity children
-    private final String EAN_LOCATION_CODE = "EanLocationCode";
-    private final String ONLY_INTERNAL_INDICATOR = "OnlyInternalIndicator";
-    private final String NON_ACTIVITY_INDICATOR = "NonActiveIndicator";
-    private final String SYSTEM_SUPPLIER = "SystemSupplier";
-    private final String SYSTEM_TYPE = "SystemType";
-    private final String COMMUNICATION_SUPPLIER = "CommunicationSupplier";
-    private final String REGION_CODE = "RegionCode";
-    private final String EDI_ADMINISTRATOR = "EdiAdministrator";
-    private final String SOR_NOTE = "SorNote";
-    
-    // PostalAddressInformation children
-    private final String STAIRWAY = "Stairway";
-    private final String MAIL_DELIVERY_SUBLOC_IDENT = "dkcc:MailDeliverySublocationIdentifier";
-    private final String STREET_NAME = "dkcc2005:StreetName";
-    private final String STREET_NAME_FORADDRESSING = "cpr:StreetNameForAddressingName";
-    private final String STREET_BUILDING_IDENTIFIER = "dkcc:StreetBuildingIdentifier";
-    private final String FLOOR_IDENTIFIER = "dkcc:FloorIdentifier";
-    private final String SUITE_IDENTIFIER = "dkcc:SuiteIdentifier";
-    private final String DISTRICT_SUBDIVISION_IDENT = "dkcc2005:DistrictSubdivisionIdentifier";
-    private final String POSTBOX_IDENTIFIER = "dkcc2005-2:PostOfficeBoxIdentifier";
-    private final String POSTCODE_IDENTIFIER = "dkcc2005:PostCodeIdentifier";
-    private final String DISTRICT_NAME = "dkcc2005:DistrictName";
-    private final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
-    
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
-    
     private RecordBuilder currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
     private RecordBuilder currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
     private RecordBuilder currentLocatonCodeRecord = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
     private RecordBuilder currentAddressInformationRecord = new RecordBuilder(SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
     private RecordBuilder currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
-    
-    //private ArrayList<InstitutionOwner> institutionOwners;
-    private ArrayList<RecordBuilder> institutionOwners;
     
 	@Inject
 	public
@@ -123,30 +64,21 @@ public class SORFullEventHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
     	characterContent = new String();
     	
-        if (qName.equals("SnapshotDate")) {
-
-        }
-
-        if (INSTITUTION_OWNER_ENTITY.equals(qName)) {
-            institutionOwners = new ArrayList<RecordBuilder>();
-        }
-
-        if (INSTITUTION_OWNER.equals(qName)) {
+        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
             currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
-            institutionOwners.add(currentInstitutionOwnerRecord);
         }
         
         if (currentInstitutionOwnerRecord != null) {
-        	if (SOR_STATUS.equals(qName)) {
+        	if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
         		currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
         	}
-        	if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+        	if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
         		currentLocatonCodeRecord = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
         	}
-        	if (POSTAL_ADDRESS_INFO.equals(qName)) {
+        	if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
         		currentAddressInformationRecord = new RecordBuilder(SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION); 
         	}
-        	if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
+        	if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
         		currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
         	}
         }
@@ -162,116 +94,105 @@ public class SORFullEventHandler extends DefaultHandler {
 
         }
 
-        if (INSTITUTION_OWNER.equals(qName)) {
-            // FIXME: currentInstitutionOwner
-            // institutionOwners.add(currentInstitutionOwner);
-            
-        	// System.out.println("Institution parsed: " + currentInstitutionOwner);
-        	try
-	        {
-	            persister.persist(currentInstitutionOwnerRecord.build(), SorFullRecordSpecs.INSTITUTIONS_EJER);
-	        }
-	        catch (SQLException e)
-	        {
-	            throw new SAXException(e);
-	        }
+        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
+        	persist(currentInstitutionOwnerRecord, SorFullRecordSpecs.INSTITUTIONS_EJER);
         	currentInstitutionOwnerRecord = null;
         } else if (currentInstitutionOwnerRecord != null ) {
-        	if (ENTITY_NAME.equals(qName)) {
+        	if (SORXmlTagNames.ENTITY_NAME.equals(qName)) {
         		currentInstitutionOwnerRecord.field("entityName", characterContent);
-        	} else if (SOR_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.SOR_IDENTIFIER.equals(qName)) {
         		currentInstitutionOwnerRecord.field("sorIdentifier", Long.valueOf(characterContent));
-        	} else if (OWNER_TYPE.equals(qName)) {
+        	} else if (SORXmlTagNames.OWNER_TYPE.equals(qName)) {
         		currentInstitutionOwnerRecord.field("ownerType", Long.valueOf(characterContent));
-        	} else if (SOR_STATUS.equals(qName)) {
+        	} else if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
         		// currentInstitutionOwner.setSorStatus(currentSorStatus);
         		// currentSorStatus = null;
         		// TODO FIXME
-        	} else if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+        	} else if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
         		persist(currentLocatonCodeRecord, SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
         		currentLocatonCodeRecord = null;
         		// TODO link current institionowner to this eanlocationcode somehow....
-        	} else if (POSTAL_ADDRESS_INFO.equals(qName)) {
+        	} else if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
         		persist(currentAddressInformationRecord, SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
         		currentAddressInformationRecord = null;
         		// TODO link current institionowner to this postal address somehow....
-        	} else if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
+        	} else if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
         		persist(currentVirtualInformationRecord, SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
         		currentVirtualInformationRecord = null;
         		// TODO link current institionowner to this virtual info address somehow....
         	}
         }
         if (currentSorStatusRecord != null) {
-        	if (FROM_DATE.equals(qName)) {
+        	if (SORXmlTagNames.FROM_DATE.equals(qName)) {
         		currentSorStatusRecord.field("fromDate", characterContent);
-    		} else if (TO_DATE.equals(qName)) {
+    		} else if (SORXmlTagNames.TO_DATE.equals(qName)) {
     			currentSorStatusRecord.field("toDate", characterContent);
-    		} else if (UPDATED_AT_DATE.equals(qName)) {
+    		} else if (SORXmlTagNames.UPDATED_AT_DATE.equals(qName)) {
     			currentSorStatusRecord.field("updatedAt", characterContent);
-    		} else if (FIRST_FROM_DATE.equals(qName)) {
+    		} else if (SORXmlTagNames.FIRST_FROM_DATE.equals(qName)) {
     			currentSorStatusRecord.field("firstFromDate", characterContent);
     		}
         }
         if (currentLocatonCodeRecord != null) {
-        	if (EAN_LOCATION_CODE.endsWith(qName)) {
+        	if (SORXmlTagNames.EAN_LOCATION_CODE.endsWith(qName)) {
         		currentLocatonCodeRecord.field("eanLocationCode", Long.valueOf(characterContent));
-        	} else if (ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
+        	} else if (SORXmlTagNames.ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
         		setBoolField(currentLocatonCodeRecord, "onlyInternalIndicator", characterContent);
-        	} else if (NON_ACTIVITY_INDICATOR.endsWith(qName)) {
+        	} else if (SORXmlTagNames.NON_ACTIVITY_INDICATOR.endsWith(qName)) {
         		setBoolField(currentLocatonCodeRecord, "nonActiveIndicator", characterContent);
-        	} else if (SYSTEM_SUPPLIER.endsWith(qName)) {
+        	} else if (SORXmlTagNames.SYSTEM_SUPPLIER.endsWith(qName)) {
         		currentLocatonCodeRecord.field("systemSupplier", Long.valueOf(characterContent));
-        	} else if (SYSTEM_TYPE.endsWith(qName)) {
+        	} else if (SORXmlTagNames.SYSTEM_TYPE.endsWith(qName)) {
         		currentLocatonCodeRecord.field("systemType", Long.valueOf(characterContent));
-        	} else if (COMMUNICATION_SUPPLIER.endsWith(qName)) {
+        	} else if (SORXmlTagNames.COMMUNICATION_SUPPLIER.endsWith(qName)) {
         		currentLocatonCodeRecord.field("communicationSupplier", Long.valueOf(characterContent));
-        	} else if (REGION_CODE.endsWith(qName)) {
+        	} else if (SORXmlTagNames.REGION_CODE.endsWith(qName)) {
         		currentLocatonCodeRecord.field("regionCode", Long.valueOf(characterContent));
-        	} else if (EDI_ADMINISTRATOR.endsWith(qName)) {
+        	} else if (SORXmlTagNames.EDI_ADMINISTRATOR.endsWith(qName)) {
         		currentLocatonCodeRecord.field("ediAdministrator", Long.valueOf(characterContent));
-        	} else if (SOR_NOTE.endsWith(qName)) {
+        	} else if (SORXmlTagNames.SOR_NOTE.endsWith(qName)) {
         		currentLocatonCodeRecord.field("sorNote", characterContent);
-        	} else if (SOR_STATUS.equals(qName)) {
+        	} else if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
         		//currentLocationCode.setSorStatus(currentSorStatus);
         		//currentSorStatus = null;
         	}
         }
         if (currentAddressInformationRecord != null) {
-        	if (STAIRWAY.equals(qName)) {
+        	if (SORXmlTagNames.STAIRWAY.equals(qName)) {
         		currentAddressInformationRecord.field("stairway", characterContent);
-        	} else if (MAIL_DELIVERY_SUBLOC_IDENT.equals(qName)) {
+        	} else if (SORXmlTagNames.MAIL_DELIVERY_SUBLOC_IDENT.equals(qName)) {
         		currentAddressInformationRecord.field("mailDeliverySublocationIdentifier", characterContent);
-        	} else if (STREET_NAME.equals(qName)) {
+        	} else if (SORXmlTagNames.STREET_NAME.equals(qName)) {
         		currentAddressInformationRecord.field("streetName", characterContent);
-        	} else if (STREET_NAME_FORADDRESSING.equals(qName)) {
+        	} else if (SORXmlTagNames.STREET_NAME_FORADDRESSING.equals(qName)) {
         		currentAddressInformationRecord.field("streetNameForAddressingName", characterContent);
-        	} else if (STREET_BUILDING_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.STREET_BUILDING_IDENTIFIER.equals(qName)) {
         		currentAddressInformationRecord.field("streetBuildingIdentifier", characterContent);
-        	} else if (FLOOR_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.FLOOR_IDENTIFIER.equals(qName)) {
         		currentAddressInformationRecord.field("floorIdentifier", characterContent);
-        	} else if (SUITE_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.SUITE_IDENTIFIER.equals(qName)) {
         		currentAddressInformationRecord.field("suiteIdentifier", characterContent);
-        	} else if (DISTRICT_SUBDIVISION_IDENT.equals(qName)) {
+        	} else if (SORXmlTagNames.DISTRICT_SUBDIVISION_IDENT.equals(qName)) {
         		currentAddressInformationRecord.field("districtSubdivisionIdentifier", characterContent);
-        	} else if (POSTBOX_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.POSTBOX_IDENTIFIER.equals(qName)) {
         		currentAddressInformationRecord.field("postOfficeBoxIdentifier", Long.valueOf(characterContent));
-        	} else if (POSTCODE_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.POSTCODE_IDENTIFIER.equals(qName)) {
         		currentAddressInformationRecord.field("postCodeIdentifier", Long.valueOf(characterContent));
-        	} else if (DISTRICT_NAME.equals(qName)) {
+        	} else if (SORXmlTagNames.DISTRICT_NAME.equals(qName)) {
         		currentAddressInformationRecord.field("districtName", characterContent);
-        	} else if (COUNTRY_IDENT_CODE.equals(qName)) {
+        	} else if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName)) {
         		// TODO How to get attribute from element
         		currentAddressInformationRecord.field("countryIdentificationCode", characterContent);
         	}
         }
         if (currentVirtualInformationRecord != null) {
-        	if (EMAIL_ADDRESS_IDENTIFIER.equals(qName)) {
+        	if (SORXmlTagNames.EMAIL_ADDRESS_IDENTIFIER.equals(qName)) {
         		currentVirtualInformationRecord.field("emailAddressIdentifier", characterContent);
-        	} else if (WEBSITE.equals(qName)) {
+        	} else if (SORXmlTagNames.WEBSITE.equals(qName)) {
         		currentVirtualInformationRecord.field("website", characterContent);
-        	} else if (TELEPHONE_NUMBER_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.TELEPHONE_NUMBER_IDENTIFIER.equals(qName)) {
         		currentVirtualInformationRecord.field("telephoneNumberIdentifier", characterContent);
-        	} else if (FAX_NUMBER_IDENTIFIER.equals(qName)) {
+        	} else if (SORXmlTagNames.FAX_NUMBER_IDENTIFIER.equals(qName)) {
         		currentVirtualInformationRecord.field("faxNumberIdentifier", characterContent);
         	}
         }

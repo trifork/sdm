@@ -73,7 +73,6 @@ public class SORXmlParser implements Parser {
         	}
         }
 
-
         try {
             parseFile(fileToParse);
 
