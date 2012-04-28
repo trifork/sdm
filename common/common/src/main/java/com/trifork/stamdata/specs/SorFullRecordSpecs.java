@@ -31,24 +31,62 @@ import com.trifork.stamdata.persistence.RecordSpecification;
 
 public class SorFullRecordSpecs {
 
-	public static final RecordSpecification INSTITUTIONS_EJER = RecordSpecification.createSpecification("InstitutionOwner", "pk",
-				field("sorIdentifier", 8).numerical(),
+	public static final RecordSpecification INSTITUTIONS_EJER = RecordSpecification.createSpecification("SORInstitutionOwner", "pk",
+				field("sorIdentifier", 20).numerical(),
 				field("entityName",60),
-				field("ownerType", 8).numerical(),
-				field("eanLocationCodeId", 8).numerical(),
-				field("postalAddressInformationId", 8).numerical(),
-				field("virtualAddressInformationId", 8).numerical(),
-				field("sorStatusId", 8).numerical()
+				field("ownerType", 10).numerical(),
+				field("eanLocationCodeId", 10).numerical().doAllowNull(),
+				field("postalAddressInformationId", 10).numerical().doAllowNull(),
+				field("virtualAddressInformationId", 10).numerical().doAllowNull(),
+				field("sorStatusId", 8).numerical().doAllowNull()
 			);
 	
-	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SorStatus", "pk",
+	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", "pk",
 				field("fromDate", 10),
 				field("toDate",10),
 				field("updatedAt",10),
 				field("firstFromDate",10)
 			);
 
-    public static final RecordSpecification HEALTH_INSTITUTION_RECORD_TYPE = RecordSpecification.createSpecification("HealthInstitution", "SorIdentifier",
+	public static final RecordSpecification EAN_LOCATION_CODE_ENTITY = RecordSpecification.createSpecification("SOREanLocationCode", "pk",
+				field("eanLocationCode", 20).numerical(),
+				field("onlyInternalIndicator", 1),
+				field("nonActiveIndicator", 1),
+				field("systemSupplier", 20).numerical(),
+				field("systemType", 20).numerical(),
+				field("communicationSupplier", 20).numerical(),
+				field("regionCode", 5).numerical(),
+				field("ediAdministrator", 5).numerical(),
+				field("sorNote", 254).doAllowNull()
+				// TODO sor status
+			);
+	
+	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", "pk", 
+				field("mailDeliverySublocationIdentifier", 34).doAllowNull(),
+				field("streetName", 40),
+				field("streetNameForAddressingName", 20).doAllowNull(),
+				field("streetBuildingIdentifier", 10),
+				field("floorIdentifier", 10).doAllowNull(),
+				field("suiteIdentifier", 4).doAllowNull(),
+				field("districtSubdivisionIdentifier", 34).doAllowNull(),
+				field("postOfficeBoxIdentifier", 4).numerical().doAllowNull(),
+				field("postCodeIdentifier", 4).numerical(),
+				field("districtName", 34),
+				// TODO FK : field("countryIdentificationCodeTypeId", 10).numerical(),
+				field("countryIdentificationCode", 10),
+				field("stairway", 40).doAllowNull()
+			);
+	
+	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", "pk", 
+				field("emailAddressIdentifier", 254).doAllowNull(),
+				field("website", 254).doAllowNull(),
+				field("telephoneNumberIdentifier", 20),
+				field("faxNumberIdentifier", 20).doAllowNull()
+			);
+	
+//	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("", keyColumnName, fieldSpecifications)
+	
+    public static final RecordSpecification HEALTH_INSTITUTION_RECORD_TYPE = RecordSpecification.createSpecification("SORHealthInstitution", "SorIdentifier",
                 field("SorIdentifier", 20).numerical(), //Den første komponent kan blive lige så lang som der er cifre i antallet af enheder:  SOR-kode der relaterer til enheden. Genereres automatisk. En SOR-kode består af fire komponenter: - Fortløbende nummer - Namespace (7 cifre: "1000016") - Partition-ID (2 cifre) - Checksum-ciffer (1 cifre). Den første mulige SOR-kode er dermed '11000016002'.
                 field("EntityName", 60),
                 field("InstitutionType", 8).numerical(),
