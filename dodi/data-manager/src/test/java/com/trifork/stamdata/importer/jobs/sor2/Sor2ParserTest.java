@@ -28,27 +28,12 @@ package com.trifork.stamdata.importer.jobs.sor2;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.io.File;
 
-import javax.inject.Provider;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 import com.trifork.stamdata.importer.FileParserIntegrationTest;
-import com.trifork.stamdata.importer.jobs.sor.sor2.SORFullEventHandler;
-import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlParser;
-import com.trifork.stamdata.importer.jobs.yderregister.YderregisterSaxEventHandler;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class Sor2ParserTest extends FileParserIntegrationTest
 {
@@ -66,19 +51,6 @@ public class Sor2ParserTest extends FileParserIntegrationTest
         placeInInbox(fileSet1, true);
          
         assertThat(isLocked(), is(false));
-
-//        assertRecordCount("Yderregister", 58);
-//        assertRecordCount("YderregisterPerson", 54);
-		/*long timeStart = System.currentTimeMillis();
-		parser.process(inbox1, persister);
-		
-		long timeEnd = System.currentTimeMillis();
-		System.out.println("full1 file took: " + (timeEnd-timeStart) + " ms");
-		
-		timeStart = System.currentTimeMillis();
-		parser.process(inbox2, persister);
-		timeEnd = System.currentTimeMillis();
-		System.out.println("full2 file took: " + (timeEnd-timeStart) + " ms");*/
 	}
 
 }

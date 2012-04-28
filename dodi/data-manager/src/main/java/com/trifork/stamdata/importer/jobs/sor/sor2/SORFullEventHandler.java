@@ -25,21 +25,18 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2;
 
+import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
-import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -50,66 +47,11 @@ public class SORFullEventHandler extends DefaultHandler {
 	
     private String characterContent;
 
-    private final String INSTITUTION_OWNER_ENTITY = "InstitutionOwnerEntity";
-    private final String INSTITUTION_OWNER = "InstitutionOwner";
-
-    // 
-    private final String SOR_IDENTIFIER = "SorIdentifier";
-    private final String ENTITY_NAME = "EntityName";
-    private final String OWNER_TYPE = "OwnerType";
-    private final String SOR_STATUS = "SorStatus";
-    private final String EAN_LOCATION_CODE_ENTITY = "EanLocationCodeEntity";
-    private final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
-    private final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
-    
-/*    // SorStatusType element children
-    private final String FROM_DATE = "FromDate";
-    private final String TO_DATE = "ToDate";
-    private final String UPDATED_AT_DATE = "UpdatedAt";
-    private final String FIRST_FROM_DATE = "FirstFromDate";
-    
-    // VirtualAddressInformation children
-    private final String EMAIL_ADDRESS_IDENTIFIER = "EmailAddressIdentifier";
-    private final String WEBSITE = "Website";
-    private final String TELEPHONE_NUMBER_IDENTIFIER = "TelephoneNumberIdentifier";
-    private final String FAX_NUMBER_IDENTIFIER = "FaxNumberIdentifier";
-       
-    // EanLocationCodeEntity children
-    private final String EAN_LOCATION_CODE = "EanLocationCode";
-    private final String ONLY_INTERNAL_INDICATOR = "OnlyInternalIndicator";
-    private final String NON_ACTIVITY_INDICATOR = "NonActiveIndicator";
-    private final String SYSTEM_SUPPLIER = "SystemSupplier";
-    private final String SYSTEM_TYPE = "SystemType";
-    private final String COMMUNICATION_SUPPLIER = "CommunicationSupplier";
-    private final String REGION_CODE = "RegionCode";
-    private final String EDI_ADMINISTRATOR = "EdiAdministrator";
-    private final String SOR_NOTE = "SorNote";
-    
-    // PostalAddressInformation children
-    private final String STAIRWAY = "Stairway";
-    private final String MAIL_DELIVERY_SUBLOC_IDENT = "dkcc:MailDeliverySublocationIdentifier";
-    private final String STREET_NAME = "dkcc2005:StreetName";
-    private final String STREET_NAME_FORADDRESSING = "cpr:StreetNameForAddressingName";
-    private final String STREET_BUILDING_IDENTIFIER = "dkcc:StreetBuildingIdentifier";
-    private final String FLOOR_IDENTIFIER = "dkcc:FloorIdentifier";
-    private final String SUITE_IDENTIFIER = "dkcc:SuiteIdentifier";
-    private final String DISTRICT_SUBDIVISION_IDENT = "dkcc2005:DistrictSubdivisionIdentifier";
-    private final String POSTBOX_IDENTIFIER = "dkcc2005-2:PostOfficeBoxIdentifier";
-    private final String POSTCODE_IDENTIFIER = "dkcc2005:PostCodeIdentifier";
-    private final String DISTRICT_NAME = "dkcc2005:DistrictName";
-    private final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
-*/    
-    private SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormatUtils.ISO_DATE_FORMAT.getPattern());
-
-/*    private InstitutionOwner currentInstitutionOwner;
-    private SorStatus currentSorStatus;
-    private EanLocationCode currentLocationCode;
-    private AddressInformation currentAddress;
-    private VirtualAddressInformation currentVirtualInformation;*/
-    RecordBuilder currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
-    
-    //private ArrayList<InstitutionOwner> institutionOwners;
-    private ArrayList<RecordBuilder> institutionOwners;
+    private RecordBuilder currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
+    private RecordBuilder currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
+    private RecordBuilder currentLocatonCodeRecord = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
+    private RecordBuilder currentAddressInformationRecord = new RecordBuilder(SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
+    private RecordBuilder currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
     
 	@Inject
 	public
@@ -122,35 +64,24 @@ public class SORFullEventHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
     	characterContent = new String();
     	
-        if (qName.equals("SnapshotDate")) {
-
-        }
-
-        if (INSTITUTION_OWNER_ENTITY.equals(qName)) {
-            institutionOwners = new ArrayList<RecordBuilder>();
-        }
-
-        if (INSTITUTION_OWNER.equals(qName)) {
-            /*currentInstitutionOwner = new InstitutionOwner();
-            institutionOwners.add(currentInstitutionOwner);*/
+        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
             currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTIONS_EJER);
-            institutionOwners.add(currentInstitutionOwnerRecord);
         }
         
-        /*if (currentInstitutionOwner != null) {
-        	if (SOR_STATUS.equals(qName)) {
-        		currentSorStatus = new SorStatus();
+        if (currentInstitutionOwnerRecord != null) {
+        	if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
+        		currentSorStatusRecord = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
         	}
-        	if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
-        		currentLocationCode = new EanLocationCode();
+        	if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+        		currentLocatonCodeRecord = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
         	}
-        	if (POSTAL_ADDRESS_INFO.equals(qName)) {
-        		currentAddress = new AddressInformation();
+        	if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
+        		currentAddressInformationRecord = new RecordBuilder(SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION); 
         	}
-        	if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
-        		currentVirtualInformation = new VirtualAddressInformation();
+        	if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
+        		currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
         	}
-        }*/
+        }
 
         super.startElement(uri, localName, qName, atts);
     }
@@ -163,132 +94,129 @@ public class SORFullEventHandler extends DefaultHandler {
 
         }
 
-        if (INSTITUTION_OWNER.equals(qName)) {
-            // FIXME: currentInstitutionOwner
-            // institutionOwners.add(currentInstitutionOwner);
-            
-        	// System.out.println("Institution parsed: " + currentInstitutionOwner);
-        	try
-	        {
-	            persister.persist(currentInstitutionOwnerRecord.build(), SorFullRecordSpecs.INSTITUTIONS_EJER);
-	        }
-	        catch (SQLException e)
-	        {
-	            throw new SAXException(e);
-	        }
+        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
+        	persist(currentInstitutionOwnerRecord, SorFullRecordSpecs.INSTITUTIONS_EJER);
         	currentInstitutionOwnerRecord = null;
         } else if (currentInstitutionOwnerRecord != null ) {
-        	if (ENTITY_NAME.equals(qName)) {
-        		//currentInstitutionOwner.setEntityName(characterContent);
+        	if (SORXmlTagNames.ENTITY_NAME.equals(qName)) {
         		currentInstitutionOwnerRecord.field("entityName", characterContent);
-        	} else if (SOR_IDENTIFIER.equals(qName)) {
-        		//currentInstitutionOwner.setSorIdentifier(Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.SOR_IDENTIFIER.equals(qName)) {
         		currentInstitutionOwnerRecord.field("sorIdentifier", Long.valueOf(characterContent));
-        	} else if (OWNER_TYPE.equals(qName)) {
-        		//currentInstitutionOwner.setOwnerType(Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.OWNER_TYPE.equals(qName)) {
         		currentInstitutionOwnerRecord.field("ownerType", Long.valueOf(characterContent));
-        	} else if (SOR_STATUS.equals(qName)) {
+        	} else if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
         		// currentInstitutionOwner.setSorStatus(currentSorStatus);
         		// currentSorStatus = null;
         		// TODO FIXME
-        	} else if (EAN_LOCATION_CODE_ENTITY.equals(qName)) {
-        		// currentInstitutionOwner.setEanLocationCode(currentLocationCode);
-        		// currentInstitutionOwner = null;
-        		// TODO FIXME
-        	} else if (POSTAL_ADDRESS_INFO.equals(qName)) {
-        		// currentInstitutionOwner.setPostalAddressInformation(currentAddress);
-        		// currentAddress = null;
-        		// TODO FIXME
-        	} else if (VIRTUAL_ADDRESS_INFO.equals(qName)) {
-        		// currentInstitutionOwner.setVirtualAddressInformation(currentVirtualInformation);
-        		// currentVirtualInformation = null;
-        		// TODO FIXME
+        	} else if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+        		persist(currentLocatonCodeRecord, SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
+        		currentLocatonCodeRecord = null;
+        		// TODO link current institionowner to this eanlocationcode somehow....
+        	} else if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
+        		persist(currentAddressInformationRecord, SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
+        		currentAddressInformationRecord = null;
+        		// TODO link current institionowner to this postal address somehow....
+        	} else if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
+        		persist(currentVirtualInformationRecord, SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
+        		currentVirtualInformationRecord = null;
+        		// TODO link current institionowner to this virtual info address somehow....
         	}
         }
-/*        if (currentSorStatus != null) {
-        	if (FROM_DATE.equals(qName)) {
-        		currentSorStatus.setFromDate(parseISO8601Date(characterContent));
-    		} else if (TO_DATE.equals(qName)) {
-    			currentSorStatus.setToDate(parseISO8601Date(characterContent));
-    		} else if (UPDATED_AT_DATE.equals(qName)) {
-    			currentSorStatus.setUpdatedAt(parseISO8601Date(characterContent));
-    		} else if (FIRST_FROM_DATE.equals(qName)) {
-    			currentSorStatus.setFirstFromDate(parseISO8601Date(characterContent));
+        if (currentSorStatusRecord != null) {
+        	if (SORXmlTagNames.FROM_DATE.equals(qName)) {
+        		currentSorStatusRecord.field("fromDate", characterContent);
+    		} else if (SORXmlTagNames.TO_DATE.equals(qName)) {
+    			currentSorStatusRecord.field("toDate", characterContent);
+    		} else if (SORXmlTagNames.UPDATED_AT_DATE.equals(qName)) {
+    			currentSorStatusRecord.field("updatedAt", characterContent);
+    		} else if (SORXmlTagNames.FIRST_FROM_DATE.equals(qName)) {
+    			currentSorStatusRecord.field("firstFromDate", characterContent);
     		}
         }
-        if (currentLocationCode != null) {
-        	if (EAN_LOCATION_CODE.endsWith(qName)) {
-        		currentLocationCode.setEanLocationCode(Long.valueOf(characterContent));
-        	} else if (ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
-        		currentLocationCode.setOnlyInternalIndicator(Boolean.valueOf(characterContent));
-        	} else if (NON_ACTIVITY_INDICATOR.endsWith(qName)) {
-        		currentLocationCode.setNonActiveIndicator(Boolean.valueOf(characterContent));
-        	} else if (SYSTEM_SUPPLIER.endsWith(qName)) {
-        		currentLocationCode.setSystemSupplier(Long.valueOf(characterContent));
-        	} else if (SYSTEM_TYPE.endsWith(qName)) {
-        		currentLocationCode.setSystemType(Long.valueOf(characterContent));
-        	} else if (COMMUNICATION_SUPPLIER.endsWith(qName)) {
-        		currentLocationCode.setCommunicationSupplier(Long.valueOf(characterContent));
-        	} else if (REGION_CODE.endsWith(qName)) {
-        		currentLocationCode.setRegionCode(Long.valueOf(characterContent));
-        	} else if (EDI_ADMINISTRATOR.endsWith(qName)) {
-        		currentLocationCode.setEdiAdministrator(Long.valueOf(characterContent));
-        	} else if (SOR_NOTE.endsWith(qName)) {
-        		currentLocationCode.setSorNote(characterContent);
-        	} else if (SOR_STATUS.equals(qName)) {
-        		currentLocationCode.setSorStatus(currentSorStatus);
-        		currentSorStatus = null;
+        if (currentLocatonCodeRecord != null) {
+        	if (SORXmlTagNames.EAN_LOCATION_CODE.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("eanLocationCode", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
+        		setBoolField(currentLocatonCodeRecord, "onlyInternalIndicator", characterContent);
+        	} else if (SORXmlTagNames.NON_ACTIVITY_INDICATOR.endsWith(qName)) {
+        		setBoolField(currentLocatonCodeRecord, "nonActiveIndicator", characterContent);
+        	} else if (SORXmlTagNames.SYSTEM_SUPPLIER.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("systemSupplier", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.SYSTEM_TYPE.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("systemType", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.COMMUNICATION_SUPPLIER.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("communicationSupplier", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.REGION_CODE.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("regionCode", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.EDI_ADMINISTRATOR.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("ediAdministrator", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.SOR_NOTE.endsWith(qName)) {
+        		currentLocatonCodeRecord.field("sorNote", characterContent);
+        	} else if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
+        		//currentLocationCode.setSorStatus(currentSorStatus);
+        		//currentSorStatus = null;
         	}
         }
-        if (currentAddress != null) {
-        	if (STAIRWAY.equals(qName)) {
-        		currentAddress.setStairway(characterContent);
-        	} else if (MAIL_DELIVERY_SUBLOC_IDENT.equals(qName)) {
-        		currentAddress.setMailDeliverySublocationIdentifier(characterContent);
-        	} else if (STREET_NAME.equals(qName)) {
-        		currentAddress.setStreetName(characterContent);
-        	} else if (STREET_NAME_FORADDRESSING.equals(qName)) {
-        		currentAddress.setStreetNameForAddressingName(characterContent);
-        	} else if (STREET_BUILDING_IDENTIFIER.equals(qName)) {
-        		currentAddress.setStreetBuildingIdentifier(characterContent);
-        	} else if (FLOOR_IDENTIFIER.equals(qName)) {
-        		currentAddress.setFloorIdentifier(characterContent);
-        	} else if (SUITE_IDENTIFIER.equals(qName)) {
-        		currentAddress.setSuiteIdentifier(characterContent);
-        	} else if (DISTRICT_SUBDIVISION_IDENT.equals(qName)) {
-        		currentAddress.setDistrictSubdivisionIdentifier(characterContent);
-        	} else if (POSTBOX_IDENTIFIER.equals(qName)) {
-        		currentAddress.setPostOfficeBoxIdentifier(Integer.valueOf(characterContent));
-        	} else if (POSTCODE_IDENTIFIER.equals(qName)) {
-        		currentAddress.setPostCodeIdentifier(Integer.valueOf(characterContent));
-        	} else if (DISTRICT_NAME.equals(qName)) {
-        		currentAddress.setDistrictName(characterContent);
-        	} else if (COUNTRY_IDENT_CODE.equals(qName)) {
+        if (currentAddressInformationRecord != null) {
+        	if (SORXmlTagNames.STAIRWAY.equals(qName)) {
+        		currentAddressInformationRecord.field("stairway", characterContent);
+        	} else if (SORXmlTagNames.MAIL_DELIVERY_SUBLOC_IDENT.equals(qName)) {
+        		currentAddressInformationRecord.field("mailDeliverySublocationIdentifier", characterContent);
+        	} else if (SORXmlTagNames.STREET_NAME.equals(qName)) {
+        		currentAddressInformationRecord.field("streetName", characterContent);
+        	} else if (SORXmlTagNames.STREET_NAME_FORADDRESSING.equals(qName)) {
+        		currentAddressInformationRecord.field("streetNameForAddressingName", characterContent);
+        	} else if (SORXmlTagNames.STREET_BUILDING_IDENTIFIER.equals(qName)) {
+        		currentAddressInformationRecord.field("streetBuildingIdentifier", characterContent);
+        	} else if (SORXmlTagNames.FLOOR_IDENTIFIER.equals(qName)) {
+        		currentAddressInformationRecord.field("floorIdentifier", characterContent);
+        	} else if (SORXmlTagNames.SUITE_IDENTIFIER.equals(qName)) {
+        		currentAddressInformationRecord.field("suiteIdentifier", characterContent);
+        	} else if (SORXmlTagNames.DISTRICT_SUBDIVISION_IDENT.equals(qName)) {
+        		currentAddressInformationRecord.field("districtSubdivisionIdentifier", characterContent);
+        	} else if (SORXmlTagNames.POSTBOX_IDENTIFIER.equals(qName)) {
+        		currentAddressInformationRecord.field("postOfficeBoxIdentifier", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.POSTCODE_IDENTIFIER.equals(qName)) {
+        		currentAddressInformationRecord.field("postCodeIdentifier", Long.valueOf(characterContent));
+        	} else if (SORXmlTagNames.DISTRICT_NAME.equals(qName)) {
+        		currentAddressInformationRecord.field("districtName", characterContent);
+        	} else if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName)) {
         		// TODO How to get attribute from element
+        		currentAddressInformationRecord.field("countryIdentificationCode", characterContent);
         	}
         }
-        if (currentVirtualInformation != null) {
-        	if (EMAIL_ADDRESS_IDENTIFIER.equals(qName)) {
-        		currentVirtualInformation.setEmailAddressIdentifier(characterContent);
-        	} else if (WEBSITE.equals(qName)) {
-        		currentVirtualInformation.setWebsite(characterContent);
-        	} else if (TELEPHONE_NUMBER_IDENTIFIER.equals(qName)) {
-        		currentVirtualInformation.setTelephoneNumberIdentifier(characterContent);
-        	} else if (FAX_NUMBER_IDENTIFIER.equals(qName)) {
-        		currentVirtualInformation.setFaxNumberIdentifier(characterContent);
+        if (currentVirtualInformationRecord != null) {
+        	if (SORXmlTagNames.EMAIL_ADDRESS_IDENTIFIER.equals(qName)) {
+        		currentVirtualInformationRecord.field("emailAddressIdentifier", characterContent);
+        	} else if (SORXmlTagNames.WEBSITE.equals(qName)) {
+        		currentVirtualInformationRecord.field("website", characterContent);
+        	} else if (SORXmlTagNames.TELEPHONE_NUMBER_IDENTIFIER.equals(qName)) {
+        		currentVirtualInformationRecord.field("telephoneNumberIdentifier", characterContent);
+        	} else if (SORXmlTagNames.FAX_NUMBER_IDENTIFIER.equals(qName)) {
+        		currentVirtualInformationRecord.field("faxNumberIdentifier", characterContent);
         	}
-        }*/
+        }
         super.endElement(uri, localName, qName);
         
     }
-
-	private Date parseISO8601Date(String strDate) throws SAXException {
-		try {
-			return dateFormat.parse(strDate);
-		} catch (ParseException e) {
-			throw new SAXException(e);
-		}
-	}
+    
+    private void setBoolField(RecordBuilder rb, String fieldName, String value) 
+    {
+    	boolean f = Boolean.valueOf(value);
+    	if (f)
+    		rb.field(fieldName, "1");
+    	else
+    		rb.field(fieldName, "0");
+    }
+    
+    private void persist(RecordBuilder rb, RecordSpecification specification) throws SAXException
+    {
+    	try {
+    		persister.persist(rb.build(), specification);
+    	} catch (SQLException e) {
+    		throw new SAXException(e);
+    	}
+    }
 
     @Override
     public void characters(char[] chars, int start, int length) throws SAXException {
