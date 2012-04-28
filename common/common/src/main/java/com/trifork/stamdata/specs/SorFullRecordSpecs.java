@@ -58,7 +58,6 @@ public class SorFullRecordSpecs {
                 //,field("VisitingAddressInformation")
                 //,field("VirtualAddressInformation")
                 ,field("OptionalEanLocationCode", 20).numerical()
-                ,
                 ,field("GeographicalParentRelation", 8).numerical() //Angiver hvilken geografisk tilknytning enheden har. Enten: Selvstændig geografisk placering (1), Den organisatoriske mor (2), Anden geografisk mor (3), Ingen geografisk placering (4), Ukendt geografisk placering (5).
                 ,field("GeographicalParentSorIdentifier", 8).numerical() //Angiver enhedens geografiske mor.
 
