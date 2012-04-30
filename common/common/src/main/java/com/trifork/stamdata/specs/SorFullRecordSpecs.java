@@ -31,37 +31,50 @@ import com.trifork.stamdata.persistence.RecordSpecification;
 
 public class SorFullRecordSpecs {
 
-	public static final RecordSpecification INSTITUTIONS_EJER = RecordSpecification.createSpecification("SORInstitutionOwner", "pk",
+	public static final String FROM_DATE = "fromDate";
+	public static final String TO_DATE = "toDate";
+	public static final String FIRST_FROM_DATE = "firstFromDate";
+	public static final String UPDATED_AT = "updatedAt";
+	
+	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", null,
+			field(FROM_DATE, 10),
+			field(TO_DATE,10).doAllowNull(),
+			field(UPDATED_AT,10).doAllowNull(),
+			field(FIRST_FROM_DATE,10)
+		);
+
+	public static final RecordSpecification EAN_LOCATION_CODE_ENTITY = RecordSpecification.createSpecification("SOREanLocationCode", "eanLocationCode",
+			field("eanLocationCode", 20).numerical(),
+			field("onlyInternalIndicator", 1),
+			field("nonActiveIndicator", 1),
+			field("systemSupplier", 20).numerical(),
+			field("systemType", 20).numerical(),
+			field("communicationSupplier", 20).numerical(),
+			field("regionCode", 5).numerical(),
+			field("ediAdministrator", 5).numerical(),
+			field("sorNote", 254).doAllowNull(),
+			// TODO sor status
+			field(FROM_DATE, 10),
+			field(TO_DATE,10).doAllowNull(),
+			field(UPDATED_AT,10).doAllowNull(),
+			field(FIRST_FROM_DATE,10)
+		);
+	
+	public static final RecordSpecification INSTITUTION_OWNER = RecordSpecification.createSpecification("SORInstitutionOwner", "sorIdentifier",
 				field("sorIdentifier", 20).numerical(),
 				field("entityName",60),
 				field("ownerType", 10).numerical(),
-				field("eanLocationCodeId", 10).numerical().doAllowNull(),
+				field(EAN_LOCATION_CODE_ENTITY).doAllowNull(),
 				field("postalAddressInformationId", 10).numerical().doAllowNull(),
 				field("virtualAddressInformationId", 10).numerical().doAllowNull(),
-				field("sorStatusId", 8).numerical().doAllowNull()
+				field(FROM_DATE, 10),
+				field(TO_DATE,10).doAllowNull(),
+				field(UPDATED_AT,10).doAllowNull(),
+				field(FIRST_FROM_DATE,10)
 			);
 	
-	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", "pk",
-				field("fromDate", 10),
-				field("toDate",10),
-				field("updatedAt",10),
-				field("firstFromDate",10)
-			);
-
-	public static final RecordSpecification EAN_LOCATION_CODE_ENTITY = RecordSpecification.createSpecification("SOREanLocationCode", "pk",
-				field("eanLocationCode", 20).numerical(),
-				field("onlyInternalIndicator", 1),
-				field("nonActiveIndicator", 1),
-				field("systemSupplier", 20).numerical(),
-				field("systemType", 20).numerical(),
-				field("communicationSupplier", 20).numerical(),
-				field("regionCode", 5).numerical(),
-				field("ediAdministrator", 5).numerical(),
-				field("sorNote", 254).doAllowNull()
-				// TODO sor status
-			);
 	
-	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", "pk", 
+	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", null,
 				field("mailDeliverySublocationIdentifier", 34).doAllowNull(),
 				field("streetName", 40),
 				field("streetNameForAddressingName", 20).doAllowNull(),
@@ -77,14 +90,40 @@ public class SorFullRecordSpecs {
 				field("stairway", 40).doAllowNull()
 			);
 	
-	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", "pk", 
+	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", null,
 				field("emailAddressIdentifier", 254).doAllowNull(),
 				field("website", 254).doAllowNull(),
 				field("telephoneNumberIdentifier", 20),
 				field("faxNumberIdentifier", 20).doAllowNull()
 			);
 	
-//	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("", keyColumnName, fieldSpecifications)
+	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("currentAddressInformationRecord", "sorIdentifier",
+				field("sorIdentifier", 20).numerical(),
+				field("entityName", 60),
+				field("unitType", 20).numerical().doAllowNull(),
+				field("locationCode", 20).doAllowNull(),
+				field("pharmacyIdentifier", 20).doAllowNull(),
+				field("shakIdentifier", 7).doAllowNull(),
+				field("providerIdentifier", 9).doAllowNull(),
+				field("fkOptionalEanLocationCode", 10).numerical().doAllowNull(), // TODO Do not allow null
+				field("fkGeographicalParent", 10).numerical().doAllowNull(), // TODO Do not allow null
+				field("fkPostalAddressInformation", 10).numerical().doAllowNull(),
+				field("fkVisitingAddressInformation", 10).numerical().doAllowNull(),
+				field("fkActivityAddressInformation", 10).numerical().doAllowNull(),
+				field("fkVirtualAddressInfomation", 10).numerical().doAllowNull(),
+				field("fkClinicalSpecialityColleaction", 10).numerical().doAllowNull(),
+				field("fkSorStatus", 10).numerical().doAllowNull(),  // TODO Do not allow null
+				field("fkReplacesSorCollection", 10).numerical().doAllowNull(),
+				field("fkReplacedByCollection", 10).numerical().doAllowNull(),
+				field("ambulantActivityIndicator", 1).doAllowNull(),
+				field("patientsAdmittedIndicator", 1).doAllowNull(),
+				field("reportingLevelIndicator", 1).doAllowNull(),
+				field("localAttribute1", 20).doAllowNull(),
+				field("localAttribute2", 20).doAllowNull(),
+				field("localAttribute3", 20).doAllowNull(),
+				field("localAttribute4", 20).doAllowNull(),
+				field("localAttribute5", 20).doAllowNull()
+			);
 	
     public static final RecordSpecification HEALTH_INSTITUTION_RECORD_TYPE = RecordSpecification.createSpecification("SORHealthInstitution", "SorIdentifier",
                 field("SorIdentifier", 20).numerical(), //Den første komponent kan blive lige så lang som der er cifre i antallet af enheder:  SOR-kode der relaterer til enheden. Genereres automatisk. En SOR-kode består af fire komponenter: - Fortløbende nummer - Namespace (7 cifre: "1000016") - Partition-ID (2 cifre) - Checksum-ciffer (1 cifre). Den første mulige SOR-kode er dermed '11000016002'.

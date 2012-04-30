@@ -24,21 +24,21 @@
  */
 package com.trifork.stamdata.persistence;
 
-import static java.lang.String.format;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.google.inject.Inject;
-import com.trifork.stamdata.Preconditions;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
 
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
+import com.trifork.stamdata.persistence.RecordSpecification.RecordFieldType;
 
 //FIXME: This class has all the fetcher methods I moved Friday morning ;( Will have to be moved
 public class RecordPersister
@@ -53,8 +53,10 @@ public class RecordPersister
         this.transactionTime = transactionTime;
     }
 
-    public void persist(Record record, RecordSpecification specification) throws SQLException
+    
+    public Long persist(Record record, RecordSpecification specification) throws SQLException
     {
+    	Long result = null;
         Preconditions.checkNotNull(record);
         Preconditions.checkNotNull(specification);
         Preconditions.checkArgument(specification.conformsToSpecifications(record));
@@ -71,12 +73,105 @@ public class RecordPersister
         // differently from all other register types. The data contained in each input record is appended directly
         // to the database instead of updating existing records.
 
-        PreparedStatement insertRecordStatement = connection.prepareStatement(createInsertStatementSql(specification));
+        // We need to return auto generated index in case we need to make foreign keys
 
-        populateInsertStatement(insertRecordStatement, record, specification);
-        insertRecordStatement.execute();
+        try {
+            connection.setAutoCommit(false);
+            /*
+            String selectForUpdate = "SELECT count(*) FROM " + specification.getTable() + " WHERE ValidTo IS NULL AND " + specification.getKeyColumn() + " = ?";
+            
+            PreparedStatement selectStatement = connection.prepareStatement(selectForUpdate);
+            populateSelectStatement(selectStatement, record, specification);
+            ResultSet resultSet = selectStatement.executeQuery();
+            
+            if (resultSet != null && resultSet.next()) {
+            	long rowCount = resultSet.getLong(1);
+    			if (rowCount == 1) {
+                    PreparedStatement updateRecordStatement = connection.prepareStatement(createUpdateStatementSql(specification));
+                    populateUpdateStatement(updateRecordStatement, record, specification);
+                    
+                    int updatedRows = updateRecordStatement.executeUpdate();
+                    updateRecordStatement.close();
+                    
+                    Preconditions.checkState(1 == updatedRows, "A single row should have been updated - but updatedRows are: " + updatedRows);
+            	} else if (rowCount > 1) {
+            		throw new AssertionError("More than 1 row exists for " + specification.getTable() + " with ValidTo NULL");
+            	}
+            }*/
+            
+            PreparedStatement insertRecordStatement = connection.prepareStatement(createInsertStatementSql(specification), PreparedStatement.RETURN_GENERATED_KEYS);
 
-        insertRecordStatement.close();
+            populateInsertStatement(insertRecordStatement, record, specification);
+            insertRecordStatement.executeUpdate();
+            ResultSet rs = insertRecordStatement.getGeneratedKeys();
+            if (rs != null) {
+            	rs.next();
+            	result = rs.getLong(1);
+            }
+
+            insertRecordStatement.close();
+            connection.commit();        	
+        } catch (Exception e) {
+			if (connection != null) {
+				connection.rollback();
+				connection.setAutoCommit(true);
+			}
+        	throw new SQLException(e);
+		}
+
+        return result;
+    }
+    
+    private boolean checkIfRecordIsUpdated(Record record, RecordSpecification specification)
+    {
+    	
+    	return false;
+    }
+    
+    public void populateSelectStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpecification) throws SQLException
+    {
+    	Preconditions.checkNotNull(recordSpecification.getKeyColumn());
+    	// Preconditions.checkArgument(recordSpecification.getKeyColumn(), recordSpecification., errorMessage)
+    	String keyColumn = recordSpecification.getKeyColumn();
+    	for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
+    	{
+    		if (keyColumn != null && keyColumn.equals(fieldSpecification.name)) {
+    			RecordFieldType recordFieldType = fieldSpecification.type;
+    			if (recordFieldType.equals(RecordFieldType.ALPHANUMERICAL)) {
+    				preparedStatement.setString(1, (String)record.get(keyColumn));
+    			} else if (recordFieldType.equals(RecordFieldType.NUMERICAL)) {
+    				preparedStatement.setLong(1, (Long) record.get(keyColumn));
+    			} else {
+					throw new IllegalArgumentException("Only alfanumerical and numerical 'keys' are supported and record value must not be null");
+				}
+    		}
+    	}
+    	
+    }
+    
+    public void populateUpdateStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpecification) throws SQLException
+    {
+    	Preconditions.checkNotNull(recordSpecification.getKeyColumn());
+    	
+    	int index = 1;
+    	
+    	preparedStatement.setTimestamp(index++, new Timestamp(transactionTime.getMillis()));
+    	
+    	String keyColumn = recordSpecification.getKeyColumn();
+    	for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
+    	{
+    		if (keyColumn != null && keyColumn.equals(fieldSpecification.name)) {
+    			RecordFieldType recordFieldType = fieldSpecification.type;
+    			if (recordFieldType.equals(RecordFieldType.ALPHANUMERICAL)) {
+    				preparedStatement.setString(index++, (String)record.get(keyColumn));
+    			} else if (recordFieldType.equals(RecordFieldType.NUMERICAL)) {
+    				preparedStatement.setLong(index++, (Long) record.get(keyColumn));
+    			} else {
+					throw new IllegalArgumentException("Only alfanumerical and numerical 'keys' are supported");
+				}
+    		}
+    	}
+    	
     }
 
     public void populateInsertStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpec) throws SQLException
@@ -147,6 +242,15 @@ public class RecordPersister
         builder.append(") VALUES (");
         builder.append(StringUtils.join(questionMarks, ", "));
         builder.append(")");
+
+        return builder.toString();
+    }
+    
+    public String createUpdateStatementSql(RecordSpecification specification)
+    {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("UPDATE ").append(specification.getTable()).append(" SET ValidTo = ? WHERE " + specification.getKeyColumn() + " = ? AND ValidTo IS NULL");
 
         return builder.toString();
     }

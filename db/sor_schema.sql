@@ -22,22 +22,13 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOREanLocationCode` (
   `ediAdministrator` BIGINT NOT NULL ,
   `sorNote` VARCHAR(254) NULL DEFAULT NULL ,
   `sorStatusId` BIGINT NULL DEFAULT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
   PRIMARY KEY (`pk`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
-
-
--- -----------------------------------------------------
--- Table `sdm_warehouse`.`SORCountryIdentificationCodeType`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `sdm_warehouse`.`SORCountryIdentificationCodeType` ;
-
-CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORCountryIdentificationCodeType` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
-  `scheme` ENUM('iso3166-alpha2','iso3166-alpha3','un-numeric3','imk') NOT NULL ,
-  PRIMARY KEY (`pk`) )
-ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -57,16 +48,13 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORPostalAddressInformation` (
   `postOfficeBoxIdentifier` INT NULL ,
   `postCodeIdentifier` INT NULL ,
   `districtName` VARCHAR(20) NULL ,
-  `countryIdentificationCodeTypeId` BIGINT NULL ,
+  `countryIdentificationCodeScheme` SMALLINT NULL ,
   `countryIdentificationCode` VARCHAR(10) NULL ,
   `stairway` VARCHAR(40) NULL ,
-  PRIMARY KEY (`pk`) ,
-  INDEX `fk_countryIdentitifationCodeTypeScheme` (`countryIdentificationCodeTypeId` ASC) ,
-  CONSTRAINT `fk_countryIdentitifationCodeTypeScheme`
-    FOREIGN KEY (`countryIdentificationCodeTypeId` )
-    REFERENCES `sdm_warehouse`.`SORCountryIdentificationCodeType` (`pk` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
+  PRIMARY KEY (`pk`) )
 ENGINE = InnoDB;
 
 
@@ -81,6 +69,9 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` (
   `website` VARCHAR(254) NULL ,
   `telephoneNumberIdentifier` VARCHAR(20) NOT NULL ,
   `faxNumberIdentifier` VARCHAR(20) NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
   PRIMARY KEY (`pk`) )
 ENGINE = InnoDB;
 
@@ -144,6 +135,45 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORSorStatus` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `sdm_warehouse`.`SOROrganizationalUnit`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sdm_warehouse`.`SOROrganizationalUnit` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOROrganizationalUnit` (
+  `pk` BIGINT NOT NULL ,
+  `sorIdentifier` BIGINT NOT NULL ,
+  `entityName` VARCHAR(60) NOT NULL ,
+  `unitType` BIGINT NULL ,
+  `locationCode` VARCHAR(20) NULL ,
+  `pharmacyIdentifier` VARCHAR(20) NULL ,
+  `shakIdentifier` VARCHAR(7) NULL ,
+  `providerIdentifier` VARCHAR(9) NULL ,
+  `fkOptionalEanLocationCode` BIGINT NOT NULL ,
+  `fkGeographicalParent` BIGINT NOT NULL ,
+  `fkPostalAddressInformation` BIGINT NULL ,
+  `fkVisitingAddressInformation` BIGINT NULL ,
+  `fkActivityAddressInformation` BIGINT NULL ,
+  `fkVirtualAddressInfomation` BIGINT NULL ,
+  `fkClinicalSpecialityColleaction` BIGINT NULL ,
+  `fkSorStatus` BIGINT NOT NULL ,
+  `fkReplacesSorCollection` BIGINT NULL ,
+  `fkReplacedByCollection` BIGINT NULL ,
+  `ambulantActivityIndicator` VARCHAR(1) NULL ,
+  `patientsAdmittedIndicator` VARCHAR(1) NULL ,
+  `reportingLevelIndicator` VARCHAR(1) NULL ,
+  `localAttribute1` VARCHAR(20) NULL ,
+  `localAttribute2` VARCHAR(20) NULL ,
+  `localAttribute3` VARCHAR(20) NULL ,
+  `localAttribute4` VARCHAR(20) NULL ,
+  `localAttribute5` VARCHAR(20) NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
+  PRIMARY KEY (`pk`) )
+ENGINE = InnoDB;
 
 
 

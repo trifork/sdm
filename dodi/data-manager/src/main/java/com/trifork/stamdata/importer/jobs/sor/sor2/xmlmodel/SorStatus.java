@@ -25,36 +25,35 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
-import java.util.Date;
 
 public class SorStatus {
-	private Date fromDate;
-	private Date toDate;
-	private Date updatedAt;
-	private Date firstFromDate;
+	private String fromDate;
+	private String toDate;
+	private String updatedAt;
+	private String firstFromDate;
 	
-	public Date getFromDate() {
+	public String getFromDate() {
 		return fromDate;
 	}
-	public void setFromDate(Date fromDate) {
+	public void setFromDate(String fromDate) {
 		this.fromDate = fromDate;
 	}
-	public Date getToDate() {
+	public String getToDate() {
 		return toDate;
 	}
-	public void setToDate(Date toDate) {
+	public void setToDate(String toDate) {
 		this.toDate = toDate;
 	}
-	public Date getUpdatedAt() {
+	public String getUpdatedAt() {
 		return updatedAt;
 	}
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(String updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-	public Date getFirstFromDate() {
+	public String getFirstFromDate() {
 		return firstFromDate;
 	}
-	public void setFirstFromDate(Date firstFromDate) {
+	public void setFirstFromDate(String firstFromDate) {
 		this.firstFromDate = firstFromDate;
 	}
 	@Override
@@ -63,5 +62,7 @@ public class SorStatus {
 				+ ", updatedAt=" + updatedAt + ", firstFromDate="
 				+ firstFromDate + "]";
 	}
+	
 
+	
 }

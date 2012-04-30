@@ -75,7 +75,9 @@ public class SORXmlTagNames {
     public static final String DISTRICT_NAME = "dkcc2005:DistrictName";
     public static final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
     
-    //////////////////////////////////////////////////////////////////
+    // ORGANIZATIONAL_UNIT
+    public static final String ORGANIZATIONAL_UNIT = "OrganizationalUnit";
     
-    
+    // ORGANIZATIONAL_UNIT
+    public static final String HEALTH_INSTITUTION = "HealthInstitution";
 }

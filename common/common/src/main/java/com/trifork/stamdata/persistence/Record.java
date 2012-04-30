@@ -77,4 +77,10 @@ public class Record
     {
         return map != null ? map.hashCode() : 0;
     }
+
+	@Override
+	public String toString() {
+		return "Record [map=" + map + "]";
+	}
+ 
 }

@@ -60,7 +60,7 @@ public class RecordSpecification
     {
         DO_NOT_PERSIST;
     }
-    
+
     public static class FieldSpecification
     {
         public final String name;
@@ -102,7 +102,7 @@ public class RecordSpecification
             return new FieldSpecification(name, type, length, persistField, true);
         }
     }
-    
+
     /**
      * Creates an alphanumerical field that will be persisted
      */

@@ -88,7 +88,7 @@ public class RecordBuilder
         }
         else
         {
-            throw new IllegalStateException("Mandatory fields not set");
+            throw new IllegalStateException("Mandatory fields not set: " + record.toString());
         }
     }
     

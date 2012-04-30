@@ -72,8 +72,8 @@ public abstract class FileParserIntegrationTest
         statement.execute("TRUNCATE TABLE Import");
         statement.execute("TRUNCATE TABLE YderregisterPerson");
         statement.execute("TRUNCATE TABLE Sikrede");
-        statement.execute("TRUNCATE TABLE SORSorStatus");
-        statement.execute("TRUNCATE TABLE SORInstitutionOwner");
+        // statement.execute("TRUNCATE TABLE SORSorStatus");
+        // statement.execute("TRUNCATE TABLE SORInstitutionOwner");
 
         statement.close();
     }
