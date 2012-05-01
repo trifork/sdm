@@ -127,6 +127,19 @@ public class RecordBuilder
         
         return null;
     }
+    
+    public Object getFieldValue(String fieldName)
+    {
+    	for (FieldSpecification fieldSpecification: recordSpecification.getFieldSpecs())
+        {
+            if (fieldSpecification.name.equals(fieldName))
+            {
+                return record.get(fieldName);
+            }
+        }
+        
+        return null;
+    }
 
 	@Override
 	public String toString() {

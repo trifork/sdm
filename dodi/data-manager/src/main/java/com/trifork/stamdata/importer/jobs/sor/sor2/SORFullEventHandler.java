@@ -38,13 +38,14 @@ import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.EanLocationCode;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.OrganizationalUnit;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.SorStatus;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.SorNode;
-import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
 
 public class SORFullEventHandler extends DefaultHandler {
 
 	private static final Logger logger = Logger.getLogger(SORFullEventHandler.class);
+	
+	private final RecordFetcher fetcher;
 	private final RecordPersister persister;
 	
     private String characterContent;
@@ -61,9 +62,10 @@ public class SORFullEventHandler extends DefaultHandler {
     
 	@Inject
 	public
-    SORFullEventHandler(RecordPersister persister)
+    SORFullEventHandler(RecordPersister persister, RecordFetcher fetcher)
     {
         this.persister = persister;
+        this.fetcher = fetcher;
     }
 
     @Override
@@ -95,10 +97,14 @@ public class SORFullEventHandler extends DefaultHandler {
         	if (currentNode.parseEndTag(qName, characterContent)) {
         		SorNode parent = currentNode.getParent();
         		
-        		if (currentNode.isHasUniqueKey()) {
-        			currentNode.updateDirty();
+        		if (currentNode.isUniqueKey()) {
+        			//currentNode.updateDirty();
         			try {
+        				currentNode.compareAgainstDatabaseAndUpdateDirty(fetcher);
 						currentNode.persist(persister);
+						if (parent != null) {
+							// TODO Start her i morgen KPN
+						}
 					} catch (SQLException e) {
 						throw new SAXException(e);
 					}
@@ -107,9 +113,9 @@ public class SORFullEventHandler extends DefaultHandler {
         			parent.addChild(currentNode);
         			currentNode = currentNode.getParent();
         		} 
-        		if (parent == null) {
-        			System.out.println(currentNode);
-        		}
+        		//if (parent == null) {
+        		//	System.out.println(currentNode);
+        		//}
         		currentNode = parent;
         	}
         }

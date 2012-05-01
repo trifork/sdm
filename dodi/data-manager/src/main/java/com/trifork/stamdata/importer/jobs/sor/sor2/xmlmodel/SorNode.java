@@ -31,6 +31,7 @@ import java.util.Vector;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
 
 public abstract class SorNode {
@@ -38,7 +39,9 @@ public abstract class SorNode {
 	protected Vector<SorNode> children = new Vector<SorNode>();
 	private SorNode parent;
 	
-	private boolean dirty;
+	private Long PID;
+	
+	protected boolean dirty;
 	private boolean hasUniqueKey;
 	
 	public SorNode(Attributes attribs, SorNode parent) {
@@ -56,12 +59,7 @@ public abstract class SorNode {
 		return parent;
 	}
 	
-	public boolean getDirty()
-	{
-		return dirty;
-	}
-	
-	public void updateDirty() {
+	/*public void updateDirty() {
 		if (parent != null && parent.getDirty()) {
 			dirty = true;
 		} else {
@@ -73,6 +71,9 @@ public abstract class SorNode {
 	}
 	
 	abstract public boolean recordDirty();
+	*/
+	
+	abstract public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException;
 	
 	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
 		return false;
@@ -88,12 +89,20 @@ public abstract class SorNode {
 		return "XmlNode [children=" + children + "]";
 	}
 
-	public boolean isHasUniqueKey() {
+	public boolean isUniqueKey() {
 		return hasUniqueKey;
 	}
 
 	public void setHasUniqueKey(boolean hasUniqueKey) {
 		this.hasUniqueKey = hasUniqueKey;
+	}
+
+	public Long getPID() {
+		return PID;
+	}
+
+	public void setPID(Long pID) {
+		PID = pID;
 	}
 	
 }

@@ -36,7 +36,7 @@ public class SorFullRecordSpecs {
 	public static final String FIRST_FROM_DATE = "firstFromDate";
 	public static final String UPDATED_AT = "updatedAt";
 	
-	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", "pk",
+	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", "PID",
 			field(FROM_DATE, 10),
 			field(TO_DATE,10).doAllowNull(),
 			field(UPDATED_AT,10).doAllowNull(),
@@ -74,7 +74,7 @@ public class SorFullRecordSpecs {
 			);
 	
 	
-	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", "pk",
+	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", "PID",
 				field("mailDeliverySublocationIdentifier", 34).doAllowNull(),
 				field("streetName", 40),
 				field("streetNameForAddressingName", 20).doAllowNull(),
@@ -90,7 +90,7 @@ public class SorFullRecordSpecs {
 				field("stairway", 40).doAllowNull()
 			);
 	
-	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", "pk",
+	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", "PID",
 				field("emailAddressIdentifier", 254).doAllowNull(),
 				field("website", 254).doAllowNull(),
 				field("telephoneNumberIdentifier", 20),
@@ -100,6 +100,7 @@ public class SorFullRecordSpecs {
 	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("SOROrganizationalUnit", "sorIdentifier",
 				field("sorIdentifier", 20).numerical(),
 				field("entityName", 60),
+				field("fkOrganizationalChildUnit", 10).numerical().doAllowNull(),
 				field("unitType", 20).numerical().doAllowNull(),
 				field("localCode", 20).doAllowNull(),
 				field("pharmacyIdentifier", 20).doAllowNull(),

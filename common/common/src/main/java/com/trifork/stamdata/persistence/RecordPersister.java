@@ -53,7 +53,6 @@ public class RecordPersister
         this.transactionTime = transactionTime;
     }
 
-    
     public Long persist(Record record, RecordSpecification specification) throws SQLException
     {
     	Long result = null;

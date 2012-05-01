@@ -31,8 +31,11 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
+import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class OrganizationalUnit extends SorNode {
@@ -140,7 +143,7 @@ public class OrganizationalUnit extends SorNode {
 	private void updateForeignKeys() {
 		for (SorNode node : children) {
 			if (node.getClass() == SorStatus.class) {
-				builder.field("fkSorStatus", ((SorStatus)node).getPrimaryKey());
+				builder.field("fkSorStatus", ((SorStatus)node).getPID());
 			}
 		}
 	}
@@ -149,7 +152,39 @@ public class OrganizationalUnit extends SorNode {
 	public void persist(RecordPersister persister) throws SQLException {
 		super.persist(persister);
 		updateForeignKeys();
-		persister.persist(builder.build(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT);
+		setPID(persister.persist(builder.build(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT));
+		
+		SorNode parent = getParent();
+		// Update parent organizational units to point to us
+		if (parent != null && parent.getClass() == OrganizationalUnit.class) {
+			((OrganizationalUnit)parent).builder.field("fkOrganazationalChildUnit", getPID());
+		}
+	}
+	
+	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException {
+		// Always set dirty, and reset below if we are sure we are not updated
+		dirty = true;
+		Record fetched = fetcher.fetchCurrent(builder.getFieldValue("sorIdentifier").toString(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT);
+		if (fetched != null) {
+			Object sorStatusId = fetched.get("fkSorStatus");
+			for (SorNode node : children) {
+				if (node.getClass() == SorStatus.class) {
+					SorStatus status = (SorStatus)node;
+					status.setPID((Long)sorStatusId);
+					status.compareAgainstDatabaseAndUpdateDirty(fetcher);
+					if (!status.dirty) {
+						dirty = false;
+					}
+				}
+			}
+		}
+		for (SorNode node : children) {
+			node.dirty = dirty;
+		}
+		if (dirty)
+			System.out.println("Record dirty");
+		else
+			System.out.println("Record clean");
 	}
 
 	public boolean recordDirty() {

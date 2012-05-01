@@ -31,7 +31,9 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
+import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
@@ -43,8 +45,6 @@ public class SorStatus extends SorNode {
 //	private String firstFromDate;
 	
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
-	
-	private Long primaryKey;
 
 	public SorStatus(Attributes attribs, SorNode parent) {
 		super(attribs, parent);
@@ -71,23 +71,36 @@ public class SorStatus extends SorNode {
 		return false;
 	}
 	
-	public boolean recordDirty() {
-		return true;
-	}
-	
 	@Override
 	public void persist(RecordPersister persister) throws SQLException {
+		super.persist(persister);
 		Long id = persister.persist(builder.build(), SorFullRecordSpecs.SOR_STATUS);
 		if (id == null)
 		{
 			throw new SQLException("MySql did not respond with an Id of the row inserted in SorStatus table");
 		}
-		primaryKey = id;
-		super.persist(persister);
+		setPID(id);
 	}
 	
-	public Long getPrimaryKey() {
-		return primaryKey;
+	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException {
+		dirty = true;
+		// We rely on primaryKey being set before this is called
+		String updatedAtInXml = (String) builder.getFieldValue("updatedAt");
+		if (getPID() != null) {
+			Record fetched = fetcher.fetchCurrent(getPID().toString(), SorFullRecordSpecs.SOR_STATUS);
+			if (fetched != null) {
+				String updatedAtInDb = (String)fetched.get("updatedAt");
+				// Both null so we are clean
+				if (updatedAtInXml == null && updatedAtInDb == null) {
+					dirty = false;
+				// Updates have equal date so we are clean
+				} else if (updatedAtInDb.equals(updatedAtInXml)) {
+					dirty = false;
+				}
+			} else {
+				throw new SQLException("Could not located Sor Status");
+			}
+		}
 	}
 
 	@Override

@@ -32,22 +32,12 @@ import org.xml.sax.SAXException;
 
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class EanLocationCode extends SorNode {
-//	private long eanLocationCode;
-//	private boolean onlyInternalIndicator;
-//	private boolean nonActiveIndicator;
-//	private long systemSupplier;
-//	private long systemType;
-//	private long communicationSupplier;
-//	private long regionCode;
-//	private long ediAdministrator;
-//	private String sorNote;
-	
-	private Long primaryKey;
-	
+
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
 
 	public EanLocationCode(Attributes attribs, SorNode parent) {
@@ -91,18 +81,6 @@ public class EanLocationCode extends SorNode {
 		return false;
 	}
 	
-	public void setPrimaryKey(Long key) {
-		primaryKey = key;
-	}
-	
-	public Long getPrimaryKey() {
-		return primaryKey;
-	}
-		
-	public boolean recordDirty() {
-		return true;
-	}
-	
 	/**
 	 * Must happen right after persist has been called on all children, to 
 	 * make sure we insert an correct id
@@ -110,7 +88,7 @@ public class EanLocationCode extends SorNode {
 	private void updateForeignKeys() {
 		for (SorNode node : children) {
 			if (node.getClass() == SorStatus.class) {
-				builder.field("fkSorStatus", ((SorStatus)node).getPrimaryKey());
+				builder.field("fkSorStatus", ((SorStatus)node).getPID());
 			}
 		}
 	}
@@ -121,11 +99,8 @@ public class EanLocationCode extends SorNode {
 		updateForeignKeys();
 		persister.persist(builder.build(), SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
 	}
-
-	@Override
-	public String toString() {
-		return "EanLocationCode [primaryKey=" + primaryKey + ", builder="
-				+ builder + ", toString()=" + super.toString() + "]";
+	
+	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) {
 	}
 	
 }
