@@ -75,8 +75,8 @@ public class RecordPersister
 
         // We need to return auto generated index in case we need to make foreign keys
 
-        try {
-            connection.setAutoCommit(false);
+/*        try {
+            connection.setAutoCommit(false);*/
             /*
             String selectForUpdate = "SELECT count(*) FROM " + specification.getTable() + " WHERE ValidTo IS NULL AND " + specification.getKeyColumn() + " = ?";
             
@@ -108,17 +108,17 @@ public class RecordPersister
             	rs.next();
             	result = rs.getLong(1);
             }
-
+            
+//            connection.commit();
             insertRecordStatement.close();
-            connection.commit();        	
-        } catch (Exception e) {
+/*        } catch (Exception e) {
 			if (connection != null) {
 				connection.rollback();
 				connection.setAutoCommit(true);
 			}
         	throw new SQLException(e);
 		}
-
+        connection.setAutoCommit(true);*/
         return result;
     }
     
@@ -127,7 +127,7 @@ public class RecordPersister
     	
     	return false;
     }
-    
+    /*
     public void populateSelectStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpecification) throws SQLException
     {
     	Preconditions.checkNotNull(recordSpecification.getKeyColumn());
@@ -173,7 +173,7 @@ public class RecordPersister
     	}
     	
     }
-
+*/
     public void populateInsertStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpec) throws SQLException
     {
         Preconditions.checkArgument(recordSpec.conformsToSpecifications(record), "The record does not conform to it's spec.");

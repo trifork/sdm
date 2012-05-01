@@ -34,11 +34,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.EanLocationCode;
+import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.OrganizationalUnit;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.SorStatus;
+import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.SorNode;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class SORFullEventHandler extends DefaultHandler {
 
@@ -47,13 +49,15 @@ public class SORFullEventHandler extends DefaultHandler {
 	
     private String characterContent;
 
-    private RecordBuilder currentInstitutionOwnerRecord;
+    /*private RecordBuilder currentInstitutionOwnerRecord;
     private SorStatus currentSorStatusRecord;
     private RecordBuilder currentLocatonCodeRecord;
     private RecordBuilder currentAddressInformationRecord;
-    private RecordBuilder currentVirtualInformationRecord;
-    private RecordBuilder currentHealthInstitutionRecord;
-    private RecordBuilder currentOrganizationalUnitRecord;
+    private RecordBuilder currentVirtualInformationRecord;*/
+//    private RecordBuilder currentHealthInstitutionRecord;
+//    private RecordBuilder currentOrganizationalUnitRecord;
+
+    private SorNode currentNode;
     
 	@Inject
 	public
@@ -66,93 +70,48 @@ public class SORFullEventHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
     	characterContent = new String();
     	
-        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
-            currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTION_OWNER);
-        }
-        
-        if (currentInstitutionOwnerRecord != null) {
-        	if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
-        		currentSorStatusRecord = new SorStatus();
-        	}
-        	if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
-        		currentLocatonCodeRecord = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
-        	}
-        	if (SORXmlTagNames.ORGANIZATIONAL_UNIT.equals(qName)) {
-//        		currentOrganizationalUnitRecord = new RecordBuilder(SorFullRecordSpecs.ORGANIZATIONAL_UNIT);
-        	}
-        	if (SORXmlTagNames.HEALTH_INSTITUTION.equals(qName)) {
-//        		currentHealthInstitutionRecord = new RecordBuilder(SorFullRecordSpecs.HEALTH_INSTITUTION_RECORD_TYPE);
-        	}
-        	if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
-        		currentAddressInformationRecord = new RecordBuilder(SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION); 
-        	}
-        	if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
-        		currentVirtualInformationRecord = new RecordBuilder(SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
-        	}
-        	if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName) && currentAddressInformationRecord != null) {
-        		String scheme = atts.getValue("scheme");
-        		currentAddressInformationRecord.field("countryIdentificationCodeScheme", SORFullEventHandler.countrySchemeStringToInt(scheme));
-        	}
-        }
-        //
+//        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
+//            currentInstitutionOwnerRecord = new RecordBuilder(SorFullRecordSpecs.INSTITUTION_OWNER);
+//        }
+
+    	// TODO Proper factory
+    	if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
+    		currentNode = new SorStatus(atts, currentNode);
+    	}
+    	if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
+    		currentNode = new EanLocationCode(atts, currentNode);
+    	}
+    	if (SORXmlTagNames.ORGANIZATIONAL_UNIT.equals(qName)) {
+    		currentNode = new OrganizationalUnit(atts, currentNode);
+    	}
 
         super.startElement(uri, localName, qName, atts);
     }
     
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        if (qName.equals("SnapshotDate")) {
-        	//
-        }
-
-        if (SORXmlTagNames.INSTITUTION_OWNER.equals(qName)) {
-        	persist(currentInstitutionOwnerRecord, SorFullRecordSpecs.INSTITUTION_OWNER);
-        	currentInstitutionOwnerRecord = null;
-        } else if (SORXmlTagNames.HEALTH_INSTITUTION.equals(qName)) {
-            // Persist health institution
-/*        } else if (currentHealthInstitutionRecord != null) {
-        	parseHealthInstitutionRecordEndTag(qName);
-        } else if (currentOrganizationalUnitRecord != null ) {
-        	parseOrganizationalRecordEndTag(qName);*/
-        } else if (currentLocatonCodeRecord != null) {
-        	parseLocationCodeRecordEndTag(qName);
-        } else if (currentInstitutionOwnerRecord != null ) {
-        	parseInstitutionOwnerRecordEndTag(qName);
-        }
-        
-       
-        if (currentAddressInformationRecord != null) {
-        	parseCurrentAddressEndTag(qName);
-        }
-        if (currentVirtualInformationRecord != null) {
-        	parseVirtualRecordEndTag(qName);
+        if (currentNode != null)
+        {
+        	if (currentNode.parseEndTag(qName, characterContent)) {
+        		SorNode parent = currentNode.getParent();
+        		
+        		if (currentNode.isHasUniqueKey()) {
+        			currentNode.updateDirty();
+        			currentNode.persist(persister);
+        		}
+        		else if (parent != null) {
+        			parent.addChild(currentNode);
+        			currentNode = currentNode.getParent();
+        		} 
+        		if (parent == null) {
+        			System.out.println(currentNode);
+        		}
+        		currentNode = parent;
+        	}
         }
         super.endElement(uri, localName, qName);
     }
-
-	private void setSorStatusOnRecord(RecordBuilder recordBuilder) {
-		recordBuilder.field(SorFullRecordSpecs.FIRST_FROM_DATE, currentSorStatusRecord.getFirstFromDate());
-		recordBuilder.field(SorFullRecordSpecs.FROM_DATE, currentSorStatusRecord.getFromDate());
-		recordBuilder.field(SorFullRecordSpecs.TO_DATE, currentSorStatusRecord.getToDate());
-		recordBuilder.field(SorFullRecordSpecs.UPDATED_AT,currentSorStatusRecord.getUpdatedAt());
-		currentSorStatusRecord = null;
-	}
-
-
-    
-    
-    private void parseSorStatusRecordEndTag(String qName) throws SAXException {
-    	if (SORXmlTagNames.FROM_DATE.equals(qName)) {
-    		currentSorStatusRecord.setFromDate(characterContent);
-		} else if (SORXmlTagNames.TO_DATE.equals(qName)) {
-			currentSorStatusRecord.setToDate(characterContent);
-		} else if (SORXmlTagNames.UPDATED_AT_DATE.equals(qName)) {
-			currentSorStatusRecord.setUpdatedAt(characterContent);
-		} else if (SORXmlTagNames.FIRST_FROM_DATE.equals(qName)) {
-			currentSorStatusRecord.setFirstFromDate(characterContent);
-		}
-    }
-    
+/*
     private void parseInstitutionOwnerRecordEndTag(String qName) throws SAXException {
     	if (SORXmlTagNames.ENTITY_NAME.equals(qName)) {
     		currentInstitutionOwnerRecord.field("entityName", characterContent);
@@ -164,60 +123,9 @@ public class SORFullEventHandler extends DefaultHandler {
     		// currentInstitutionOwner.setSorStatus(currentSorStatus);
     		// currentSorStatus = null;
     		// TODO FIXME
-    	} else if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
-    		persist(currentAddressInformationRecord, SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
-    		currentAddressInformationRecord = null;
-    		// TODO link current institionowner to this postal address somehow....
-    	} else if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
-    		persist(currentVirtualInformationRecord, SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
-    		currentVirtualInformationRecord = null;
-    		// TODO link current institionowner to this virtual info address somehow....
     	}
     	if (qName.equals(SORXmlTagNames.SOR_STATUS)) {
     		setSorStatusOnRecord(currentInstitutionOwnerRecord);
-    	}
-    	if (currentSorStatusRecord != null) {
-        	parseSorStatusRecordEndTag(qName);
-        }
-    }
-    
-    private void parseHealthInstitutionRecordEndTag(String qName) throws SAXException {
-    	//
-    }
-    
-    private void parseOrganizationalRecordEndTag(String qName) throws SAXException {
-    	//
-    }
-    
-    private void parseLocationCodeRecordEndTag(String qName) throws SAXException {
-    	if (SORXmlTagNames.EAN_LOCATION_CODE.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("eanLocationCode", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.ONLY_INTERNAL_INDICATOR.endsWith(qName)) {
-    		setBoolField(currentLocatonCodeRecord, "onlyInternalIndicator", characterContent);
-    	} else if (SORXmlTagNames.NON_ACTIVITY_INDICATOR.endsWith(qName)) {
-    		setBoolField(currentLocatonCodeRecord, "nonActiveIndicator", characterContent);
-    	} else if (SORXmlTagNames.SYSTEM_SUPPLIER.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("systemSupplier", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.SYSTEM_TYPE.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("systemType", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.COMMUNICATION_SUPPLIER.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("communicationSupplier", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.REGION_CODE.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("regionCode", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.EDI_ADMINISTRATOR.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("ediAdministrator", Long.valueOf(characterContent));
-    	} else if (SORXmlTagNames.SOR_NOTE.endsWith(qName)) {
-    		currentLocatonCodeRecord.field("sorNote", characterContent);
-    	} else if (SORXmlTagNames.SOR_STATUS.equals(qName)) {
-    		//currentLocationCode.setSorStatus(currentSorStatus);
-    		//currentSorStatus = null;
-    	}
-    	if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(qName)) {
-    		persist(currentLocatonCodeRecord, SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
-    		currentLocatonCodeRecord = null;
-    	}
-    	if (qName.equals(SORXmlTagNames.SOR_STATUS)) {
-    		setSorStatusOnRecord(currentLocatonCodeRecord);
     	}
     	if (currentSorStatusRecord != null) {
         	parseSorStatusRecordEndTag(qName);
@@ -233,6 +141,11 @@ public class SORFullEventHandler extends DefaultHandler {
     		currentVirtualInformationRecord.field("telephoneNumberIdentifier", characterContent);
     	} else if (SORXmlTagNames.FAX_NUMBER_IDENTIFIER.equals(qName)) {
     		currentVirtualInformationRecord.field("faxNumberIdentifier", characterContent);
+    	}
+    	if (SORXmlTagNames.VIRTUAL_ADDRESS_INFO.equals(qName)) {
+    		persist(currentVirtualInformationRecord, SorFullRecordSpecs.VIRTUAL_ADDRESS_INFORMATION);
+    		currentVirtualInformationRecord = null;
+    		// TODO link current institionowner to this virtual info address somehow....
     	}
     }
     
@@ -262,8 +175,12 @@ public class SORFullEventHandler extends DefaultHandler {
     	} else if (SORXmlTagNames.COUNTRY_IDENT_CODE.equals(qName)) {
     		currentAddressInformationRecord.field("countryIdentificationCode", characterContent);
     	}
+    	if (SORXmlTagNames.POSTAL_ADDRESS_INFO.equals(qName)) {
+    		persist(currentAddressInformationRecord, SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
+    		currentAddressInformationRecord = null;
+    	}
     }
-    
+    */
     public static long countrySchemeStringToInt(String schemeName) throws SAXException
     {
     	if (schemeName.equals("iso3166-alpha2")) {
@@ -277,15 +194,6 @@ public class SORFullEventHandler extends DefaultHandler {
     	} else {
     		throw new SAXException("Unrecognized country scheme value");
     	}
-    }
-    
-    private void setBoolField(RecordBuilder rb, String fieldName, String value) 
-    {
-    	boolean f = Boolean.valueOf(value);
-    	if (f)
-    		rb.field(fieldName, "1");
-    	else
-    		rb.field(fieldName, "0");
     }
     
     private Long persist(RecordBuilder rb, RecordSpecification specification) throws SAXException

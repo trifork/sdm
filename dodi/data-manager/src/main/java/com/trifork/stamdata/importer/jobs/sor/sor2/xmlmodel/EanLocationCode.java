@@ -25,89 +25,85 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
-public class EanLocationCode {
-	private long eanLocationCode;
-	private boolean onlyInternalIndicator;
-	private boolean nonActiveIndicator;
-	private long systemSupplier;
-	private long systemType;
-	private long communicationSupplier;
-	private long regionCode;
-	private long ediAdministrator;
-	private String sorNote;
-	private SorStatus sorStatus;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
-	public long getEanLocationCode() {
-		return eanLocationCode;
-	}
-	public void setEanLocationCode(long eanLocationCode) {
-		this.eanLocationCode = eanLocationCode;
-	}
-	public boolean isOnlyInternalIndicator() {
-		return onlyInternalIndicator;
-	}
-	public void setOnlyInternalIndicator(boolean onlyInternalIndicator) {
-		this.onlyInternalIndicator = onlyInternalIndicator;
-	}
-	public boolean isNonActiveIndicator() {
-		return nonActiveIndicator;
-	}
-	public void setNonActiveIndicator(boolean nonActiveIndicator) {
-		this.nonActiveIndicator = nonActiveIndicator;
-	}
-	public long getSystemSupplier() {
-		return systemSupplier;
-	}
-	public void setSystemSupplier(long systemSupplier) {
-		this.systemSupplier = systemSupplier;
-	}
-	public long getSystemType() {
-		return systemType;
-	}
-	public void setSystemType(long systemType) {
-		this.systemType = systemType;
-	}
-	public long getCommunicationSupplier() {
-		return communicationSupplier;
-	}
-	public void setCommunicationSupplier(long communicationSupplier) {
-		this.communicationSupplier = communicationSupplier;
-	}
-	public long getRegionCode() {
-		return regionCode;
-	}
-	public void setRegionCode(long regionCode) {
-		this.regionCode = regionCode;
-	}
-	public long getEdiAdministrator() {
-		return ediAdministrator;
-	}
-	public void setEdiAdministrator(long ediAdministrator) {
-		this.ediAdministrator = ediAdministrator;
-	}
-	public String getSorNote() {
-		return sorNote;
-	}
-	public void setSorNote(String sorNote) {
-		this.sorNote = sorNote;
-	}
-	public SorStatus getSorStatus() {
-		return sorStatus;
-	}
-	public void setSorStatus(SorStatus sorStatus) {
-		this.sorStatus = sorStatus;
-	}
-	@Override
-	public String toString() {
-		return "EanLocationCode [eanLocationCode=" + eanLocationCode
-				+ ", onlyInternalIndicator=" + onlyInternalIndicator
-				+ ", nonActiveIndicator=" + nonActiveIndicator
-				+ ", systemSupplier=" + systemSupplier + ", systemType="
-				+ systemType + ", communicationSupplier="
-				+ communicationSupplier + ", regionCode=" + regionCode
-				+ ", ediAdministrator=" + ediAdministrator + ", sorNote="
-				+ sorNote + ", sorStatus=" + sorStatus + "]";
+import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.specs.SorFullRecordSpecs;
+
+public class EanLocationCode extends SorNode {
+//	private long eanLocationCode;
+//	private boolean onlyInternalIndicator;
+//	private boolean nonActiveIndicator;
+//	private long systemSupplier;
+//	private long systemType;
+//	private long communicationSupplier;
+//	private long regionCode;
+//	private long ediAdministrator;
+//	private String sorNote;
+	
+	private Long primaryKey;
+	
+	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
+
+	public EanLocationCode(Attributes attribs, SorNode parent) {
+		super(attribs, parent);
+		this.setHasUniqueKey(false);
 	}
 	
+	@Override
+	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
+		if (SORXmlTagNames.EAN_LOCATION_CODE_ENTITY.equals(tagName)) {
+			return true;
+    	}
+		
+		if (SORXmlTagNames.EAN_LOCATION_CODE.endsWith(tagName)) {
+			builder.field("eanLocationCode", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.ONLY_INTERNAL_INDICATOR.endsWith(tagName)) {
+    		boolean f = Boolean.valueOf(tagValue);
+    		if (f)
+    			builder.field("onlyInternalIndicator", "1");
+    		else
+    			builder.field("onlyInternalIndicator", "0");
+    	} else if (SORXmlTagNames.NON_ACTIVITY_INDICATOR.endsWith(tagName)) {
+    		boolean f = Boolean.valueOf(tagValue);
+    		if (f)
+    			builder.field("nonActiveIndicator", "1");
+    		else
+    			builder.field("nonActiveIndicator", "0");
+    	} else if (SORXmlTagNames.SYSTEM_SUPPLIER.endsWith(tagName)) {
+    		builder.field("systemSupplier", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.SYSTEM_TYPE.endsWith(tagName)) {
+    		builder.field("systemType", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.COMMUNICATION_SUPPLIER.endsWith(tagName)) {
+    		builder.field("communicationSupplier", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.REGION_CODE.endsWith(tagName)) {
+    		builder.field("regionCode", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.EDI_ADMINISTRATOR.endsWith(tagName)) {
+    		builder.field("ediAdministrator", Long.valueOf(tagValue));
+    	} else if (SORXmlTagNames.SOR_NOTE.endsWith(tagName)) {
+    		builder.field("sorNote", tagValue);
+    	}
+		return false;
+	}
+	
+	public void setPrimaryKey(Long key) {
+		primaryKey = key;
+	}
+	
+	public Long getPrimaryKey() {
+		return primaryKey;
+	}
+		
+	public boolean recordDirty() {
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "EanLocationCode [primaryKey=" + primaryKey + ", builder="
+				+ builder + ", toString()=" + super.toString() + "]";
+	}
 	
 }

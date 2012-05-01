@@ -74,7 +74,7 @@ public class SorFullRecordSpecs {
 			);
 	
 	
-	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", null,
+	public static final RecordSpecification POSTAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORPostalAddressInformation", "pk",
 				field("mailDeliverySublocationIdentifier", 34).doAllowNull(),
 				field("streetName", 40),
 				field("streetNameForAddressingName", 20).doAllowNull(),
@@ -90,7 +90,7 @@ public class SorFullRecordSpecs {
 				field("stairway", 40).doAllowNull()
 			);
 	
-	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", null,
+	public static final RecordSpecification VIRTUAL_ADDRESS_INFORMATION = RecordSpecification.createSpecification("SORVirtualAddressInformation", "pk",
 				field("emailAddressIdentifier", 254).doAllowNull(),
 				field("website", 254).doAllowNull(),
 				field("telephoneNumberIdentifier", 20),
@@ -101,18 +101,20 @@ public class SorFullRecordSpecs {
 				field("sorIdentifier", 20).numerical(),
 				field("entityName", 60),
 				field("unitType", 20).numerical().doAllowNull(),
-				field("locationCode", 20).doAllowNull(),
+				field("localCode", 20).doAllowNull(),
 				field("pharmacyIdentifier", 20).doAllowNull(),
 				field("shakIdentifier", 7).doAllowNull(),
 				field("providerIdentifier", 9).doAllowNull(),
-				field("fkOptionalEanLocationCode", 10).numerical().doAllowNull(), // TODO Do not allow null
-				field("fkGeographicalParent", 10).numerical().doAllowNull(), // TODO Do not allow null
+				field("eanLocationCodeInheritedIndicator", 1).doAllowNull(),
+				field("fkEanLocationCode", 10).numerical().doAllowNull(),
+				field("geographicalParentRelation", 10).numerical(),
+				field("geographicalParentSorIdentifier", 10).numerical().doAllowNull(),
 				field("fkPostalAddressInformation", 10).numerical().doAllowNull(),
 				field("fkVisitingAddressInformation", 10).numerical().doAllowNull(),
 				field("fkActivityAddressInformation", 10).numerical().doAllowNull(),
 				field("fkVirtualAddressInfomation", 10).numerical().doAllowNull(),
 				field("fkClinicalSpecialityColleaction", 10).numerical().doAllowNull(),
-				field("fkSorStatus", 10).numerical().doAllowNull(),  // TODO Do not allow null
+				field("fkSorStatus", 10).numerical().doAllowNull(),
 				field("fkReplacesSorCollection", 10).numerical().doAllowNull(),
 				field("fkReplacedByCollection", 10).numerical().doAllowNull(),
 				field("ambulantActivityIndicator", 1).doAllowNull(),

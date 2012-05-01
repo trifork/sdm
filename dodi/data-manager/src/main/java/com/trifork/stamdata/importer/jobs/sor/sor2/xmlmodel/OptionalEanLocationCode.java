@@ -25,6 +25,6 @@
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
 
-public class OptionalEanLocationCode extends EanLocationCode {
+public class OptionalEanLocationCode /*extends EanLocationCode*/ {
     private Boolean entityInheritedIndicator; //can be null or boolean
 }

@@ -25,44 +25,55 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
-public class SorStatus {
-	private String fromDate;
-	private String toDate;
-	private String updatedAt;
-	private String firstFromDate;
+import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.specs.SorFullRecordSpecs;
+
+
+public class SorStatus extends SorNode {
+//	private String fromDate;
+//	private String toDate;
+//	private String updatedAt;
+//	private String firstFromDate;
 	
-	public String getFromDate() {
-		return fromDate;
+	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
+
+	public SorStatus(Attributes attribs, SorNode parent) {
+		super(attribs, parent);
+		this.setHasUniqueKey(false);
 	}
-	public void setFromDate(String fromDate) {
-		this.fromDate = fromDate;
+	
+	@Override
+	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
+		if (SORXmlTagNames.SOR_STATUS.equals(tagName)) {
+			return true;
+		}
+    	if (SORXmlTagNames.FROM_DATE.equals(tagName)) {
+    		builder.field("fromDate", tagValue);
+		} else if (SORXmlTagNames.TO_DATE.equals(tagName)) {
+			builder.field("toDate", tagValue);
+		} else if (SORXmlTagNames.UPDATED_AT_DATE.equals(tagName)) {
+			builder.field("toDate", tagValue);
+		} else if (SORXmlTagNames.FIRST_FROM_DATE.equals(tagName)) {
+			builder.field("firstFromDate", tagValue);
+		} else {
+			// Throw exception because we encountered an unexpected tag.
+			throw new SAXException("Encountered an unexpected tag '" + tagName + "' in SorStatus");
+		}
+		return false;
 	}
-	public String getToDate() {
-		return toDate;
+	
+	public boolean recordDirty() {
+		return true;
 	}
-	public void setToDate(String toDate) {
-		this.toDate = toDate;
-	}
-	public String getUpdatedAt() {
-		return updatedAt;
-	}
-	public void setUpdatedAt(String updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	public String getFirstFromDate() {
-		return firstFromDate;
-	}
-	public void setFirstFromDate(String firstFromDate) {
-		this.firstFromDate = firstFromDate;
-	}
+
 	@Override
 	public String toString() {
-		return "SorStatus [fromDate=" + fromDate + ", toDate=" + toDate
-				+ ", updatedAt=" + updatedAt + ", firstFromDate="
-				+ firstFromDate + "]";
+		return "SorStatus [builder=" + builder + ", toString()="
+				+ super.toString() + "]";
 	}
-	
-
 	
 }

@@ -59,7 +59,7 @@ public class RecordBuilder
             throw new IllegalArgumentException("Values in records must be string or long. field=" + fieldName);
         }
     }
-
+    
     public RecordBuilder field(String fieldName, Long value)
     {
         return field(fieldName, value, RecordSpecification.RecordFieldType.NUMERICAL);
@@ -127,4 +127,12 @@ public class RecordBuilder
         
         return null;
     }
+
+	@Override
+	public String toString() {
+		return "RecordBuilder [recordSpecification=" + recordSpecification
+				+ ", record=" + record + "]";
+	}
+    
+    
 }

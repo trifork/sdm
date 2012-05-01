@@ -75,8 +75,49 @@ public class SORXmlTagNames {
     public static final String DISTRICT_NAME = "dkcc2005:DistrictName";
     public static final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
     
-    // ORGANIZATIONAL_UNIT
     public static final String ORGANIZATIONAL_UNIT = "OrganizationalUnit";
+    public class OrganizationalUnit {
+    	public static final String SOR_IDENTIFIER = "SorIdentifier";
+    	public static final String ENTITY_NAME = "EntityName";
+    	public static final String UNIT_TYPE = "UnitType";
+    	public static final String LOCAL_CODE = "LocalCode";
+    	public static final String PHARMACY_IDENTIFIER = "PharmacyIdentifier";
+    	public static final String SHAK_IDENTIFIER = "ShakIdentifier";
+    	public static final String PROVIDER_IDENTIFIER = "ProviderIdentifier";
+    	
+    	public static final String OPTIONAL_EAN_LOCATION_CODE = "OptionalEanLocationCode";
+    	public static final String EAN_ENTITY_INHERITED_INDICATOR = "EntityInheritedIndicator";
+    	public static final String EAN_LOCATION_CODE = "EanLocationCodeEntity";
+    	
+    	public static final String GEOGRAPHICAL_PARENT = "GeographicalParent";
+    	// SUB NODE
+    	public static final String GEOGRAPHICAL_PARENT_RELATION = "GeographicalParentRelation";
+    	public static final String GEOGRAPHICAL_PARENT_SOR_IDENTIFIER = "GeographicalParentSorIdentifier";
+    	
+    	public static final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
+    	public static final String VISITING_ADDRESS_INFO = "VisitingAddressInformation";
+    	public static final String ACTIVITY_ADDRESS_INFO = "ActivityAddressInformation";
+    	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
+    	public static final String CLINICAL_SPECIALITY_COLLECTION = "ClinicalSpecialityCollection"; // TODO
+    	
+    	public static final String SOR_STATUS = "SorStatus";
+    	public static final String REPLACES_ENTITY_COLLECTION = "ReplacesEntityCollection"; // TODO
+    	public static final String REPLACED_BY_ENTITY_COLLECTION = "ReplacedByEntityCollection"; // TODO
+    	
+    	public static final String ORGANIZATIONAL_UNIT_INFO = "OrganizationalUnitInformation";
+    	// SUB NODES
+  		public static final String AMBULANT_ACTIVITY_INDICATOR = "AmbulantActivityIndicator";
+  		public static final String PATIENTS_ADMITTED_INDICATOR = "PatientsAdmittedIndicator";
+   		public static final String REPORTING_LEVEL_INDICATOR = "ReportingLevelIndicator";
+   		
+   		public static final String LOCAL_ATTRBIBUTES_COLLECTION = "LocalAttributeCollection";
+   		// SUB NODES
+   		public static final String LOCAL_ATTRBIBUTE1 = "LocalAttribute1";
+   		public static final String LOCAL_ATTRBIBUTE2 = "LocalAttribute1";
+   		public static final String LOCAL_ATTRBIBUTE3 = "LocalAttribute1";
+   		public static final String LOCAL_ATTRBIBUTE4 = "LocalAttribute1";
+   		public static final String LOCAL_ATTRBIBUTE5 = "LocalAttribute1";
+    };
     
     // ORGANIZATIONAL_UNIT
     public static final String HEALTH_INSTITUTION = "HealthInstitution";
