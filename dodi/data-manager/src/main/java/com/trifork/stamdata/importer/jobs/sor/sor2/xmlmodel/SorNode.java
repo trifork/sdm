@@ -25,6 +25,7 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
+import java.sql.SQLException;
 import java.util.Vector;
 
 import org.xml.sax.Attributes;
@@ -45,7 +46,10 @@ public abstract class SorNode {
 		dirty = false;
 	}
 	
-	public void persist(RecordPersister persister) {
+	public void persist(RecordPersister persister) throws SQLException {
+		for (SorNode node : children) {
+			node.persist(persister);
+		}
 	}
 	
 	public SorNode getParent() {
@@ -71,7 +75,6 @@ public abstract class SorNode {
 	abstract public boolean recordDirty();
 	
 	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
-		
 		return false;
 	}
 	

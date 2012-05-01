@@ -97,7 +97,11 @@ public class SORFullEventHandler extends DefaultHandler {
         		
         		if (currentNode.isHasUniqueKey()) {
         			currentNode.updateDirty();
-        			currentNode.persist(persister);
+        			try {
+						currentNode.persist(persister);
+					} catch (SQLException e) {
+						throw new SAXException(e);
+					}
         		}
         		else if (parent != null) {
         			parent.addChild(currentNode);
@@ -195,7 +199,7 @@ public class SORFullEventHandler extends DefaultHandler {
     		throw new SAXException("Unrecognized country scheme value");
     	}
     }
-    
+    /*
     private Long persist(RecordBuilder rb, RecordSpecification specification) throws SAXException
     {
     	try {
@@ -203,7 +207,7 @@ public class SORFullEventHandler extends DefaultHandler {
     	} catch (SQLException e) {
     		throw new SAXException(e);
     	}
-    }
+    }*/
 
     @Override
     public void characters(char[] chars, int start, int length) throws SAXException {

@@ -25,11 +25,14 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
+import java.sql.SQLException;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 
@@ -40,6 +43,8 @@ public class SorStatus extends SorNode {
 //	private String firstFromDate;
 	
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
+	
+	private Long primaryKey;
 
 	public SorStatus(Attributes attribs, SorNode parent) {
 		super(attribs, parent);
@@ -68,6 +73,21 @@ public class SorStatus extends SorNode {
 	
 	public boolean recordDirty() {
 		return true;
+	}
+	
+	@Override
+	public void persist(RecordPersister persister) throws SQLException {
+		Long id = persister.persist(builder.build(), SorFullRecordSpecs.SOR_STATUS);
+		if (id == null)
+		{
+			throw new SQLException("MySql did not respond with an Id of the row inserted in SorStatus table");
+		}
+		primaryKey = id;
+		super.persist(persister);
+	}
+	
+	public Long getPrimaryKey() {
+		return primaryKey;
 	}
 
 	@Override

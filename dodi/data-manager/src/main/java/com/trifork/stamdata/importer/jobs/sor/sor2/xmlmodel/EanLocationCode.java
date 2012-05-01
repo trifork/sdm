@@ -25,11 +25,14 @@
 
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
+import java.sql.SQLException;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
 import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class EanLocationCode extends SorNode {
@@ -98,6 +101,25 @@ public class EanLocationCode extends SorNode {
 		
 	public boolean recordDirty() {
 		return true;
+	}
+	
+	/**
+	 * Must happen right after persist has been called on all children, to 
+	 * make sure we insert an correct id
+	 */
+	private void updateForeignKeys() {
+		for (SorNode node : children) {
+			if (node.getClass() == SorStatus.class) {
+				builder.field("fkSorStatus", ((SorStatus)node).getPrimaryKey());
+			}
+		}
+	}
+	
+	@Override
+	public void persist(RecordPersister persister) throws SQLException {
+		super.persist(persister);
+		updateForeignKeys();
+		persister.persist(builder.build(), SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
 	}
 
 	@Override

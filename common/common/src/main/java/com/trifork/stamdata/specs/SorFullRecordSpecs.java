@@ -36,7 +36,7 @@ public class SorFullRecordSpecs {
 	public static final String FIRST_FROM_DATE = "firstFromDate";
 	public static final String UPDATED_AT = "updatedAt";
 	
-	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", null,
+	public static final RecordSpecification SOR_STATUS = RecordSpecification.createSpecification("SORSorStatus", "pk",
 			field(FROM_DATE, 10),
 			field(TO_DATE,10).doAllowNull(),
 			field(UPDATED_AT,10).doAllowNull(),
@@ -53,11 +53,11 @@ public class SorFullRecordSpecs {
 			field("regionCode", 5).numerical(),
 			field("ediAdministrator", 5).numerical(),
 			field("sorNote", 254).doAllowNull(),
-			// TODO sor status
-			field(FROM_DATE, 10),
+			field("fkSorStatus", 10).numerical().doAllowNull()
+/*			field(FROM_DATE, 10),
 			field(TO_DATE,10).doAllowNull(),
 			field(UPDATED_AT,10).doAllowNull(),
-			field(FIRST_FROM_DATE,10)
+			field(FIRST_FROM_DATE,10)*/
 		);
 	
 	public static final RecordSpecification INSTITUTION_OWNER = RecordSpecification.createSpecification("SORInstitutionOwner", "sorIdentifier",
@@ -97,7 +97,7 @@ public class SorFullRecordSpecs {
 				field("faxNumberIdentifier", 20).doAllowNull()
 			);
 	
-	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("currentAddressInformationRecord", "sorIdentifier",
+	public static final RecordSpecification ORGANIZATIONAL_UNIT = RecordSpecification.createSpecification("SOROrganizationalUnit", "sorIdentifier",
 				field("sorIdentifier", 20).numerical(),
 				field("entityName", 60),
 				field("unitType", 20).numerical().doAllowNull(),
