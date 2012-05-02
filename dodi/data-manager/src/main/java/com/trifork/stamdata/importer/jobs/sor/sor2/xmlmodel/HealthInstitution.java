@@ -35,9 +35,6 @@ public class HealthInstitution {
     private String pharmacyIdentifier; //String up to 20 chars, can be null
     private String shakIdentifier; //String 4-7 characters, can be null
 
-    private OptionalEanLocationCode optionalEanLocationCode;
-    private GeographicalParent geographicalParent; //can be null - Angiver hvilken geografisk tilknytning enheden har. Enten: Selvstændig geografisk placering (1), Den organisatoriske mor (2), Anden geografisk mor (3), Ingen geografisk placering (4), Ukendt geografisk placering (5).
-
     private PostalAddressInformation postalAddressInformation;
     private PostalAddressInformation visitingAddressInformation;
     private VirtualAddressInformation virtualAddressInformation;
@@ -55,28 +52,12 @@ public class HealthInstitution {
         this.entityName = entityName;
     }
 
-    public GeographicalParent getGeographicalParent() {
-        return geographicalParent;
-    }
-
-    public void setGeographicalParent(GeographicalParent geographicalParent) {
-        this.geographicalParent = geographicalParent;
-    }
-
     public long getInstitutionType() {
         return institutionType;
     }
 
     public void setInstitutionType(long institutionType) {
         this.institutionType = institutionType;
-    }
-
-    public OptionalEanLocationCode getOptionalEanLocationCode() {
-        return optionalEanLocationCode;
-    }
-
-    public void setOptionalEanLocationCode(OptionalEanLocationCode optionalEanLocationCode) {
-        this.optionalEanLocationCode = optionalEanLocationCode;
     }
 
     public String getPharmacyIdentifier() {

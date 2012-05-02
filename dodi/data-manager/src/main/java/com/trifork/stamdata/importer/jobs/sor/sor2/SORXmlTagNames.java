@@ -40,6 +40,12 @@ public class SORXmlTagNames {
 	public static final String TO_DATE = "ToDate";
 	public static final String UPDATED_AT_DATE = "UpdatedAt";
 	public static final String FIRST_FROM_DATE = "FirstFromDate";
+	
+	public static final String CLINICAL_SPECIALITY = "ClinicalSpeciality";
+	public class ClinicalSpeciality {
+		public static final String SPECIALITY_CODE = "SpecialityCode";
+		public static final String SPECIALITY_TYPE = "SpecialityType";
+	};
     
 	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
 	public class VirtualAddressInformation {

@@ -42,6 +42,12 @@ public class SorFullRecordSpecs {
 				field(UPDATED_AT,10).doAllowNull(),
 				field(FIRST_FROM_DATE,10)
 		);
+	
+	public static final RecordSpecification CLINICAL_SPECIALITY = RecordSpecification.createSpecification("SORClinicalSpeciality", "PID",
+				field("fkOrganizationalUnit", 10).numerical(),
+				field("specialityCode", 10).numerical(),
+				field("specialityType", 10).numerical()
+		);
 
 	public static final RecordSpecification INSTITUTION_OWNER = RecordSpecification.createSpecification("SORInstitutionOwner", "sorIdentifier",
 				field("sorIdentifier", 20).numerical(),

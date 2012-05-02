@@ -35,7 +35,6 @@ import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 public class OrganizationalUnit extends SorNode {
@@ -79,17 +78,9 @@ public class OrganizationalUnit extends SorNode {
 		} else if (SORXmlTagNames.OrganizationalUnit.GEOGRAPHICAL_PARENT_SOR_IDENTIFIER.equals(tagName)) {
 			builder.field("geographicalParentSorIdentifier", Long.valueOf(tagValue));
 		} else if (SORXmlTagNames.OrganizationalUnit.POSTAL_ADDRESS_INFO.equals(tagName)) {
-			// TODO
-			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.VISITING_ADDRESS_INFO.equals(tagName)) {
-			// TODO
-			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.ACTIVITY_ADDRESS_INFO.equals(tagName)) {
-			// TODO
-			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.VIRTUAL_ADDRESS_INFO.equals(tagName)) {
-			// TODO
-			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.CLINICAL_SPECIALITY_COLLECTION.equals(tagName)) {
 			// TODO
 			System.out.println("TODO : " + tagName);
@@ -166,10 +157,10 @@ public class OrganizationalUnit extends SorNode {
 	
 	@Override
 	public void persist(RecordPersister persister) throws SQLException {
-		super.persist(persister);
 		updateForeignKeys();
 		setPID(persister.persist(builder.build(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT));
-		
+		//
+		super.persist(persister);
 		SorNode parent = getParentNode();
 		// Update parent organizational units to point to us
 		if (parent != null && parent.getClass() == OrganizationalUnit.class) {

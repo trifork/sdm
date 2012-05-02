@@ -41,7 +41,6 @@ import javax.xml.parsers.SAXParser;
 import java.io.File;
 import java.io.IOException;
 
-import static com.trifork.stamdata.Preconditions.checkArgument;
 import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
 
 @ParserInformation(id = "sor", name = "Sor")
