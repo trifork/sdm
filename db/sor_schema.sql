@@ -6,12 +6,35 @@ CREATE SCHEMA IF NOT EXISTS `sdm_warehouse` DEFAULT CHARACTER SET utf8 COLLATE u
 USE `sdm_warehouse` ;
 
 -- -----------------------------------------------------
+-- Table `sdm_warehouse`.`SORInstitutionOwner`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORInstitutionOwner` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORInstitutionOwner` (
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
+  `sorIdentifier` BIGINT NOT NULL ,
+  `entityName` VARCHAR(60) NOT NULL ,
+  `ownerType` BIGINT NOT NULL ,
+  `fkEanLocationCode` BIGINT NULL DEFAULT NULL ,
+  `fkPostalAddressInformation` BIGINT NOT NULL ,
+  `fkVirtualAddressInfomation` BIGINT NOT NULL ,
+  `fkSorStatus` BIGINT NOT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
+  PRIMARY KEY (`PID`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
 -- Table `sdm_warehouse`.`SOREanLocationCode`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `sdm_warehouse`.`SOREanLocationCode` ;
 
 CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOREanLocationCode` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
   `eanLocationCode` BIGINT NOT NULL ,
   `onlyInternalIndicator` CHAR NOT NULL ,
   `nonActiveIndicator` CHAR NOT NULL ,
@@ -21,11 +44,31 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOREanLocationCode` (
   `regionCode` BIGINT NOT NULL ,
   `ediAdministrator` BIGINT NOT NULL ,
   `sorNote` VARCHAR(254) NULL DEFAULT NULL ,
-  `sorStatusId` BIGINT NULL DEFAULT NULL ,
+  `fkSorStatus` BIGINT NULL DEFAULT NULL ,
   `ValidFrom` DATETIME NOT NULL ,
   `ValidTo` DATETIME NULL ,
   `ModifiedDate` DATETIME NOT NULL ,
-  PRIMARY KEY (`pk`) )
+  PRIMARY KEY (`PID`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_bin;
+
+
+-- -----------------------------------------------------
+-- Table `sdm_warehouse`.`SORSorStatus`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORSorStatus` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORSorStatus` (
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
+  `fromDate` VARCHAR(10) NOT NULL ,
+  `toDate` VARCHAR(10) NULL DEFAULT NULL ,
+  `updatedAt` VARCHAR(10) NULL DEFAULT NULL ,
+  `firstFromDate` VARCHAR(10) NOT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
+  PRIMARY KEY (`PID`) )
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_bin;
@@ -37,7 +80,7 @@ COLLATE = utf8_bin;
 DROP TABLE IF EXISTS `sdm_warehouse`.`SORPostalAddressInformation` ;
 
 CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORPostalAddressInformation` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
   `mailDeliverySublocationIdentifier` VARCHAR(34) NULL ,
   `streetName` VARCHAR(40) NOT NULL ,
   `streetNameForAddressingName` VARCHAR(20) NULL ,
@@ -54,7 +97,7 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORPostalAddressInformation` (
   `ValidFrom` DATETIME NOT NULL ,
   `ValidTo` DATETIME NULL ,
   `ModifiedDate` DATETIME NOT NULL ,
-  PRIMARY KEY (`pk`) )
+  PRIMARY KEY (`PID`) )
 ENGINE = InnoDB;
 
 
@@ -64,7 +107,7 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` ;
 
 CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
   `emailAddressIdentifier` VARCHAR(254) NULL ,
   `website` VARCHAR(254) NULL ,
   `telephoneNumberIdentifier` VARCHAR(20) NOT NULL ,
@@ -72,69 +115,8 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORVirtualAddressInformation` (
   `ValidFrom` DATETIME NOT NULL ,
   `ValidTo` DATETIME NULL ,
   `ModifiedDate` DATETIME NOT NULL ,
-  PRIMARY KEY (`pk`) )
+  PRIMARY KEY (`PID`) )
 ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `sdm_warehouse`.`SORInstitutionOwner`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `sdm_warehouse`.`SORInstitutionOwner` ;
-
-CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORInstitutionOwner` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
-  `sorIdentifier` BIGINT NOT NULL ,
-  `entityName` VARCHAR(60) NOT NULL ,
-  `ownerType` BIGINT NOT NULL ,
-  `eanLocationCodeId` BIGINT NULL DEFAULT NULL ,
-  `postalAddressInformationId` BIGINT NULL ,
-  `virtualAddressInformationId` BIGINT NULL ,
-  `sorStatusId` BIGINT NULL ,
-  `ValidFrom` DATETIME NOT NULL ,
-  `ValidTo` DATETIME NULL ,
-  `ModifiedDate` DATETIME NOT NULL ,
-  PRIMARY KEY (`pk`) ,
-  INDEX `fk_eanLocationCode` (`eanLocationCodeId` ASC) ,
-  INDEX `fk_postalAddressInformation` (`postalAddressInformationId` ASC) ,
-  INDEX `fk_virtualAddressInformation` (`virtualAddressInformationId` ASC) ,
-  CONSTRAINT `fk_eanLocationCode`
-    FOREIGN KEY (`eanLocationCodeId` )
-    REFERENCES `sdm_warehouse`.`SOREanLocationCode` (`pk` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_postalAddressInformation`
-    FOREIGN KEY (`postalAddressInformationId` )
-    REFERENCES `sdm_warehouse`.`SORPostalAddressInformation` (`pk` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_virtualAddressInformation`
-    FOREIGN KEY (`virtualAddressInformationId` )
-    REFERENCES `sdm_warehouse`.`SORVirtualAddressInformation` (`pk` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
-
-
--- -----------------------------------------------------
--- Table `sdm_warehouse`.`SORSorStatus`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `sdm_warehouse`.`SORSorStatus` ;
-
-CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORSorStatus` (
-  `pk` BIGINT NOT NULL AUTO_INCREMENT ,
-  `fromDate` DATE NOT NULL ,
-  `toDate` DATE NULL DEFAULT NULL ,
-  `updatedAt` DATE NULL DEFAULT NULL ,
-  `firstFromDate` DATE NOT NULL ,
-  `ValidFrom` DATETIME NOT NULL ,
-  `ValidTo` DATETIME NULL ,
-  `ModifiedTime` DATETIME NULL ,
-  PRIMARY KEY (`pk`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_bin;
 
 
 -- -----------------------------------------------------
@@ -143,16 +125,19 @@ COLLATE = utf8_bin;
 DROP TABLE IF EXISTS `sdm_warehouse`.`SOROrganizationalUnit` ;
 
 CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOROrganizationalUnit` (
-  `pk` BIGINT NOT NULL ,
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
   `sorIdentifier` BIGINT NOT NULL ,
   `entityName` VARCHAR(60) NOT NULL ,
+  `fkOrganizationalChildUnit` BIGINT NULL ,
   `unitType` BIGINT NULL ,
-  `locationCode` VARCHAR(20) NULL ,
+  `localCode` VARCHAR(20) NULL ,
   `pharmacyIdentifier` VARCHAR(20) NULL ,
   `shakIdentifier` VARCHAR(7) NULL ,
   `providerIdentifier` VARCHAR(9) NULL ,
-  `fkOptionalEanLocationCode` BIGINT NOT NULL ,
-  `fkGeographicalParent` BIGINT NOT NULL ,
+  `eanLocationCodeInheritedIndicator` CHAR(1) NULL ,
+  `fkEanLocationCode` BIGINT NULL ,
+  `geographicalParentRelation` BIGINT NOT NULL ,
+  `geographicalParentSorIdentifier` BIGINT NULL ,
   `fkPostalAddressInformation` BIGINT NULL ,
   `fkVisitingAddressInformation` BIGINT NULL ,
   `fkActivityAddressInformation` BIGINT NULL ,
@@ -172,7 +157,35 @@ CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SOROrganizationalUnit` (
   `ValidFrom` DATETIME NOT NULL ,
   `ValidTo` DATETIME NULL ,
   `ModifiedDate` DATETIME NOT NULL ,
-  PRIMARY KEY (`pk`) )
+  PRIMARY KEY (`PID`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `sdm_warehouse`.`SORHealthInstitution`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `sdm_warehouse`.`SORHealthInstitution` ;
+
+CREATE  TABLE IF NOT EXISTS `sdm_warehouse`.`SORHealthInstitution` (
+  `PID` BIGINT NOT NULL AUTO_INCREMENT ,
+  `sorIdentifier` BIGINT NOT NULL ,
+  `entityName` VARCHAR(60) NOT NULL ,
+  `institutionType` BIGINT NOT NULL ,
+  `pharmacyIdentifier` VARCHAR(20) NULL ,
+  `shakIdentifier` VARCHAR(7) NULL ,
+  `eanLocationCodeInheritedIndicator` VARCHAR(1) NULL ,
+  `fkEanLocationCode` BIGINT NULL ,
+  `geographicalParentRelation` BIGINT NULL ,
+  `geographicalParentSorIdentifier` BIGINT NULL ,
+  `fkPostalAddressInformation` BIGINT NULL ,
+  `fkVisitingAddressInformation` BIGINT NULL ,
+  `fkActivityAddressInformation` BIGINT NULL ,
+  `fkVirtualAddressInfomation` BIGINT NULL ,
+  `fkSorStatus` BIGINT NOT NULL ,
+  `ValidFrom` DATETIME NOT NULL ,
+  `ValidTo` DATETIME NULL ,
+  `ModifiedDate` DATETIME NOT NULL ,
+  PRIMARY KEY (`PID`) )
 ENGINE = InnoDB;
 
 
