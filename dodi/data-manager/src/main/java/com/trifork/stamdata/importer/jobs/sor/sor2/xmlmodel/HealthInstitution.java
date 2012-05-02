@@ -38,8 +38,8 @@ public class HealthInstitution {
     private OptionalEanLocationCode optionalEanLocationCode;
     private GeographicalParent geographicalParent; //can be null - Angiver hvilken geografisk tilknytning enheden har. Enten: Selvstændig geografisk placering (1), Den organisatoriske mor (2), Anden geografisk mor (3), Ingen geografisk placering (4), Ukendt geografisk placering (5).
 
-    private AddressInformation postalAddressInformation;
-    private AddressInformation visitingAddressInformation;
+    private PostalAddressInformation postalAddressInformation;
+    private PostalAddressInformation visitingAddressInformation;
     private VirtualAddressInformation virtualAddressInformation;
 
     private SorStatus sorStatus;//required
@@ -87,11 +87,11 @@ public class HealthInstitution {
         this.pharmacyIdentifier = pharmacyIdentifier;
     }
 
-    public AddressInformation getPostalAddressInformation() {
+    public PostalAddressInformation getPostalAddressInformation() {
         return postalAddressInformation;
     }
 
-    public void setPostalAddressInformation(AddressInformation postalAddressInformation) {
+    public void setPostalAddressInformation(PostalAddressInformation postalAddressInformation) {
         this.postalAddressInformation = postalAddressInformation;
     }
 
@@ -143,11 +143,11 @@ public class HealthInstitution {
         this.virtualAddressInformation = virtualAddressInformation;
     }
 
-    public AddressInformation getVisitingAddressInformation() {
+    public PostalAddressInformation getVisitingAddressInformation() {
         return visitingAddressInformation;
     }
 
-    public void setVisitingAddressInformation(AddressInformation visitingAddressInformation) {
+    public void setVisitingAddressInformation(PostalAddressInformation visitingAddressInformation) {
         this.visitingAddressInformation = visitingAddressInformation;
     }
 }

@@ -40,8 +40,8 @@ public class EanLocationCode extends SorNode {
 
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
 
-	public EanLocationCode(Attributes attribs, SorNode parent) {
-		super(attribs, parent);
+	public EanLocationCode(Attributes attribs, SorNode parent, String parentTag) {
+		super(attribs, parent, parentTag);
 		this.setHasUniqueKey(false);
 	}
 	
@@ -51,31 +51,31 @@ public class EanLocationCode extends SorNode {
 			return true;
     	}
 		
-		if (SORXmlTagNames.EAN_LOCATION_CODE.endsWith(tagName)) {
+		if (SORXmlTagNames.EanLocationCode.EAN_LOCATION_CODE.endsWith(tagName)) {
 			builder.field("eanLocationCode", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.ONLY_INTERNAL_INDICATOR.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.ONLY_INTERNAL_INDICATOR.endsWith(tagName)) {
     		boolean f = Boolean.valueOf(tagValue);
     		if (f)
     			builder.field("onlyInternalIndicator", "1");
     		else
     			builder.field("onlyInternalIndicator", "0");
-    	} else if (SORXmlTagNames.NON_ACTIVITY_INDICATOR.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.NON_ACTIVITY_INDICATOR.endsWith(tagName)) {
     		boolean f = Boolean.valueOf(tagValue);
     		if (f)
     			builder.field("nonActiveIndicator", "1");
     		else
     			builder.field("nonActiveIndicator", "0");
-    	} else if (SORXmlTagNames.SYSTEM_SUPPLIER.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.SYSTEM_SUPPLIER.endsWith(tagName)) {
     		builder.field("systemSupplier", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.SYSTEM_TYPE.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.SYSTEM_TYPE.endsWith(tagName)) {
     		builder.field("systemType", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.COMMUNICATION_SUPPLIER.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.COMMUNICATION_SUPPLIER.endsWith(tagName)) {
     		builder.field("communicationSupplier", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.REGION_CODE.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.REGION_CODE.endsWith(tagName)) {
     		builder.field("regionCode", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.EDI_ADMINISTRATOR.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.EDI_ADMINISTRATOR.endsWith(tagName)) {
     		builder.field("ediAdministrator", Long.valueOf(tagValue));
-    	} else if (SORXmlTagNames.SOR_NOTE.endsWith(tagName)) {
+    	} else if (SORXmlTagNames.EanLocationCode.SOR_NOTE.endsWith(tagName)) {
     		builder.field("sorNote", tagValue);
     	}
 		return false;

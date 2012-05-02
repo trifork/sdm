@@ -37,15 +37,17 @@ import com.trifork.stamdata.persistence.RecordPersister;
 public abstract class SorNode {
 
 	protected Vector<SorNode> children = new Vector<SorNode>();
-	private SorNode parent;
+	private SorNode parentNode;
+	private String parentTag;
 	
 	private Long PID;
 	
 	protected boolean dirty;
 	private boolean hasUniqueKey;
 	
-	public SorNode(Attributes attribs, SorNode parent) {
-		this.parent = parent;
+	public SorNode(Attributes attribs, SorNode parent, String parentTag) {
+		this.parentNode = parent;
+		this.setParentTag(parentTag);
 		dirty = false;
 	}
 	
@@ -55,23 +57,9 @@ public abstract class SorNode {
 		}
 	}
 	
-	public SorNode getParent() {
-		return parent;
+	public SorNode getParentNode() {
+		return parentNode;
 	}
-	
-	/*public void updateDirty() {
-		if (parent != null && parent.getDirty()) {
-			dirty = true;
-		} else {
-			dirty = recordDirty();
-		}
-		for (SorNode node : children) {
-			node.updateDirty();
-		}
-	}
-	
-	abstract public boolean recordDirty();
-	*/
 	
 	abstract public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException;
 	
@@ -79,9 +67,12 @@ public abstract class SorNode {
 		return false;
 	}
 	
-	public void addChild(SorNode child)
-	{
+	public void addChild(SorNode child) {
 		this.children.addElement(child);
+	}
+	
+	public void removeChild(SorNode child) {
+		this.children.removeElement(child);
 	}
 
 	@Override
@@ -104,5 +95,13 @@ public abstract class SorNode {
 	public void setPID(Long pID) {
 		PID = pID;
 	}
-	
+
+	public String getParentTag() {
+		return parentTag;
+	}
+
+	public void setParentTag(String parentTag) {
+		this.parentTag = parentTag;
+	}
+
 }

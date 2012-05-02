@@ -42,14 +42,14 @@ public class OrganizationalUnit extends SorNode {
 
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.ORGANIZATIONAL_UNIT);
 
-	public OrganizationalUnit(Attributes attribs, SorNode parent) {
-		super(attribs, parent);
+	public OrganizationalUnit(Attributes attribs, SorNode parent, String parentTag) {
+		super(attribs, parent, parentTag);
 		this.setHasUniqueKey(true);
 	}
 	
 	@Override
 	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
-		if (SORXmlTagNames.ORGANIZATIONAL_UNIT.equals(tagName)) {
+		if (SORXmlTagNames.ORGANIZATIONAL_UNIT_ENTITY.equals(tagName)) {
 			return true;
 		}
     	if (SORXmlTagNames.OrganizationalUnit.SOR_IDENTIFIER.equals(tagName)) {
@@ -141,9 +141,25 @@ public class OrganizationalUnit extends SorNode {
 	 * make sure we insert an correct id
 	 */
 	private void updateForeignKeys() {
+		// This is not pretty to look at but we need to 
+		// get those relation in order somewhere
 		for (SorNode node : children) {
 			if (node.getClass() == SorStatus.class) {
 				builder.field("fkSorStatus", ((SorStatus)node).getPID());
+			}
+			if (node.getClass() == VirtualAddressInformation.class) {
+				builder.field("fkVirtualAddressInfomation", ((VirtualAddressInformation)node).getPID());
+			}
+			if (node.getClass() == PostalAddressInformation.class) {
+				PostalAddressInformation postalNode = (PostalAddressInformation)node;
+				String parentTag = postalNode.getParentTag();
+				if (SORXmlTagNames.OrganizationalUnit.POSTAL_ADDRESS_INFO.equals(parentTag)) {
+					builder.field("fkPostalAddressInformation", ((PostalAddressInformation)node).getPID());
+				} else if (SORXmlTagNames.OrganizationalUnit.VISITING_ADDRESS_INFO.equals(parentTag)) {
+					builder.field("fkVisitingAddressInformation", ((PostalAddressInformation)node).getPID());
+				} else if (SORXmlTagNames.OrganizationalUnit.ACTIVITY_ADDRESS_INFO.equals(parentTag)) {
+					builder.field("fkActivityAddressInformation", ((PostalAddressInformation)node).getPID());
+				}
 			}
 		}
 	}
@@ -154,10 +170,10 @@ public class OrganizationalUnit extends SorNode {
 		updateForeignKeys();
 		setPID(persister.persist(builder.build(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT));
 		
-		SorNode parent = getParent();
+		SorNode parent = getParentNode();
 		// Update parent organizational units to point to us
 		if (parent != null && parent.getClass() == OrganizationalUnit.class) {
-			((OrganizationalUnit)parent).builder.field("fkOrganazationalChildUnit", getPID());
+			((OrganizationalUnit)parent).builder.field("fkOrganizationalChildUnit", getPID());
 		}
 	}
 	
@@ -178,17 +194,10 @@ public class OrganizationalUnit extends SorNode {
 				}
 			}
 		}
+		// If we are dirty we so are our children
 		for (SorNode node : children) {
 			node.dirty = dirty;
 		}
-		if (dirty)
-			System.out.println("Record dirty");
-		else
-			System.out.println("Record clean");
-	}
-
-	public boolean recordDirty() {
-		return true;
 	}
 	
 	@Override

@@ -36,7 +36,7 @@ public class InstitutionOwner {
 
     private EanLocationCode eanLocationCode;
 
-    private AddressInformation postalAddressInformation;
+    private PostalAddressInformation postalAddressInformation;
 
     private VirtualAddressInformation virtualAddressInformation;
 
@@ -66,12 +66,12 @@ public class InstitutionOwner {
 		this.eanLocationCode = eanLocationCode;
 	}
 
-	public AddressInformation getPostalAddressInformation() {
+	public PostalAddressInformation getPostalAddressInformation() {
 		return postalAddressInformation;
 	}
 
 	public void setPostalAddressInformation(
-			AddressInformation postalAddressInformation) {
+			PostalAddressInformation postalAddressInformation) {
 		this.postalAddressInformation = postalAddressInformation;
 	}
 

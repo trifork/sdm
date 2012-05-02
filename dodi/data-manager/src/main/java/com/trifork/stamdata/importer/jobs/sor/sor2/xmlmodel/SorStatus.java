@@ -39,15 +39,10 @@ import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
 
 public class SorStatus extends SorNode {
-//	private String fromDate;
-//	private String toDate;
-//	private String updatedAt;
-//	private String firstFromDate;
-	
 	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.SOR_STATUS);
 
-	public SorStatus(Attributes attribs, SorNode parent) {
-		super(attribs, parent);
+	public SorStatus(Attributes attribs, SorNode parent, String parentTag) {
+		super(attribs, parent, parentTag);
 		this.setHasUniqueKey(false);
 	}
 	
@@ -65,7 +60,6 @@ public class SorStatus extends SorNode {
 		} else if (SORXmlTagNames.FIRST_FROM_DATE.equals(tagName)) {
 			builder.field("firstFromDate", tagValue);
 		} else {
-			// Throw exception because we encountered an unexpected tag.
 			throw new SAXException("Encountered an unexpected tag '" + tagName + "' in SorStatus");
 		}
 		return false;

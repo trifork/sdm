@@ -34,9 +34,6 @@ public class SORXmlTagNames {
 	public static final String ENTITY_NAME = "EntityName";
 	public static final String OWNER_TYPE = "OwnerType";
 	public static final String SOR_STATUS = "SorStatus";
-	public static final String EAN_LOCATION_CODE_ENTITY = "EanLocationCodeEntity";
-	public static final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
-	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
     
     // SorStatusType element children
 	public static final String FROM_DATE = "FromDate";
@@ -44,38 +41,46 @@ public class SORXmlTagNames {
 	public static final String UPDATED_AT_DATE = "UpdatedAt";
 	public static final String FIRST_FROM_DATE = "FirstFromDate";
     
-    // VirtualAddressInformation children
-	public static final String EMAIL_ADDRESS_IDENTIFIER = "EmailAddressIdentifier";
-	public static final String WEBSITE = "Website";
-	public static final String TELEPHONE_NUMBER_IDENTIFIER = "TelephoneNumberIdentifier";
-	public static final String FAX_NUMBER_IDENTIFIER = "FaxNumberIdentifier";
+	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
+	public class VirtualAddressInformation {
+		public static final String EMAIL_ADDRESS_IDENTIFIER = "xkom:EmailAddressIdentifier";
+		public static final String WEBSITE = "Website";
+		public static final String TELEPHONE_NUMBER_IDENTIFIER = "TelephoneNumberIdentifier";
+		public static final String FAX_NUMBER_IDENTIFIER = "FaxNumberIdentifier";
+	};
 
-    // EanLocationCodeEntity children
-	public static final String EAN_LOCATION_CODE = "EanLocationCode";
-	public static final String ONLY_INTERNAL_INDICATOR = "OnlyInternalIndicator";
-	public static final String NON_ACTIVITY_INDICATOR = "NonActiveIndicator";
-	public static final String SYSTEM_SUPPLIER = "SystemSupplier";
-	public static final String SYSTEM_TYPE = "SystemType";
-    public static final String COMMUNICATION_SUPPLIER = "CommunicationSupplier";
-    public static final String REGION_CODE = "RegionCode";
-    public static final String EDI_ADMINISTRATOR = "EdiAdministrator";
-    public static final String SOR_NOTE = "SorNote";
+	public static final String EAN_LOCATION_CODE_ENTITY = "EanLocationCodeEntity";
+	public class EanLocationCode {
+		public static final String EAN_LOCATION_CODE = "EanLocationCode";
+		public static final String ONLY_INTERNAL_INDICATOR = "OnlyInternalIndicator";
+		public static final String NON_ACTIVITY_INDICATOR = "NonActiveIndicator";
+		public static final String SYSTEM_SUPPLIER = "SystemSupplier";
+		public static final String SYSTEM_TYPE = "SystemType";
+	    public static final String COMMUNICATION_SUPPLIER = "CommunicationSupplier";
+	    public static final String REGION_CODE = "RegionCode";
+	    public static final String EDI_ADMINISTRATOR = "EdiAdministrator";
+	    public static final String SOR_NOTE = "SorNote";
+	    public static final String SOR_STATUS = "SorStatus";
+	};
+
+    public static final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
+    public static final String ADDRESS_POSTAL = "xkom-1:AddressPostal";
+    public class PostalAddressInformation {
+	    public static final String STAIRWAY = "Stairway";
+	    public static final String MAIL_DELIVERY_SUBLOC_IDENT = "dkcc:MailDeliverySublocationIdentifier";
+	    public static final String STREET_NAME = "dkcc2005:StreetName";
+	    public static final String STREET_NAME_FORADDRESSING = "cpr:StreetNameForAddressingName";
+	    public static final String STREET_BUILDING_IDENTIFIER = "dkcc:StreetBuildingIdentifier";
+	    public static final String FLOOR_IDENTIFIER = "dkcc:FloorIdentifier";
+	    public static final String SUITE_IDENTIFIER = "dkcc:SuiteIdentifier";
+	    public static final String DISTRICT_SUBDIVISION_IDENT = "dkcc2005:DistrictSubdivisionIdentifier";
+	    public static final String POSTBOX_IDENTIFIER = "dkcc2005-2:PostOfficeBoxIdentifier";
+	    public static final String POSTCODE_IDENTIFIER = "dkcc2005:PostCodeIdentifier";
+	    public static final String DISTRICT_NAME = "dkcc2005:DistrictName";
+	    public static final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
+    };
     
-    // PostalAddressInformation children
-    public static final String STAIRWAY = "Stairway";
-    public static final String MAIL_DELIVERY_SUBLOC_IDENT = "dkcc:MailDeliverySublocationIdentifier";
-    public static final String STREET_NAME = "dkcc2005:StreetName";
-    public static final String STREET_NAME_FORADDRESSING = "cpr:StreetNameForAddressingName";
-    public static final String STREET_BUILDING_IDENTIFIER = "dkcc:StreetBuildingIdentifier";
-    public static final String FLOOR_IDENTIFIER = "dkcc:FloorIdentifier";
-    public static final String SUITE_IDENTIFIER = "dkcc:SuiteIdentifier";
-    public static final String DISTRICT_SUBDIVISION_IDENT = "dkcc2005:DistrictSubdivisionIdentifier";
-    public static final String POSTBOX_IDENTIFIER = "dkcc2005-2:PostOfficeBoxIdentifier";
-    public static final String POSTCODE_IDENTIFIER = "dkcc2005:PostCodeIdentifier";
-    public static final String DISTRICT_NAME = "dkcc2005:DistrictName";
-    public static final String COUNTRY_IDENT_CODE = "dkcc:CountryIdentificationCode";
-    
-    public static final String ORGANIZATIONAL_UNIT = "OrganizationalUnit";
+    public static final String ORGANIZATIONAL_UNIT_ENTITY = "OrganizationalUnitEntity";
     public class OrganizationalUnit {
     	public static final String SOR_IDENTIFIER = "SorIdentifier";
     	public static final String ENTITY_NAME = "EntityName";
@@ -119,6 +124,6 @@ public class SORXmlTagNames {
    		public static final String LOCAL_ATTRBIBUTE5 = "LocalAttribute1";
     };
     
-    // ORGANIZATIONAL_UNIT
+    // HEALTH_INSTITUTION
     public static final String HEALTH_INSTITUTION = "HealthInstitution";
 }
