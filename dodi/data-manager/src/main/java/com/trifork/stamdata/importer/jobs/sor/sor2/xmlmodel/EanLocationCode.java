@@ -85,7 +85,7 @@ public class EanLocationCode extends SorNode {
 	 * Must happen right after persist has been called on all children, to 
 	 * make sure we insert an correct id
 	 */
-	private void updateForeignKeys() {
+	private void updateForeignKeysOneToOne() {
 		for (SorNode node : children) {
 			if (node.getClass() == SorStatus.class) {
 				builder.field("fkSorStatus", ((SorStatus)node).getPID());
@@ -94,9 +94,8 @@ public class EanLocationCode extends SorNode {
 	}
 	
 	@Override
-	public void persist(RecordPersister persister) throws SQLException {
-		super.persist(persister);
-		updateForeignKeys();
+	public void persistCurrentNode(RecordPersister persister) throws SQLException {
+		updateForeignKeysOneToOne();
 		persister.persist(builder.build(), SorFullRecordSpecs.EAN_LOCATION_CODE_ENTITY);
 	}
 	

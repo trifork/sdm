@@ -34,6 +34,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.ClinicalSpeciality;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.EanLocationCode;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.OrganizationalUnit;
 import com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel.PostalAddressInformation;
@@ -88,6 +89,10 @@ public class SORFullEventHandler extends DefaultHandler {
     	{
     		currentNode = new PostalAddressInformation(atts, currentNode, lastTag);
     	}
+    	else if (SORXmlTagNames.CLINICAL_SPECIALITY.equals(qName)) 
+    	{
+    		currentNode = new ClinicalSpeciality(atts, currentNode, lastTag);
+    	}
     	
     	lastTag = qName;
         super.startElement(uri, localName, qName, atts);
@@ -103,7 +108,7 @@ public class SORFullEventHandler extends DefaultHandler {
         		if (currentNode.isUniqueKey()) {
         			try {
         				currentNode.compareAgainstDatabaseAndUpdateDirty(fetcher);
-						currentNode.persist(persister);
+						currentNode.persistRecursive(persister);
 						if (parent != null) {
 							parent.removeChild(currentNode);
 						}

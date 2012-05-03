@@ -42,6 +42,7 @@ public class ClinicalSpeciality extends SorNode {
 
 	public ClinicalSpeciality(Attributes attribs, SorNode parent, String parentTag) {
 		super(attribs, parent, parentTag);
+		persistDependsOnParent = true;
 	}
 	
 	@Override
@@ -50,18 +51,21 @@ public class ClinicalSpeciality extends SorNode {
 			return true;
 		}
     	if (SORXmlTagNames.ClinicalSpeciality.SPECIALITY_CODE.equals(tagName)) {
-    		builder.field("specialityCode", tagValue);
+    		builder.field("specialityCode", Long.valueOf(tagValue));
 		} else if (SORXmlTagNames.ClinicalSpeciality.SPECIALITY_TYPE.equals(tagName)) {
-			builder.field("specialityType", tagValue);
+			builder.field("specialityType", Long.valueOf(tagValue));
 		} else {
 			throw new SAXException("Encountered an unexpected tag '" + tagName + "' in SorStatus");
 		}
 		return false;
 	}
 	
+	public void setOrganizationalOwner(Long ownerPID) {
+		builder.field("fkOrganizationalUnit", ownerPID);
+	}
+	
 	@Override
-	public void persist(RecordPersister persister) throws SQLException {
-		super.persist(persister);
+	public void persistCurrentNode(RecordPersister persister) throws SQLException {
 		Long id = persister.persist(builder.build(), SorFullRecordSpecs.CLINICAL_SPECIALITY);
 		if (id == null)
 		{

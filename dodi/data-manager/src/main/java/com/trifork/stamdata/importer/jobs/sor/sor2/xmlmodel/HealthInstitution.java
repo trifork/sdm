@@ -26,109 +26,50 @@
 package com.trifork.stamdata.importer.jobs.sor.sor2.xmlmodel;
 
 
-import java.util.List;
+import java.sql.SQLException;
 
-public class HealthInstitution {
-    private long sorIdentifier; //required
-    private String entityName; //required - String up to 60 chars
-    private long institutionType; //required
-    private String pharmacyIdentifier; //String up to 20 chars, can be null
-    private String shakIdentifier; //String 4-7 characters, can be null
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 
-    private PostalAddressInformation postalAddressInformation;
-    private PostalAddressInformation visitingAddressInformation;
-    private VirtualAddressInformation virtualAddressInformation;
+import com.trifork.stamdata.importer.jobs.sor.sor2.SORXmlTagNames;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordFetcher;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.specs.SorFullRecordSpecs;
 
-    private SorStatus sorStatus;//required
+public class HealthInstitution extends SorNode {
+	
+	private RecordBuilder builder = new RecordBuilder(SorFullRecordSpecs.HEALTH_INSTITUTION_RECORD_TYPE);
 
-    private List<Long> replacesEntityCollection; //can be null - contains list of sorIDentifiers
-    private List<Long> replacedByEntityCollection; //can be null - contains list of sorIDentifiers
+	public HealthInstitution(Attributes attribs, SorNode parent,
+			String parentTag) {
+		super(attribs, parent, parentTag);
+	}
+	
+	public boolean parseEndTag(String tagName, String tagValue) throws SAXException {
+		if (SORXmlTagNames.HEALTH_INSTITUTION.equals(tagName)) {
+			return true;
+		}
+    	if (SORXmlTagNames.HealthInstitution.SOR_IDENTIFIER.equals(tagName)) {
+    		builder.field("sorIdentifier", Long.valueOf(tagValue));
+		} else if (SORXmlTagNames.HealthInstitution.ENTITY_NAME.equals(tagName)) {
+			builder.field("entityName", tagValue);
+		} else if (SORXmlTagNames.HealthInstitution.INSTITUTION_TYPE.equals(tagName)) {
+			builder.field("institutionType", Long.valueOf(tagValue));
+		}
+		return false;
+	}
 
-    public String getEntityName() {
-        return entityName;
-    }
+	@Override
+	public void persistCurrentNode(RecordPersister persister)
+			throws SQLException {
+		
+	}
 
-    public void setEntityName(String entityName) {
-        this.entityName = entityName;
-    }
+	@Override
+	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher)
+			throws SQLException {
+		
+	}
 
-    public long getInstitutionType() {
-        return institutionType;
-    }
-
-    public void setInstitutionType(long institutionType) {
-        this.institutionType = institutionType;
-    }
-
-    public String getPharmacyIdentifier() {
-        return pharmacyIdentifier;
-    }
-
-    public void setPharmacyIdentifier(String pharmacyIdentifier) {
-        this.pharmacyIdentifier = pharmacyIdentifier;
-    }
-
-    public PostalAddressInformation getPostalAddressInformation() {
-        return postalAddressInformation;
-    }
-
-    public void setPostalAddressInformation(PostalAddressInformation postalAddressInformation) {
-        this.postalAddressInformation = postalAddressInformation;
-    }
-
-    public List<Long> getReplacedByEntityCollection() {
-        return replacedByEntityCollection;
-    }
-
-    public void setReplacedByEntityCollection(List<Long> replacedByEntityCollection) {
-        this.replacedByEntityCollection = replacedByEntityCollection;
-    }
-
-    public List<Long> getReplacesEntityCollection() {
-        return replacesEntityCollection;
-    }
-
-    public void setReplacesEntityCollection(List<Long> replacesEntityCollection) {
-        this.replacesEntityCollection = replacesEntityCollection;
-    }
-
-    public String getShakIdentifier() {
-        return shakIdentifier;
-    }
-
-    public void setShakIdentifier(String shakIdentifier) {
-        this.shakIdentifier = shakIdentifier;
-    }
-
-    public long getSorIdentifier() {
-        return sorIdentifier;
-    }
-
-    public void setSorIdentifier(long sorIdentifier) {
-        this.sorIdentifier = sorIdentifier;
-    }
-
-    public SorStatus getSorStatus() {
-        return sorStatus;
-    }
-
-    public void setSorStatus(SorStatus sorStatus) {
-        this.sorStatus = sorStatus;
-    }
-
-    public VirtualAddressInformation getVirtualAddressInformation() {
-        return virtualAddressInformation;
-    }
-
-    public void setVirtualAddressInformation(VirtualAddressInformation virtualAddressInformation) {
-        this.virtualAddressInformation = virtualAddressInformation;
-    }
-
-    public PostalAddressInformation getVisitingAddressInformation() {
-        return visitingAddressInformation;
-    }
-
-    public void setVisitingAddressInformation(PostalAddressInformation visitingAddressInformation) {
-        this.visitingAddressInformation = visitingAddressInformation;
-    }
 }

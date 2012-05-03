@@ -43,7 +43,7 @@ public class SorStatus extends SorNode {
 
 	public SorStatus(Attributes attribs, SorNode parent, String parentTag) {
 		super(attribs, parent, parentTag);
-		this.setHasUniqueKey(false);
+		hasUniqueKey = false;
 	}
 	
 	@Override
@@ -66,18 +66,25 @@ public class SorStatus extends SorNode {
 	}
 	
 	@Override
-	public void persist(RecordPersister persister) throws SQLException {
-		super.persist(persister);
-		Long id = persister.persist(builder.build(), SorFullRecordSpecs.SOR_STATUS);
-		if (id == null)
+	public void persistCurrentNode(RecordPersister persister) throws SQLException {
+		if (this.isDirty())
 		{
-			throw new SQLException("MySql did not respond with an Id of the row inserted in SorStatus table");
+			Long id = persister.persist(builder.build(), SorFullRecordSpecs.SOR_STATUS);
+			if (id == null)
+			{
+				throw new SQLException("MySql did not respond with an Id of the row inserted in SorStatus table");
+			}
+			setPID(id);
+			setDirty(false);
 		}
-		setPID(id);
+		else
+		{
+			System.out.println("Trying to persist something that is not dirty");
+		}
 	}
 	
 	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException {
-		dirty = true;
+		boolean dirty = true;
 		// We rely on primaryKey being set before this is called
 		String updatedAtInXml = (String) builder.getFieldValue("updatedAt");
 		if (getPID() != null) {
@@ -95,6 +102,7 @@ public class SorStatus extends SorNode {
 				throw new SQLException("Could not located Sor Status");
 			}
 		}
+		setDirty(dirty);
 	}
 
 	@Override

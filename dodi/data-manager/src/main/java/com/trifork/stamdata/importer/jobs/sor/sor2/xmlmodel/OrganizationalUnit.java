@@ -65,25 +65,16 @@ public class OrganizationalUnit extends SorNode {
 			builder.field("shakIdentifier", tagValue);
 		} else if (SORXmlTagNames.OrganizationalUnit.PROVIDER_IDENTIFIER.equals(tagName)) {
 			builder.field("providerIdentifier", tagValue);
-		} else if (SORXmlTagNames.OrganizationalUnit.OPTIONAL_EAN_LOCATION_CODE.equals(tagName)) {
 		} else if (SORXmlTagNames.OrganizationalUnit.EAN_ENTITY_INHERITED_INDICATOR.equals(tagName)) {
 			boolean f = Boolean.valueOf(tagValue);
 			if (f)
 				builder.field("eanLocationCodeInheritedIndicator", "1");
 			else
 				builder.field("eanLocationCodeInheritedIndicator", "0");
-		} else if (SORXmlTagNames.OrganizationalUnit.GEOGRAPHICAL_PARENT.equals(tagName)) {
 		} else if (SORXmlTagNames.OrganizationalUnit.GEOGRAPHICAL_PARENT_RELATION.equals(tagName)) {
 			builder.field("geographicalParentRelation", Long.valueOf(tagValue));
 		} else if (SORXmlTagNames.OrganizationalUnit.GEOGRAPHICAL_PARENT_SOR_IDENTIFIER.equals(tagName)) {
 			builder.field("geographicalParentSorIdentifier", Long.valueOf(tagValue));
-		} else if (SORXmlTagNames.OrganizationalUnit.POSTAL_ADDRESS_INFO.equals(tagName)) {
-		} else if (SORXmlTagNames.OrganizationalUnit.VISITING_ADDRESS_INFO.equals(tagName)) {
-		} else if (SORXmlTagNames.OrganizationalUnit.ACTIVITY_ADDRESS_INFO.equals(tagName)) {
-		} else if (SORXmlTagNames.OrganizationalUnit.VIRTUAL_ADDRESS_INFO.equals(tagName)) {
-		} else if (SORXmlTagNames.OrganizationalUnit.CLINICAL_SPECIALITY_COLLECTION.equals(tagName)) {
-			// TODO
-			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.SOR_STATUS.equals(tagName)) {
 			builder.field("fkSorStatus", Long.valueOf(tagValue));
 		} else if (SORXmlTagNames.OrganizationalUnit.REPLACES_ENTITY_COLLECTION.equals(tagName)) {
@@ -91,7 +82,7 @@ public class OrganizationalUnit extends SorNode {
 			System.out.println("TODO : " + tagName);
 		} else if (SORXmlTagNames.OrganizationalUnit.REPLACED_BY_ENTITY_COLLECTION.equals(tagName)) {
 			// TODO fkReplacedByCollection
-			System.out.println("TODO : " + tagName);
+			System.out.println("TODO : " + tagName);	
 		} else if (SORXmlTagNames.OrganizationalUnit.AMBULANT_ACTIVITY_INDICATOR.equals(tagName)) {
 			boolean f = Boolean.valueOf(tagValue);
 			if (f)
@@ -120,9 +111,17 @@ public class OrganizationalUnit extends SorNode {
 			builder.field("localAttribute4", tagValue);
 		} else if (SORXmlTagNames.OrganizationalUnit.LOCAL_ATTRBIBUTE5.equals(tagName)) {
 			builder.field("localAttribute5", tagValue);
+		} else if (SORXmlTagNames.OrganizationalUnit.GEOGRAPHICAL_PARENT.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.ORGANIZATIONAL_UNIT_INFO.equals(tagName)||
+				SORXmlTagNames.OrganizationalUnit.POSTAL_ADDRESS_INFO.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.VISITING_ADDRESS_INFO.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.ACTIVITY_ADDRESS_INFO.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.VIRTUAL_ADDRESS_INFO.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.CLINICAL_SPECIALITY_COLLECTION.equals(tagName) ||
+				SORXmlTagNames.OrganizationalUnit.OPTIONAL_EAN_LOCATION_CODE.equals(tagName)) {
+			// Do nothing
 		} else {
-			// TODO back in when sub nodes are implemented
-			//throw new SAXException("Encountered an unexpected tag '" + tagName + "' in SorStatus");
+			throw new SAXException("Encountered an unexpected tag '" + tagName + "' in OrganizationalUnit");
 		}
 		return false;
 	}
@@ -131,7 +130,7 @@ public class OrganizationalUnit extends SorNode {
 	 * Must happen right after persist has been called on all children, to 
 	 * make sure we insert an correct id
 	 */
-	private void updateForeignKeys() {
+	private void updateForeignKeysOneToOne() {
 		// This is not pretty to look at but we need to 
 		// get those relation in order somewhere
 		for (SorNode node : children) {
@@ -155,12 +154,20 @@ public class OrganizationalUnit extends SorNode {
 		}
 	}
 	
+	private void updateForeignKeysOneToMany() {
+		for (SorNode node : children) {
+			if (node.getClass() == ClinicalSpeciality.class) {
+				((ClinicalSpeciality)node).setOrganizationalOwner(getPID());
+			}
+		}
+	}
+	
 	@Override
-	public void persist(RecordPersister persister) throws SQLException {
-		updateForeignKeys();
+	public void persistCurrentNode(RecordPersister persister) throws SQLException {
+		updateForeignKeysOneToOne();
 		setPID(persister.persist(builder.build(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT));
-		//
-		super.persist(persister);
+		updateForeignKeysOneToMany();
+		
 		SorNode parent = getParentNode();
 		// Update parent organizational units to point to us
 		if (parent != null && parent.getClass() == OrganizationalUnit.class) {
@@ -170,7 +177,7 @@ public class OrganizationalUnit extends SorNode {
 	
 	public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException {
 		// Always set dirty, and reset below if we are sure we are not updated
-		dirty = true;
+		boolean dirty = true;
 		Record fetched = fetcher.fetchCurrent(builder.getFieldValue("sorIdentifier").toString(), SorFullRecordSpecs.ORGANIZATIONAL_UNIT);
 		if (fetched != null) {
 			Object sorStatusId = fetched.get("fkSorStatus");
@@ -179,16 +186,13 @@ public class OrganizationalUnit extends SorNode {
 					SorStatus status = (SorStatus)node;
 					status.setPID((Long)sorStatusId);
 					status.compareAgainstDatabaseAndUpdateDirty(fetcher);
-					if (!status.dirty) {
+					if (!status.isDirty()) {
 						dirty = false;
 					}
 				}
 			}
 		}
-		// If we are dirty we so are our children
-		for (SorNode node : children) {
-			node.dirty = dirty;
-		}
+		setDirty(dirty);
 	}
 	
 	@Override

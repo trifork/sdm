@@ -42,24 +42,39 @@ public abstract class SorNode {
 	
 	private Long PID;
 	
-	protected boolean dirty;
-	private boolean hasUniqueKey;
+	private boolean dirty;
+
+	protected boolean hasUniqueKey;
+	protected boolean persistDependsOnParent;
 	
 	public SorNode(Attributes attribs, SorNode parent, String parentTag) {
+		persistDependsOnParent = false;
 		this.parentNode = parent;
 		this.setParentTag(parentTag);
 		dirty = false;
 	}
 	
-	public void persist(RecordPersister persister) throws SQLException {
+	public void persistRecursive(RecordPersister persister) throws SQLException {
+		if (!dirty)
+			return;
+		System.out.println("We are persisting why?");
+		// First save all children that do not depend on parent
 		for (SorNode node : children) {
-			node.persist(persister);
+			if (!node.persistDependsOnParent)
+				node.persistRecursive(persister);
+		}
+		persistCurrentNode(persister);
+		for (SorNode node : children) {
+			if (node.persistDependsOnParent)
+				node.persistRecursive(persister);
 		}
 	}
 	
 	public SorNode getParentNode() {
 		return parentNode;
 	}
+	
+	abstract public void persistCurrentNode(RecordPersister persister) throws SQLException;
 	
 	abstract public void compareAgainstDatabaseAndUpdateDirty(RecordFetcher fetcher) throws SQLException;
 	
@@ -78,6 +93,17 @@ public abstract class SorNode {
 	@Override
 	public String toString() {
 		return "XmlNode [children=" + children + "]";
+	}
+	
+	protected boolean isDirty() {
+		return dirty;
+	}
+
+	protected void setDirty(boolean dirty) {
+		this.dirty = dirty;
+		for (SorNode node : children) {
+			node.setDirty(dirty);
+		}
 	}
 
 	public boolean isUniqueKey() {

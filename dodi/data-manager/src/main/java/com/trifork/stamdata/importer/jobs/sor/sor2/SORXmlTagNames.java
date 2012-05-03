@@ -30,8 +30,6 @@ public class SORXmlTagNames {
 	public static final String INSTITUTION_OWNER_ENTITY = "InstitutionOwnerEntity";
 	public static final String INSTITUTION_OWNER = "InstitutionOwner";
     // 
-	public static final String SOR_IDENTIFIER = "SorIdentifier";
-	public static final String ENTITY_NAME = "EntityName";
 	public static final String OWNER_TYPE = "OwnerType";
 	public static final String SOR_STATUS = "SorStatus";
     
@@ -45,6 +43,23 @@ public class SORXmlTagNames {
 	public class ClinicalSpeciality {
 		public static final String SPECIALITY_CODE = "SpecialityCode";
 		public static final String SPECIALITY_TYPE = "SpecialityType";
+	};
+	
+	public static final String HEALTH_INSTITUTION = "HealthInstitution";
+	public class HealthInstitution {
+		public static final String SOR_IDENTIFIER = "SorIdentifier";
+    	public static final String ENTITY_NAME = "EntityName";
+    	public static final String INSTITUTION_TYPE = "InstitutionType";
+    	public static final String PHARMACY_IDENTIFIER = "PharmacyIdentifier";
+    	public static final String SHAK_IDENTIFIER = "ShakIdentifier";
+    	public static final String OPTIONAL_EAN_LOCATION_CODE = "OptionalEanLocationCode";
+    	public static final String GEOGRAPHICAL_PARENT = "GeographicalParent";
+    	public static final String POSTAL_ADDRESS_INFO = "PostalAddressInformation";
+    	public static final String VISITING_ADDRESS_INFO = "VisitingAddressInformation";
+    	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
+    	public static final String SOR_STATUS = "SorStatus";
+    	public static final String REPLACES_ENTITY_COLLECTION = "ReplacesEntityCollection"; // TODO
+    	public static final String REPLACED_BY_ENTITY_COLLECTION = "ReplacedByEntityCollection"; // TODO
 	};
     
 	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
@@ -109,7 +124,7 @@ public class SORXmlTagNames {
     	public static final String VISITING_ADDRESS_INFO = "VisitingAddressInformation";
     	public static final String ACTIVITY_ADDRESS_INFO = "ActivityAddressInformation";
     	public static final String VIRTUAL_ADDRESS_INFO = "VirtualAddressInformation";
-    	public static final String CLINICAL_SPECIALITY_COLLECTION = "ClinicalSpecialityCollection"; // TODO
+    	public static final String CLINICAL_SPECIALITY_COLLECTION = "ClinicalSpecialityCollection";
     	
     	public static final String SOR_STATUS = "SorStatus";
     	public static final String REPLACES_ENTITY_COLLECTION = "ReplacesEntityCollection"; // TODO
@@ -130,6 +145,4 @@ public class SORXmlTagNames {
    		public static final String LOCAL_ATTRBIBUTE5 = "LocalAttribute1";
     };
     
-    // HEALTH_INSTITUTION
-    public static final String HEALTH_INSTITUTION = "HealthInstitution";
 }

@@ -86,8 +86,7 @@ public class PostalAddressInformation extends SorNode {
 	}
 	
 	@Override
-	public void persist(RecordPersister persister) throws SQLException {
-		super.persist(persister);
+	public void persistCurrentNode(RecordPersister persister) throws SQLException {
 		Long id = persister.persist(builder.build(), SorFullRecordSpecs.POSTAL_ADDRESS_INFORMATION);
 		if (id == null)
 		{
