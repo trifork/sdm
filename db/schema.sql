@@ -1280,21 +1280,24 @@ CREATE TABLE AssignedDoctor ( -- Sikrede
 CREATE TABLE `Bemyndigelse` (
    BemyndigelsePID BIGINT(20) AUTO_INCREMENT NOT NULL PRIMARY KEY,
 	
-  `kode` VARCHAR(255) NOT NULL,
+  `kode` VARCHAR(100) NOT NULL,
   `bemyndigende_cpr` VARCHAR(10) NOT NULL,
   `bemyndigede_cpr` VARCHAR(10) NOT NULL,
-  `bemyndigede_cvr` VARCHAR(10) NULL DEFAULT NULL,
-  `system` VARCHAR(255) NOT NULL,
-  `arbejdsfunktion_id` BIGINT NOT NULL,
-  `rettighed_id` BIGINT NOT NULL,
-  `status_id` BIGINT NOT NULL,
-  `godkendelsesdato` datetime DEFAULT NULL,
+  `bemyndigede_cvr` VARCHAR(8) NULL DEFAULT NULL,
+  `system` VARCHAR(100) NOT NULL,
+  `arbejdsfunktion` VARCHAR(100) NOT NULL,
+  `rettighed` VARCHAR(100) NOT NULL,
+  `status` VARCHAR(100) NOT NULL,
+  `godkendelses_dato` VARCHAR(35) DEFAULT NULL,
+  `oprettelses_dato` VARCHAR(35) DEFAULT NULL,
+  `modificeret_dato` VARCHAR(35) DEFAULT NULL,
+  `gyldig_fra_dato` VARCHAR(35) DEFAULT NULL,
+  `gyldig_til_dato` VARCHAR(35) DEFAULT NULL,
   
-	CreatedDate DATETIME NOT NULL,
-	ModifiedDate DATETIME NOT NULL,
-	ValidFrom DATETIME NOT NULL,
-	ValidTo DATETIME NOT NULL,
+   ModifiedDate DATETIME NOT NULL,
+   ValidFrom DATETIME NOT NULL,
+   ValidTo DATETIME NOT NULL,
 	
-	INDEX (BemyndigelsePID, ModifiedDate),
-	INDEX (kode, ValidTo, ValidFrom)
+   INDEX (BemyndigelsePID, ModifiedDate),
+   INDEX (kode, gyldig_fra_dato, gyldig_til_dato)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
