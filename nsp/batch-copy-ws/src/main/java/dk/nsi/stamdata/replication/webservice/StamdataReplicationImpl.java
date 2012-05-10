@@ -38,6 +38,7 @@ import javax.xml.ws.Holder;
 
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.security.ClientVocesCvr;
@@ -132,7 +133,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
     {
         return ("sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1);
+                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
@@ -171,6 +173,10 @@ public class StamdataReplicationImpl implements StamdataReplication {
             else if ("yder".equals(parameters.getDatatype()))
             {
                 recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
+            }
+            else if ("bemyndigelse".equals(parameters.getDatatype()))
+            {
+                recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
             }
             else
             {

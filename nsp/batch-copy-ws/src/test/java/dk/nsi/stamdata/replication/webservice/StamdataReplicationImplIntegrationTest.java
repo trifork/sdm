@@ -28,6 +28,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 import com.trifork.stamdata.persistence.*;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.jaxws.generated.*;
@@ -44,10 +45,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -60,6 +63,9 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Connection;
@@ -345,7 +351,48 @@ public class StamdataReplicationImplIntegrationTest
         }
     }
 
+    @Test
+    public void testBemyndigelsesServiceCopy() throws Exception
+    {
+        recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
+        Record record = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "1234567890").addDummyFieldsAndBuild();
+        records.add(record);
+        Record record2 = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "9876543210").addDummyFieldsAndBuild();
+        records.add(record2);
+
+        createBemyndigelseReplicationRequest("bemyndigelsesservice", "bemyndigelse");
+
+        populateDatabaseAndSendRequest();
+
+        assertResponseContainsRecordAtom("bemyndigelsesservice", "bemyndigelse");
+        
+        printDocument(anyAsElement.getOwnerDocument(), System.out);
+        
+        assertResponseContainsExactNumberOfRecords("bemyndigelse:bemyndigelse", 2);
+        assertResponseContainsValueOnXPath("//bemyndigelse:bemyndigelse/bemyndigelse:kode", "1234567890");
+    }
+
     // Helper methods
+    
+    // Pretty print XML document - good for debugging
+    private static void printDocument(Document doc, OutputStream out) throws IOException, TransformerException {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer = tf.newTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+        transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
+    }
+
+    private void createBemyndigelseReplicationRequest(String register, String datatype) {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister(register);
+        request.setDatatype(datatype);
+        request.setVersion(1L);
+        request.setOffset("0");
+    }
 
     private void createCprPersonRegisterReplicationRequest()
     {
@@ -449,7 +496,8 @@ public class StamdataReplicationImplIntegrationTest
                 "atom", "http://www.w3.org/2005/Atom",
                 "sdm", "http://nsi.dk/-/stamdata/3.0/cpr",
                 "sikrede", "http://nsi.dk/-/stamdata/3.0/sikrede",
-                "yder", "http://nsi.dk/-/stamdata/3.0/yderregister");
+                "yder", "http://nsi.dk/-/stamdata/3.0/yderregister",
+                "bemyndigelse", "http://nsi.dk/-/stamdata/3.0/bemyndigelsesservice");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
         xpath.setNamespaceContext(context);
@@ -475,6 +523,7 @@ public class StamdataReplicationImplIntegrationTest
         cvrClient.addPermission("sikrede/sikrede/v1");
         cvrClient.addPermission("yderregister/yder/v1");
         cvrClient.addPermission("yderregister/person/v1");
+        cvrClient.addPermission("bemyndigelsesservice/bemyndigelse/v1");
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();

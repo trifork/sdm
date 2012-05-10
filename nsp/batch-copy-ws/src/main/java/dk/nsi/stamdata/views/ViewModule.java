@@ -30,6 +30,7 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
 import dk.nsi.stamdata.views.autorisationsregisteret.Autorisation;
+import dk.nsi.stamdata.views.bemyndigelse.Bemyndigelse;
 import dk.nsi.stamdata.views.cpr.BarnRelation;
 import dk.nsi.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import dk.nsi.stamdata.views.cpr.Person;
@@ -121,6 +122,10 @@ public class ViewModule extends AbstractModule
         // SKS
         
         views.addBinding().to(Institution.class);
+
+        // Bemyndigelse
+        
+        views.addBinding().to(Bemyndigelse.class);
     }
     
 

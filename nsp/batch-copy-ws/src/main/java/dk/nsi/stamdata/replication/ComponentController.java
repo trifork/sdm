@@ -27,14 +27,15 @@ package dk.nsi.stamdata.replication;
 
 import static com.google.inject.name.Names.bindProperties;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
+
+import javax.servlet.ServletContextEvent;
+
+import org.apache.log4j.Logger;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Scopes;
 import com.google.inject.Stage;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
@@ -46,15 +47,11 @@ import com.trifork.stamdata.persistence.PersistenceFilter;
 import com.trifork.stamdata.persistence.PersistenceModule;
 import com.trifork.stamdata.persistence.StatelessPersistenceFilter;
 
-import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
-import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 import dk.nsi.stamdata.replication.models.AuthenticationModule;
 import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
+import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
+import dk.nsi.stamdata.security.DenGodeWebServiceModule;
 import dk.nsi.stamdata.views.ViewModule;
-import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
-import org.apache.log4j.Logger;
-
-import javax.servlet.ServletContextEvent;
 
 
 public class ComponentController extends GuiceServletContextListener
