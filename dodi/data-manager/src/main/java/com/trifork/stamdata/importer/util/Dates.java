@@ -26,13 +26,11 @@
 
 package com.trifork.stamdata.importer.util;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.trifork.stamdata.Preconditions;
 
@@ -41,20 +39,21 @@ public class Dates
 {
 	public static final Date THE_END_OF_TIME = toDate(2999, 12, 31);
 
-    // FIXME: SimpleDateFormat is not thread safe! Use DateTimeFormatter instead.
-	public static final DateFormat yyyyMMddHHmm = new SimpleDateFormat("yyyyMMddHHmm");
-	public static final DateFormat yyyy_MM_dd = new SimpleDateFormat("yyyy-MM-dd");
+	
+	
+	public static final DateTimeFormatter yyyyMMddHHmm = DateTimeFormat.forPattern("yyyyMMddHHmm");
+	public static final DateTimeFormatter yyyy_MM_dd = DateTimeFormat.forPattern("yyyy-MM-dd");
 	
 	public static String toDateStringISO8601(Date date)
     {
-	    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-        return formatter.format(date);
+	    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyyMMdd");
+        return formatter.print(date.getTime());
     }
 
 	public static String toFilenameDatetime(Date date)
 	{
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH-mm-ss");
-		return formatter.format(date);
+	    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH-mm-ss");
+		return formatter.print(date.getTime());
 	}
 
 	public static Date toDate(int year, int month, int date)
@@ -87,8 +86,7 @@ public class Dates
 	public static String toSqlDate(Date date)
 	{
 		Preconditions.checkNotNull(date);
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.format(date);
+	    DateTimeFormatter df = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+		return df.print(date.getTime());
 	}
 }

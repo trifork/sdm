@@ -50,6 +50,10 @@ import com.trifork.stamdata.importer.jobs.cpr.models.Navneoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.Personoplysninger;
 import com.trifork.stamdata.importer.jobs.cpr.models.UmyndiggoerelseVaergeRelation;
 import org.apache.log4j.Logger;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 
 public class CPRParser
@@ -329,7 +333,7 @@ public class CPRParser
 	}
 
 
-	private static Date parseDate(DateFormat format, String line, int from, int to) throws ParseException, Exception
+	private static Date parseDate(DateTimeFormatter format, String line, int from, int to) throws ParseException, Exception
 	{
 		String dateString = cut(line, from, to);
 		if (dateString != null && dateString.trim().length() == to - from && !dateString.equals(EMPTY_DATE_STRING))
@@ -446,11 +450,11 @@ public class CPRParser
 	}
 
 
-	private static Date parseDateAndCheckValidity(String dateString, DateFormat format, String line) throws ParseException, Exception
+	private static Date parseDateAndCheckValidity(String dateString, DateTimeFormatter format, String line) throws ParseException, Exception
 	{
 		dateString = fixWeirdDate(dateString);
-		Date date = format.parse(dateString);
-		String formattedDate = format.format(date);
+		LocalDateTime date = format.parseLocalDateTime(dateString);
+		String formattedDate = format.print(date);
 
 		if (!formattedDate.equals(dateString))
 		{
@@ -466,6 +470,6 @@ public class CPRParser
 			}
 		}
 
-		return date;
+		return date.toDate();
 	}
 }

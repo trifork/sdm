@@ -1299,5 +1299,5 @@ CREATE TABLE `Bemyndigelse` (
    ValidTo DATETIME NOT NULL,
 	
    INDEX (BemyndigelsePID, ModifiedDate),
-   INDEX (kode, gyldig_fra_dato, gyldig_til_dato)
+   INDEX (kode, ValidTo, ValidFrom)
 ) ENGINE=InnoDB COLLATE=utf8_bin;

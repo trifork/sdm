@@ -38,6 +38,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -83,7 +85,9 @@ public class CPRIntegrationTest
 	@Test
 	public void canEstablishData() throws Exception
 	{
-		importFile("data/cpr/testEtablering/D100313.L431102");
+        Date latestIkraft1 = CPRImporter.getLatestVersion(connection);
+
+        importFile("data/cpr/testEtablering/D100313.L431102");
 
 		// When running a full load (file doesn't ends on 01) of CPR no
 		// LatestIkraft should be written to the db.
@@ -120,7 +124,52 @@ public class CPRIntegrationTest
 		assertFalse(rs.next());
 	}
 
+    @Test
+    public void jiraNSPSUPPORT_53_ErrorInUpdate() throws Exception
+    {
+        importFile("data/cpr/D120127.L431101");
 
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * from Person WHERE cpr='0101595072'");
+        assertTrue(rs.next());
+        //printResultset(rs);
+        assertEquals("K", rs.getString("Koen"));
+        assertEquals("0101595072", rs.getString("CPR"));
+        assertEquals("Yyyyyyyyyy", rs.getString("Efternavn"));
+        assertEquals("Yyyyyy Yyyyy Yyyyyy", rs.getString("Fornavn"));
+        assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
+        assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+        assertFalse(rs.next());
+    }
+
+    @Test
+    public void jiraNSPSUPPORT_53_ErrorInUpdate2() throws Exception
+    {
+        importFile("data/cpr/D120128.L431101");
+
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * from Person WHERE cpr='1005400925'");
+        assertTrue(rs.next());
+        //printResultset(rs);
+        assertEquals("M", rs.getString("Koen"));
+        assertEquals("1005400925", rs.getString("CPR"));
+        assertEquals("Jensen", rs.getString("Efternavn"));
+        assertEquals("Pål", rs.getString("Fornavn"));
+        assertEquals("2012-01-27 00:00:00.0", rs.getString("validFrom"));
+        assertEquals("2999-12-31 00:00:00.0", rs.getString("validTo"));
+        assertFalse(rs.next());
+    }
+
+
+    // Helper method to inspect a resultset
+    private void printResultset(ResultSet rs) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+        for (int i=1; i <= metaData.getColumnCount(); i++) {
+            System.out.println(metaData.getColumnName(i)+ ": "+ rs.getObject(i));
+        }
+    }
+
+    
 	@Test(expected = Exception.class)
 	public void failsWhenEndRecordAppearsBeforeEndOfFile() throws Exception
 	{
@@ -159,15 +208,15 @@ public class CPRIntegrationTest
 		assertEquals("9000", rs.getString("Postnummer"));
 		assertEquals("Aalborg", rs.getString("PostDistrikt"));
 		assertEquals("01", rs.getString("Status"));
-		assertEquals(yyyy_MM_dd.parse("1997-09-09"), rs.getDate("NavneBeskyttelseStartDato"));
-		assertEquals(yyyy_MM_dd.parse("2001-02-20"), rs.getDate("NavneBeskyttelseSletteDato"));
+		assertEquals(yyyy_MM_dd.parseDateTime("1997-09-09").toDate(), rs.getDate("NavneBeskyttelseStartDato"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2001-02-20").toDate(), rs.getDate("NavneBeskyttelseSletteDato"));
 		assertEquals("", rs.getString("GaeldendeCPR"));
-		assertEquals(yyyy_MM_dd.parse("1896-01-01"), rs.getDate("Foedselsdato"));
+		assertEquals(yyyy_MM_dd.parseDateTime("1896-01-01").toDate(), rs.getDate("Foedselsdato"));
 		assertEquals("Pensionist", rs.getString("Stilling"));
 		assertEquals("8511", rs.getString("VejKode"));
 		assertEquals("851", rs.getString("KommuneKode"));
-		assertEquals(yyyy_MM_dd.parse("2001-11-16"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2001-11-16").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
 
@@ -198,16 +247,16 @@ public class CPRIntegrationTest
 		assertEquals("0003", rs.getString("TypeKode"));
 		assertEquals("Mor", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		rs.next();
 
 		assertEquals("0004", rs.getString("TypeKode"));
 		assertEquals("Far", rs.getString("TypeTekst"));
 		assertEquals("", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2008-01-01"), rs.getDate("ValidFrom"));
-		assertEquals(yyyy_MM_dd.parse("2999-12-31"), rs.getDate("ValidTo"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2008-01-01").toDate(), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2999-12-31").toDate(), rs.getDate("ValidTo"));
 
 		assertTrue(rs.last());
 	}
@@ -226,7 +275,7 @@ public class CPRIntegrationTest
 		assertEquals("0001", rs.getString("TypeKode"));
 		assertEquals("Værges CPR findes", rs.getString("TypeTekst"));
 		assertEquals("0904414131", rs.getString("RelationCpr"));
-		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("RelationCprStartDato"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("RelationCprStartDato"));
 		assertEquals("", rs.getString("VaergesNavn"));
 		assertEquals(null, rs.getDate("VaergesNavnStartDato"));
 		assertEquals("", rs.getString("RelationsTekst1"));
@@ -234,7 +283,7 @@ public class CPRIntegrationTest
 		assertEquals("", rs.getString("RelationsTekst3"));
 		assertEquals("", rs.getString("RelationsTekst4"));
 		assertEquals("", rs.getString("RelationsTekst5"));
-		assertEquals(yyyy_MM_dd.parse("2000-02-28"), rs.getDate("ValidFrom"));
+		assertEquals(yyyy_MM_dd.parseDateTime("2000-02-28").toDate(), rs.getDate("ValidFrom"));
 		assertEquals(Dates.THE_END_OF_TIME, rs.getDate("ValidTo"));
 		assertTrue(rs.last());
 	}
