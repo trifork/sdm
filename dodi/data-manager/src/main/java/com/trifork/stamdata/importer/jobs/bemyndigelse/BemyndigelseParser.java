@@ -26,7 +26,6 @@ package com.trifork.stamdata.importer.jobs.bemyndigelse;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
-import static com.trifork.stamdata.persistence.RecordSpecification.field;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ import javax.xml.bind.Unmarshaller;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 
-import com.trifork.stamdata.importer.ComponentController;
 import com.trifork.stamdata.importer.config.KeyValueStore;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
@@ -58,7 +56,6 @@ import dk.sdsd.nsp.slalog.api.SLALogItem;
 public class BemyndigelseParser implements Parser {
 
     private final RecordSpecification recordSpecification;
-    private static final String SEQUENCE_KEY = "SEQUENCE_KEY";
     private final KeyValueStore keyValueStore;
     private static Logger logger = Logger.getLogger(BemyndigelseParser.class); 
 

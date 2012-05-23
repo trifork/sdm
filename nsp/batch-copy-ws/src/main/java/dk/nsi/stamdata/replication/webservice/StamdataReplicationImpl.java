@@ -32,18 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Provider;
+import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
 
-import com.trifork.stamdata.persistence.RecordFetcher;
-import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-import dk.nsi.stamdata.security.ClientVocesCvr;
-
-import dk.nsi.stamdata.views.sor.Yder;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
@@ -53,7 +46,12 @@ import org.w3c.dom.Document;
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordMetadata;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
@@ -64,10 +62,12 @@ import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
+import dk.nsi.stamdata.security.ClientVocesCvr;
 import dk.nsi.stamdata.views.View;
 import dk.nsi.stamdata.views.Views;
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataReplication")
+@HandlerChain(file="handler-chain.xml")
 @GuiceWebservice
 @SchemaValidation
 public class StamdataReplicationImpl implements StamdataReplication {

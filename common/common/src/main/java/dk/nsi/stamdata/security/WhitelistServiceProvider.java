@@ -24,12 +24,11 @@
  */
 package dk.nsi.stamdata.security;
 
+import java.sql.Connection;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import org.hibernate.SessionFactory;
-
-import java.sql.Connection;
 
 @Singleton
 public class WhitelistServiceProvider implements Provider<WhitelistService>

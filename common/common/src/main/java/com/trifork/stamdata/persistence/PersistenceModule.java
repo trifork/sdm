@@ -161,9 +161,7 @@ public class PersistenceModule extends AbstractModule
         connectionProps.put("user", username);
         connectionProps.put("password", password);
         try {
-            return DriverManager.
-                    getConnection(jdbcURL,
-                                  connectionProps);
+            return DriverManager.getConnection(jdbcURL, connectionProps);
         } catch (SQLException e) {
             throw  new RuntimeException("Cannot get connection", e);
         }

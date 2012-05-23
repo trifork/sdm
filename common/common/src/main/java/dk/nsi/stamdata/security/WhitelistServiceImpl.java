@@ -24,9 +24,6 @@
  */
 package dk.nsi.stamdata.security;
 
-import org.hibernate.*;
-import org.hibernate.type.StandardBasicTypes;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

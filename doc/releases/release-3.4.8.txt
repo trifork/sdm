@@ -1,0 +1,7 @@
+Stamdata 3.4.8 Release Notes
+============================
+
+NSPSUPPORT-55: 	Fixed bug with local timezones in date time conversion
+
+Bemyndigelsesregister importer added 
+
