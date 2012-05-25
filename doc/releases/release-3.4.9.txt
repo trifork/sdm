@@ -1,0 +1,9 @@
+Stamdata 3.4.9 Release Notes
+============================
+
+NSPSUPPORT-56: 	Fixed bug with missing "Flowstatus" in KRS response
+
+Added Takstimporter to default monitoring config.
+
+Added "arbejdsfunktion" to bemyndigelses data
+
