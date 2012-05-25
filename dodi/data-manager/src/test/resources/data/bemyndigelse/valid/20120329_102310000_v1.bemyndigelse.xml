@@ -6,6 +6,7 @@
     <bemyndigede_cpr>0987654321</bemyndigede_cpr>
     <bemyndigede_cvr>11223344</bemyndigede_cvr>
     <system>system</system>
+    <arbejdsfunktion>arbejdsfunktion</arbejdsfunktion>
     <status>status</status>
     <rettighed>rettighed</rettighed>
     <godkendelsesdato>2001-12-31T12:00:00</godkendelsesdato>
@@ -20,6 +21,7 @@
     <bemyndigede_cpr>1987654321</bemyndigede_cpr>
     <bemyndigede_cvr>11223345</bemyndigede_cvr>
     <system>system2</system>
+    <arbejdsfunktion>arbejdsfunktion</arbejdsfunktion>
     <status>status2</status>
     <rettighed>rettighed2</rettighed>
     <godkendelsesdato>2001-12-30T12:00:00</godkendelsesdato>

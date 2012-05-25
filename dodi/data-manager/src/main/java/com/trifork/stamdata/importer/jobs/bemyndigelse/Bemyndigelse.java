@@ -37,6 +37,7 @@ public class Bemyndigelse {
     String bemyndigedeCPR;
     String bemyndigedeCVR;
     String system;
+    private String arbejdsfunktion;
     String rettighed;
     String status;
     String godkendelsesDato;
@@ -128,6 +129,13 @@ public class Bemyndigelse {
     }
     public void setGyldigTilDato(String gyldigTilDato) {
         this.gyldigTilDato = gyldigTilDato;
+    }
+    public void setArbejdsfunktion(String arbejdsfunktion) {
+        this.arbejdsfunktion = arbejdsfunktion;
+    }
+    @XmlElement(name="arbejdsfunktion")
+    public String getArbejdsfunktion() {
+        return arbejdsfunktion;
     }
 
 }

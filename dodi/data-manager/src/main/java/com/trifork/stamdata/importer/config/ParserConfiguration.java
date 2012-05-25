@@ -30,16 +30,20 @@ import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
+import com.trifork.stamdata.importer.jobs.bemyndigelse.BemyndigelseParser;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserContext;
 import com.trifork.stamdata.importer.parsers.ParserState;
 import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Set;
 
 public class ParserConfiguration
 {
+    private static Logger log = Logger.getLogger(ParserConfiguration.class); 
+
     @Deprecated
     private static Set<FileParserJob> bindOldParsers(CompositeConfiguration config, File rootDir)
     {
@@ -113,10 +117,19 @@ public class ParserConfiguration
         return parsers;
     }
 
-    public static void bindParsers(CompositeConfiguration config, File rootDir, Binder binder)
-    {
+    public static void bindParsers(CompositeConfiguration config, File rootDir, Binder binder) {
+        if(log.isDebugEnabled()) {
+            log.debug("Old parsers: "+config.getString("parser"));
+            log.debug("New parsers: "+config.getString("parser_v2"));
+        }
+        
         Set<FileParserJob> oldParsers = bindOldParsers(config, rootDir);
         Set<ParserContext> newParsers = bindNewParsers(config, binder);
+
+        if(log.isDebugEnabled()) {
+            log.debug("Old parsers: "+oldParsers);
+            log.debug("New parsers: "+newParsers);
+        }
 
         binder.bind(new TypeLiteral<Set<FileParserJob>>() {}).toInstance(ImmutableSet.copyOf(oldParsers));
         binder.bind(new TypeLiteral<Set<ParserContext>>() {}).toInstance(ImmutableSet.copyOf(newParsers));

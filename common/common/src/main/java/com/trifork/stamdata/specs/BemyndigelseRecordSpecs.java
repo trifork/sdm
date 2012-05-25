@@ -38,6 +38,7 @@ public final class BemyndigelseRecordSpecs
             field("bemyndigede_cpr", 10),
             field("bemyndigede_cvr", 8),
             field("system", 100),
+            field("arbejdsfunktion", 100),
             field("rettighed", 100),
             field("status", 100),
             field("godkendelses_dato", 25),

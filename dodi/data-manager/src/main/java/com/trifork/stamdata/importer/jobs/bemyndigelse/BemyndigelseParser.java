@@ -99,6 +99,7 @@ public class BemyndigelseParser implements Parser {
         builder.field("bemyndigede_cpr", bemyndigelse.getBemyndigedeCPR());
         builder.field("bemyndigede_cvr", bemyndigelse.getBemyndigedeCVR());
         builder.field("system", bemyndigelse.getSystem());
+        builder.field("arbejdsfunktion", bemyndigelse.getArbejdsfunktion());
         builder.field("rettighed", bemyndigelse.getRettighed());
         builder.field("status", bemyndigelse.getStatus());
         builder.field("godkendelses_dato", bemyndigelse.getGodkendelsesDato());
