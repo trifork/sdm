@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified"            
+           attributeFormDefault="unqualified" 
+           xml:lang="EN" >
+  
+	<xs:include schemaLocation="SpecialityCode.xsd"/>
+	<xs:include schemaLocation="SpecialityType.xsd"/>
+  
+	<xs:element name="ClinicalSpeciality" type="ClinicalSpecialityType"/>
+	<xs:complexType name="ClinicalSpecialityType">
+		<xs:sequence>
+			<xs:element ref="SpecialityCode"/>
+			<xs:element ref="SpecialityType"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

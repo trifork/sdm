@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>OptionalEanLocationCode</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>OptionalEanLocationCode</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>OptionalEanLocationCode</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Loaktions kode</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>
+

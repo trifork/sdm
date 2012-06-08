@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified" 
+           attributeFormDefault="unqualified"
+           xml:lang="EN" >           
+  
+	<xs:include schemaLocation="HealthInstitution.xsd"/>
+	<xs:include schemaLocation="OrganizationalUnitEntity.xsd"/>
+
+  <xs:element name="HealthInstitutionEntity" type="HealthInstitutionEntityType"/>
+	<xs:complexType name="HealthInstitutionEntityType">
+		<xs:sequence>
+			<xs:element ref="HealthInstitution"/>
+			<xs:element ref="OrganizationalUnitEntity" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

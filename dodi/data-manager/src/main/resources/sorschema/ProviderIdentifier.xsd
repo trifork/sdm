@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           elementFormDefault="qualified"
+           xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xml:lang="EN">
+
+  <xs:element name="ProviderIdentifier" type="ProviderIdentifierType" />
+
+  <xs:simpleType name="ProviderIdentifierType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="9" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

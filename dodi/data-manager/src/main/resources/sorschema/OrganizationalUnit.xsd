@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified"
+           xml:lang="EN">
+  
+	<xs:include schemaLocation="ClinicalSpecialityCollection.xsd"/>
+	<xs:include schemaLocation="UnitType.xsd"/>
+	<xs:include schemaLocation="EntityName.xsd"/>
+	<xs:include schemaLocation="SorIdentifier.xsd"/>
+	<xs:include schemaLocation="LocalCode.xsd"/>
+	<xs:include schemaLocation="ProviderIdentifier.xsd"/>
+	<xs:include schemaLocation="ShakIdentifier.xsd"/>
+	<xs:include schemaLocation="PostalAddressInformation.xsd"/>
+	<xs:include schemaLocation="VisitingAddressInformation.xsd"/>
+	<xs:include schemaLocation="ActivityAddressInformation.xsd"/>
+	<xs:include schemaLocation="VirtualAddressInformation.xsd"/>
+	<xs:include schemaLocation="OptionalEanLocationCode.xsd"/>
+	<xs:include schemaLocation="ReplacesEntityCollection.xsd"/>
+  <xs:include schemaLocation="ReplacedByEntityCollection.xsd"/>
+
+  <xs:include schemaLocation="SorStatus.xsd"/>
+	<xs:include schemaLocation="PharmacyIdentifier.xsd"/>
+	<xs:include schemaLocation="LocalAttributeCollection.xsd"/>
+	<xs:include schemaLocation="OrganizationalUnitInformation.xsd"/>
+	<xs:include schemaLocation="GeographicalParent.xsd"/>
+
+  <xs:element name="OrganizationalUnit" type="OrganizationalUnitType"/>
+	<xs:complexType name="OrganizationalUnitType">
+		<xs:sequence>
+			<xs:element ref="SorIdentifier" minOccurs="1"/>
+			<xs:element ref="EntityName" minOccurs="1"/>
+			<xs:element ref="UnitType" minOccurs="0" />
+			<xs:element ref="LocalCode" minOccurs="0"/>
+			<xs:element ref="PharmacyIdentifier" minOccurs="0"/>
+			<xs:element ref="ShakIdentifier" minOccurs="0"/>
+			<xs:element ref="ProviderIdentifier" minOccurs="0"/>
+			<xs:element ref="OptionalEanLocationCode" minOccurs="1"/>
+			<xs:element ref="GeographicalParent" minOccurs="1"/>
+			<xs:element ref="PostalAddressInformation" minOccurs="0"/>
+			<xs:element ref="VisitingAddressInformation" minOccurs="0"/>
+			<xs:element ref="ActivityAddressInformation" minOccurs="0"/>
+			<xs:element ref="VirtualAddressInformation" minOccurs="0"/>
+      <xs:element ref="ClinicalSpecialityCollection" minOccurs="0"/>
+			<xs:element ref="SorStatus" minOccurs="1"/>
+			<xs:element ref="ReplacesEntityCollection" minOccurs="0"/>
+			<xs:element ref="ReplacedByEntityCollection"  minOccurs="0"/>
+			<xs:element ref="OrganizationalUnitInformation" minOccurs="0"/>
+			<xs:element ref="LocalAttributeCollection" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

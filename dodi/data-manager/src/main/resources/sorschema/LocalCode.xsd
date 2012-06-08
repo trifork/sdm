@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           elementFormDefault="qualified"
+           xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xml:lang="EN">
+
+  <xs:element name="LocalCode" type="LocalCodeType" />
+
+  <xs:simpleType name="LocalCodeType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="20" />
+    </xs:restriction>
+  </xs:simpleType>
+
+
+</xs:schema>

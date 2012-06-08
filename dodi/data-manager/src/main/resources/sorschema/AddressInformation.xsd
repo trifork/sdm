@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified"            
+           attributeFormDefault="unqualified" 
+           xml:lang="EN"  >
+  
+<!-- 	<xs:import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/" schemaLocation="http://digitaliser.dk/resource/1081/artefact/XKOM_AddressPostal.xsd"/>  -->
+  <xs:include schemaLocation="Stairway.xsd"/>
+
+  <xs:element name="AddressInformation" type="AddressInformationType"/>
+	<xs:complexType name="AddressInformationType">
+		<xs:sequence>
+<!-- 			<xs:element ref="xkom:AddressPostal"/>  -->
+			<xs:element ref="Stairway" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
