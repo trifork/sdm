@@ -55,9 +55,9 @@ import oio.sundhedsstyrelsen.organisation._1_0.SorTreeType;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
-import org.mortbay.log.Log;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
+import com.trifork.stamdata.importer.jobs.sor.SORImporter;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
@@ -79,6 +79,7 @@ public class SorRelationParser implements Parser {
     private Map<String, String> selfRelationsMap;
     private Map<String, HashSet<String>> shakYderMap;
     private DateTime snapshotDate;
+    
 
     @Inject
     SorRelationParser(KeyValueStore keyValueStore) {
@@ -131,7 +132,7 @@ public class SorRelationParser implements Parser {
         InstitutionOwnerType owner = institution.getInstitutionOwner();
         String ownerId = ""+owner.getSorIdentifier();
         if(!hasValidPeriod(owner.getSorStatus())) {
-            Log.debug("Institution with SOR id:" +ownerId+"  is is no longer valid, toDate: "+owner.getSorStatus().getToDate());
+            logger.debug("Institution with SOR id:" +ownerId+"  is is no longer valid, toDate: "+owner.getSorStatus().getToDate());
             return;
         }
         
@@ -156,7 +157,7 @@ public class SorRelationParser implements Parser {
         
         String hiChildId = ""+healthInstitution.getSorIdentifier();
         if(!hasValidPeriod(healthInstitution.getSorStatus())) {
-            Log.debug("Institution with SOR id:" +hiChildId+" is no longer valid, toDate: "+healthInstitution.getSorStatus().getToDate());
+            logger.debug("Institution with SOR id:" +hiChildId+" is no longer valid, toDate: "+healthInstitution.getSorStatus().getToDate());
             return;
         }
         
@@ -178,7 +179,7 @@ public class SorRelationParser implements Parser {
         String childId = ""+ou.getSorIdentifier();
         
         if(!hasValidPeriod(ou.getSorStatus())) {
-            Log.debug("Institution with SOR id:" +ou+" is no longer valid, toDate: "+ou.getSorStatus().getToDate());
+            logger.debug("Institution with SOR id:" +ou+" is no longer valid, toDate: "+ou.getSorStatus().getToDate());
             return;
         }
         
