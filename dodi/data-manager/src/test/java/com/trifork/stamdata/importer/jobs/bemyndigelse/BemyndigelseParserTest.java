@@ -95,17 +95,16 @@ public class BemyndigelseParserTest {
             
             assertNumberOfBemyndigelserRecordsIsInDatabase(connection, 2, recordSpecification);
             
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM " + recordSpecification.getTable());
-            while(rs.next()) {
-                int count = rs.getMetaData().getColumnCount();
-                for(int i = 1; i< count; i++) {
-                    System.out.print(rs.getMetaData().getColumnName(i));
-                    System.out.print(":");
-                    System.out.println(rs.getString(i));
-                }
-            }
-            
+//            Statement statement = connection.createStatement();
+//            ResultSet rs = statement.executeQuery("SELECT * FROM " + recordSpecification.getTable());
+//            while(rs.next()) {
+//                int count = rs.getMetaData().getColumnCount();
+//                for(int i = 1; i< count; i++) {
+//                    System.out.print(rs.getMetaData().getColumnName(i));
+//                    System.out.print(":");
+//                    System.out.println(rs.getString(i));
+//                }
+//            }
             
         } finally {
             if (connection != null) {
@@ -129,16 +128,16 @@ public class BemyndigelseParserTest {
             
             assertNumberOfBemyndigelserRecordsIsInDatabase(connection, 3, recordSpecification);
             
-            Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM " + recordSpecification.getTable());
-            while(rs.next()) {
-                int count = rs.getMetaData().getColumnCount();
-                for(int i = 1; i< count; i++) {
-                    System.out.print(rs.getMetaData().getColumnName(i));
-                    System.out.print(":");
-                    System.out.println(rs.getString(i));
-                }
-            }
+//            Statement statement = connection.createStatement();
+//            ResultSet rs = statement.executeQuery("SELECT * FROM " + recordSpecification.getTable());
+//            while(rs.next()) {
+//                int count = rs.getMetaData().getColumnCount();
+//                for(int i = 1; i< count; i++) {
+//                    System.out.print(rs.getMetaData().getColumnName(i));
+//                    System.out.print(":");
+//                    System.out.println(rs.getString(i));
+//                }
+//            }
             
             
         } finally {
