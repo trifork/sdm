@@ -90,7 +90,7 @@ public class RecordFetcher
                 "(PID > ? AND ModifiedDate = ?) OR " +
                 "PID > ? OR " +
                 "(PID = ? AND ModifiedDate > ?) " +
-                "ORDER BY PID, ModifiedDate LIMIT %d", recordSpecification.getTable(), limit);
+                "ORDER BY ModifiedDate, PID LIMIT %d", recordSpecification.getTable(), limit);
 
         PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
 
