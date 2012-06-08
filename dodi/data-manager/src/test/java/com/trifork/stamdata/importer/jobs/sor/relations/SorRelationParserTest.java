@@ -112,7 +112,7 @@ public class SorRelationParserTest {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT Count(*) FROM " + recordSpecification.getTable() + " WHERE sor_parent = '21000016006'");
             resultSet.next();
-            assertEquals(24, resultSet.getLong(1));
+            assertEquals(22, resultSet.getLong(1));
             
             Statement statement2 = connection.createStatement();
             ResultSet resultSet2 = statement2.executeQuery("SELECT sor FROM " + shakYderSpecification.getTable() + " WHERE shak_yder = 'SHAK=804301'");
