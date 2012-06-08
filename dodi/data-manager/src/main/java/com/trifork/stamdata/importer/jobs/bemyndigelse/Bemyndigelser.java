@@ -49,13 +49,6 @@ public class Bemyndigelser {
         return bemyndigelseList;
     }
     
-    public void addBemyndigelse(Bemyndigelse b) {
-        if(bemyndigelseList == null) {
-            bemyndigelseList = new ArrayList<Bemyndigelse>();
-        }
-        bemyndigelseList.add(b);
-    }
-
     @XmlAttribute(name="Version")
     public String getVersion() {
         return version;
