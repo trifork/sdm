@@ -57,7 +57,6 @@ import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
 
 import com.trifork.stamdata.importer.config.KeyValueStore;
-import com.trifork.stamdata.importer.jobs.sor.SORImporter;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.importer.parsers.exceptions.OutOfSequenceException;
@@ -78,6 +77,7 @@ public class SorRelationParser implements Parser {
     private static Logger logger = Logger.getLogger(SorRelationParser.class);
     private Map<String, String> selfRelationsMap;
     private Map<String, HashSet<String>> shakYderMap;
+    private HashSet<String> parentChildIds;
     private DateTime snapshotDate;
     
 
@@ -97,11 +97,28 @@ public class SorRelationParser implements Parser {
             File files = checkRequiredFiles(dataSet);
             
             List<InstitutionOwnerEntityType> list = unmarshallFile(files);
+            processSorTree(persister, list);
+            
+            slaLogItem.setCallResultOk();
+            slaLogItem.store();
+        } catch (Exception e) {
+            slaLogItem.setCallResultError("SorRelationParser Failed - Cause: " + e.getMessage());
+            slaLogItem.store();
+            throw e;
+        }
+        
+    }
+
+    void processSorTree(RecordPersister persister, List<InstitutionOwnerEntityType> list) throws SQLException {
+        try {
             selfRelationsMap = new HashMap<String, String>();
             shakYderMap = new HashMap<String, HashSet<String>>();
+            parentChildIds = new HashSet<String>();
+
             for (InstitutionOwnerEntityType institutions : list) {
                 persistInstitutionRelations(institutions, persister);
             }
+            
             // persist institutions relations with self
             Set<String> keys = selfRelationsMap.keySet();
             for (String sorSelfRelationId : keys) {
@@ -113,18 +130,11 @@ public class SorRelationParser implements Parser {
             for (String shakYderKey : syKeys) {
                 persistShakYder(shakYderKey, shakYderMap.get(shakYderKey), persister);
             }
-            
-            slaLogItem.setCallResultOk();
-            slaLogItem.store();
-        } catch (Exception e) {
-            slaLogItem.setCallResultError("SorRelationParser Failed - Cause: " + e.getMessage());
-            slaLogItem.store();
-            throw e;
         } finally {
             selfRelationsMap = null;
             shakYderMap = null;
+            parentChildIds = null;
         }
-        
     }
 
     private void persistInstitutionRelations(InstitutionOwnerEntityType institution, RecordPersister persister) throws SQLException {
@@ -177,13 +187,19 @@ public class SorRelationParser implements Parser {
     private void traverseOrganizationalUnitEntity(String parentId, OrganizationalUnitEntityType ouChild, RecordPersister persister) throws SQLException {
         OrganizationalUnitType ou = ouChild.getOrganizationalUnit();
         String childId = ""+ou.getSorIdentifier();
+
+        // persist relation with owner and with self
+        if(parentChildIds.contains(parentId + "_" + childId)) {
+            // ou is persisted already - this check is needed due to tree parsing algorithm where a parent must map directly to all childs 
+            return;
+        }
+        parentChildIds.add(parentId + "_" + childId);
         
         if(!hasValidPeriod(ou.getSorStatus())) {
             logger.debug("Institution with SOR id:" +ou+" is no longer valid, toDate: "+ou.getSorStatus().getToDate());
             return;
         }
         
-        // persist relation with owner and with self
         persistNode(parentId, childId, persister);
         selfRelationsMap.put(childId, "");
         
@@ -273,7 +289,7 @@ public class SorRelationParser implements Parser {
             for (int i = 0; i < input.length; i++) {
                 JAXBElement<SorTreeType> jaxbSOR = (JAXBElement<SorTreeType>) jaxbUnmarshaller.unmarshal(input[i]);
                 SorTreeType sor = jaxbSOR.getValue();
-                snapshotDate = new DateTime(sor.getSnapshotDate().toGregorianCalendar().getTime());
+                setSnapshotDate(new DateTime(sor.getSnapshotDate().toGregorianCalendar().getTime()));
                 List<InstitutionOwnerEntityType> institutionOwnerEntity = sor.getInstitutionOwnerEntity();
                 list.addAll(institutionOwnerEntity);
             }
@@ -300,6 +316,10 @@ public class SorRelationParser implements Parser {
        }
        
        return dataSet;
+    }
+
+    void setSnapshotDate(DateTime snapshotDate) {
+        this.snapshotDate = snapshotDate;
     }
 
 }
