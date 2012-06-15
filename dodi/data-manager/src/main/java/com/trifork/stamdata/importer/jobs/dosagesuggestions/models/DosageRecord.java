@@ -36,7 +36,7 @@ public abstract class DosageRecord extends AbstractStamdataEntity
 {
 
 	private Date validFrom;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(DosageRecord.class);
 
 	public void setVersion(Date validFrom)
 	{

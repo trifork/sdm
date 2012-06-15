@@ -36,7 +36,7 @@ import org.apache.log4j.Logger;
 public abstract class TakstEntity extends AbstractStamdataEntity
 {
 	protected Takst takst;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(TakstEntity.class);
 
 	@Override
 	public Date getValidFrom()

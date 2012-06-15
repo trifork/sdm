@@ -82,12 +82,12 @@ public class SOREventHandler extends DefaultHandler
 		{
 			curIOE = new InstitutionOwnerEntity();
 		}
-		if ("HealthInstitutionEntity".equals(qName))
+		else if ("HealthInstitutionEntity".equals(qName))
 		{
 			curHIE = new HealthInstitutionEntity();
 			curIOE.setHealthInstitutionEntity(curHIE);
 		}
-		if ("OrganizationalUnitEntity".equals(qName))
+		else if ("OrganizationalUnitEntity".equals(qName))
 		{
 			if (curOUE == null)
 			{

@@ -55,7 +55,7 @@ public class Apotek extends AbstractStamdataEntity
 	private String www;
 	private Date validFrom;
 	private Date validTo;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(Apotek.class);
 
 	public Apotek()
 	{

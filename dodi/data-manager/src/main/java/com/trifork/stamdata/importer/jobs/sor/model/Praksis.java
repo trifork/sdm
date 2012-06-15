@@ -45,7 +45,7 @@ public class Praksis extends AbstractStamdataEntity
 	private Long sorNummer;
 	private Date validFrom;
 	private Date validTo;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(Praksis.class);
 
 	public Praksis()
 	{
