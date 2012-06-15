@@ -94,6 +94,7 @@ public class SorRelationParser implements Parser {
 
         SLALogItem slaLogItem = getSLALogger().createLogItem("SorRelationParser", "dataSet");
         try {
+            logger.debug("Starting SOR NPI relation parser");
             File files = checkRequiredFiles(dataSet);
             
             List<InstitutionOwnerEntityType> list = unmarshallFile(files);
@@ -105,6 +106,8 @@ public class SorRelationParser implements Parser {
             slaLogItem.setCallResultError("SorRelationParser Failed - Cause: " + e.getMessage());
             slaLogItem.store();
             throw e;
+        } finally {
+            logger.debug("Ending SOR NPI relation parser");
         }
         
     }
