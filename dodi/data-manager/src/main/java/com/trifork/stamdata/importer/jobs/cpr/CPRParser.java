@@ -387,9 +387,8 @@ public class CPRParser
 			}
 		}
 
-		if (logger.isDebugEnabled() && !fixedDate.equals(date))
-		{
-			logger.debug("Fixing CPR date from="+date+" to=" + fixedDate);
+		if (logger.isTraceEnabled() && !fixedDate.equals(date)) {
+			logger.trace("Fixing CPR date from="+date+" to=" + fixedDate);
 		}
 
 		return fixedDate;
