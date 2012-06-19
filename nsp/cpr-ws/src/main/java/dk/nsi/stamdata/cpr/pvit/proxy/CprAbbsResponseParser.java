@@ -51,6 +51,9 @@ public class CprAbbsResponseParser
     public List<String> extractCprNumbers(String soapResponse) throws CprAbbsException
     {
         int start = soapResponse.indexOf("<?xml");
+        if(start == -1) {
+            throw new CprAbbsException("Invalid message body on call to CPR Abbs");
+        }
         String soapResponseWithoutHeader = soapResponse.substring(start);
         return extractCprNumbersWithoutHeaders(soapResponseWithoutHeader);
     }
