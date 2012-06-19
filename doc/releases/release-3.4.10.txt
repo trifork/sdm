@@ -1,0 +1,14 @@
+Stamdata 3.4.10 Release Notes
+============================
+
+NSPSUPPORT-59:  Changed sequence on records, so they are now ordered by modiefieddate primarily
+NSPSUPPORT-63:  Fixed F¿dselsdato in Person so clients doesn't misinterprete the timezones anymore
+NSPSUPPORT-66:  Fixed bad SQL statements in monitoring URLs for KRS and CPR-EOS 
+NSPSUPPORT-68:  Added indexes to CPR tables for textfields used in searches
+NSPSUPPORT-69:  Added new database settings to https://svn.softwareborsen.dk/stamdata/trunk/Dokumentation/Driftsvejledning.doc specifying max_allowed_packet size
+NSPSUPPORT-70:  Fixed missing errorhandling when calling post to cprabbs service
+NSPSUPPORT-71:  Changed logging from debug to trace for logging Fixed dates...
+
+Others:
+Added database delta scheme from release 3.4.9 to release 3.4.10
+Added SOR-NPI parser (data is used from samtykke, and not exposed through KRS)
