@@ -1,0 +1,18 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>Unit Type</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Angiver hvilken type den organisatoriske enhed er. Kan kun angives for organisatoriske enheder der hører under en sundhedsinstitution af typen "hospital". Obligatorisk oplysning for Organisatoriske enheder under sundhedsinstitutioner af typern "hospital". Begrebs ID (SNOMED CT)</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Organisatorisk enhedstype</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>
+
+
+

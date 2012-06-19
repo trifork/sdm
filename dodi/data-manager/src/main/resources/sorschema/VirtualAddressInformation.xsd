@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           xmlns:xkom1="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" 
+           xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/01/10/" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified"
+           xml:lang="EN">
+
+  <xs:import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" schemaLocation="http://digitaliser.dk/resource/2237/artefact/XKOM_EmailAddressIdentifier.xsd"/>
+  <xs:include schemaLocation="FaxNumberIdentifier.xsd"/>
+  <xs:include schemaLocation="TelephoneNumberIdentifier.xsd"/>
+  <xs:include schemaLocation="Website.xsd"/>
+
+  <xs:element name="VirtualAddressInformation" type="VirtualAddressInformationType"/>
+	<xs:complexType name="VirtualAddressInformationType">
+		<xs:sequence>
+			<xs:element ref="xkom1:EmailAddressIdentifier" minOccurs="0"/>
+			<xs:element ref="Website" minOccurs="0"/>
+			<xs:element ref="TelephoneNumberIdentifier" />
+			<xs:element ref="FaxNumberIdentifier" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

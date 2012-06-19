@@ -1,0 +1,15 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>EanLocationCodeEntity</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Overbegreb - indeholder oplysninger om lokatiosnummeret.  Lokationsnummeret med tilhørende olysninger kan nedarves fra parent-enheden.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Lokationsnummeroplysninger</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>

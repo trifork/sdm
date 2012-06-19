@@ -1,0 +1,15 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>PharmacyIdentifier</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Angiver enhedens apoteksnummer.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Apoteksnummer</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>

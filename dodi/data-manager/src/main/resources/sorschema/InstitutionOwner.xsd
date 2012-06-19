@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified" 
+           attributeFormDefault="unqualified"
+           xml:lang="EN" >           
+
+	<xs:include schemaLocation="SorIdentifier.xsd"/>
+	<xs:include schemaLocation="EntityName.xsd"/>
+	<xs:include schemaLocation="OwnerType.xsd"/>
+	<xs:include schemaLocation="PostalAddressInformation.xsd"/>
+	<xs:include schemaLocation="VirtualAddressInformation.xsd"/>
+	<xs:include schemaLocation="SorStatus.xsd"/>
+	<xs:include schemaLocation="EanLocationCodeEntity.xsd"/>
+
+  <xs:element name="InstitutionOwner" type="InstitutionOwnerType"/>
+	<xs:complexType name="InstitutionOwnerType">
+		<xs:sequence>
+			<xs:element ref="SorIdentifier" minOccurs="1"/>
+			<xs:element ref="EntityName" minOccurs="1"/>
+			<xs:element ref="OwnerType" minOccurs="1"/>
+			<xs:element ref="EanLocationCodeEntity" minOccurs="0"/>
+			<xs:element ref="PostalAddressInformation" minOccurs="1"/>
+			<xs:element ref="VirtualAddressInformation" minOccurs="1"/>
+			<xs:element ref="SorStatus" minOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

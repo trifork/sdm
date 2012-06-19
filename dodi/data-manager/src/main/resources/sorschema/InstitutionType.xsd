@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<xs:schema targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           elementFormDefault="qualified"
+           xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified"
+           xml:lang="EN" >           
+           
+  <xs:element name="InstitutionType" type="InstitutionTypeType" />
+
+  <xs:simpleType name="InstitutionTypeType" >
+    <xs:restriction base="xs:long">
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

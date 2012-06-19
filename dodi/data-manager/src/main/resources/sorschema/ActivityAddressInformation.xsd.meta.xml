@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>ActivityAddressInformation</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Oplysninger om enhedens aktivitetsadresse. Aktivitetsadressen kan angives som værende den samme som enhedens besøgsadresse. Obligatorisk oplysning.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Aktivitetsadresse</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>
+

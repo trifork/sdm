@@ -24,21 +24,21 @@
  */
 package com.trifork.stamdata.importer.config;
 
+import java.io.File;
+import java.util.Set;
+
+import org.apache.commons.configuration.CompositeConfiguration;
+import org.apache.log4j.Logger;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Binder;
 import com.google.inject.TypeLiteral;
 import com.trifork.stamdata.importer.jobs.FileParser;
 import com.trifork.stamdata.importer.jobs.FileParserJob;
-import com.trifork.stamdata.importer.jobs.bemyndigelse.BemyndigelseParser;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.ParserContext;
 import com.trifork.stamdata.importer.parsers.ParserState;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.log4j.Logger;
-
-import java.io.File;
-import java.util.Set;
 
 public class ParserConfiguration
 {

@@ -30,6 +30,7 @@ import com.google.inject.TypeLiteral;
 import com.trifork.stamdata.Namespace;
 import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.views.View;

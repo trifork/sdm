@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>AmbulantActivityIndicator</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Angiver om enheden har ambulante kontakter. Værdisættes: ja/nej. Obligatorisk angivelse hvis den organisatoriske enhed hører under en sundhedsinstitution af typen "hospital".</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Ambulante kontakter</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>

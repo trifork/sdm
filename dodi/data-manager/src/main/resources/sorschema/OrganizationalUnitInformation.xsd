@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           elementFormDefault="qualified"
+           xml:lang="EN">
+
+  <xs:include schemaLocation="AmbulantActivityIndicator.xsd"/>
+  <xs:include schemaLocation="PatientsAdmittedIndicator.xsd"/>
+  <xs:include schemaLocation="ReportingLevelIndicator.xsd"/>
+
+
+  <xs:element name="OrganizationalUnitInformation" type="OrganizationalUnitInformationType"/>
+  <xs:complexType name="OrganizationalUnitInformationType">
+    <xs:sequence>
+      <xs:element ref="AmbulantActivityIndicator" />
+      <xs:element ref="PatientsAdmittedIndicator" />
+      <xs:element ref="ReportingLevelIndicator" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
