@@ -366,7 +366,7 @@ public class StamdataReplicationImplIntegrationTest
 
         assertResponseContainsRecordAtom("bemyndigelsesservice", "bemyndigelse");
         
-        printDocument(anyAsElement.getOwnerDocument(), System.out);
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
         
         assertResponseContainsExactNumberOfRecords("bemyndigelse:bemyndigelse", 2);
         assertResponseContainsValueOnXPath("//bemyndigelse:bemyndigelse/bemyndigelse:kode", "1234567890");
@@ -375,15 +375,20 @@ public class StamdataReplicationImplIntegrationTest
     // Helper methods
     
     // Pretty print XML document - good for debugging
-    private static void printDocument(Document doc, OutputStream out) throws IOException, TransformerException {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        Transformer transformer = tf.newTransformer();
-        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-        transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
+    private static void printDocument(Document doc, OutputStream out) {
+        try {
+            TransformerFactory tf = TransformerFactory.newInstance();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.transform(new DOMSource(doc), new StreamResult(new OutputStreamWriter(out, "UTF-8")));
+        } catch(Exception e) {
+            // ignore - this is a test method
+            e.printStackTrace();
+        }
     }
 
     private void createBemyndigelseReplicationRequest(String register, String datatype) {
@@ -471,6 +476,9 @@ public class StamdataReplicationImplIntegrationTest
     {
         XPathExpression expression = createXpathExpression("//sdm:person/sdm:cpr");
         String result = expression.evaluate(anyAsElement);
+        
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+
         assertThat(result, is(oracleCpr));
     }
 
