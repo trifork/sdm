@@ -777,7 +777,7 @@ CREATE TABLE Person (
 	ValidTo DATETIME NOT NULL,
 	
 	INDEX (PersonPID, ModifiedDate),
-	INDEX (CPR, ValidTo, ValidFrom)
+	INDEX (CPR, ValidTo, ValidFrom, Fornavn, Mellemnavn, Efternavn, Foedselsdato)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 
@@ -789,7 +789,8 @@ CREATE TABLE Person (
 
 CREATE TABLE ChangesToCPR (
 	CPR CHAR(10) PRIMARY KEY,
-	ModifiedDate TIMESTAMP NOT NULL
+	ModifiedDate TIMESTAMP NOT NULL,
+	INDEX (ModifiedDate)
 );
 
 
