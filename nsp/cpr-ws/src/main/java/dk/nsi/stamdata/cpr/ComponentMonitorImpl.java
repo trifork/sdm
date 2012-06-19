@@ -55,7 +55,7 @@ public class ComponentMonitorImpl implements ComponentMonitor
 			// be lost at any second.
 			
 			Session session = sessions.get();
-			session.createSQLQuery("SELECT 1 FROM Person").setCacheable(false).uniqueResult();
+			session.createSQLQuery("SELECT 1 FROM Person LIMIT 1").setCacheable(false).uniqueResult();
 			
 			return true;
 		}
