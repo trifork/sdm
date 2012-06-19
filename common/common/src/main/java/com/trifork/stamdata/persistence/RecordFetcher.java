@@ -130,7 +130,6 @@ public class RecordFetcher
 
                 if (fieldSpec.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
-                    // TODO: Explicit check of returned type
                     builder.field(fieldName, resultSet.getInt(fieldName));
                 }
                 else if (fieldSpec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)

@@ -59,7 +59,7 @@ public class SygehusAfdeling extends AbstractStamdataEntity
 	private Long underlagtSygehusSorNummer;
 	private Date validFrom;
 	private Date validTo;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(SygehusAfdeling.class);
 
 	@Column
 	public String getNavn()
