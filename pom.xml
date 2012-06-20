@@ -7,7 +7,7 @@
   <groupId>dk.nsi.stamdata</groupId>
   <artifactId>stamdata-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.4.10-SNAPSHOT</version>
+  <version>3.4.10</version>
 
   <scm>
     <connection>scm:git:git@github.com:trifork/sdm.git</connection>
