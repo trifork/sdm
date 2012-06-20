@@ -73,8 +73,9 @@ public class SorRelationParser implements Parser {
 
     private final RecordSpecification recordSpecification;
     private final RecordSpecification shakYderSpecification;
+    @SuppressWarnings("unused")
     private final KeyValueStore keyValueStore;
-    private static Logger logger = Logger.getLogger(SorRelationParser.class);
+    private static final Logger logger = Logger.getLogger(SorRelationParser.class);
     private Map<String, String> selfRelationsMap;
     private Map<String, HashSet<String>> shakYderMap;
     private HashSet<String> parentChildIds;
@@ -145,7 +146,9 @@ public class SorRelationParser implements Parser {
         InstitutionOwnerType owner = institution.getInstitutionOwner();
         String ownerId = ""+owner.getSorIdentifier();
         if(!hasValidPeriod(owner.getSorStatus())) {
-            logger.debug("Institution with SOR id:" +ownerId+"  is is no longer valid, toDate: "+owner.getSorStatus().getToDate());
+            if(logger.isDebugEnabled()) {
+                logger.debug("Institution with SOR id:" +ownerId+"  is is no longer valid, toDate: "+owner.getSorStatus().getToDate());
+            }
             return;
         }
         
@@ -170,7 +173,9 @@ public class SorRelationParser implements Parser {
         
         String hiChildId = ""+healthInstitution.getSorIdentifier();
         if(!hasValidPeriod(healthInstitution.getSorStatus())) {
-            logger.debug("Institution with SOR id:" +hiChildId+" is no longer valid, toDate: "+healthInstitution.getSorStatus().getToDate());
+            if(logger.isDebugEnabled()) {
+                logger.debug("Institution with SOR id:" +hiChildId+" is no longer valid, toDate: "+healthInstitution.getSorStatus().getToDate());
+            }
             return;
         }
         
@@ -192,14 +197,17 @@ public class SorRelationParser implements Parser {
         String childId = ""+ou.getSorIdentifier();
 
         // persist relation with owner and with self
-        if(parentChildIds.contains(parentId + "_" + childId)) {
+        String parentChildId = parentId + "_" + childId;
+        if(parentChildIds.contains(parentChildId)) {
             // ou is persisted already - this check is needed due to tree parsing algorithm where a parent must map directly to all childs 
             return;
         }
-        parentChildIds.add(parentId + "_" + childId);
+        parentChildIds.add(parentChildId);
         
         if(!hasValidPeriod(ou.getSorStatus())) {
-            logger.debug("Institution with SOR id:" +ou+" is no longer valid, toDate: "+ou.getSorStatus().getToDate());
+            if(logger.isDebugEnabled()) {
+                logger.debug("Institution with SOR id:" +ou+" is no longer valid, toDate: "+ou.getSorStatus().getToDate());
+            }
             return;
         }
         
