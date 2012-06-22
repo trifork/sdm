@@ -24,6 +24,20 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import static com.trifork.stamdata.Preconditions.checkArgument;
+import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
+import static java.lang.String.format;
+
+import java.io.File;
+import java.util.Iterator;
+
+import javax.inject.Inject;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.LineIterator;
+import org.apache.log4j.MDC;
+
+import com.trifork.stamdata.importer.config.Configuration;
 import com.trifork.stamdata.importer.parsers.Parser;
 import com.trifork.stamdata.importer.parsers.annotations.ParserInformation;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
@@ -31,24 +45,15 @@ import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+
 import dk.sdsd.nsp.slalog.api.SLALogItem;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.LineIterator;
-import org.apache.log4j.MDC;
-
-import javax.inject.Inject;
-import java.io.File;
-import java.util.Iterator;
-
-import static com.trifork.stamdata.Preconditions.checkArgument;
-import static com.trifork.stamdata.importer.tools.SLALoggerHolder.getSLALogger;
-import static java.lang.String.format;
 
 @ParserInformation(id = "sikrede", name = "\"Sikrede\"")
 public class SikredeParser implements Parser {
-    public static final String ACCEPTED_RECIPIENT_ID = "F053";
-    public static final String ACCEPTED_INTERFACE_ID = "S1061023";
-
+	// default settings, is overwritten by configuration
+    private String acceptedRecipientId = "F053";
+    private String acceptedInterfaceId = "S1061023";
+    
     public static final String FILE_ENCODING = "ISO-8859-1";
 
     private static final String RECORD_TYPE_START = "00";
@@ -72,6 +77,9 @@ public class SikredeParser implements Parser {
         this.recordParser = recordParser;
         this.recordSpecification = recordSpecification;
         this.brsUpdater = brsUpdater;
+
+        this.acceptedRecipientId = Configuration.getString("spooler.sikrede.recipientid");
+        this.acceptedInterfaceId = Configuration.getString("spooler.sikrede.interfaceid");
     }
 
     @Override
@@ -133,12 +141,12 @@ public class SikredeParser implements Parser {
 
                 // FIXME: Verificer Modt og SnitfladeId jf. dokumentation.
                 //
-                if (!ACCEPTED_RECIPIENT_ID.equals(startRecord.get("Modt"))) {
-                    throw new ParserException(format("The receiver id '%s' did not match the expected '%s'.", startRecord.get("Modt"), ACCEPTED_RECIPIENT_ID));
+                if (!acceptedRecipientId.equals(startRecord.get("Modt"))) {
+                    throw new ParserException(format("The receiver id '%s' did not match the expected '%s'.", startRecord.get("Modt"), acceptedRecipientId));
                 }
 
-                if (!ACCEPTED_INTERFACE_ID.equals(startRecord.get("SnitfladeId"))) {
-                    throw new ParserException(format("The interface id did not match the expected '%s'.", startRecord.get("SnitfladeId"), ACCEPTED_INTERFACE_ID));
+                if (!acceptedInterfaceId.equals(startRecord.get("SnitfladeId"))) {
+                    throw new ParserException(format("The interface id did not match the expected '%s'.", startRecord.get("SnitfladeId"), acceptedInterfaceId));
                 }
             } else if (line.startsWith(RECORD_TYPE_END)) {
                 if (startRecord == null) throw new ParserException("Start record was not found before end record.");

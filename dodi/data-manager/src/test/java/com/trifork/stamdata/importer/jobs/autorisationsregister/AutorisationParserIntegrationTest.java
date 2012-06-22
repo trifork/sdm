@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.Statement;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -56,6 +57,9 @@ public class AutorisationParserIntegrationTest
 	public void setUp() throws Exception
 	{
 		connection = new ConnectionManager().getConnection();
+		
+		Statement statement = connection.createStatement();
+		statement.execute("truncate table Autorisation");
 	}
 
 	@After
