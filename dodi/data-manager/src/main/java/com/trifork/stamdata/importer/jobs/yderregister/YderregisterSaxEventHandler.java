@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import com.trifork.stamdata.importer.jobs.sor.SORImporter;
 import com.trifork.stamdata.importer.parsers.exceptions.ParserException;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
@@ -35,7 +36,7 @@ import com.trifork.stamdata.persistence.RecordPersister;
 
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import org.apache.commons.lang.StringUtils;
-import org.mortbay.log.Log;
+import org.apache.log4j.Logger;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -50,6 +51,7 @@ import static java.lang.String.format;
  */
 public class YderregisterSaxEventHandler extends DefaultHandler
 {
+    private static final Logger logger = Logger.getLogger(YderregisterSaxEventHandler.class);
     private static final String SUPPORTED_INTERFACE_VERSION = "S1040025";
     private static final String EXPECTED_RECIPIENT_ID = "F053";
 
@@ -106,8 +108,8 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private void parseEndRecord(Attributes att, long yderRecordCount, long personRecordCount)
     {
         long expectedRecordCount = Long.parseLong(att.getValue("AntPost"));
-        if(Log.isDebugEnabled()) {
-            Log.debug(format("Found %s Yder records and %s Person records", yderRecordCount, personRecordCount));
+        if(logger.isDebugEnabled()) {
+            logger.debug(format("Found %s Yder records and %s Person records", yderRecordCount, personRecordCount));
         }
 
         long recordCount = yderRecordCount + personRecordCount;
