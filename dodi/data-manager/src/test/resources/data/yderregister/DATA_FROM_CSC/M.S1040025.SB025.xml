@@ -136,5 +136,5 @@
         <Person HistIdPerson="446A0F4C31E30AC0" YdernrPerson="318035" TilgDatoPerson="19930101" AfgDatoPerson="        " CprNr="1606630014" PersonrolleKode="71" PersonrolleTxt="Apoteker                                                    "></Person>
     </Yder>
     <Yder HistIdYder="8783D63E265441C5" AmtKodeYder="84" AmtTxtYder="Region Hovedstaden                                          " YdernrYder="009164" PrakBetegn="NST / Peter Søttrup                               " AdrYder="Frederiksberg Allé 5,4                            " PostnrYder="1621" PostdistYder="København V         " TilgDatoYder="19851201" AfgDatoYder="        " HvdSpecKode="80" HvdSpecTxt="Almen lægegerning                                           " HvdTlf="11557799" EmailYder="                                                  " WWW="                                                                              "></Yder>
-    <Slut AntPost="00000058"></Slut>
+    <Slut AntPost="00000112"></Slut>
 </etds1040025XML>

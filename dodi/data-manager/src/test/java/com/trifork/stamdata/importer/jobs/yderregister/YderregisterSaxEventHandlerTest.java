@@ -98,7 +98,7 @@ public class YderregisterSaxEventHandlerTest
 
         writeRecordElement(yderRecord, person1, person2);
 
-        writeEndElement("1");
+        writeEndElement("3");
 
         eventHandler.endElement(null, null, ROOT_TAG);
 

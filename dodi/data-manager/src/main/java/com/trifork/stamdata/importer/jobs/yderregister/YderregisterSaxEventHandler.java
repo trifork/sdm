@@ -35,6 +35,7 @@ import com.trifork.stamdata.persistence.RecordPersister;
 
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import org.apache.commons.lang.StringUtils;
+import org.mortbay.log.Log;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -61,7 +62,8 @@ public class YderregisterSaxEventHandler extends DefaultHandler
     private static final String PERSON_QNAME = "Person";
 
     private final RecordPersister persister;
-    private long recordCount = 0;
+    private long yderRecordCount = 0;
+    private long personRecordCount = 0;
     
     private String versionNumber = null;
 
@@ -79,16 +81,17 @@ public class YderregisterSaxEventHandler extends DefaultHandler
         }
         else if (YDER_QNAME.equals(qName))
         {
-            recordCount += 1;
+            yderRecordCount += 1;
             parseYder(attributes);
         }
         else if (PERSON_QNAME.equals(qName))
         {
+            personRecordCount += 1;
             parsePerson(attributes);
         }
         else if (END_QNAME.equals(qName))
         {
-            parseEndRecord(attributes, recordCount);
+            parseEndRecord(attributes, yderRecordCount, personRecordCount);
         }
         else if (ROOT_QNAME.equals(qName))
         {
@@ -100,12 +103,15 @@ public class YderregisterSaxEventHandler extends DefaultHandler
         }
     }
 
-    private void parseEndRecord(Attributes att, long recordCount)
+    private void parseEndRecord(Attributes att, long yderRecordCount, long personRecordCount)
     {
         long expectedRecordCount = Long.parseLong(att.getValue("AntPost"));
+        if(Log.isDebugEnabled()) {
+            Log.debug(format("Found %s Yder records and %s Person records", yderRecordCount, personRecordCount));
+        }
 
-        if (recordCount != expectedRecordCount)
-        {
+        long recordCount = yderRecordCount + personRecordCount;
+        if (recordCount != expectedRecordCount) {
             throw new ParserException(format("The expected number of records '%d' did not match the actual '%d'.", expectedRecordCount, recordCount));
         }
     }
