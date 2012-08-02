@@ -115,9 +115,14 @@ public class PersistenceModule extends AbstractModule
 
         config.setProperty("hibernate.c3p0.min_size", "5");
         config.setProperty("hibernate.c3p0.max_size", "100");
-        config.setProperty("hibernate.c3p0.timeout", "200");
-        
-        // See debug information
+        config.setProperty("hibernate.c3p0.checkoutTimeout", "5000"); // after 5 s, if we can't get a connection, report error to the caller
+	    config.setProperty("hibernate.c3p0.acquireRetryAttempts", "0"); // retry infinitely to reconnect
+	    config.setProperty("hibernate.c3p0.acquireRetryDelay", "5000"); // wait 5 seconds between retry attempts
+	    config.setProperty("hibernate.c3p0.breakAfterAcquireFailure", "false"); // do not give up when the database goes down
+	    config.setProperty("hibernate.c3p0.maxIdleTime", "60"); // disconnect idle connections after one minute
+	    config.setProperty("hibernate.c3p0.idleConnectionTestPeriod", "30"); //  test all idle, pooled but unchecked-out connections every half minute
+	    config.setProperty("hibernate.c3p0.preferredTestQuery", "select 1"); //  test all idle, pooled but unchecked-out connections every half minute
+	    // See debug information
 //        config.setProperty("hibernate.c3p0.unreturnedConnectionTimeout", "2");
 //        config.setProperty("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
 
@@ -145,15 +150,6 @@ public class PersistenceModule extends AbstractModule
         return factory.openStatelessSession();
     }
     
-    
-/*    @Provides
-    @Deprecated
-    protected Connection provideConnection(Session session)
-    {
-        return session.connection();
-    }
-    */
-
     @Provides
     protected Connection provideConnection(@Named(JDBC_URL_PROP) String jdbcURL, @Named(DB_USERNAME_PROP) String username, @Nullable @Named(DB_PASSWORD_PROP) String password)
     {

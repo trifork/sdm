@@ -24,35 +24,26 @@
  */
 package dk.nsi.stamdata.security;
 
-import java.sql.Connection;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 @Singleton
 public class WhitelistServiceProvider implements Provider<WhitelistService>
 {
-    private Connection connection;
+    private SessionFactory sessionFactory;
 
     @Inject
-    WhitelistServiceProvider(Connection connection)
+    WhitelistServiceProvider(SessionFactory sessionFactory)
 	{
-		this.connection = connection;
+		this.sessionFactory = sessionFactory;
 	}
 	
 	@Override
 	public WhitelistService get()
 	{
-		return new WhitelistServiceImpl(connection);
+		return new WhitelistServiceImpl(sessionFactory);
 	}
-
-
-
-	/*
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})
-	@BindingAnnotation
-	public static @interface Whitelist { }
-	*/
 }
