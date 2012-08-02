@@ -1,0 +1,15 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>SorIdentifier</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>SOR kode der relaterer til enheden. Genereres automatisk. Kan have op til 18 karakterer.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>SOR-ID /SOR- kode</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>

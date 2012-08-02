@@ -34,5 +34,9 @@ public class CprAbbsException extends Exception {
 		super(cause);
 	}
 
+    public CprAbbsException(String message) {
+        super(message);
+    }
+
     private static final long serialVersionUID = 0L;
 }

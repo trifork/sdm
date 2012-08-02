@@ -38,7 +38,7 @@ public abstract class CPREntity extends AbstractStamdataEntity
 {
 	CPRDataset dataset;
 	String cpr;
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(CPREntity.class);
 
 	public String getCpr()
 	{

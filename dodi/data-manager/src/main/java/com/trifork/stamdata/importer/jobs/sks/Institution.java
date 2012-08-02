@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
 @Entity(name = "Organisation")
 public class Institution extends AbstractStamdataEntity
 {
-    public final Logger logger = Logger.getLogger(AbstractStamdataEntity.class);
+    private static final Logger logger = Logger.getLogger(Institution.class);
     
 	private Date validFrom;
 	private Date validTo;

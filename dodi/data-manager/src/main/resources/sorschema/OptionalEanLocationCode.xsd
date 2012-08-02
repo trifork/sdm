@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0"
+           elementFormDefault="qualified">
+
+  <xs:include schemaLocation="EanLocationCodeEntity.xsd" />
+
+  <xs:element name="OptionalEanLocationCode" type="OptionalEanLocationCodeType"/>
+
+  <xs:complexType name="OptionalEanLocationCodeType" >
+    <xs:choice>
+      <xs:element name="EntityInheritedIndicator" type="xs:boolean" minOccurs="0"/>
+      <xs:element ref="EanLocationCodeEntity" />
+    </xs:choice>
+  </xs:complexType>
+
+</xs:schema>

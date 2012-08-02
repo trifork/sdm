@@ -1,0 +1,15 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>FaxNumberIdentifier</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Angiver enhedens faxnummer.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>Ydernummer</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Faxnummer</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>

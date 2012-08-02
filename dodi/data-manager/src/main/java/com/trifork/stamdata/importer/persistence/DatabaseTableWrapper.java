@@ -353,9 +353,10 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         updateValidToStmt.setObject(3, getCurrentRS().getObject(Entities.getIdColumnName(type)));
         updateValidToStmt.setObject(4, getCurrentRS().getTimestamp("ValidFrom"));
 
-        int rowsAffected = updateValidToStmt.executeUpdate();
-
-        Preconditions.checkState(rowsAffected == 1, "Updated completeXml number of rows. expected=1, actual=" + rowsAffected);
+        // This can potentially hit several rows when validFrom equals validTo
+        // when a record is "closed".
+        
+        updateValidToStmt.executeUpdate();
     }
 
     public void updateValidFromOnCurrentRow(Date validFrom, Date transactionTime) throws SQLException
@@ -365,9 +366,10 @@ public class DatabaseTableWrapper<T extends TemporalEntity>
         updateValidFromStmt.setObject(3, getCurrentRS().getObject(Entities.getIdColumnName(type)));
         updateValidFromStmt.setObject(4, getCurrentRS().getTimestamp("ValidFrom"));
 
-        int rowsAffected = updateValidFromStmt.executeUpdate();
+        // This can potentially hit several rows when validFrom equals validTo
+        // when a record is "closed".
         
-        Preconditions.checkState(rowsAffected == 1, "completeXml number of affected rows. expected=1, actual=" + rowsAffected);
+        updateValidFromStmt.executeUpdate();
     }
 
     public boolean currentRowEquals(TemporalEntity entity) throws Exception

@@ -40,6 +40,12 @@ import javax.persistence.Temporal;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import dk.nsi.stamdata.views.View;
 import dk.nsi.stamdata.views.ViewPath;
@@ -49,6 +55,7 @@ import dk.nsi.stamdata.views.ViewPath;
 @ViewPath("cpr/person/v1")
 public class Person extends View
 {
+    
 	@XmlTransient
 	public Date createdDate;
 
@@ -137,6 +144,7 @@ public class Person extends View
 
 	public String gaeldendeCPR;
 
+    @XmlJavaTypeAdapter(DateAdapter.class)
 	@Temporal(DATE)
 	public Date foedselsdato;
 
@@ -180,5 +188,21 @@ public class Person extends View
 	public Date getUpdated()
 	{
 		return modifiedDate;
+	}
+
+
+	static class DateAdapter extends XmlAdapter<String, Date> {
+
+	    private final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd").withZone(DateTimeZone.UTC);
+
+	    @Override
+	    public String marshal(Date d) throws Exception {
+	        return DATETIME_FORMATTER.print(d.getTime());
+	    }
+	    
+	    @Override
+	    public Date unmarshal(String v) throws Exception {
+	        return DATETIME_FORMATTER.parseDateTime(v).toDate();
+	    }
 	}
 }

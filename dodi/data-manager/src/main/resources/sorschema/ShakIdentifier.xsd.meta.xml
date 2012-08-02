@@ -1,0 +1,16 @@
+<Metadata xmlns="http://rep.oio.dk/infostructurebase/schemas/2004/09/13/">
+  <Title>ShakIdentifier</Title>
+  <DescriptionStructure>
+    <DescriptionEnglish />
+    <DescriptionDanish>Angiver hvilken SghAfd-kode enheden har tilknyttet. Den samme SgfAfd-kode kan angives på mere end én enhed. Der kan kun registreres officielle SghAfd-koder.</DescriptionDanish>
+  </DescriptionStructure>
+  <Author>Sundhedsstyrelsen, SOR</Author>
+  <LabelStructure>
+    <LabelDanish>SghAfd-kode</LabelDanish>
+  </LabelStructure>
+  <ObjectTerm>Adresse</ObjectTerm>
+  <PropertyTerm></PropertyTerm>
+  <RepresentationTerm></RepresentationTerm>
+  <Version>1.0.0</Version>
+</Metadata>
+

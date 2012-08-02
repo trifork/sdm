@@ -25,6 +25,7 @@
 package dk.nsi.stamdata.cpr.pvit.proxy;
 
 import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -61,6 +62,13 @@ public class CprAbbsClientIntegrationTest {
         server.stopServer();
     }
 
+
+    @Test(expected=CprAbbsException.class)
+    public void canNotCallService() throws Exception {
+
+        CprSubscriptionClient clientWithWrongURL = new CprSubscriptionClient("localhost", Integer.toString(server.getPort()), "/cprabbs/service/WRONGcprabbs");
+        clientWithWrongURL.getChangedCprs(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), null);
+    }
 
     @Test
     public void canCallService() throws MalformedURLException, CprAbbsException {

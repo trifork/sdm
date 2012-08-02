@@ -78,6 +78,9 @@ public class CprSubscriptionClient
         String result;
         try {
             result = postXml.postXml(host, port, path, soapCallMessage);
+            if(!result.contains("200 OK")) {
+                throw new CprAbbsException(result);
+            }
         } catch (IOException e) {
             throw new CprAbbsException(e);
         }

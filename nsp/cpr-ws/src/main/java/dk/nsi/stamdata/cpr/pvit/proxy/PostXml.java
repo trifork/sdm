@@ -38,6 +38,7 @@ public class PostXml {
         
         Socket sock = null;
         try {
+            
             InetAddress addr = InetAddress.getByName(hostname);
             sock = new Socket(addr, port);
 

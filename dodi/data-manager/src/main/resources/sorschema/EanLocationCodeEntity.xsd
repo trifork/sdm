@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:oio:sundhedsstyrelsen:organisation:1.0.0" 
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           xml:lang="EN" >
+  
+	<xs:include schemaLocation="SorStatus.xsd"/>
+	<xs:include schemaLocation="SorNote.xsd"/>
+  <xs:include schemaLocation="SystemSupplier.xsd"/>
+  <xs:include schemaLocation="SystemType.xsd"/>
+  <xs:include schemaLocation="CommunicationSupplier.xsd"/>
+  <xs:include schemaLocation="RegionCode.xsd"/>
+  <xs:include schemaLocation="EdiAdministrator.xsd"/>
+
+  <xs:include schemaLocation="EanLocationCode.xsd"/>
+  <xs:include schemaLocation="OnlyInternalIndicator.xsd"/>
+  <xs:include schemaLocation="NonActiveIndicator.xsd"/>
+
+  <xs:element name="EanLocationCodeEntity" type="EanLocationCodeEntityType"/>
+	<xs:complexType name="EanLocationCodeEntityType">
+		<xs:sequence>
+			<xs:element ref="EanLocationCode" />
+			<xs:element ref="OnlyInternalIndicator" />
+			<xs:element ref="NonActiveIndicator" />
+			<xs:element ref="SystemSupplier"  />
+			<xs:element ref="SystemType" />
+			<xs:element ref="CommunicationSupplier" />
+			<xs:element ref="RegionCode" />
+			<xs:element ref="EdiAdministrator" />
+			<xs:element ref="SorNote" minOccurs="0"/>
+			<xs:element ref="SorStatus" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
