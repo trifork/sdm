@@ -1273,7 +1273,8 @@ CREATE TABLE AssignedDoctor ( -- Sikrede
 
   reference varchar(40) NOT NULL,
 
-  PRIMARY KEY (pk)
+  PRIMARY KEY (pk),
+  KEY `patientCpr` (`patientCpr`)
 ) ENGINE=InnoDB COLLATE=utf8_bin;
 
 -- Bemyndigelser
