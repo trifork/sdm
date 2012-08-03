@@ -117,8 +117,8 @@ public class BrsUpdaterTest {
         brsUpdater.closeRelationship(primaryKeyOfOpenRelationship, ASSIGNED_TO);
         assertClosedRelationship(primaryKeyOfOpenRelationship);
     }
-    
-    @Test
+
+	@Test
     public void testUpdateExistingRelationshipWhenDoctorDoesNotExist() throws SQLException
     {
         brsUpdater.updateExistingRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
@@ -180,25 +180,6 @@ public class BrsUpdaterTest {
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AssignedDoctor WHERE patientCpr = ? AND doctorOrganisationIdentifier = ? AND assignedTo IS NOT NULL");
         preparedStatement.setString(1, patientCpr);
         preparedStatement.setString(2, doctorOrganisationIdentifier);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        assertTrue(resultSet.next());
-    }
-
-    private void assertOpenRelationship(String patientCpr, String doctorOrganisationIdentifier) throws SQLException
-    {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AssignedDoctor WHERE patientCpr = ? AND doctorOrganisationIdentifier = ? AND assignedTo IS NULL");
-        preparedStatement.setString(1, patientCpr);
-        preparedStatement.setString(2, doctorOrganisationIdentifier);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        assertTrue(resultSet.next());
-    }
-
-    private void assertAssignedFromExists(String patientCpr, String doctorOrganisationIdentifier, DateTime assignedFrom) throws SQLException
-    {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM AssignedDoctor WHERE patientCpr = ? AND doctorOrganisationIdentifier = ? AND assignedFrom = ?");
-        preparedStatement.setString(1, patientCpr);
-        preparedStatement.setString(2, doctorOrganisationIdentifier);
-        preparedStatement.setDate(3, new Date(assignedFrom.getMillis()));
         ResultSet resultSet = preparedStatement.executeQuery();
         assertTrue(resultSet.next());
     }

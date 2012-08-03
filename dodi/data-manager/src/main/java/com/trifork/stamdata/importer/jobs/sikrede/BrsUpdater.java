@@ -24,30 +24,29 @@
  */
 package com.trifork.stamdata.importer.jobs.sikrede;
 
+import com.google.inject.Inject;
+import com.trifork.stamdata.Preconditions;
+import com.trifork.stamdata.persistence.Record;
+import org.joda.time.DateTime;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import org.joda.time.DateTime;
-
-import com.google.inject.Inject;
-import com.trifork.stamdata.Preconditions;
-import com.trifork.stamdata.persistence.Record;
 
 public class BrsUpdater {
-
     static final long NO_EXISTING_RELATIONSHIP = -1;
-    private Connection connection;
+	private JdbcTemplate jdbcTemplate;
 
-    @Inject
+	@Inject
     public BrsUpdater(Connection connection) 
     {
-        this.connection = connection;
+	    final boolean DO_SUPPRESS_CLOSE = true;
+	    jdbcTemplate = new JdbcTemplate(new SingleConnectionDataSource(connection, DO_SUPPRESS_CLOSE)); // use a data source which always give out the same connection, and ignores close() calls on the connection (ie. acts as a singleton pool)
     }
     
     public void updateRecord(Record record) throws SQLException
@@ -73,44 +72,34 @@ public class BrsUpdater {
     
     long openRelationshipExists(String patientCpr, String doctorOrganisationIdentifier) throws SQLException
     {
-        PreparedStatement preparedStatement = connection.prepareStatement("SELECT pk FROM AssignedDoctor WHERE patientCpr = ? AND doctorOrganisationIdentifier = ? AND assignedTo IS NULL");
-        preparedStatement.setString(1, patientCpr);
-        preparedStatement.setString(2, doctorOrganisationIdentifier);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        if(resultSet.next())
-        {
-            return resultSet.getLong(1);
-        }
-        else
-        {
-            return NO_EXISTING_RELATIONSHIP;
-        }
+	    String querySql = "SELECT pk FROM AssignedDoctor WHERE patientCpr = ? AND doctorOrganisationIdentifier = ? AND assignedTo IS NULL";
+	    Long result;
+	    try {
+		    result = jdbcTemplate.queryForLong(querySql, patientCpr, doctorOrganisationIdentifier);
+	    } catch (EmptyResultDataAccessException norelation) {
+		    result = NO_EXISTING_RELATIONSHIP;
+	    }
+
+	    return result;
     }
     
     void closeRelationship(long primaryKey, DateTime assignedTo) throws SQLException
     {
-        PreparedStatement preparedStatement = connection.prepareStatement("UPDATE AssignedDoctor SET assignedTo = ? WHERE pk = ?");
-        preparedStatement.setDate(1, new Date(assignedTo.getMillis()));
-        preparedStatement.setLong(2, primaryKey);
-        preparedStatement.executeUpdate();
+	    String updateSql = "UPDATE AssignedDoctor SET assignedTo = ? WHERE pk = ?";
+        jdbcTemplate.update(updateSql, new Date(assignedTo.getMillis()), primaryKey);
     }
     
     void insertRelationship(String patientCpr, String doctorOrganisationIdentifier, DateTime assignedFrom, DateTime assignedTo) throws SQLException
     {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO AssignedDoctor (patientCpr, doctorOrganisationIdentifier, assignedFrom, assignedTo, reference) VALUES (?, ?, ?, ?, ?)");
-        preparedStatement.setString(1, patientCpr);
-        preparedStatement.setString(2, doctorOrganisationIdentifier);
-        preparedStatement.setDate(3, new Date(assignedFrom.getMillis()));
-        if(assignedTo != null)
-        {
-            preparedStatement.setDate(4, new Date(assignedTo.getMillis()));
-        }
-        else
-        {
-            preparedStatement.setNull(4, java.sql.Types.NULL);
-        }
-        preparedStatement.setString(5, new DateTime().toString());
-        preparedStatement.executeUpdate();
+	    String insertSql = "INSERT INTO AssignedDoctor (patientCpr, doctorOrganisationIdentifier, assignedFrom, assignedTo, reference) VALUES (?, ?, ?, ?, ?)";
+
+	    Date assignedToDate = null;
+	    if(assignedTo != null)
+	    {
+		    assignedToDate = new Date(assignedTo.getMillis());
+	    }
+
+	    jdbcTemplate.update(insertSql, patientCpr, doctorOrganisationIdentifier, new Date(assignedFrom.getMillis()), assignedToDate, new DateTime().toString());
     }
     
     static String hashCpr(String cpr)
@@ -150,4 +139,5 @@ public class BrsUpdater {
         }
         return hex.toString();
     }
+
 }
