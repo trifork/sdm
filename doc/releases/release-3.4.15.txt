@@ -1,0 +1,4 @@
+Stamdata 3.4.15 Release Notes
+=============================
+
+NSPSUPPORT-95: Fixed issue with Sikrede data not being persisted correctly in AssignedDoctor (BRS table)

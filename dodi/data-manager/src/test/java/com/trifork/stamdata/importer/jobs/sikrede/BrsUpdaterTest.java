@@ -119,27 +119,27 @@ public class BrsUpdaterTest {
     }
 
 	@Test
-    public void testUpdateExistingRelationshipWhenDoctorDoesNotExist() throws SQLException
+    public void testInsertOrUpdateHistoricalRelationshipWhenDoctorDoesNotExist() throws SQLException
     {
-        brsUpdater.updateExistingRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
+        brsUpdater.insertOrUpdateHistoricalRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
         assertClosedRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier);
     }
 
     @Test
-    public void testUpdateExistingRelationshipWhenDoctorExistWithOpenRelationship() throws SQLException
+    public void testInsertOrUpdateHistoricalRelationshipWhenDoctorExistWithOpenRelationship() throws SQLException
     {
         brsUpdater.insertRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, null);
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM);
-        brsUpdater.updateExistingRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM.minusDays(1), ASSIGNED_TO);
+        brsUpdater.insertOrUpdateHistoricalRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM.minusDays(1), ASSIGNED_TO);
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
     }
     
     @Test
-    public void testUpdateExistingRelationshipWhenDoctorExistWithClosedRelationship() throws SQLException
+    public void testInsertOrUpdateHistoricalRelationshipWhenDoctorExistWithClosedRelationship() throws SQLException
     {
         brsUpdater.insertRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
-        brsUpdater.updateExistingRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_TO.plusYears(2), ASSIGNED_TO.plusYears(3));
+        brsUpdater.insertOrUpdateHistoricalRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_TO.plusYears(2), ASSIGNED_TO.plusYears(3));
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_TO.plusYears(2), ASSIGNED_TO.plusYears(3));
     }

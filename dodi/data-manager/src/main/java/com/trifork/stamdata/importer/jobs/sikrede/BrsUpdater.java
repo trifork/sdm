@@ -29,19 +29,22 @@ import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.Record;
 import org.joda.time.DateTime;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BrsUpdater {
     static final long NO_EXISTING_RELATIONSHIP = -1;
 	private JdbcTemplate jdbcTemplate;
-
+	
 	@Inject
     public BrsUpdater(Connection connection) 
     {
@@ -52,20 +55,67 @@ public class BrsUpdater {
     public void updateRecord(Record record) throws SQLException
     {
         String hashedCpr = hashCpr((String) record.get("CPRnr"));
+        String oldYder = (String) record.get("SYdernrGl");
+        String newYder = (String) record.get("SYdernr");
+        DateTime oldYderStartDate = parseSikredeRecordDate((String) record.get("SIkraftDatoYderGl"));
+        DateTime newYderStartDate = parseSikredeRecordDate((String) record.get("SIkraftDatoYder"));
+
+        // first ensure that the historic information in the input record is closed (assignedTo is set to non-null value)
+        insertOrUpdateHistoricalRelationship(hashedCpr, oldYder, oldYderStartDate, newYderStartDate);
         
-        updateExistingRelationship(hashedCpr, (String) record.get("SYdernrGl"), parseSikredeRecordDate((String) record.get("SIkraftDatoYderGl")), parseSikredeRecordDate((String) record.get("SIkraftDatoYder")));
-        insertRelationship(hashedCpr, (String) record.get("SYdernr"), parseSikredeRecordDate((String) record.get("SIkraftDatoYder")), null);
+        // then, check if we have an existing, open, record with the given cpr number
+        ExistingRecord existingRecord = selectExistingRecord(hashedCpr);
+        if (existingRecord != null) {
+
+        	if (existingRecord.assignedFrom.isAfter(newYderStartDate)) {
+            	// if the existing records starting time is AFTER the new record, then we
+            	// have to treat the new record as a historic record
+        		insertRelationship(hashedCpr, newYder, newYderStartDate, existingRecord.assignedFrom);
+        	}
+        	else {
+        		// if the existing records starting time is BEFORE the new record, then we
+        		// close the existing record, and insert the new record as the current open record
+        		insertRelationship(hashedCpr, newYder, newYderStartDate, null);
+        		closeRelationship(existingRecord.pk, newYderStartDate);
+        	}
+        }
+        else {
+        	// no existing records for cpr, so simply insert the new record as open
+    		insertRelationship(hashedCpr, newYder, newYderStartDate, null);
+        }
     }
     
-    void updateExistingRelationship(String patientCpr, String doctorOrganisationIdentifier, DateTime assignedFrom, DateTime assignedTo) throws SQLException
-    {
+    ExistingRecord selectExistingRecord(String hashedCpr) {
+	    String querySql = "SELECT pk, assignedFrom FROM AssignedDoctor WHERE patientCpr = ? AND assignedTo IS NULL";
+
+	    ExistingRecord existingRecord = null;
+	    try {
+		    existingRecord = jdbcTemplate.queryForObject(querySql, new Object[] { hashedCpr }, new RowMapper<ExistingRecord>() {
+				public ExistingRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
+					ExistingRecord existingRecord = new ExistingRecord();
+		
+					existingRecord.pk = rs.getLong("pk");
+					existingRecord.assignedFrom = new DateTime(rs.getTimestamp("assignedFrom").getTime());
+		
+					return existingRecord;
+		
+				}
+		    });
+	    }
+	    catch (IncorrectResultSizeDataAccessException ex) {
+	    	; // ignore, this exception is thrown when there are no results, which is okay in this case
+	    }
+
+	    return existingRecord;
+    }
+    
+    void insertOrUpdateHistoricalRelationship(String patientCpr, String doctorOrganisationIdentifier, DateTime assignedFrom, DateTime assignedTo) throws SQLException {
         long primaryKeyFromExistingRelationship = openRelationshipExists(patientCpr, doctorOrganisationIdentifier);
-        if(primaryKeyFromExistingRelationship == NO_EXISTING_RELATIONSHIP)
-        {
+
+        if (primaryKeyFromExistingRelationship == NO_EXISTING_RELATIONSHIP) {
             insertRelationship(patientCpr, doctorOrganisationIdentifier, assignedFrom, assignedTo);
         }
-        else
-        {
+        else {
             closeRelationship(primaryKeyFromExistingRelationship, assignedTo);
         }
     }
@@ -140,4 +190,8 @@ public class BrsUpdater {
         return hex.toString();
     }
 
+    private class ExistingRecord {
+    	long pk;
+    	DateTime assignedFrom;
+    }
 }
