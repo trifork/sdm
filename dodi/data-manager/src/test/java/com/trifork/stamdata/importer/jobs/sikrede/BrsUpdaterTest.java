@@ -38,6 +38,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.trifork.stamdata.importer.config.ConnectionManager;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
 
 public class BrsUpdaterTest {
 
@@ -142,6 +145,48 @@ public class BrsUpdaterTest {
         brsUpdater.insertOrUpdateHistoricalRelationship(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_TO.plusYears(2), ASSIGNED_TO.plusYears(3));
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_FROM, ASSIGNED_TO);
         assertRecordExists(examplePatientCpr, exampleDoctorOrganisationIdentifier, ASSIGNED_TO.plusYears(2), ASSIGNED_TO.plusYears(3));
+    }
+    
+    // NSPSUPPORT-95 - citizens switching doctor several times between updates caused the importer
+    //                 to mess up the data - we ended with > 1 open record. This test checks that this
+    //                 will not happen in the future
+    @Test
+    public void testHistoryMismatch() throws SQLException {
+    	DateTime DATE_1 = new DateTime(2012, 11, 30, 0, 0);
+    	String date_1_string = "20121130";
+    	String date_2_string = "20120930";
+    	String date_3_string = "20120730";
+    	String date_4_string = "20120530";
+    	String cpr = "1111111118";
+    	String yder1 = "123456";
+    	String yder2 = "234567";
+    	String yder3 = "345678";
+
+    	RecordBuilder builder1 = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+    	builder1.addDummyFieldsAndBuild(); // fill up fields that are irrelevant for this test
+    	builder1.field("CPRnr", cpr);
+    	builder1.field("SYdernr", yder2);
+    	builder1.field("SYdernrGl", yder1);
+    	builder1.field("SIkraftDatoYder", date_3_string);
+    	builder1.field("SIkraftDatoYderGl", date_4_string);
+    	Record record1 = builder1.build();
+    	
+    	RecordBuilder builder2 = new RecordBuilder(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
+    	builder2.addDummyFieldsAndBuild(); // fill up fields that are irrelevant for this test
+    	builder2.field("CPRnr", cpr);
+    	builder2.field("SYdernr", yder1);
+    	builder2.field("SYdernrGl", yder3);
+    	builder2.field("SIkraftDatoYder", date_1_string);
+    	builder2.field("SIkraftDatoYderGl", date_2_string);
+    	Record record2 = builder2.build();
+
+    	brsUpdater.updateRecord(record1);
+    	brsUpdater.updateRecord(record2);
+
+    	assertClosedRelationship("AF3F5EC3C82E368A231444633154F7A5A1340085", yder1);
+    	assertClosedRelationship("AF3F5EC3C82E368A231444633154F7A5A1340085", yder2);
+    	assertClosedRelationship("AF3F5EC3C82E368A231444633154F7A5A1340085", yder3);
+    	assertRecordExists("AF3F5EC3C82E368A231444633154F7A5A1340085", yder1, DATE_1);
     }
     
     ////////////////////////
