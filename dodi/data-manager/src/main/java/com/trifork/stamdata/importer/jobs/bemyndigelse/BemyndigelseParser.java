@@ -93,7 +93,6 @@ public class BemyndigelseParser implements Parser {
     private Record buildRecord(Bemyndigelse bemyndigelse) {
         RecordBuilder builder = new RecordBuilder(recordSpecification);
 
-        // TODO: Validation
         builder.field("kode", bemyndigelse.getKode());
         builder.field("bemyndigende_cpr", bemyndigelse.getBemyndigendeCPR());
         builder.field("bemyndigede_cpr", bemyndigelse.getBemyndigedeCPR());

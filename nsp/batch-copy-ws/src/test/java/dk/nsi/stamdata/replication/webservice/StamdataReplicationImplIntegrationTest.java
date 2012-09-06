@@ -24,29 +24,18 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.*;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-import dk.nsi.stamdata.jaxws.generated.*;
-import dk.nsi.stamdata.replication.models.Client;
-import dk.nsi.stamdata.replication.models.ClientDao;
-import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -62,19 +51,44 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigInteger;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.VitaminRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
+import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
+import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
+import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
+import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
+import dk.nsi.stamdata.views.cpr.Person;
 
 @RunWith(GuiceTestRunner.class)
 public class StamdataReplicationImplIntegrationTest
@@ -277,7 +291,7 @@ public class StamdataReplicationImplIntegrationTest
         Record record = builder.addDummyFieldsAndBuild();
         records.add(record);
 
-        createSikredeReplicationRequest("sikrede", "sikrede");
+        createReplicationRequest("sikrede", "sikrede");
         populateDatabaseAndSendRequest();
 
         assertResponseContainsRecordAtom("sikrede", "sikrede");
@@ -292,7 +306,7 @@ public class StamdataReplicationImplIntegrationTest
         Record record = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE).field("HistIdYder", "1234567890123456").addDummyFieldsAndBuild();
         records.add(record);
 
-        createSikredeReplicationRequest("yderregister", "yder");
+        createReplicationRequest("yderregister", "yder");
 
         populateDatabaseAndSendRequest();
 
@@ -308,7 +322,7 @@ public class StamdataReplicationImplIntegrationTest
        Record record = new RecordBuilder(recordSpecification).field("HistIdPerson", "1234").addDummyFieldsAndBuild();
        records.add(record);
 
-       createSikredeReplicationRequest("yderregister", "person");
+       createReplicationRequest("yderregister", "person");
 
        populateDatabaseAndSendRequest();
 
@@ -352,15 +366,30 @@ public class StamdataReplicationImplIntegrationTest
     }
 
     @Test
-    public void testBemyndigelsesServiceCopy() throws Exception
+    public void testSORSygehusAfdelingCopy() throws Exception
     {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("sor");
+        request.setDatatype("sygehusafdeling");
+        request.setVersion(1L);
+        request.setOffset("0");
+
+        populateDatabaseAndSendRequest();
+
+        printDocument(anyAsElement.getOwnerDocument(), System.out);
+
+        assertResponseContainsRecordAtom("sor", "sygehusafdeling");
+    }
+
+    @Test
+    public void testBemyndigelsesServiceCopy() throws Exception {
         recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
         Record record = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "1234567890").addDummyFieldsAndBuild();
         records.add(record);
         Record record2 = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "9876543210").addDummyFieldsAndBuild();
         records.add(record2);
 
-        createBemyndigelseReplicationRequest("bemyndigelsesservice", "bemyndigelse");
+        createReplicationRequest("bemyndigelsesservice", "bemyndigelse");
 
         populateDatabaseAndSendRequest();
 
@@ -370,6 +399,26 @@ public class StamdataReplicationImplIntegrationTest
         
         assertResponseContainsExactNumberOfRecords("bemyndigelse:bemyndigelse", 2);
         assertResponseContainsValueOnXPath("//bemyndigelse:bemyndigelse/bemyndigelse:kode", "1234567890");
+    }
+
+    @Test
+    public void testVitaminGrunddataCopy() throws Exception {
+        recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
+        Record record = new RecordBuilder(VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC).field("drugID", 1234567).addDummyFieldsAndBuild();
+        records.add(record);
+        Record record2 = new RecordBuilder(VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC).field("drugID", 9876543).addDummyFieldsAndBuild();
+        records.add(record2);
+
+        createReplicationRequest("vitamin", "grunddata");
+
+        populateDatabaseAndSendRequest();
+
+        assertResponseContainsRecordAtom("vitamin", "grunddata");
+        
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+        
+        assertResponseContainsExactNumberOfRecords("grunddata:grunddata", 2);
+        assertResponseContainsValueOnXPath("//grunddata:grunddata/grunddata:drugID", "1234567");
     }
 
     // Helper methods
@@ -391,7 +440,7 @@ public class StamdataReplicationImplIntegrationTest
         }
     }
 
-    private void createBemyndigelseReplicationRequest(String register, String datatype) {
+    private void createReplicationRequest(String register, String datatype) {
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister(register);
         request.setDatatype(datatype);
@@ -404,15 +453,6 @@ public class StamdataReplicationImplIntegrationTest
         request = new ObjectFactory().createReplicationRequestType();
         request.setRegister("cpr");
         request.setDatatype("person");
-        request.setVersion(1L);
-        request.setOffset("0");
-    }
-
-    private void createSikredeReplicationRequest(String register, String datatype)
-    {
-        request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister(register);
-        request.setDatatype(datatype);
         request.setVersion(1L);
         request.setOffset("0");
     }
@@ -505,6 +545,7 @@ public class StamdataReplicationImplIntegrationTest
                 "sdm", "http://nsi.dk/-/stamdata/3.0/cpr",
                 "sikrede", "http://nsi.dk/-/stamdata/3.0/sikrede",
                 "yder", "http://nsi.dk/-/stamdata/3.0/yderregister",
+                "grunddata", "http://nsi.dk/-/stamdata/3.0/vitamin",
                 "bemyndigelse", "http://nsi.dk/-/stamdata/3.0/bemyndigelsesservice");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
@@ -532,6 +573,11 @@ public class StamdataReplicationImplIntegrationTest
         cvrClient.addPermission("yderregister/yder/v1");
         cvrClient.addPermission("yderregister/person/v1");
         cvrClient.addPermission("bemyndigelsesservice/bemyndigelse/v1");
+        cvrClient.addPermission("sor/sygehusafdeling/v1");
+        cvrClient.addPermission("vitamin/grunddata/v1");
+        cvrClient.addPermission("vitamin/firmadata/v1");
+        cvrClient.addPermission("vitamin/udgaaedenavne/v1");
+        cvrClient.addPermission("vitamin/indholdsstoffer/v1");
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();
@@ -545,9 +591,9 @@ public class StamdataReplicationImplIntegrationTest
         connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
         RecordPersister recordPersister = new RecordPersister(connection, new Instant());
 
-        for (Record sikredeRecord : records)
+        for (Record r : records)
         {
-            recordPersister.persist(sikredeRecord, recordSpecification);
+            recordPersister.persist(r, recordSpecification);
         }
 
         t.commit();

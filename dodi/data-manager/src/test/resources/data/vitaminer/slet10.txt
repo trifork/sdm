@@ -1,0 +1,2179 @@
+2810009815519930511GEASALOL COMP.                                    
+2810010475520031208Atapin                                            
+2810010475520030122GELONIDA                                          
+2810014025519991227METHOTREXATE "LEDERLE"                            
+2810017305519960130PANKREATIN                                        
+2810017305520080131Pankreatin Rosco                                  
+2810029165919971117CARBOCAIN, DENTAL                                 
+2810034426019960130PANKREATIN                                        
+2810038946119921217INTRALIPID                                        
+2810038946119940527INTRALIPID 10 NOVUM                               
+2810038946119960828INTRALIPID 10%                                    
+2810039416119960130STREPTIPENPROKAIN VET. "ROSCO"                    
+2810040726220010207PACINOL                                           
+2810042386220021002DEHYDROBENZPERIDOL                                
+2810042386220021003DROLEPTAN                                         
+2810043316320001115MIXOBAR                                           
+2810047356520080115Apurin                                            
+2810048046520020820LEOCILLIN VET.                                    
+2810050366620011114PREDNISOLONACETAT VET. "HOECHST"                  
+2810050396619980416FORTRAL                                           
+2810050786620060215Orabet                                            
+2810051556720020820LEOCILLIN VET.                                    
+2810055156819970422FLUFENAZIN "SQUIBB"                               
+2810055156819990519SIQUALONE                                         
+2810057097020051012Flufenazin Dekanoat "Squibb"                      
+2810058427020020626FUNGILIN                                          
+2810058817119950510ALBUMIN "KABI"                                    
+2810058817120030507ALBUMIN "PHARMACIA"                               
+2810060487219940913XENTOVAC VET. VACCINE                             
+2810061057219980223HALOTAN "HALOCARBON"                              
+2810062267220080527Tad Marek Vaccine Vet.                            
+2810062877319940526PORCOVAC PLUS VET.                                
+2810062877319940427PORCOVAC VET.                                     
+2810062877319940829PORCOVAC VET.                                     
+2810064407419960212GAMMAGLOBULIN "KABI"                              
+2810064407420020416GAMMAGLOBULIN "PHARMACIA"                         
+2810064517419930913BEROTEC                                           
+2810065517420061011Thyrefact                                         
+2810065527419960729KALIUMKLORID "HíSSLE"                             
+2810065567420080115Apurin                                            
+2810066877520080527Tad IB Vaccine II Vet.                            
+2810067067519980610CLINORIL                                          
+2810067517519950315GLUCOS. 50 MG/ML+NA.CHL. 9 MG/ML "KABI PHARMACIA" 
+2810067517519991004GLUCOS. 50 MG/ML+NA.CHL. 9 MG/ML "PHARMACIA"      
+2810067517519921210GLUCOS.50MG/ML+NA.CHL.9MG/ML"KABIVITRUM"          
+2810070437619981117ASKORBINSYRE                                      
+2810070507619980519ATROPIN "DAK"                                     
+2810070507619980616ATROPIN "DAK"                                     
+2810070507619980610ATROPIN "PS"                                      
+2810070667619980323BENZOKAIN-SALOL "DAK"                             
+2810070927620011227DEXTROPROPOXIFEN "DAK"                            
+2810071007619990112DIHYDROERGOTAMIN "DAK"                            
+2810071477619990209FIGEN "DAK"                                       
+2810072467620001016KLORHEXIDIN "DAK"                                 
+2810073377620010207MEPYRAMIN "DAK"                                   
+2810073487619990518METAOXEDRIN "DAK"                                 
+2810074147620000306OPIUM "DAK"                                       
+2810074357619981017PILOKARPIN "DAK"                                  
+2810074577619990209PROMETAZIN "DAK"                                  
+2810074607619990907PYRIDOXIN "DAK"                                   
+2810075047620000515SULFAMETIZOL "DAK"                                
+2810075207619990824TEOFYLAMIN "DAK"                                  
+2810075727619990209ZINK "DAK"                                        
+2810077737619990824PYRAZINAMID "DAK"                                 
+2810077877619960625STREPTIPENPROKAIN VET. "DAK"                      
+2810077877619961121STREPTIPENPROKAIN VET. "DAK"                      
+2810079427719931229BENZYLPENICILLINPROKAIN VET. "DAK"                
+2810079427719961106BENZYLPENICILLINPROKAIN VET. "DAK"                
+2810079427719960625BENZYLPENICILLINPROKAIN VET. "PHS"                
+2810079787719950703YOHIMBIN "DAK"                                    
+2810079787720010918YOHIMBIN "UNP"                                    
+2810082037819980519ATROPIN "DAK"                                     
+2810082037819980616ATROPIN "DAK"                                     
+2810082037819980610ATROPIN "PS"                                      
+2810082647920000711KLORHEXIDIN "DAK"                                 
+2810082927920000808SALICYL "DAK"                                     
+2810082937920000808SALICYL "DAK"                                     
+2810088308520020301ALK 205 AVENA ELATIOR                             
+2810090337620020305ELYZOL                                            
+2810090337620080603Metronidazol "Alpharma"                           
+2810091597719950315KAL.CHL.3,8MG/ML+GLUCOS.34,1MG/ML "KABI PHARMACIA"
+2810091597719990714KAL.CHL.3,8MG/ML+GLUCOS.34,1MG/ML "PHARMACIA"     
+2810091597719921210KAL.CHL.3,8MG/ML+GLUCOS.34,1MG/ML"KABIV"          
+2810091607719950315KAL.CHL.3,8MG/ML+NA.CHL.6MG/ML "KABI PHARMACIA"   
+2810091607719991004KAL.CHL.3,8MG/ML+NA.CHL.6MG/ML "PHARMACIA"        
+2810091607719921210KAL.CHL.3,8MG/ML+NA.CHL.6MG/ML"KABIVITR"          
+2810091687720110222Vonapen Retard Vet.                               
+2810098037820020305ELYZOL                                            
+2810098037820080213Metronidazol "Alpharma"                           
+2810099707819980423CARBAMID-HYDROKORTISON "DAK"                      
+2810099707819990614CARBAMID-HYDROKORTISON "DAK"                      
+2810099827819921009BEBULIN                                           
+2810099827819961203BEBULIN                                           
+2810099827819961230BEBULIN                                           
+2810099827819921027IMMUNINE                                          
+2810100127819970611KETALAR VET.                                      
+2810100697919950201MEPOZID                                           
+2810100917219980407XENTO VET. SERUM                                  
+2810103087920020318ELYZOL                                            
+2810103087920080603Metronidazol "Alpharma"                           
+2810103377919961024BURSAL DISEASE VACCINE VET.                       
+2810103477919970604DIANEAL MED GLUCOS. 13,6 MG/ML                    
+2810103487919970604DIANEAL MED GLUCOS. 38,6 MG/ML                    
+2810104828020030922Uromitexan                                        
+2810107458119970604DIANEAL MED GLUCOS. 22,7 MG/ML                    
+2810108148120010109ALBUMIN HUMAN "IMMUNO"                            
+2810108448019950315GLUCOS 25MG/ML+NA.CHL. 4,5 MG/ML "KABI PHARMACIA" 
+2810108448019991116GLUCOS.25 MG/ML+NA.CHL.4,5 MG/ML "PHARMACIA"      
+2810108448019921210GLUCOS25MG/ML+NA.CHL4,5MG/ML"KABIVITRUM"          
+2810110108220080123Alocodan                                          
+2810110108220080115Apurin                                            
+2810112678320060912Acinil                                            
+2810112688320060912Acinil                                            
+2810112968320040511Endobulin                                         
+2810113878319991214METHOTREXATE "LEDERLE"                            
+2810113888319991214METHOTREXATE "LEDERLE"                            
+2810113918320100601Buccard                                           
+2810113928320100601Buccard                                           
+2810114048319930702VIBRIO ANGUILLARUM BACTERIN VET.                  
+2810114178319991214PINEX COMB.                                       
+2810114178319980122PINEX FORTE                                       
+2810116818319951220CALFONAT                                          
+2810116818319930315RESCUVOLIN                                        
+2810116828319951220CALFONAT                                          
+2810116828319930315RESCUVOLIN                                        
+2810116838319960227CALFONAT                                          
+2810116838319930315RESCUVOLIN                                        
+2810116878319951219BONITOL                                           
+2810116878319921214CISPLASOL                                         
+2810117308319951122DEPRAKINE                                         
+2810117818420010109ALBUMIN HUMAN "IMMUNO"                            
+2810118038419970908XYMELIN                                           
+2810119488420051012Flufenazin Dekanoat "Squibb"                      
+2810119488420051012Sigualone decanoat                                
+2810119488420051012Siqualone decanoat                                
+2810119938419970324NEMEXIN                                           
+2810119938419990105REVIA                                             
+2810120378420060912Acinil                                            
+2810120438419970908XYMELIN                                           
+2810120448419970908XYMELIN                                           
+2810120848519960227JACLACIN                                          
+2810121388519950317LOMUFORTE                                         
+2810122298520090729Ibuprofen "Merck NM"                              
+2810122298520060214Ibuprofen "NM"                                    
+2810122308520090729Ibuprofen "Merck NM"                              
+2810122308520060215Ibuprofen "NM"                                    
+2810122608520090728Amoxicillin "Merck NM"                            
+2810122608520051108Amoxicillin "NM"                                  
+2810122618520090728Amoxicillin "Merck NM"                            
+2810122618520051108Amoxicillin "NM"                                  
+2810123228520060215Orabet                                            
+2810123248519970718KRYOBULIN HP                                      
+2810123848519991019LOCKOLYS-GLUCOS                                   
+2810123848520020109LOCKOLYS-GLUCOS 15 MG/ML MED CALCIUM 1,75 MMOL/L  
+2810123858519991019LOCKOLYS-GLUCOS                                   
+2810123858520020109LOCKOLYS-GLUCOS 42,5 MG/ML MED CALCIUM 1,75 MMOL/L
+2810123868519991019LOCKOLYS-GLUCOS                                   
+2810123868520020109LOCKOLYS-GLUCOS 23 MG/ML MED CALCIUM 1,75 MMOL/L  
+2810125418619961021KLORHEXIDIN "KABI PHARMACIA"                      
+2810125418619921210KLORHEXIDIN "KABIVITRUM"                          
+2810125618620030115NETTOTRIM VET.                                    
+2810125618620010124TRIMAZIN VET.                                     
+2810126118620070102Gestoden/Ethinylestradiol "Berlipharm"            
+2810126118620060509Gynera                                            
+2810126128619931025LOGODEN                                           
+2810126268619950411HYTRINEX                                          
+2810126358620090729Ibuprofen "Merck NM"                              
+2810126358620060215Ibuprofen "NM"                                    
+2810126448620061012Amoxicillin "NM"                                  
+2810126638620090714Atenolol "Merck NM"                               
+2810126638620051025Atenolol "NM"                                     
+2810126648620090714Atenolol "Merck NM"                               
+2810126648620051025Atenolol "NM"                                     
+2810126938619950621GAMMAGARD                                         
+2810127158619940413NOCTONE                                           
+2810127978619940425NOCTONE                                           
+2810128378619940617RESPIROL                                          
+2810128388619940617RESPIROL                                          
+2810128398619950131RESPIROL                                          
+2810128408619950131RESPIROL                                          
+2810128558620090714Verapamil "Merck NM"                              
+2810128558620051108Verapamil "NM"                                    
+2810128558620051108Verapamil Merck "NM"                              
+2810128568620090714Verapamil "Merck NM"                              
+2810128568620051108Verapamil "NM"                                    
+2810128578620090714Verapamil "Merck NM"                              
+2810128578620051108Verapamil "NM"                                    
+2810128638620090701Piroxicam "Merck NM"                              
+2810128638620060201Piroxicam "NM"                                    
+2810128648620090701Piroxicam "Merck NM"                              
+2810128648620060201Piroxicam "NM"                                    
+2810128818620090603Naproxen "Merck NM"                               
+2810128818620060103Naproxen "NM"                                     
+2810128828620090603Naproxen "Merck NM"                               
+2810128828620060103Naproxen "NM"                                     
+2810129208719930406PROGRANE PROLONGATUM                              
+2810129288719981104AMPIPEN VET.                                      
+2810129288719930616DIMUCIN VET.                                      
+2810129308720011114ESCUTAMOL                                         
+2810129318720080609Pindolol "Merck NM"                               
+2810129318720051025Pindolol "NM"                                     
+2810129328720080609Pindolol "Merck NM"                               
+2810129328720051025Pindolol "NM"                                     
+2810129628720090701Propranolol "Merck NM"                            
+2810129628720060103Propranolol "NM"                                  
+2810129638720090701Propranolol "Merck NM"                            
+2810129638720060103Propranolol "NM"                                  
+2810129648720090701Propranolol "Merck NM"                            
+2810129648720060103Propranolol "NM"                                  
+2810130048720090519Diklofenak "Merck NM"                             
+2810130048720060103Diklofenak "NM"                                   
+2810130368719921214EMTHEXAT                                          
+2810130368719980622EMTHEXATE                                         
+2810130368719960102METOTREXOL                                        
+2810130408720090616Natriumklorid Mini-plasco                         
+2810130418720021016KALIUMKLORID MINI-PLASCO                          
+2810130958719951220CALFONAT                                          
+2810130958719930315RESCUVOLIN                                        
+2810131558720080609Flunitrazepam "Merck NM"                          
+2810131558720060719Flunitrazepam "NM"                                
+2810131698720040204Vincristine "Faulding"                            
+2810131698719980323VINCRISTINE "LEDERLE"                             
+2810131698720090407Vincristine "Mayne"                               
+2810131718719981020FLUOROURACIL "LEDERLE"                            
+2810133468819930512UNIVER                                            
+2810133478819930511UNIVER                                            
+2810133488819930512UNIVER                                            
+2810133518820060103Ketoprofen "NM"                                   
+2810133528820060103Ketoprofen "NM"                                   
+2810133608820090505Coversyl                                          
+2810133618820090505Coversyl                                          
+2810133928819920302DEXAMETHASON "NOVO" VET.                          
+2810134058820040729Anotit Vet.                                       
+2810134748820080609Flunitrazepam "Merck NM"                          
+2810134748820060719Flunitrazepam "NM"                                
+2810134858819931011EUROBIOL                                          
+2810134958820031028Mixtard 30 NovoLet                                
+2810134958820031028Mixtard 30/70 Pen                                 
+2810135808919960410MIXTARD 10/90 PEN                                 
+2810135818919960410MIXTARD 20/80 PEN                                 
+2810135828919960410MIXTARD 40/60 PEN                                 
+2810135838919960410MIXTARD 50/50 PEN                                 
+2810136138919961211SOMATOBISS                                        
+2810136268920090908Tamoxifen "Merck NM"                              
+2810136268920060329Tamoxifen "NM"                                    
+2810136298920090714Atenolol "Merck NM"                               
+2810136298920051025Atenolol "NM"                                     
+2810136748919991028PIROXICAM "GEA"                                   
+2810136748919980728PIROXICAM "HEXASCAN"                              
+2810136758919991028PIROXICAM "GEA"                                   
+2810136758919980728PIROXICAM "HEXASCAN"                              
+2810136768919991028PIROXICAM "GEA"                                   
+2810136768919980728PIROXICAM "HEXASCAN"                              
+2810137008919991006DICLOFENAC "GEA"                                  
+2810137008919980728DICLOFENAC "HEXASCAN"                             
+2810137018919991006DICLOFENAC "GEA"                                  
+2810137018919980728DICLOFENAC "HEXASCAN"                             
+2810137318920000216ACETYLCYSTEIN "GEA"                               
+2810137318919980819ACETYLCYSTEIN "HEXASCAN"                          
+2810137448919991110GLIBENCLAMID "GEA"                                
+2810137448919980727GLIBENCLAMID "HEXASCAN"                           
+2810137628920000724KLORHEXIDIN "DAK"                                 
+2810137658919990824TEOFYLAMIN "DAK"                                  
+2810137818920090812Indapamide "Merck NM"                             
+2810137818920060719Indapamide "NM"                                   
+2810138058920090812Triazolam "Merck NM"                              
+2810138058920060103Triazolam "NM"                                    
+2810138068920090812Triazolam "Merck NM"                              
+2810138068920060103Triazolam "NM"                                    
+2810138358919921217IV-15 VET.                                        
+2810138878919930316NORDITROPIN NORDIJECT                             
+2810138878920040115Norditropin Penset 12                             
+2810138888919930316NORDITROPIN NORDIJECT                             
+2810138888920040115Norditropin Penset 24                             
+2810138988919930804ESKATROPE                                         
+2810138988919940120ESKATROPE                                         
+2810138988919931208SOMACTON                                          
+2810139148919940210PERGOLIDE "LILLY"                                 
+2810139158919940210PERGOLIDE "LILLY"                                 
+2810139168919940210PERGOLIDE "LILLY"                                 
+2810139359019940318CANTRAL                                           
+2810139379019940318CANTRAL                                           
+2810139399019940318CANTRAL                                           
+2810139409019940318CANTRAL                                           
+2810139449019921214FUNGAL                                            
+2810139459019921214FUNGAL                                            
+2810139469019921214FUNGAL                                            
+2810139479019921214FUNGAL                                            
+2810139489019921214FUNGAL                                            
+2810139569019930329ORUDIS                                            
+2810139959019991214METHOTREXATE "LEDERLE"                            
+2810140509019930401HUMULIN M3                                        
+2810140939020031126Mixtard 40 NovoLet                                
+2810140939020031125Mixtard 40/60 Pen                                 
+2810141499019921214KETOPROFEN "PROGRAPHARM"                          
+2810141509019921214KETOPROFEN PROLONGATUM "PROGRAPHARM"              
+2810141519019921214KETOPROFEN PROLONGATUM "PROGRAPHARM"              
+2810141529019921214MINITRAN                                          
+2810141549019921214MINITRAN                                          
+2810141649019950802NEOPLASOL                                         
+2810142009019931117CIBAZID                                           
+2810142669119930927BEROTEC                                           
+2810143029120060719Cimetidin "NM"                                    
+2810143039120060719Cimetidin "NM"                                    
+2810143049120060719Cimetidin "NM"                                    
+2810143229120000128AMOXICILLIN "GEA"                                 
+2810143229119980723AMOXICILLIN "HEXASCAN"                            
+2810143239120000128AMOXICILLIN "GEA"                                 
+2810143239119980723AMOXICILLIN "HEXASCAN"                            
+2810143249120000128AMOXICILLIN "GEA"                                 
+2810143249119980723AMOXICILLIN "HEXASCAN"                            
+2810143309119931025BROMAZEPAM "GERARD"                               
+2810143309119921231BROMAZEPAM "HEXASCAN"                             
+2810143409119921214ISOSORBIDMONONITRAT "ETHYPHARM"                   
+2810143419119921214ISOSORBIDMONONITRAT "ETHYPHARM"                   
+2810144159119981020CARBOPLATIN "LEDERLE"                             
+2810144409119931110KLORHEXIDIN-XYLOCAIN                              
+2810144579119921214DILTIAZEM "ETHYPHARM"                             
+2810144589119921214DILTIAZEM "ETHYPHARM"                             
+2810144599119921214DILTIAZEM "ETHYPHARM"                             
+2810144609119961118DILCOR                                            
+2810144609119921214DILTIAZEM "ETHYPHARM"                             
+2810144659119930511DALACIN                                           
+2810145019119921214BEROTEC MITE                                      
+2810145429119930406PROGRANE PROLONGATUM                              
+2810145599120020306ELYZOL                                            
+2810145709119930127DEDEI                                             
+2810145719119930127DEDEI                                             
+2810145729119930127DEDEI                                             
+2810145739119930127DEDEI                                             
+2810146319119930127PLENDIL-SELO-ZOK                                  
+2810146359119940714PHENOTHRIN "NAPP LAB."                            
+2810146519119921231BROMAZEPAM "HEXASCAN"                             
+2810146719119921203NAPROXEN "NM"                                     
+2810146719120090603Naproxen-E "Merck NM"                             
+2810146719120060103Naproxen-E "NM"                                   
+2810146779119930202INDOMETHACIN "BILLEV"                             
+2810146789119930202INDOMETHACIN "BILLEV"                             
+2810146839119930209NAPROXEN "BILLEV"                                 
+2810146849119930209NAPROXEN "BILLEV"                                 
+2810146859119930209SALBUTAMOL "BILLEV"                               
+2810146889119921217TEMAZEPAM "BILLEV"                                
+2810146899119921217TEMAZEPAM "BILLEV"                                
+2810147099119940322KETOFEN VET.                                      
+2810147099119970604ROMEFEN VET.                                      
+2810147389119930917DIPINEX                                           
+2810147389119961204DIPIVEFRIN "LEIRAS"                               
+2810147389119961217DIPIVEFRIN "LEIRAS"                               
+2810147389119931101OFTAPINEX                                         
+2810147939119940504LANSOPRAZOLE "LEDERLE"                            
+2810148059119931108AMPIMAX VET.                                      
+2810148109119940126LORAM                                             
+2810148119119940126LORAM                                             
+2810148179119951121COMBINORD R+G VET.                                
+2810148239120070312Tad Thymo Vac Vet.                                
+2810148239120080923Tad Thymo Vac. Vet.                               
+2810148279120000515DIFTERI-TETANUS VACCINE "SSI"                     
+2810148279120010807DIFTERI-TETANUS VACCINE "SSI" TIL REVACCINATION   
+2810148339119950321TUBERKULIN PPD "SSI"                              
+2810148359119950321TUBERKULIN PPD "SSI"                              
+2810148659219930920NICOLAN                                           
+2810148739219960112PNEUMOVAX 23                                      
+2810148779219940519GILUTENSIN                                        
+2810148799219940519GILUTENSIN                                        
+2810148909219951106IV-26 VET.                                        
+2810148909219960930NOBI-VAC GUMBORO VET.                             
+2810148909220021210NOBILIS GUMBORO INAC.                             
+2810149089220060406Lincomix Vet. Premix                              
+2810149139219930315MORFIN SULFAT "ETHYPHARM"                         
+2810149149219930315MORFIN SULFAT "ETHYPHARM"                         
+2810149159219930315MORFIN SULFAT "ETHYPHARM"                         
+2810149169219930315MORFIN SULFAT "ETHYPHARM"                         
+2810149509219930930CMP-20 VET.                                       
+2810150269219971021BRICANYL TURBUHALER                               
+2810150459219930414STILNOCT                                          
+2810150459219981116STILNOX                                           
+2810150739219940208DILTELAN ONCE DAILY                               
+2810150749219940208DILTELAN ONCE DAILY                               
+2810150759219940208DILTELAN ONCE DAILY                               
+2810151299219980217ETYMONIS                                          
+2810151409219950829CEFEPIM "BMS"                                     
+2810151719219930211CAPRIL                                            
+2810151719219931112CAPTOPRIL "BILLEV"                                
+2810151719219961008CAPTOPRIL "GERARD"                                
+2810151719220090630Captopril "Merck NM"                              
+2810151719220060215Captopril "NM"                                    
+2810151729219931112CAPTOPRIL "BILLEV"                                
+2810151729219961008CAPTOPRIL "GERARD"                                
+2810151729220090630Captopril "Merck NM"                              
+2810151729220060215Captopril "NM"                                    
+2810151739219931112CAPTOPRIL "BILLEV"                                
+2810151739219961008CAPTOPRIL "GERARD"                                
+2810151739220090630Captopril "Merck NM"                              
+2810151739220060215Captopril "NM"                                    
+2810151789219930225DICLOFENAC "DURASCAN"                             
+2810151789219991006DICLOFENAC "GEA"                                  
+2810151789219980728DICLOFENAC "HEXASCAN"                             
+2810151799219930225DICLOFENAC "DURASCAN"                             
+2810151799219991006DICLOFENAC "GEA"                                  
+2810151799219980728DICLOFENAC "HEXASCAN"                             
+2810151909219930825CORENITEC                                         
+2810152069220100428Depakine                                          
+2810152069220020206DEPRAKINE                                         
+2810152079220020206DEPRAKINE RETARD                                  
+2810152179219931103MINIRIN                                           
+2810152309219931110PROGYNON                                          
+2810152309219931116PROGYNONA                                         
+2810152309219940104PROGYNOVA                                         
+2810152319219931110PROGYNON                                          
+2810152319219931116PROGYNONA                                         
+2810152319219931119PROGYNOVA                                         
+2810152569219931029SOTACOR                                           
+2810152569219950801SOTALEX                                           
+2810152579219931029SOTACOR                                           
+2810152579219950314SOTALEX                                           
+2810152839219940908PROTECH-AR VET.                                   
+2810152859219930114NAURONTIN                                         
+2810152859219960118NEURONTIN                                         
+2810152869219960118NEURONTIN                                         
+2810152889219931223CLAMOXYL                                          
+2810152889219951025IMACILLIN                                         
+2810152889219951106IMACILLIN NOVUM                                   
+2810152919219931223CLAMOXYL                                          
+2810152919219951025IMACILLIN                                         
+2810152919219951106IMACILLIN NOVUM                                   
+2810152959220040105Cyclophosphamid "A-Pharma"                        
+2810152959220031222Cyclophosphamid "Apodan"                          
+2810152959220040106Cyclophosphamid "Apodan"                          
+2810152969219951129STERILT VAND "KABI PHARMACIA"                     
+2810152969219991227STERILT VAND "PHARMACIA"                          
+2810153169220050719Nyfen                                             
+2810153169219950724SIP                                               
+2810153419219950714SANTILLINA                                        
+2810153569219990628TERFENADIN "STADA"                                
+2810153569219970224TERFENADINE "STADA"                               
+2810153629219961129ACTIPROFEN                                        
+2810154129319931025AMIZIDE                                           
+2810154139319931025AMIZIDE MITE                                      
+2810154339320000628MIRAPRIL VET.                                     
+2810154349320000628MIRAPRIL VET.                                     
+2810154359320000628MIRAPRIL VET.                                     
+2810154369320000628MIRAPRIL VET.                                     
+2810154379320000628MIRAPRIL VET.                                     
+2810154809319950301IVOMEC VET. SR BOLUS                              
+2810154869320010612RANITIDIN "ALPHARMA"                              
+2810154869320010530RANITIDIN "GENERICS"                              
+2810154869320080617Ranitidin "Merck NM"                              
+2810154869320070524Ranitidin "NM Pharma"                             
+2810154869319940303RANITIDIN "NM"                                    
+2810154879320010612RANITIDIN "ALPHARMA"                              
+2810154879320010530RANITIDIN "GENERICS"                              
+2810154879320080617Ranitidin "Merck NM"                              
+2810154879320070524Ranitidin "NM Pharma"                             
+2810154879319940303RANITIDIN "NM"                                    
+2810154899319950217ESCOR FORTE                                       
+2810155199319940704INTRALIPID MIX 1800                               
+2810155199319960923KABI MIX 1800                                     
+2810155209319940704INTRALIPID MIX 2500                               
+2810155209319960923KABI MIX 2500                                     
+2810155239319980917CIMETIDIN 200 "STADA"                             
+2810155249319980917CIMETIDIN 400 "STADA"                             
+2810155259319980917CIMETIDIN 800 "STADA"                             
+2810155289319940712CORTINET                                          
+2810155299319941010BENEFLUR                                          
+2810155349319950707CARBOPLATIN "DELTA WEST"                          
+2810155349319980323CARBOPLATIN "DELTA WEST"                          
+2810155349320010724CARBOPLATIN "PHARMACIA & UPJOHN"                  
+2810155349320041221Carboplatin "Pharmacia"                           
+2810155349319950804CARBOPLATIN "UPJOHN"                              
+2810155429320030317EXSPOT POUR-ON VET.                               
+2810155429319940628EXSPOT VET.                                       
+2810155599319931229H-B-VAX II                                        
+2810155609319931229H-B-VAX II                                        
+2810155889319941024RECORMON NOVUM                                    
+2810156519319941108ALZONET                                           
+2810156529319941108ALZONET                                           
+2810156719320000131DICLOFENAC 25 "STADA"                             
+2810156729320000131DICLOFENAC 50 "STADA"                             
+2810157279320090520Selegilin "Merck NM"                              
+2810157279320070424Selegilin "NM"                                    
+2810157279319940704SELEGILINE "NM"                                   
+2810157429319960923DILCOR                                            
+2810157669319931203BROMAZEPAM "DURASCAN"                             
+2810157669320000317BROMAZEPAM "GEA"                                  
+2810157669319990419BROMAZEPAM "HEXASCAN"                             
+2810157679319931203BROMAZEPAM "DURASCAN"                             
+2810157679320000317BROMAZEPAM "GEA"                                  
+2810157679319990419BROMAZEPAM "HEXASCAN"                             
+2810157919319941006FLUOXIN                                           
+2810158729419950320DAKTARIN                                          
+2810158739419950320DAKTARIN                                          
+2810159539419950717CENTORX                                           
+2810159579419950207LORON                                             
+2810159639420010320RANITIDIN "NM"                                    
+2810159649420010320RANITIDIN "NM"                                    
+2810159749419960104DUODEX                                            
+2810159749419950421SPERSADEX COMP.                                   
+2810159759419981015RATINET                                           
+2810159769419981015RATINET                                           
+2810166509419951005NOVA-T 380 AG                                     
+2810166579419951108ADIZEM-XL                                         
+2810166589419951108ADIZEM-XL                                         
+2810166599419951108ADIZEM-XL                                         
+2810166609419951108ADIZEM-XL                                         
+2810166669420100112Vancomycin "Alpharma"                             
+2810166669420101116Vancomycin "Axellia"                              
+2810166669420030429VANCOMYCIN "DUMEX"                                
+2810166879419971022KENACTAN                                          
+2810166879419971020PAKENACUTAN                                       
+2810168239419950321NOCTAMID                                          
+2810168439420060331Tucoprim Premix Vet.                              
+2810168479419951113CEFUROXIM "IBSA"                                  
+2810168489419951113CEFUROXIM "IBSA"                                  
+2810168499419951113CEFUROXIM "IBSA"                                  
+2810168609419991018ETALPHA                                           
+2810168669420070102Gestoden/Ethinylestradiol "Schering"              
+2810168669419960704GYNELLE                                           
+2810168669419950105GYNERA 20                                         
+2810168669419951031LODEN                                             
+2810168669420060509Meloden                                           
+2810168679419960704GYNELLE 28                                        
+2810168679419950105GYNERA 20 ED                                      
+2810168679419951031LODEN 28                                          
+2810168789419960613PUREGON 2                                         
+2810168979420090728Amoxicillin "Merck NM"                            
+2810168979420051108Amoxicillin "NM"                                  
+2810169019419950928PANACUR SR VET.                                   
+2810169509419971117CARBOCAIN, DENTAL                                 
+2810170019419950519ENALFOR VET.                                      
+2810170029419950519ENALFOR VET.                                      
+2810170039419950519ENALFOR VET.                                      
+2810170049419950519ENALFOR VET.                                      
+2810170059419950519ENALFOR VET.                                      
+2810170539419950607ZINACEF MONOVIAL                                  
+2810170579420070314Sotalol "Actavis"                                 
+2810170579420070313Sotalol "Alpharma"                                
+2810170579420070314Sotalol "Alpharma"                                
+2810170579420060215Sotalol "Dumex-Alpharma"                          
+2810170579419970107SOTALOL "DUMEX"                                   
+2810170699419960222DILTIAZEM XL                                      
+2810170699419980716DILTIAZEM XL "NORDIC"                             
+2810170699419970527DILTIAZEM XL "PHARMATEC"                          
+2810170709419960220DILTIAZEM XL                                      
+2810170709419980716DILTIAZEM XL "NORDIC"                             
+2810170709419970527DILTIAZEM XL "PHARMATEC"                          
+2810171389420040218Nicorette Citrus                                  
+2810171389419951108NICORETTE FRUGT                                   
+2810171399420040218Nicorette Citrus                                  
+2810171399419951108NICORETTE FRUGT                                   
+2810171659419960115PRENOL VET.                                       
+2810171829419960409BIOFENAC                                          
+2810171859420020206DEPRAKINE RETARD                                  
+2810172219419960207FLUTAN                                            
+2810172379419951220MESTROL                                           
+2810172639419950913PROZAC                                            
+2810173129420010917BECONASE AQUA                                     
+2810173139420000307CALCIUM SANDOZ                                    
+2810173189419951124KREON                                             
+2810173189419951024PANKREON                                          
+2810173339419951127STILNOCT                                          
+2810173569419960109DIPIVEFRIN                                        
+2810173569419960515DIPIVEFRIN "LEIRAS"                               
+2810173699420010905DEPRAKINE                                         
+2810173949420020625BETNOVAT REKTAL                                   
+2810174369519950815TYLOSIN VET.                                      
+2810174449520120413Estradiol/Norethiseronacetat "Sandoz"             
+2810174449520120306Femanor                                           
+2810174519519950302ANAFRANIL (PARANOVA)                              
+2810174579519960118ESTRADERM MX                                      
+2810174589519960118ESTRADERM MX                                      
+2810174599519960118ESTRADERM MX                                      
+2810174629519970408RENOVA                                            
+2810175099520090701Piroxicam "Merck NM"                              
+2810175099520060719Piroxicam "NM"                                    
+2810175209520060815Sotalol "Merck NM"                                
+2810175209520090520Sotalol "Merck NM"                                
+2810175209520060815Sotalol "NM"                                      
+2810175209520060815Sotalol "NM"                                      
+2810175269519960507FENTANYL "AL"                                     
+2810175269519990309FENTANYL "ALPHARMA"                               
+2810175269520060630Fentanyl "Alpharma"                               
+2810175269520050524Fentanyl "Dumex-Alpharma"                         
+2810175499520000516SEROXAT                                           
+2810175589519950803NICOCLYN VET.                                     
+2810175849520011005NORVASC                                           
+2810175859520011005NORVASC                                           
+2810175889519980323KLACID                                            
+2810176299519960528BIBAG                                             
+2810177119519960308ANDRODERM                                         
+2810177429519960116DULCOLAX NP                                       
+2810177559519951205HOLOP                                             
+2810177559519991018NICOTINELL                                        
+2810177989519960903CONTALGIN "ONCE DAILY"                            
+2810178009519960903CONTALGIN "ONCE DAILY"                            
+2810178029519960903CONTALGIN "ONCE DAILY"                            
+2810178439520000615DI-TE-KI-POL VACCINE "SSI"                        
+2810178519519960618NORVASC                                           
+2810178709519960801MINICARE                                          
+2810178719519960801MINICARE                                          
+2810178929519991202DICURAL VET.                                      
+2810179029519951227FLUOXETIN "DURASCAN"                              
+2810179029520030103FONDUR                                            
+2810179129519960423AURORIX                                           
+2810179149519980515HUMULIN REGULAR                                   
+2810179149519951123HUMULIN REGULAR I HUMAJECT PEN                    
+2810179149519980814HUMULIN REGULAR PENFILL                           
+2810179159519980515HUMULIN NPH                                       
+2810179159519951123HUMULIN NPH I HUMAJECT PEN                        
+2810179159519980812HUMULIN NPH PENFILL                               
+2810179169519980515HUMULIN MIX 30/70                                 
+2810179169519951123HUMULIN MIX 30/70 I HUMAJECT PEN                  
+2810179169519980814HUMULIN MIX 30/70 PENFILL                         
+2810179209519971021NIFEDIPIN "DAK"                                   
+2810179239519980323KLACID                                            
+2810179339519970319SELEGILIN "AL"                                    
+2810179339520020416SELEGILIN "DUMEX-ALPHARMA"                        
+2810179349519970319SELEGILIN "AL"                                    
+2810179349520020416SELEGILIN "DUMEX-ALPHARMA"                        
+2810179579519961030CLIMARA 50                                        
+2810179589519961030CLIMARA 100                                       
+2810179669519960610UNIPRIL                                           
+2810179679519960610UNIPRIL                                           
+2810179889619960805NEZECORT                                          
+2810180019619970401INSUMAN COMB 25/75                                
+2810180029619970401INSUMAN COMB 25/75                                
+2810180259619961023CIPRIL                                            
+2810180259619960812SEROPRAM                                          
+2810180319619961120CONTALGIN 2                                       
+2810180329619961120CONTALGIN 2                                       
+2810180399619970410CAA NOBILIS VET.                                  
+2810180479619960806TRAMADOL "DURASCAN"                               
+2810180489620031128Aciclovir "Alpharma"                              
+2810180489619971007ACYCLOVIR "AL"                                    
+2810180489620031128Acyclovir "Dumex-Alpharma"                        
+2810180619619960806TRAMADOL "DURASCAN"                               
+2810180629619960806TRAMADOL "DURASCAN"                               
+2810180639619980217SALBUTAMOL "ETHYPHARM"                            
+2810180649619980217SALBUTAMOL "ETHYPHARM"                            
+2810180699620090811Fluoxetin "Merck NM"                              
+2810180699620060201Fluoxetin "NM"                                    
+2810180699620050819Seroscand                                         
+2810181079619980709PARVOSORB N VET.                                  
+2810181079619990503PARVOSORB N VET.                                  
+2810181079619981015PARVOSORB VET.                                    
+2810182099619970924ATRACURIUM "ALPHARMA"                             
+2810182209619970613FLUOXETIN "NYCO"                                  
+2810182229619990406CLOMICALM VET.                                    
+2810182399619970415SOTALOLHYDROCHLORID "DURASCAN"                    
+2810182409619970415SOTALOLHYDROCHLORID "DURASCAN"                    
+2810182429619980825LOSARTANKALIUM/HYDROCHLORTHIAZID "MSD"            
+2810182709619980317MIRAPEX                                           
+2810182959619970916VIRILAN                                           
+2810182969619970910VIRILAN                                           
+2810183059620010905DEPRAKINE RETARD                                  
+2810183069620010917DEPRAKINE RETARD                                  
+2810183459620061019Captopril "Dumex-Alpharma"                        
+2810183469620100114Captopril "Alpharma"                              
+2810183469620061019Captopril "Dumex-Alpharma"                        
+2810183479620100114Captopril "Alpharma"                              
+2810183479620061019Captopril "Dumex-Alpharma"                        
+2810183579619970408EDEX                                              
+2810183589619970408EDEX                                              
+2810183829619970827APROVEL/KARVEA                                    
+2810183839619990615ERYSORB P-N VET.                                  
+2810183979619970521ILIADIN UDEN KONSERVERINGSMIDDEL                  
+2810184379619990215CLARITYN RAPID                                    
+2810184459620000808ETALPHA                                           
+2810184669620060221Corodil Comp                                      
+2810184839620070711Zymamed                                           
+2810185019619970424CIPAX                                             
+2810185019619970225CIPRAX                                            
+2810185099619961007DICURAL                                           
+2810185099620000118DICURAL VET.                                      
+2810185109620000118DICURAL VET.                                      
+2810185119620000118DICURAL VET.                                      
+2810185459619971113LAMISIL                                           
+2810185459619980325LAMISIL KUTAN                                     
+2810186349620010904INDAPAMID "CLONMEL"                               
+2810186349619980623INDAPAMIDE "CLONMEL"                              
+2810186419619990728ECONOR VET.                                       
+2810186559620000201INGELVAC AR4 VET.                                 
+2810186569620060630Propofol "Alpharma"                               
+2810186569620050524Propofol "Dumex-Alpharma"                         
+2810186659620040720Tramadol "Gea"                                    
+2810186659619990203TRAMADOL GEA                                      
+2810186659619971121TRAMIN                                            
+2810186669620040720Tramadol "Gea"                                    
+2810186669619990203TRAMADOL GEA                                      
+2810186669619971121TRAMIN                                            
+2810186789619971031VIAZEM SR                                         
+2810186799619971031VIAZEM SR                                         
+2810186809619971031VIAZEM SR                                         
+2810186819619971031VIAZEM SR                                         
+2810186839719991004INSULATARD PEN                                    
+2810186839719971007PAINSULATARD PEN                                  
+2810186859720000307LAMICTAL                                          
+2810186869720000224LAMICTAL                                          
+2810186879720000211LAMICTAL                                          
+2810186909720000211ZOCOR                                             
+2810186919720000211ZOCOR                                             
+2810186929720000501ZYRTEC                                            
+2810187009720000222IMIGRAN                                           
+2810187099720010515ELOCON                                            
+2810187109720000502BUDESONID "CROSS PHARMA" TURBUHALER               
+2810187109720000222PULMICORT TURBUHALER                              
+2810187109719970613SPIROCORT TURBUHALER                              
+2810187119720000502BUDESONID "CROSS PHARMA" TURBUHALER               
+2810187119720000222PULMICORT TURBUHALER                              
+2810187119719970613SPIROCORT TURBUHALER                              
+2810187129719980928RANITIDIN "STADA" 150                             
+2810187139719980928RANITIDIN "STADA" 300                             
+2810187269720061205Oftamolol                                         
+2810187269719990506TIMOLOL "ALCON"                                   
+2810187279720061205Oftamolol                                         
+2810187279719990506TIMOLOL "ALCON"                                   
+2810187339720060719Aciclovir "NM"                                    
+2810187349720060719Aciclovir "NM"                                    
+2810187359720060719Aciclovir "NM"                                    
+2810187509720001009PULMOTIL  VET.                                    
+2810187509719990428PULMOTIL G100 PREMIX VET.                         
+2810187629720001219SOMATULINE PR                                     
+2810187859720060630Midazolam "Alpharma"                              
+2810187859720031209Midazolam "Dumex-Alpharma"                        
+2810187869720060703Midazolam "Alpharma"                              
+2810187869720031211Midazolam "Dumex-Alpharma"                        
+2810188039719970604DIANEAL PD1 MED GLUCOS.                           
+2810188039719970326DIANEAL PD1 MED GLUCOS. 13,6 MG/ML                
+2810188049719970604DIANEAL PD1 MED GLUCOS.                           
+2810188049719970326DIANEAL PD1 MED GLUCOS. 22,7 MG/ML                
+2810188059719970604DIANEAL PD1 MED GLUCOS.                           
+2810188059719970326DIANEAL PD1 MED GLUCOS. 38,6 MG/ML                
+2810188359720010515ELOCON                                            
+2810188499719971023ENALAPRILMALEAT "DURASCAN"                        
+2810188509719971023ENALAPRILMALEAT "DURASCAN"                        
+2810188519719971023ENALAPRILMALEAT "DURASCAN"                        
+2810188549720000222LAMISIL                                           
+2810188939719980515HUMULIN REGULAR                                   
+2810188949719980515HUMULIN MIX 30/70                                 
+2810188949719980824PAHUMULIN MIX 30/70 PEN                           
+2810189269720040317Bioclavid Forte                                   
+2810189409720000417PLENDIL                                           
+2810189449720030916Trisekvens                                        
+2810189679719970728SAQUINAVIR                                        
+2810189679719980820SAQUINAVIR "ROCHE"                                
+2810189779720021217MYCO SHIELD VET.                                  
+2810189779720061204Mycobac Vet.                                      
+2810189899719971009NUELIN RETARD                                     
+2810190079719970624ROCERONA                                          
+2810190089719970624ROCERONA                                          
+2810190319719970701GYNERGEN COMP.                                    
+2810190359719971027HUMALOG-HUMAPEN                                   
+2810190359719990112HUMALOG-PEN                                       
+2810190419720001003IVERMECTIN VIRBAC VET.                            
+2810190419719990216VIRBAMEC                                          
+2810190499720060518Invicorp 1                                        
+2810190869719990603ZYTRAM                                            
+2810190869719990811ZYTRAM UNO                                        
+2810190879719990603ZYTRAM                                            
+2810190879719990811ZYTRAM UNO                                        
+2810190889719990603ZYTRAM                                            
+2810190889719990812ZYTRAM UNO                                        
+2810190989720001212LAXOBERAL                                         
+2810191309719980911OXYGESIC                                          
+2810191339720050216Pronoctan                                         
+2810191719719990701FLUOXETIN "STADA"                                 
+2810191719719980709FLUOXETINE "STADA"                                
+2810191759719980921IBUPROFEN "ASTRA"                                 
+2810191869720000222ROACCUTAN                                         
+2810191879720000306ROACCUTAN                                         
+2810191929719970916VIRILAN DUO                                       
+2810191939719970916VIRILAN DUO                                       
+2810192049720001101ADALAT OROS                                       
+2810192059720001101ADALAT OROS                                       
+2810192129720000222MYCOSTATIN                                        
+2810192239720000127STILNOX                                           
+2810192909720000808ETALPHA                                           
+2810192939720030318DUVAXYN IE PLUS VET.                              
+2810193329719980126ZOPIVANE                                          
+2810193379720011030PROPOFOL 1% "FRESENIUS"                           
+2810193509719980325LAMISIL KUTAN                                     
+2810193559719981101BOZI                                              
+2810193559720030401TELMISARTAN "BOEHRINGER INGELHEIM"                
+2810193559719980421TRADEMARK                                         
+2810193569719981101BOZI                                              
+2810193569720030401TELMISARTAN "BOEHRINGER INGELHEIM"                
+2810193569719980421TRADEMARK                                         
+2810194089719971205QUADRISOL 5 VET.                                  
+2810194089719991019QUADRISOL 5 VET. TIL HUND                         
+2810194169719990531PNEUMO 23                                         
+2810194289720011123STABOX 5% VET.                                    
+2810194369719990531GLUCOS 50 MG/ML BUFFRAD "PHARMACIA & UPJOHN"      
+2810194639720000208CALCIUM FOLINATE "FAULDING"                       
+2810194639720040204Calciumfolinat "Faulding"                         
+2810194639720091006Calciumfolinat "Mayne"                            
+2810194819720060215Methotrexate "Ebewe"                              
+2810194819720120615Methotrexate "Ebewe"                              
+2810194819720110823Methotrexate "Meda"                               
+2810194829720040730Methotrexate "Ebewe"                              
+2810194829720060620Methotrexate "Ebewe"                              
+2810194829720040730Methotrexate "Meda"                               
+2810194829720120112Methotrexate "Meda"                               
+2810195069719990811CITALOPRAM "LUNDBECK"                             
+2810195069719990415SEPRAM                                            
+2810195079719990811CITALOPRAM "LUNDBECK"                             
+2810195079719990404SEPRAM                                            
+2810195089719990811CITALOPRAM "LUNDBECK"                             
+2810195089719990415SEPRAM                                            
+2810195209719980720APROVEL HCT                                       
+2810195209719980821APROZIDE                                          
+2810195229719980720KARVEA HCT                                        
+2810195239719980720KARVEA HCT                                        
+2810195299720041208Qualimec Vet.                                     
+2810195329719981009MEFLONIDE                                         
+2810195349720030103FLUOXETIN "DURASCAN"                              
+2810195369719991018CAPD/DPCA 17                                      
+2810195369720020108LOCKOLYS-GLUCOS 15 MG/ML MED CALCIUM 1,25 MMOL/L  
+2810195369719990702LOCKOLYS-GLUCOS 15 MG/ML MED CALCIUM 1,25 MMOL/ML 
+2810195369719980325LOCKOLYS-GLUCOS MED CALCIUM                       
+2810195379719991005CAPD/DPCA 19                                      
+2810195379719990702LOCKOLYS-GLUCOS 23 MG/ML MED CALCIUM 1,25 MMOL/L  
+2810195379720020121LOCKOLYS-GLUCOS 23 MG/ML MED CALCIUM 1,25 MMOL/L  
+2810195379719980305LOCKOLYS-GLUCOS MED CALCIUM                       
+2810195389719991005CAPD/DPCA 18                                      
+2810195389719990702LOCKOLYS-GLUCOS 42,5 MG/ML MED CALCIUM 1,25 MMOL/L
+2810195389720020108LOCKOLYS-GLUCOS 42,5 MG/ML MED CALCIUM 1,25 MMOL/L
+2810195389719980325LOCKOLYS-GLUCOS MED CALCIUM                       
+2810195589719990112HUMALOG MIX25, PEN                                
+2810195619719990112HUMALOG MIX50, PEN                                
+2810300149819990422PROGRAM 40 VET.                                   
+2810300529819981001ZALEPLON                                          
+2810300539819981001ZALEPLON                                          
+2810300619819990406DEPREFRI                                          
+2810300859820060103Omeprazol "Generics"                              
+2810300859820090616Omeprazol "Merck NM"                              
+2810300859819981130OMEPRAZOL "NM"                                    
+2810301069820100310Imodium med Simethicon                            
+2810301069819990215IMODIUM NOGAS                                     
+2810301089819990108IMMUNGLOBULIN INTRAVENùST "SSI"                   
+2810301249819981201ARABLOC                                           
+2810301269820060703Buspiron "Actavis"                                
+2810301269820060630Buspiron "Alpharma"                               
+2810301269820080423Buspiron "Alpharma"                               
+2810301269820040726Stesiron                                          
+2810301399819981014PERINDOPRIL-INDAPAMIDE                            
+2810301399820020320PERINDOPRIL-INDAPAMIDE "SERVIER"                  
+2810301619820040311Imoramid                                          
+2810301619820010308LOPERAMID "JUTA"                                  
+2810301669820031128Aciclovir "Alpharma"                              
+2810301669820031128Acyclovir "Dumex-Alpharma"                        
+2810301919820000211IMDUR                                             
+2810302209819980609FORTZAAR                                          
+2810302209819981119LOSARTANKALIUM/HYDROCHLORTHIAZID "MSD"            
+2810302219820090812Zopiklon "Merck NM"                               
+2810302219820050928Zopiklon "NM"                                     
+2810302279819980923ALIMIX                                            
+2810302369819990625ZENOPRIL                                          
+2810302379819990625ZENOPRIL                                          
+2810302389819990625ZENOPRIL                                          
+2810302859819991213FLUOXETIN "BIOCHEMIE"                             
+2810302859820031215Fluoxetin "Biochemie"                             
+2810302859820010614FLUOXETIN "MULTIPHARMA"                           
+2810302999820000320DEPRAKINE RETARD                                  
+2810303009820000403DEPRAKINE RETARD                                  
+2810303019820000307TERBASMIN TURBUHALER                              
+2810303019820000502TERBUTALIN "CROSS PHARMA"                         
+2810303019820000515TERBUTALIN "CROSS PHARMA" TURBUHALER              
+2810303259819991108ENALAPRIL "BIOCHEMIE"                             
+2810303259820050713Enalapril "Biochemie"                             
+2810303259820010525ENALAPRIL "MULTIPHARMA"                           
+2810303269819991108ENALAPRIL "BIOCHEMIE"                             
+2810303269820050713Enalapril "Biochemie"                             
+2810303269820010525ENALAPRIL "MULTIPHARMA"                           
+2810303339819981201LIBERTIL                                          
+2810303449819991108ENALAPRIL "BIOCHEMIE"                             
+2810303449820050713Enalapril "Biochemie"                             
+2810303449820010525ENALAPRIL "MULTIPHARMA"                           
+2810303559820000307TERBASMIN                                         
+2810303559819981230TERBASMIN AEROSOL                                 
+2810303609820000211TRIATEC                                           
+2810303619820000211TRIATEC                                           
+2810303629819991108ENALAPRIL "BIOCHEMIE"                             
+2810303629820050713Enalapril "Biochemie"                             
+2810303629820010525ENALAPRIL "MULTIPHARMA"                           
+2810303769819990203TRAMADOL GEA                                      
+2810303919820000211CORDARONE                                         
+2810304009819990112NIFICODAN                                         
+2810304599820000211PRAVACHOL                                         
+2810304749820100727Flixotide                                         
+2810304749820100727Flixotide                                         
+2810304749820100727Flixotide Diskus                                  
+2810304759820091021Flixotide                                         
+2810305229820051222Eurifel FeLV                                      
+2810305229820060817Eurifel FeLV                                      
+2810305229819990125EURIFEL VET.                                      
+2810305229820051222Purevax FeLV                                      
+2810305229820060818Purevax FeLV                                      
+2810305309820000512MENOTROPIN "FERRING"                              
+2810305439819981218NORVASC                                           
+2810305579920001002KOGENATE SF                                       
+2810305669820021023ABAXIVIR                                          
+2810305669820000727ACICLOVIR "RANBAXY"                               
+2810305679820021023ABAXIVIR                                          
+2810305679820000727ACICLOVIR "RANBAXY"                               
+2810305689820021023ABAXIVIR                                          
+2810305689820000727ACICLOVIR "RANBAXY"                               
+2810305869919990412APRIL                                             
+2810305879919990412APRIL                                             
+2810305889919990412APRIL                                             
+2810305899919990412APRIL                                             
+2810305919920050719Lisinopril "Biochemie"                            
+2810305919920000131LISINOPRIL "MEDIS"                                
+2810305919920010712LISINOPRIL "MULTIPHARMA"                          
+2810305919920000626LISINOPRIL "PHARMASCOPE"                          
+2810305929920050719Lisinopril "Biochemie"                            
+2810305929920000131LISINOPRIL "MEDIS"                                
+2810305929920010712LISINOPRIL "MULTIPHARMA"                          
+2810305929920000626LISINOPRIL "PHARMASCOPE"                          
+2810305939920050719Lisinopril "Biochemie"                            
+2810305939920000131LISINOPRIL "MEDIS"                                
+2810305939920010712LISINOPRIL "MULTIPHARMA"                          
+2810305939920000626LISINOPRIL "PHARMASCOPE"                          
+2810305949920050719Lisinopril "Biochemie"                            
+2810305949920000131LISINOPRIL "MEDIS"                                
+2810305949920010712LISINOPRIL "MULTIPHARMA"                          
+2810305949920000626LISINOPRIL "PHARMASCOPE"                          
+2810306019919990118MIXTARD 40/50 PEN                                 
+2810306049919990520NIQUITIN CQ                                       
+2810306059919990520NIQUITIN CQ                                       
+2810306069919990520NIQUITIN CQ                                       
+2810306129920000224SOTALOL "GEA"                                     
+2810306149920000224SOTALOL "GEA"                                     
+2810306239919990208FONDOZAL                                          
+2810306429920040802Tramadol "Gea"                                    
+2810306479920020723LAMOTRIGIN "ORIFARM"                              
+2810306489920020916LAMOTRIGIN "ORIFARM"                              
+2810306499920020922LAMOTRIGIN "ORIFARM"                              
+2810306729920070606Laktulose "medic" med citronsmag                  
+2810306729919990908LAKTULOSE MED CITRONSMAG "MEDIC"                  
+2810306749920001002KOGENATE SF                                       
+2810306759920001002KOGENATE SF                                       
+2810306839920000522BUDESONID "PHARMACHEMIE"                          
+2810306839919990421BUDESONIDE "PHARMACHEMIE"                         
+2810306869919990721CAPTOPRIL "BIOCHEMIE"                             
+2810306869920040108Captopril "Biochemie"                             
+2810306869920011212CAPTOPRIL "MULTIPHARMA"                           
+2810306879919990721CAPTOPRIL "BIOCHEMIE"                             
+2810306879920040108Captopril "Biochemie"                             
+2810306879920011212CAPTOPRIL "MULTIPHARMA"                           
+2810306889919990721CAPTOPRIL "BIOCHEMIE"                             
+2810306889920040108Captopril "Biochemie"                             
+2810306889920011212CAPTOPRIL "MULTIPHARMA"                           
+2810307049919990709HELICOBACTER TEST HP-PLUS                         
+2810307289919990615ALAMYCIN 10 VET.                                  
+2810307299919990615ALAMYCIN LA VET.                                  
+2810307299919990625OCIMYCIN PROLONGATUM VET.                         
+2810307399919990721KURDIN                                            
+2810307409919990721KURDIN                                            
+2810307739920001017ALFATRONOL                                        
+2810307759920001017ALFATRONOL                                        
+2810308029920010419PEG-INTRON                                        
+2810308379920060926Lisinogen                                         
+2810308379920081204Lisinopril "Merck NM"                             
+2810308389920060926Lisinogen                                         
+2810308389920081204Lisinopril "Merck NM"                             
+2810308399920060926Lisinogen                                         
+2810308399920081204Lisinopril "Merck NM"                             
+2810308859919991122"VELOSULIN HM (GE)"                               
+2810308859919990514VELOSULIN HM (GE)                                 
+2810309329920000413ESTROGEL                                          
+2810309370020000418CYCLIO SPOT ON TIL HUND OG KAT                    
+2810309370020001013CYCLIO SPOT ON TIL KAT                            
+2810309370020001025CYCLIO VET., SPOT-ON TIL KAT                      
+2810309439919990707LIPOREX                                           
+2810309449919990707LIPOREX                                           
+2810309459919990707LIPOREX                                           
+2810309489920040302Alprascan                                         
+2810309499920040302Alprascan                                         
+2810310159919991027CITALOPRAM "LUNDBECK"                             
+2810310169919991027CITALOPRAM "LUNDBECK"                             
+2810310279919991007INSULIN RAPID PEN REFILL                          
+2810310289919991007INSULIN RAPID PEN                                 
+2810310329920021126DANILAX                                           
+2810310619919991213FLUXANTIN "GEA"                                   
+2810310819920010314BETACOR                                           
+2810310829920010314BETACOR                                           
+2810310999920010202OVIDREL                                           
+2810310999920011017OVIDRELLE                                         
+2810311179920000120MIXTARD 30 INNOLET                                
+2810311269920000123PAROXETIN "SYNTHON"                               
+2810311829920040818Paclitaxel "Ebewe"                                
+2810311909920090729Enalapril "Merck NM"                              
+2810311909920070703Enalapril "NM"                                    
+2810311919920070703Enalapril "erck NM"                               
+2810311919920090729Enalapril "Merck NM"                              
+2810311919920070703Enalapril "NM"                                    
+2810311929920090729Enalapril "Merck NM"                              
+2810311929920070703Enalapril "NM"                                    
+2810312049920000128NIZATIDIN "DURASCAN"                              
+2810312059920000128NIZATIDIN "DURASCAN"                              
+2810312129920060103Omeprazol "Generics"                              
+2810312129920090616Omeprazol "Merck NM"                              
+2810312179920000201BUDESONID GRY                                     
+2810312179920041011Budesonid PCH                                     
+2810312229920050816Rhinocort Turbuhaler                              
+2810312379920000224LAMISIL DERM GEL                                  
+2810312749919991216CETIRIZIN "JACABSEN PHARMA"                       
+2810312749920020618CETIRIZIN "JACOBSEN PHARMA"                       
+2810312869920001004NOBI-EQUENZA NT VET.                              
+2810312869920000419NOBI-EQUENZA T VET.                               
+2810313079920011031URAPLEX                                           
+2810313089920000622HEMOSOL LO                                        
+2810313090020001004NOBI-EQUENZA VET.                                 
+2810313350020040506Ceftriaxon "curasan"                              
+2810313350020000504CEFTRICOP                                         
+2810313350020020315COPCEFTRI                                         
+2810313360020040506Ceftriaxon "curasan"                              
+2810313360020000504CEFTRICOP                                         
+2810313360020020315COPCEFTRI                                         
+2810313459920031223Trisekvens Forte                                  
+2810313690020050712Gabapentin "ratiopharm"                           
+2810313690020000125TIFFIGABA                                         
+2810313690020011126TIFIGABA                                          
+2810313690020020402TIFIGABA                                          
+2810313690020011211TIFIGABA "RATIOPHARM"                             
+2810313700020050712Gabapentin "ratiopharm"                           
+2810313700020011126TIFIGABA                                          
+2810313700020020402TIFIGABA                                          
+2810313700020011211TIFIGABA "RATIOPHARM"                             
+2810313890020000328CISCOPE                                           
+2810313890020010711CISPHARM                                          
+2810313900020000328CISCOPE                                           
+2810313900020010711CISPHARM                                          
+2810313910020000328CISCOPE                                           
+2810313910020010711CISPHARM                                          
+2810314140020011029PROTEIN C "BAXTER"                                
+2810314200020041028Budesonid "Biochemie"                             
+2810314200020030926Budesonide "BASF"                                 
+2810314210020041028Budesonid "Biochemie"                             
+2810314210020030926Budesonide "BASF"                                 
+2810314260020020702KETONET                                           
+2810314340020030203CITALOPRAM "JACOBSEN PHARMA"                      
+2810314350020030203CITALOPRAM "JACOBSEN PHARMA"                      
+2810314360020030203CITALOPRAM "JACOBSEN PHARMA"                      
+2810314410020010625NESSP                                             
+2810314560020020516GABAHEX                                           
+2810314570020020516GABAHEX                                           
+2810314710020020130ACNEMED                                           
+2810314710020010711ISOMED                                            
+2810314710020080212Isotretinoin "Alpharma"                           
+2810314730020020904DELTAISO                                          
+2810314730020020917DELTAISO                                          
+2810314730020010711ISOTRET                                           
+2810314730020020909ISOTRETINOIN "RATIOPHARM"                         
+2810314740020020904DELTAISO                                          
+2810314740020020917DELTAISO                                          
+2810314740020010711ISOTRET                                           
+2810314740020020909ISOTRETINOIN "RATIOPHARM"                         
+2810314830020011023CAMPATH                                           
+2810314860020050719Ciprofloxacin "Biochemie"                         
+2810314860020010625CIPROFLOXACIN "MULTIPHARMA"                       
+2810314870020050719Ciprofloxacin "Biochemie"                         
+2810314870020010625CIPROFLOXACIN "MULTIPHARMA"                       
+2810314880020050719Ciprofloxacin "Biochemie"                         
+2810314880020010625CIPROFLOXACIN "MULTIPHARMA"                       
+2810315090020000921VIDEX                                             
+2810315190020030402AMDEPIN                                           
+2810315190020040319Amlodipin "GEA"                                   
+2810315190020090922Amlodipin "Hexal"                                 
+2810315190020000418AMPEDIN                                           
+2810315210020030402AMDEPIN                                           
+2810315210020040319Amlodipin "GEA"                                   
+2810315210020090922Amlodipin "Hexal"                                 
+2810315220020001013CYCLIO SPOT ON TIL SMè HUNDE                      
+2810315220020001025CYCLIO VET., SPOT-ON TIL HUND, 12 MG              
+2810315220020021217CYCLIO VET., TIL HUND, 12 MG                      
+2810315230020001013CYCLIO SPOT ON TIL MEDIUM HUNDE                   
+2810315230020001025CYCLIO VET., SPOT-ON TIL HUND, 30 MG              
+2810315240020001013CYCLIO SPOT ON TIL STORE HUNDE                    
+2810315240020001025CYCLIO VET., SPOT-ON TIL HUND, 60 MG              
+2810315820020090407Paroxetin "Merck NM"                              
+2810315820020090407Paroxetin "Mylan                                  
+2810315820020041216Paroxetin "NM"                                    
+2810315820020011126PAROXETIN "SCAND PHARM"                           
+2810315890020101102Premedox Vet.                                     
+2810315890020001220PULMODOX VET                                      
+2810315950020040803Calciumfolinat "Ebewe"                            
+2810315950020110823Calciumfolinat "Meda"                             
+2810316060020091229Ranitidin "Alpharma"                              
+2810316070020091229Ranitidin "Alpharma"                              
+2810316320020030514OPTIPAR                                           
+2810316320020040720Paroxetin "GEA"                                   
+2810316360020031211Zolpidem "Jacobsen Pharma"                        
+2810316360020031117Zolpidemtartrat "Jacobsen Pharma"                 
+2810316370020050412Flixotide                                         
+2810316720020010119UFT                                               
+2810316850020010608MP-METFORMINE HCI                                 
+2810316860020010608MP-METFORMINE HCI                                 
+2810316950020050706Roxithromycin "UNP"                               
+2810316960020050706Roxithromycin "UNP"                               
+2810316990020030715NETTOMEC VET.                                     
+2810316990020000719NETTOMED VET.                                     
+2810317320020051205Duphamox Vet.                                     
+2810317320020050411Duphamox Vet. til kat                             
+2810317580020020225PAROXETABS                                        
+2810317600020040325Paroxetin "Biochemie"                             
+2810317600020050606Paroxetin "Sandoz"                                
+2810317600020020225SEROXAGEN                                         
+2810318030020010220SERETIDE INHALER NON-CFC                          
+2810318090020001222PROZAC                                            
+2810318120020010124TRAMADOL "1A"                                     
+2810318320020001204ENALAPRIL COMP. "1A"                              
+2810318340020000929FLUOXETIN                                         
+2810318340020080115Fluoxetin "1A Farma"                              
+2810318340020010124FLUOXETIN "1A"                                    
+2810318450020020819LISINOPHARM                                       
+2810318460020020819LISINOPHARM                                       
+2810318470020020819LISINOPHARM                                       
+2810318580020001113VERAPAMIL "1A"                                    
+2810318590020001113VERAPAMIL "1A"                                    
+2810318600020001113VERAPAMIL "1A"                                    
+2810318610020001205VERAPAMIL "1A FARMA"                              
+2810318610020001113VERAPAMIL "1A"                                    
+2810318730020001113ACICLOVIR "1A"                                    
+2810318740020001113ACICLOVIR "1A"                                    
+2810318750020001113ACICLOVIR "1A"                                    
+2810318860020011005REXER                                             
+2810319110020010117ELEKTROLYTOPLùSNING TIL BICARBONAT SH-EL00        
+2810319110020011106SH-EL00, ELEKTROLYTOPLùSNING TIL BICABONAT        
+2810319120020011114ELEKTROLYTOPLùSNING TIL BICARBONAT SH-EL02        
+2810319130020011113BASISK OPLùSNING TIL BICARBONAT SH-BIC35          
+2810319310020010118CIMETIDIN "1A"                                    
+2810319320020001105CIMETIDIN !1A"                                    
+2810319320020010118CIMETIDIN "1A"                                    
+2810319330020010118CIMETIDIN "1A"                                    
+2810319850020080115Allopurinol "1A Farma"                            
+2810319850020010124ALLOPURINOL "1A"                                  
+2810319860020080115Allopurinol "1A Farma"                            
+2810319860020010124ALLOPURINOL "1A"                                  
+2810319920020020624LOVASTATIN "AL"                                   
+2810319930020020624LOVASTATIN "AL"                                   
+2810320270020031209Proleukin                                         
+2810320430020001213EURIFLE RCPFELV                                   
+2810320700020021011GABAPENTIN "2K"                                   
+2810320700020021211GABAPENTIN "2K"                                   
+2810320710020021011GABAPENTIN "2K"                                   
+2810320710020021223GABAPENTIN "2K"                                   
+2810320730020060829Gabapentin "DuraScan"                             
+2810320730020101130Gabapentin "Sandoz"                               
+2810320740020060829Gabapentin "DuraScan"                             
+2810320740020101130Gabapentin "Sandoz"                               
+2810320820020020430GABAT                                             
+2810320830020020430GABAT                                             
+2810320840020010621TRIMETHOPRIM "1A"                                 
+2810320850020010124TRIAZOLAM "1A"                                    
+2810320860020010309TIAMAZOL "1A"                                     
+2810320860020010312TIAMAZOL 1A FARMA                                 
+2810320860020010106TIAMIZOL "1A"                                     
+2810320900020011219FORACTIF 6 AIRMAX                                 
+2810320900020050128Foractif Airmax                                   
+2810320910020011219FORACTIF 12 AIRMAX                                
+2810320910020050128Foractif Airmax                                   
+2810321180020011008ROXITHROMYCIN "DURASCAN"                          
+2810321190020011008ROXITHROMYCIN "DURASCAN"                          
+2810321510120030623FONTEX                                            
+2810321600020040212Chemotadin                                        
+2810321600020010418LORAHAM                                           
+2810321600020040331Loratidin "Alternova"                             
+2810321600020040302Loratidin Alternova                               
+2810322320120010821PROPOFOL 2%                                       
+2810322600120070720Kreon                                             
+2810322600120070720Pankreon                                          
+2810322690120010926ENALAPRIL COMP. "RATIOPHARM"                      
+2810322770120010731ZOVANT                                            
+2810322780120010731ZOVANT                                            
+2810323050120020920LACTULOSE "PS"                                    
+2810323190120010312ARTIQ                                             
+2810323210120010312ARTIQ                                             
+2810323290120020613MOCLID                                            
+2810323290120021210MOCLOHAM                                          
+2810323560120011116ALLERTEC                                          
+2810323560120060801Alnok                                             
+2810323660120010608LORASTAD                                          
+2810323770120040209Cetirizin "Biochemie"                             
+2810323770120020213FAMTRICIN                                         
+2810323770120010612FEMCETIRIZIN                                      
+2810323880120090324Cetirizin "Merck NM"                              
+2810323880120051206Cetirizin "NM"                                    
+2810324080120011005SEROXAT                                           
+2810324340120050110Citalopram HEXAL                                  
+2810324340120041130Emocal                                            
+2810324350120050110Citalopram HEXAL                                  
+2810324350120041130Emocal                                            
+2810324360120050110Citalopram HEXAL                                  
+2810324360120041130Emocal                                            
+2810324400120071005Amoxicillin/clavulansyre "Alpharma"               
+2810324530120040108Zolpidem "Biochemie"                              
+2810324540120040108Zolpidem "Biochemie"                              
+2810324780120011019SOVILET                                           
+2810324830120020321OLICLINOMEL N 5-800 E                             
+2810324830120020312OLICLINOMEL N5-800E                               
+2810324930120030401BOLUSACPLUS                                       
+2810324940120030401BOLUSACPLUS                                       
+2810325090120010808PENICILLIN "PANPHARMA"                            
+2810325100120020319DIDRONATE                                         
+2810325220120011121SEROXETIN                                         
+2810325230120021010CIPROFLOXACIN "DURASCAN"                          
+2810325240120021010CIPROFLOXACIN "DURASCAN"                          
+2810325250120021010CIPROFLOXACIN "DURASCAN"                          
+2810325280120030625ZARASTEROL                                        
+2810325460120030624PARODOX                                           
+2810325460120021227PAROTOX                                           
+2810325460120100615Paroxetin "Copyfarm"                              
+2810325540120020703CIPROFLOXACIN "2K"                                
+2810325550120020703CIPROFLOXACIN "2K"                                
+2810325560120020703CIPROFLOXACIN "2K"                                
+2810325730120020315CAPTOPRIL "2K PHARMA"                             
+2810325730120020314CAPTOPRIL "2K"                                    
+2810325730120030805CAPTOPRIL "2K"                                    
+2810325730120050817Captopril "Pliva"                                 
+2810325740120020314CAPTOPRIL "2K"                                    
+2810325740120030805CAPTOPRIL "2K"                                    
+2810325740120050817Captopril "Pliva"                                 
+2810325820120030129MOCLOBEMID "2K PHARMA"                            
+2810325820120020503MOCLOBEMID "2K"                                   
+2810325820120050427Moclobemid "Pliva"                                
+2810325820120030203MOCLOBEMID PLIVA                                  
+2810325840120021227RANITIDIN "2K PHARMA"                             
+2810325840120020314RANITIDIN "2K"                                    
+2810325850120021227RANITIDIN "2K PHARMA"                             
+2810325850120020314RANITIDIN "2K"                                    
+2810325950120021028ACYTEC                                            
+2810325950120020531DELCETIRO                                         
+2810325950120010711HISTASIN                                          
+2810326280120021209LORATADIN "DURASCAN"                              
+2810326320120020715SIMCOR                                            
+2810326320120030411SIMPLAQOR                                         
+2810326320120050830Simvastatin "Biochemie"                           
+2810326320120050928Simvastatin "Sandoz                               
+2810326330120020715SIMCOR                                            
+2810326330120030411SIMPLAQOR                                         
+2810326330120050830Simvastatin "Biochemie"                           
+2810326340120020715SIMCOR                                            
+2810326340120030411SIMPLAQOR                                         
+2810326340120050830Simvastatin "Biochemie"                           
+2810326510120020805BIOTIDIN                                          
+2810326510120050719Ranitidin "Biochemie"                             
+2810326520120020805BIOTIDIN                                          
+2810326520120050719Ranitidin "Biochemie"                             
+2810326670120011004SEROXAT                                           
+2810327090120050412Seretide                                          
+2810327100120030620HAVRIX 1440                                       
+2810327260120021007LIPCUT                                            
+2810327260120050215Simvastatin "Gea"                                 
+2810327270120021007LIPCUT                                            
+2810327270120050215Simvastatin "Gea"                                 
+2810327280120021007LIPCUT                                            
+2810327280120050221Simvastatin "Gea"                                 
+2810327290120021007LIPCUT                                            
+2810327290120050215Simvastatin "Gea"                                 
+2810328020120050927Citalopram "Copyfarm"                             
+2810328020120021022CITAREJ                                           
+2810328030120050927Citalopram "Copyfarm"                             
+2810328030120021022CITAREJ                                           
+2810328040120050927Citalopram "Copyfarm"                             
+2810328040120021022CITAREJ                                           
+2810328060120100824Citaham                                           
+2810328070120100824Citaham                                           
+2810328080120100824Citaham                                           
+2810328160120030523ETOPOSID "FAULDING"                               
+2810328160120011204ETOPOSIDE "FAULDING"                              
+2810328200120050330Fluconazol "Gea"                                  
+2810328200120030109MEXOLE                                            
+2810328410120040302Zyrtec                                            
+2810328410120040302Zyrtec                                            
+2810328410120031111Zyrtec Zaptabs                                    
+2810328600120040901Conasol                                           
+2810328600120050817Conasol                                           
+2810328600120030305FLUCONASTAD                                       
+2810328600120040913Fluconazol "Actavis"                              
+2810328620120040901Conasol                                           
+2810328620120050817Conasol                                           
+2810328620120030305FLUCONASTAD                                       
+2810328620120100311Fluconastad                                       
+2810328620120040913Fluconazol "Actavis"                              
+2810328620120100311Fluconazol "Actavis"                              
+2810328620120100311Fluconazol "Actavis"                              
+2810328790120090519Fluconazol "Alpharma"                             
+2810328810120090519Fluconazol "Alpharma"                             
+2810329170120020416ENGERIX-B                                         
+2810329270120020201VIOXXAKUT                                         
+2810329280120020201VIOXXAKUT                                         
+2810329360120031107Carvedilol "Stichting"                            
+2810329370120031107Carvedilol "Stichting"                            
+2810329380120031107Carvedilol "Stichting"                            
+2810329390120031107Carvedilol "Stichting"                            
+2810329470120040914Ciprofloxacin "ACO"                               
+2810329470120030331CIPROFLOXACIN "KRKA"                              
+2810329480120040914Ciprofloxacin "ACO"                               
+2810329480120030331CIPROFLOXACIN "KRKA"                              
+2810329490120040914Ciprofloxacin "ACO"                               
+2810329490120030331CIPROFLOXACIN "KRKA"                              
+2810330060120090324Amlodipin "1A Farma"                              
+2810330080120090324Amlodipin "1A Farma"                              
+2810330140120050719Citalopram "Biochemie"                            
+2810330150120050719Citalopram "Biochemie"                            
+2810330160120050719Citalopram "Biochemie"                            
+2810330370120040604Moxagis                                           
+2810330390120040604Moxagis                                           
+2810330690120050412Ibuprofen "Actavis"                               
+2810330690120050412Ibuprofen "UNP"                                   
+2810330690120051027Ibuprofen "UNP"                                   
+2810330780120050719Loratadin "Biochemie"                             
+2810331130120030507DACRIOSOL PLUS UKONSERVERET                       
+2810331140120050802Tramadol "Actavis"                                
+2810331140120050830Tramadol "Actavis"                                
+2810331140120050802Tramadol "UNP"                                    
+2810331140120050816Tramadol "UNP"                                    
+2810331140120050928Tramadol "UNP"                                    
+2810331310120030408MIRCOM                                            
+2810331310120030214MIRTAZAPINE COMBUXIM                              
+2810331320120030408MIRCOM                                            
+2810331320120030214MIRTAZAPINE COMBUXIM                              
+2810331330120030408MIRCOM                                            
+2810331330120030214MIRTAZAPINE COMBUXIM                              
+2810331530120030513NIZATIDIN "JACOBSEN PHARMA"                       
+2810331530120050914Nizatidin "UNP"                                   
+2810331540120030513NIZATIDIN "JACOBSEN PHARMA"                       
+2810331540120050914Nizatidin "UNP"                                   
+2810331580120030131MIRTAZAPIN "DURASCAN"                             
+2810331590120030131MIRTAZAPIN "DURASCAN"                             
+2810331610120050622Proteq FluT                                       
+2810331750120060816Proteq Flu                                        
+2810331900120060523Simvastatin "Copyfarm"                            
+2810331900120060829Simvastatin "Copyfarm"                            
+2810331900120030515SIMVASTATIN "HEUMANN"                             
+2810331900120060524Statinacop                                        
+2810331910120060523Simvastatin "Copyfarm"                            
+2810331910120060829Simvastatin "Copyfarm"                            
+2810331910120030515SIMVASTATIN "HEUMANN"                             
+2810331910120060524Statinacop                                        
+2810331920120060523Simvastatin "Copyfarm"                            
+2810331920120060829Simvastatin "Copyfarm"                            
+2810331920120030515SIMVASTATIN "HEUMANN"                             
+2810331920120060524Statinacop                                        
+2810331960120091021Octalbin 5%                                       
+2810331970120091021Octalbin 20%                                      
+2810332400120050412Flixotide                                         
+2810332530120060314Momendol                                          
+2810332540120030306FLUCONALFA                                        
+2810332560120030306FLUCONALFA                                        
+2810332850120050412Seretide                                          
+2810332930120050412Seretide                                          
+2810333170120050719Felodipin "Biochemie"                             
+2810333180120050719Felodipin "Biochemie"                             
+2810333650120020115FLUCOGAMMA                                        
+2810333950220041108Fluoxetin "BMM"                                   
+2810333950220040204Fluoxone "BMM"                                    
+2810333950220040129Fluoxone "Medisan"                                
+2810333950220031215Fluoxone Divule                                   
+2810333960220050104Loratadin "Merck NM"                              
+2810333960220090728Loratadin "Merck NM"                              
+2810333960220050104Loratadin "NM"                                    
+2810333960220061024Loratadin "NM"                                    
+2810333980120020827SIMVASTATIN "DURASCAN"                            
+2810333990120020827SIMVASTATIN "DURASCAN"                            
+2810334000120020827SIMVASTATIN "DURASCAN"                            
+2810335140220020731ALESTICOL                                         
+2810335140220071029Simvastatin "Nycomed"                             
+2810335150220020731ALESTICOL                                         
+2810335150220071029Simvastatin "Nycomed"                             
+2810335160220020731ALESTICOL                                         
+2810335160220071029Simvastatin "Nycomed"                             
+2810335520220080827Diclofenac "Actavis" Retard                       
+2810335520220030501DICLOFENAC "UNP"                                  
+2810335520220050705Diclofenac "UNP" Retard                           
+2810335520220030310DICLOFONE                                         
+2810335530220080827Diclofenac  Retard  "Actavis"                     
+2810335530220080827Diclofenac  Retard "Actavis"                      
+2810335530220080827Diclofenac "Actavis" Retard                       
+2810335530220030501DICLOFENAC "UNP"                                  
+2810335530220050817Diclofenac "UNP" Retard                           
+2810335530220030310DICLOFONE                                         
+2810335680220050719Cefotaxim "Biochemie"                             
+2810335880220040301Ondansetron "1A"                                  
+2810335890220040301Ondansetron "1A"                                  
+2810335900220041220Emesetron                                         
+2810335910220041220Emesetron                                         
+2810336110220030821LISINOPRIL/HYDROCHLORTHIAZID "ALPHARMA"           
+2810336160220070828Amlodipin "Actavis"                               
+2810336160220040510Amlodipin "Tiefenbacher"                          
+2810336160220050525Amlodipin "UNP"                                   
+2810336170220070828Amlodipin "Actavis"                               
+2810336170220040510Amlodipin "Tiefenbacher"                          
+2810336170220050525Amlodipin "UNP"                                   
+2810336200220040510Amlodipin "AET"                                   
+2810336210220040510Amlodipin "AET"                                   
+2810336380220030709FLUCONAZOL "IWA"                                  
+2810336400220090812Terazosin "Merck NM"                              
+2810336400220050510Terazosin "NM"                                    
+2810336410220090812Terazosin "Merck NM"                              
+2810336410220050510Terazosin "NM"                                    
+2810336760220021210LOSEC-MUPS                                        
+2810336770220050301Enalapril/Hydrochlorthiazid "Copyfarm" 20 mg/12,5 
+2810336770220050223Enalapril/Hydrochlorthiazid "Copyfarm" 20/12,5 mg 
+2810336770220080318Enalapril/Hydrochlorthiazid "Copyfarm" 20mg/12,5mg
+2810336770220040623Enalapril/Hydrochlorthiazide "Medis"              
+2810336770220050223Trinaced                                          
+2810337010220040211Meloxicam "Bioglan"                               
+2810337010220040527Meloxicam "Niche"                                 
+2810337010220040211Meloxicam "NM"                                    
+2810337020220040211Meloxicam "Bioglan"                               
+2810337020220040527Meloxicam "Niche"                                 
+2810337020220040211Meloxicam "NM"                                    
+2810337030220100629Amlodipin "Copyfarm"                              
+2810337030220111115Amlodipin "Orifarm"                               
+2810337030220030730AMLODIPIN "REGENOLD"                              
+2810337040220100629Amlodipin "Copyfarm"                              
+2810337040220111115Amlodipin "Orifarm"                               
+2810337040220030730AMLODIPIN "REGENOLD"                              
+2810338330220021210DICLOFENAC "2K PHARMA"                            
+2810338330220060620Diclofenac "Copyfarm"                             
+2810338330220051205Diclofenac "Pliva"                                
+2810338340220021210DICLOFENAC "2K PHARMA"                            
+2810338340220060829Diclofenac "Copyfarm"                             
+2810338340220051205Diclofenac "Pliva"                                
+2810338480220020715SIMKRK                                            
+2810338480220030402ZOVASIN                                           
+2810338490220020715SIMKRK                                            
+2810338490220030402ZOVASIN                                           
+2810338500220020715SIMKRK                                            
+2810338500220030402ZOVASIN                                           
+2810338560220020715SIMVADUB                                          
+2810338560220030507SIMVASTATIN "GEVITA"                              
+2810338560220080513Simvastatin "Gevita"                              
+2810338560220070320Simvastatin "UNP"                                 
+2810338570220020715SIMVADUB                                          
+2810338570220030507SIMVASTATIN "GEVITA"                              
+2810338570220080513Simvastatin "Gevita"                              
+2810338570220070320Simvastatin "UNP"                                 
+2810338580220020715SIMVADUB                                          
+2810338580220030507SIMVASTATIN "GEVITA"                              
+2810338580220080513Simvastatin "Gevita"                              
+2810338580220070320Simvastatin "UNP"                                 
+2810338600220040512Omezol                                            
+2810338610220020530OMESOL                                            
+2810338610220040512Omezol                                            
+2810338910220060911Alsporin                                          
+2810338910220050606Cyclosporin "Albertex III"                        
+2810338920220060911Alsporin                                          
+2810338920220050606Cyclosporin "Albertex III"                        
+2810338930220060911Alsporin                                          
+2810338930220050606Cyclosporin "Albertex III"                        
+2810339090220030103OFLACIN                                           
+2810339090220041122Ofloxacin "PCD"                                   
+2810339370220040130Hyperil                                           
+2810339370220040219Lisinopril/hydrochlorthiazid "ratiopharm"         
+2810339630220020925BRICANYL TURBUHALER                               
+2810339640220020925RHINOCORT TURBUHALER                              
+2810340580220040108Omeprazol "Biochemie"                             
+2810340600220020709OMEPRAZOL ""BIOCHEMIE"                            
+2810340600220040108Omeprazol "Biochemie"                             
+2810340870220040120Medrapril                                         
+2810340880220040120Medrapril                                         
+2810340890220040120Medrapril                                         
+2810341110220050208Clarimycin                                        
+2810341110220050413Clarithromycin Actavis                            
+2810341110220050411Davicyn                                           
+2810341120220050208Clarimycin                                        
+2810341120220050413Clarithromycin Actavis                            
+2810341120220050411Davicyn                                           
+2810341430220040120Gamicen                                           
+2810342240220040121Naprilyn                                          
+2810342240220030711RAMIRYL                                           
+2810342250220040121Naprilyn                                          
+2810342250220030711RAMIRYL                                           
+2810342260220040121Naprilyn                                          
+2810342260220030711RAMIRYL                                           
+2810342270220040121Naprilyn                                          
+2810342270220030711RAMIRYL                                           
+2810342630220041208Qualimec Pour-On Vet.                             
+2810342680220030527GASTROMEX                                         
+2810342680220030303OMIZOL                                            
+2810342710220031128Ramipril Copyfarm                                 
+2810342710220031128Vimarin                                           
+2810343000220020911CARVELYX                                          
+2810343160220040303Panam                                             
+2810343160220031222Panam Brus                                        
+2810343240220021022DOXAZOSIN "PLIVA PHARMA"                          
+2810343240220021004DOXAZOSIN "PLIVA"                                 
+2810343340220021212FUCIDIN                                           
+2810343470220030508CLATUD                                            
+2810343520220020927ILTRASTAD 01                                      
+2810343520220050215Itrastad 01                                       
+2810344110220050802Budesonid "Breath"                                
+2810344110220021015BUDESONID BREATH, NEBULISER                       
+2810344110220040225Budesonid Nebuliser "Breath"                      
+2810344220220050110Citalopram HEXAL                                  
+2810344220220041130Emocal                                            
+2810344380220090714Simvastatin "Merck NM"                            
+2810344380220051024Simvastatin "NM"                                  
+2810344390220090714Simvastatin "Merck NM"                            
+2810344390220051024Simvastatin "NM"                                  
+2810344490220030828ENGERIX-B                                         
+2810344610220021101EQUILIS STREPE VET.                               
+2810345270220030217ATACAND PLUS                                      
+2810345270220071207Atacand Zid                                       
+2810345320220050923Olsarmen                                          
+2810345320220030528VOTUM                                             
+2810345330220050923Olsarmen                                          
+2810345330220030528VOTUM                                             
+2810345340220050923Olsarmen                                          
+2810345340220030528VOTUM                                             
+2810346000220030908FLECTOR TISSUGEL                                  
+2810346060220040227Mandolgin Flash                                   
+2810346800320050801Afine                                             
+2810346800320050801Terbinafin Actavis                                
+2810346800320050801Terbinafin Actavis                                
+2810347080320060823Alfpros retard                                    
+2810347080320090729Alfuzosin "Merck NM"                              
+2810347080320100622Alfuzosin "Mylan"                                 
+2810347080320100921Alfuzosin "Mylan"                                 
+2810347080320090729Alfuzosin Mylan                                   
+2810347080320100622Lafunomyl                                         
+2810347300320060720Prostaretard                                      
+2810348500320040601PropoFlo Vet.                                     
+2810348670320040706Emenafren                                         
+2810348680320040706Emenafren                                         
+2810348980320040720Pravastatin "Pharmacons"                          
+2810348990320040720Pravastatin "Pharmacons"                          
+2810349020320031107Clonelen                                          
+2810349030320031107Clonelen                                          
+2810349040320031107Clonelen                                          
+2810349050320031107Clonelen                                          
+2810349290320040415Ondansetron "Alternova"                           
+2810349610320050131Triagine                                          
+2810350060320090505Coversyl                                          
+2810350090320040322Cargav                                            
+2810350100320040322Cargav                                            
+2810350110320040322Cargav                                            
+2810350120320040322Cargav                                            
+2810350490320050131Trigomal                                          
+2810350560320041001Dispomal                                          
+2810350560320050131Gudalam                                           
+2810350570320041001Dispomal                                          
+2810350570320050131Gudalam                                           
+2810350580320041001Dispomal                                          
+2810350580320050131Gudalam                                           
+2810350590320041001Dispomal                                          
+2810350590320050131Gudalam                                           
+2810351660320050819Lagichem                                          
+2810351670320050819Lagichem                                          
+2810351680320050819Lagichem                                          
+2810351710320030729LOVASTATIN "KRKA"                                 
+2810351720320030729LOVASTATIN "KRKA"                                 
+2810352000320031008Lovastatin "EuroPharmaDK"                         
+2810352030320050511Rikazid                                           
+2810352140320060320Tramadol "Copyfarm"                               
+2810352500320051103Metformin "HEXAL"                                 
+2810352500320051103Metformin "Jacobsen Pharma"                       
+2810352500320060215Metformin "Jacobsen Pharma"                       
+2810352500320050801Metformin "Jacobsen"                              
+2810352510320051103Metformin "HEXAL"                                 
+2810352510320051103Metformin "Jacobsen Pharma"                       
+2810352510320060215Metformin "Jacobsen Pharma"                       
+2810352510320050801Metformin "Jacobsen"                              
+2810352520320060509Kantamon                                          
+2810352520320050801Torformin                                         
+2810352530320060510Kantamon                                          
+2810352530320050801Torformin                                         
+2810352580320080912Quinapril "Copyfarm"                              
+2810352590320080912Quinapril "Copyfarm"                              
+2810352600320080912Quinapril "Copyfarm"                              
+2810352660320051208Atacare                                           
+2810352660320050512Hjertemin                                         
+2810352730320051025Aciclovir "Jacobsen Pharma"                       
+2810352730320050729Aciclovir "Jacobsen"                              
+2810352740320051025Aciclovir "Jacobsen Pharma"                       
+2810352740320050729Aciclovir "Jacobsen"                              
+2810352750320051025Aciclovir "Jacobsen Pharma"                       
+2810352750320050729Aciclovir "Jacobsen"                              
+2810352760320040712Amlostad                                          
+2810352760320040402Ladipon                                           
+2810352770320040712Amlostad                                          
+2810352770320040402Ladipon                                           
+2810352880320070112Diclomed                                          
+2810352880320080909Diklofenak "Copyfarm"                             
+2810352880320061201Feclon                                            
+2810352920320060328Cimasan                                           
+2810352920320050729Thomavir                                          
+2810352930320100420Aciclovir "1A  Farma"                             
+2810352930320090616Aciclovir "1A Farma"                              
+2810352930320060328Cimasan                                           
+2810352930320050729Thomavir                                          
+2810352940320060328Cimasan                                           
+2810352940320050729Thomavir                                          
+2810353050320040302Amlodipin mesilat "Biochemie"                     
+2810353060320040302Amlodipin mesilat "Biochemie"                     
+2810353800320040225Amlodipin "KPD"                                   
+2810353820320040225Amlodipin "KPD"                                   
+2810353850320040325Dipinocard                                        
+2810353860320040325Dipinocard                                        
+2810354150320060308Formoterol Clickhaler                             
+2810354340320051221Burkapamil                                        
+2810354340320060328Burkapamil                                        
+2810354340320051221Verapamil "1A Farma"                              
+2810354350320051206Verapamil "Jacobsen Pharma"                       
+2810354730320060130Lagichem                                          
+2810354740320060130Lagichem                                          
+2810354750320030812LAGICEHM                                          
+2810354750320060130Lagichem                                          
+2810355020320060210Thiamazol "Jacobsen Pharma"                       
+2810355470320110601Azathioprin "Copyfarm"                            
+2810355830320110208Alnok                                             
+2810355830320060801Biocetrin                                         
+2810355830320031205Cetirizin "Biochemie"                             
+2810355840320040401Ceftriaxon "Biochemie"                            
+2810355850320040401Ceftriaxon "Biochemie"                            
+2810355890320041125Loratadin "BMM"                                   
+2810355890320040309Loratadin "Medisan"                               
+2810355900320081230Altermicron                                       
+2810355900320081230Altermicron                                       
+2810355900320081230Gliclazid "Alternova"                             
+2810355900320101117Gliclazid "Alternova"                             
+2810356350320040816Ramipril "Ranbaxy                                 
+2810356350320040616Ramitol                                           
+2810356370320040106Ramipharm "Stada"                                 
+2810356380320040106Ramipharm "Stada"                                 
+2810356470320041108Paroxetin "Stichting"                             
+2810356970320040324Azithromycin "Gea"                                
+2810357090320030923Carvedilol ""AET"                                 
+2810357090320040220Carvedilol "AET"                                  
+2810357100320040220Carvedilol "AET"                                  
+2810357110320040220Carvedilol "AET"                                  
+2810357120320040326Carvedilol "Tiefenbacher"                         
+2810357120320090728Carvedilol "UNP"                                  
+2810357130320040326Carvedilol "Tiefenbacher"                         
+2810357130320090728Carvedilol "UNP"                                  
+2810357140320040326Carvedilol "Tiefenbacher"                         
+2810357140320090616Carvedilol "UNP"                                  
+2810357310320060829Acetylcystein "Copyfarm"                          
+2810357310320060117Mycin                                             
+2810357610320040608Pravastatin "Gea"                                 
+2810357610320040726Pravastatin "GEA"                                 
+2810357610320040617Pravastatin "HEXAL"                               
+2810357620320040608Pravastatin "Gea"                                 
+2810357620320040726Pravastatin "GEA"                                 
+2810357620320040617Pravastatin "HEXAL"                               
+2810357940320081125Ketoprofen "Jacobsen Pharma"                      
+2810358010320040331Sertraline "Mount"                                
+2810358020320040331Sertraline "Mount"                                
+2810359420320060510Diclofepit                                        
+2810359940320031211Tylan                                             
+2810360020320100713Carboplatin "Meda"                                
+2810360190320040719Uroxatral                                         
+2810360230320040629Asasantin Retard                                  
+2810360280320050913Glimepirid "APS"                                  
+2810360310320050913Glimepirid "APS"                                  
+2810360370320050215Itraconazol                                       
+2810360370320080923Itraconazol "Merck NM"                            
+2810360370320090729Itraconazol "Merck NM"                            
+2810360370320080923Itraconazol "Mylan"                               
+2810360370320060516Itraconazol "QBL"                                 
+2810360470320040114Meloxcipam                                        
+2810360470320060612Moxcipam                                          
+2810360640320070503Losartankalium "ratiopharm"                       
+2810360640320050726Sartanol                                          
+2810360670320070503Losartankalium "ratiopharm"                       
+2810360670320050726Sartanol                                          
+2810360830320041104Paclitaxel "IWA"                                  
+2810360900320050215Itraconazol "GEA"                                 
+2810360900320050425Itraconazol "Jacobsen Pharma"                     
+2810361010320040310Linco-Spectin                                     
+2810361020320040310Linco-Spectin                                     
+2810361500320060327Antideprex                                        
+2810361500320060327Citalopram Alternova                              
+2810361510320060327Antideprex                                        
+2810361530320060327Antideprex                                        
+2810361740320040812Omeprazol "BMM"                                   
+2810362210320050829Lansoprazol "UNP"                                 
+2810362210320040102Lansoprazol UNP                                   
+2810362210320050727Lapzol                                            
+2810362210320051025Lapzol                                            
+2810362220320050829Lansoprazol "UNP"                                 
+2810362220320040102Lansoprazol UNP                                   
+2810362220320051025Lapzol                                            
+2810362310320040720Omeprazol "Ratiopharm"                            
+2810362320320040720Omeprazol "Ratiopharm"                            
+2810362510320060421Acinil                                            
+2810362510320040113Cimetidin                                         
+2810362510320060421Cimetidin "Jacobsen Pharma"                       
+2810362510320060912Cimetidin "Jacobsen Pharma"                       
+2810362520320060421Acinil                                            
+2810362520320040113Cimetidin                                         
+2810362520320060421Cimetidin "Jacobsen Pharma"                       
+2810362520320060912Cimetidin "Jacobsen Pharma"                       
+2810362530320060421Acinil                                            
+2810362530320040113Cimetidin                                         
+2810362530320060421Cimetidin "Jacobsen Pharma"                       
+2810362530320060912Cimetidin "Jacobsen Pharma"                       
+2810362580320040119Altercor                                          
+2810362580320040116Alterecor                                         
+2810362580320040830Simvastatin "UNP"                                 
+2810362590320040119Altercor                                          
+2810362590320040116Alterecor                                         
+2810362590320040830Simvastatin "UNP"                                 
+2810362600320040119Altercor                                          
+2810362600320040116Alterecor                                         
+2810362600320040830Simvastatin "UNP"                                 
+2810363260420050309M725 HCCh                                         
+2810363270320040819Nisocline                                         
+2810363380420040526Simvastatin "KRK"                                 
+2810363400420051115Millstad                                          
+2810364470420061117Terbinafin "Chista"                               
+2810364500420060704Clamycinstad                                      
+2810364510420060704Clamycinstad                                      
+2810364540420041006Mirzaten                                          
+2810365310420050311Efexor Depot                                      
+2810365500420080812Dipinocard                                        
+2810365520420080812Dipinocard                                        
+2810365600420050414Nobivac Ducat Vet.                                
+2810365910420040729Moxoham                                           
+2810365920420040729Moxoham                                           
+2810366260420041222Zofenil Plus                                      
+2810366280420041222Bifril Plus                                       
+2810367080420100310Gabapentin "Kappler Pharma Consult"               
+2810367080420070614Gabapentin "KPC"                                  
+2810367080420070620Gabapentin ?Kappler Pharma Consult?               
+2810367100420051205Alfu "TAD"                                        
+2810367100420060727Alfuzosin "Alternova                              
+2810367100420060727Alfuzosin "Alternova"                             
+2810367100420101019Alfuzosin "Alternova"                             
+2810367100420060727Alfuzosin "Lindopharm"                            
+2810367100420060424Alfuzosin "TAD"                                   
+2810367350420050525Sertrabeck                                        
+2810367360420050525Sertrabeck                                        
+2810368240420090304Enrofloxacin "Gosmore"                            
+2810368240420070315Enrofloxacin Gosmore                              
+2810368240420060828ENX/I/50                                          
+2810368450420050209Striant SR                                        
+2810368850420050425Naprimed                                          
+2810368860420050425Naprimed                                          
+2810368860420050425Naprimed                                          
+2810368930420041207Moprilam                                          
+2810368930420041018Prinetax,                                         
+2810368930420041207Quinapril "Alernova"                              
+2810368960420051025Gadofosveset Trisodium "Schering AG"              
+2810369770420060105Terbinafin "Durascan"                             
+2810369770420060213Terbinafin "Sandoz"                               
+2810370090420050214Itrastad 04                                       
+2810370990420051025Paclitaxel "Jacobsen Pharma"                      
+2810370990420110823Paclitaxel "Meda"                                 
+2810371020420060725Somatropin "Sandoz"                               
+2810371210420050216Lansoprazol "Generics"                            
+2810371210420090728Lansoprazol "Merck NM"                            
+2810371220420050216Lansoprazol "Generics"                            
+2810371220420090728Lansoprazol "Merck NM"                            
+2810371260420050302Ondansetron "Hexal"                               
+2810371270420050420Ciprofloxacin "BMM"                               
+2810371310420050125Lantrolix                                         
+2810371580420061010Granisol                                          
+2810371930420051107Tamsulosin "STD" (AKO)                            
+2810371930420070523Tamsulosinhydrochlorid "STD"                      
+2810371950420090811Sertralin "Merck NM"                              
+2810371950420050315Sertralin "NM"                                    
+2810371960420090811Sertralin "Merck NM"                              
+2810371960420050315Sertralin "NM"                                    
+2810372280420060407Enalapril HCTZ "Alternova"                        
+2810372280420050909Enalapril HCTZ Alternova                          
+2810372650420050613Pracetam 10%                                      
+2810372850420050708Adin                                              
+2810372850420070815Desmopressin "Nordic Drugs"                       
+2810372860420050708Adin                                              
+2810372860420070821Desmopressin "Nordic Drugs"                       
+2810373020420050307Metoprolol Succinat "1A Farma"                    
+2810373030420050307Metoprolol Succinat "1A Farma"                    
+2810373040420050307Metoprolol Succinat "1A Farma"                    
+2810373060420050307Metoprolol Succinat "1A Farma"                    
+2810373660420061023Enalapril/Hydrochlorothiazid "Actavis"            
+2810373660420050425Enatabs                                           
+2810373700420070102Atorvastatin "Mimer"                              
+2810373710420070102Atorvastatin "Mimer"                              
+2810373720420070102Atorvastatin "Mimer"                              
+2810373730420070102Atorvastatin "Mimer"                              
+2810374180420041122Carvediol "Teva"                                  
+2810374400420070810Omeprazol "Copyfarm"                              
+2810374400420070904Omeprazol "Orifarm"                               
+2810374760420041130Esnorcomp Sekvens                                 
+2810374770420051109Sinestic Turbohaler                               
+2810374900420060124Terbinafin "Dr. Reddy"                            
+2810375170420050401Apralan                                           
+2810375270420050715Healip                                            
+2810375720420070810Topiramat "MRC"                                   
+2810375720420060905Topiramate "Mimer"                                
+2810375720420061017Topiramate "MRC"                                  
+2810375730420070810Topiramat "MRC"                                   
+2810375730420060905Topiramate "Mimer"                                
+2810375730420061017Topiramate "MRC"                                  
+2810375920420070328Buprenelene                                       
+2810375920420050106Buprenelene "Jacobsen Pharma"                     
+2810375920420091021Buprenorphin "Nycomed"                            
+2810375920420050520Subulene                                          
+2810376260520090811Terbinafin "Merck NM"                             
+2810376390420070226Lirtazin                                          
+2810376400420070416Lirtazin                                          
+2810376410420070416Lirtazin                                          
+2810376470420080116Immunglobulin "ZLB Behring"                       
+2810376470420050531Sandoglobulin NF Liquid                           
+2810376760520061107Furosemid "PharmAdvice"                           
+2810377180520051005Pamidronat "Teva"                                 
+2810377480520050414Remeron Smelt                                     
+2810378070520050607Co-Diovan                                         
+2810378070520070410Diovan Comp                                       
+2810378220520060220Lisinopril/Hydrochlorothiazid "Alternova"         
+2810378230520060220Lisinopril/Hydrochlorothiazid "Alternova"         
+2810378390520051108Fluoxetin "Merck NM"                              
+2810378390520080523Foxetin "Merck NM"                                
+2810378550520051121Fosinopril "Teva"                                 
+2810378560520051121Fosinopril "Teva"                                 
+2810378940520050915Lanso "KRKA"                                      
+2810378940520060103Safemar                                           
+2810379100520050701Nicorette Pepparmint                              
+2810379100520080108Zease Freshmint                                   
+2810379110520050701Nicorette Pepparmint                              
+2810379110520080108Zease Freshmint                                   
+2810379220520101117Methadon "Alternova"                              
+2810379220520050421Pinadon Methadon                                  
+2810379220520050909Pinadone Methadon                                 
+2810379220520050421Pinadone Methadon "DTF"                           
+2810379340520050915Ketoconazole Shampoo 2%                           
+2810379340520050425Nizoral Shampoo 2%                                
+2810380120520061107Clozapin "PharmAdvice"                            
+2810380130520061107Clozapin "PharmAdvice"                            
+2810380200520051107Tamsulosin "Merck NM"                             
+2810380250520051107Tamsulosin "Alternova"                            
+2810380770520051107Tamsulosin "Ratiopharm"                           
+2810380870520070129Biocip                                            
+2810380870520060929Ciprocina                                         
+2810380870520070228Ciprofloxacin "Claris Lifesciences"               
+2810381190520060714Rosiglitazone/Glimepiride "GSK"                   
+2810381220520060714Rosiglitazone/Glimepiride "GSK"                   
+2810381510520060112Benator Plus                                      
+2810381520520060112Benator Plus                                      
+2810381750520051111Meglimid                                          
+2810381970520090728Glimepirid "Merck NM"                             
+2810381980520090728Glimepirid "Merck NM"                             
+2810381990520090728Glimepirid "Merck NM"                             
+2810382000520090728Glimepirid "Merck NM"                             
+2810382190520060314Rhinocort Turbuhaler                              
+2810382670520070911Assieme Turbohaler                                
+2810383070520070118Metaflumizone "Fort Dodge" til katte              
+2810383080520070118Metaflumizone/Amitraz "Fort Dodge" til hunde      
+2810384470520090812Sumatriptan "Merck NM"                            
+2810384470520060302Sumatriptan "Merck"                               
+2810384480520090812Sumatriptan "Merck NM"                            
+2810384480520060302Sumatriptan "Merck"                               
+2810384630520060213Alfuzosin "1 A Farma"                             
+2810384630520050920Alfuzosin "1 A Farmal"                            
+2810384750520060816Enbrel                                            
+2810384750520060815Enbrel Pëd                                        
+2810384850520090728Lamotrigin "Merck NM"                             
+2810384850520060607Lamotrigine tabletter                             
+2810384860520090728Lamotrigin "Merck NM"                             
+2810384860520060607Lamotrigine tabletter                             
+2810384870520090728Lamotrigin "Merck NM"                             
+2810384870520060607Lamotrigine tabletter                             
+2810384880520090728Lamotrigin "Merck NM"                             
+2810384880520060607Lamotrigine tabletter                             
+2810384890520060110Tylan Vet                                         
+2810385750520071029Felartan                                          
+2810385750520120503Losartankalium  "Actavis"                         
+2810385750520111130Losartankalium "Actavis"                          
+2810386300520060118Xatral XL                                         
+2810386440520100423Lamotrigine "Arrow"                               
+2810386450520100423Lamotrigine "Arrow"                               
+2810386460520100423Lamotrigine "Arrow"                               
+2810386650520070712Paroxetine "Ranbaxy"                              
+2810387130520070111Lamotrigine "Teva"                                
+2810387660520081010Topiramat "IWA"                                   
+2810387670520081010Topiramat "IWA"                                   
+2810387680520081010Topiramat "IWA"                                   
+2810387690520081010Topiramat "IWA"                                   
+2810387710520070808Mirtazapin "Sandoz"                               
+2810387790520060216Pulmodox Vet.                                     
+2810388110520060306Asanyl                                            
+2810388120520060306Asanyl                                            
+2810388400520070912Ebastine "Pharmcom"                               
+2810388410520070912Ebastine "Pharmcom"                               
+2810388440620110517Pulmicort Turbohaler                              
+2810390020620061213Impaqtiv                                          
+2810390100620061106Fentarix                                          
+2810390330620071112Sertralin "Aurobindo"                             
+2810390330620110712Sertralin "Bluefish"                              
+2810390330620070618Sertraline "Aurex"                                
+2810390340620071112Sertralin "Aurobindo"                             
+2810390340620110712Sertralin "Bluefish"                              
+2810390340620070618Sertraline "Aurex"                                
+2810390400620070426Leventa                                           
+2810390610620090115Tarnasol                                          
+2810390620620090115Tarnasol                                          
+2810390630620090115Tarnasol                                          
+2810391170620060314Tarka "Abbott"                                    
+2810391500620061128Reminyl Retard                                    
+2810391540620060815Cobactan LA                                       
+2810391550620070320Mirtazapine "Ethypharm"                           
+2810391560620070320Mirtazapine "Ethypharm"                           
+2810391570620070320Mirtazapine "Ethypharm"                           
+2810391600620060323AquaVac Vibrio                                    
+2810391650620060822Tylan Vet.                                        
+2810391670620060621Stabox Premix Vet.                                
+2810392310620060706Co-Diov†n                                         
+2810392320620060706Co-Diov†n                                         
+2810392490620090721Faxiprol                                          
+2810392500620090721Faxiprol                                          
+2810392510620090721Faxiprol                                          
+2810392550620070622Pantoprazole "Sandoz"                             
+2810392880620080227Cabergolin "Billev Pharma"                        
+2810392890620080227Cabergolin "Billev Pharma"                        
+2810392900620080227Cabergolin "Billev Pharma"                        
+2810392950620060503Setralin "Teva"                                   
+2810392960620060503Setralin "Teva"                                   
+2810393480620090923Losamerck                                         
+2810393480620071019Losartan "Merck NM"                               
+2810393490620090923Losamerck                                         
+2810393490620071019Losartan "Merck NM"                               
+2810393510620070313Uni Diamicron                                     
+2810393630620060818Co-Diovan                                         
+2810393630620060519Co-Diovan Forte                                   
+2810393630620061124Diovan Comp 160 mg/12,5 mg                        
+2810393710620091006Miramerck                                         
+2810393710620091117Miramerck                                         
+2810393710620070522Mirtazapin "Merck NM"                             
+2810393710620091009Mirtazapine "Mylan"                               
+2810393720620091006Miramerck                                         
+2810393720620091117Miramerck                                         
+2810393720620070522Mirtazapin "Merck NM"                             
+2810393720620091009Mirtazapine "Mylan"                               
+2810393730620091006Miramerck                                         
+2810393730620091117Miramerck                                         
+2810393730620070522Mirtazapin "Merck NM"                             
+2810393730620091009Mirtazapine "Mylan"                               
+2810393770620080704Anastrozol "Merck NM"                             
+2810393890620061219Nitrolingual Sublingual Spray                     
+2810394000620080117Fosaprepitant "MSD"                               
+2810394030620080619Piperacillin/Tazobactam                           
+2810394040620080619Piperacillin/Tazobactam                           
+2810394350620060818Co-Diovan Forte 160 mg/25 mg                      
+2810394350620061124Diovan Comp 160 mg/25 mg                          
+2810395270620070306Cyclo Spray                                       
+2810396040620070913Coxydon                                           
+2810396040620080506Oxyratio                                          
+2810396050620070913Coxydon                                           
+2810396050620080506Oxyratio                                          
+2810396060620070913Coxydon                                           
+2810396060620080506Oxyratio                                          
+2810396200620061006Doxycyclin                                        
+2810396740620090421Gemcitabin "Mayne"                                
+2810396740620070803Gemcitabine "Mayne"                               
+2810396750620090421Gemcitabin "Mayne"                                
+2810396750620070803Gemcitabine "Mayne"                               
+2810396760620090421Gemcitabin "Mayne"                                
+2810396760620070803Gemcitabine "Mayne"                               
+2810397460620061010Flixotide diskos                                  
+2810397470620061010Flixotide diskos                                  
+2810397470620060802Flixotide diskus                                  
+2810397480620061010Flixotide diskos                                  
+2810397520620091021Nopin                                             
+2810397520620090204Paracetamol "Copyfarm"                            
+2810397660620070927Cabergolin "Arrow"                                
+2810397720620080304Topiramate "Arrow"                                
+2810397720620060807Topiramate "Arrow",                               
+2810397730620080304Topiramate "Arrow"                                
+2810397730620060807Topiramate "Arrow",                               
+2810397810620080722Perindopril "BMM Pharma"                          
+2810398150620071114ZyComb                                            
+2810398540620070827Clindakne                                         
+2810398870620060830Irinotekan                                        
+2810398870620080102Irinotekan "BMM Pharma"                           
+2810399320620070614Anidulafungin                                     
+2810399500620060915Flubenol Vet                                      
+2810399680620071126Donepezil Tevagen                                 
+2810399840620080214f2+                                               
+2810399850620060925Oxytocin Vet                                      
+2810399910620080314Asyntil                                           
+2810399920620080314Asyntil                                           
+2810400710620080305Glirat                                            
+2810400970620100302Losapensa                                         
+2810400970620061127Losartan-Hydrochlorthiazid "Jacobsen Pharma"      
+2810400970620100205Losartankalium/Hydrochlorthiazid "Farmaprojects"  
+2810400970620090813Losartankalium/hydrochlorthiazid "Jacobsen Pharma"
+2810400980620100302Losapensa                                         
+2810400980620061127Losartan-Hydrochlorthiazid "Jacobsen Pharma"      
+2810400980620100205Losartankalium/Hydrochlorthiazid "Farmaprojects"  
+2810400980620090813Losartankalium/hydrochlorthiazid "Jacobsen Pharma"
+2810401170620071122Amiodaron "A-Pharma"                              
+2810401610620070510Nobivac Tricat III                                
+2810401710620061222Tiamutin 12,5 % Soluci¢n Oral                     
+2810401770620081002Piperacillin/Tazobactam "Kabi"                    
+2810401780620081002Piperacillin/Tazobactam "Kabi"                    
+2810402070620061213Indapamide "Alternova"                            
+2810402210620070403Fluconazole Redibag "Baxter"                      
+2810402560620061106Rhinocort Turbuhaler                              
+2810402610620061107Nexim                                             
+2810402740620061108Avtonel                                           
+2810402790620080509Bicalutamid "Synthon"                             
+2810402790620071203Bicalutamide "Synthon"                            
+2810402810620080428Bicalutamid "Avansor"                             
+2810402810620071203Bicalutamide "Avansor"                            
+2810402820620080428Bicalutamid "Avansor"                             
+2810402820620071203Bicalutamide "Avansor"                            
+2810403540620080310Losartan Potassium                                
+2810403540620090428Losartankalium/hydrochlorthiazid "Liconsa"        
+2810403550620080310Losartan Potassium                                
+2810403550620090428Losartankalium/hydrochlorthiazid "Liconsa"        
+2810404390620081125Ropimerck                                         
+2810404440620090218Omeprazol "Chemo Iberica"                         
+2810404450620090218Omeprazol "Chemo Iberica"                         
+2810404590620090922Trandolapril "Merck NM"                           
+2810404610620090922Trandolapril "Merck NM"                           
+2810404780620071114Oestrogel                                         
+2810404890620081010Pantomed                                          
+2810404900620081010Pantomed                                          
+2810404910620090421Pantoprazol STADA                                 
+2810404910620081001Tifizol                                           
+2810405480720070508Cotareg                                           
+2810405830620070723Mirtazapin Smelt "Stada"                          
+2810405840620070723Mirtazapin Smelt "Stada"                          
+2810405850620070723Mirtazapin Smelt "Stada"                          
+2810406330720080509Bicalutamid "Nycomed"                             
+2810407050720110921Olanzapin Teva                                    
+2810407050720080102Olanzapine "Teva"                                 
+2810407050720081024Olanzapine Teva                                   
+2810408130720080213Losator Comp.                                     
+2810408140720080213Losator Comp.                                     
+2810408170720070508Cotareg                                           
+2810408360720080828Risperidone "BMM Pharma"                          
+2810408370720080828Risperidone "BMM Pharma"                          
+2810408380720080828Risperidone "BMM Pharma"                          
+2810408390720080828Risperidone "BMM Pharma"                          
+2810408400720080828Risperidone "BMM Pharma"                          
+2810408500720071116Metoprolol "ratiopharm"                           
+2810409450720081209Pharmasin                                         
+2810409760720080410Ropirade                                          
+2810410990720080403Aureomycin100 Granular                            
+2810411030720090217Losartankalium "Copyfarm"                         
+2810411280720070629Klaricid XL                                       
+2810411890720070419Venlafaxine Retard                                
+2810411890720080919Venlamerck Retard                                 
+2810411900720070419Venlafaxine Retard                                
+2810411900720080919Venlamerck Retard                                 
+2810412180720080423Perindoprilarginin/Amlodipin "Servier"            
+2810412180720080421Procoversyl "Les Laboratoires Servier"            
+2810412190720080423Perindoprilarginin/Amlodipin "Servier"            
+2810412190720080421Procoversyl "Les Laboratoires Servier"            
+2810412200720080423Perindoprilarginin/Amlodipin "Servier"            
+2810412200720080421Procoversyl "Les Laboratoires Servier"            
+2810412210720080423Perindoprilarginin/Amlodipin "Servier"            
+2810412210720080421Procoversyl "Les Laboratoires Servier"            
+2810412290720080917Losacomp                                          
+2810412290720091019Lozamyl Comp.                                     
+2810412290720090721Lozid Comp.                                       
+2810412890720080630Natriumchlorid 9 mg/ml "Noridem"                  
+2810412890720080624Sodium Chloride                                   
+2810413110720081009Valaciklovir "Merck NM"                           
+2810413110720081009Valaciklovir "Mylan"                              
+2810413470720071018Effexor L.P.                                      
+2810413550720070522Lafaxin "Retard"                                  
+2810413550720070912Lafaxin Retard                                    
+2810413550720081121Vaxalin Retard                                    
+2810414900720080905Brimonidin "ratiopharm"                           
+2810414980720070913Lorzaar Protect                                   
+2810415430720080910Lacosamide "Schwarz Pharma"                       
+2810416710720081209Panzol                                            
+2810416720720081209Panzol                                            
+2810416960720071018Effexor L.P.                                      
+2810418590720120403Quetiapin "Teva"                                  
+2810418600720120403Quetiapin "Teva"                                  
+2810418620720120403Quetiapin "Teva"                                  
+2810418630720120403Quetiapin "Teva"                                  
+2810419390720080408Lozaar                                            
+2810420760720080213Fluconazole "Claris"                              
+2810422000720090715Amisulpride "DLF"                                 
+2810423300720071109Diazepam "2care4)                                 
+2810426250720100121Escitalopram "Alchemia"                           
+2810426260720100121Escitalopram "Alchemia"                           
+2810426270720100121Escitalopram "Alchemia"                           
+2810426280720100121Escitalopram "Alchemia"                           
+2810427240820081203Tifaxin XR                                        
+2810428070820090302Metoprolol "ratiopharm"                           
+2810428930820090331Pramipexol "EQL Pharma"                           
+2810429000820090608Escitalopram "Vera Pharma"                        
+2810429000820090130Escitalopram-"Vera"                               
+2810429010820090608Escitalopram "Vera Pharma"                        
+2810429010820090130Escitalopram-"Vera"                               
+2810429020820090608Escitalopram "Vera Pharma"                        
+2810429020820090130Escitalopram-"Vera"                               
+2810429030820090608Escitalopram "Vera Pharma"                        
+2810429030820090130Escitalopram-"Vera"                               
+2810430100820090709Escitralix                                        
+2810430110820090709Escitralix                                        
+2810430120820090709Escitralix                                        
+2810430130820090709Escitralix                                        
+2810431060820090805Pramipexol "Orion"                                
+2810431540820080417Symbicort Turbuhaler                              
+2810432620820090922Metropolol-Acino                                  
+2810432740820080708Propeclear                                        
+2810433250820081215Clomipramin "2care4"                              
+2810435040820100209Oralcon                                           
+2810435250820090918Metformin "USV"                                   
+2810436330820090714Lecisyn                                           
+2810436970820090302Metformin HCI "Pharmacin"                         
+2810436980820090302Metformin HCI "Pharmacin"                         
+2810436990820090302Metformin HCI "Pharmacin"                         
+2810437490820110519Clopix                                            
+2810437740820090217Pantoprazol  NY "Teva"                            
+2810437740820080801Pantoprazol "Teva"                                
+2810437740820090924Pantoteva                                         
+2810437750820080801Pantoprazol "Teva"                                
+2810437750820090217Pantoprazol NY "Teva"                             
+2810437750820090924Pantoteva                                         
+2810438510820091005Clopiren                                          
+2810439670820110208Requip Depot                                      
+2810439880820081212Madopar                                           
+2810440150820100512Paracetamol "Actavis"                             
+2810440160820100512Paracetamol "Actavis"                             
+2810441260820081020Escitalopram Paranova                             
+2810442830820090217APO-go                                            
+2810442850820090911Nelio                                             
+2810442860820090911Nelio                                             
+2810443110820100525Losarix Comp                                      
+2810446870920090813Losartan/hydrochlorthiazid "Arrow"                
+2810447900920100906Clopidogrel "HCS"                                 
+2810447900920111109Clopidogrel "HCS"                                 
+2810447900920100909Clopidogrel Teva Pharma                           
+2810447900920111109Clopidogrel Teva Pharma                           
+2810451290920110208Requip Depot                                      
+2810451300920110208Requip Depot                                      
+2810451340920090707Cozaar Comp. 100 mg/12,5 mg                       
+2810451790920090506ReFacto                                           
+2810451800920090506ReFacto                                           
+2810451810920090506ReFacto                                           
+2810452470920090804Tegafur Komb. "Abacus Medicine"                   
+2810453910920090930Clopidogrel besilate "Ratiopharm"                 
+2810453920920090929Clopidogrel NY "Sandoz"                           
+2810454130920110429Leuprorelin "Abacus Medicine"                     
+2810454130920110518Leuprorelin "Abacus Medicine"                     
+2810454130920110726Leuprorelin "Abacus Medicine"                     
+2810454130920100525Procren Depot                                     
+2810454130920100525Procren Depot                                     
+2810454130920110502Procren Depot                                     
+2810454130920110518Procren Depot                                     
+2810454140920110429Leuprorelin "Abacus Medicine"                     
+2810454140920110726Leuprorelin "Abacus Medicine"                     
+2810454140920100525Procren Depot                                     
+2810454140920110502Procren Depot                                     
+2810457210920090914Sandimmun                                         
+2810457220920090914Sandimmun                                         
+2810457590920091113Femara                                            
+2810457880920090924Voltaren                                          
+2810458530920110523Mirop                                             
+2810458530920110124Rolip                                             
+2810458720920110204Pramipexol "Arrow"                                
+2810458960920100503Serevent 50                                       
+2810460720920100129Aciclovir                                         
+2810466221020100325Stymbicort Turbuhaler                             
+2810467191020100520Singulair Paedriatic                              
+2810467431020100607Symbicort Turbuhaler                              
+2810475561020101104Fucidine (ChemVet)                                
+2810476601020120404Quetiapin "Teva"                                  
+2810476601020111221Quetiapine "Teva"                                 
+2810476611020120404Quetiapin "Teva"                                  
+2810476611020111221Quetiapine "Teva"                                 
+2810476621020120404Quetiapin "Teva"                                  
+2810476621020111221Quetiapine "Teva"                                 
+2810476631020120404Quetiapin "Teva"                                  
+2810476631020111221Quetiapine "Teva"                                 
+2810483281120110504Atorvastatin "Tabs'n Caps"                        
+2810483621120110406Atorvastatin "Tabs'N Caps"                        
+2810487031120111130Escitalopram"A-Pharma"                            
+2810487591120110511Engerix-B 20 mikrogram/1ml                        

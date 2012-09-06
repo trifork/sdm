@@ -13,7 +13,7 @@
  * where applicable.
  *
  * The Original Code is "Stamdata".
- *
+ *   
  * The Initial Developer of the Original Code is Trifork Public A/S.
  *
  * Portions created for the Original Code are Copyright 2011,
@@ -24,25 +24,8 @@
  */
 package dk.nsi.stamdata.replication.tools;
 
-import com.google.inject.Guice;
-import com.google.inject.Key;
-import com.google.inject.TypeLiteral;
-import com.trifork.stamdata.Namespace;
-import com.trifork.stamdata.Nullable;
-import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-import dk.nsi.stamdata.views.View;
-import dk.nsi.stamdata.views.ViewModule;
-import org.dom4j.Document;
-import org.dom4j.DocumentFactory;
-import org.dom4j.Element;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.XMLWriter;
+import static com.trifork.stamdata.Preconditions.checkArgument;
 
-import javax.xml.bind.annotation.XmlSchema;
-import javax.xml.bind.annotation.XmlTransient;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,7 +36,26 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import static com.trifork.stamdata.Preconditions.checkArgument;
+import javax.xml.bind.annotation.XmlSchema;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentFactory;
+import org.dom4j.Element;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.XMLWriter;
+
+import com.google.inject.Guice;
+import com.google.inject.Key;
+import com.google.inject.TypeLiteral;
+import com.trifork.stamdata.Namespace;
+import com.trifork.stamdata.Nullable;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+
+import dk.nsi.stamdata.views.View;
+import dk.nsi.stamdata.views.ViewModule;
 
 public class SchemaGenerator
 {

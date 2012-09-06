@@ -122,25 +122,6 @@ public class ComponentController extends GuiceServletContextListener
             getLogger().info("Installing MonitoringModule");
             install(new MonitoringModule());
             
-
-/*
-            // Logging
-            getLogger().info("Configuring SLALoggingServletFilter");
-
-            // The mandatory SLA filter.
-            //
-            bind(SLALoggingServletFilter.class).in(Scopes.SINGLETON);
-            Map<String, String> filterParams = new HashMap<String, String>();
-            filterParams.put("appName", COMPONENT_NAME);
-            filterParams.put("shortAppName", COMPONENT_NAME);
-            filterRegex(ALL_EXCEPT_STATUS_PAGE).through(SLALoggingServletFilter.class, filterParams);
-
-            Moved to web.xml for simplicity
-/*
-*/
-
-            
-            
             // Security
             getLogger().info("Installing DenGodeWebServiceModule");
             install(new DenGodeWebServiceModule());

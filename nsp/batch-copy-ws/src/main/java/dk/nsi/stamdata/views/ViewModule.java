@@ -42,6 +42,10 @@ import dk.nsi.stamdata.views.doseringsforslag.DosageVersion;
 import dk.nsi.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
 import dk.nsi.stamdata.views.sks.Institution;
 import dk.nsi.stamdata.views.sor.*;
+import dk.nsi.stamdata.views.vitamin.Firmadata;
+import dk.nsi.stamdata.views.vitamin.Grunddata;
+import dk.nsi.stamdata.views.vitamin.VitaminIndholdsstoffer;
+import dk.nsi.stamdata.views.vitamin.VitaminUdgaaedeNavne;
 
 import java.util.Map;
 import java.util.Set;
@@ -126,6 +130,12 @@ public class ViewModule extends AbstractModule
         // Bemyndigelse
         
         views.addBinding().to(Bemyndigelse.class);
+        
+        // Vitaminer
+        views.addBinding().to(Firmadata.class);
+        views.addBinding().to(Grunddata.class);
+        views.addBinding().to(VitaminIndholdsstoffer.class);
+        views.addBinding().to(VitaminUdgaaedeNavne.class);
     }
     
 

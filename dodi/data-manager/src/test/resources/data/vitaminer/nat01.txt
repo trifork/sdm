@@ -1,0 +1,86 @@
+28116103706SPNA              EcovagFlora                   vaginalkapsler,h†rdeVAGKAPH                           0000000000   011366011366 G01AX14VA                                
+28116104107SPNA              Husk Psyllium-fr›skaller      kapsler, h†rde      KAPH          500 mg              0000500000MG 010203010203 A06AC01OR                                
+28116104609SPNA              Vitalia St‘rk Baldrian ctrnmelovertrukne tabletterTABOTR                            0000000000   258899258899 N05CM  OR                                
+28116104709SPNA              Matas St‘rk Baldrian citrnmel.overtrukne tabletterTABOTR                            0000000000   036400036400 N05CM  OR                                
+28116164298SPNA              Sinupret                      overtrukne tabletterTABOTR                            0000000000   014092020802 R05X   OR                                
+28116164998SPNA              Sinova                        overtrukne tabletterTABOTR                            0000000000   014092014092 R05X   OR                                
+28116167800SPNA              Termo                         medicinsk plaster   PLASTER                           0000000000   012715012715 M02AB  TD                                
+28116169002SPNA              Agnus castus "Nycomed"        filmovertrukne tabl.TABFILM                           0000000000   020802020802 G02CB  OR                                
+28116169203SPNA              Atrosan                       filmovertrukne tabl.TABFILM                           0000000000   176300176300 M01AX  OR                                
+28116169303SPNA              Sinupret Forte                overtrukne tabletterTABOTR                            0000000000   262702262702 R05X   OR               D                
+28116169403SPNA              Sinova Forte                  overtrukne tabletterTABOTR                            0000000000   262702262702 R05X   OR               D                
+28116169600SPNA              Solidaforce                   orale dr†ber, opl›snORALDRO                           0000000000   176300176300 C03X   OR                                
+28116170104SPNA              Sabalin                       kapsler, bl›de      KAPB          320 mg              0000320000MG 263387258411 G04CX02OR                                
+28116170204SPNA              Dit Apoteks Fiskeolie         kapsler, bl›de      KAPB          1 g                 0000001000G  255782255782 C10AX06OR                                
+28116170804SPNA              Drogen's Fiskeolie            kapsler, bl›de      KAPB          1 g                 0000001000G  255429255429 C10AX06OR               D                
+52610000293SPNA              Husk Psyllium-fr›skaller      pulver t. oral susp.ORAPULS                           0000000000   010203010203 A06AC01OR                                
+52610000393SPNA              Valerina Nat                  filmovertrukne tabl.TABFILM                           0000000000   263387258411 N05CM  OR                                
+52610000893SPNA              Agiolax                       granulat            GRA                               0000000000   256353254766 A06AB56OR                                
+52610001393SPNA              Pikasol GI 60                 kapsler, bl›de      KAPB          1 g                 0000001000G  258899258899 C10AX06OR                                
+52610009593SPNA              Thea Bona                     urtete, endosisbeh. URTETED       1,2 g               0000001200G  262249262249 A06AB06OR                                
+52610009693SPNA              Thea Bona                     urtete              URTETE        100 %               0000100000PC 262249262249 A06AB06OR                                
+52610011893SPNA              ’gte Venustorn                urtete              URTETE                            0000000000   131300131300 M01AX  OR                                
+52610011993SPNA              Thea Go'                      tabletter           TAB           280 mg              0000280000MG 131300131300 A06AB06OR                                
+52610012193SPNA              Thea Go'                      urtete, endosisbeh. URTETED       2 g                 0000002000G  131300131300 A06AB06OR                                
+52610012293SPNA              Thea Go'                      urtete              URTETE        100 %               0000100000PC 131300131300 A06AB06OR                                
+52610016293SPNA              Crataegisan                   orale dr†ber, opl›snORALDRO                           0000000000   176300176300 C01EB04OR                                
+52610016493SPNA              Echinaforce                   sugetabletter       SUGTAB                            0000000000   176300176300 R05X   OR                                
+52610016593SPNA              Echinaforce                   orale dr†ber, opl›snORALDRO                           0000000000   176300176300 R05X   OR                                
+52610020793SPNA              Physio-JHP                    orale dr†ber        ORALDRB                           0000000000   157400157400 A03A   IHKUOR                            
+52610023093SPNA              Padma 28                      tabletter           TAB                               0000000000   261399261399 C04A   OR                                
+52610024493SPNA              Obbekj‘rs Orig. Pebermynteolieorale dr†ber        ORALDRB                           0000000000   012854012854 A03A   IHKUOR                            
+52610024893SPNA              Propesan                      kapsler, bl›de      KAPB                              0000000000   012854012854 G04CX  OR                                
+52610025093SPNA              Obbekj‘rs Originale Pebermyntekapsler, bl›de      KAPB                              0000000000   012854012854 A03A   OR                                
+52610026893SPNA              Prosan Nat                    overtrukne tabletterTABOTR                            0000000000   261078261078 N05CM  OR                                
+52610032293SPNA              Kan Jang                      filmovertrukne tabl.TABFILM                           0000000000   256783256783 R05X   OR                                
+52610033093SPNA              Kwai                          overtrukne tabletterTABOTR                            0000000000   258279131500 C10A   OR                                
+52610034293SPNA              Tempel                        kapsler, h†rde      KAPH                              0000000000   260508260508 N06DX02OR                                
+52610035593SPNA              Guarmin                       gran. til oral susp.ORAGRAS       92 %                0000092000PC 261225261225 A10BX01OR                                
+52610035693SPNA              Guarmin                       kapsler, h†rde      KAPH          370 mg              0000370000MG 261225261225 A10BX01OR                                
+52610039793SPNA              Idoform                       enterokapsler, h†rdeENTKAPH                           0000000000   026100026100 A07FA01OR                                
+52610040193SPNA              Frutin                        tyggetabletter      TYGTAB                            0000000000   010549010549 A02AD  OR                                
+52610042793SPNA              Vita Care Q10-D               sugetabletter       SUGTAB        10 mg               0000010000MG 097600097600 C01EB09OR                                
+52610043893SPNA              VitaCare Q10 MAX              kapsler, h†rde      KAPH          30 mg               0000030000MG 097600097600 C01EB09OR                                
+52610045893SPNA              Bio-Biloba                    filmovertrukne tabl.TABFILM                           0000000000   109400109400 N06DX02OR                                
+52610045993SPNA              Bio-Qinon Q10                 kapsler, bl›de      KAPB          30 mg               0000030000MG 109400109400 C01EB09OR                                
+52610050793SPNA              Salina DAK                    oral opl›sning      ORALOPL                           0000000000   020802020802 R05CA  OR                                
+52610051193SPNA              Remifemin                     tabletter           TAB                               0000000000   258863952081 G02C   OR                                
+52610052893SPNA              Norske Brystdr†ber DAK        oral opl›sning      ORALOPL                           0000000000   020802020802 R05CA  OR                                
+52610055695SPNA              Ginseng Arkokaps              kapsler, h†rde      KAPH                              0000000000   011504011504 N06    OR                                
+52610055795SPNA              Russisk Rod Arkokaps          kapsler, h†rde      KAPH          250 mg              0000250000MG 011504011504 N06    OR                                
+52610056596SPNA              Echinagard                    orale dr†ber, opl›snORALDRO                           0000000000   255009260541 R05X   OR                                
+52610056696SPNA              Echinagard                    sugetabletter       SUGTAB                            0000000000   255009260541 R05X   OR                                
+52610056896SPNA              EFI Ginkgo Biloba             kapsler, h†rde      KAPH                              0000000000   097600097600 N06DX02OR                                
+52610057196SPNA              Ginsana                       kapsler, bl›de      KAPB                              0000000000   952081952081 N06    OR                        20061009
+52610057296SPNA              Vitabutin                     kapsler, h†rde      KAPH                              0000000000   097600097600 J01X   OR                                
+52610057696SPNA              Danisan Nat                   overtrukne tabletterTABOTR                            0000000000   261078261078 N05CM  OR                                
+52610058197SPNA              Prostasan                     kapsler, bl›de      KAPB                              0000000000   176300176300 G04CX02OR                                
+52610058597SPNA              Venokan                       depottabletter      DEPTAB                            0000000000   257768010681 C05CX03OR                                
+52610059297SPNA              Neurokan                      overtrukne tabletterTABOTR                            0000000000   257768952081 N06AX25OR                                
+52610059497SPNA              Modigen                       kapsler, h†rde      KAPH                              0000000000   097600097600 N06AX25OR                                
+52610059697SPNA              Seredrin                      filmovertrukne tabl.TABFILM       40 mg               0000040000MG 257768257768 N06DX02OR                                
+52610059897SPNA              Bifolac                       enterokapsler, h†rdeENTKAPH                           0000000000   011366011366 A07FA01OR                                
+52610061197SPNA              Drogen`s St‘rk Baldrian citrm.overtrukne tabletterTABOTR                            0000000000   258899258899 N05CM  OR                                
+52610061297SPNA              Valerina Forte                overtrukne tabletterTABOTR                            0000000000   263387258411 N05CM09OR                                
+52610061397SPNA              Kwai 300                      overtrukne tabletterTABOTR                            0000000000   258279131500 C10A   OR                                
+52610061597SPNA              ’gte Venustorn                kapsler, h†rde      KAPH                              0000000000   131300131300 M01AX  OR                                
+52610062097SPNA              China-Oel                     orale dr†ber        ORALDRB                           0000000000   012250012250 A03A   KUOR                              
+52610062198SPNA              Prostaplant                   kapsler, bl›de      KAPB                              0000000000   257768257768 G04CX  OR                                
+52610062298SPNA              Hyperiforce                   tabletter           TAB                               0000000000   176300176300 N06AX25OR                                
+52610064198SPNA              Chisan                        oral opl›sning      ORALOPL                           0000000000   260544255896 N06    OR      J                         
+52610064498SPNA              Chisandra Adaptogen           filmovertrukne tabl.TABFILM                           0000000000   260544255896 N06    OR                                
+52610064598SPNA              Velzina                       kapsler, h†rde      KAPH                              0000000000   260508260508 N06AX25OR                                
+52610064798SPNA              Calmigen Caps                 kapsler, h†rde      KAPH                              0000000000   097600097600 N06AX25OR                                
+52610065098SPNA              Bronchosan                    orale dr†ber, opl›snORALDRO                           0000000000   176300176300 R05CA10OR                                
+52610065198SPNA              Arctic Root rosenrod          overtrukne tabletterTABOTR                            0000000000   260544255896 N06    OR                                
+52610065898SPNA              Matas St‘rk Ginkgo Biloba     filmovertrukne tabl.TABFILM                           0000000000   036400036400 N06DX02OR                                
+52610066199SPNA              Vivag med applikator          vaginalkapsler,h†rdeVAGKAPH                           0000000000   041400041400 G01AX14VA                                
+52610066299SPNA              Futura Fiskeolie              kapsler, bl›de      KAPB          1 g                 0000001000G  070000070000 C10AX06OR                                
+52610066499SPNA              Vivag                         vaginalkapsler,h†rdeVAGKAPH                           0000000000   041400041400 G01AX14VA                                
+52610066599SPNA              Jemo-pharm Ginkgo Biloba      kapsler, h†rde      KAPH                              0000000000   097600097600 N06DX02OR                                
+52610066899SPNA              Calmigen 300                  filmovertrukne tabl.TABFILM                           0000000000   261225261225 N06AX25OR                                
+52610066900SPNA              Apovit Fiskeolie              kapsler, bl›de      KAPB          1 g                 0000001000G  020802020802 C10AX06OR                                
+52610067000SPNA              Matas M‘lkesyrebakterier      enterokapsler, h†rdeENTKAPH                           0000000000   036400036400 A07FA01OR                                
+52610067100SPNA              Futura Hostlet                oral opl›sning      ORALOPL                           0000000000   070000070000 R05CA  OR                                
+52610068000SPNA              Lacteol                       kapsler, h†rde      KAPH                              0000000000   012625012625 A07FA01OR                                
+52610069901SPNA              Aesculaforce forte            enterotabletter     ENTTAB                            0000000000   176300176300 C05CX03OR               D                

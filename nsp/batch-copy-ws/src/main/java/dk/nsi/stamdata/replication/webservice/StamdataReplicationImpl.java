@@ -51,6 +51,7 @@ import com.trifork.stamdata.persistence.RecordMetadata;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.VitaminRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
@@ -134,7 +135,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
         return ("sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1);
+                || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
@@ -170,17 +172,37 @@ public class StamdataReplicationImpl implements StamdataReplication {
             {
                 recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
             }
-            else if ("yder".equals(parameters.getDatatype()))
-            {
-                recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
+            else if ("yderregister".equals(parameters.getRegister())) {
+                if("yder".equals(parameters.getDatatype())) {
+                    recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
+                } else if("person".equals(parameters.getDatatype())) {
+                    recordSpecification = YderregisterRecordSpecs.PERSON_RECORD_TYPE;
+                } else {
+                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
+                }
             }
-            else if ("bemyndigelse".equals(parameters.getDatatype()))
-            {
-                recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
+            else if ("bemyndigelsesservice".equals(parameters.getRegister())) {
+                if("bemyndigelse".equals(parameters.getDatatype())) {
+                    recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
+                } else {
+                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
+                }
             }
-            else
-            {
-                recordSpecification = YderregisterRecordSpecs.PERSON_RECORD_TYPE;
+            else if ("vitamin".equals(parameters.getRegister())) {
+                if("grunddata".equals(parameters.getDatatype())) {
+                    recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
+                } else if("firmadata".equals(parameters.getDatatype())) {
+                    recordSpecification = VitaminRecordSpecs.FIRMADATA_RECORD_SPEC;
+                } else if("udgaaedenavne".equals(parameters.getDatatype())) {
+                    recordSpecification = VitaminRecordSpecs.UDGAAEDENAVNE_RECORD_SPEC;
+                } else if("indholdsstoffer".equals(parameters.getDatatype())) {
+                    recordSpecification = VitaminRecordSpecs.INDHOLDSSTOFFER_RECORD_SPEC;
+                } else {
+                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
+                }
+            }
+            else {
+                throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
             }
             Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
     

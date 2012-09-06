@@ -1,0 +1,565 @@
+000400BMS                                                   
+001200Merial                                                
+001500Aventis Pasteur MSD                                   
+004000Nettopharma                                           
+004500Medis-Danmark                                         
+005400Grunenthal                                            
+010186Scanpharm                                             
+010189Orifarm                                               
+010191Pharma-Skan                                           
+010200Alpharma                                              
+010236Pharmacia Animal Health                               
+010252Clean Chemical                                        
+010511UCB Pharma                                            
+010530Swedish Orphan                                        
+010543Galderma                                              
+010588Serono                                                
+010600Abbott                                                
+010608Bristol-Myers                                         
+010641Opco                                                  
+010642Aventis Pasteur                                       
+010643Cross Pharma                                          
+010652Biove                                                 
+010700Abbott                                                
+010717Gemelli                                               
+010728Vericore                                              
+010744SmithKline Beecham                                    
+010780Santen                                                
+010990Hipra                                                 
+011032Sanofi-Synthelabo                                     
+011105Cross Vetpharm                                        
+011127Ebewe                                                 
+011148Procter & Gamble                                      
+011160BMS                                                   
+011173Ingen                                                 
+011231Bioglan                                               
+011325Hermal                                                
+011336Aventis Behring                                       
+011347Amgros                                                
+011358Alcon                                                 
+011370Synthon                                               
+011374Apotekernes                                           
+011387Roche                                                 
+011398Wyeth                                                 
+011401Norgine                                               
+011420Sanova Pharma                                         
+011445HemaSure                                              
+011478Schwarz                                               
+011482Warner Lambert                                        
+011483Ferring                                               
+011484Serono Europe                                         
+011527Ophtha                                                
+011554Aventis Behring                                       
+011557PharmaService                                         
+011565MediLink                                              
+011584Nordic Drugs Danmark                                  
+011593Desitin                                               
+011595ECO Animal Health                                     
+011596ScanimalHealth                                        
+011623Genzyme Europe                                        
+011639Whitehall                                             
+011653Scanpharm                                             
+011657Mayne                                                 
+011660Fresenius Medical Care                                
+011667Searle Scand.                                         
+011677Orion Pharma Animal Health                            
+011683ASTA Medica                                           
+011685Santen Oy                                             
+011692SP Europe                                             
+011694Guerbet                                               
+011698Pharmacia Animal Health                               
+011707Clintec                                               
+011715Sogeval                                               
+011716Schering-Plough                                       
+011732Amgen                                                 
+011760Solvay Pharma                                         
+011761Menarini                                              
+011762Menarini                                              
+011763OBA                                                   
+011768Novartis Healthcare                                   
+011775Sipaco                                                
+011817Sieroterapico Berna                                   
+011823Solvay Pharma                                         
+011832Novartis Europharm                                    
+011855Nordic Health-care                                    
+011883Cipla Chanelle                                        
+011890Merial                                                
+011923August Wolff                                          
+012029KRKA                                                  
+012050Novartis                                              
+012069Medimpex                                              
+012080Kemifarma Holding                                     
+012081Ranbaxy                                               
+012097ratiopharm                                            
+012098B. Braun Medical                                      
+012145Pharmalink                                            
+012154ERA Medical                                           
+012196Pharmalink                                            
+012200Alcon-Couvreur                                        
+012204BiometMerck                                           
+012238Galderma                                              
+012255Utandningstester                                      
+012262Vitaflo Scandinavia AB                                
+012263Fresenius Kabi                                        
+012264Fresenius Kabi                                        
+012284Schering-Plough                                       
+012289Novartis Animal                                       
+012374Lohmann Animal Health                                 
+012383Genthon                                               
+012400ALK-Abello                                            
+012412Elan Pharma                                           
+012460HRA                                                   
+012463Otsuka                                                
+012515Knoll                                                 
+012532Medac                                                 
+012562EuroPharmaDK                                          
+012565Goldshield Pharmaceuticals                            
+012582Nordic Drugs                                          
+012590Dexcel                                                
+012600Allergan                                              
+012607Wyeth                                                 
+012617Galderma                                              
+012625ChemVet                                               
+012666Novartis Animal Health                                
+012688Omrix                                                 
+012691MedImmune                                             
+012698Alternova                                             
+012713Aventis Pharma                                        
+012718medac                                                 
+012719Aventis Pharma                                        
+0127201A Farma                                              
+012723Nettovet                                              
+012740Meda                                                  
+012751Astra Tech                                            
+012760Biovail                                               
+012761ScanVet Animal Health (+ Biovet)                      
+012765Allergan                                              
+012768Arrow                                                 
+012778Pliva Pharma                                          
+012882Eli Lilly NL                                          
+012907Copyfarm                                              
+012931Panpharma                                             
+012937John Wyeth                                            
+012939Novartis Ophthalmics                                  
+012962Janssen-Cilag                                         
+012965Janssen Pharmaceutica                                 
+012987Teva Pharmaceuticals                                  
+013005GlaxoSmithKline Bio                                   
+013014Solco                                                 
+013054Stadapharm                                            
+013059Pfizer Consumer                                       
+013067OPCO-Pharma                                           
+013086Ratiopharm                                            
+013107Octapharma                                            
+013114United Nordic Pharma                                  
+013161BMS Pharma                                            
+013164Biochemie/Novartis                                    
+013228Schering                                              
+013281Dentsply                                              
+013300Apodan                                                
+013313cell pharm                                            
+013359Ivax Scandinavia                                      
+013388Arrow Generics                                        
+013435Jenson                                                
+013468Universal Farma                                       
+013500S.C.A.T.                                              
+013525Boehringer Ingelheim                                  
+013614IVAX                                                  
+013635Egis Pharmaceuticals                                  
+013762ACO Hud                                               
+013763Merck Sante                                           
+013801Octapharma                                            
+013805Allergan Norden                                       
+013922Lavet Pharmaceuticals Ltd.                            
+013929B. Braun                                              
+013934Mayne Nordic                                          
+013987Ethypharm                                             
+014000Viatris                                               
+014011Genzyme                                               
+014029Arrow Generics                                        
+014058Thea                                                  
+014900Bayer                                                 
+015900Billev Pharma                                         
+016000Sandoz                                                
+016500Boehringer Ingelheim                                  
+017200B. Braun                                              
+017500Bristol                                               
+018200Altana Pharma                                         
+020800Nycomed Danmark                                       
+020802Nycomed Danmark                                       
+022500Alpharma                                              
+022800Fresenius Medical                                     
+023800Orion Pharma                                          
+024100Ethicals                                              
+025200Orion                                                 
+025500Felo                                                  
+025900Ferring                                               
+026000Ferring                                               
+026100Ferrosan                                              
+026500Fisons                                                
+026700Fort Dodge Labs                                       
+027500Gea                                                   
+027501Hexal                                                 
+027900Astellas Pharma                                       
+028100Glaxo                                                 
+029000Guerbet                                               
+029300Hameln Pharma                                         
+030100Aventis Pharma                                        
+031200Baxter                                                
+031500Intervet B.V.                                         
+031600United Vaccines                                       
+031900Janssen                                               
+032500Solvay                                                
+033400Abbott                                                
+033500Kreussler                                             
+034200Lannacher                                             
+034600Schering                                              
+034800Leo                                                   
+035200Eli Lilly                                             
+035800Lundbeck                                              
+035801Lundbeck                                              
+036800Medac                                                 
+037000Merck                                                 
+037100Merz & Co.                                            
+037700MSD-SP                                                
+037800MSD                                                   
+038500Merck                                                 
+039000Novo                                                  
+039500Organon                                               
+039800Orion Corporation Orion Pharma                        
+041100Pfizer                                                
+041500Pharmacia                                             
+0436003M Health Care                                        
+044500Rosco                                                 
+046400Schering                                              
+047400Servier                                               
+048800SSI                                                   
+049400Abigo                                                 
+049800TAD                                                   
+049900Temmler                                               
+050300E. Tjellesen                                          
+051300UCB Pharma                                            
+053900Wyeth                                                 
+054100Wyeth Research                                        
+054200Wyeth                                                 
+055600Abbott                                                
+056000Servier Danmark                                       
+056100AstraZeneca                                           
+056200Astra Tech                                            
+056800Bayer                                                 
+057500Friis & Co.                                           
+058300Eli Lilly                                             
+058700Pharmacia                                             
+058900Fisons                                                
+059000Searle                                                
+059100Ottosontrade                                          
+059300GlaxoSmithKline Pharma                                
+059400Abigo                                                 
+059700Baxter                                                
+059800Intervet                                              
+059900Janssen-Cilag                                         
+060800Meda                                                  
+061200MSD                                                   
+061600Organon                                               
+061800Pfizer                                                
+0625003M                                                    
+062700Roche                                                 
+062800Salfarm                                               
+063100Scanvet                                               
+063200Schering                                              
+063500Smith & Nephew                                        
+063800GlaxoSmithKline Consumer                              
+071300Danipharm                                             
+073800Kjems                                                 
+082900Sanofi-Synthelabo                                     
+083200Paranova Danmark                                      
+084600Marcopharma                                           
+088200Lomedia Polyvet                                       
+092000Schering-Plough                                       
+095300DVI, Lindholm                                         
+099300Biovet                                                
+109400Pharma Nord                                           
+116100BMS                                                   
+119300Pharmachemie B.V.                                     
+122600Serono Nordic                                         
+132300Alcon                                                 
+135100Lorex                                                 
+135400Baxter                                                
+136100Durascan                                              
+138400SBL Vaccin                                            
+140200Virbac                                                
+140400Norton                                                
+140800Generics UK                                           
+142900Heinrich Mack                                         
+143700Fort Dodge                                            
+147100Stada                                                 
+148100Novo Farmaka                                          
+148800Norpharma                                             
+149000Allergan                                              
+149500Boehringer Ingelheim                                  
+152100Pfizer Animal Health                                  
+153100Virbac                                                
+1534003M                                                    
+156700Schering-Plough Vet                                   
+159500SAD                                                   
+161300Norbrook                                              
+162800Propharma                                             
+163300Warner-Lambert                                        
+168200Bracco                                                
+172400Allergan                                              
+174800Schierbeck                                            
+178600Ethypharm                                             
+181800Gambro                                                
+182000Gambro                                                
+184900Norton                                                
+185600Yamanouchi Pharma                                     
+185900Chemvet                                               
+187800Generics                                              
+187900NM Pharma                                             
+192000medic                                                 
+192500Merial                                                
+195700Mekos                                                 
+196000Roche                                                 
+198100Gerard                                                
+198200McDermott                                             
+201500Actavis                                               
+205600Boehringer Ingelheim Danmark                          
+206500Elan                                                  
+209900Hexal                                                 
+210000Merck-Clevenot                                        
+211400Abbott                                                
+214200Bremer Pharma                                         
+214700Virbac                                                
+225100Scotia                                                
+227600Vetoquinol                                            
+228300Amersham Health                                       
+234000Wyeth                                                 
+234300Elanco Animal                                         
+237900Wyeth                                                 
+240500Actavis Nordic                                        
+245400Halocarbon                                            
+246300Desitin                                               
+249700Fermenta                                              
+249900BMS                                                   
+250000PharmaCoDane                                          
+252909A-Pharma                                              
+252919Therabel                                              
+252965Merial                                                
+252983Consilient                                            
+253032Sandoz, Novartis                                      
+253096Nordmedica                                            
+253099BMM Pharma                                            
+253102Bayer HealthCare                                      
+254657Orion Pharma                                          
+254693Recept Pharma                                         
+254749Cephalon France                                       
+254766Meda                                                  
+254780Orion Pharma Animal Health                            
+254817Wyeth Danmark                                         
+254856BMS                                                   
+254921DeltaSelect                                           
+254940BioPhausia                                            
+254979Pharmaxim                                             
+254980ZLB Behring                                           
+255018Medis                                                 
+255071EuroCept                                              
+255147Dr. Tezza                                             
+255214G.L. Pharma                                           
+255233ProStrakan                                            
+255235Serono                                                
+255237Actavis Group                                         
+255247Amdipharm                                             
+255285ZLB Behring                                           
+255286ZLB Behring                                           
+255296Laboratoires Sogeval                                  
+255311ZLB Behring                                           
+255313Ovation Healthcare                                    
+255397Sanofi Pharma                                         
+255398Abacus                                                
+255436Pinewood Laboratories                                 
+255442Merck NM                                              
+255479Propharma                                             
+255483Sandoz                                                
+255494Merck NM                                              
+255517Winthrop                                              
+255536ViCare Medical                                        
+255677Biocodex                                              
+255693Zeneus                                                
+255694ERA Medical                                           
+255707Intendis                                              
+255729Krka AB                                               
+255791Amgen                                                 
+255794MSD                                                   
+255801Sanofi Pasteur MSD                                    
+255816UCB Nordic                                            
+255820Pfizer Animal Health                                  
+255873Sanofi                                                
+255880OmniVision                                            
+255894Singad Pharma                                         
+255928Docpharma                                             
+256198Stichting                                             
+256231Hospira Enterprises                                   
+256241Wyeth AB                                              
+256269Astellas                                              
+256284Encysive                                              
+256331Fresenius Kabi                                        
+256353Madaus                                                
+256371MSD                                                   
+256495Pharmason                                             
+2565072care4                                                
+256527Medis ehf.                                            
+256582Initios Medical                                       
+256647GSK Consumer Healthcare                               
+256766Fort Dodge Animal Health Ltd                          
+256816GE Healthcare                                         
+256853Antula Healthcare                                     
+256938Ophtha                                                
+256939Actavis Nordic                                        
+256974GE Healthcare                                         
+257022Pfizer                                                
+257050EnaPharm AB                                           
+257100Pharmapol                                             
+257112Three Rivers Pharmaceuticals                          
+257213Actavis                                               
+257228Sanofi-Aventis                                        
+257299Norgine                                               
+257309Schering-Plough                                       
+257330Schering-Plough Animal Health                         
+257348Teva Denmark                                          
+257349Stragen Nordic                                        
+257418Ranbaxy Pharma                                        
+257625Nordic Drugs                                          
+257628Reckitt Benckiser Healthcare                          
+257704Ranbaxy                                               
+257770Colgate-Palmolive                                     
+257780Sofus                                                 
+257836Claris Lifesciences                                   
+257869Aurobindo Pharma Limited                              
+258008Cephalon Pharma                                       
+258063CSL Behring                                           
+258077Huvepharma                                            
+258134Bayer Schering                                        
+258140CSL Behring                                           
+258152Allergan                                              
+258171Actavis Group                                         
+258187Alpharma BVBA                                         
+258274Noridem                                               
+258287Orifarm Generics                                      
+258318McNeil Denmark                                        
+258331Apotex Europe                                         
+258338DLF                                                   
+258347AWD                                                   
+258357Octapharma                                            
+258375Ranbaxy                                               
+258439Niconovum                                             
+258446CARINOPHARMA                                          
+258450ACO Hud Nordic                                        
+258479A-Pharma                                              
+258503Ceva                                                  
+258628Institut Produits Synthese                            
+258754TEVA                                                  
+258873BioPhausia                                            
+258933Orion                                                 
+258998Recordati                                             
+259158Dermatech R&D Limited                                 
+259172Abbott                                                
+259234Hospira UK                                            
+259247Hospira Nordic                                        
+259282ScanimalHealth                                        
+259378Mylan                                                 
+259440Bioalliance Pharma                                    
+259478Mylan                                                 
+259499MediGroup                                             
+259559Pfizer Oy Animal Health                               
+259659Mylan                                                 
+259666Pinnacle Biologics                                    
+259694Orchid Europe                                         
+259707Glenmark                                              
+259732A. Menarini                                           
+259752Cephalon UK Limited                                   
+259831Meda AB                                               
+259868Alternova                                             
+259914Tolmar                                                
+259930Famy                                                  
+259936Recip AB                                              
+259995Mylan                                                 
+260088Bayer AH GmbH                                         
+260206Acino                                                 
+260224UCB Pharma                                            
+260227Sofus Stockholm Consulting                            
+260278Vetoquinol                                            
+260289Campus                                                
+260307Iroko Products Limited                                
+260372Virbac Danmark                                        
+260405Celgene                                               
+260415IBSA Farmaceutici                                     
+260437Acino                                                 
+260441Laboratorios                                          
+260458Dechra                                                
+260503FarmaPlus AS                                          
+260507A Generic Pharmaceutical                              
+260595EUSA Pharma SAS                                       
+260596Laboratoire Innotech Intl.                            
+260686SpePharm Holding                                      
+260688Columbia Laboratories                                 
+260814HCS                                                   
+260850Sandoz                                                
+260865Piramal                                               
+260894Bluefish                                              
+260942Laboratoires Genopharm                                
+2609762care4                                                
+261188Shire Pharmaceuticals Ireland                         
+261239TMC Pharma Services                                   
+2613571A Farma A/S                                          
+261358Hexal                                                 
+261367Nordic Drugs                                          
+261425Takeda Global R & D                                   
+261505Cyathus                                               
+261531Tabs n Caps Pack                                      
+261651Kemifarma ApS                                         
+261659Abcur AB                                              
+261778Pensa Pharma AB                                       
+261783GE Healthcare A/S                                     
+261792United Vaccines Holding BV                            
+261867MErck Serono                                          
+262093Axellia                                               
+262097Matrix                                                
+262100Pfizer AB                                             
+262114Intervet                                              
+262135Paranova Danmark                                      
+262182Pharmeco                                              
+262246B. Braun Medical                                      
+262282ViiV Healthcare                                       
+262309GrÅnenthal Denmark                                    
+262341RB Pharmaceuticals Limited                            
+262342Abbott Scandinavia AB                                 
+262349Merck A/S                                             
+262361Swedish Orphan                                        
+262365Alkopharma SARL                                       
+262373Abbott                                                
+262525BioPhausia                                            
+262661Arrow Pharma                                          
+262666Abott                                                 
+263023Bayer                                                 
+263032Virbac De Portugal - Laboratorio                      
+263074Evolan Pharma                                         
+263123Laboratoires GENOPHARM                                
+263147Bayer A/S                                             
+263182AstraZeneca                                           
+263260Eli Lilly                                             
+263261Astellas                                              
+263376Vitaflo Scandinavia                                   
+263383Les Laboratoires Servier                              
+263396Lundbeck Pharma A/S                                   
+263463ScanimalHealth                                        
+263486Schering-Plough                                       
+263525Sogeval Danmark ApS                                   
+263734Swedish Orphan Biovitrum                              
+951237Janssen Biologics                                     
+951331MSD Danmark                                           
+951384EQL Pharma                                            
+951387Intervet                                              
+951433Arrow ApS                                             
+951477Bayer                                                 
+951809Tabs n Caps Pack                                      
+952485Sogeval Danmark ApS                                   

@@ -1,0 +1,31 @@
+28136232199SPVM              Omnimin                       filmovertrukne tabl.TABFILM                           0000000000   054600054600 A11AA  OR                                
+28136232299SPVM              Medobiotin                    tabletter           TAB           2,5 mg              0000002500MG 013503041400 A11HA05OR                                
+28136233402SPVM              Matas Q10                     kapsler, bl›de      KAPB          30 mg               0000030000MG 036400036400 C01EB09OR                                
+28136233603SPVM              SelenoPrecise                 depottabletter      DEPTAB        100 mikrogram       0000100000RG 109400109400 A12CE  OR               D                
+52620002193SPVM              Jern C "medic"                filmovertrukne tabl.TABFILM       100+60 mg           0000000000   192000192000 B03AA02OR                                
+52620002893SPVM              APOVIT Ferrofumarat           filmovertrukne tabl.TABFILM       66 mg Fe            0000066000MG 020802020802 B03AA02OR                                
+52620003193SPVM              APOVIT C-vitamin ekstra st‘rk brusetabletter      BRUTAB        1000 mg             0001000000MG 020802020802 A11GA01OR                                
+52620003493SPVM              APOVIT B-Combin st‘rk         filmovertrukne tabl.TABFILM                           0000000000   020802020802 A11EA  OR                                
+52620003793SPVM              APOVIT B1 vitamin ekstra st‘rktabletter           TAB           300 mg              0000300000MG 020802020802 A11DA01OR                                
+52620007993SPVM              Mega Calciumascorbat          oralt pulver        ORALPUL                           0000000000   131300131300 A11GA01OR                                
+52620008193SPVM              Zink "Natur-Drogeriet"        tabletter           TAB           30 mg               0000030000MG 131300131300 A12CB02OR                                
+52620008593SPVM              E-Vitamin "Natur-Drogeriet"   kapsler, bl›de      KAPB          335 mg              0000335000MG 131300131300 A11HA03OR                                
+52620008993SPVM              Super B6 "Natur-Drogeriet"    tabletter           TAB           50 mg               0000050000MG 131300131300 A11HA02OR                                
+52620009493SPVM              BiOrto Zink                   kapsler, h†rde      KAPH          30 mg               0000030000MG 176300176300 A12CB02OR                                
+52620009593SPVM              BiOrto B1 Vitamin             kapsler, h†rde      KAPH          100 mg              0000100000MG 176300176300 A11DA01OR                                
+52620009893SPVM              Biorto B6 Vitamin             kapsler, h†rde      KAPH          121 mg              0000121000MG 176300176300 A11HA02OR                                
+52620009993SPVM              BiOrto Al-C                   kapsler, h†rde      KAPH          750+50+25 mg        0000000000   176300176300 A11GB01OR                                
+52620010193SPVM              BiOrto Total B                filmovertrukne tabl.TABFILM                           0000000000   176300176300 A11EA  OR                                
+52620010893SPVM              Dol-C-Min                     filmovertrukne tabl.TABFILM                           0000000000   054600054600 A11GB  OR                                
+52620011093SPVM              Multi B "Biosym"              filmovertrukne tabl.TABFILM                           0000000000   054600054600 A11EA  OR                                
+52620015693SPVM              Mega C 1500 "Tolico"          depottabletter      DEPTAB        1500 mg             0001500000MG 262244262244 A11GA01OR                                
+52620021293SPVM              Matas St‘rk E-vitamin naturligkapsler, bl›de      KAPB          335 mg              0000335000MG 036400036400 A11HA03OR                                
+52620021393SPVM              Matas St‘rk E-vitamin naturligkapsler, bl›de      KAPB          135 mg              0000135000MG 036400036400 A11HA03OR                                
+52620022693SPVM              C-Tabs Multi-tabs             depottabletter      DEPTAB        500 mg              0000500000MG 026100026100 A11GA01OR                                
+52620023093SPVM              Multitabs ACD-dr†ber          orale dr†ber, emuls.ORALDRE                           0000000000   026100026100 A11CB  OR                                
+52620025593SPVM              Bio-E-Vitamin                 kapsler, bl›de      KAPB          350 mg              0000350000MG 109400109400 A11HA03OR                                
+52620025693SPVM              Bio-C-Vit. "Pharma N" syreneutfilmovertrukne tabl.TABFILM       750 mg              0000750000MG 109400109400 A11GA01OR                                
+52620026493SPVM              Biorto Pantothensyre          kapsler, h†rde      KAPH          100 mg              0000100000MG 176300176300 A11HA31OR                                
+52620027995SPVM              APOVIT Folsyre st‘rk          tabletter           TAB           0,4 mg              0000000400MG 020802020802 B03BB01OR                                
+52620029997SPVM              EFI Super Q10                 kapsler, h†rde      KAPH          30 mg               0000030000MG 097600097600 C01EB09OR                                
+52620032499SPVM              APOVIT B6 vitamin ekstra st‘rkovertrukne tabletterTABOTR        60 mg               0000060000MG 020802020802 A11HA02OR                                

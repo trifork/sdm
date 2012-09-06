@@ -1,0 +1,39 @@
+2812020199519990629LEUCOSCAN                                         
+2812020219820020118NEOTECT                                           
+2812020239920090806Ceretec II                                        
+2812020369320020711META-IODOBENZYLGUANIDINE (I123) SOLUTION          
+2812020369320050118Meta-iodobenzylguanidine (I123) Solution"Amersham"
+2812020379320020711SODIUM IODIDE (123 I) INJECTION                   
+2812020379320060511Sodium Iodide (123 I) injection "Amersham"        
+2812021129320041109TecneScan HDP                                     
+2812021329320020711INDIUM (IN-111) OXINE SOLUTION                    
+2812021329320050606Indium (In-111) Oxine Solution "Amersham"         
+2812021379320031030Amertec II Technetium-99m Sterile Generator       
+2812021399320020711CHROMIUM (51-CR) EDTA INJECTION                   
+2812021399320050606Chromium (51-Cr) EDTA Injection "Amersham"        
+2812021419320020711INDIUM (IN-111) CHLORIDE SOLUTION                 
+2812021419320050606Indium (In-111) Chloride Solution "Amersham"      
+2812021429320020715SODIUM CHROMATE (51 CR) SOLUTION                  
+2812021429320050606Sodium Chromate (51 Cr) Solution "Amersham"       
+2812021439320050606Sodium Iodide (131 I) Diagn. Capsules "Amersham"  
+2812021439320020711SODIUM IODIDE (131 I) DIAGNOSTIC CAPSULES         
+2812021449320020711SODIUM IODIDE (131 I) INJECTION                   
+2812021449320050606Sodium Iodide (131 I) Injection "Amersham"        
+2812021519320020711(131-I) META-IODOBENZYLGUANIDINE FOR DIAGNOSTIC US
+2812021519320050606(131-I)Meta-iodobenzylguanidine diagn. "Amersham" 
+2812021529320020711(131-I) M-IODOBENZYLGUANIDINE FOR THERAPEUTIC USE 
+2812021529320081030(131-I)Meta-iodobenzylguanidine therap. "Amersham"
+2812021650020081120F-18 Fludeoxyglucose PCA                          
+2812021650020020116PCA                                               
+2812021860120040217Yttrium (Y-90) Chloride "CIS"                     
+2812022230220040719Tetrofosmin "Amersham"                            
+2812022240320040608FDG-IBA                                           
+2812022300520050712FDG Scan F18                                      
+281202232052006060818F-FDG Ris›                                      
+2812022350620070321Fludeoxyglucose OUH                               
+2812022360720080314Cardio-Scint                                      
+2812022400720090506Sestamibi "Draximage"                             
+2812022430820110627MonIyot-131                                       
+2812022440820110627MonIyot-131                                       
+2812022450820110627MonIyot-131                                       
+2812487581120120509Elumatic                                          
