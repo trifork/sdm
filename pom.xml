@@ -647,7 +647,6 @@
 						<version>2.9</version>
 						<configuration>
 							<systemPropertyVariables>
-								<!--jboss.server.log.dir>${java.io.tmpdir}</jboss.server.log.dir-->
 								<jboss.server.log.dir>${basedir}</jboss.server.log.dir>
                                 <jboss.server.config.url>${basedir}/src/main/resources/</jboss.server.config.url>
 							</systemPropertyVariables>
