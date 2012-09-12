@@ -24,18 +24,30 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigInteger;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.*;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.VitaminRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+import dk.nsi.stamdata.jaxws.generated.*;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
+import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
+import dk.nsi.stamdata.views.cpr.Person;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.joda.time.DateTime;
+import org.joda.time.Instant;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -51,44 +63,19 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.Record;
-import com.trifork.stamdata.persistence.RecordBuilder;
-import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
-import com.trifork.stamdata.persistence.RecordPersister;
-import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.VitaminRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-
-import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
-import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
-import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
-import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
-import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
-import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
-import dk.nsi.stamdata.replication.models.Client;
-import dk.nsi.stamdata.replication.models.ClientDao;
-import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.*;
 
 @RunWith(GuiceTestRunner.class)
 public class StamdataReplicationImplIntegrationTest
@@ -113,8 +100,9 @@ public class StamdataReplicationImplIntegrationTest
     private RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
     private List<Record> records = Lists.newArrayList();
     private DateTime now, lastYear, nextYear;
+	private List<String> permissions;
 
-    @Before
+	@Before
     public void setUp() throws Exception
     {
         server = new TestServer().port(8986).contextPath("/").start();
@@ -131,6 +119,18 @@ public class StamdataReplicationImplIntegrationTest
         nextYear = now.plusYears(1);
 
         isClientAuthority = true;
+	    
+	    permissions = Arrays.asList(new String[] {
+									Views.getViewPath(Person.class),
+									"sikrede/sikrede/v1",
+									"yderregister/yder/v1",
+									"yderregister/person/v1",
+									"bemyndigelsesservice/bemyndigelse/v1",
+									"sor/sygehusafdeling/v1",
+									"vitamin/grunddata/v1",
+									"vitamin/firmadata/v1",
+									"vitamin/udgaaedenavne/v1",
+									"vitamin/indholdsstoffer/v1"});
     }
 
     @After
@@ -401,7 +401,26 @@ public class StamdataReplicationImplIntegrationTest
         assertResponseContainsValueOnXPath("//bemyndigelse:bemyndigelse/bemyndigelse:kode", "1234567890");
     }
 
-    @Test
+	/**
+	 * This is a regression test covering the change introduced by NSPSUPPORT-57 to the documentation
+	 */
+	@Test()
+	public void testPermissionsAreNotCommaSeparated() throws Exception {
+		createReplicationRequest("vitamin", "grunddata");
+
+		// the documentation stated that this was the way to get the 4 vitamin permissions, so let's try it
+		permissions = Arrays.asList("vitamin/grunddata/v1,vitamin/firmadata/v1,vitamin/udgaaedenavne/v1,vitamin/indholdsstoffer/v1");
+
+		try {
+			populateDatabaseAndSendRequest();
+			fail("Expected SOAP fault saying that the client does not have the necessary permissions");
+		} catch (ReplicationFault fault) {
+			assertTrue(fault.getMessage().contains("The provided cvr is not authorized to fetch this datatype"));
+		}
+	}
+
+
+	@Test
     public void testVitaminGrunddataCopy() throws Exception {
         recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
         Record record = new RecordBuilder(VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC).field("drugID", 1234567).addDummyFieldsAndBuild();
@@ -568,16 +587,9 @@ public class StamdataReplicationImplIntegrationTest
 
         // Example of subject serial number: CVR:19343634-UID:1234
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
-        cvrClient.addPermission(Views.getViewPath(Person.class));
-        cvrClient.addPermission("sikrede/sikrede/v1");
-        cvrClient.addPermission("yderregister/yder/v1");
-        cvrClient.addPermission("yderregister/person/v1");
-        cvrClient.addPermission("bemyndigelsesservice/bemyndigelse/v1");
-        cvrClient.addPermission("sor/sygehusafdeling/v1");
-        cvrClient.addPermission("vitamin/grunddata/v1");
-        cvrClient.addPermission("vitamin/firmadata/v1");
-        cvrClient.addPermission("vitamin/udgaaedenavne/v1");
-        cvrClient.addPermission("vitamin/indholdsstoffer/v1");
+	    for (String permission : permissions) {
+		    cvrClient.addPermission(permission);
+	    }
         session.persist(cvrClient);
 
         session.createQuery("DELETE FROM Person").executeUpdate();
