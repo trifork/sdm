@@ -51,6 +51,7 @@ import com.trifork.stamdata.persistence.RecordMetadata;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.VaccinationRecordSpecs;
 import com.trifork.stamdata.specs.VitaminRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
@@ -136,7 +137,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 || ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
+                || ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1)
+                || ("ddv".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
@@ -197,6 +199,27 @@ public class StamdataReplicationImpl implements StamdataReplication {
                     recordSpecification = VitaminRecordSpecs.UDGAAEDENAVNE_RECORD_SPEC;
                 } else if("indholdsstoffer".equals(parameters.getDatatype())) {
                     recordSpecification = VitaminRecordSpecs.INDHOLDSSTOFFER_RECORD_SPEC;
+                } else {
+                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
+                }
+            }
+            else if ("ddv".equals(parameters.getRegister())) {
+                if("diseases".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.DISEASES_RECORD_SPEC;
+                } else if("diseases_vaccines".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.DISEASESVACCINES_RECORD_SPEC;
+                } else if("dosageoptions".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.DOSAGEOPTIONS_RECORD_SPEC;
+                } else if("ssidrugs".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.SSIDRUGS_RECORD_SPEC;
+                } else if("vaccinationplanitems".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.VACCINATIONPLANITEMS_RECORD_SPEC;
+                } else if("vaccinationplan".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.VACCINATIONPLANS_RECORD_SPEC;
+                } else if("vaccines".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.VACCINES_RECORD_SPEC;
+                } else if("vaccines_drugs".equals(parameters.getDatatype())) {
+                    recordSpecification = VaccinationRecordSpecs.VACCINESDRUGS_RECORD_SPEC;
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }

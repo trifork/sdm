@@ -24,31 +24,78 @@
  */
 package dk.nsi.stamdata.views;
 
+import java.util.Map;
+import java.util.Set;
+
 import com.google.common.collect.Maps;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
+
 import dk.nsi.stamdata.views.autorisationsregisteret.Autorisation;
 import dk.nsi.stamdata.views.bemyndigelse.Bemyndigelse;
 import dk.nsi.stamdata.views.cpr.BarnRelation;
 import dk.nsi.stamdata.views.cpr.ForaeldremyndighedsRelation;
 import dk.nsi.stamdata.views.cpr.Person;
 import dk.nsi.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
-import dk.nsi.stamdata.views.dkma.*;
+import dk.nsi.stamdata.views.dkma.ATC;
+import dk.nsi.stamdata.views.dkma.Administrationsvej;
+import dk.nsi.stamdata.views.dkma.Beregningsregler;
+import dk.nsi.stamdata.views.dkma.Dosering;
+import dk.nsi.stamdata.views.dkma.Doseringskode;
+import dk.nsi.stamdata.views.dkma.Drug;
+import dk.nsi.stamdata.views.dkma.EmballagetypeKoder;
+import dk.nsi.stamdata.views.dkma.Enhedspriser;
+import dk.nsi.stamdata.views.dkma.Firma;
+import dk.nsi.stamdata.views.dkma.Formbetegnelse;
+import dk.nsi.stamdata.views.dkma.Indholdsstoffer;
+import dk.nsi.stamdata.views.dkma.Indikation;
+import dk.nsi.stamdata.views.dkma.Indikationskode;
+import dk.nsi.stamdata.views.dkma.Klausulering;
+import dk.nsi.stamdata.views.dkma.LaegemiddelAdministrationsvejRelation;
+import dk.nsi.stamdata.views.dkma.Laegemiddelnavn;
+import dk.nsi.stamdata.views.dkma.Medicintilskud;
+import dk.nsi.stamdata.views.dkma.Opbevaringsbetingelser;
+import dk.nsi.stamdata.views.dkma.OplysningerOmDosisdispensering;
+import dk.nsi.stamdata.views.dkma.Pakning;
+import dk.nsi.stamdata.views.dkma.Pakningskombination;
+import dk.nsi.stamdata.views.dkma.PakningskombinationerUdenPriser;
+import dk.nsi.stamdata.views.dkma.Pakningsstoerrelsesenhed;
+import dk.nsi.stamdata.views.dkma.Priser;
+import dk.nsi.stamdata.views.dkma.Rekommandation;
+import dk.nsi.stamdata.views.dkma.SpecialeForNBS;
+import dk.nsi.stamdata.views.dkma.Styrkeenhed;
+import dk.nsi.stamdata.views.dkma.Substitution;
+import dk.nsi.stamdata.views.dkma.SubstitutionAfLaegemidlerUdenFastPris;
+import dk.nsi.stamdata.views.dkma.TakstVersion;
+import dk.nsi.stamdata.views.dkma.Tidsenhed;
+import dk.nsi.stamdata.views.dkma.Tilskudsinterval;
+import dk.nsi.stamdata.views.dkma.TilskudsprisgrupperPakningsniveau;
+import dk.nsi.stamdata.views.dkma.UdgaaedeNavne;
+import dk.nsi.stamdata.views.dkma.Udleveringsbestemmelse;
 import dk.nsi.stamdata.views.doseringsforslag.DosageStructure;
 import dk.nsi.stamdata.views.doseringsforslag.DosageUnit;
 import dk.nsi.stamdata.views.doseringsforslag.DosageVersion;
 import dk.nsi.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
 import dk.nsi.stamdata.views.sks.Institution;
-import dk.nsi.stamdata.views.sor.*;
+import dk.nsi.stamdata.views.sor.Apotek;
+import dk.nsi.stamdata.views.sor.Praksis;
+import dk.nsi.stamdata.views.sor.Sygehus;
+import dk.nsi.stamdata.views.sor.SygehusAfdeling;
+import dk.nsi.stamdata.views.sor.Yder;
+import dk.nsi.stamdata.views.vaccination.Disease;
+import dk.nsi.stamdata.views.vaccination.DiseaseVaccine;
+import dk.nsi.stamdata.views.vaccination.Dosageoption;
+import dk.nsi.stamdata.views.vaccination.SSIDrug;
+import dk.nsi.stamdata.views.vaccination.VaccinationPlan;
+import dk.nsi.stamdata.views.vaccination.VaccinationPlanItem;
+import dk.nsi.stamdata.views.vaccination.Vaccine;
+import dk.nsi.stamdata.views.vaccination.VaccineDrug;
 import dk.nsi.stamdata.views.vitamin.Firmadata;
 import dk.nsi.stamdata.views.vitamin.Grunddata;
 import dk.nsi.stamdata.views.vitamin.VitaminIndholdsstoffer;
 import dk.nsi.stamdata.views.vitamin.VitaminUdgaaedeNavne;
-
-import java.util.Map;
-import java.util.Set;
 
 public class ViewModule extends AbstractModule
 {
@@ -136,6 +183,16 @@ public class ViewModule extends AbstractModule
         views.addBinding().to(Grunddata.class);
         views.addBinding().to(VitaminIndholdsstoffer.class);
         views.addBinding().to(VitaminUdgaaedeNavne.class);
+        
+        // Vaccinationer
+        views.addBinding().to(Disease.class);
+        views.addBinding().to(DiseaseVaccine.class);
+        views.addBinding().to(Dosageoption.class);
+        views.addBinding().to(SSIDrug.class);
+        views.addBinding().to(VaccinationPlan.class);
+        views.addBinding().to(VaccinationPlanItem.class);
+        views.addBinding().to(Vaccine.class);
+        views.addBinding().to(VaccineDrug.class);
     }
     
 

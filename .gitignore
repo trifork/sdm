@@ -16,6 +16,7 @@ logFile_IS_UNDEFINED
 jmeter
 */**/jmeter.log
 *.log
+*.log.1
 release.properties
 **/*.iml
 *.iml
