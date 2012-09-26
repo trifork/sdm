@@ -1,0 +1,9 @@
+Stamdata 3.4.16 Release Notes
+=============================
+
+* NSPSUPPORT-103: Tilføjet Whitelist tabel, så NSP services kan køre på en SDM4 database
+
+* Tilføjet Registerudtræk af Vitaminimporter til KRS
+
+* Tilføjet Registerudtræk af Vaccinationsimporter til KRS
+
