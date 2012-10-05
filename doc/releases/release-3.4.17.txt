@@ -1,0 +1,7 @@
+Stamdata 3.4.17 Release Notes
+=============================
+
+* Fixed NSP-SUPPORT-114, hvor v¾rdier ikke kunne opdateres i keyvaluestore
+
+* Fixed NSP-SUPPORT-84 hvor shakIdentifier fejlagtigt var oversat til nummer, og efterf¿lgende sat til en BigInteger i stedet for en streng som XSDen foreskriver
+
