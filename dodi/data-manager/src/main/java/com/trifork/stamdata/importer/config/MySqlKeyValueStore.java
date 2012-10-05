@@ -106,8 +106,13 @@ public class MySqlKeyValueStore implements KeyValueStore
             if (value != null)
             {
                 checkArgument(value.length() <= DB_FIELD_SIZE, "value can max be %d characters.", DB_FIELD_SIZE);
-
-                statement = connection.prepareStatement("INSERT INTO KeyValueStore (ownerId, id, value) VALUES (?, ?, ?)");
+                if(get(key) == null) {
+                    statement = connection.prepareStatement("INSERT INTO KeyValueStore (ownerId, id, value) VALUES (?, ?, ?)");
+                } else {
+                    statement = connection.prepareStatement("Update KeyValueStore set ownerId=?, id=?, value=? WHERE ownerid=? and id=?");
+                    statement.setObject(4, dataOwnerId);
+                    statement.setObject(5, key);
+                }
                 statement.setObject(3, value);
             }
             else

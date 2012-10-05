@@ -24,32 +24,19 @@
  */
 package com.trifork.stamdata.importer.config;
 
-import com.trifork.stamdata.importer.parsers.Parser;
-import com.trifork.stamdata.importer.parsers.Parsers;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNotNull;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-public class MySqlKeyValueStoreTest
-{
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+public class MySqlKeyValueStoreTest {
     private Connection connection;
 
     private final String owner1Id = "default_owner";
@@ -59,8 +46,7 @@ public class MySqlKeyValueStoreTest
     private MySqlKeyValueStore owner2Store;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         connection = new ConnectionManager().getConnection();
 
         owner1Store = new MySqlKeyValueStore(owner1Id, connection);
@@ -68,15 +54,13 @@ public class MySqlKeyValueStoreTest
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws Exception {
         connection.rollback();
         connection.close();
     }
 
     @Test
-    public void testPutValueForKeyGetsStoredInTheDatabaseForTheCorrectOwner() throws SQLException
-    {
+    public void testPutValueForKeyGetsStoredInTheDatabaseForTheCorrectOwner() throws SQLException {
         owner1Store.put("foo", "bar");
 
         String storedValue = owner1Store.get("foo");
@@ -85,8 +69,7 @@ public class MySqlKeyValueStoreTest
     }
 
     @Test
-    public void testPutStoresTheValueForTheCorrectOwner() throws SQLException
-    {
+    public void testPutStoresTheValueForTheCorrectOwner() throws SQLException {
         String key = "foo";
 
         owner1Store.put(key, "fez");
@@ -100,8 +83,21 @@ public class MySqlKeyValueStoreTest
     }
 
     @Test
-    public void testThatStoringNullInAKeyDeletesTheRowInTheDatabase() throws SQLException
-    {
+    public void testPutStoresTheSameKeyMoreThaOnce() throws SQLException {
+        String key = "foo";
+
+        owner1Store.put(key, "fez");
+        String value1 = owner1Store.get(key);
+
+        owner1Store.put(key, "baz");
+        String value2 = owner1Store.get(key);
+
+        assertThat(value1, is("fez"));
+        assertThat(value2, is("baz"));
+    }
+
+    @Test
+    public void testThatStoringNullInAKeyDeletesTheRowInTheDatabase() throws SQLException {
         owner1Store.put("foo", "bar");
         owner1Store.put("foo", null);
 
@@ -111,8 +107,7 @@ public class MySqlKeyValueStoreTest
     }
 
     @Test
-    public void testThatGettingANonExistingKeyReturnsNullAndDoesNotThrowAnException()
-    {
+    public void testThatGettingANonExistingKeyReturnsNullAndDoesNotThrowAnException() {
         String value = owner1Store.get("foo");
 
         assertThat(value, is(nullValue()));
