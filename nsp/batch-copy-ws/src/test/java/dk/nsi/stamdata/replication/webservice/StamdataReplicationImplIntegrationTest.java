@@ -372,7 +372,8 @@ public class StamdataReplicationImplIntegrationTest
         request.setRegister("sor");
         request.setDatatype("sygehusafdeling");
         request.setVersion(1L);
-        request.setOffset("0");
+        request.setOffset("00000000000000000000");
+        request.setMaxRecords(500L);
 
         populateDatabaseAndSendRequest();
 

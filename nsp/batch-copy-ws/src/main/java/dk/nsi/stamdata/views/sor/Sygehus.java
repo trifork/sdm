@@ -58,7 +58,7 @@ public class Sygehus extends View
 
 	protected BigInteger eanLokationsnummer;
 
-	protected BigInteger nummer;
+	protected String nummer;
 
 	protected String navn;
 
