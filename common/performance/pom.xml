@@ -36,7 +36,7 @@
 							<value>false</value>
 						</property>
 					</sysproperties>
-					<jMeterRemoteLocation>http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.6.zip</jMeterRemoteLocation>
+					<jMeterRemoteLocation>http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.8.zip</jMeterRemoteLocation>
 				</configuration>
 			</plugin>
 		</plugins>
