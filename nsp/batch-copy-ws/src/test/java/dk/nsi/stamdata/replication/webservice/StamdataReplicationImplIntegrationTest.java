@@ -24,30 +24,20 @@
  */
 package dk.nsi.stamdata.replication.webservice;
 
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.trifork.stamdata.jaxws.SealNamespaceResolver;
-import com.trifork.stamdata.persistence.*;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.VitaminRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-import dk.nsi.stamdata.jaxws.generated.*;
-import dk.nsi.stamdata.replication.models.Client;
-import dk.nsi.stamdata.replication.models.ClientDao;
-import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.joda.time.DateTime;
-import org.joda.time.Instant;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.math.BigInteger;
+import java.net.URL;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -63,24 +53,52 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.math.BigInteger;
-import java.net.URL;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.Instant;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.trifork.stamdata.jaxws.SealNamespaceResolver;
+import com.trifork.stamdata.persistence.Record;
+import com.trifork.stamdata.persistence.RecordBuilder;
+import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
+import com.trifork.stamdata.persistence.RecordPersister;
+import com.trifork.stamdata.persistence.RecordSpecification;
+import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
+import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.VitaminRecordSpecs;
+import com.trifork.stamdata.specs.YderregisterRecordSpecs;
+
+import dk.nsi.stamdata.jaxws.generated.Header;
+import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
+import dk.nsi.stamdata.jaxws.generated.ReplicationFault;
+import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
+import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
+import dk.nsi.stamdata.jaxws.generated.Security;
+import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
+import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
+import dk.nsi.stamdata.replication.models.Client;
+import dk.nsi.stamdata.replication.models.ClientDao;
+import dk.nsi.stamdata.testing.TestServer;
+import dk.nsi.stamdata.views.Views;
+import dk.nsi.stamdata.views.cpr.Person;
 
 @RunWith(GuiceTestRunner.class)
 public class StamdataReplicationImplIntegrationTest
 {
-    public static final String WHITELISTED_CVR = "12345678";
+    public static final String WHITELISTED_CVR = "25520041";
     public static final String NON_WHITELISTED_CVR = "87654321";
     private boolean isClientAuthority = false;
 
@@ -108,6 +126,7 @@ public class StamdataReplicationImplIntegrationTest
         server = new TestServer().port(8986).contextPath("/").start();
 
         URL wsdlLocation = new URL("http://localhost:8986/service/StamdataReplication?wsdl");
+        //URL wsdlLocation = new URL("http://ext15-cniab01.nsp-test.netic.dk:8080/stamdata-batch-copy-ws/service/StamdataReplication?wsdl");
         QName serviceName = new QName("http://nsi.dk/2011/10/21/StamdataKrs/", "StamdataReplicationService");
         StamdataReplicationService service = new StamdataReplicationService(wsdlLocation, serviceName);
 
@@ -130,7 +149,8 @@ public class StamdataReplicationImplIntegrationTest
 									"vitamin/grunddata/v1",
 									"vitamin/firmadata/v1",
 									"vitamin/udgaaedenavne/v1",
-									"vitamin/indholdsstoffer/v1"});
+									"vitamin/indholdsstoffer/v1",
+									"cpr/barnrelation/v1"});
     }
 
     @After
@@ -238,8 +258,18 @@ public class StamdataReplicationImplIntegrationTest
         request.setMaxRecords(2L);
 
         populateDatabaseAndSendRequest();
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 2);
+        
+	    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+        
+        XPathExpression expression = createXpathExpression("//sdm:person/sdm:foedselsdato");
+        String result = expression.evaluate(anyAsElement);
+        Date date = dateFormatter.parseDateTime(result).toDate();
+        assertEquals(a.foedselsdato.getTime(), date.getTime());
+        
     }
 
     @Test
@@ -383,6 +413,23 @@ public class StamdataReplicationImplIntegrationTest
     }
 
     @Test
+    public void testCPRBarnRelationCopy() throws Exception
+    {
+        request = new ObjectFactory().createReplicationRequestType();
+        request.setRegister("cpr");
+        request.setDatatype("barnrelation");
+        request.setVersion(1L);
+        request.setOffset("00000000000000000000");
+        request.setMaxRecords(500L);
+
+        populateDatabaseAndSendRequest();
+
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+
+        assertResponseContainsRecordAtom("cpr", "barnrelation");
+    }
+
+    @Test
     public void testBemyndigelsesServiceCopy() throws Exception {
         recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
         Record record = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "1234567890").addDummyFieldsAndBuild();
@@ -506,30 +553,30 @@ public class StamdataReplicationImplIntegrationTest
 
     private void assertResponseContainsCprAtom()
     {
-        assertThat(anyAsElement.getLocalName(), is("feed"));
-        assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:nsi.dk,2011:cpr/person/v1"));
+        assertEquals(anyAsElement.getLocalName(), "feed");
+        assertEquals(anyAsElement.getNamespaceURI(), "http://www.w3.org/2005/Atom");
+        assertEquals(anyAsElement.getFirstChild().getFirstChild().getTextContent(), "tag:nsi.dk,2011:cpr/person/v1");
     }
 
     private void assertResponseContainsRecordAtom(String register, String datatype)
     {
-        assertThat(anyAsElement.getLocalName(), is("feed"));
-        assertThat(anyAsElement.getNamespaceURI(), is("http://www.w3.org/2005/Atom"));
-        assertThat(anyAsElement.getFirstChild().getFirstChild().getTextContent(), is("tag:nsi.dk,2011:" + register + "/" + datatype + "/v1"));
+    	assertEquals(anyAsElement.getLocalName(), "feed");
+    	assertEquals(anyAsElement.getNamespaceURI(), "http://www.w3.org/2005/Atom");
+    	assertEquals(anyAsElement.getFirstChild().getFirstChild().getTextContent(), "tag:nsi.dk,2011:" + register + "/" + datatype + "/v1");
     }
 
     private void assertResponseContainsPersonWithSurNameMatchingGivenName(String givenName, String surName) throws XPathExpressionException
     {
         XPathExpression expression = createXpathExpression("//sdm:person[sdm:fornavn='" + givenName + "']/sdm:efternavn");
         String result = expression.evaluate(anyAsElement);
-        assertThat(result, is(surName));
+        assertEquals(result, surName);
     }
 
     private void assertResponseContainsExactNumberOfRecords(String tag, int n) throws XPathExpressionException
     {
         XPathExpression expression = createXpathExpression("count(//" + tag + ")");
         String countAsString = expression.evaluate(anyAsElement);
-        assertThat(Integer.parseInt(countAsString), is(n));
+        assertEquals(Integer.parseInt(countAsString), n);
     }
 
     private void assertResponseContainsPersonWithCpr(String oracleCpr) throws XPathExpressionException
@@ -539,14 +586,14 @@ public class StamdataReplicationImplIntegrationTest
         
         //printDocument(anyAsElement.getOwnerDocument(), System.out);
 
-        assertThat(result, is(oracleCpr));
+        assertEquals(result, oracleCpr);
     }
 
     private void assertResponseContainsValueOnXPath(String xPath, String oracle) throws XPathExpressionException
     {
         XPathExpression expression = createXpathExpression(xPath);
         String result = expression.evaluate(anyAsElement);
-        assertThat(result, is(oracle));
+        assertEquals(result, oracle);
     }
 
     private String getOffsetFromAtomEntry() throws XPathExpressionException

@@ -100,7 +100,7 @@ public class VitaminUdgaaedeNavne extends View {
     
     static class DateAdapter extends XmlAdapter<String, Date> {
 
-        private final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyyMMdd").withZone(DateTimeZone.UTC);
+        private final DateTimeFormatter DATETIME_FORMATTER = DateTimeFormat.forPattern("yyyyMMdd");
 
         @Override
         public String marshal(Date d) throws Exception {

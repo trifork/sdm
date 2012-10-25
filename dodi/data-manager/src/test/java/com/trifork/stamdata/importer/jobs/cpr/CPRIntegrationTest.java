@@ -316,6 +316,12 @@ public class CPRIntegrationTest
 		rs = stmt.executeQuery("SELECT COUNT(*) FROM Person WHERE NavneBeskyttelseStartDato < NOW() AND NavneBeskyttelseSletteDato > NOW()");
 		rs.next();
 		assertEquals(1, rs.getInt(1));
+		
+		rs = stmt.executeQuery("Select FoedselsdatoMarkering from Person");
+		while(rs.next()) {
+			System.out.println(rs.getString("FoedselsdatoMarkering"));
+		}
+		
 	}
 
 
