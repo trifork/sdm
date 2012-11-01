@@ -51,7 +51,7 @@ public class DGWSSoapHandler implements SOAPHandler<SOAPMessageContext> {
 
                 NodeList nodeList = soapHeader.getElementsByTagNameNS("http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", "Header");
                 Node medcomHeader = nodeList.item(0);
-
+                
                 Element flowStatus = medcomHeader.getOwnerDocument().createElementNS("http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", "FlowStatus");
                 flowStatus.setTextContent(FlowStatusValues.FLOW_FINALIZED_SUCCESFULLY);
                 

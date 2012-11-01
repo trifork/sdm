@@ -28,6 +28,7 @@ import static java.lang.String.format;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,7 @@ import dk.nsi.stamdata.jaxws.generated.ReplicationRequestType;
 import dk.nsi.stamdata.jaxws.generated.ReplicationResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.StamdataReplication;
+import dk.nsi.stamdata.jaxws.generated.Timestamp;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.security.ClientVocesCvr;
@@ -102,6 +104,14 @@ public class StamdataReplicationImpl implements StamdataReplication {
     @Override
     public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
+    	
+    	// Replace the client request securityheader
+    	Security security = new Security();
+    	Timestamp ts = new Timestamp();
+    	ts.setCreated(Calendar.getInstance());
+    	security.setTimestamp(ts);
+    	wsseHeader.value = security;
+    	
         try
         {
             // During the transition to the new architecture we will have
