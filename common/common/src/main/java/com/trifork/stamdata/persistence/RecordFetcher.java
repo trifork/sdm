@@ -88,8 +88,7 @@ public class RecordFetcher
     {
         String queryString = String.format("SELECT * FROM %s WHERE " +
                 "(PID > ? AND ModifiedDate = ?) OR " +
-                "PID > ? OR " +
-                "(PID = ? AND ModifiedDate > ?) " +
+                "(ModifiedDate > ?) " +
                 "ORDER BY ModifiedDate, PID LIMIT %d", recordSpecification.getTable(), limit);
 
         PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
@@ -97,9 +96,7 @@ public class RecordFetcher
         Timestamp fromModifiedDateAsTimestamp = new Timestamp(fromModifiedDate.getMillis());
         preparedStatement.setObject(1, fromPID);
         preparedStatement.setTimestamp(2, fromModifiedDateAsTimestamp);
-        preparedStatement.setObject(3, fromPID);
-        preparedStatement.setObject(4, fromPID);
-        preparedStatement.setTimestamp(5, fromModifiedDateAsTimestamp);
+        preparedStatement.setTimestamp(3, fromModifiedDateAsTimestamp);
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
