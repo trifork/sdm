@@ -81,8 +81,9 @@ public class RecordXmlGenerator
         
         for (RecordMetadata metadata : records)
         {
+        	String revisionId = String.format("%010d%010d", metadata.getModifiedDate().getMillis() / 1000, metadata.getPid());
             Element entry = addElement(root, ATOM_NAMESPACE_URI, "atom:entry", null);
-            String atomId = String.format("tag:nsi.dk,2011:%s/%s/v1/%d%07d", register, datatype, metadata.getModifiedDate().getMillis(), metadata.getPid());
+            String atomId = String.format("tag:nsi.dk,2011:%s/%s/v1/%s", register, datatype, revisionId);
             addElement(entry, ATOM_NAMESPACE_URI, "atom:id", atomId);
             addElement(entry, ATOM_NAMESPACE_URI, "atom:title", null);
 
