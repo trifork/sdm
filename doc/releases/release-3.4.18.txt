@@ -1,0 +1,10 @@
+Stamdata 3.4.18 Release Notes
+=============================
+
+* Fixed NSP-SUPPORT-120, så Kopi register service laver korrekt udtræk - FMK har testet denne
+
+* Fixed NSP-SUPPORT-121, timezoneproblem hvor der blev trukket 1 time fra fødselsdage 
+
+* Fixed NSP-SUPPORT-122, Deserialisering af WS kald via SOSI seal.
+
+ 
