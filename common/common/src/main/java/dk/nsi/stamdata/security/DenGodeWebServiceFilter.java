@@ -167,6 +167,22 @@ public class DenGodeWebServiceFilter implements Filter
 	       }
 	   }
 
+	/* Simple method for checking if a request is an access to a schema (xsd, wsdl) resource.
+	 * It is used to allow access without requiring DGWS headers
+	 */
+	private boolean isRequestForSchemaResource(HttpServletRequest httpRequest) {
+		String queryString = (httpRequest.getQueryString() != null) ? httpRequest.getQueryString().toLowerCase() : "";
+
+		if (queryString.equals("wsdl")) {
+                        return true;
+                }
+		else if (queryString.matches("xsd=[0-9]+")) {
+			return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
@@ -184,8 +200,7 @@ public class DenGodeWebServiceFilter implements Filter
 		// having to send DGWS stuff along with the call we
 		// make a little hack that pass these called through.
 
-		if ("wsdl".equalsIgnoreCase(httpRequest.getQueryString()))
-		{
+		if (isRequestForSchemaResource(httpRequest)) {
 			chain.doFilter(request, response);
 			return;
 		}
