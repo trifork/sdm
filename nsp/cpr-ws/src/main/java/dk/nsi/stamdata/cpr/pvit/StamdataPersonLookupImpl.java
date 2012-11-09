@@ -31,6 +31,8 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import org.apache.log4j.Logger;
+
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Transactional;
@@ -45,7 +47,6 @@ import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
-import org.apache.log4j.Logger;
 
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup")

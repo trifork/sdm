@@ -216,8 +216,7 @@ public class Person extends BaseTemporalEntity
     }
 
     public String getStatus() {
-    	String s = "00" + status;
-    	return s.substring(s.length() - 2);
+    	return status;
     }
 
     public void setStatus(String status) {
