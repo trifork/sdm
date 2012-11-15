@@ -129,6 +129,9 @@ public class MunicipalityMapper
 		municipalityToCounty.put("0657", "1083");
 		municipalityToCounty.put("0661", "1083");
 		municipalityToCounty.put("0756", "1083");
+                municipalityToCounty.put("0540", "1083");
+                municipalityToCounty.put("0550", "1083");
+
 
 		// Region Midtjylland (1082)
 
