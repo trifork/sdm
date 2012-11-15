@@ -54,13 +54,16 @@ public final class ConfigurationLoader {
 
         try {
             config.load(buildInConfig);
+            logger.debug("Configuration file 'config.properties' loaded");
             buildInConfig.close();
 
             if (testConfig != null) {
                 logger.info("Test Configuration file 'test-config.properties' found.");
 
                 config.load(testConfig);
-            } else if (deploymentConfig != null) {
+            }
+
+            if (deploymentConfig != null) {
                 logger.info("Configuration file '"+componentName+".properties' found.");
 
                 config.load(deploymentConfig);
