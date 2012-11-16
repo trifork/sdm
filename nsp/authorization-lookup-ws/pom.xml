@@ -4,7 +4,7 @@
   <parent>
     <groupId>dk.nsi.stamdata</groupId>
     <artifactId>stamdata-parent</artifactId>
-    <version>3.4.23-SNAPSHOT</version>
+    <version>3.4.23</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
