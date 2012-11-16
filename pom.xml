@@ -670,6 +670,48 @@
 				</plugins>
 			</reporting>
 		</profile>
+      <profile>
+          <id>useDbCredentialProperties</id>
+          <build>
+              <plugins>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-antrun-plugin</artifactId>
+                      <version>1.7</version>
+                      <executions>
+                          <execution>
+                              <phase>pre-integration-test</phase>
+                              <goals>
+                                  <goal>run</goal>
+                              </goals>
+                              <configuration>
+                                  <target>
+                                      <echo>Creating DODI configuration file (for overriding content in config.properties).
+    You can override database user and password by specifying -Ddb.username=someuser -Ddb.password=somepassword
+    Credentials used are '${db.username}'/'${db.password}'
+                                      </echo>
+                                      <echo file="dodi/data-manager/src/test/resources/stamdata-data-manager.properties" append="false">db.user=${db.username}
+                                          db.pwd=${db.password}</echo>
+
+                                      <echo>Creating NSP configuration file (for overriding content in config.properties AND test-config.properties)
+    You can override database user and password by specifying -Ddb.username=someuser -Ddb.password=somepassword
+    Credentials used are '${db.username}'/'${db.password}'
+                                      </echo>
+
+                                      <echo file="nsp/batch-copy-ws/src/test/resources/stamdata-batch-copy-ws.properties" append="false">db.connection.username=${db.username}
+                                          db.connection.password=${db.password}</echo>
+                                      <echo file="nsp/cpr-ws/src/test/resources/stamdata-cpr-ws.properties" append="false">db.connection.username=${db.username}
+                                          db.connection.password=${db.password}</echo>
+                                      <echo file="nsp/authorization-lookup-ws/src/test/resources/stamdata-authorization-lookup-ws.properties" append="false">db.connection.username=${db.username}
+                                          db.connection.password=${db.password}</echo>
+                                  </target>
+                              </configuration>
+                          </execution>
+                      </executions>
+                  </plugin>
+              </plugins>
+          </build>
+      </profile>
   </profiles>
 
   <repositories>
