@@ -1,0 +1,10 @@
+Stamdata 3.4.25 Release Notes
+=============================
+
+* Fixed ConfigurationLoader i common - Rettet til altid at indlæse stamdata-<modulename>.properties, uanset hvilke andre properties filer der er på classpath. (Samme opførsel som stamdata-data-manager)
+
+* Fixed NSPSUPPORT-135, tønder kommune og sønderborg kommune tilføjet
+
+* Fixed NSPSUPPORT-130, SCES, SAES og SKRS servicerer ikke tilhørende schema
+
+
