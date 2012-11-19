@@ -500,7 +500,8 @@ public class PersonMapper
 
 	private String getBuildingIdentifier(Person person)
 	{
-		return person.husnummer + person.bygningsnummer;
+		// NSPSUPPORT-129 : buildingidentifier er alene husnummer + evt bogstav (fx 13B). Dette er indeholdt i person.husnummer
+		return person.husnummer; // + person.bygningsnummer;
 	}
 
 
