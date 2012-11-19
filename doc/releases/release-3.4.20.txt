@@ -7,4 +7,4 @@ Stamdata 3.4.20 Release Notes
 
 * Fixed NSPSUPPORT-130, SCES, SAES og SKRS servicerer ikke tilhørende schema
 
-
+* Fixed NSPSUPPORT-132, STS certificate for test purposes updated
