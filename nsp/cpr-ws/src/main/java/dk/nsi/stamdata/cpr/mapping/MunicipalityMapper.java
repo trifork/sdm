@@ -24,27 +24,28 @@
  */
 package dk.nsi.stamdata.cpr.mapping;
 
-import java.util.Properties;
-
-import com.google.common.base.Preconditions;
-
-import org.apache.commons.io.IOUtils;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
-public class MunicipalityMapper
-{
-	public String toCountyCode(String municipalityCode)
-	{
+import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
+
+public class MunicipalityMapper {
+	private static final Logger logger = Logger.getLogger(MunicipalityMapper.class);
+
+	public String toCountyCode(String municipalityCode) {
 		String countyCode = municipalityToCounty.getProperty(municipalityCode);
-		Preconditions.checkState(countyCode != null, "The municipality code '%s' is not associated with any county. There is an error in the registry or CPR-service.", municipalityCode);
+		if (countyCode == null) {
+			logger.error("Unknown municipality: " + municipalityCode);
+			countyCode = "99";
+		}
+		
 		return countyCode;
 	}
 
-
 	private static Properties municipalityToCounty = new Properties();
-	static
-	{
+	static {
 		ClassLoader classLoader = MunicipalityMapper.class.getClassLoader();
 		InputStream isInternal = classLoader.getResourceAsStream("municipalities-internal.properties");
 		InputStream isExternal = classLoader.getResourceAsStream("municipalities-external.properties");
@@ -56,9 +57,11 @@ public class MunicipalityMapper
 			if (isExternal != null) {
 				municipalityToCounty.load(isExternal);
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new RuntimeException("Problem loading one of the municipalities.properties file", e);
-		} finally {
+		}
+		finally {
 			IOUtils.closeQuietly(isExternal);
 			IOUtils.closeQuietly(isInternal);
 		}
