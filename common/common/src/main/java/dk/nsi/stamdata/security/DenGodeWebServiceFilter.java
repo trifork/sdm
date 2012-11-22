@@ -67,7 +67,6 @@ import dk.sosi.seal.pki.SOSIFederation;
 import dk.sosi.seal.pki.SOSITestFederation;
 import dk.sosi.seal.vault.EmptyCredentialVault;
 import dk.sosi.seal.xml.XmlUtil;
-import dk.sosi.seal.xml.XmlUtilException;
 
 
 /**
@@ -79,8 +78,7 @@ import dk.sosi.seal.xml.XmlUtilException;
  * code below would have to be rewritten.
  */
 @Singleton
-public class DenGodeWebServiceFilter implements Filter
-{
+public class DenGodeWebServiceFilter implements Filter {
     public static final String ALL_EXCEPT_STATUS_PAGE = "(?!/status)/.*";
     
     private static final Logger logger = Logger.getLogger(DenGodeWebServiceFilter.class);
@@ -97,27 +95,13 @@ public class DenGodeWebServiceFilter implements Filter
 	public DenGodeWebServiceFilter() { }
 
 	@Inject
-	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation, @Named(USE_DGWS_INIT_PARAM_KEY) String dgwsLevels)
-	{
+	DenGodeWebServiceFilter(@Nullable @Named(USE_TEST_FEDERATION_PARAMETER) String useTestFederation, @Named(USE_DGWS_INIT_PARAM_KEY) String dgwsLevels) {
 		this.useTestFederation = Boolean.valueOf(useTestFederation);
 		this.dgwsLevels = splitNistList(dgwsLevels);
 	}
 	
-	private Set<Integer> splitNistList(String levels)
-	{
-	    Set<Integer> levelSet = Sets.newLinkedHashSet();
-	    
-	    for (String level : Splitter.on(",").trimResults().omitEmptyStrings().split(levels))
-	    {
-	        levelSet.add(Integer.parseInt(level));
-	    }
-	    
-	    return levelSet;
-	}
-	
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException
-	{
+	public void init(FilterConfig filterConfig) throws ServletException {
 		this.useTestFederation = shouldWeUseTestFederation(filterConfig);
 
 		Properties properties = SignatureUtil.setupCryptoProviderForJVM();
@@ -129,67 +113,11 @@ public class DenGodeWebServiceFilter implements Filter
         logger.info("Init filter using federation type: " + federation.getClass());
 	}
 
-	private boolean shouldWeUseTestFederation(FilterConfig filterConfig)
-	{
-		String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
-		String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
-		
-		if (sysProp != null)
-		{
-			return Boolean.valueOf(sysProp);
-		}
-		else if (initParameter != null)
-		{
-			return Boolean.valueOf(initParameter);
-		}
-		else
-		{
-			return useTestFederation;
-		}
-	}
-	
-	   private Set<Integer> getNistLevel(FilterConfig filterConfig)
-	   {
-	       String initParameter = filterConfig.getInitParameter(USE_DGWS_INIT_PARAM_KEY);
-	       String sysProp = System.getProperty(USE_DGWS_INIT_PARAM_KEY);
-	       
-	       if (sysProp != null)
-	       {
-	           return splitNistList(sysProp);
-	       }
-	       else if (initParameter != null)
-	       {
-	           return splitNistList(initParameter);
-	       }
-	       else
-	       {
-	           return dgwsLevels;
-	       }
-	   }
-
-	/* Simple method for checking if a request is an access to a schema (xsd, wsdl) resource.
-	 * It is used to allow access without requiring DGWS headers
-	 */
-	private boolean isRequestForSchemaResource(HttpServletRequest httpRequest) {
-		String queryString = (httpRequest.getQueryString() != null) ? httpRequest.getQueryString().toLowerCase() : "";
-
-		if (queryString.equals("wsdl")) {
-                        return true;
-                }
-		else if (queryString.matches("xsd=[0-9]+")) {
-			return true;
-		}
-
-		return false;
-	}
-
 	@Override
-	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
-	{
-		// Guard: We only accept HTTP requests.
+	public void doFilter(ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
 
-		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse))
-		{
+		// Guard: We only accept HTTP requests.
+		if (!(request instanceof HttpServletRequest && response instanceof HttpServletResponse)) {
 		    throw new AssertionError("We are unable to handle requests and responses that are not of the type HttpServletRequest and HttpServletResponse");
 		}
 
@@ -197,18 +125,14 @@ public class DenGodeWebServiceFilter implements Filter
 		HttpServletRequest httpRequest = new BufferedInputRequestWrapper((HttpServletRequest) request);
 
 		// HACK: To allow the JAX-WS client to access the WSDL without
-		// having to send DGWS stuff along with the call we
-		// make a little hack that pass these called through.
-
+		// having to send DGWS stuff along with the call we make a little hack that pass these called through.
 		if (isRequestForSchemaResource(httpRequest)) {
 			chain.doFilter(request, response);
 			return;
 		}
 
-		try
-		{
+		try	{
 			// Rip out the ID Card and cram it into the request context.
-
 			final String xml = IOUtils.toString(httpRequest.getReader());
             httpRequest.getPathInfo();
 			
@@ -217,54 +141,34 @@ public class DenGodeWebServiceFilter implements Filter
 
 			IDCard idCard = factory.deserializeRequest(xml).getIDCard();
 			
-			// We have to make sure ourselves that the ID Cards NIST level etc.
-			// is as expected.
-			
-			if (dgwsLevels.contains(idCard.getAuthenticationLevel().getLevel()))
-			{
+			// We have to make sure ourselves that the ID Cards NIST level etc. is as expected.
+			if (dgwsLevels.contains(idCard.getAuthenticationLevel().getLevel())) {
 			    request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 	            chain.doFilter(httpRequest, response);
-			}
-			else
-			{
+			} else {
 			    Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.SECURITY_LEVEL_FAILED, "Invalid security level.");
 	            writeFaultToResponse(httpResponse, reply);
 			}
-		}
-		catch (SignatureInvalidModelBuildException ignore)
-		{
-	        logger.warn("The signature was invalid");
+		} catch (SignatureInvalidModelBuildException e) {
 			// The signature was invalid. This sender is to blame.
-			
-			// Unfortunately SEAL's API is not made with the user in mind and
-			// we cannot access e.g. the flow ID without re-parsing the XML
-			// again ourselves. Therefore we simply return "0".
-			
-			// FIXME: To enable protection against replay attacks,
-			// the response embeds the ID of the corresponding request (see the inResponseToID).
-			// We do not set this, because it is difficult to get because using SEAL's API is
-			// up hill.
-			
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.INVALID_SIGNATURE, "The signature used to sign the message was incorrectly signed or no longer valid.");
-			writeFaultToResponse(httpResponse, reply);
-		}
-		catch (XmlUtilException ignore)
-		{
-            logger.warn("An XmlUtilException was caught: " + ignore.getMessage());
-			// The message could not be read. The sender is to blame.
-			
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
-			writeFaultToResponse(httpResponse, reply);
-		}
-		catch (Exception ignore)
-		{
-		    logger.warn("An unexpected exception was caught: " + ignore.getMessage());
-			// This is bad and will likely be a bug.
 
-			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, "An unexpected error occured while proccessing the request.");
+			String message = "The signature used to sign the message was incorrectly signed or no longer valid." + e.getMessage();
+	        logger.warn(message);
+			
+			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, e.getMessageID(), e.getFlowID(), FaultCodeValues.INVALID_SIGNATURE, message);
+			writeFaultToResponse(httpResponse, reply);
+		}
+		catch (Exception e) {
+			String message = "An exception was caught: " + e.getMessage(); 
+		    logger.warn(message);
+
+			Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.PROCESSING_PROBLEM, message);
 			writeFaultToResponse(httpResponse, reply);
 		}
 	}
+	
+	@Override
+	public void destroy() { }
 
 	private void writeFaultToResponse(HttpServletResponse httpResponse, Reply reply) throws IOException
 	{
@@ -281,9 +185,56 @@ public class DenGodeWebServiceFilter implements Filter
         writer.flush();
         writer.close();
 	}
+	
+	/* Simple method for checking if a request is an access to a schema (xsd, wsdl) resource.
+	 * It is used to allow access without requiring DGWS headers
+	 */
+	private boolean isRequestForSchemaResource(HttpServletRequest httpRequest) {
+		String queryString = (httpRequest.getQueryString() != null) ? httpRequest.getQueryString().toLowerCase() : "";
 
-	@Override
-	public void destroy() { }
+		if (queryString.equals("wsdl")) {
+			return true;
+		} else if (queryString.matches("xsd=[0-9]+")) {
+			return true;
+		}
+		return false;
+	}
+	
+	private Set<Integer> getNistLevel(FilterConfig filterConfig)  {
+		String initParameter = filterConfig.getInitParameter(USE_DGWS_INIT_PARAM_KEY);
+		String sysProp = System.getProperty(USE_DGWS_INIT_PARAM_KEY);
+	       
+		if (sysProp != null) {
+			return splitNistList(sysProp);
+		} else if (initParameter != null) {
+			return splitNistList(initParameter);
+		} else {
+			return dgwsLevels;
+		}
+	}
+
+	private boolean shouldWeUseTestFederation(FilterConfig filterConfig) {
+		String initParameter = filterConfig.getInitParameter(USE_TEST_FEDERATION_INIT_PARAM_KEY);
+		String sysProp = System.getProperty(USE_TEST_FEDERATION_INIT_PARAM_KEY);
+
+		if (sysProp != null) {
+			return Boolean.valueOf(sysProp);
+		} else if (initParameter != null) {
+			return Boolean.valueOf(initParameter);
+		} else {
+			return useTestFederation;
+		}
+	}
+
+	private Set<Integer> splitNistList(String levels) {
+		Set<Integer> levelSet = Sets.newLinkedHashSet();
+
+		for (String level : Splitter.on(",").trimResults().omitEmptyStrings().split(levels)) {
+			levelSet.add(Integer.parseInt(level));
+		}
+
+		return levelSet;
+	}
 	
 	/**
 	 * This annotation allows dependency injectors know

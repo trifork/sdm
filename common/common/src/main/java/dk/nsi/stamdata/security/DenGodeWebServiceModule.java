@@ -33,32 +33,25 @@ import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 
 import dk.sosi.seal.model.SystemIDCard;
-import dk.sosi.seal.model.constants.SubjectIdentifierTypeValues;
 
-
-public class DenGodeWebServiceModule extends AbstractModule
-{
+public class DenGodeWebServiceModule extends AbstractModule {
     @Override
-    protected void configure()
-    {
+    protected void configure() {
         // Nothing to do
     }
 
 
     @Provides
     @RequestScoped
-    public SystemIDCard provideSystemIDCard(HttpServletRequest request)
-    {
+    public SystemIDCard provideSystemIDCard(HttpServletRequest request)  {
         return (SystemIDCard) request.getAttribute(DenGodeWebServiceFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
     }
     
     @Provides
     @RequestScoped
     @ClientVocesCvr
-    public String providesClientVocesCVR(SystemIDCard idCard)
-    {
-        if (!idCard.getSystemInfo().getCareProvider().getType().equals(SubjectIdentifierTypeValues.CVR_NUMBER))
-        {
+    public String providesClientVocesCVR(SystemIDCard idCard) {
+        if (!idCard.getSystemInfo().getCareProvider().getType().equals(CVR_NUMBER)) {
             throw new IllegalStateException("You cannot inject a client's VOCES CVR if the suplied id card is not using a CVR care provider.");
         }
         
