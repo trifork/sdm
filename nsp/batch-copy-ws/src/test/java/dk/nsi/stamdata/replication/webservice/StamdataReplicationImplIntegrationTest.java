@@ -407,7 +407,7 @@ public class StamdataReplicationImplIntegrationTest
 
         populateDatabaseAndSendRequest();
 
-        printDocument(anyAsElement.getOwnerDocument(), System.out);
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
 
         assertResponseContainsRecordAtom("sor", "sygehusafdeling");
     }
