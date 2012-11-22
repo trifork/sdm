@@ -3,11 +3,7 @@ Stamdata 3.4.20 Release Notes
 
 * Fixed ConfigurationLoader i common - Rettet til altid at indlæse stamdata-<modulename>.properties, uanset hvilke andre properties filer der er på classpath. (Samme opførsel som stamdata-data-manager)
 
-* Fixed NSPSUPPORT-129, Fixed personMapper på SCES. så den ikke længere sender bygningsnummer med ud.
-
 * Fixed NSPSUPPORT-130, SCES, SAES og SKRS servicerer ikke tilhørende schema
-
-* Fixed NSPSUPPORT-131, Forbedret fejlhåndtering ved DGWS faults
 
 * Fixed NSPSUPPORT-132, STS certificate for test purposes updated
 
