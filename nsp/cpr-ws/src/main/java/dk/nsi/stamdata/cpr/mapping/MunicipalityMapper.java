@@ -37,10 +37,10 @@ public class MunicipalityMapper {
 	public String toCountyCode(String municipalityCode) {
 		String countyCode = municipalityToCounty.getProperty(municipalityCode);
 		if (countyCode == null) {
-			logger.error("Unknown municipality: " + municipalityCode);
-			countyCode = "99";
+			logger.warn("Unknown municipality: " + municipalityCode + " setting countyCode to 1099");
+			countyCode = "1099";
 		}
-		
+
 		return countyCode;
 	}
 
