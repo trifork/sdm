@@ -104,7 +104,12 @@ public class RecordFetcher
         while(resultSet.next())
         {
             Instant validFrom = new Instant(resultSet.getTimestamp("ValidFrom"));
-            Instant validTo = new Instant(resultSet.getTimestamp("ValidTo"));
+            // Validto can be null - and a new Instant with null as argument gives "now"
+            Timestamp vto = resultSet.getTimestamp("ValidTo");
+            Instant validTo = null;
+            if(vto != null) {
+            	validTo = new Instant(vto);
+            } 
             Instant modifiedDate = new Instant(resultSet.getTimestamp("ModifiedDate"));
             Long pid = (Long) resultSet.getObject("PID");
             Record record = createRecordFromResultSet(recordSpecification, resultSet);

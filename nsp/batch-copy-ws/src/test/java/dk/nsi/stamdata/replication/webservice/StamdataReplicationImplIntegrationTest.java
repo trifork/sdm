@@ -78,6 +78,7 @@ import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
+import com.trifork.stamdata.specs.TilskudsblanketRecordSpecs;
 import com.trifork.stamdata.specs.VitaminRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
@@ -150,7 +151,8 @@ public class StamdataReplicationImplIntegrationTest
 									"vitamin/firmadata/v1",
 									"vitamin/udgaaedenavne/v1",
 									"vitamin/indholdsstoffer/v1",
-									"cpr/barnrelation/v1"});
+									"cpr/barnrelation/v1",
+									"tilskudsblanket/forhoejettakst/v1"});
     }
 
     @After
@@ -482,13 +484,33 @@ public class StamdataReplicationImplIntegrationTest
 
         assertResponseContainsRecordAtom("vitamin", "grunddata");
         
-        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+        printDocument(anyAsElement.getOwnerDocument(), System.out);
         
         assertResponseContainsExactNumberOfRecords("grunddata:grunddata", 2);
         assertResponseContainsValueOnXPath("//grunddata:grunddata/grunddata:drugID", "1234567");
     }
 
-    // Helper methods
+	@Test
+    public void testTilskudsblanketForhoejetTakstCopy() throws Exception {
+        recordSpecification = TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC;
+        Record record = new RecordBuilder(TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC).field("Varenummer", 1234567).addDummyFieldsAndBuild();
+        records.add(record);
+        Record record2 = new RecordBuilder(TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC).field("Varenummer", 9876543).addDummyFieldsAndBuild();
+        records.add(record2);
+
+        createReplicationRequest("tilskudsblanket", "forhoejettakst");
+
+        populateDatabaseAndSendRequest();
+
+        assertResponseContainsRecordAtom("tilskudsblanket", "forhoejettakst");
+        
+        //printDocument(anyAsElement.getOwnerDocument(), System.out);
+        
+        assertResponseContainsExactNumberOfRecords("forhoejettakst:forhoejettakst", 2);
+        assertResponseContainsValueOnXPath("//forhoejettakst:forhoejettakst/forhoejettakst:Varenummer", "1234567");
+    }
+
+	// Helper methods
     
     // Pretty print XML document - good for debugging
     private static void printDocument(Document doc, OutputStream out) {
@@ -613,6 +635,7 @@ public class StamdataReplicationImplIntegrationTest
                 "sikrede", "http://nsi.dk/-/stamdata/3.0/sikrede",
                 "yder", "http://nsi.dk/-/stamdata/3.0/yderregister",
                 "grunddata", "http://nsi.dk/-/stamdata/3.0/vitamin",
+                "forhoejettakst", "http://nsi.dk/-/stamdata/3.0/tilskudsblanket",
                 "bemyndigelse", "http://nsi.dk/-/stamdata/3.0/bemyndigelsesservice");
         XPathFactory factory = XPathFactory.newInstance();
         XPath xpath = factory.newXPath();
@@ -666,8 +689,7 @@ public class StamdataReplicationImplIntegrationTest
 
         if (isClientAuthority)
         {
-            SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil
-                    .getVocesTrustedSecurityWrapper(WHITELISTED_CVR);
+            SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(WHITELISTED_CVR);
             securityHeader = secutityHeadersNotWhitelisted.getSecurity();
             medcomHeader = secutityHeadersNotWhitelisted.getMedcomHeader();
         } else
