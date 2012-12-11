@@ -97,7 +97,7 @@ public class RecordPersisterTest
         connection.commit();
 
         Record record = fetcher.fetchCurrent("Bar", recordSpecification);
-        assertThat((Integer) record.get("Foo"), is(23));
+        assertThat((Long) record.get("Foo"), is(new Long(23)));
     }
 
     @Test

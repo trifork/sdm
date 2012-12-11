@@ -152,9 +152,10 @@ public class RecordSpecification
                     
                     if (fieldsSpecification.type == RecordFieldType.NUMERICAL)
                     {
-                        if (!(value instanceof Integer))
-                        {
-                            return false;
+                        if ((value instanceof Long) || (value instanceof Integer)) {
+                            continue;
+                        } else {
+                        	return false;
                         }
                     }
                     else if (fieldsSpecification.type == RecordFieldType.ALPHANUMERICAL)

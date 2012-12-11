@@ -67,10 +67,10 @@ public class SingleLineRecordParserTest
         
         Record record = exampleSikredeLineParser.parseLine(exampleLine);
         
-        assertEquals(1, record.get("PostType"));
+        assertEquals(1l, record.get("PostType"));
         assertEquals("din", record.get("TruncatedString"));
         assertEquals("farmor", record.get("UntruncatedString"));
-        assertEquals(42, record.get("NumberWithSpacesForPadding"));
+        assertEquals(42l, record.get("NumberWithSpacesForPadding"));
     }
 
     @Test(expected=IllegalArgumentException.class)

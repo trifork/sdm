@@ -132,7 +132,7 @@ public class RecordFetcher
 
                 if (fieldSpec.type == RecordSpecification.RecordFieldType.NUMERICAL)
                 {
-                    builder.field(fieldName, resultSet.getInt(fieldName));
+                    builder.field(fieldName, resultSet.getLong(fieldName));
                 }
                 else if (fieldSpec.type == RecordSpecification.RecordFieldType.ALPHANUMERICAL)
                 {

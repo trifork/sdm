@@ -167,7 +167,7 @@ public class SikredeParser implements Parser {
             }
         }
 
-        if (!endRecord.get("AntPost").equals(numRecords)) {
+        if (!endRecord.get("AntPost").equals(new Long(numRecords))) {
             throw new ParserException("The number of records that were parsed did not match the total from the end record.");
         }
     }

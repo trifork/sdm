@@ -58,7 +58,16 @@ public class RecordGenerator
             }
             else if(fieldSpecification.type == RecordSpecification.RecordFieldType.NUMERICAL)
             {
-                String value = Integer.toString((Integer) record.get(fieldSpecification.name));
+            	Object o = record.get(fieldSpecification.name);
+                String value;
+            	if(o instanceof Integer) {
+					value = Integer.toString((Integer) record.get(fieldSpecification.name));
+            	} else if(o instanceof Long) {
+					value = Long.toString((Long) record.get(fieldSpecification.name));
+            	} else {
+                    throw new AssertionError("Numerical field must be Integer or Long, but was: "+o);
+            		
+            	}
                 builder.append(prefixPadding('0', fieldSpecification.length - value.length()));
                 builder.append(value);
             }
