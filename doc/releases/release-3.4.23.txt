@@ -1,0 +1,4 @@
+Stamdata 3.4.23 Release Notes
+=============================
+
+* Fixed NSPSUPPORT-147, RecordFetcher og RecordBuilder i stamdata-common på sdm3 bruger integers for "NUMERICAL" i stedet for longs
