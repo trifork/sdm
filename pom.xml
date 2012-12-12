@@ -686,6 +686,7 @@
                               </goals>
                               <configuration>
                                   <target>
+                                      <echoproperties />
                                       <echo>Creating DODI configuration file (for overriding content in config.properties).
     You can override database user and password by specifying -Ddb.username=someuser -Ddb.password=somepassword
     Credentials used are '${db.username}'/'${db.password}'
