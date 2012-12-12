@@ -672,10 +672,10 @@
 		</profile>
       <profile>
           <id>useDbCredentialProperties</id>
-          <properties>
+          <!--properties>
               <db.username>${db.username}</db.username>
               <db.password>${db.password}</db.password>
-          </properties>
+          </properties-->
           <build>
               <plugins>
                   <plugin>
