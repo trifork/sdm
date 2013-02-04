@@ -39,6 +39,7 @@ import java.util.Map;
 import javax.xml.bind.annotation.XmlSchema;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.trifork.stamdata.specs.TilskudsblanketRecordSpecs;
 import org.dom4j.Document;
 import org.dom4j.DocumentFactory;
 import org.dom4j.Element;
@@ -86,6 +87,13 @@ public class SchemaGenerator
         generateRecordXsd(outputDir, "sikrede", "sikrede", SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         generateRecordXsd(outputDir, "yderregisteret", "yder", YderregisterRecordSpecs.YDER_RECORD_TYPE);
         generateRecordXsd(outputDir, "yderregisteret", "person", YderregisterRecordSpecs.PERSON_RECORD_TYPE);
+
+        generateRecordXsd(outputDir, "tilskudsblanket", "blanket", TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC);
+        generateRecordXsd(outputDir, "tilskudsblanket", "blanketenkelt", TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC);
+        generateRecordXsd(outputDir, "tilskudsblanket", "blanketforhoejet", TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC);
+        generateRecordXsd(outputDir, "tilskudsblanket", "blanketkroniker", TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC);
+        generateRecordXsd(outputDir, "tilskudsblanket", "forhoejettakst", TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC);
+        generateRecordXsd(outputDir, "tilskudsblanket", "blanketterminal", TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC);
     }
     
     private static void generateRecordXsd(File outputDir, String register, String entityName, RecordSpecification spec) throws IOException
@@ -211,9 +219,9 @@ public class SchemaGenerator
         {
             addElement(all, field.name, convert2XsdType(field.type), field.length);
         }
-        
-        all.addElement("xs:element").addAttribute("name", "validFrom").addAttribute("type", "xs:dateTime");
-        all.addElement("xs:element").addAttribute("name", "validTo").addAttribute("type", "xs:dateTime");
+        all.addElement("xs:element").addAttribute("name", "ModifiedDate").addAttribute("type", "xs:dateTime");
+        all.addElement("xs:element").addAttribute("name", "ValidFrom").addAttribute("type", "xs:dateTime");
+        all.addElement("xs:element").addAttribute("name", "ValidTo").addAttribute("type", "xs:dateTime");
 
         XMLWriter xmlWriter = new XMLWriter(writer, OutputFormat.createPrettyPrint());
         xmlWriter.write(doc);

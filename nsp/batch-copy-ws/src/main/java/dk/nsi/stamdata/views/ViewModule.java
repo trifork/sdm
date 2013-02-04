@@ -84,12 +84,6 @@ import dk.nsi.stamdata.views.sor.Praksis;
 import dk.nsi.stamdata.views.sor.Sygehus;
 import dk.nsi.stamdata.views.sor.SygehusAfdeling;
 import dk.nsi.stamdata.views.sor.Yder;
-import dk.nsi.stamdata.views.tilskudsblanket.Blanket;
-import dk.nsi.stamdata.views.tilskudsblanket.BlanketEnkelt;
-import dk.nsi.stamdata.views.tilskudsblanket.BlanketForhoejet;
-import dk.nsi.stamdata.views.tilskudsblanket.BlanketKroniker;
-import dk.nsi.stamdata.views.tilskudsblanket.BlanketTerminal;
-import dk.nsi.stamdata.views.tilskudsblanket.ForhoejetTakst;
 import dk.nsi.stamdata.views.vaccination.Disease;
 import dk.nsi.stamdata.views.vaccination.DiseaseVaccine;
 import dk.nsi.stamdata.views.vaccination.Dosageoption;
@@ -199,14 +193,6 @@ public class ViewModule extends AbstractModule
         views.addBinding().to(VaccinationPlanItem.class);
         views.addBinding().to(Vaccine.class);
         views.addBinding().to(VaccineDrug.class);
-        
-        // Tilskudsblanketter
-        views.addBinding().to(Blanket.class);
-        views.addBinding().to(BlanketEnkelt.class);
-        views.addBinding().to(BlanketForhoejet.class);
-        views.addBinding().to(BlanketKroniker.class);
-        views.addBinding().to(BlanketTerminal.class);
-        views.addBinding().to(ForhoejetTakst.class);
     }
     
 

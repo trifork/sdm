@@ -38,24 +38,25 @@ public class TilskudsblanketRecordSpecs {
             field("BlanketTekst", 21000));
 
 
-	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketEnkelt", "BlanketId", 
+	public static final RecordSpecification BLANKET_ENKELTTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketEnkelt", "Id",
             field("BlanketId", 15).numerical(),
             field("Genansoegning", 1).numerical(),
             field("Navn", 100),
-            field("Form", 100));
+            field("Form", 100),
+            field("Id", 32));
 
-	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketForhoejet", "BlanketId", 
+	public static final RecordSpecification BLANKET_FORHOJETTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketForhoejet", "DrugId",
             field("BlanketId", 15).numerical(),
             field("DrugId", 12).numerical());
 
 
-	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketKroniker", "BlanketId", 
+	public static final RecordSpecification BLANKET_KRONIKERTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketKroniker", "Genansoegning",
             field("BlanketId", 15).numerical(),
             field("Genansoegning", 1).numerical());
 
-	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketTerminal", "BlanketId", 
-            field("BlanketId", 15).numerical());
-
+	public static final RecordSpecification BLANKET_TERMINALTILSKUD_RECORD_SPEC = RecordSpecification.createSpecification("TilskudsblanketTerminal", "Id",
+            field("BlanketId", 15).numerical(),
+            field("Id", 1).numerical());
 
 	public static final RecordSpecification FORHOEJETTAKST_RECORD_SPEC = RecordSpecification.createSpecification("TilskudForhoejetTakst", "Varenummer", 
 			field("Varenummer", 10).numerical(),
