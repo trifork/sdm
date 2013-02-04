@@ -37,7 +37,8 @@ public class YderregisterRecordSpecs
             field("SnitfladeId", 8)
     );
 
-    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpecification("Yderregister", "HistIdYder",
+    public static final RecordSpecification YDER_RECORD_TYPE = RecordSpecification.createSpecification("Yderregister", "Id",
+            field("Id", 32),
             field("HistIdYder", 16),
             field("AmtKodeYder", 2),
             field("AmtTxtYder", 60),
@@ -75,7 +76,8 @@ public class YderregisterRecordSpecs
             // ...
     );
 
-    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpecification("YderregisterPerson", "HistIdPerson",
+    public static final RecordSpecification PERSON_RECORD_TYPE = RecordSpecification.createSpecification("YderregisterPerson", "Id",
+            field("Id", 32),
             field("HistIdPerson", 16),
             field("YdernrPerson", 6),
             field("TilgDatoPerson", 8),

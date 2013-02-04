@@ -1,0 +1,5 @@
+Stamdata 3.4.24 Release Notes
+=============================
+* Recordspecs for Yderregister and YderregisterPerson updated to reflect changes from NSPSUPPORT-168
+* Recordspecs for Tilskudsblanketter updated to reflect changes from NSPSUPPORT-182
+* Yderimporter removed from project as it has been moved to sdm4
