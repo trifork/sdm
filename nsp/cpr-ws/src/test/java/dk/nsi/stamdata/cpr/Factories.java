@@ -157,6 +157,7 @@ public class Factories
     public static Record createYderRecord(String ydernummer)
     {
         RecordBuilder builder = new RecordBuilder(YderregisterRecordSpecs.YDER_RECORD_TYPE)
+                                    .field("Id", "langmd5her...")
                                     .field("YdernrYder", ydernummer)
                                     .field("PrakBetegn", "Klinikken")
                                     .field("PostdistYder", "Århus")
