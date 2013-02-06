@@ -79,7 +79,7 @@ public class RecordXmlGeneratorTest {
         
         // FIXME: This should be UTF-8
         String expected = 
-        "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" +
+        "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" +
         "<atom:feed xmlns:atom=\"http://www.w3.org/2005/Atom\">" +
         "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1</atom:id>" +
         "<atom:updated>"+ updatedDateInString + "</atom:updated>" +
@@ -126,7 +126,7 @@ public class RecordXmlGeneratorTest {
         
         // FIXME: This should be UTF-8
         String expected = 
-                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>" +
+                "<?xml version=\"1.0\" encoding=\"UTF-16\"?>\n" +
                         "<atom:feed xmlns:atom=\"http://www.w3.org/2005/Atom\">" +
                         "<atom:id>tag:nsi.dk,2011:sikrede/sikrede/v1</atom:id>" +
                         "<atom:updated>"+ updatedDateInString + "</atom:updated>" +
