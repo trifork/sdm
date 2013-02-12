@@ -1,0 +1,3 @@
+Stamdata 3.4.25 Release Notes
+=============================
+* cpr.dk_core_20051124.xsd -> leading zeroes has been removed from PersonCivilRegistrationStatusCodeType since it is an integer type.
