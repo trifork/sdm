@@ -1,0 +1,6 @@
+Stamdata 3.4.26 Release Notes
+=============================
+* Hele DODI delen er fjernet da den fra SDM4 benyttes
+* Connections leaks er lukket
+* Connections hentes nu fra JNDI datasource hvis den er sat op i config
+
