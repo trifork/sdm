@@ -71,10 +71,11 @@ public class WhitelistServiceImpl implements WhitelistService {
 	@Override
 	public List<String> getWhitelist(final String serviceName) {
 		final List<String> cvrs = new ArrayList<String>();
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		@SuppressWarnings("deprecation") Connection con = session.connection();
-		try {
+        Session session = null;
+        try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            Connection con = session.connection();
 			PreparedStatement getAllWhitelisted = prepareStatement(con, QUERY_GET_ALL_WHITELISTED);
 			getAllWhitelisted.setString(1, serviceName);
 			ResultSet resultSet = getAllWhitelisted.executeQuery();
@@ -85,20 +86,19 @@ public class WhitelistServiceImpl implements WhitelistService {
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to get whitelisted CVR numbers using prepared statement", e);
 		} finally {
-			close(con);
 			close(session);
 		}
-
 		return cvrs;
 	}
 
 	@Override
 	public boolean isCvrWhitelisted(final String cvr, final String serviceName) {
 		final List<String> cvrs = new ArrayList<String>();
-		Session session = sessionFactory.openSession();
-		session.beginTransaction();
-		@SuppressWarnings("deprecation") Connection con = session.connection();
+		Session session = null;
 		try {
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            Connection con = session.connection();
 			PreparedStatement isCVRWhitelisted = prepareStatement(con, QUERY_IS_CVR_WHITELISTED);
 			isCVRWhitelisted.setString(1, serviceName);
 			isCVRWhitelisted.setString(2, cvr);
@@ -110,27 +110,14 @@ public class WhitelistServiceImpl implements WhitelistService {
 		} catch (SQLException e) {
 			throw new RuntimeException("Unable to check if CVR is whitelisted using prepared statement", e);
 		} finally {
-			close(con);
 			close(session);
 		}
-
 		return cvrs.size() > 0;
 	}
-
 
 	private void close(Session session) {
 		if (session != null) {
 			session.close();
-		}
-	}
-
-	private void close(Connection con) {
-		if (con != null) {
-			try {
-				con.close();
-			} catch (SQLException e) {
-				logger.warn("Unable to close connection", e);
-			}
 		}
 	}
 }

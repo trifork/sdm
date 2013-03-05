@@ -54,6 +54,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import com.google.inject.Provider;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
@@ -114,6 +115,8 @@ public class StamdataReplicationImplIntegrationTest
     private Session session;
     @Inject
     private ClientDao clientDao;
+    @Inject
+    private Provider<Connection> connectionProvider;
 
     private List<Person> persons = Lists.newArrayList();
     private RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
@@ -672,7 +675,7 @@ public class StamdataReplicationImplIntegrationTest
         Connection connection = session.connection();
         connection.createStatement().executeUpdate("DROP TABLE IF EXISTS " + recordSpecification.getTable());
         connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
-        RecordPersister recordPersister = new RecordPersister(connection, new Instant());
+        RecordPersister recordPersister = new RecordPersister(connectionProvider, new Instant());
 
         for (Record r : records)
         {

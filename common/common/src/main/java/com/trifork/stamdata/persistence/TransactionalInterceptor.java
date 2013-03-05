@@ -74,10 +74,8 @@ class TransactionalInterceptor implements MethodInterceptor
             }
             finally
             {
-                if(session != null)
-                {
-                    // TODO: If this is closed, unit tests fail - why?
-//                    session.close();
+                if (session.isOpen()) {
+                    session.close();
                 }
             }
         }

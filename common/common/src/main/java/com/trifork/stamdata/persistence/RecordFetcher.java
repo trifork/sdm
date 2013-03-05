@@ -41,20 +41,22 @@ import com.google.inject.Provider;
 
 public class RecordFetcher
 {
-    private final Provider<Connection> connection;
+    private final Provider<Connection> connectionProvider;
 
     @Inject
-    public RecordFetcher(Provider<Connection> connection)
+    public RecordFetcher(Provider<Connection> connectionProvider)
     {
-        this.connection = connection;
+        this.connectionProvider = connectionProvider;
     }
     
     public Record fetchCurrent(String key, RecordSpecification recordSpecification, String lookupColumn) throws SQLException
     {
         PreparedStatement preparedStatement = null;
+        Connection connection = null;
         try {
             String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), lookupColumn);
-            preparedStatement = connection.get().prepareStatement(queryString);
+            connection = connectionProvider.get();
+            preparedStatement = connection.prepareStatement(queryString);
             preparedStatement.setObject(1, key);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next())
@@ -65,16 +67,12 @@ public class RecordFetcher
             {
                 return null;
             }
-        }
-        catch (SQLException e)
-        {
-            throw e;
-        }
-        finally
-        {
-            if(preparedStatement != null)
-            {
+        } finally {
+            if(preparedStatement != null) {
                 preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
             }
         }
     }
@@ -90,34 +88,44 @@ public class RecordFetcher
                 "(PID > ? AND ModifiedDate = ?) OR " +
                 "(ModifiedDate > ?) " +
                 "ORDER BY ModifiedDate, PID LIMIT %d", recordSpecification.getTable(), limit);
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            connection = connectionProvider.get();
+            preparedStatement = connection.prepareStatement(queryString);
 
-        PreparedStatement preparedStatement = connection.get().prepareStatement(queryString);
+            Timestamp fromModifiedDateAsTimestamp = new Timestamp(fromModifiedDate.getMillis());
+            preparedStatement.setObject(1, fromPID);
+            preparedStatement.setTimestamp(2, fromModifiedDateAsTimestamp);
+            preparedStatement.setTimestamp(3, fromModifiedDateAsTimestamp);
 
-        Timestamp fromModifiedDateAsTimestamp = new Timestamp(fromModifiedDate.getMillis());
-        preparedStatement.setObject(1, fromPID);
-        preparedStatement.setTimestamp(2, fromModifiedDateAsTimestamp);
-        preparedStatement.setTimestamp(3, fromModifiedDateAsTimestamp);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        ResultSet resultSet = preparedStatement.executeQuery();
-
-        List<RecordMetadata> result = new ArrayList<RecordMetadata>();
-        while(resultSet.next())
-        {
-            Instant validFrom = new Instant(resultSet.getTimestamp("ValidFrom"));
-            // Validto can be null - and a new Instant with null as argument gives "now"
-            Timestamp vto = resultSet.getTimestamp("ValidTo");
-            Instant validTo = null;
-            if(vto != null) {
-            	validTo = new Instant(vto);
-            } 
-            Instant modifiedDate = new Instant(resultSet.getTimestamp("ModifiedDate"));
-            Long pid = (Long) resultSet.getObject("PID");
-            Record record = createRecordFromResultSet(recordSpecification, resultSet);
-            RecordMetadata recordMetadata = new RecordMetadata(validFrom, validTo, modifiedDate, pid, record);
-            result.add(recordMetadata);
+            List<RecordMetadata> result = new ArrayList<RecordMetadata>();
+            while(resultSet.next())
+            {
+                Instant validFrom = new Instant(resultSet.getTimestamp("ValidFrom"));
+                // Validto can be null - and a new Instant with null as argument gives "now"
+                Timestamp vto = resultSet.getTimestamp("ValidTo");
+                Instant validTo = null;
+                if(vto != null) {
+                    validTo = new Instant(vto);
+                }
+                Instant modifiedDate = new Instant(resultSet.getTimestamp("ModifiedDate"));
+                Long pid = (Long) resultSet.getObject("PID");
+                Record record = createRecordFromResultSet(recordSpecification, resultSet);
+                RecordMetadata recordMetadata = new RecordMetadata(validFrom, validTo, modifiedDate, pid, record);
+                result.add(recordMetadata);
+            }
+            return result;
+        } finally {
+            if (preparedStatement != null) {
+                preparedStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
         }
-
-        return result;
     }
 
     private Record createRecordFromResultSet(RecordSpecification recordSpecification, ResultSet resultSet) throws SQLException

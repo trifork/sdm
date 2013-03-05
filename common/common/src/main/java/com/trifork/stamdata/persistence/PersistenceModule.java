@@ -30,14 +30,16 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import com.google.inject.TypeLiteral;
 
-import com.trifork.stamdata.Nullable;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.StatelessSession;
 import org.hibernate.cfg.Configuration;
 
 import javax.inject.Named;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -47,24 +49,21 @@ import java.util.Set;
 import static com.google.inject.Key.get;
 import static com.google.inject.name.Names.named;
 
-
 public class PersistenceModule extends AbstractModule
 {
     private static final TypeLiteral<Set<Object>> A_SET_OF_OBJECTS = new TypeLiteral<Set<Object>>() {};
+
+    public static final String JNDI_DATASOURCE_NAME = "sdm.JNDIName";
 
     public static final String JDBC_URL_PROP = "db.connection.jdbcURL";
     public static final String DB_USERNAME_PROP = "db.connection.username";
     public static final String DB_PASSWORD_PROP = "db.connection.password";
 
-
     @Override
     protected void configure()
     {
         requireBinding(get(A_SET_OF_OBJECTS, Persistent.class));
-
-        requireBinding(get(String.class, named(JDBC_URL_PROP)));
-        requireBinding(get(String.class, named(DB_USERNAME_PROP)));
-        // We don't require a password since it might not be set.
+        requireBinding(get(String.class, named(JNDI_DATASOURCE_NAME)));
 
         install(new TransactionalModule());
     }
@@ -72,31 +71,33 @@ public class PersistenceModule extends AbstractModule
 
     @Provides
     @Singleton
-    protected SessionFactory provideSessionFactory(@Persistent Set<Object> entities, @Named(JDBC_URL_PROP) String jdbcURL, @Named(DB_USERNAME_PROP) String username, @Nullable @Named(DB_PASSWORD_PROP) String password)
+    protected SessionFactory provideSessionFactory(@Persistent Set<Object> entities,
+                                                   @Named(JNDI_DATASOURCE_NAME) String jndiDatasource,
+                                                   @Named(JDBC_URL_PROP) String jdbcUrl,
+                                                   @Named(DB_USERNAME_PROP) String jdbcUsername,
+                                                   @Named(DB_PASSWORD_PROP) String jdbcPassword)
     {
         Configuration config = new Configuration();
-
-        config.setProperty("hibernate.connection.url", jdbcURL);
-        config.setProperty("hibernate.connection.username", username);
-        config.setProperty("hibernate.connection.password", password);
-
-        // TODO: These can be configurable to e.g. allow in-memory databases.
+        // In tests jndiDatasource is empty and we use jdbc directly
+        if (jndiDatasource == null || jndiDatasource.length() == 0) {
+            config.setProperty("hibernate.connection.url", jdbcUrl);
+            config.setProperty("hibernate.connection.username", jdbcUsername);
+            config.setProperty("hibernate.connection.password", jdbcPassword);
+        } else {
+            config.setProperty("hibernate.connection.datasource", jndiDatasource);
+            config.setProperty("hibernate.transaction.manager_lookup_class",
+                    "org.hibernate.transaction.JBossTransactionManagerLookup");
+        }
+        config.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
 
         config.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
         config.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLInnoDBDialect");
-
         config.setProperty("hibernate.connection.characterEncoding", "utf8");
 
         // Set the default behavior of dates fetched from the database to be
         // converted to null. The alternative 00-00-0000 or similar is strange.
-
         config.setProperty("hibernate.connection.zeroDateTimeBehavior", "convertToNull");
-
-        config.setProperty("hibernate.transaction.factory_class", "org.hibernate.transaction.JDBCTransactionFactory");
         config.setProperty("hibernate.current_session_context_class", "thread");
-
-        // TODO: Look into caching.
-
         config.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.NoCacheProvider");
 
         // Since we are not using the exact same version as provided
@@ -108,23 +109,8 @@ public class PersistenceModule extends AbstractModule
         config.setProperty("hibernate.validator.autoregister_listeners", "false");
         config.setProperty("hibernate.search.autoregister_listeners", "false");
 
-        // Use a C3P0 connection pool.
-        // The default connection pool is not meant for production use.
-        //
-        // TODO: Make this configurable.
+        // Configure Hibernate JTA bindings
 
-        config.setProperty("hibernate.c3p0.min_size", "5");
-        config.setProperty("hibernate.c3p0.max_size", "100");
-        config.setProperty("hibernate.c3p0.checkoutTimeout", "5000"); // after 5 s, if we can't get a connection, report error to the caller
-	    config.setProperty("hibernate.c3p0.acquireRetryAttempts", "0"); // retry infinitely to reconnect
-	    config.setProperty("hibernate.c3p0.acquireRetryDelay", "5000"); // wait 5 seconds between retry attempts
-	    config.setProperty("hibernate.c3p0.breakAfterAcquireFailure", "false"); // do not give up when the database goes down
-	    config.setProperty("hibernate.c3p0.maxIdleTime", "60"); // disconnect idle connections after one minute
-	    config.setProperty("hibernate.c3p0.idleConnectionTestPeriod", "30"); //  test all idle, pooled but unchecked-out connections every half minute
-	    config.setProperty("hibernate.c3p0.preferredTestQuery", "select 1"); //  test all idle, pooled but unchecked-out connections every half minute
-	    // See debug information
-//        config.setProperty("hibernate.c3p0.unreturnedConnectionTimeout", "2");
-//        config.setProperty("hibernate.c3p0.debugUnreturnedConnectionStackTraces", "true");
 
         // Lastly register all the entities.
 
@@ -149,15 +135,27 @@ public class PersistenceModule extends AbstractModule
     {
         return factory.openStatelessSession();
     }
-    
+
     @Provides
-    protected Connection provideConnection(@Named(JDBC_URL_PROP) String jdbcURL, @Named(DB_USERNAME_PROP) String username, @Nullable @Named(DB_PASSWORD_PROP) String password)
+    protected Connection provideConnection(@Named(JNDI_DATASOURCE_NAME) String jndiDatasource,
+                                           @Named(JDBC_URL_PROP) String jdbcUrl,
+                                           @Named(DB_USERNAME_PROP) String jdbcUsername,
+                                           @Named(DB_PASSWORD_PROP) String jdbcPassword)
     {
-        Properties connectionProps = new Properties();
-        connectionProps.put("user", username);
-        connectionProps.put("password", password);
         try {
-            return DriverManager.getConnection(jdbcURL, connectionProps);
+            // In tests jndiDatasource is empty and we use jdbc directly
+            if (jndiDatasource == null || jndiDatasource.length() == 0) {
+                Properties connectionProps = new Properties();
+                connectionProps.put("user", jdbcUsername);
+                connectionProps.put("password", jdbcPassword);
+                return DriverManager.getConnection(jdbcUrl, connectionProps);
+            } else {
+                Context initialContext = new InitialContext();
+                DataSource dataSource = (DataSource) initialContext.lookup(jndiDatasource);
+                return dataSource.getConnection();
+            }
+        } catch (NamingException e) {
+            throw  new RuntimeException("Cannot get connection", e);
         } catch (SQLException e) {
             throw  new RuntimeException("Cannot get connection", e);
         }

@@ -38,6 +38,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import com.google.inject.Provider;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
@@ -83,6 +84,9 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
     @Inject
     private Session session;
+
+    @Inject
+    private Provider<Connection> connectionProvider;
 
     private GetPersonInformationIn request = new GetPersonInformationIn();
     private GetPersonWithHealthCareInformationIn healthCareRequest = new GetPersonWithHealthCareInformationIn();
@@ -264,22 +268,22 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         session.connection().createStatement().executeUpdate("DELETE FROM Yderregister");
 
         for (Person person : persons) session.persist(person);
+
+        t.commit();
                 
         for (Record sikredeRecord: sikredeRecords)
         {
             // RecordPersister should be injected
-            RecordPersister recordPersister = new RecordPersister(session.connection(), Instant.now());
+            RecordPersister recordPersister = new RecordPersister(connectionProvider, Instant.now());
             recordPersister.persist(sikredeRecord, SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         }
         
         for (Record yderRecord: yderRecords)
         {
             // RecordPersister should be injected
-            RecordPersister recordPersister = new RecordPersister(session.connection(), Instant.now());
+            RecordPersister recordPersister = new RecordPersister(connectionProvider, Instant.now());
             recordPersister.persist(yderRecord, YderregisterRecordSpecs.YDER_RECORD_TYPE);
         }
-        
-        t.commit();
 
         SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(RANDOM_CVR, "foo", "bar");
         healthCareResponse = client.getPersonWithHealthCareInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), healthCareRequest);

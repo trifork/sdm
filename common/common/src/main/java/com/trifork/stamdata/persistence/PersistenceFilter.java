@@ -68,20 +68,14 @@ public class PersistenceFilter implements Filter
 		}
 		catch (Exception e)
 		{
-			try
-			{
-			    if (transaction != null)
-			    {
+			try {
+			    if (transaction != null) {
 			        transaction.rollback();
 			    }
-			}
-			catch (Exception ex)
-			{
+			} catch (Exception ex) {
 			    ex.printStackTrace();
 			}
-			
 			// Let other filters handle the exception.
-			
 			throw new ServletException(e);
 		}
 		finally

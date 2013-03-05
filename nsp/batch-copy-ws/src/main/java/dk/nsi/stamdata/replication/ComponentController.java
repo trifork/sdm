@@ -56,7 +56,7 @@ import dk.nsi.stamdata.views.ViewModule;
 
 public class ComponentController extends GuiceServletContextListener
 {
-    private static final String COMPONENT_NAME = "stamdata-batch-copy-ws";
+    public static final String COMPONENT_NAME = "stamdata-batch-copy-ws";
     private static Logger logger;
 
     @Override

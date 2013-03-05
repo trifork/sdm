@@ -26,13 +26,6 @@ package com.trifork.stamdata.persistence;
 
 import org.joda.time.Instant;
 
-/**
- * Created by IntelliJ IDEA.
- * User: borlum
- * Date: 11/17/11
- * Time: 2:48 PM
- * To change this template use File | Settings | File Templates.
- */
 public class RecordMetadata
 {
     private final Instant validFrom;

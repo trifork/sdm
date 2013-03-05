@@ -37,7 +37,6 @@
     <module>common/common</module>
     <module>common/performance</module>
     <module>common/testing</module>
-    <module>dodi/data-manager</module>
     <module>nsp/batch-copy-ws</module>
     <module>nsp/authorization-lookup-ws</module>
     <module>nsp/cpr-ws</module>
@@ -82,23 +81,6 @@
         </dependency>
 
       <!-- Hibernate -->
-      <dependency>
-        <groupId>org.hibernate</groupId>
-        <artifactId>hibernate-c3p0</artifactId>
-        <version>${jboss6.hibernate.version}</version>
-        <scope>runtime</scope>
-        <exclusions>
-          <exclusion>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-      <groupId>c3p0</groupId>
-  		<artifactId>c3p0</artifactId>
-  		<version>0.8.5.2</version>
-	  </dependency>
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
@@ -691,13 +673,6 @@
                               <configuration>
                                   <target>
                                       <echoproperties />
-                                      <echo>Creating DODI configuration file (for overriding content in config.properties).
-    You can override database user and password by specifying -Ddb.username=someuser -Ddb.password=somepassword
-    Credentials used are '${db.username}'/'${db.password}'
-                                      </echo>
-                                      <echo file="dodi/data-manager/src/test/resources/stamdata-data-manager.properties" append="false">db.user=${db.username}
-                                          db.pwd=${db.password}</echo>
-
                                       <echo>Creating NSP configuration file (for overriding content in config.properties AND test-config.properties)
     You can override database user and password by specifying -Ddb.username=someuser -Ddb.password=somepassword
     Credentials used are '${db.username}'/'${db.password}'

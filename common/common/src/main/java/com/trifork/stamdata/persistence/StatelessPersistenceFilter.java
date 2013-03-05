@@ -62,17 +62,14 @@ public class StatelessPersistenceFilter implements Filter
             chain.doFilter(request, response);
 
             session.getTransaction().commit();
-        }
-        catch (Exception e)
-        {
-            try
-            {
-                session.getTransaction().rollback();
+        } catch (Exception e) {
+            try {
+                if (session != null) {
+                    session.getTransaction().rollback();
+                }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ignored) {
             }
-
             throw new ServletException(e);
         }
     }

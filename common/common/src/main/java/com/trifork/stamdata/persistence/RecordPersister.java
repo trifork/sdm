@@ -24,8 +24,6 @@
  */
 package com.trifork.stamdata.persistence;
 
-import static java.lang.String.format;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,6 +31,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.trifork.stamdata.Preconditions;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.Instant;
@@ -40,16 +39,15 @@ import org.joda.time.Instant;
 import com.google.common.collect.Lists;
 import com.trifork.stamdata.persistence.RecordSpecification.FieldSpecification;
 
-//FIXME: This class has all the fetcher methods I moved Friday morning ;( Will have to be moved
 public class RecordPersister
 {
-    private final Connection connection;
+    private final Provider<Connection> connectionProvider;
     private final Instant transactionTime;
 
     @Inject
-    public RecordPersister(Connection connection, Instant transactionTime)
+    public RecordPersister(Provider<Connection> connectionProvider, Instant transactionTime)
     {
-        this.connection = connection;
+        this.connectionProvider = connectionProvider;
         this.transactionTime = transactionTime;
     }
 
@@ -59,27 +57,26 @@ public class RecordPersister
         Preconditions.checkNotNull(specification);
         Preconditions.checkArgument(specification.conformsToSpecifications(record));
 
-        /*
-        PreparedStatement statement = connection.prepareStatement(format("UPDATE %s SET validTo = ?, modifiedDate = ? WHERE %s = ? AND validTo IS NULL", specification.getTable(), specification.getKeyColumn()));
-        statement.setObject(1, transactionTime.toDate());
-        statement.setObject(2, transactionTime.toDate());
-        statement.setObject(3, record.get(specification.getKeyColumn()));
-        statement.close();
-        */
+        Connection connection = null;
+        PreparedStatement insertRecordStatement = null;
+        try {
+            connection = connectionProvider.get();
+            insertRecordStatement = connection.prepareStatement(createInsertStatementSql(specification));
 
-        // Data dumps from Yderregister and "Sikrede" contains history information and are therefore handled
-        // differently from all other register types. The data contained in each input record is appended directly
-        // to the database instead of updating existing records.
-
-        PreparedStatement insertRecordStatement = connection.prepareStatement(createInsertStatementSql(specification));
-
-        populateInsertStatement(insertRecordStatement, record, specification);
-        insertRecordStatement.execute();
-
-        insertRecordStatement.close();
+            populateInsertStatement(insertRecordStatement, record, specification);
+            insertRecordStatement.execute();
+        } finally {
+            if (insertRecordStatement != null) {
+                insertRecordStatement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
     }
 
-    public void populateInsertStatement(PreparedStatement preparedStatement, Record record, RecordSpecification recordSpec) throws SQLException
+    public void populateInsertStatement(PreparedStatement preparedStatement, Record record,
+                                        RecordSpecification recordSpec) throws SQLException
     {
         Preconditions.checkArgument(recordSpec.conformsToSpecifications(record), "The record does not conform to it's spec.");
 
