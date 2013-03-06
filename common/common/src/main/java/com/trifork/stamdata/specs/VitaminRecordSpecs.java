@@ -56,20 +56,20 @@ public class VitaminRecordSpecs {
             field("sletningsstatus", 1));
     
     public static final RecordSpecification FIRMADATA_RECORD_SPEC = RecordSpecification.createSpecification("VitaminFirmadata", "firmaID", 
-            field("firmaID", 0),
-            field("kortFirmaMaerke", 0),
-            field("langtFirmaMaerke", 0),
-            field("parallelimportKode", 0));
+            field("firmaID", 6),
+            field("kortFirmaMaerke", 32),
+            field("langtFirmaMaerke", 20),
+            field("parallelimportKode", 2));
     
     public static final RecordSpecification UDGAAEDENAVNE_RECORD_SPEC = RecordSpecification.createSpecification("VitaminUdgaaedeNavne", "drugID", 
-            field("drugID", 0),
-            field("aendringsDato", 0),
-            field("tidligereNavn", 0));
+            field("drugID", 11),
+            field("aendringsDato", 8),
+            field("tidligereNavn", 50));
     
     public static final RecordSpecification INDHOLDSSTOFFER_RECORD_SPEC = RecordSpecification.createSpecification("VitaminIndholdsstoffer", "drugID", 
-            field("drugID", 0),
-            field("stofKlasse", 0),
-            field("substansgruppe", 0),
-            field("substans", 0));
+            field("drugID", 11),
+            field("stofKlasse", 100),
+            field("substansgruppe", 100),
+            field("substans", 150));
 
 }

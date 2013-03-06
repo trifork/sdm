@@ -1,0 +1,4 @@
+Stamdata 3.4.27 Release Notes
+=============================
+* Rettet: SDM-14 Vitamin records specs har max længde 0
+
