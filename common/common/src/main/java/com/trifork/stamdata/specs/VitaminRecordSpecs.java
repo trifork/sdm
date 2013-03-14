@@ -52,13 +52,12 @@ public class VitaminRecordSpecs {
             field("substitutionsgruppe", 4),
             field("dosisdispensering", 1),
 		    field("blank", 8).doNotPersist(),
-		    field("karantaeneDato", 8),
-            field("sletningsstatus", 1));
+		    field("karantaeneDato", 8));
     
     public static final RecordSpecification FIRMADATA_RECORD_SPEC = RecordSpecification.createSpecification("VitaminFirmadata", "firmaID", 
             field("firmaID", 6),
             field("kortFirmaMaerke", 32),
-            field("langtFirmaMaerke", 20),
+            field("langtFirmaMaerke", 250),
             field("parallelimportKode", 2));
     
     public static final RecordSpecification UDGAAEDENAVNE_RECORD_SPEC = RecordSpecification.createSpecification("VitaminUdgaaedeNavne", "drugID", 
