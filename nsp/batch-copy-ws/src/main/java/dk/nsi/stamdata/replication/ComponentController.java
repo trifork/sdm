@@ -31,6 +31,8 @@ import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
 
+import dk.nsi.stamdata.replication.introspection.IntrospectionConfig;
+import dk.nsi.stamdata.replication.introspection.IntrospectionModule;
 import org.apache.log4j.Logger;
 
 import com.google.inject.AbstractModule;
@@ -68,6 +70,8 @@ public class ComponentController extends GuiceServletContextListener
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         super.contextInitialized(servletContextEvent);
+        // TODO Perform database introspection
+
         getLogger().info(servletContextEvent.getServletContext().getServletContextName() + " [Started]");
     }
 
@@ -102,6 +106,8 @@ public class ComponentController extends GuiceServletContextListener
             install(new PersistenceModule());
             getLogger().info("Installing AuthenticationModule");
             install(new AuthenticationModule());
+            getLogger().info("Installing IntrospectionModule");
+            install(new IntrospectionModule());
         }
     }
 

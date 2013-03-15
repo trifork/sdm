@@ -1,0 +1,13 @@
+{
+    "registers": {
+        "sikrede": {
+            "sikrede": "Sikrede"
+        },
+        "vitamin": {
+            "grunddata": "VitaminGrunddata",
+            "firmadata": "VitaminFirmadata",
+            "udgaaedenavne": "VitaminUdgaaedeNavne",
+            "indholdsstoffer": "VitaminIndholdsstoffer"
+        }
+    }
+}

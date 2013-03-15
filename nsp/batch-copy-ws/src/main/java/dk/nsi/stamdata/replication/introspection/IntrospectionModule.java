@@ -22,40 +22,13 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.replication.tools;
+package dk.nsi.stamdata.replication.introspection;
 
-import com.google.inject.Guice;
-import com.google.inject.Inject;
-import dk.nsi.stamdata.views.View;
-import dk.nsi.stamdata.views.ViewModule;
-import org.junit.Before;
-import org.junit.Test;
+import com.google.inject.AbstractModule;
 
-import java.io.StringWriter;
-import java.util.Map;
+public class IntrospectionModule extends AbstractModule {
+    @Override
+    protected void configure() {
 
-public class SchemaGeneratorTest
-{
-    private SchemaGenerator generator;
-
-    @Inject
-    private Map<String, Class<? extends View>> views;
-
-    @Before
-    public void setUp() throws Exception
-    {
-        generator = new SchemaGenerator();
-
-        Guice.createInjector(new ViewModule()).injectMembers(this);
-    }
-
-    @Test
-    public void testThatWeCanGenerateASchemaForAllViewTypes() throws Exception
-    {
-        for (Class<? extends View> view : views.values())
-        {
-            StringWriter writer = new StringWriter();
-            generator.generate(view, writer);
-        }
     }
 }
