@@ -60,13 +60,15 @@ public class VitaminRecordSpecs {
             field("langtFirmaMaerke", 250),
             field("parallelimportKode", 2));
     
-    public static final RecordSpecification UDGAAEDENAVNE_RECORD_SPEC = RecordSpecification.createSpecification("VitaminUdgaaedeNavne", "drugID", 
+    public static final RecordSpecification UDGAAEDENAVNE_RECORD_SPEC = RecordSpecification.createSpecification("VitaminUdgaaedeNavne", "Id",
+            field("Id", 40),
             field("drugID", 11),
             field("aendringsDato", 8),
             field("tidligereNavn", 50));
     
-    public static final RecordSpecification INDHOLDSSTOFFER_RECORD_SPEC = RecordSpecification.createSpecification("VitaminIndholdsstoffer", "drugID", 
-            field("drugID", 11),
+    public static final RecordSpecification INDHOLDSSTOFFER_RECORD_SPEC = RecordSpecification.createSpecification("VitaminIndholdsstoffer", "Id",
+            field("Id", 40),
+            field("drugId", 11),
             field("stofKlasse", 100),
             field("substansgruppe", 100),
             field("substans", 150));
