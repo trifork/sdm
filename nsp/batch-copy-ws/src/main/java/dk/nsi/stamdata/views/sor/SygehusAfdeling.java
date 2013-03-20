@@ -71,7 +71,7 @@ public class SygehusAfdeling extends View
 
 	protected String hovedSpecialeTekst;
 
-	protected BigInteger nummer;
+	protected String nummer;
 
 	protected String navn;
 
