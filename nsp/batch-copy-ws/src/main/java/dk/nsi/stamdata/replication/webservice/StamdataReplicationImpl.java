@@ -38,6 +38,10 @@ import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
 
+import dk.nsi.stamdata.replication.dynamic.DynamicViewMapper;
+import dk.nsi.stamdata.replication.dynamic.DynamicRow;
+import dk.nsi.stamdata.replication.dynamic.DynamicRowFetcher;
+import dk.nsi.stamdata.replication.vo.ViewMapVO;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
@@ -89,6 +93,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final AtomFeedWriter outputWriter;
     private final Provider<RecordFetcher> fetchers;
 
+    @Inject
+    private DynamicViewMapper dynamicViewMapper;
+
+    @Inject
+    private DynamicRowFetcher dynamicRowFetcher;
+
+    @Inject DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
     StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
@@ -118,13 +129,12 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // During the transition to the new architecture we will have
             // to handle some registers differently.
             //
-            if (isRecordRegister(parameters))
-            {
+            if (isRecordRegister(parameters)) {
                 return handleRequestUsingRecords(wsseHeader, medcomHeader, parameters);
-            }
-            else
-            {
+            } else if (isHibernateView(parameters)) {
                 return handleRequestUsingHibernateView(wsseHeader, medcomHeader, parameters);
+            } else {
+                return handleRequestUsingDynamicViews(wsseHeader, medcomHeader, parameters);
             }
         }
         catch (ReplicationFault e)
@@ -142,21 +152,79 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
     }
 
+    private boolean isHibernateView(ReplicationRequestType parameters) {
+        // TODO TEMP FUNCTION REMOVE
+        return !(("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1));
+    }
+
     private boolean isRecordRegister(ReplicationRequestType parameters)
     {
         return ("sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                //|| ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                //|| ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 || ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1)
                 || ("tilskudsblanket".equals(parameters.getRegister()) && parameters.getVersion() == 1)
                 || ("ddv".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
+    private ReplicationResponseType handleRequestUsingDynamicViews(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
+                                                                   ReplicationRequestType parameters) throws ReplicationFault {
+        try {
+            String viewPath = getViewPath(parameters);
+
+            MDC.put("view", String.valueOf(viewPath));
+            MDC.put("cvr", String.valueOf(cvr));
+
+            Client client = clients.findByCvr(cvr);
+            if (client == null || !client.isAuthorizedFor(viewPath))
+            {
+                throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
+            }
+
+            HistoryOffset offset = getOffset(parameters);
+            int limit = getRecordLimit(parameters);
+
+            MDC.put("offset", String.valueOf(offset));
+            MDC.put("limit", String.valueOf(limit));
+
+            ////////////////////
+            // Do actual work here
+            ViewMapVO view = dynamicViewMapper
+                    .getViewMapForView(parameters.getRegister(), parameters.getDatatype(), parameters.getVersion());
+
+            Document feedDocument = createFeed(view, parameters, offset, limit);
+
+            // Construct the output container.
+            ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
+
+            response.setAny(feedDocument.getFirstChild());
+
+            // Log that the client successfully accessed the data.
+            // Simply for audit purposes.
+            //
+            // The client details are included in the MDC.
+            //
+            logger.info("Records fetched, sending response.");
+
+            return response;
+
+        } catch (ReplicationFault e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ReplicationFault("Could not complete the request do to an error.", FaultCodes.INTERNAL_ERROR, e);
+        } finally {
+            MDC.remove("view");
+            MDC.remove("cvr");
+            MDC.remove("offset");
+            MDC.remove("limit");
+        }
+    }
+
     private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
-        try 
-        {
+        try {
             String viewPath = getViewPath(parameters);
 
             MDC.put("view", String.valueOf(viewPath));
@@ -182,11 +250,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // fill the output structure.
             //
             RecordSpecification recordSpecification = null;
-            if("sikrede".equals(parameters.getRegister()))
-            {
+            if("sikrede".equals(parameters.getRegister())) {
                 recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
-            }
-            else if ("yderregister".equals(parameters.getRegister())) {
+            } else if ("yderregister".equals(parameters.getRegister())) {
                 if("yder".equals(parameters.getDatatype())) {
                     recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
                 } else if("person".equals(parameters.getDatatype())) {
@@ -194,8 +260,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }
-            }
-            else if ("bemyndigelsesservice".equals(parameters.getRegister())) {
+            } else if ("bemyndigelsesservice".equals(parameters.getRegister())) {
                 if("bemyndigelse".equals(parameters.getDatatype())) {
                     recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
                 } else {
@@ -214,8 +279,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }
-            }
-            else if ("ddv".equals(parameters.getRegister())) {
+            } else if ("ddv".equals(parameters.getRegister())) {
                 if("diseases".equals(parameters.getDatatype())) {
                     recordSpecification = VaccinationRecordSpecs.DISEASES_RECORD_SPEC;
                 } else if("diseases_vaccines".equals(parameters.getDatatype())) {
@@ -235,8 +299,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }
-            }
-            else if ("tilskudsblanket".equals(parameters.getRegister())) {
+            } else if ("tilskudsblanket".equals(parameters.getRegister())) {
                 if("forhoejettakst".equals(parameters.getDatatype())) {
                     recordSpecification = TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC;
                 } else if("blanket".equals(parameters.getDatatype())) {
@@ -252,8 +315,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }
-            }
-            else {
+            } else {
                 throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
             }
             Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
@@ -295,8 +357,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
     private ReplicationResponseType handleRequestUsingHibernateView(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws RuntimeException, ReplicationFault
     {
-        try
-        {
+        try {
             Class<? extends View> requestedView = getViewClass(parameters);
     
             MDC.put("view", Views.getViewPath(requestedView));
@@ -337,9 +398,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
             logger.info("Records fetched, sending response.");
     
             return response;
-        }
-        finally
-        {
+        } finally {
             // Clean up the thread's MDC.
             // TODO: This might fit better in an interceptor.
             //
@@ -352,16 +411,27 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
     private int getRecordLimit(ReplicationRequestType parameters)
     {
-        if (parameters.getMaxRecords() == null)
-        {
+        if (parameters.getMaxRecords() == null) {
             return MAX_RECORD_LIMIT;
-        }
-        else
-        {
+        } else {
             return Math.min(parameters.getMaxRecords().intValue(), MAX_RECORD_LIMIT);
         }
     }
 
+    private Document createFeed(ViewMapVO view, ReplicationRequestType parameters, HistoryOffset offset, int limit) {
+        long pid = Long.parseLong(offset.getRecordID());
+        Instant modifiedDate = new Instant(offset.getModifiedDate());
+
+        try {
+            List<DynamicRow> rows = dynamicRowFetcher.fetchRows(view, pid, modifiedDate, limit);
+            return dynamicViewXmlGenerator.generateXml(view, rows,
+                    parameters.getRegister(), parameters.getDatatype(), DateTime.now());
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error", e);
+        } catch (TransformerException e) {
+            throw new RuntimeException("Transformer error", e);
+        }
+    }
 
     private <T extends View> Document createFeed(Class<T> requestedView, HistoryOffset offset, int limit) throws ReplicationFault
     {
@@ -369,12 +439,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
         
         Document body;
         
-        try
-        {
+        try {
             body = outputWriter.write(requestedView, results);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             throw new ReplicationFault("A unexpected error occurred. Processing stopped.", FaultCodes.IO_ERROR, e);
         }
         
@@ -391,12 +458,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
         
         List<RecordMetadata> records = fetcher.fetchSince(spec, pid, modifiedDate, limit);
 
-        try
-        {
+        try {
             return xmlGenerator.generateXml(records, parameters.getRegister(), parameters.getDatatype(), DateTime.now());
-        }
-        catch (TransformerException e)
-        {
+        } catch (TransformerException e) {
             throw new RuntimeException("Transformer error");
         }
     }
@@ -407,8 +471,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         
         Class<? extends View> requestedView = viewClasses.get(viewPath);
         
-        if (requestedView == null)
-        {
+        if (requestedView == null) {
             throw new ReplicationFault(format("No view with identifier register=%s, datatype=%s and version=%d can be found.", parameters.getRegister(), parameters.getDatatype(), parameters.getVersion()), FaultCodes.UNKNOWN_VIEW);
         }
         
@@ -423,12 +486,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
     private HistoryOffset getOffset(ReplicationRequestType parameters) throws ReplicationFault
     {
-        try
-        {
+        try {
             return new HistoryOffset(parameters.getOffset());
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw new ReplicationFault("Invalid offset in the request.", FaultCodes.INVALID_OFFSET, e);
         }
     }
