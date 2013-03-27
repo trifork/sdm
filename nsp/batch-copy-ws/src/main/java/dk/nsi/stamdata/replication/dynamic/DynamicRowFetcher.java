@@ -27,6 +27,7 @@ package dk.nsi.stamdata.replication.dynamic;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import dk.nsi.stamdata.replication.exceptions.DynamicViewException;
 import dk.nsi.stamdata.replication.vo.ColumnMapVO;
 import dk.nsi.stamdata.replication.vo.ViewMapVO;
 import org.apache.commons.dbutils.DbUtils;
@@ -56,14 +57,15 @@ public class DynamicRowFetcher {
 
     public List<DynamicRow> fetchRows(ViewMapVO view, long fromPid, Instant fromModifiedDate, int limit) throws SQLException {
         List<DynamicRow> resultRows = new LinkedList<DynamicRow>();
+        String pidColumn = findPidColumnName(view);
         String[] columns = selectColumnsFromRow(view);
         String columnsForSelect = StringUtils.join(columns, ",");
         logger.debug("Fetching rows with columns: " + columnsForSelect);
 
         String queryString = String.format("SELECT " + columnsForSelect + " FROM %s WHERE " +
-                "(PID > ? AND ModifiedDate = ?) OR " +
+                "(" + pidColumn + " > ? AND ModifiedDate = ?) OR " +
                 "(ModifiedDate > ?) " +
-                "ORDER BY ModifiedDate, PID LIMIT %d", view.getTableName(), limit);
+                "ORDER BY ModifiedDate, " + pidColumn + " LIMIT %d", view.getTableName(), limit);
 
         QueryRunner qr = new QueryRunner();
         MapListHandler handler = new MapListHandler();
@@ -80,6 +82,15 @@ public class DynamicRowFetcher {
             DbUtils.close(conn);
         }
         return resultRows;
+    }
+
+    private String findPidColumnName(ViewMapVO view) {
+        for (ColumnMapVO column : view.getColumnMaps()) {
+            if (column.isPid()) {
+                return column.getTableColumnName();
+            }
+        }
+        throw new DynamicViewException("PID Column not found for view " + view.toString());
     }
 
     private String[] selectColumnsFromRow(ViewMapVO view) {

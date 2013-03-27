@@ -1,13 +1,14 @@
 package dk.nsi.stamdata.replication.dao;
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import dk.nsi.stamdata.replication.vo.ColumnMapVO;
 import dk.nsi.stamdata.replication.vo.ViewMapVO;
 import dk.nsi.stamdata.replication.webservice.GuiceTestRunner;
 import org.apache.commons.dbutils.DbUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,11 +32,23 @@ public class DynamicViewDAOTest {
     private DynamicViewDAO dao;
 
     @Inject
-    private Provider<Connection> connectionProvider;
+    private Connection connection;
+
+    private Long id;
+
+    @Before
+    public void setUp() throws SQLException {
+        id = insertTestMapping();
+    }
+
+    @After
+    public void tearDown() throws SQLException {
+        removeMapping(id);
+        DbUtils.close(connection);
+    }
 
     @Test
     public void testGetViewMap() throws SQLException {
-        Long id = insertTestMapping();
 
         ViewMapVO viewMapForView = dao.getViewMapForView(testRegister, testDatatype, 1);
         assertNotNull(viewMapForView);
@@ -62,30 +75,20 @@ public class DynamicViewDAOTest {
 
     private void removeMapping(Long id) throws SQLException {
         QueryRunner qr = new QueryRunner();
-        Connection connection = connectionProvider.get();
-        try {
-            qr.update(connection, "DELETE FROM SKRSViewMapping WHERE idSKRSViewMapping=?", id);
-        } finally {
-            DbUtils.close(connection);
-        }
+        qr.update(connection, "DELETE FROM SKRSViewMapping WHERE idSKRSViewMapping=?", id);
     }
 
     private Long insertTestMapping() throws SQLException {
         ScalarHandler handler = new ScalarHandler();
         QueryRunner qr = new QueryRunner();
-        Connection connection = connectionProvider.get();
-        try {
-            String sql = "INSERT INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES (?, ?, ?, ?, ?)";
-            qr.update(connection, sql, testRegister, testDatatype, 1, testTableName, new Timestamp((new Date()).getTime()));
+        String sql = "INSERT INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES (?, ?, ?, ?, ?)";
+        qr.update(connection, sql, testRegister, testDatatype, 1, testTableName, new Timestamp((new Date()).getTime()));
 
-            String select = "SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register=? AND datatype=? AND version=?";
-            Long id = (Long) qr.query(connection, select, handler, testRegister, testDatatype, new Integer(1));
-            insertTestColumnMapping(connection, id);
+        String select = "SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register=? AND datatype=? AND version=?";
+        Long id = (Long) qr.query(connection, select, handler, testRegister, testDatatype, 1);
+        insertTestColumnMapping(connection, id);
 
-            return id;
-        } finally {
-            DbUtils.close(connection);
-        }
+        return id;
     }
 
     private void insertTestColumnMapping(Connection connection, Long viewId) throws SQLException {

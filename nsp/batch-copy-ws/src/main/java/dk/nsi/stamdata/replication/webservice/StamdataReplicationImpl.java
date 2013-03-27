@@ -129,13 +129,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // During the transition to the new architecture we will have
             // to handle some registers differently.
             //
-            if (isRecordRegister(parameters)) {
+            /*if (isRecordRegister(parameters)) {
                 return handleRequestUsingRecords(wsseHeader, medcomHeader, parameters);
             } else if (isHibernateView(parameters)) {
                 return handleRequestUsingHibernateView(wsseHeader, medcomHeader, parameters);
-            } else {
+            } else {*/
                 return handleRequestUsingDynamicViews(wsseHeader, medcomHeader, parameters);
-            }
+            //}
         }
         catch (ReplicationFault e)
         {
@@ -155,7 +155,8 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private boolean isHibernateView(ReplicationRequestType parameters) {
         // TODO TEMP FUNCTION REMOVE
         return !(("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1));
+                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                || ("sks".equals(parameters.getRegister()) && "institution".equals(parameters.getDatatype()) && parameters.getVersion() == 1));
     }
 
     private boolean isRecordRegister(ReplicationRequestType parameters)

@@ -25,6 +25,7 @@
 package dk.nsi.stamdata.replication.dao;
 
 import com.google.inject.Provider;
+import dk.nsi.stamdata.replication.exceptions.DynamicViewException;
 import dk.nsi.stamdata.replication.vo.ColumnMapVO;
 import dk.nsi.stamdata.replication.vo.ViewMapVO;
 import org.apache.commons.dbutils.DbUtils;
@@ -58,8 +59,10 @@ public class DynamicViewDAO {
         try {
             conn = connectionProvider.get();
             List<Object[]> viewMaps = qr.query(conn, sql, handler, register, dataType, version);
-            if (viewMaps.size() != 1) {
-                //TODO throw exception
+            if (viewMaps.size() < 1) {
+                throw new DynamicViewException("View not found for " + register + "/" + dataType + "/" + version);
+            } else if (viewMaps.size() > 1) {
+                throw new DynamicViewException("Multiple views found for " + register + "/" + dataType + "/" + version);
             }
             Long id = (Long) viewMaps.get(0)[0];
             String tableName = (String) viewMaps.get(0)[1];

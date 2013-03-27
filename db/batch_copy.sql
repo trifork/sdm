@@ -14,7 +14,8 @@ CREATE  TABLE IF NOT EXISTS `SKRSViewMapping` (
   `tableName` VARCHAR(255) NOT NULL ,
   `createdDate` TIMESTAMP NOT NULL ,
   PRIMARY KEY (`idSKRSViewMapping`) ,
-  INDEX `idx` (`register` ASC, `datatype` ASC, `version` ASC) )
+  INDEX `idx` (`register` ASC, `datatype` ASC, `version` ASC) ,
+  UNIQUE INDEX `unique` (`register` ASC, `datatype` ASC, `version` ASC) )
   ENGINE = InnoDB;
 
 
@@ -26,18 +27,19 @@ CREATE  TABLE IF NOT EXISTS `SKRSColumns` (
   `viewMap` BIGINT(15) NOT NULL ,
   `isPID` TINYINT NOT NULL ,
   `tableColumnName` VARCHAR(255) NOT NULL ,
-  `feedColumnName` VARCHAR(255) NOT NULL ,
+  `feedColumnName` VARCHAR(255) NULL ,
   `feedPosition` INT NOT NULL ,
   `dataType` INT NOT NULL ,
   `maxLength` INT NULL ,
   PRIMARY KEY (`idSKRSColumns`) ,
   INDEX `viewMap_idx` (`viewMap` ASC) ,
+  UNIQUE INDEX `viewColumn` (`tableColumnName` ASC, `viewMap` ASC) ,
   CONSTRAINT `viewMap`
   FOREIGN KEY (`viewMap` )
   REFERENCES `SKRSViewMapping` (`idSKRSViewMapping` )
-ON DELETE CASCADE
-ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+  ENGINE = InnoDB;
 
 
 

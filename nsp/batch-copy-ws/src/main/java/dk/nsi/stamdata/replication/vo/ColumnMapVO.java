@@ -30,7 +30,7 @@ public class ColumnMapVO {
     private String feedColumnName;
     private int feedPosition;
     private int dataType;
-    private int maxLength;
+    private Integer maxLength;
 
     public boolean isPid() {
         return isPid;
@@ -76,7 +76,7 @@ public class ColumnMapVO {
         return maxLength;
     }
 
-    public void setMaxLength(int maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
@@ -90,9 +90,9 @@ public class ColumnMapVO {
         if (dataType != that.dataType) return false;
         if (feedPosition != that.feedPosition) return false;
         if (isPid != that.isPid) return false;
-        if (maxLength != that.maxLength) return false;
         if (feedColumnName != null ? !feedColumnName.equals(that.feedColumnName) : that.feedColumnName != null)
             return false;
+        if (maxLength != null ? !maxLength.equals(that.maxLength) : that.maxLength != null) return false;
         if (!tableColumnName.equals(that.tableColumnName)) return false;
 
         return true;
@@ -105,7 +105,7 @@ public class ColumnMapVO {
         result = 31 * result + (feedColumnName != null ? feedColumnName.hashCode() : 0);
         result = 31 * result + feedPosition;
         result = 31 * result + dataType;
-        result = 31 * result + maxLength;
+        result = 31 * result + (maxLength != null ? maxLength.hashCode() : 0);
         return result;
     }
 }
