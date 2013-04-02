@@ -57,8 +57,6 @@ import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
 import dk.sosi.seal.model.AuthenticationLevel;
 
 @RunWith(GuiceTestRunner.class)
@@ -139,7 +137,7 @@ public class StamdataReplicationIdCardLevelAttackTest {
 
         // Example of subject serial number: CVR:19343634-UID:1234
         Client cvrClient = clientDao.create("Region Syd", String.format("CVR:%s-UID:1234", WHITELISTED_CVR));
-        cvrClient.addPermission(Views.getViewPath(Person.class));
+        cvrClient.addPermission("cpr/person/v1");
         session.persist(cvrClient);
 
         t.commit();

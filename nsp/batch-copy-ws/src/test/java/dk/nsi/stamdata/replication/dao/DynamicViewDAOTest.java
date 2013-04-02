@@ -66,7 +66,7 @@ public class DynamicViewDAOTest {
         ColumnMapVO column1 = columnMaps.iterator().next();
         assertEquals(-1, column1.getDataType());
         assertEquals(1, column1.getFeedPosition());
-        assertEquals(100, column1.getMaxLength());
+        assertEquals((Integer)100, column1.getMaxLength());
         assertEquals("test_column", column1.getTableColumnName());
         assertEquals("test_feed_column", column1.getFeedColumnName());
 

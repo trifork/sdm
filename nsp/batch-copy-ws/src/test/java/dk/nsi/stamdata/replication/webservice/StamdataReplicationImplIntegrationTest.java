@@ -31,12 +31,10 @@ import static org.junit.Assert.fail;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.math.BigInteger;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.xml.namespace.NamespaceContext;
@@ -58,10 +56,7 @@ import com.google.inject.Provider;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Instant;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,8 +89,6 @@ import dk.nsi.stamdata.jaxws.generated.StamdataReplicationService;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.testing.TestServer;
-import dk.nsi.stamdata.views.Views;
-import dk.nsi.stamdata.views.cpr.Person;
 
 @RunWith(GuiceTestRunner.class)
 public class StamdataReplicationImplIntegrationTest
@@ -118,7 +111,6 @@ public class StamdataReplicationImplIntegrationTest
     @Inject
     private Provider<Connection> connectionProvider;
 
-    private List<Person> persons = Lists.newArrayList();
     private RecordSpecification recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
     private List<Record> records = Lists.newArrayList();
     private DateTime now, lastYear, nextYear;
@@ -144,7 +136,7 @@ public class StamdataReplicationImplIntegrationTest
         isClientAuthority = true;
 	    
 	    permissions = Arrays.asList(new String[] {
-									Views.getViewPath(Person.class),
+									"cpr/person/v1",
 									"sikrede/sikrede/v1",
 									"yderregister/yder/v1",
 									"yderregister/person/v1",
@@ -223,99 +215,6 @@ public class StamdataReplicationImplIntegrationTest
         populateDatabaseAndSendRequest();
         assertResponseContainsCprAtom();
         assertResponseContainsExactNumberOfRecords("sdm:person", 0);
-    }
-
-    @Test
-    public void basicQueryOnNonEmptyDatabaseReturnsOneResult() throws Exception
-    {
-
-        createCprPersonRegisterReplicationRequest();
-
-        Person person = createDonaldDuckPerson(now, lastYear, nextYear);
-        persons.add(person);
-
-        populateDatabaseAndSendRequest();
-
-        assertResponseContainsCprAtom();
-
-        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
-
-        String fornavn = "Joakim";
-        String efternavn = "And";
-        assertResponseContainsPersonWithSurNameMatchingGivenName(fornavn, efternavn);
-    }
-
-    @Test
-    public void personsArePagedAccordingToParameter() throws Exception
-    {
-
-        createCprPersonRegisterReplicationRequest();
-
-        Person a = createDonaldDuckPerson(now, lastYear, nextYear);
-        a.cpr = "1111111111";
-        persons.add(a);
-
-        Person b = createDonaldDuckPerson(now, lastYear, nextYear);
-        b.cpr = "2222222222";
-        persons.add(b);
-
-        request.setOffset("0");
-        request.setMaxRecords(2L);
-
-        populateDatabaseAndSendRequest();
-        //printDocument(anyAsElement.getOwnerDocument(), System.out);
-
-        assertResponseContainsCprAtom();
-        assertResponseContainsExactNumberOfRecords("sdm:person", 2);
-        
-	    DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-        
-        XPathExpression expression = createXpathExpression("//sdm:person/sdm:foedselsdato");
-        String result = expression.evaluate(anyAsElement);
-        Date date = dateFormatter.parseDateTime(result).toDate();
-        assertEquals(a.foedselsdato.getTime(), date.getTime());
-        
-    }
-
-    @Test
-    public void personsAreCorrectlyPaged() throws Exception
-    {
-
-        createCprPersonRegisterReplicationRequest();
-
-        DateTime yesterday = now.minusDays(1);
-
-        Person a = createDonaldDuckPerson(yesterday, lastYear, nextYear);
-        a.cpr = "1111111111";
-        persons.add(a);
-
-        Person b = createDonaldDuckPerson(yesterday, lastYear, nextYear);
-        b.cpr = "2222222222";
-        persons.add(b);
-
-        Person c = createDonaldDuckPerson(now, lastYear, nextYear);
-        c.cpr = "3333333333";
-        persons.add(c);
-
-        request.setOffset("0");
-        request.setMaxRecords(1L);
-
-        populateDatabaseAndSendRequest();
-        assertResponseContainsCprAtom();
-        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
-        assertResponseContainsPersonWithCpr("1111111111");
-
-        request.setOffset(getOffsetFromAtomEntry());
-        sendRequest();
-        assertResponseContainsCprAtom();
-        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
-        assertResponseContainsPersonWithCpr("2222222222");
-
-        request.setOffset(getOffsetFromAtomEntry());
-        sendRequest();
-        assertResponseContainsCprAtom();
-        assertResponseContainsExactNumberOfRecords("sdm:person", 1);
-        assertResponseContainsPersonWithCpr("3333333333");
     }
 
     @Test
@@ -666,12 +565,6 @@ public class StamdataReplicationImplIntegrationTest
 	    }
         session.persist(cvrClient);
 
-        session.createQuery("DELETE FROM Person").executeUpdate();
-        for (Person person : persons)
-        {
-            session.persist(person);
-        }
-
         Connection connection = session.connection();
         connection.createStatement().executeUpdate("DROP TABLE IF EXISTS " + recordSpecification.getTable());
         connection.createStatement().executeUpdate(RecordMySQLTableGenerator.createSqlSchema(recordSpecification));
@@ -706,37 +599,4 @@ public class StamdataReplicationImplIntegrationTest
         anyAsElement = (Element) response.getAny();
     }
 
-    // StamdataPersonLookupIntegrationTest contains a "Factories" class that we
-    // would rather use
-    private Person createDonaldDuckPerson(DateTime modifiedDate, DateTime validFrom, DateTime validTo)
-    {
-        String cpr = "0102451234";
-        String koen = "M";
-        String fornavn = "Joakim";
-        String mellemnavn = "von";
-        String efternavn = "And";
-        String coNavn = "Andersine And";
-        String lokalitet = "Pengetanken";
-        String vejnavn = "Ligustervænget";
-        String bygningsnummer = "42";
-        String husnummer = "123";
-        String etage = "12";
-        String sideDoerNummer = "th.";
-        String bynavn = "Andeby";
-        BigInteger postnummer = new BigInteger("8000");
-        String postdistrikt = "Gåserød";
-        String status = "01";
-        String gaeldendeCPR = "3105459876";
-        Date foedselsdato = new DateTime(1947, 12, 24, 0, 0).toDate();
-        String stilling = "Gnier";
-        BigInteger vejKode = new BigInteger("740");
-        BigInteger kommuneKode = new BigInteger("314");
-        Date navnebeskyttelseslettedato = null;
-        Date navnebeskyttelsestartdato = null;
-        Person person = new Person(cpr, koen, fornavn, mellemnavn, efternavn, coNavn, lokalitet, vejnavn,
-                bygningsnummer, husnummer, etage, sideDoerNummer, bynavn, postnummer, postdistrikt, status,
-                gaeldendeCPR, foedselsdato, stilling, vejKode, kommuneKode, modifiedDate.toDate(), navnebeskyttelseslettedato,
-                navnebeskyttelsestartdato, validFrom.toDate(), validTo.toDate());
-        return person;
-    }
 }

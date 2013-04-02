@@ -72,7 +72,7 @@ public class ColumnMapVO {
         this.dataType = dataType;
     }
 
-    public int getMaxLength() {
+    public Integer getMaxLength() {
         return maxLength;
     }
 

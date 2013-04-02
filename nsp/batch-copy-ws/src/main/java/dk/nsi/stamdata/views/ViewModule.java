@@ -33,52 +33,10 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
 
-import dk.nsi.stamdata.views.autorisationsregisteret.Autorisation;
-import dk.nsi.stamdata.views.bemyndigelse.Bemyndigelse;
-import dk.nsi.stamdata.views.cpr.BarnRelation;
-import dk.nsi.stamdata.views.cpr.ForaeldremyndighedsRelation;
-import dk.nsi.stamdata.views.cpr.Person;
-import dk.nsi.stamdata.views.cpr.UmyndiggoerelseVaergeRelation;
-import dk.nsi.stamdata.views.dkma.ATC;
-import dk.nsi.stamdata.views.dkma.Administrationsvej;
-import dk.nsi.stamdata.views.dkma.Beregningsregler;
-import dk.nsi.stamdata.views.dkma.Dosering;
-import dk.nsi.stamdata.views.dkma.Doseringskode;
-import dk.nsi.stamdata.views.dkma.Drug;
-import dk.nsi.stamdata.views.dkma.EmballagetypeKoder;
-import dk.nsi.stamdata.views.dkma.Enhedspriser;
-import dk.nsi.stamdata.views.dkma.Firma;
-import dk.nsi.stamdata.views.dkma.Formbetegnelse;
-import dk.nsi.stamdata.views.dkma.Indholdsstoffer;
-import dk.nsi.stamdata.views.dkma.Indikation;
-import dk.nsi.stamdata.views.dkma.Indikationskode;
-import dk.nsi.stamdata.views.dkma.Klausulering;
-import dk.nsi.stamdata.views.dkma.LaegemiddelAdministrationsvejRelation;
-import dk.nsi.stamdata.views.dkma.Laegemiddelnavn;
-import dk.nsi.stamdata.views.dkma.Medicintilskud;
-import dk.nsi.stamdata.views.dkma.Opbevaringsbetingelser;
-import dk.nsi.stamdata.views.dkma.OplysningerOmDosisdispensering;
-import dk.nsi.stamdata.views.dkma.Pakning;
-import dk.nsi.stamdata.views.dkma.Pakningskombination;
-import dk.nsi.stamdata.views.dkma.PakningskombinationerUdenPriser;
-import dk.nsi.stamdata.views.dkma.Pakningsstoerrelsesenhed;
-import dk.nsi.stamdata.views.dkma.Priser;
-import dk.nsi.stamdata.views.dkma.Rekommandation;
-import dk.nsi.stamdata.views.dkma.SpecialeForNBS;
-import dk.nsi.stamdata.views.dkma.Styrkeenhed;
-import dk.nsi.stamdata.views.dkma.Substitution;
-import dk.nsi.stamdata.views.dkma.SubstitutionAfLaegemidlerUdenFastPris;
-import dk.nsi.stamdata.views.dkma.TakstVersion;
-import dk.nsi.stamdata.views.dkma.Tidsenhed;
-import dk.nsi.stamdata.views.dkma.Tilskudsinterval;
-import dk.nsi.stamdata.views.dkma.TilskudsprisgrupperPakningsniveau;
-import dk.nsi.stamdata.views.dkma.UdgaaedeNavne;
-import dk.nsi.stamdata.views.dkma.Udleveringsbestemmelse;
 import dk.nsi.stamdata.views.doseringsforslag.DosageStructure;
 import dk.nsi.stamdata.views.doseringsforslag.DosageUnit;
 import dk.nsi.stamdata.views.doseringsforslag.DosageVersion;
 import dk.nsi.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
-import dk.nsi.stamdata.views.sks.Institution;
 import dk.nsi.stamdata.views.sor.Apotek;
 import dk.nsi.stamdata.views.sor.Praksis;
 import dk.nsi.stamdata.views.sor.Sygehus;
@@ -92,10 +50,6 @@ import dk.nsi.stamdata.views.vaccination.VaccinationPlan;
 import dk.nsi.stamdata.views.vaccination.VaccinationPlanItem;
 import dk.nsi.stamdata.views.vaccination.Vaccine;
 import dk.nsi.stamdata.views.vaccination.VaccineDrug;
-import dk.nsi.stamdata.views.vitamin.Firmadata;
-import dk.nsi.stamdata.views.vitamin.Grunddata;
-import dk.nsi.stamdata.views.vitamin.VitaminIndholdsstoffer;
-import dk.nsi.stamdata.views.vitamin.VitaminUdgaaedeNavne;
 
 public class ViewModule extends AbstractModule
 {
@@ -103,57 +57,7 @@ public class ViewModule extends AbstractModule
     protected void configure()
     {
         Multibinder<Object> views = Multibinder.newSetBinder(binder(), Object.class, Persistent.class);
-        views.addBinding().to(Dosering.class);
-        
-        // Autorisationsregisteret
-        
-        views.addBinding().to(Autorisation.class);
-        
-        // CPR
-        
-        views.addBinding().to(BarnRelation.class);
-        views.addBinding().to(ForaeldremyndighedsRelation.class);
-        views.addBinding().to(Person.class);
-        views.addBinding().to(UmyndiggoerelseVaergeRelation.class);
-        
-        // DKMA
-        
-        views.addBinding().to(Administrationsvej.class);
-        views.addBinding().to(ATC.class);
-        views.addBinding().to(Beregningsregler.class);
-        views.addBinding().to(Dosering.class);
-        views.addBinding().to(Doseringskode.class);
-        views.addBinding().to(Drug.class);
-        views.addBinding().to(EmballagetypeKoder.class);
-        views.addBinding().to(Enhedspriser.class);
-        views.addBinding().to(Firma.class);
-        views.addBinding().to(Formbetegnelse.class);
-        views.addBinding().to(Indholdsstoffer.class);
-        views.addBinding().to(Indikation.class);
-        views.addBinding().to(Indikationskode.class);
-        views.addBinding().to(Klausulering.class);
-        views.addBinding().to(LaegemiddelAdministrationsvejRelation.class);
-        views.addBinding().to(Laegemiddelnavn.class);
-        views.addBinding().to(Medicintilskud.class);
-        views.addBinding().to(Opbevaringsbetingelser.class);
-        views.addBinding().to(OplysningerOmDosisdispensering.class);
-        views.addBinding().to(Pakning.class);
-        views.addBinding().to(Pakningskombination.class);
-        views.addBinding().to(PakningskombinationerUdenPriser.class);
-        views.addBinding().to(Pakningsstoerrelsesenhed.class);
-        views.addBinding().to(Priser.class);
-        views.addBinding().to(Rekommandation.class);
-        views.addBinding().to(SpecialeForNBS.class);
-        views.addBinding().to(Styrkeenhed.class);
-        views.addBinding().to(Substitution.class);
-        views.addBinding().to(SubstitutionAfLaegemidlerUdenFastPris.class);
-        views.addBinding().to(TakstVersion.class);
-        views.addBinding().to(Tidsenhed.class);
-        views.addBinding().to(Tilskudsinterval.class);
-        views.addBinding().to(TilskudsprisgrupperPakningsniveau.class);
-        views.addBinding().to(UdgaaedeNavne.class);
-        views.addBinding().to(Udleveringsbestemmelse.class);
-        
+
         // Doseringsforslag
         
         views.addBinding().to(DosageStructure.class);
@@ -169,21 +73,7 @@ public class ViewModule extends AbstractModule
         views.addBinding().to(Sygehus.class);
         views.addBinding().to(SygehusAfdeling.class);
         views.addBinding().to(Yder.class);
-        
-        // SKS
-        
-        views.addBinding().to(Institution.class);
 
-        // Bemyndigelse
-        
-        views.addBinding().to(Bemyndigelse.class);
-        
-        // Vitaminer
-        views.addBinding().to(Firmadata.class);
-        views.addBinding().to(Grunddata.class);
-        views.addBinding().to(VitaminIndholdsstoffer.class);
-        views.addBinding().to(VitaminUdgaaedeNavne.class);
-        
         // Vaccinationer
         views.addBinding().to(Disease.class);
         views.addBinding().to(DiseaseVaccine.class);

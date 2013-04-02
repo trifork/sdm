@@ -50,6 +50,27 @@ public class DynamicViewDAO {
         this.connectionProvider = connectionProvider;
     }
 
+    public List<String> listAllViews() throws SQLException {
+        List<String> viewList = new LinkedList<String>();
+        String sql = "SELECT register, datatype, version FROM SKRSViewMapping";
+        ArrayListHandler handler = new ArrayListHandler();
+        QueryRunner qr = new QueryRunner();
+        Connection conn = null;
+        try {
+            conn = connectionProvider.get();
+            List<Object[]> views = qr.query(conn, sql, handler);
+            for (Object[] view : views) {
+                String register = (String) view[0];
+                String datatype = (String) view[1];
+                Integer version = (Integer) view[2];
+                viewList.add(register + "/" + datatype + "/v" + version);
+            }
+        } finally {
+            DbUtils.close(conn);
+        }
+        return viewList;
+    }
+
     public ViewMapVO getViewMapForView(String register, String dataType, long version) throws SQLException {
         String sql = "SELECT idSKRSViewMapping,tableName,createdDate FROM SKRSViewMapping WHERE register=? AND " +
                 "datatype=? AND version=?";
