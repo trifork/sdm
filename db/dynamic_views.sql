@@ -261,7 +261,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastDos := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='dosering' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastDos, 1, 'DoseringPID',    NULL, 0,  -5, NULL),
-(@lastDos, 0, 'DoseringKode',                        'kode', 1,  12, NULL),
+(@lastDos, 0, 'DoseringKode',                        'kode', 1,  -5, NULL),
 (@lastDos, 0, 'DoseringTekst',                      'tekst', 2,  12, NULL),
 (@lastDos, 0, 'DoseringKortTekst',              'kortTekst', 3,  12, NULL),
 (@lastDos, 0, 'DoseringstekstLinie1',   'beskrivelseLinje1', 4,  12, NULL),
@@ -279,8 +279,8 @@ SET @lastDrugDos := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE registe
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastDrugDos, 1, 'LaegemiddelDoseringRefPID',             NULL, 0,  -5, NULL),
 (@lastDrugDos, 0, 'CID',                                   'id', 1,  12, NULL),
-(@lastDrugDos, 0, 'DrugId',                            'drugId', 2,  12, NULL),
-(@lastDrugDos, 0, 'DoseringKode',                  'dosageCode', 3,  12, NULL),
+(@lastDrugDos, 0, 'DrugId',                            'drugId', 2,  -5, NULL),
+(@lastDrugDos, 0, 'DoseringKode',                  'dosageCode', 3,  -5, NULL),
 (@lastDrugDos, 0, 'ModifiedDate',                          NULL, 0,  93, NULL),
 (@lastDrugDos, 0, 'ValidFrom',                      'validFrom', 4,  93, NULL),
 (@lastDrugDos, 0, 'ValidTo',                          'validTo', 5,  93, NULL);
@@ -290,12 +290,12 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastLaegemiddel := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='drug' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastLaegemiddel, 1, 'LaegemiddelPID',             NULL, 0,  -5, NULL),
-(@lastLaegemiddel, 0, 'DrugID',                                                      'id', 1,  12, NULL),
+(@lastLaegemiddel, 0, 'DrugID',                                                      'id', 1,  -5, NULL),
 (@lastLaegemiddel, 0, 'DrugName',                                                  'nave', 2,  12, NULL),
 (@lastLaegemiddel, 0, 'FormKode',                                              'formKode', 3,  12, NULL),
 (@lastLaegemiddel, 0, 'FormTekst',                                            'formTekst', 4,  12, NULL),
 (@lastLaegemiddel, 0, 'StyrkeTekst',                                        'styrkeTekst', 5,  12, NULL),
-(@lastLaegemiddel, 0, 'StyrkeNumerisk',                                          'styrke', 6,  8, NULL),
+(@lastLaegemiddel, 0, 'StyrkeNumerisk',                                          'styrke', 6,   3, NULL),
 (@lastLaegemiddel, 0, 'StyrkeEnhed',                                        'styrkeenhed', 7,  12, NULL),
 (@lastLaegemiddel, 0, 'ATCKode',                                                    'atc', 8,  12, NULL),
 (@lastLaegemiddel, 0, 'ATCTekst',                                              'atcTekst', 9,  12, NULL),
@@ -303,7 +303,7 @@ INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName,
 (@lastLaegemiddel, 0, 'Varetype',                                              'varetype',11,  12, NULL),
 (@lastLaegemiddel, 0, 'Varedeltype',                                        'varedeltype',12,  12, NULL),
 (@lastLaegemiddel, 0, 'AlfabetSekvensplads',                        'alfabetSekvensplads',13,  12, NULL),
-(@lastLaegemiddel, 0, 'SpecNummer',                                          'specNummer',14,  12, NULL),
+(@lastLaegemiddel, 0, 'SpecNummer',                                          'specNummer',14,  -5, NULL),
 (@lastLaegemiddel, 0, 'LaegemiddelformTekst',                      'LaegemiddelformTekst',15,  12, NULL),
 (@lastLaegemiddel, 0, 'KodeForYderligereFormOplysn',        'kodeForYderligereFormOplysn',16,  12, NULL),
 (@lastLaegemiddel, 0, 'Trafikadvarsel',                                  'trafikadvarsel',17,  16, NULL),
@@ -350,7 +350,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastFirma := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='firma' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastFirma, 1, 'FirmaPID',                                NULL, 0,  -5, NULL),
-(@lastFirma, 0, 'Firmanummer',                    'firmanummer', 1,  12, NULL),
+(@lastFirma, 0, 'Firmanummer',                    'firmanummer', 1,  -5, NULL),
 (@lastFirma, 0, 'FirmamaerkeKort',        'firmamaerkeKortNavn', 2,  12, NULL),
 (@lastFirma, 0, 'FirmamaerkeLangtNavn',  'firmamaerkeLangtNavn', 3,  12, NULL),
 (@lastFirma, 0, 'ParallelimportoerKode','parallelimportoerKode', 4,  12, NULL),
@@ -390,9 +390,9 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastIndik := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='indikation' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastIndik, 1, 'IndikationPID',                   NULL, 0,  -5, NULL),
-(@lastIndik, 0, 'IndikationKode',                  'id', 1,  12, NULL),
-(@lastIndik, 0, 'IndikationTekst',              'tekst', 2,  -5, NULL),
-(@lastIndik, 0, 'IndikationstekstLinie1', 'tekstLinje1', 3,  -5, NULL),
+(@lastIndik, 0, 'IndikationKode',                  'id', 1,  -5, NULL),
+(@lastIndik, 0, 'IndikationTekst',              'tekst', 2,  12, NULL),
+(@lastIndik, 0, 'IndikationstekstLinie1', 'tekstLinje1', 3,  12, NULL),
 (@lastIndik, 0, 'IndikationstekstLinie2', 'tekstLinje2', 4,  12, NULL),
 (@lastIndik, 0, 'IndikationstekstLinie3', 'tekstLinje3', 5,  12, NULL),
 (@lastIndik, 0, 'aktiv',                        'aktiv', 6,  16, NULL),
@@ -406,7 +406,7 @@ SET @lastIndikKode := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE regis
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastIndikKode, 1, 'IndikationATCRefPID',              NULL, 0,  -5, NULL),
 (@lastIndikKode, 0, 'CID',                              'id', 1,  12, NULL),
-(@lastIndikKode, 0, 'IndikationKode',      'indikationskode', 2,  12, NULL),
+(@lastIndikKode, 0, 'IndikationKode',      'indikationskode', 2,  -5, NULL),
 (@lastIndikKode, 0, 'ATC',                             'atc', 3,  12, NULL),
 (@lastIndikKode, 0, 'DrugID',                       'drugId', 4,  -5, NULL),
 (@lastIndikKode, 0, 'ModifiedDate',                     NULL, 0,  93, NULL),
@@ -431,7 +431,7 @@ SET @lastLaegAdmVej := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE regi
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastLaegAdmVej, 1, 'LaegemiddelAdministrationsvejRefPID',                  NULL, 0,  -5, NULL),
 (@lastLaegAdmVej, 0, 'CID',                                                  'id', 1,  12, NULL),
-(@lastLaegAdmVej, 0, 'DrugID',                                           'drugId', 2,  12, NULL),
+(@lastLaegAdmVej, 0, 'DrugID',                                           'drugId', 2,  -5, NULL),
 (@lastLaegAdmVej, 0, 'AdministrationsvejKode',             'administrationsvejId', 3,  12, NULL),
 (@lastLaegAdmVej, 0, 'ModifiedDate',                                         NULL, 0,  93, NULL),
 (@lastLaegAdmVej, 0, 'ValidFrom',                                     'validFrom', 4,  93, NULL),
@@ -489,4 +489,236 @@ INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName,
 (@lastDosDisp, 0, 'ValidFrom',                                 'validFrom', 9,  93, NULL),
 (@lastDosDisp, 0, 'ValidTo',                                     'validTo',10,  93, NULL);
 
--- KPN Fortsæt med Pakning her
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'pakning', 1, 'Pakning', NOW());
+SET @lastPakning := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='pakning' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPakning, 1, 'PakningPID',                                               NULL, 0,  -5, NULL),
+(@lastPakning, 0, 'Varenummer',                                       'varenummer', 1,  -5, NULL),
+(@lastPakning, 0, 'VarenummerDelpakning',                   'varenummerDelpakning', 2,  -5, NULL),
+(@lastPakning, 0, 'DrugID',                                               'drugId', 3,  -5, NULL),
+(@lastPakning, 0, 'PakningsstoerrelseNumerisk',       'pakningsstoerrelseNumerisk', 4,   3, NULL),
+(@lastPakning, 0, 'Pakningsstoerrelsesenhed',            'pakningsstoerrelseEnhed', 5,  12, NULL),
+(@lastPakning, 0, 'PakningsstoerrelseTekst',             'pakningsstoerrelseTekst', 6,  12, NULL),
+(@lastPakning, 0, 'EmballageTypeKode',                         'emballageTypeKode', 7,  12, NULL),
+(@lastPakning, 0, 'Dosisdispenserbar',                         'dosisdispenserbar', 8,  16, NULL),
+(@lastPakning, 0, 'MedicintilskudsKode',                     'medicintilskudsKode', 9,  12, NULL),
+(@lastPakning, 0, 'KlausuleringsKode',                         'klausuleringsKode',10,  12, NULL),
+(@lastPakning, 0, 'AlfabetSekvensnr',                       'alfabetSekvensNummer',11,  -5, NULL),
+(@lastPakning, 0, 'AntalDelpakninger',                         'antalDelpakninger',12,  -5, NULL),
+(@lastPakning, 0, 'Udleveringsbestemmelse',               'udleveringsbestemmelse',13,  12, NULL),
+(@lastPakning, 0, 'UdleveringSpeciale',                       'udleveringSpeciale',14,  12, NULL),
+(@lastPakning, 0, 'AntalDDDPrPakning',                         'antalDDDPrPakning',15,   3, NULL),
+(@lastPakning, 0, 'OpbevaringstidNumerisk',               'opbevaringstidNumerisk',16,  -5, NULL),
+(@lastPakning, 0, 'Opbevaringstid',                               'opbevaringstid',17,  -5, NULL),
+(@lastPakning, 0, 'Opbevaringsbetingelser',               'opbevaringsbetingelser',18,  12, NULL),
+(@lastPakning, 0, 'Oprettelsesdato',                             'oprettelsesdato',19,  91, NULL),
+(@lastPakning, 0, 'DatoForSenestePrisaendring',       'datoForSenestePrisaendring',20,  91, NULL),
+(@lastPakning, 0, 'UdgaaetDato',                                     'udgaaetDato',21,  91, NULL),
+(@lastPakning, 0, 'BeregningskodeAIRegpris',             'BeregningskodeAIRegpris',22,  12, NULL),
+(@lastPakning, 0, 'PakningOptagetITilskudsgruppe', 'pakningOptagetITilskudsgruppe',23,  16, NULL),
+(@lastPakning, 0, 'Faerdigfremstillingsgebyr',         'faerdigfremstillingsgebyr',24,  16, NULL),
+(@lastPakning, 0, 'Pakningsdistributoer',                   'pakningsdistributoer',25,  -5, NULL),
+(@lastPakning, 0, 'ModifiedDate',                     NULL, 0,  93, NULL),
+(@lastPakning, 0, 'ValidFrom',                 'validFrom',26,  93, NULL),
+(@lastPakning, 0, 'ValidTo',                     'validTo',27,  93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'pakningskombination', 1, 'Pakningskombinationer', NOW());
+SET @lastPakKom := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='pakningskombination' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPakKom, 1, 'PakningskombinationerPID',                                  NULL, 0,  -5, NULL),
+(@lastPakKom, 0, 'CID',                                                       'id', 1,  12, NULL),
+(@lastPakKom, 0, 'VarenummerOrdineret',                      'varenummerOrdineret', 2,  -5, NULL),
+(@lastPakKom, 0, 'VarenummerSubstitueret',                'varenummerSubstitueret', 3,  -5, NULL),
+(@lastPakKom, 0, 'VarenummerAlternativt',                  'varenummerAlternativt', 4,  -5, NULL),
+(@lastPakKom, 0, 'AntalPakninger',                                'antalPakninger', 5,  -5, NULL),
+(@lastPakKom, 0, 'EkspeditionensSamledePris',          'ekspeditionensSamledePris', 6,  -5, NULL),
+(@lastPakKom, 0, 'InformationspligtMarkering',        'informationspligtMarkering', 7,  12, NULL),
+(@lastPakKom, 0, 'ModifiedDate',                                     NULL, 0, 93, NULL),
+(@lastPakKom, 0, 'ValidFrom',                                 'validFrom', 9, 93, NULL),
+(@lastPakKom, 0, 'ValidTo',                                     'validTo',10, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'pakningskombinationudenpriser', 1, 'PakningskombinationerUdenPriser', NOW());
+SET @lastPakKomUP := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='pakningskombinationudenpriser' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPakKomUP, 1, 'PakningskombinationerUdenPriserPID',                        NULL, 0,  -5, NULL),
+(@lastPakKomUP, 0, 'VarenummerOrdineret',                    'varenummerOrdineret', 1,  -5, NULL),
+(@lastPakKomUP, 0, 'VarenummerSubstitueret',              'varenummerSubstitueret', 2,  -5, NULL),
+(@lastPakKomUP, 0, 'VarenummerAlternativt',                'varenummerAlternativt', 3,  -5, NULL),
+(@lastPakKomUP, 0, 'AntalPakninger',                              'antalPakninger', 4,  -5, NULL),
+(@lastPakKomUP, 0, 'InformationspligtMarkering',      'informationspligtMarkering', 5,  12, NULL),
+(@lastPakKomUP, 0, 'ModifiedDate',                                     NULL, 0, 93, NULL),
+(@lastPakKomUP, 0, 'ValidFrom',                                 'validFrom', 6, 93, NULL),
+(@lastPakKomUP, 0, 'ValidTo',                                     'validTo', 7, 93, NULL);
+
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'pakningsstoerrelsesenhed', 1, 'Pakningsstoerrelsesenhed', NOW());
+SET @lastPakStoE := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='pakningsstoerrelsesenhed' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPakStoE, 1, 'PakningsstoerrelsesenhedPID',                 NULL, 0, -5, NULL),
+(@lastPakStoE, 0, 'PakningsstoerrelsesenhedKode',                'id', 1, 12, NULL),
+(@lastPakStoE, 0, 'PakningsstoerrelsesenhedTekst',            'tekst', 2, 12, NULL),
+(@lastPakStoE, 0, 'PakningsstoerrelsesenhedKortTekst',    'kortTekst', 3, 12, NULL),
+(@lastPakStoE, 0, 'ModifiedDate',                                NULL, 0, 93, NULL),
+(@lastPakStoE, 0, 'ValidFrom',                            'validFrom', 4, 93, NULL),
+(@lastPakStoE, 0, 'ValidTo',                                'validTo', 5, 93, NULL);
+
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'pris', 1, 'Priser', NOW());
+SET @lastPriser := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='pris' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPriser, 1, 'PriserPID',                                         NULL, 0, -5, NULL),
+(@lastPriser, 0, 'Varenummer',                                'varenummer', 1, -5, NULL),
+(@lastPriser, 0, 'apoteketsIndkoebspris',          'apoteketsIndkoebspris', 2, -5, NULL),
+(@lastPriser, 0, 'Registerpris',                            'registerpris', 3, -5, NULL),
+(@lastPriser, 0, 'ekspeditionensSamledePris',  'ekspeditionensSamledePris', 3, -5, NULL),
+(@lastPriser, 0, 'tilskudspris',                            'tilskudspris', 3, -5, NULL),
+(@lastPriser, 0, 'LeveranceprisTilHospitaler','leveranceprisTilHospitaler', 3, -5, NULL),
+(@lastPriser, 0, 'IkkeTilskudsberettigetDel',  'ikkeTilskudsberettigetDel', 3, -5, NULL),
+(@lastPriser, 0, 'ModifiedDate',                                      NULL, 0, 93, NULL),
+(@lastPriser, 0, 'ValidFrom',                                  'validFrom', 4, 93, NULL),
+(@lastPriser, 0, 'ValidTo',                                      'validTo', 5, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'rekommandation', 1, 'Rekommandationer', NOW());
+SET @lastRekom := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='rekommandation' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastRekom, 1, 'RekommandationerPID',           NULL, 0, -5, NULL),
+(@lastRekom, 0, 'Varenummer',            'varenummer', 1, -5, NULL),
+(@lastRekom, 0, 'Rekommandationsgruppe',     'gruppe', 2, -5, NULL),
+(@lastRekom, 0, 'DrugID',                    'drugId', 3, -5, NULL),
+(@lastRekom, 0, 'Rekommandationsniveau',     'niveau', 4, 12, NULL),
+(@lastRekom, 0, 'ModifiedDate',                  NULL, 0, 93, NULL),
+(@lastRekom, 0, 'ValidFrom',              'validFrom', 5, 93, NULL),
+(@lastRekom, 0, 'ValidTo',                  'validTo', 6, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'specialefornbs', 1, 'SpecialeForNBS', NOW());
+SET @lastSFNBS := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='specialefornbs' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSFNBS, 1, 'SpecialeForNBSPID',        NULL, 0, -5, NULL),
+(@lastSFNBS, 0, 'Kode',                     'id', 1, 12, NULL),
+(@lastSFNBS, 0, 'KortTekst',         'kortTekst', 2, 12, NULL),
+(@lastSFNBS, 0, 'Tekst',                 'tekst', 3, 12, NULL),
+(@lastSFNBS, 0, 'ModifiedDate',             NULL, 0, 93, NULL),
+(@lastSFNBS, 0, 'ValidFrom',         'validFrom', 5, 93, NULL),
+(@lastSFNBS, 0, 'ValidTo',             'validTo', 6, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'styrkeenhed', 1, 'Styrkeenhed', NOW());
+SET @lastSFNBS := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='styrkeenhed' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSFNBS, 1, 'StyrkeenhedPID',               NULL, 0, -5, NULL),
+(@lastSFNBS, 0, 'StyrkeenhedKode',              'id', 1, 12, NULL),
+(@lastSFNBS, 0, 'StyrkeenhedTekst',          'tekst', 2, 12, NULL),
+(@lastSFNBS, 0, 'StyrkeenhedKortTekst',  'kortTekst', 3, 12, NULL),
+(@lastSFNBS, 0, 'ModifiedDate',                 NULL, 0, 93, NULL),
+(@lastSFNBS, 0, 'ValidFrom',             'validFrom', 4, 93, NULL),
+(@lastSFNBS, 0, 'ValidTo',                 'validTo', 5, 93, NULL);
+
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'substitution', 1, 'Substitution', NOW());
+SET @lastSubst := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='substitution' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSubst, 1, 'SubstitutionPID',                                       NULL, 0, -5, NULL),
+(@lastSubst, 0, 'ReceptensVarenummer',                     'receptvarenummer', 1, -5, NULL),
+(@lastSubst, 0, 'Substitutionsgruppenummer',      'substitutionsgruppenummer', 2, -5, NULL),
+(@lastSubst, 0, 'NumeriskPakningsstoerrelse',    'PakningsstoerrelseNumerisk', 3, -5, NULL),
+(@lastSubst, 0, 'ProdAlfabetiskeSekvensplads',  'ProdAlfabetiskeSekvensplads', 4, 12, NULL),
+(@lastSubst, 0, 'SubstitutionskodeForPakning',  'SubstitutionskodeForPakning', 5, 12, NULL),
+(@lastSubst, 0, 'BilligsteVarenummer',                  'billigsteVarenummer', 6, -5, NULL),
+(@lastSubst, 0, 'ModifiedDate',                 NULL, 0, 93, NULL),
+(@lastSubst, 0, 'ValidFrom',             'validFrom', 7, 93, NULL),
+(@lastSubst, 0, 'ValidTo',                 'validTo', 8, 93, NULL);
+
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'substitutionaflaegemidlerudenfastpris', 1, 'SubstitutionAfLaegemidlerUdenFastPris', NOW());
+SET @lastSubstAfLUF := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='substitutionaflaegemidlerudenfastpris' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSubstAfLUF, 1, 'SubstitutionAfLaegemidlerUdenFastPrisPID',                       NULL, 0, -5, NULL),
+(@lastSubstAfLUF, 0, 'Varenummer',                                             'varenummer', 1, -5, NULL),
+(@lastSubstAfLUF, 0, 'Substitutionsgruppenummer',               'substitutionsgruppenummer', 2, -5, NULL),
+(@lastSubstAfLUF, 0, 'ModifiedDate',                 NULL, 0, 93, NULL),
+(@lastSubstAfLUF, 0, 'ValidFrom',             'validFrom', 3, 93, NULL),
+(@lastSubstAfLUF, 0, 'ValidTo',                 'validTo', 4, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'takstversion', 1, 'TakstVersion', NOW());
+SET @lastTakstV := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='takstversion' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastTakstV, 1, 'TakstVersionPID',              NULL, 0, -5, NULL),
+(@lastTakstV, 0, 'TakstUge',               'takstUge', 1, 12, NULL),
+(@lastTakstV, 0, 'ModifiedDate',                 NULL, 0, 93, NULL),
+(@lastTakstV, 0, 'ValidFrom',             'validFrom', 2, 93, NULL),
+(@lastTakstV, 0, 'ValidTo',                 'validTo', 3, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'tidsenhed', 1, 'Tidsenhed', NOW());
+SET @lastTidsenhed := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='tidsenhed' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastTidsenhed, 1, 'TidsenhedPID',                 NULL, 0, -5, NULL),
+(@lastTidsenhed, 0, 'TidsenhedKode',                'id', 1, 12, NULL),
+(@lastTidsenhed, 0, 'TidsenhedTekst',            'tekst', 2, 12, NULL),
+(@lastTidsenhed, 0, 'TidsenhedKortTekst',    'kortTekst', 3, 12, NULL),
+(@lastTidsenhed, 0, 'ModifiedDate',                 NULL, 0, 93, NULL),
+(@lastTidsenhed, 0, 'ValidFrom',             'validFrom', 4, 93, NULL),
+(@lastTidsenhed, 0, 'ValidTo',                 'validTo', 5, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'tilskudsinterval', 1, 'Tilskudsintervaller', NOW());
+SET @lastTilskInt := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='tilskudsinterval' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastTilskInt, 1, 'TilskudsintervallerPID',    NULL, 0, -5, NULL),
+(@lastTilskInt, 0, 'CID',                       'id', 1, 12, NULL),
+(@lastTilskInt, 0, 'Type',                    'type', 2,  4, NULL),
+(@lastTilskInt, 0, 'Niveau',                'niveau', 3,  4, NULL),
+(@lastTilskInt, 0, 'NedreGraense',    'nedreGraense', 4, -5, NULL),
+(@lastTilskInt, 0, 'OevreGraense',    'OevreGraense', 5, -5, NULL),
+(@lastTilskInt, 0, 'Procent',              'procent', 6,  3, NULL),
+(@lastTilskInt, 0, 'ModifiedDate',              NULL, 0, 93, NULL),
+(@lastTilskInt, 0, 'ValidFrom',          'validFrom', 7, 93, NULL),
+(@lastTilskInt, 0, 'ValidTo',              'validTo', 8, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'tilskudsprisgrupperpakningsniveau', 1, 'TilskudsprisgrupperPakningsniveau', NOW());
+SET @lastTilskGrPakN := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='tilskudsprisgrupperpakningsniveau' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastTilskGrPakN, 1, 'TilskudsprisgrupperPakningsniveauPID',                 NULL, 0, -5, NULL),
+(@lastTilskGrPakN, 0, 'Varenummer',                                   'varenummer', 1, -5, NULL),
+(@lastTilskGrPakN, 0, 'TilskudsprisGruppe',                   'TilskudsprisGruppe', 2, -5, NULL),
+(@lastTilskGrPakN, 0, 'ModifiedDate',              NULL, 0, 93, NULL),
+(@lastTilskGrPakN, 0, 'ValidFrom',          'validFrom', 3, 93, NULL),
+(@lastTilskGrPakN, 0, 'ValidTo',              'validTo', 4, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'udgaaedenavne', 1, 'UdgaaedeNavne', NOW());
+SET @lastUdgaaNa := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='udgaaedenavne' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastUdgaaNa, 1, 'UdgaaedeNavnePID',                 NULL, 0, -5, NULL),
+(@lastUdgaaNa, 0, 'CID',                              'id', 1, 12, NULL),
+(@lastUdgaaNa, 0, 'Drugid',                       'drugId', 2, -5, NULL),
+(@lastUdgaaNa, 0, 'DatoForAendringen', 'datoForAendringen', 3, 91, NULL),
+(@lastUdgaaNa, 0, 'TidligereNavn',         'tidligereNavn', 4, 12, NULL),
+(@lastUdgaaNa, 0, 'ModifiedDate',                     NULL, 0, 93, NULL),
+(@lastUdgaaNa, 0, 'ValidFrom',                 'validFrom', 5, 93, NULL),
+(@lastUdgaaNa, 0, 'ValidTo',                     'validTo', 6, 93, NULL);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate)
+  VALUES ('dkma', 'udleveringsbestemmelse', 1, 'Udleveringsbestemmelser', NOW());
+SET @lastUdlevB := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='dkma' AND datatype='udleveringsbestemmelse' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastUdlevB, 1, 'UdleveringsbestemmelserPID',       NULL, 0, -5, NULL),
+(@lastUdlevB, 0, 'Kode',                             'id', 1, 12, NULL),
+(@lastUdlevB, 0, 'Udleveringsgruppe', 'udleveringsgruppe', 2, 12, NULL),
+(@lastUdlevB, 0, 'KortTekst',                 'kortTekst', 3, 12, NULL),
+(@lastUdlevB, 0, 'Tekst',                         'tekst', 4, 12, NULL),
+(@lastUdlevB, 0, 'ModifiedDate',                     NULL, 0, 93, NULL),
+(@lastUdlevB, 0, 'ValidFrom',                 'validFrom', 5, 93, NULL),
+(@lastUdlevB, 0, 'ValidTo',                     'validTo', 6, 93, NULL);
+

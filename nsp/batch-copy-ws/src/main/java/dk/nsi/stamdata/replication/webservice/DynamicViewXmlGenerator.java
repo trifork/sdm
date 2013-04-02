@@ -46,6 +46,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -141,6 +142,18 @@ public class DynamicViewXmlGenerator {
                     break;
                 case Types.VARCHAR:
                     convertedContent = (String) columnContent;
+                    break;
+                case Types.DECIMAL:
+                    BigDecimal bd = (BigDecimal)columnContent;
+                    convertedContent = bd.toPlainString();
+                    break;
+                case Types.FLOAT:
+                    Float fval = (Float) columnContent;
+                    convertedContent = fval.toString();
+                    break;
+                case Types.DOUBLE:
+                    Double dval = (Double) columnContent;
+                    convertedContent = dval.toString();
                     break;
                 default:
                     throw new UnsupportedColumnType(columnMapVO.getDataType());
