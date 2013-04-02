@@ -26,7 +26,6 @@ package dk.nsi.stamdata.replication.webservice;
 
 import static java.lang.String.format;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
@@ -52,7 +51,6 @@ import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.RecordFetcher;
-import com.trifork.stamdata.persistence.RecordMetadata;
 import com.trifork.stamdata.persistence.RecordSpecification;
 import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
@@ -73,7 +71,6 @@ import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 import dk.nsi.stamdata.views.View;
-import dk.nsi.stamdata.views.Views;
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataReplication")
 @HandlerChain(file="handler-chain.xml")
@@ -86,7 +83,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private static final int MAX_RECORD_LIMIT = 2000;
     
     private final String cvr;
-    private final RecordDao dao;
     private final Map<String, Class<? extends View>> viewClasses;
     private final ClientDao clients;
 
@@ -102,10 +98,9 @@ public class StamdataReplicationImpl implements StamdataReplication {
     @Inject DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
     {
         this.cvr = cvr;
-        this.dao = recordDao;
         this.clients = clientDao;
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
@@ -152,20 +147,13 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
     }
 
-    private boolean isHibernateView(ReplicationRequestType parameters) {
-        // TODO TEMP FUNCTION REMOVE
-        return !(("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("sks".equals(parameters.getRegister()) && "institution".equals(parameters.getDatatype()) && parameters.getVersion() == 1));
-    }
-
     private boolean isRecordRegister(ReplicationRequestType parameters)
     {
-        return ("sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+        return (//"sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 //|| ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 //|| ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                || ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1)
+                //"bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
+                "vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1)
                 || ("tilskudsblanket".equals(parameters.getRegister()) && parameters.getVersion() == 1)
                 || ("ddv".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
@@ -319,14 +307,14 @@ public class StamdataReplicationImpl implements StamdataReplication {
             } else {
                 throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
             }
-            Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
+//            Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
     
             // Construct the output container.
             //
             ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
             
-            response.setAny(feedDocument.getFirstChild());
-            
+//            response.setAny(feedDocument.getFirstChild());
+
             // Log that the client successfully accessed the data.
             // Simply for audit purposes.
             //
@@ -349,60 +337,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
         finally
         {
-            MDC.remove("view");
-            MDC.remove("cvr");
-            MDC.remove("offset");
-            MDC.remove("limit");
-        }
-    }
-
-    private ReplicationResponseType handleRequestUsingHibernateView(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws RuntimeException, ReplicationFault
-    {
-        try {
-            Class<? extends View> requestedView = getViewClass(parameters);
-    
-            MDC.put("view", Views.getViewPath(requestedView));
-            MDC.put("cvr", cvr);
-    
-            // Validate authentication.
-            //
-            Client client = clients.findByCvr(cvr);
-            if (client == null || !client.isAuthorizedFor(requestedView))
-            {
-                throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
-            }
-    
-            // Validate the input parameters.
-            //
-            HistoryOffset offset = getOffset(parameters);
-            int limit = getRecordLimit(parameters);
-    
-            MDC.put("offset", String.valueOf(offset));
-            MDC.put("limit", String.valueOf(limit));
-    
-            // Fetch the records from the database and
-            // fill the output structure.
-            //
-            Document feedDocument = createFeed(requestedView, offset, limit);
-    
-            // Construct the output container.
-            //
-            ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
-            
-            response.setAny(feedDocument.getFirstChild());
-            
-            // Log that the client successfully accessed the data.
-            // Simply for audit purposes.
-            //
-            // The client details are included in the MDC.
-            //
-            logger.info("Records fetched, sending response.");
-    
-            return response;
-        } finally {
-            // Clean up the thread's MDC.
-            // TODO: This might fit better in an interceptor.
-            //
             MDC.remove("view");
             MDC.remove("cvr");
             MDC.remove("offset");
@@ -434,37 +368,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
         }
     }
 
-    private <T extends View> Document createFeed(Class<T> requestedView, HistoryOffset offset, int limit) throws ReplicationFault
-    {
-        List<T> results = dao.findPage(requestedView, offset.getRecordID(), offset.getModifiedDate(), limit);
-        
-        Document body;
-        
-        try {
-            body = outputWriter.write(requestedView, results);
-        } catch (IOException e) {
-            throw new ReplicationFault("A unexpected error occurred. Processing stopped.", FaultCodes.IO_ERROR, e);
-        }
-        
-        return body;
-    }
-    
-    private Document createFeed(RecordSpecification spec, ReplicationRequestType parameters, HistoryOffset offset, int limit) throws SQLException
-    {
-        RecordXmlGenerator xmlGenerator = new RecordXmlGenerator(spec);
-        RecordFetcher fetcher = this.fetchers.get();
-
-        long pid = Long.parseLong(offset.getRecordID());
-        Instant modifiedDate = new Instant(offset.getModifiedDate());
-        
-        List<RecordMetadata> records = fetcher.fetchSince(spec, pid, modifiedDate, limit);
-
-        try {
-            return xmlGenerator.generateXml(records, parameters.getRegister(), parameters.getDatatype(), DateTime.now());
-        } catch (TransformerException e) {
-            throw new RuntimeException("Transformer error");
-        }
-    }
 
     private Class<? extends View> getViewClass(ReplicationRequestType parameters) throws ReplicationFault
     {
