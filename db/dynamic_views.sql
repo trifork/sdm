@@ -3,6 +3,102 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- Tilskudsblanket
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanket', 1, 'Tilskudsblanket', NOW());
+SET @lastBlanket := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanket' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBlanket, 1, 'PID',                              NULL, 0, -5, NULL),
+(@lastBlanket, 0, 'BlanketId',                 'BlanketId', 1, -5, NULL),
+(@lastBlanket, 0, 'BlanketTekst',           'BlanketTekst', 2, 12, NULL),
+(@lastBlanket, 0, 'ModifiedDate',           'ModifiedDate', 3, 93, 12),
+(@lastBlanket, 0, 'ValidFrom',                 'ValidFrom', 4, 93, 12),
+(@lastBlanket, 0, 'ValidTo',                     'ValidTo', 5, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'forhoejettakst', 1, 'TilskudForhoejetTakst', NOW());
+SET @lastForTakst := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='forhoejettakst' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastForTakst, 1, 'PID',                              NULL, 0, -5, NULL),
+(@lastForTakst, 0, 'Varenummer',               'Varenummer', 1, -5, NULL),
+(@lastForTakst, 0, 'Navn',                           'Navn', 1, 12, NULL),
+(@lastForTakst, 0, 'Form',                           'Form', 2, 12, NULL),
+(@lastForTakst, 0, 'FormTekst',                 'FormTekst', 3, 12, NULL),
+(@lastForTakst, 0, 'ATCkode',                     'ATCkode', 4, 12, NULL),
+(@lastForTakst, 0, 'Styrke',                       'Styrke', 5, 12, NULL),
+(@lastForTakst, 0, 'DrugID',                       'DrugID', 6, -5, NULL),
+(@lastForTakst, 0, 'PakningsTekst',         'PakningsTekst', 7, 12, NULL),
+(@lastForTakst, 0, 'Udlevering',               'Udlevering', 8, 12, NULL),
+(@lastForTakst, 0, 'Tilskudstype',           'Tilskudstype', 9, 12, NULL),
+(@lastForTakst, 0, 'ModifiedDate',           'ModifiedDate',10, 93, 12),
+(@lastForTakst, 0, 'ValidFrom',                 'ValidFrom',11, 93, 12),
+(@lastForTakst, 0, 'ValidTo',                     'ValidTo',12, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanketforhoejet', 1, 'TilskudsblanketForhoejet', NOW());
+SET @lastBlanketForH := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanketforhoejet' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBlanketForH, 1, 'PID',                              NULL, 0, -5, NULL),
+(@lastBlanketForH, 0, 'BlanketId',                 'BlanketId', 1, -5, NULL),
+(@lastBlanketForH, 0, 'DrugId',                       'DrugId', 2, 12, NULL),
+(@lastBlanketForH, 0, 'ModifiedDate',           'ModifiedDate', 3, 93, 12),
+(@lastBlanketForH, 0, 'ValidFrom',                 'ValidFrom', 4, 93, 12),
+(@lastBlanketForH, 0, 'ValidTo',                     'ValidTo', 5, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanketenkelt', 1, 'TilskudsblanketEnkelt', NOW());
+SET @lastBlanketEnkelt := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanketenkelt' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBlanketEnkelt, 1, 'PID',                      NULL, 0, -5, NULL),
+(@lastBlanketEnkelt, 0, 'BlanketId',         'BlanketId', 1, -5, NULL),
+(@lastBlanketEnkelt, 0, 'Genansoegning', 'Genansoegning', 2, -5, NULL),
+(@lastBlanketEnkelt, 0, 'Navn',                   'Navn', 3, 12, NULL),
+(@lastBlanketEnkelt, 0, 'Form',                   'Form', 4, 12, NULL),
+(@lastBlanketEnkelt, 0, 'Id',                       'Id', 5, 12, NULL),
+(@lastBlanketEnkelt, 0, 'ModifiedDate',   'ModifiedDate', 6, 93, 12),
+(@lastBlanketEnkelt, 0, 'ValidFrom',         'ValidFrom', 7, 93, 12),
+(@lastBlanketEnkelt, 0, 'ValidTo',             'ValidTo', 8, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanketterminal', 1, 'TilskudsblanketTerminal', NOW());
+SET @lastBlanketTerminal := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanketterminal' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBlanketTerminal, 1, 'PID',                      NULL, 0, -5, NULL),
+(@lastBlanketTerminal, 0, 'Id',                       'Id', 1, 12, NULL),
+(@lastBlanketTerminal, 0, 'BlanketId',         'BlanketId', 2, -5, NULL),
+(@lastBlanketTerminal, 0, 'ModifiedDate',   'ModifiedDate', 3, 93, 12),
+(@lastBlanketTerminal, 0, 'ValidFrom',         'ValidFrom', 4, 93, 12),
+(@lastBlanketTerminal, 0, 'ValidTo',             'ValidTo', 5, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanketkroniker', 1, 'TilskudsblanketKroniker', NOW());
+SET @lastBlanketKro := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanketkroniker' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBlanketKro, 1, 'PID',                      NULL, 0, -5, NULL),
+(@lastBlanketKro, 0, 'BlanketId',         'BlanketId', 1, -5, NULL),
+(@lastBlanketKro, 0, 'Genansoegning', 'Genansoegning', 2, -5, NULL),
+(@lastBlanketKro, 0, 'ModifiedDate',   'ModifiedDate', 3, 93, 12),
+(@lastBlanketKro, 0, 'ValidFrom',         'ValidFrom', 4, 93, 12),
+(@lastBlanketKro, 0, 'ValidTo',             'ValidTo', 5, 93, 12);
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- Bemyndigelse
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('bemyndigelsesservice', 'bemyndigelse', 1, 'Bemyndigelse', NOW());
+SET @lastBem := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='bemyndigelsesservice' AND datatype='bemyndigelse' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastBem, 1, 'PID',                              NULL, 0, -5, NULL),
+(@lastBem, 0, 'kode',                           'kode', 1, 12, NULL),
+(@lastBem, 0, 'bemyndigende_cpr',   'bemyndigende_cpr', 2, 12, NULL),
+(@lastBem, 0, 'bemyndigede_cpr',     'bemyndigede_cpr', 3, 12, NULL),
+(@lastBem, 0, 'bemyndigede_cvr',     'bemyndigede_cvr', 4, 12, NULL),
+(@lastBem, 0, 'system',                       'system', 5, 12, NULL),
+(@lastBem, 0, 'arbejdsfunktion',     'arbejdsfunktion', 6, 12, NULL),
+(@lastBem, 0, 'rettighed',                 'rettighed', 7, 12, NULL),
+(@lastBem, 0, 'status',                       'status', 8, 12, NULL),
+(@lastBem, 0, 'godkendelses_dato', 'godkendelses_dato', 9, 12, NULL),
+(@lastBem, 0, 'oprettelses_dato',   'oprettelses_dato',10, 12, NULL),
+(@lastBem, 0, 'modificeret_dato',   'modificeret_dato',11, 12, NULL),
+(@lastBem, 0, 'gyldig_fra_dato',     'gyldig_fra_dato',12, 12, NULL),
+(@lastBem, 0, 'gyldig_til_dato',     'gyldig_til_dato',13, 12, NULL),
+(@lastBem, 0, 'ModifiedDate',                     NULL, 0, 93, 12),
+(@lastBem, 0, 'ValidFrom',                 'ValidFrom',14, 93, 12),
+(@lastBem, 0, 'ValidTo',                     'ValidTo',15, 93, 12);
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- Yderregister
 
 INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('yderregister', 'yder', 1, 'Yderregister', NOW());
