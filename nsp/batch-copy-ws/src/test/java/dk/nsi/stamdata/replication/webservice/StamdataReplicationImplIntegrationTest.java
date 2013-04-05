@@ -300,23 +300,6 @@ public class StamdataReplicationImplIntegrationTest
     }
 
     @Test
-    public void testSORSygehusAfdelingCopy() throws Exception
-    {
-        request = new ObjectFactory().createReplicationRequestType();
-        request.setRegister("sor");
-        request.setDatatype("sygehusafdeling");
-        request.setVersion(1L);
-        request.setOffset("00000000000000000000");
-        request.setMaxRecords(500L);
-
-        populateDatabaseAndSendRequest();
-
-        //printDocument(anyAsElement.getOwnerDocument(), System.out);
-
-        assertResponseContainsRecordAtom("sor", "sygehusafdeling");
-    }
-
-    @Test
     public void testCPRBarnRelationCopy() throws Exception
     {
         request = new ObjectFactory().createReplicationRequestType();
@@ -370,27 +353,6 @@ public class StamdataReplicationImplIntegrationTest
 			assertTrue(fault.getMessage().contains("The provided cvr is not authorized to fetch this datatype"));
 		}
 	}
-
-
-	@Test
-    public void testVitaminGrunddataCopy() throws Exception {
-        recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
-        Record record = new RecordBuilder(VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC).field("drugID", 1234567).addDummyFieldsAndBuild();
-        records.add(record);
-        Record record2 = new RecordBuilder(VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC).field("drugID", 9876543).addDummyFieldsAndBuild();
-        records.add(record2);
-
-        createReplicationRequest("vitamin", "grunddata");
-
-        populateDatabaseAndSendRequest();
-
-        assertResponseContainsRecordAtom("vitamin", "grunddata");
-        
-        printDocument(anyAsElement.getOwnerDocument(), System.out);
-        
-        assertResponseContainsExactNumberOfRecords("grunddata:grunddata", 2);
-        assertResponseContainsValueOnXPath("//grunddata:grunddata/grunddata:drugID", "1234567");
-    }
 
 	@Test
     public void testTilskudsblanketForhoejetTakstCopy() throws Exception {

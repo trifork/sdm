@@ -3,6 +3,105 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- SOR
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'apotek', 1, 'Apotek', NOW());
+SET @lastApot := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='apotek' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastApot, 1, 'ApotekPID',                           NULL, 0, -5, NULL),
+(@lastApot, 0, 'SorNummer',                    'sorNummer', 1, -5, NULL),
+(@lastApot, 0, 'ApotekNummer',              'apotekNummer', 2, -5, NULL),
+(@lastApot, 0, 'FilialNummer',              'filialNummer', 3, -5, NULL),
+(@lastApot, 0, 'EanLokationsnummer',  'eanLokationsnummer', 4, -5, NULL),
+(@lastApot, 0, 'cvr',                                'cvr', 5, -5, NULL),
+(@lastApot, 0, 'pcvr',                              'pcvr', 6, -5, NULL),
+(@lastApot, 0, 'Navn',                              'navn', 7, 12, NULL),
+(@lastApot, 0, 'Telefon',                        'telefon', 8, 12, NULL),
+(@lastApot, 0, 'Vejnavn',                        'vejnavn', 9, 12, NULL),
+(@lastApot, 0, 'Postnummer',                  'postnummer',10, 12, NULL),
+(@lastApot, 0, 'Bynavn',                          'bynavn',11, 12, NULL),
+(@lastApot, 0, 'Email',                            'email',12, 12, NULL),
+(@lastApot, 0, 'Www',                                'www',13, 12, NULL),
+(@lastApot, 0, 'ModifiedDate',                        NULL, 0, 93, 12),
+(@lastApot, 0, 'ValidFrom',                    'validFrom',14, 93, 12),
+(@lastApot, 0, 'ValidTo',                        'validTo',15, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'praksis', 1, 'Praksis', NOW());
+SET @lastPraks := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='praksis' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastPraks, 1, 'PraksisPID',                         NULL, 0, -5, NULL),
+(@lastPraks, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
+(@lastPraks, 0, 'EanLokationsnummer', 'eanLokationsnummer', 2, -5, NULL),
+(@lastPraks, 0, 'RegionCode',                 'regionCode', 3, -5, NULL),
+(@lastPraks, 0, 'Navn',                             'navn', 4, 12, NULL),
+(@lastPraks, 0, 'ModifiedDate',                       NULL, 0, 93, 12),
+(@lastPraks, 0, 'ValidFrom',                   'validFrom', 5, 93, 12),
+(@lastPraks, 0, 'ValidTo',                       'validTo', 6, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'sygehus', 1, 'Sygehus', NOW());
+SET @lastSygehus := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='sygehus' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSygehus, 1, 'SygeHusPID',                         NULL, 0, -5, NULL),
+(@lastSygehus, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
+(@lastSygehus, 0, 'EanLokationsnummer', 'eanLokationsnummer', 2, -5, NULL),
+(@lastSygehus, 0, 'Nummer',                         'nummer', 3, 12, NULL),
+(@lastSygehus, 0, 'Telefon',                       'telefon', 5, 12, NULL),
+(@lastSygehus, 0, 'Navn',                             'navn', 4, 12, NULL),
+(@lastSygehus, 0, 'Vejnavn',                       'vejnavn', 6, 12, NULL),
+(@lastSygehus, 0, 'Postnummer',                 'postnummer', 7, 12, NULL),
+(@lastSygehus, 0, 'Bynavn',                         'bynavn', 8, 12, NULL),
+(@lastSygehus, 0, 'Email',                           'email', 9, 12, NULL),
+(@lastSygehus, 0, 'Www',                               'www',10, 12, NULL),
+(@lastSygehus, 0, 'ModifiedDate',                       NULL, 0, 93, 12),
+(@lastSygehus, 0, 'ValidFrom',                   'validFrom',11, 93, 12),
+(@lastSygehus, 0, 'ValidTo',                       'validTo',12, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'sygehusafdeling', 1, 'SygehusAfdeling', NOW());
+SET @lastSygehusAfd := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='sygehusafdeling' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSygehusAfd, 1, 'SygeHusAfdelingPID',                               NULL, 0, -5, NULL),
+(@lastSygehusAfd, 0, 'SorNummer',                                 'sorNummer', 1, -5, NULL),
+(@lastSygehusAfd, 0, 'EanLokationsnummer',               'eanLokationsnummer', 5, -5, NULL),
+(@lastSygehusAfd, 0, 'Nummer',                                       'nummer',10, 12, NULL),
+(@lastSygehusAfd, 0, 'Navn',                                           'navn',11, 12, NULL),
+(@lastSygehusAfd, 0, 'SygehusSorNummer',                   'sygehusSorNummer', 2, -5, NULL),
+(@lastSygehusAfd, 0, 'OverAfdelingSorNummer',         'overafdelingSorNummer', 3, -5, NULL),
+(@lastSygehusAfd, 0, 'UnderlagtSygehusSorNummer', 'underlagtSygehusSorNummer', 4, -5, NULL),
+(@lastSygehusAfd, 0, 'AfdelingTypeKode',                   'afdelingTypeKode', 6, -5, NULL),
+(@lastSygehusAfd, 0, 'AfdelingTypeTekst',                 'afdelingTypeTekst', 7, 12, NULL),
+(@lastSygehusAfd, 0, 'HovedSpecialeKode',                 'hovedSpecialeKode', 8, 12, NULL),
+(@lastSygehusAfd, 0, 'HovedSpecialeTekst',               'hovedSpecialeTekst', 9, 12, NULL),
+(@lastSygehusAfd, 0, 'Telefon',                                     'telefon',12, 12, NULL),
+(@lastSygehusAfd, 0, 'Vejnavn',                                     'vejnavn',13, 12, NULL),
+(@lastSygehusAfd, 0, 'Postnummer',                               'postnummer',14, 12, NULL),
+(@lastSygehusAfd, 0, 'Bynavn',                                       'bynavn',15, 12, NULL),
+(@lastSygehusAfd, 0, 'Email',                                         'email',16, 12, NULL),
+(@lastSygehusAfd, 0, 'Www',                                             'www',17, 12, NULL),
+(@lastSygehusAfd, 0, 'ModifiedDate',                                     NULL, 0, 93, 12),
+(@lastSygehusAfd, 0, 'ValidFrom',                                 'validFrom',18, 93, 12),
+(@lastSygehusAfd, 0, 'ValidTo',                                     'validTo',19, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'yder', 1, 'Yder', NOW());
+SET @lastSygehus := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='yder' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastSygehus, 1, 'YderPID',                            NULL, 0, -5, NULL),
+(@lastSygehus, 0, 'Nummer',                         'nummer', 4, -5, NULL),
+(@lastSygehus, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
+(@lastSygehus, 0, 'PraksisSorNummer',     'praksisSorNummer', 2, -5, NULL),
+(@lastSygehus, 0, 'EanLokationsnummer', 'eanLokationsnummer', 3, -5, NULL),
+(@lastSygehus, 0, 'Telefon',                       'telefon', 6, 12, NULL),
+(@lastSygehus, 0, 'Navn',                             'navn', 5, 12, NULL),
+(@lastSygehus, 0, 'Vejnavn',                       'vejnavn', 7, 12, NULL),
+(@lastSygehus, 0, 'Postnummer',                 'postnummer', 8, 12, NULL),
+(@lastSygehus, 0, 'Bynavn',                         'bynavn', 9, 12, NULL),
+(@lastSygehus, 0, 'Email',                           'email',10, 12, NULL),
+(@lastSygehus, 0, 'Www',                               'www',11, 12, NULL),
+(@lastSygehus, 0, 'HovedSpecialeKode',   'hovedSpecialeKode',12, 12, NULL),
+(@lastSygehus, 0, 'HovedSpecialeTekst', 'hovedSpecialeTekst',13, 12, NULL),
+(@lastSygehus, 0, 'ModifiedDate',                       NULL, 0, 93, 12),
+(@lastSygehus, 0, 'ValidFrom',                   'validFrom',14, 93, 12),
+(@lastSygehus, 0, 'ValidTo',                       'validTo',15, 93, 12);
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- Tilskudsblanket
 INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('tilskudsblanket', 'blanket', 1, 'Tilskudsblanket', NOW());
 SET @lastBlanket := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='blanket' AND version=1);
@@ -264,7 +363,6 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastSik := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sikrede' AND datatype='sikrede' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastSik, 1, 'PID',                                       NULL, 0,  -5, NULL),
-(@lastSik, 0, 'PostType',                                  'PostType', 1,  12, NULL),
 (@lastSik, 0, 'CPRnr',                                        'CPRnr', 2,  12, 10),
 (@lastSik, 0, 'SYdernr',                                    'SYdernr', 3,  12, 6),
 (@lastSik, 0, 'SIkraftDatoYder',                    'SIkraftDatoYder', 4,  12, 8),

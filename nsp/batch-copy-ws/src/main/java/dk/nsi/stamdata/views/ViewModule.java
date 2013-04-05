@@ -37,11 +37,6 @@ import dk.nsi.stamdata.views.doseringsforslag.DosageStructure;
 import dk.nsi.stamdata.views.doseringsforslag.DosageUnit;
 import dk.nsi.stamdata.views.doseringsforslag.DosageVersion;
 import dk.nsi.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
-import dk.nsi.stamdata.views.sor.Apotek;
-import dk.nsi.stamdata.views.sor.Praksis;
-import dk.nsi.stamdata.views.sor.Sygehus;
-import dk.nsi.stamdata.views.sor.SygehusAfdeling;
-import dk.nsi.stamdata.views.sor.Yder;
 import dk.nsi.stamdata.views.vaccination.Disease;
 import dk.nsi.stamdata.views.vaccination.DiseaseVaccine;
 import dk.nsi.stamdata.views.vaccination.Dosageoption;
@@ -65,14 +60,6 @@ public class ViewModule extends AbstractModule
         views.addBinding().to(DosageVersion.class);
         views.addBinding().to(dk.nsi.stamdata.views.doseringsforslag.Drug.class);
         views.addBinding().to(DrugDosageStructureRelation.class);
-        
-        // SOR
-        
-        views.addBinding().to(Apotek.class);
-        views.addBinding().to(Praksis.class);
-        views.addBinding().to(Sygehus.class);
-        views.addBinding().to(SygehusAfdeling.class);
-        views.addBinding().to(Yder.class);
 
         // Vaccinationer
         views.addBinding().to(Disease.class);

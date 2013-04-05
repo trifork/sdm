@@ -86,7 +86,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final Map<String, Class<? extends View>> viewClasses;
     private final ClientDao clients;
 
-    private final AtomFeedWriter outputWriter;
     private final Provider<RecordFetcher> fetchers;
 
     @Inject
@@ -98,12 +97,11 @@ public class StamdataReplicationImpl implements StamdataReplication {
     @Inject DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, Provider<RecordFetcher> fetchers)
     {
         this.cvr = cvr;
         this.clients = clientDao;
         this.viewClasses = viewClasses;
-        this.outputWriter = outputWriter;
         this.fetchers = fetchers;
     }
     
