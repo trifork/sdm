@@ -33,10 +33,6 @@ import com.google.inject.Provides;
 import com.google.inject.multibindings.Multibinder;
 import com.trifork.stamdata.persistence.Persistent;
 
-import dk.nsi.stamdata.views.doseringsforslag.DosageStructure;
-import dk.nsi.stamdata.views.doseringsforslag.DosageUnit;
-import dk.nsi.stamdata.views.doseringsforslag.DosageVersion;
-import dk.nsi.stamdata.views.doseringsforslag.DrugDosageStructureRelation;
 import dk.nsi.stamdata.views.vaccination.Disease;
 import dk.nsi.stamdata.views.vaccination.DiseaseVaccine;
 import dk.nsi.stamdata.views.vaccination.Dosageoption;
@@ -52,14 +48,6 @@ public class ViewModule extends AbstractModule
     protected void configure()
     {
         Multibinder<Object> views = Multibinder.newSetBinder(binder(), Object.class, Persistent.class);
-
-        // Doseringsforslag
-        
-        views.addBinding().to(DosageStructure.class);
-        views.addBinding().to(DosageUnit.class);
-        views.addBinding().to(DosageVersion.class);
-        views.addBinding().to(dk.nsi.stamdata.views.doseringsforslag.Drug.class);
-        views.addBinding().to(DrugDosageStructureRelation.class);
 
         // Vaccinationer
         views.addBinding().to(Disease.class);

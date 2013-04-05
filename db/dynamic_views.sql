@@ -3,7 +3,75 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- Doserings forslag
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('doseringsforslag', 'dosagestructure', 1, 'DosageStructure', NOW());
+SET @lastDosStr := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='dosagestructure' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastDosStr, 1, 'DosageStructurePID',               NULL, 0, -5, NULL),
+(@lastDosStr, 0, 'releaseNumber',         'releaseNumber', 2, -5, NULL),
+(@lastDosStr, 0, 'code',                           'code', 1, 12, NULL),
+(@lastDosStr, 0, 'type',                           'type', 3, 12, NULL),
+(@lastDosStr, 0, 'simpleString',           'simpleString', 4, 12, NULL),
+(@lastDosStr, 0, 'supplementaryText', 'supplementaryText', 5, 12, NULL),
+(@lastDosStr, 0, 'xml',                             'xml', 6, 12, NULL),
+(@lastDosStr, 0, 'shortTranslation',   'shortTranslation', 7, 12, NULL),
+(@lastDosStr, 0, 'longTranslation',     'longTranslation', 8, 12, NULL),
+(@lastDosStr, 0, 'ModifiedDate',                     NULL, 0, 93, 12),
+(@lastDosStr, 0, 'ValidFrom',                 'validFrom', 9, 93, 12),
+(@lastDosStr, 0, 'ValidTo',                     'validTo',10, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('doseringsforslag', 'dosageunit', 1, 'DosageUnit', NOW());
+SET @lastDosUni := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='dosageunit' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastDosUni, 1, 'DosageUnitPID',            NULL, 0, -5, NULL),
+(@lastDosUni, 0, 'code',                   'code', 2, -5, NULL),
+(@lastDosUni, 0, 'releaseNumber', 'releaseNumber', 1, -5, NULL),
+(@lastDosUni, 0, 'textSingular',   'textSingular', 3, 12, NULL),
+(@lastDosUni, 0, 'textPlural',       'textPlural', 4, 12, NULL),
+(@lastDosUni, 0, 'ModifiedDate',             NULL, 0, 93, 12),
+(@lastDosUni, 0, 'ValidFrom',         'validFrom', 5, 93, 12),
+(@lastDosUni, 0, 'ValidTo',             'validTo', 6, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('doseringsforslag', 'version', 1, 'DosageVersion', NOW());
+SET @lastDosVer := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='version' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastDosVer, 1, 'DosageVersionPID',         NULL, 0, -5, NULL),
+(@lastDosVer, 0, 'daDate',               'daDate', 1, 91, NULL),
+(@lastDosVer, 0, 'lmsDate',             'lmsDate', 2, 91, NULL),
+(@lastDosVer, 0, 'releaseDate',     'releaseDate', 3, 91, NULL),
+(@lastDosVer, 0, 'releaseNumber', 'releaseNumber', 4, -5, NULL),
+(@lastDosVer, 0, 'ModifiedDate',             NULL, 0, 93, 12),
+(@lastDosVer, 0, 'ValidFrom',         'validFrom', 5, 93, 12),
+(@lastDosVer, 0, 'ValidTo',             'validTo', 6, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('doseringsforslag', 'drug', 1, 'DosageDrug', NOW());
+SET @lastDosDrug := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='drug' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastDosDrug, 1, 'DosageDrugPID',              NULL, 0, -5, NULL),
+(@lastDosDrug, 0, 'releaseNumber',   'releaseNumber', 1, -5, NULL),
+(@lastDosDrug, 0, 'drugId',                 'drugId', 2, -5, NULL),
+(@lastDosDrug, 0, 'dosageUnitCode', 'dosageUnitCode', 4, -5, NULL),
+(@lastDosDrug, 0, 'drugName',             'drugName', 3, 12, NULL),
+(@lastDosDrug, 0, 'ModifiedDate',               NULL, 0, 93, 12),
+(@lastDosDrug, 0, 'ValidFrom',           'validFrom', 5, 93, 12),
+(@lastDosDrug, 0, 'ValidTo',               'validTo', 6, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('doseringsforslag', 'drugdosagestructurerelation', 1, 'DrugDosageStructureRelation', NOW());
+SET @lastDosDrugStr := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='drugdosagestructurerelation' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastDosDrugStr, 1, 'DrugDosageStructureRelationPID',                 NULL, 0, -5, NULL),
+(@lastDosDrugStr, 0, 'id',                                             'id', 1, 12, NULL),
+(@lastDosDrugStr, 0, 'drugId',                                     'drugId', 2, -5, NULL),
+(@lastDosDrugStr, 0, 'dosageStructureCode',           'dosageStructureCode', 4, -5, NULL),
+(@lastDosDrugStr, 0, 'releaseNumber',                       'releaseNumber', 3, -5, NULL),
+(@lastDosDrugStr, 0, 'ModifiedDate',                                   NULL, 0, 93, 12),
+(@lastDosDrugStr, 0, 'ValidFrom',                               'validFrom', 5, 93, 12),
+(@lastDosDrugStr, 0, 'ValidTo',                                   'validTo', 6, 93, 12);
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- SOR
+
 INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'apotek', 1, 'Apotek', NOW());
 SET @lastApot := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='apotek' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
@@ -81,25 +149,25 @@ INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName,
 (@lastSygehusAfd, 0, 'ValidTo',                                     'validTo',19, 93, 12);
 
 INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('sor', 'yder', 1, 'Yder', NOW());
-SET @lastSygehus := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='yder' AND version=1);
+SET @lastYder := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='yder' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
-(@lastSygehus, 1, 'YderPID',                            NULL, 0, -5, NULL),
-(@lastSygehus, 0, 'Nummer',                         'nummer', 4, -5, NULL),
-(@lastSygehus, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
-(@lastSygehus, 0, 'PraksisSorNummer',     'praksisSorNummer', 2, -5, NULL),
-(@lastSygehus, 0, 'EanLokationsnummer', 'eanLokationsnummer', 3, -5, NULL),
-(@lastSygehus, 0, 'Telefon',                       'telefon', 6, 12, NULL),
-(@lastSygehus, 0, 'Navn',                             'navn', 5, 12, NULL),
-(@lastSygehus, 0, 'Vejnavn',                       'vejnavn', 7, 12, NULL),
-(@lastSygehus, 0, 'Postnummer',                 'postnummer', 8, 12, NULL),
-(@lastSygehus, 0, 'Bynavn',                         'bynavn', 9, 12, NULL),
-(@lastSygehus, 0, 'Email',                           'email',10, 12, NULL),
-(@lastSygehus, 0, 'Www',                               'www',11, 12, NULL),
-(@lastSygehus, 0, 'HovedSpecialeKode',   'hovedSpecialeKode',12, 12, NULL),
-(@lastSygehus, 0, 'HovedSpecialeTekst', 'hovedSpecialeTekst',13, 12, NULL),
-(@lastSygehus, 0, 'ModifiedDate',                       NULL, 0, 93, 12),
-(@lastSygehus, 0, 'ValidFrom',                   'validFrom',14, 93, 12),
-(@lastSygehus, 0, 'ValidTo',                       'validTo',15, 93, 12);
+(@lastYder, 1, 'YderPID',                            NULL, 0, -5, NULL),
+(@lastYder, 0, 'Nummer',                         'nummer', 4, -5, NULL),
+(@lastYder, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
+(@lastYder, 0, 'PraksisSorNummer',     'praksisSorNummer', 2, -5, NULL),
+(@lastYder, 0, 'EanLokationsnummer', 'eanLokationsnummer', 3, -5, NULL),
+(@lastYder, 0, 'Telefon',                       'telefon', 6, 12, NULL),
+(@lastYder, 0, 'Navn',                             'navn', 5, 12, NULL),
+(@lastYder, 0, 'Vejnavn',                       'vejnavn', 7, 12, NULL),
+(@lastYder, 0, 'Postnummer',                 'postnummer', 8, 12, NULL),
+(@lastYder, 0, 'Bynavn',                         'bynavn', 9, 12, NULL),
+(@lastYder, 0, 'Email',                           'email',10, 12, NULL),
+(@lastYder, 0, 'Www',                               'www',11, 12, NULL),
+(@lastYder, 0, 'HovedSpecialeKode',   'hovedSpecialeKode',12, 12, NULL),
+(@lastYder, 0, 'HovedSpecialeTekst', 'hovedSpecialeTekst',13, 12, NULL),
+(@lastYder, 0, 'ModifiedDate',                       NULL, 0, 93, 12),
+(@lastYder, 0, 'ValidFrom',                   'validFrom',14, 93, 12),
+(@lastYder, 0, 'ValidTo',                       'validTo',15, 93, 12);
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Tilskudsblanket
