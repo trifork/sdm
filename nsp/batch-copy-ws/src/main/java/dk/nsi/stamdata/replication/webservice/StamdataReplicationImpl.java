@@ -52,12 +52,7 @@ import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.TilskudsblanketRecordSpecs;
-import com.trifork.stamdata.specs.VaccinationRecordSpecs;
 import com.trifork.stamdata.specs.VitaminRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
@@ -70,7 +65,6 @@ import dk.nsi.stamdata.jaxws.generated.Timestamp;
 import dk.nsi.stamdata.replication.models.Client;
 import dk.nsi.stamdata.replication.models.ClientDao;
 import dk.nsi.stamdata.security.ClientVocesCvr;
-import dk.nsi.stamdata.views.View;
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataReplication")
 @HandlerChain(file="handler-chain.xml")
@@ -83,7 +77,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private static final int MAX_RECORD_LIMIT = 2000;
     
     private final String cvr;
-    private final Map<String, Class<? extends View>> viewClasses;
     private final ClientDao clients;
 
     private final Provider<RecordFetcher> fetchers;
@@ -97,11 +90,10 @@ public class StamdataReplicationImpl implements StamdataReplication {
     @Inject DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Provider<RecordFetcher> fetchers)
     {
         this.cvr = cvr;
         this.clients = clientDao;
-        this.viewClasses = viewClasses;
         this.fetchers = fetchers;
     }
     
@@ -119,16 +111,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
     	
         try
         {
-            // During the transition to the new architecture we will have
-            // to handle some registers differently.
-            //
-            /*if (isRecordRegister(parameters)) {
-                return handleRequestUsingRecords(wsseHeader, medcomHeader, parameters);
-            } else if (isHibernateView(parameters)) {
-                return handleRequestUsingHibernateView(wsseHeader, medcomHeader, parameters);
-            } else {*/
-                return handleRequestUsingDynamicViews(wsseHeader, medcomHeader, parameters);
-            //}
+            return handleRequestUsingDynamicViews(wsseHeader, medcomHeader, parameters);
         }
         catch (ReplicationFault e)
         {
@@ -151,9 +134,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
                 //|| ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 //|| ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
                 //"bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                "vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1)
-                || ("tilskudsblanket".equals(parameters.getRegister()) && parameters.getVersion() == 1)
-                || ("ddv".equals(parameters.getRegister()) && parameters.getVersion() == 1);
+                "vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingDynamicViews(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
@@ -237,24 +218,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
             // fill the output structure.
             //
             RecordSpecification recordSpecification = null;
-            if("sikrede".equals(parameters.getRegister())) {
-                recordSpecification = SikredeRecordSpecs.ENTRY_RECORD_SPEC;
-            } else if ("yderregister".equals(parameters.getRegister())) {
-                if("yder".equals(parameters.getDatatype())) {
-                    recordSpecification = YderregisterRecordSpecs.YDER_RECORD_TYPE;
-                } else if("person".equals(parameters.getDatatype())) {
-                    recordSpecification = YderregisterRecordSpecs.PERSON_RECORD_TYPE;
-                } else {
-                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-                }
-            } else if ("bemyndigelsesservice".equals(parameters.getRegister())) {
-                if("bemyndigelse".equals(parameters.getDatatype())) {
-                    recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
-                } else {
-                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-                }
-            }
-            else if ("vitamin".equals(parameters.getRegister())) {
+            if ("vitamin".equals(parameters.getRegister())) {
                 if("grunddata".equals(parameters.getDatatype())) {
                     recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
                 } else if("firmadata".equals(parameters.getDatatype())) {
@@ -263,42 +227,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
                     recordSpecification = VitaminRecordSpecs.UDGAAEDENAVNE_RECORD_SPEC;
                 } else if("indholdsstoffer".equals(parameters.getDatatype())) {
                     recordSpecification = VitaminRecordSpecs.INDHOLDSSTOFFER_RECORD_SPEC;
-                } else {
-                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-                }
-            } else if ("ddv".equals(parameters.getRegister())) {
-                if("diseases".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.DISEASES_RECORD_SPEC;
-                } else if("diseases_vaccines".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.DISEASESVACCINES_RECORD_SPEC;
-                } else if("dosageoptions".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.DOSAGEOPTIONS_RECORD_SPEC;
-                } else if("ssidrugs".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.SSIDRUGS_RECORD_SPEC;
-                } else if("vaccinationplanitems".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.VACCINATIONPLANITEMS_RECORD_SPEC;
-                } else if("vaccinationplan".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.VACCINATIONPLANS_RECORD_SPEC;
-                } else if("vaccines".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.VACCINES_RECORD_SPEC;
-                } else if("vaccines_drugs".equals(parameters.getDatatype())) {
-                    recordSpecification = VaccinationRecordSpecs.VACCINESDRUGS_RECORD_SPEC;
-                } else {
-                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-                }
-            } else if ("tilskudsblanket".equals(parameters.getRegister())) {
-                if("forhoejettakst".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC;
-                } else if("blanket".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.BLANKET_RECORD_SPEC;
-                } else if("blanketterminal".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.BLANKET_TERMINALTILSKUD_RECORD_SPEC;
-                } else if("blanketforhoejet".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.BLANKET_FORHOJETTILSKUD_RECORD_SPEC;
-                } else if("blanketkroniker".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.BLANKET_KRONIKERTILSKUD_RECORD_SPEC;
-                } else if("blanketenkelt".equals(parameters.getDatatype())) {
-                    recordSpecification = TilskudsblanketRecordSpecs.BLANKET_ENKELTTILSKUD_RECORD_SPEC;
                 } else {
                     throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
                 }
@@ -364,20 +292,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
         } catch (TransformerException e) {
             throw new RuntimeException("Transformer error", e);
         }
-    }
-
-
-    private Class<? extends View> getViewClass(ReplicationRequestType parameters) throws ReplicationFault
-    {
-        String viewPath = getViewPath(parameters);
-        
-        Class<? extends View> requestedView = viewClasses.get(viewPath);
-        
-        if (requestedView == null) {
-            throw new ReplicationFault(format("No view with identifier register=%s, datatype=%s and version=%d can be found.", parameters.getRegister(), parameters.getDatatype(), parameters.getVersion()), FaultCodes.UNKNOWN_VIEW);
-        }
-        
-        return requestedView;
     }
 
 

@@ -50,7 +50,6 @@ import dk.nsi.stamdata.replication.models.AuthenticationModule;
 import dk.nsi.stamdata.replication.monitoring.ComponentMonitorImpl;
 import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
 import dk.nsi.stamdata.security.DenGodeWebServiceModule;
-import dk.nsi.stamdata.views.ViewModule;
 
 
 public class ComponentController extends GuiceServletContextListener
@@ -95,8 +94,6 @@ public class ComponentController extends GuiceServletContextListener
             String useTestSTS = "dgwsTest".equalsIgnoreCase(props.getProperty("security")) ? "true" : "false";
             bindConstant().annotatedWith(Names.named(DenGodeWebServiceFilter.USE_TEST_FEDERATION_PARAMETER)).to(useTestSTS);
 
-            getLogger().info("Installing ViewModule");
-            install(new ViewModule());
             getLogger().info("Installing PersistenceModule");
             install(new PersistenceModule());
             getLogger().info("Installing AuthenticationModule");

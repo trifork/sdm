@@ -72,10 +72,7 @@ import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.persistence.RecordMySQLTableGenerator;
 import com.trifork.stamdata.persistence.RecordPersister;
 import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.BemyndigelseRecordSpecs;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.TilskudsblanketRecordSpecs;
-import com.trifork.stamdata.specs.VitaminRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
@@ -316,26 +313,6 @@ public class StamdataReplicationImplIntegrationTest
         assertResponseContainsRecordAtom("cpr", "barnrelation");
     }
 
-    @Test
-    public void testBemyndigelsesServiceCopy() throws Exception {
-        recordSpecification = BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC;
-        Record record = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "1234567890").addDummyFieldsAndBuild();
-        records.add(record);
-        Record record2 = new RecordBuilder(BemyndigelseRecordSpecs.ENTRY_RECORD_SPEC).field("kode", "9876543210").addDummyFieldsAndBuild();
-        records.add(record2);
-
-        createReplicationRequest("bemyndigelsesservice", "bemyndigelse");
-
-        populateDatabaseAndSendRequest();
-
-        assertResponseContainsRecordAtom("bemyndigelsesservice", "bemyndigelse");
-        
-        //printDocument(anyAsElement.getOwnerDocument(), System.out);
-        
-        assertResponseContainsExactNumberOfRecords("bemyndigelse:bemyndigelse", 2);
-        assertResponseContainsValueOnXPath("//bemyndigelse:bemyndigelse/bemyndigelse:kode", "1234567890");
-    }
-
 	/**
 	 * This is a regression test covering the change introduced by NSPSUPPORT-57 to the documentation
 	 */
@@ -353,26 +330,6 @@ public class StamdataReplicationImplIntegrationTest
 			assertTrue(fault.getMessage().contains("The provided cvr is not authorized to fetch this datatype"));
 		}
 	}
-
-	@Test
-    public void testTilskudsblanketForhoejetTakstCopy() throws Exception {
-        recordSpecification = TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC;
-        Record record = new RecordBuilder(TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC).field("Varenummer", 1234567).addDummyFieldsAndBuild();
-        records.add(record);
-        Record record2 = new RecordBuilder(TilskudsblanketRecordSpecs.FORHOEJETTAKST_RECORD_SPEC).field("Varenummer", 9876543).addDummyFieldsAndBuild();
-        records.add(record2);
-
-        createReplicationRequest("tilskudsblanket", "forhoejettakst");
-
-        populateDatabaseAndSendRequest();
-
-        assertResponseContainsRecordAtom("tilskudsblanket", "forhoejettakst");
-        
-        //printDocument(anyAsElement.getOwnerDocument(), System.out);
-        
-        assertResponseContainsExactNumberOfRecords("forhoejettakst:forhoejettakst", 2);
-        assertResponseContainsValueOnXPath("//forhoejettakst:forhoejettakst/forhoejettakst:Varenummer", "1234567");
-    }
 
 	// Helper methods
     

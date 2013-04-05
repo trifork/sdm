@@ -36,9 +36,6 @@ import javax.persistence.Table;
 
 import com.google.common.collect.Sets;
 
-import dk.nsi.stamdata.views.View;
-import dk.nsi.stamdata.views.Views;
-
 @Entity
 @Table(name = "Client")
 public class Client
@@ -87,11 +84,6 @@ public class Client
 	public boolean removePermission(String viewName)
 	{
 		return permissions.remove(viewName);
-	}
-
-	public boolean isAuthorizedFor(Class<? extends View> view)
-	{
-	    return isAuthorizedFor(Views.getViewPath(view));
 	}
 	
 	public boolean isAuthorizedFor(String viewName)
