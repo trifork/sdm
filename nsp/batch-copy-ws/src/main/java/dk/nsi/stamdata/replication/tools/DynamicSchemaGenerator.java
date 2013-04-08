@@ -123,6 +123,7 @@ public class DynamicSchemaGenerator {
             case Types.DECIMAL:
                 return "xs:decimal";
             case Types.DATE:
+                return "xs:date";
             case Types.TIMESTAMP:
                 return "xs:dateTime";
             default:
