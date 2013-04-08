@@ -29,7 +29,6 @@ import static java.lang.String.format;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Provider;
 import javax.jws.HandlerChain;
@@ -130,11 +129,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
 
     private boolean isRecordRegister(ReplicationRequestType parameters)
     {
-        return (//"sikrede".equals(parameters.getRegister())&& "sikrede".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                //|| ("yderregister".equals(parameters.getRegister()) && "yder".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                //|| ("yderregister".equals(parameters.getRegister()) && "person".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                //"bemyndigelsesservice".equals(parameters.getRegister()) && "bemyndigelse".equals(parameters.getDatatype()) && parameters.getVersion() == 1)
-                "vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
+        return ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingDynamicViews(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
