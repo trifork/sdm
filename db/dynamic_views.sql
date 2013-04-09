@@ -63,8 +63,8 @@ SET @lastVitaminIndhS := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE re
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastVitaminIndhS, 1, 'PID',                        NULL, 0, -5, NULL),
 (@lastVitaminIndhS, 0, 'Id',                         'Id', 1, 12, 40),
-(@lastVitaminIndhS, 0, 'DrugID',                 'drugID', 2, -5, null),
-(@lastVitaminIndhS, 0, 'StofKlasse',         'stofklasse', 3, 12, 100),
+(@lastVitaminIndhS, 0, 'DrugID',                 'drugId', 2, -5, null),
+(@lastVitaminIndhS, 0, 'StofKlasse',         'stofKlasse', 3, 12, 100),
 (@lastVitaminIndhS, 0, 'Substansgruppe', 'substansgruppe', 4, 12, 100),
 (@lastVitaminIndhS, 0, 'Substans',             'substans', 5, 12, 150),
 (@lastVitaminIndhS, 0, 'ModifiedDate',     'ModifiedDate', 6, 93, 12),
