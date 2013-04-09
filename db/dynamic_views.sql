@@ -38,7 +38,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastVitaminFirma := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='vitamin' AND datatype='firmadata' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastVitaminFirma, 1, 'PID',                                NULL, 0, -5, NULL),
-(@lastVitaminFirma, 0, 'FirmaID',              'langtFirmaMaerke', 1, -5, NULL),
+(@lastVitaminFirma, 0, 'FirmaID',                       'firmaID', 1, -5, NULL),
 (@lastVitaminFirma, 0, 'KortFirmaMaerke',       'kortFirmaMaerke', 2, 12, 20),
 (@lastVitaminFirma, 0, 'LangtFirmaMaerke',     'langtFirmaMaerke', 3, 12, 32),
 (@lastVitaminFirma, 0, 'ParallelimportKode', 'parallelimportKode', 4, 12, 2),
