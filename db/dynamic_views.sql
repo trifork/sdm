@@ -3,6 +3,75 @@
 -- ---------------------------------------------------------------------------------------------------------------------
 
 -- ---------------------------------------------------------------------------------------------------------------------
+-- Vitamin
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('vitamin', 'grunddata', 1, 'VitaminGrunddata', NOW());
+SET @lastVitaminGrund := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='vitamin' AND datatype='grunddata' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastVitaminGrund, 1, 'PID',                                                     NULL, 0, -5, NULL),
+(@lastVitaminGrund, 0, 'drugID',                                              'drugID', 1, -5, NULL),
+(@lastVitaminGrund, 0, 'varetype',                                          'varetype', 2, 12, 2),
+(@lastVitaminGrund, 0, 'varedeltype',                                    'varedeltype', 3, 12, 2),
+(@lastVitaminGrund, 0, 'alfabetSekvensplads',                    'alfabetSekvensplads', 4, 12, 9),
+(@lastVitaminGrund, 0, 'specNummer',                                      'specNummer', 5, 12, 5),
+(@lastVitaminGrund, 0, 'navn',                                                  'navn', 6, 12, 30),
+(@lastVitaminGrund, 0, 'formTekst',                                        'formTekst', 7, 12, 20),
+(@lastVitaminGrund, 0, 'formKode',                                          'formKode', 8, 12, 7),
+(@lastVitaminGrund, 0, 'kodeYderligereFormOplysninger','kodeYderligereFormOplysninger', 9, 12, 7),
+(@lastVitaminGrund, 0, 'styrkeTekst',                                    'styrkeTekst',10, 12, 20),
+(@lastVitaminGrund, 0, 'styrkeNumerisk',                              'styrkeNumerisk',11,  3, null),
+(@lastVitaminGrund, 0, 'styrkeEnhed',                                    'styrkeEnhed',12, 12, 3),
+(@lastVitaminGrund, 0, 'mtIndehaverKode',                            'mtIndehaverKode',13, -5, null),
+(@lastVitaminGrund, 0, 'repraesentantDistributoerKode','repraesentantDistributoerKode',14, -5, null),
+(@lastVitaminGrund, 0, 'atcKode',                                            'atcKode',15, 12, 8),
+(@lastVitaminGrund, 0, 'administrationsvejKode',              'administrationsvejKode',16, 12, 8),
+(@lastVitaminGrund, 0, 'trafikadvarsel',                              'trafikadvarsel',17, 12, 1),
+(@lastVitaminGrund, 0, 'substitution',                                  'substitution',18, 12, 1),
+(@lastVitaminGrund, 0, 'substitutionsgruppe',                    'substitutionsgruppe',19, 12, 4),
+(@lastVitaminGrund, 0, 'dosisdispensering',                        'dosisdispensering',20, 12, 1),
+(@lastVitaminGrund, 0, 'karantaeneDato',                              'karantaeneDato',21, 12, 8),
+(@lastVitaminGrund, 0, 'ModifiedDate',                                  'ModifiedDate',22, 93, 12),
+(@lastVitaminGrund, 0, 'ValidFrom',                                        'ValidFrom',23, 93, 12),
+(@lastVitaminGrund, 0, 'ValidTo',                                            'ValidTo',24, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('vitamin', 'firmadata', 1, 'VitaminFirmadata', NOW());
+SET @lastVitaminFirma := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='vitamin' AND datatype='firmadata' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastVitaminFirma, 1, 'PID',                                NULL, 0, -5, NULL),
+(@lastVitaminFirma, 0, 'FirmaID',              'langtFirmaMaerke', 1, -5, NULL),
+(@lastVitaminFirma, 0, 'KortFirmaMaerke',       'kortFirmaMaerke', 2, 12, 20),
+(@lastVitaminFirma, 0, 'LangtFirmaMaerke',     'langtFirmaMaerke', 3, 12, 32),
+(@lastVitaminFirma, 0, 'ParallelimportKode', 'parallelimportKode', 4, 12, 2),
+(@lastVitaminFirma, 0, 'ModifiedDate',             'ModifiedDate', 5, 93, 12),
+(@lastVitaminFirma, 0, 'ValidFrom',                   'ValidFrom', 6, 93, 12),
+(@lastVitaminFirma, 0, 'ValidTo',                       'ValidTo', 7, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('vitamin', 'udgaaedenavne', 1, 'VitaminUdgaaedeNavne', NOW());
+SET @lastVitaminUdgN := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='vitamin' AND datatype='udgaaedenavne' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastVitaminUdgN, 1, 'PID',                      NULL, 0, -5, NULL),
+(@lastVitaminUdgN, 0, 'Id',                       'Id', 1, 12, 40),
+(@lastVitaminUdgN, 0, 'DrugID',               'drugID', 2, -5, null),
+(@lastVitaminUdgN, 0, 'AendringsDato', 'aendringsDato', 3, 12, 8),
+(@lastVitaminUdgN, 0, 'TidligereNavn', 'tidligereNavn', 4, 12, 50),
+(@lastVitaminUdgN, 0, 'ModifiedDate',   'ModifiedDate', 5, 93, 12),
+(@lastVitaminUdgN, 0, 'ValidFrom',         'ValidFrom', 6, 93, 12),
+(@lastVitaminUdgN, 0, 'ValidTo',             'ValidTo', 7, 93, 12);
+
+INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('vitamin', 'indholdsstoffer', 1, 'VitaminIndholdsstoffer', NOW());
+SET @lastVitaminIndhS := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='vitamin' AND datatype='indholdsstoffer' AND version=1);
+INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
+(@lastVitaminIndhS, 1, 'PID',                        NULL, 0, -5, NULL),
+(@lastVitaminIndhS, 0, 'Id',                         'Id', 1, 12, 40),
+(@lastVitaminIndhS, 0, 'DrugID',                 'drugID', 2, -5, null),
+(@lastVitaminIndhS, 0, 'StofKlasse',         'stofklasse', 3, 12, 100),
+(@lastVitaminIndhS, 0, 'Substansgruppe', 'substansgruppe', 4, 12, 100),
+(@lastVitaminIndhS, 0, 'Substans',             'substans', 5, 12, 150),
+(@lastVitaminIndhS, 0, 'ModifiedDate',     'ModifiedDate', 6, 93, 12),
+(@lastVitaminIndhS, 0, 'ValidFrom',           'ValidFrom', 7, 93, 12),
+(@lastVitaminIndhS, 0, 'ValidTo',               'ValidTo', 8, 93, 12);
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- Vaccination
 INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, createdDate) VALUES ('ddv', 'diseases', 1, 'ddv_diseases', NOW());
 SET @lastDiseases := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='ddv' AND datatype='diseases' AND version=1);
@@ -1134,4 +1203,5 @@ INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName,
 (@lastUdlevB, 0, 'ModifiedDate',                     NULL, 0, 93, NULL),
 (@lastUdlevB, 0, 'ValidFrom',                 'validFrom', 5, 93, NULL),
 (@lastUdlevB, 0, 'ValidTo',                     'validTo', 6, 93, NULL);
+
 

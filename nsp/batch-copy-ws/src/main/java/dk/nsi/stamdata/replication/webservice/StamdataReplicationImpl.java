@@ -30,7 +30,6 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.inject.Provider;
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
@@ -49,9 +48,6 @@ import org.w3c.dom.Document;
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
-import com.trifork.stamdata.persistence.RecordFetcher;
-import com.trifork.stamdata.persistence.RecordSpecification;
-import com.trifork.stamdata.specs.VitaminRecordSpecs;
 
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
@@ -78,22 +74,20 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final String cvr;
     private final ClientDao clients;
 
-    private final Provider<RecordFetcher> fetchers;
-
     @Inject
     private DynamicViewMapper dynamicViewMapper;
 
     @Inject
     private DynamicRowFetcher dynamicRowFetcher;
 
-    @Inject DynamicViewXmlGenerator dynamicViewXmlGenerator;
+    @Inject
+    private DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao)
     {
         this.cvr = cvr;
         this.clients = clientDao;
-        this.fetchers = fetchers;
     }
     
 
@@ -125,11 +119,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
         {
             throw new ReplicationFault("An unhandled error occurred.", FaultCodes.INTERNAL_ERROR, e);
         }
-    }
-
-    private boolean isRecordRegister(ReplicationRequestType parameters)
-    {
-        return ("vitamin".equals(parameters.getRegister()) && parameters.getVersion() == 1);
     }
 
     private ReplicationResponseType handleRequestUsingDynamicViews(Holder<Security> wsseHeader, Holder<Header> medcomHeader,
@@ -178,86 +167,6 @@ public class StamdataReplicationImpl implements StamdataReplication {
         } catch (Exception e) {
             throw new ReplicationFault("Could not complete the request do to an error.", FaultCodes.INTERNAL_ERROR, e);
         } finally {
-            MDC.remove("view");
-            MDC.remove("cvr");
-            MDC.remove("offset");
-            MDC.remove("limit");
-        }
-    }
-
-    private ReplicationResponseType handleRequestUsingRecords(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
-    {
-        try {
-            String viewPath = getViewPath(parameters);
-
-            MDC.put("view", String.valueOf(viewPath));
-            MDC.put("cvr", String.valueOf(cvr));
-            
-            // Validate authentication.
-            //
-            Client client = clients.findByCvr(cvr);
-            if (client == null || !client.isAuthorizedFor(viewPath))
-            {
-                throw new ReplicationFault("The provided cvr is not authorized to fetch this datatype.", FaultCodes.UNAUTHORIZED);
-            }
-            
-            // Validate the input parameters.
-            //
-            HistoryOffset offset = getOffset(parameters);
-            int limit = getRecordLimit(parameters);
-    
-            MDC.put("offset", String.valueOf(offset));
-            MDC.put("limit", String.valueOf(limit));
-    
-            // Fetch the records from the database and
-            // fill the output structure.
-            //
-            RecordSpecification recordSpecification = null;
-            if ("vitamin".equals(parameters.getRegister())) {
-                if("grunddata".equals(parameters.getDatatype())) {
-                    recordSpecification = VitaminRecordSpecs.GRUNDDATA_RECORD_SPEC;
-                } else if("firmadata".equals(parameters.getDatatype())) {
-                    recordSpecification = VitaminRecordSpecs.FIRMADATA_RECORD_SPEC;
-                } else if("udgaaedenavne".equals(parameters.getDatatype())) {
-                    recordSpecification = VitaminRecordSpecs.UDGAAEDENAVNE_RECORD_SPEC;
-                } else if("indholdsstoffer".equals(parameters.getDatatype())) {
-                    recordSpecification = VitaminRecordSpecs.INDHOLDSSTOFFER_RECORD_SPEC;
-                } else {
-                    throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-                }
-            } else {
-                throw new IllegalStateException("Datatype: '"+parameters.getDatatype()+"' not known on register '"+parameters.getRegister()+"'");
-            }
-//            Document feedDocument = createFeed(recordSpecification, parameters, offset, limit);
-    
-            // Construct the output container.
-            //
-            ReplicationResponseType response = new ObjectFactory().createReplicationResponseType();
-            
-//            response.setAny(feedDocument.getFirstChild());
-
-            // Log that the client successfully accessed the data.
-            // Simply for audit purposes.
-            //
-            // The client details are included in the MDC.
-            //
-            logger.info("Records fetched, sending response.");
-    
-            return response;
-        }
-        catch (ReplicationFault e)
-        {
-            // We don't want to wrap replication faults further,
-            // so catch and rethrow them here.
-            //
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new ReplicationFault("Could not complete the request do to an error.", FaultCodes.INTERNAL_ERROR, e);
-        }
-        finally
-        {
             MDC.remove("view");
             MDC.remove("cvr");
             MDC.remove("offset");
