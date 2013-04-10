@@ -33,6 +33,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.Inject;
@@ -79,14 +80,16 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
     private final RecordFetcher recordFetcher;
     private final PersonMapper personMapper;
 	private final String clientCVR;
+    private final SLALogItem slaLogItem;
 
     @Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card)
+	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, SLALogItem slaLogItem)
 	{
 		this.fetcher = fetcher;
         this.recordFetcher = recordFetcher;
         this.personMapper = personMapper;
 		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
+        this.slaLogItem = slaLogItem;
 	}
 
 	// TODO: Headers should be set to outgoing. See BRS for correct way of
@@ -95,6 +98,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Transactional
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
+        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		// 1. Check the white list to see if the client is authorized.
@@ -129,7 +133,8 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Transactional
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
 	{
-		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
+        SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		// 1. Check the white list to see if the client is authorized.
 

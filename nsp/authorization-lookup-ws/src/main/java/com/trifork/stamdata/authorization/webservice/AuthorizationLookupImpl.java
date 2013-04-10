@@ -34,6 +34,7 @@ import javax.xml.ws.Holder;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
+import com.trifork.stamdata.authorization.SoapUtils;
 import com.trifork.stamdata.authorization.models.Authorization;
 import com.trifork.stamdata.authorization.models.AuthorizationDao;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
@@ -49,7 +50,7 @@ import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.security.WhitelistService;
 import dk.nsi.stamdata.security.Whitelisted;
-import dk.sosi.seal.model.constants.FaultCodeValues;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 
 
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.AuthorizationPortType")
@@ -60,13 +61,16 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
 	private final WhitelistService whitelist;
 	private final AuthorizationDao authorizationDao;
     private final String cvr;
+    private final SLALogItem slaLogItem;
 
 	@Inject
-	AuthorizationLookupImpl(@ClientVocesCvr String cvr, WhitelistService whitelist, AuthorizationDao authorizationDao)
+	AuthorizationLookupImpl(@ClientVocesCvr String cvr, WhitelistService whitelist, AuthorizationDao authorizationDao,
+                            SLALogItem slaLogItem)
 	{
 		this.cvr = cvr;
         this.authorizationDao = authorizationDao;
 		this.whitelist = whitelist;
+        this.slaLogItem = slaLogItem;
 	}
 
 	@Override
@@ -74,6 +78,12 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
 	public AuthorizationResponseType authorization(Holder<Security> wsseHeader,
 	        Holder<Header> medcomHeader, AuthorizationRequestType parameters)
 	        throws DGWSFault {
+        Header value = medcomHeader.value;
+        if (value.getLinking() != null && value.getLinking().getMessageID() != null) {
+            String messageID = value.getLinking().getMessageID();
+            slaLogItem.setMessageId(messageID);
+        }
+        SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
         List<Authorization> authorizations = authorizationDao.getAuthorizations(parameters.getCpr());
 
