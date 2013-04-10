@@ -65,6 +65,12 @@
       <artifactId>seal</artifactId>
     </dependency>
 
+    <!-- SLA logging -->
+    <dependency>
+      <groupId>dk.sdsd.nsp</groupId>
+      <artifactId>nsp-util</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>com.google.inject.extensions</groupId>
       <artifactId>guice-servlet</artifactId>

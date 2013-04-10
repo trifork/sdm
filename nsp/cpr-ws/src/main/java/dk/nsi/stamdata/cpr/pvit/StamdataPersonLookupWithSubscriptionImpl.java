@@ -33,6 +33,7 @@ import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
 import dk.nsi.stamdata.jaxws.generated.*;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
@@ -58,17 +59,18 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
     private final String clientCVR;
     private StamdataPersonResponseFinder stamdataPersonResponseFinder;
     private CprSubscriptionClient abbsClient;
-
+    private final SLALogItem slaLogItem;
 
     /**
      * Constructor for this implementation as Guice request scoped bean
      */
     @Inject
-    StamdataPersonLookupWithSubscriptionImpl(SystemIDCard idCard, StamdataPersonResponseFinder stamdataPersonResponseFinder, CprSubscriptionClient abbsClient)
+    StamdataPersonLookupWithSubscriptionImpl(SystemIDCard idCard, StamdataPersonResponseFinder stamdataPersonResponseFinder, CprSubscriptionClient abbsClient, SLALogItem slaLogItem)
     {
         this.abbsClient = abbsClient;
         this.clientCVR = idCard.getSystemInfo().getCareProvider().getID();
         this.stamdataPersonResponseFinder = stamdataPersonResponseFinder;
+        this.slaLogItem = slaLogItem;
     }
 
 
@@ -79,8 +81,8 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
             @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
             @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequestType request) throws DGWSFault
     {
+        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
         PersonLookupResponseType response;
-        
         try
         {
             List<String> changedCprs = abbsClient.getChangedCprs(wsseHeader, medcomHeader, new DateTime(request.getSince()));

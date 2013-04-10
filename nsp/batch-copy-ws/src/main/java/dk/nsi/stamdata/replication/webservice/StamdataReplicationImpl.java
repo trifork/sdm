@@ -38,6 +38,7 @@ import javax.jws.WebService;
 import javax.xml.transform.TransformerException;
 import javax.xml.ws.Holder;
 
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
@@ -89,9 +90,12 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private final AtomFeedWriter outputWriter;
     private final Provider<RecordFetcher> fetchers;
 
+    private final SLALogItem slaLogItem;
+
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses, AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, RecordDao recordDao, ClientDao clientDao, Map<String, Class<? extends View>> viewClasses,
+                            AtomFeedWriter outputWriter, Provider<RecordFetcher> fetchers, SLALogItem slaLogItem)
     {
         this.cvr = cvr;
         this.dao = recordDao;
@@ -99,13 +103,18 @@ public class StamdataReplicationImpl implements StamdataReplication {
         this.viewClasses = viewClasses;
         this.outputWriter = outputWriter;
         this.fetchers = fetchers;
+        this.slaLogItem = slaLogItem;
     }
     
 
     @Override
     public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
-    	
+        Header value = medcomHeader.value;
+        if (value.getLinking() != null && value.getLinking().getMessageID() != null) {
+            String messageID = value.getLinking().getMessageID();
+            slaLogItem.setMessageId(messageID);
+        }
     	// Replace the client request securityheader
     	Security security = new Security();
     	Timestamp ts = new Timestamp();
