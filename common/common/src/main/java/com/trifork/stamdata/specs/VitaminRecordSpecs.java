@@ -30,7 +30,7 @@ import com.trifork.stamdata.persistence.RecordSpecification;
 
 public class VitaminRecordSpecs {
     public static final RecordSpecification GRUNDDATA_RECORD_SPEC = RecordSpecification.createSpecification("VitaminGrunddata", "drugID", 
-            field("drugID", 11).numerical(),
+            field("drugID", 12).numerical(),
             field("varetype", 2),
             field("varedeltype", 2),
             field("alfabetSekvensplads", 9),
@@ -40,7 +40,7 @@ public class VitaminRecordSpecs {
 		    field("formKode", 7),
 		    field("kodeYderligereFormOplysninger", 7),
             field("styrkeTekst", 20),
-            field("styrkeNumerisk", 10),
+            field("styrkeNumerisk", 14),
             field("styrkeEnhed", 3),
             field("mtIndehaverKode", 6).numerical(),
             field("repraesentantDistributoerKode", 6).numerical(),
@@ -62,13 +62,13 @@ public class VitaminRecordSpecs {
     
     public static final RecordSpecification UDGAAEDENAVNE_RECORD_SPEC = RecordSpecification.createSpecification("VitaminUdgaaedeNavne", "Id",
             field("Id", 40),
-            field("drugID", 11),
+            field("drugID", 12),
             field("aendringsDato", 8),
             field("tidligereNavn", 50));
     
     public static final RecordSpecification INDHOLDSSTOFFER_RECORD_SPEC = RecordSpecification.createSpecification("VitaminIndholdsstoffer", "Id",
             field("Id", 40),
-            field("drugId", 11),
+            field("drugId", 12),
             field("stofKlasse", 100),
             field("substansgruppe", 100),
             field("substans", 150));
