@@ -82,6 +82,7 @@ public class AuthorizationLookupImpl implements AuthorizationPortType
         if (value.getLinking() != null && value.getLinking().getMessageID() != null) {
             String messageID = value.getLinking().getMessageID();
             slaLogItem.setMessageId(messageID);
+            slaLogItem.setSourceOperation("authorization");
         }
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 

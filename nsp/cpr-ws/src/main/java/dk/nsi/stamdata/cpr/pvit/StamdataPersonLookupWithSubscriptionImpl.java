@@ -81,7 +81,7 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
             @WebParam(name = "Header", targetNamespace = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd", header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
             @WebParam(name = "CprAbbsRequest", targetNamespace = "http://nsi.dk/cprabbs/2011/10", partName = "parameters") CprAbbsRequestType request) throws DGWSFault
     {
-        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
+        SoapUtils.updateSlaLog(medcomHeader, "getSubscribedPersonDetails", slaLogItem);
         PersonLookupResponseType response;
         try
         {

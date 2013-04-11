@@ -164,11 +164,12 @@ public final class SoapUtils
 		medcomHeader.value = medcom;
 	}
 
-    public static void updateSlaLog(Holder<Header> medcomHeader, SLALogItem slaLogItem) {
+    public static void updateSlaLog(Holder<Header> medcomHeader, String operation, SLALogItem slaLogItem) {
         Header value = medcomHeader.value;
         if (slaLogItem != null && value.getLinking() != null && value.getLinking().getMessageID() != null) {
             String messageID = value.getLinking().getMessageID();
             slaLogItem.setMessageId(messageID);
+            slaLogItem.setSourceOperation(operation);
         }
     }
 }

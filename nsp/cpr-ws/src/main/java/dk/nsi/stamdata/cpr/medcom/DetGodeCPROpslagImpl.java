@@ -98,7 +98,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Transactional
 	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
 	{
-        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
+        SoapUtils.updateSlaLog(medcomHeader, "getPersonInformation", slaLogItem);
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		// 1. Check the white list to see if the client is authorized.
@@ -133,7 +133,7 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	@Transactional
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
 	{
-        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
+        SoapUtils.updateSlaLog(medcomHeader, "getPersonWithHealthCareInformation", slaLogItem);
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
 		// 1. Check the white list to see if the client is authorized.

@@ -77,7 +77,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
     @Transactional
     public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader, Holder<Header> medcomHeader, PersonLookupRequestType request) throws DGWSFault
     {
-        SoapUtils.updateSlaLog(medcomHeader, slaLogItem);
+        SoapUtils.updateSlaLog(medcomHeader, "getPersonDetails", slaLogItem);
         verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
 
         // TODO: This should be done in the filter

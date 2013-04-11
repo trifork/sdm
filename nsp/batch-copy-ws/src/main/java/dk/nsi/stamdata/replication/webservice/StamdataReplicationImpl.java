@@ -114,6 +114,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
         if (value.getLinking() != null && value.getLinking().getMessageID() != null) {
             String messageID = value.getLinking().getMessageID();
             slaLogItem.setMessageId(messageID);
+            slaLogItem.setSourceOperation("replicate");
         }
     	// Replace the client request securityheader
     	Security security = new Security();
