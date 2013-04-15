@@ -556,6 +556,7 @@
                     <srcFile>${basedir}/../../db/dropAndCreateDB.sql</srcFile>
                     <srcFile>${basedir}/../../db/schema.sql</srcFile>
                     <srcFile>${basedir}/../../db/batch_copy.sql</srcFile>
+                    <srcFile>${basedir}/../../db/dynamic_views.sql</srcFile>
                   </srcFiles>
                 </configuration>
               </execution>
