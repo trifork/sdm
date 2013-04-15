@@ -1,0 +1,9 @@
+Stamdata 3.5.0 Release Notes
+=============================
+* SDM-12 Dynamisk SKRS er lavet
+  Dette indebærer at formattet på det atom data der returneres nu laves ud fra mysql definitioner i stedet for views og
+  recordsspecs.
+
+For at deploye denne version er det nødvendig der oprettes 2 nye tabeller og de populeres med data dette gøre med følgene 2 sql filer
+1: db/batch_copy.sql
+2: db/dynamic_views.sql
