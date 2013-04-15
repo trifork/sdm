@@ -1,0 +1,3 @@
+Stamdata 3.4.30 Release Notes
+=============================
+* SDM-4 SLA-Log forbedring af første fix

@@ -42,6 +42,7 @@ import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.Linking;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.Timestamp;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sosi.seal.model.constants.FlowStatusValues;
 
 
@@ -162,4 +163,13 @@ public final class SoapUtils
 
 		medcomHeader.value = medcom;
 	}
+
+    public static void updateSlaLog(Holder<Header> medcomHeader, String operation, SLALogItem slaLogItem) {
+        Header value = medcomHeader.value;
+        if (slaLogItem != null && value.getLinking() != null && value.getLinking().getMessageID() != null) {
+            String messageID = value.getLinking().getMessageID();
+            slaLogItem.setMessageId(messageID);
+            slaLogItem.setSourceOperation(operation);
+        }
+    }
 }

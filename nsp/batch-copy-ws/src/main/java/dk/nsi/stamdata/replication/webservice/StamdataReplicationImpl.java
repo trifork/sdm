@@ -39,6 +39,7 @@ import dk.nsi.stamdata.replication.dynamic.DynamicViewMapper;
 import dk.nsi.stamdata.replication.dynamic.DynamicRow;
 import dk.nsi.stamdata.replication.dynamic.DynamicRowFetcher;
 import dk.nsi.stamdata.replication.vo.ViewMapVO;
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.joda.time.DateTime;
@@ -73,6 +74,7 @@ public class StamdataReplicationImpl implements StamdataReplication {
     
     private final String cvr;
     private final ClientDao clients;
+    private final SLALogItem slaLogItem;
 
     @Inject
     private DynamicViewMapper dynamicViewMapper;
@@ -84,17 +86,23 @@ public class StamdataReplicationImpl implements StamdataReplication {
     private DynamicViewXmlGenerator dynamicViewXmlGenerator;
 
     @Inject
-    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao)
+    StamdataReplicationImpl(@ClientVocesCvr String cvr, ClientDao clientDao, SLALogItem slaLogItem)
     {
         this.cvr = cvr;
         this.clients = clientDao;
+        this.slaLogItem = slaLogItem;
     }
     
 
     @Override
     public ReplicationResponseType replicate(Holder<Security> wsseHeader, Holder<Header> medcomHeader, ReplicationRequestType parameters) throws ReplicationFault
     {
-    	
+        Header value = medcomHeader.value;
+        if (value.getLinking() != null && value.getLinking().getMessageID() != null) {
+            String messageID = value.getLinking().getMessageID();
+            slaLogItem.setMessageId(messageID);
+            slaLogItem.setSourceOperation("replicate");
+        }
     	// Replace the client request securityheader
     	Security security = new Security();
     	Timestamp ts = new Timestamp();

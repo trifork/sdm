@@ -27,8 +27,8 @@
     </filter-mapping>
 
     <filter>
-        <filter-name>SlaLogFilter</filter-name>
-        <filter-class>dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter</filter-class>
+        <filter-name>SDMSlaLogFilter</filter-name>
+        <filter-class>com.trifork.stamdata.sla.SDMSLALoggingFilter</filter-class>
         <init-param>
             <param-name>appName</param-name>
             <param-value>Stamdata Replication Module</param-value>
@@ -39,7 +39,7 @@
         </init-param>
     </filter>
     <filter-mapping>
-        <filter-name>SlaLogFilter</filter-name>
+        <filter-name>SDMSlaLogFilter</filter-name>
         <servlet-name>JAXWSServlet</servlet-name>
     </filter-mapping>
 

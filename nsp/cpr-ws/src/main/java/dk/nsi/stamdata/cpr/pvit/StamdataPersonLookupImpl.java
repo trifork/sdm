@@ -31,6 +31,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
 
 import com.sun.xml.ws.developer.SchemaValidation;
@@ -58,16 +59,17 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
     private final String clientCVR;
     private final StamdataPersonResponseFinder stamdataPersonResponseFinder;
-
+    private final SLALogItem slaLogItem;
 
     /**
      * Constructor for this implementation as Guice request scoped bean
      */
     @Inject
-    StamdataPersonLookupImpl(SystemIDCard idCard, StamdataPersonResponseFinder stamdataPersonResponseFinder)
+    StamdataPersonLookupImpl(SystemIDCard idCard, StamdataPersonResponseFinder stamdataPersonResponseFinder, SLALogItem slaLogItem)
     {
         this.clientCVR = idCard.getSystemInfo().getCareProvider().getID();
         this.stamdataPersonResponseFinder = stamdataPersonResponseFinder;
+        this.slaLogItem = slaLogItem;
     }
 
 
@@ -75,6 +77,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
     @Transactional
     public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader, Holder<Header> medcomHeader, PersonLookupRequestType request) throws DGWSFault
     {
+        SoapUtils.updateSlaLog(medcomHeader, "getPersonDetails", slaLogItem);
         verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
 
         // TODO: This should be done in the filter
@@ -116,7 +119,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
         throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
     }
-
 
     private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault
     {

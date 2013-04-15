@@ -1,0 +1,5 @@
+Stamdata 3.4.29 Release Notes
+=============================
+* Rettet: SDM-4 - SLA-log fra stamdata-services
+* Rettet: SDM-26 - Svar fra SAES kan ikke læses af Seal.java
+

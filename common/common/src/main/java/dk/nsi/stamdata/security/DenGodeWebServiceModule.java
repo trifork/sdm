@@ -32,6 +32,8 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.servlet.RequestScoped;
 
+import dk.sdsd.nsp.slalog.api.SLALogItem;
+import dk.sdsd.nsp.slalog.ws.SLALoggingServletFilter;
 import dk.sosi.seal.model.SystemIDCard;
 
 public class DenGodeWebServiceModule extends AbstractModule {
@@ -45,6 +47,12 @@ public class DenGodeWebServiceModule extends AbstractModule {
     @RequestScoped
     public SystemIDCard provideSystemIDCard(HttpServletRequest request)  {
         return (SystemIDCard) request.getAttribute(DenGodeWebServiceFilter.IDCARD_REQUEST_ATTRIBUTE_KEY);
+    }
+
+    @Provides
+    @RequestScoped
+    public SLALogItem provideCurrentSlaLogItem(HttpServletRequest request) {
+        return (SLALogItem) request.getAttribute(SLALoggingServletFilter.CURRENT_LOGITEM_REQUEST_KEY);
     }
     
     @Provides

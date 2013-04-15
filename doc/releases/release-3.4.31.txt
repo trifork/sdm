@@ -1,0 +1,3 @@
+Stamdata 3.4.31 Release Notes
+=============================
+* Rettet: SDM-27 Vitaminimporter recordsspecs stadig ikke gode nok

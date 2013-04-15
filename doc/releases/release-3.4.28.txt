@@ -1,0 +1,3 @@
+Stamdata 3.4.28 Release Notes
+=============================
+* Rettet: SDM-15 Fixet i vitamin importeren, derfor skal record specen også opdateres i krs
