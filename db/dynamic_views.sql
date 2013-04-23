@@ -372,7 +372,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastYder := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='sor' AND datatype='yder' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastYder, 1, 'YderPID',                            NULL, 0, -5, NULL),
-(@lastYder, 0, 'Nummer',                         'nummer', 4, -5, NULL),
+(@lastYder, 0, 'Nummer',                         'nummer', 4, 12, NULL),
 (@lastYder, 0, 'SorNummer',                   'sorNummer', 1, -5, NULL),
 (@lastYder, 0, 'PraksisSorNummer',     'praksisSorNummer', 2, -5, NULL),
 (@lastYder, 0, 'EanLokationsnummer', 'eanLokationsnummer', 3, -5, NULL),
@@ -405,7 +405,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastForTakst := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='tilskudsblanket' AND datatype='forhoejettakst' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastForTakst, 1, 'PID',                              NULL, 0, -5, NULL),
-(@lastForTakst, 0, 'Varenummer',               'Varenummer', 1, -5, NULL),
+(@lastForTakst, 0, 'Varenummer',               'Varenummer', 1, 12, NULL),
 (@lastForTakst, 0, 'Navn',                           'Navn', 1, 12, NULL),
 (@lastForTakst, 0, 'Form',                           'Form', 2, 12, NULL),
 (@lastForTakst, 0, 'FormTekst',                 'FormTekst', 3, 12, NULL),
