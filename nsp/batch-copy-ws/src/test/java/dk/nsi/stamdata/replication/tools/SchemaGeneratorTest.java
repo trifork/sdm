@@ -30,6 +30,7 @@ import dk.nsi.stamdata.replication.TestTableCreator;
 import dk.nsi.stamdata.replication.webservice.GuiceTestRunner;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -63,6 +64,7 @@ public class SchemaGeneratorTest
     }
 
     @Test
+    @Ignore
     public void testThatWeCanGenerateTestSchema() throws Exception
     {
         long id = testTableCreator.createAndWhiteListForTestView();
