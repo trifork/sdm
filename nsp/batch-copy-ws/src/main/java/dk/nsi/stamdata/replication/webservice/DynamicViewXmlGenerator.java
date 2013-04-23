@@ -158,8 +158,8 @@ public class DynamicViewXmlGenerator {
                 default:
                     throw new UnsupportedColumnType(columnMapVO.getDataType());
             }
+            addElement(parent, namespace, columnMapVO.getFeedColumnName(), convertedContent);
         }
-        addElement(parent, namespace, columnMapVO.getFeedColumnName(), convertedContent);
     }
 
     private String TimestampToString(Timestamp timeStamp) {
