@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/yderregister" targetNamespace="http://nsi.dk/-/stamdata/3.0/yderregister">
+  <xs:element name="yder">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Id">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="32"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="HistIdYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="16"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="AmtKodeYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="AmtTxtYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="60"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="YdernrYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="6"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PrakBetegn">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="AdrYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PostnrYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="4"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PostdistYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="20"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="TilgDatoYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="AfgDatoYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="HvdSpecKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="HvdSpecTxt">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="60"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="HvdTlf">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="EmailYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="WWW">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="78"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

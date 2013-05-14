@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/yderregister" targetNamespace="http://nsi.dk/-/stamdata/3.0/yderregister">
+  <xs:element name="person">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Id">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="32"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="HistIdPerson">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="16"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="YdernrPerson">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="6"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="TilgDatoPerson">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="AfgDatoPerson">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="CprNr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PersonrolleKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PersonrolleTxt">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="60"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

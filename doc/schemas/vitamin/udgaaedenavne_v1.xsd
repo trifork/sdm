@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/vitamin" targetNamespace="http://nsi.dk/-/stamdata/3.0/vitamin">
+  <xs:element name="udgaaedenavne">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Id">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="drugID" type="xs:integer"/>
+        <xs:element name="aendringsDato">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="tidligereNavn">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

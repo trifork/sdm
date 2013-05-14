@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/vitamin" targetNamespace="http://nsi.dk/-/stamdata/3.0/vitamin">
+  <xs:element name="grunddata">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="drugID" type="xs:integer"/>
+        <xs:element name="varetype">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="varedeltype">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="alfabetSekvensplads">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="9"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="specNummer">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="5"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="navn">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="formTekst">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="20"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="formKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="7"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="kodeYderligereFormOplysninger">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="7"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="styrkeTekst">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="20"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="styrkeNumerisk" type="xs:decimal"/>
+        <xs:element name="styrkeEnhed">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="3"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="mtIndehaverKode" type="xs:integer"/>
+        <xs:element name="repraesentantDistributoerKode" type="xs:integer"/>
+        <xs:element name="atcKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="administrationsvejKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="trafikadvarsel">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="substitution">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="substitutionsgruppe">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="4"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="dosisdispensering">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="karantaeneDato">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/ddv" targetNamespace="http://nsi.dk/-/stamdata/3.0/ddv">
+  <xs:element name="diseases_vaccines">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="VaccineIdentifier" type="xs:integer"/>
+        <xs:element name="VaccineVersion" type="xs:integer"/>
+        <xs:element name="DiseaseIdentifier" type="xs:integer"/>
+        <xs:element name="DiseaseVersion" type="xs:integer"/>
+        <xs:element name="ddvModifiedDate" type="xs:string"/>
+        <xs:element name="ddvValidFrom" type="xs:string"/>
+        <xs:element name="ddvValidTo" type="xs:string"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

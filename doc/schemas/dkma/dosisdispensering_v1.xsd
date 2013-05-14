@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="dosisdispensering">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="id" type="xs:integer"/>
+        <xs:element name="drugId" type="xs:integer"/>
+        <xs:element name="substitutionsgruppe" type="xs:string"/>
+        <xs:element name="mindsteAIPPrEnhed" type="xs:integer"/>
+        <xs:element name="mindsteRegisterprisEnhed" type="xs:integer"/>
+        <xs:element name="tspPrEnhed" type="xs:integer"/>
+        <xs:element name="billigsteDrugid" type="xs:integer"/>
+        <xs:element name="KodeForBilligsteDrugid" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

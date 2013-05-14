@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/sor" targetNamespace="http://nsi.dk/-/stamdata/3.0/sor">
+  <xs:element name="yder">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="sorNummer" type="xs:integer"/>
+        <xs:element name="praksisSorNummer" type="xs:integer"/>
+        <xs:element name="eanLokationsnummer" type="xs:integer"/>
+        <xs:element name="nummer" type="xs:string"/>
+        <xs:element name="navn" type="xs:string"/>
+        <xs:element name="telefon" type="xs:string"/>
+        <xs:element name="vejnavn" type="xs:string"/>
+        <xs:element name="postnummer" type="xs:string"/>
+        <xs:element name="bynavn" type="xs:string"/>
+        <xs:element name="email" type="xs:string"/>
+        <xs:element name="www" type="xs:string"/>
+        <xs:element name="hovedSpecialeKode" type="xs:string"/>
+        <xs:element name="hovedSpecialeTekst" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

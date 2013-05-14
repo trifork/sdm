@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/ddv" targetNamespace="http://nsi.dk/-/stamdata/3.0/ddv">
+  <xs:element name="vaccinationplanitems">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="VaccinationPlanItemIdentifier" type="xs:integer"/>
+        <xs:element name="VersionID" type="xs:integer"/>
+        <xs:element name="VaccineIdentifier" type="xs:integer"/>
+        <xs:element name="VaccineName" type="xs:string"/>
+        <xs:element name="VaccinationIndex" type="xs:integer"/>
+        <xs:element name="MinimumInterval" type="xs:integer"/>
+        <xs:element name="CoverageDuration" type="xs:string"/>
+        <xs:element name="Time" type="xs:integer"/>
+        <xs:element name="Description" type="xs:string"/>
+        <xs:element name="Series" type="xs:string"/>
+        <xs:element name="VaccinationPlanIdentifier" type="xs:integer"/>
+        <xs:element name="PlanVersionID" type="xs:integer"/>
+        <xs:element name="ddvModifiedDate" type="xs:string"/>
+        <xs:element name="ddvValidFrom" type="xs:string"/>
+        <xs:element name="ddvValidTo" type="xs:string"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

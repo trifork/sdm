@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/vitamin" targetNamespace="http://nsi.dk/-/stamdata/3.0/vitamin">
+  <xs:element name="indholdsstoffer">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Id">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="drugId" type="xs:integer"/>
+        <xs:element name="stofKlasse">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="100"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="substansgruppe">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="100"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="substans">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="150"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

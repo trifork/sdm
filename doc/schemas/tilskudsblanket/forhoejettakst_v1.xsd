@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/tilskudsblanket" targetNamespace="http://nsi.dk/-/stamdata/3.0/tilskudsblanket">
+  <xs:element name="forhoejettakst">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="Varenummer" type="xs:string"/>
+        <xs:element name="Navn" type="xs:string"/>
+        <xs:element name="Form" type="xs:string"/>
+        <xs:element name="FormTekst" type="xs:string"/>
+        <xs:element name="ATCkode" type="xs:string"/>
+        <xs:element name="Styrke" type="xs:string"/>
+        <xs:element name="DrugID" type="xs:integer"/>
+        <xs:element name="PakningsTekst" type="xs:string"/>
+        <xs:element name="Udlevering" type="xs:string"/>
+        <xs:element name="Tilskudstype" type="xs:string"/>
+        <xs:element name="ModifiedDate" type="xs:dateTime"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

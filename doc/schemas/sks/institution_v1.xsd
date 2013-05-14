@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/sks" targetNamespace="http://nsi.dk/-/stamdata/3.0/sks">
+  <xs:element name="institution">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="navn" type="xs:string"/>
+        <xs:element name="nummer" type="xs:string"/>
+        <xs:element name="organisationstype" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

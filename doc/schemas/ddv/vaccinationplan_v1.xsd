@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/ddv" targetNamespace="http://nsi.dk/-/stamdata/3.0/ddv">
+  <xs:element name="vaccinationplan">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="VaccinationPlanIdentifier" type="xs:integer"/>
+        <xs:element name="VersionID" type="xs:integer"/>
+        <xs:element name="Active" type="xs:integer"/>
+        <xs:element name="Name" type="xs:string"/>
+        <xs:element name="UsableFrom" type="xs:string"/>
+        <xs:element name="UsableTo" type="xs:string"/>
+        <xs:element name="AllocationMethod" type="xs:string"/>
+        <xs:element name="Sex" type="xs:string"/>
+        <xs:element name="BirthCohorteFrom" type="xs:dateTime"/>
+        <xs:element name="BirthCohorteTo" type="xs:dateTime"/>
+        <xs:element name="AgeIntervalFrom" type="xs:integer"/>
+        <xs:element name="AgeIntervalTo" type="xs:integer"/>
+        <xs:element name="ddvModifiedDate" type="xs:string"/>
+        <xs:element name="ddvValidFrom" type="xs:string"/>
+        <xs:element name="ddvValidTo" type="xs:string"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

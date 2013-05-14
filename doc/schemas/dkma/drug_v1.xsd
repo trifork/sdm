@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="drug">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="id" type="xs:integer"/>
+        <xs:element name="nave" type="xs:string"/>
+        <xs:element name="formKode" type="xs:string"/>
+        <xs:element name="formTekst" type="xs:string"/>
+        <xs:element name="styrkeTekst" type="xs:string"/>
+        <xs:element name="styrke" type="xs:decimal"/>
+        <xs:element name="styrkeenhed" type="xs:string"/>
+        <xs:element name="atc" type="xs:string"/>
+        <xs:element name="atcTekst" type="xs:string"/>
+        <xs:element name="dosisdispenserbar" type="xs:boolean"/>
+        <xs:element name="varetype" type="xs:string"/>
+        <xs:element name="varedeltype" type="xs:string"/>
+        <xs:element name="alfabetSekvensplads" type="xs:string"/>
+        <xs:element name="specNummer" type="xs:integer"/>
+        <xs:element name="LaegemiddelformTekst" type="xs:string"/>
+        <xs:element name="kodeForYderligereFormOplysn" type="xs:string"/>
+        <xs:element name="trafikadvarsel" type="xs:boolean"/>
+        <xs:element name="substitution" type="xs:string"/>
+        <xs:element name="laegemidletsSubstitutionsgruppe" type="xs:string"/>
+        <xs:element name="datoForAfregistrAfLaegemiddel" type="xs:date"/>
+        <xs:element name="karantaenedato" type="xs:date"/>
+        <xs:element name="administrationsvejKode" type="xs:string"/>
+        <xs:element name="mtIndehaverKode" type="xs:integer"/>
+        <xs:element name="repraesentantDistributoerKode" type="xs:integer"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

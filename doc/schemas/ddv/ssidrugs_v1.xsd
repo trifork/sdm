@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/ddv" targetNamespace="http://nsi.dk/-/stamdata/3.0/ddv">
+  <xs:element name="ssidrugs">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="DrugIdentifier" type="xs:integer"/>
+        <xs:element name="VersionID" type="xs:integer"/>
+        <xs:element name="Name" type="xs:integer"/>
+        <xs:element name="FormTekst" type="xs:string"/>
+        <xs:element name="ATCCode" type="xs:string"/>
+        <xs:element name="ATCText" type="xs:string"/>
+        <xs:element name="StyrkeTekst" type="xs:string"/>
+        <xs:element name="UsableFrom" type="xs:string"/>
+        <xs:element name="UsableTo" type="xs:string"/>
+        <xs:element name="ddvModifiedDate" type="xs:string"/>
+        <xs:element name="ddvValidFrom" type="xs:string"/>
+        <xs:element name="ddvValidTo" type="xs:string"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

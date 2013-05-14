@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/ddv" targetNamespace="http://nsi.dk/-/stamdata/3.0/ddv">
+  <xs:element name="vaccines">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="VaccineIdentifier" type="xs:integer"/>
+        <xs:element name="VersionID" type="xs:integer"/>
+        <xs:element name="ATCCode" type="xs:string"/>
+        <xs:element name="ATCText" type="xs:string"/>
+        <xs:element name="ShortDescription" type="xs:string"/>
+        <xs:element name="AllowCitizenSelfRegister" type="xs:integer"/>
+        <xs:element name="AllowBulkRegister" type="xs:integer"/>
+        <xs:element name="Keywords" type="xs:string"/>
+        <xs:element name="SearchBoost" type="xs:decimal"/>
+        <xs:element name="ddvModifiedDate" type="xs:string"/>
+        <xs:element name="ddvValidFrom" type="xs:string"/>
+        <xs:element name="ddvValidTo" type="xs:string"/>
+        <xs:element name="ValidFrom" type="xs:dateTime"/>
+        <xs:element name="ValidTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

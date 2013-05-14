@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/cpr" targetNamespace="http://nsi.dk/-/stamdata/3.0/cpr">
+  <xs:element name="foraeldremyndighedrelation">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="id" type="xs:string"/>
+        <xs:element name="cpr" type="xs:string"/>
+        <xs:element name="typeKode" type="xs:string"/>
+        <xs:element name="typeTekst" type="xs:string"/>
+        <xs:element name="relationCpr" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

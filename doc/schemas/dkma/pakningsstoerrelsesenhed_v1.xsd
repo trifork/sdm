@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="pakningsstoerrelsesenhed">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="id" type="xs:string"/>
+        <xs:element name="tekst" type="xs:string"/>
+        <xs:element name="kortTekst" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

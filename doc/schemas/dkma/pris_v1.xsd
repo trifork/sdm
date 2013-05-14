@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="pris">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="varenummer" type="xs:integer"/>
+        <xs:element name="apoteketsIndkoebspris" type="xs:integer"/>
+        <xs:element name="registerpris" type="xs:integer"/>
+        <xs:element name="ekspeditionensSamledePris" type="xs:integer"/>
+        <xs:element name="tilskudspris" type="xs:integer"/>
+        <xs:element name="leveranceprisTilHospitaler" type="xs:integer"/>
+        <xs:element name="ikkeTilskudsberettigetDel" type="xs:integer"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

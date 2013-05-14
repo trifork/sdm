@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/cpr" targetNamespace="http://nsi.dk/-/stamdata/3.0/cpr">
+  <xs:element name="person">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="cpr" type="xs:string"/>
+        <xs:element name="koen" type="xs:string"/>
+        <xs:element name="fornavn" type="xs:string"/>
+        <xs:element name="mellemnavn" type="xs:string"/>
+        <xs:element name="efternavn" type="xs:string"/>
+        <xs:element name="coNavn" type="xs:string"/>
+        <xs:element name="lokalitet" type="xs:string"/>
+        <xs:element name="vejnavn" type="xs:string"/>
+        <xs:element name="bygningsnummer" type="xs:string"/>
+        <xs:element name="husnummer" type="xs:string"/>
+        <xs:element name="etage" type="xs:string"/>
+        <xs:element name="sideDoerNummer" type="xs:string"/>
+        <xs:element name="bynavn" type="xs:string"/>
+        <xs:element name="postnummer" type="xs:integer"/>
+        <xs:element name="postdistrikt" type="xs:string"/>
+        <xs:element name="status" type="xs:string"/>
+        <xs:element name="gaeldendeCPR" type="xs:string"/>
+        <xs:element name="foedselsdato" type="xs:date"/>
+        <xs:element name="stilling" type="xs:string"/>
+        <xs:element name="vejKode" type="xs:integer"/>
+        <xs:element name="kommuneKode" type="xs:integer"/>
+        <xs:element name="navnebeskyttelseslettedato" type="xs:dateTime"/>
+        <xs:element name="navnebeskyttelsestartdato" type="xs:dateTime"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="pakning">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="varenummer" type="xs:integer"/>
+        <xs:element name="varenummerDelpakning" type="xs:integer"/>
+        <xs:element name="drugId" type="xs:decimal"/>
+        <xs:element name="pakningsstoerrelseNumerisk" type="xs:decimal"/>
+        <xs:element name="pakningsstoerrelseEnhed" type="xs:string"/>
+        <xs:element name="pakningsstoerrelseTekst" type="xs:string"/>
+        <xs:element name="emballageTypeKode" type="xs:string"/>
+        <xs:element name="dosisdispenserbar" type="xs:boolean"/>
+        <xs:element name="medicintilskudsKode" type="xs:string"/>
+        <xs:element name="klausuleringsKode" type="xs:string"/>
+        <xs:element name="alfabetSekvensNummer" type="xs:integer"/>
+        <xs:element name="antalDelpakninger" type="xs:integer"/>
+        <xs:element name="udleveringsbestemmelse" type="xs:string"/>
+        <xs:element name="udleveringSpeciale" type="xs:string"/>
+        <xs:element name="antalDDDPrPakning" type="xs:decimal"/>
+        <xs:element name="opbevaringstidNumerisk" type="xs:integer"/>
+        <xs:element name="opbevaringstid" type="xs:integer"/>
+        <xs:element name="opbevaringsbetingelser" type="xs:string"/>
+        <xs:element name="oprettelsesdato" type="xs:date"/>
+        <xs:element name="datoForSenestePrisaendring" type="xs:date"/>
+        <xs:element name="udgaaetDato" type="xs:date"/>
+        <xs:element name="BeregningskodeAIRegpris" type="xs:string"/>
+        <xs:element name="pakningOptagetITilskudsgruppe" type="xs:boolean"/>
+        <xs:element name="faerdigfremstillingsgebyr" type="xs:boolean"/>
+        <xs:element name="pakningsdistributoer" type="xs:integer"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

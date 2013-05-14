@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/dkma" targetNamespace="http://nsi.dk/-/stamdata/3.0/dkma">
+  <xs:element name="pakningskombinationudenpriser">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="varenummerOrdineret" type="xs:integer"/>
+        <xs:element name="varenummerSubstitueret" type="xs:integer"/>
+        <xs:element name="varenummerAlternativt" type="xs:integer"/>
+        <xs:element name="antalPakninger" type="xs:integer"/>
+        <xs:element name="informationspligtMarkering" type="xs:string"/>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

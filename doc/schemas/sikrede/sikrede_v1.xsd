@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://nsi.dk/-/stamdata/3.0/sikrede" targetNamespace="http://nsi.dk/-/stamdata/3.0/sikrede">
+  <xs:element name="sikrede">
+    <xs:complexType>
+      <xs:all>
+        <xs:element name="CPRnr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SYdernr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="6"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoYder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSikrGrpKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoGrp">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoGrp">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSikrKomKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="3"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoKomKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SYdernrGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="6"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoYderGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoYderGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSikrGrpKodeGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoGrpGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoGrpGl">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SYdernrFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="6"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoYderFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoYderFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSikrGrpKodeFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SIkraftDatoGrpFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SRegDatoGrpFrem">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SKon">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="1"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SAlder">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="3"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SFolgerskabsPerson">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SStatus">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SBevisDato">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="8"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="PNavn">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="34"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SBSStatsborgerskabKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SBSStatsborgerskab">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="47"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKAdrLinie1">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKAdrLinie2">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKBopelsLand">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKBopelsLAndKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKEmailAdr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="50"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKFamilieRelation">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKFodselsdato">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKGyldigFra">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKGyldigTil">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKMobilNr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="20"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSKPostNrBy">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="40"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLForsikringsinstans">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="21"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLForsikringsinstansKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLForsikringsnr">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="15"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLGyldigFra">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLGyldigTil">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="10"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLSocSikretLand">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="47"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="SSLSocSikretLandKode">
+          <xs:simpleType>
+            <xs:restriction>
+              <xs:maxLength value="2"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="validFrom" type="xs:dateTime"/>
+        <xs:element name="validTo" type="xs:dateTime"/>
+      </xs:all>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
