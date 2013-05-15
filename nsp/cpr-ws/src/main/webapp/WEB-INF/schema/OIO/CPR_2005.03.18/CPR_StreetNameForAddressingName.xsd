@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" version="1.1">
+    <element name="StreetNameForAddressingName" type="cpr:StreetNameForAddressingNameType">
+        <annotation>
+            <documentation> An abbreviation of streetname. The street name for adressing is reported
+                in case the street name is above 20 positions. For names up to 20 positions the
+                street name for addressing is the same as the street name. The street name for
+                adressing is among other things used on items of mail. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="StreetNameForAddressingNameType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="20"/>
+        </restriction>
+    </simpleType>
+</schema>

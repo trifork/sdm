@@ -34,18 +34,14 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
 import dk.sdsd.nsp.slalog.api.SLALogItem;
-import org.apache.commons.lang.StringUtils;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
-import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.Transactional;
-import com.trifork.stamdata.specs.SikredeRecordSpecs;
-import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
 import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
@@ -68,7 +64,7 @@ import org.apache.log4j.Logger;
 @WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag")
 @GuiceWebservice
 @SchemaValidation
-public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
+public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGodeCPROpslag
 {
 	private static final Logger logger = Logger.getLogger(DetGodeCPROpslagImpl.class);
 
@@ -76,19 +72,14 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd";
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
-	private final Fetcher fetcher;
-    private final RecordFetcher recordFetcher;
     private final PersonMapper personMapper;
-	private final String clientCVR;
     private final SLALogItem slaLogItem;
 
     @Inject
 	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, SLALogItem slaLogItem)
 	{
-		this.fetcher = fetcher;
-        this.recordFetcher = recordFetcher;
+        super(fetcher, recordFetcher, card.getSystemInfo().getCareProvider().getID());
         this.personMapper = personMapper;
-		this.clientCVR = card.getSystemInfo().getCareProvider().getID();
         this.slaLogItem = slaLogItem;
 	}
 
@@ -96,7 +87,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 	// setting these.
 	@Override
 	@Transactional
-	public GetPersonInformationOut getPersonInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input) throws DGWSFault
+	public GetPersonInformationOut getPersonInformation(
+            @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
+            @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
+            @WebParam(name = "getPersonInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonInformationIn input)
+            throws DGWSFault
 	{
         SoapUtils.updateSlaLog(medcomHeader, "getPersonInformation", slaLogItem);
 		SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -131,7 +126,11 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 	@Override
 	@Transactional
-	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(@WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader, @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader, @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters) throws DGWSFault
+	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(
+            @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
+            @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
+            @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG, partName = "parameters") GetPersonWithHealthCareInformationIn parameters)
+            throws DGWSFault
 	{
         SoapUtils.updateSlaLog(medcomHeader, "getPersonWithHealthCareInformation", slaLogItem);
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
@@ -197,70 +196,4 @@ public class DetGodeCPROpslagImpl implements DetGodeCPROpslag
 
 		return output;
 	}
-
-	
-	@Transactional
-    private Record getSikredeRecord(String pnr) throws SQLException 
-    {
-        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC, "CPRnr");
-    }
-
-	@Transactional
-	private Record getYderRecord(String ydernummer) throws SQLException 
-	{
-	    return recordFetcher.fetchCurrent(ydernummer, YderregisterRecordSpecs.YDER_RECORD_TYPE, "YdernrYder");
-	}
-
-	// HELPERS
-
-	private Person fetchPersonWithPnr(String pnr)
-	{
-		checkNotNull(pnr, "pnr");
-
-		Person person;
-
-		try
-		{
-			person = fetcher.fetch(Person.class, pnr);
-		}
-		catch (Exception e)
-		{
-			throw SoapUtils.newServerErrorFault(e);
-		}
-
-		// NOTE: Unfortunately the specification is defined so that we have to
-		// return a
-		// fault if no person is found. We cannot change this to return nil
-		// which would
-		// be a nicer protocol.
-
-		if (person == null)
-		{
-			throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
-		}
-
-		return person;
-	}
-
-
-	// HELPERS
-
-	private void checkInputParameters(@Nullable String pnr)
-	{
-		if (StringUtils.isBlank(pnr))
-		{
-			// This service should match functionality from a service that was
-			// not DGWS protected.
-			// Callers expect to be met with a SOAP sender fault.
-			// Callers to the PVIT service should expect DGWS faults instead.
-			throw SoapUtils.newSOAPSenderFault("PersonCivilRegistrationIdentifier was not set in request, but is required.");
-		}
-	}
-
-
-	private void logAccess(String requestedCPR) throws DGWSFault
-	{
-		logger.info("type=auditlog, service=stamdata-cpr, client_cvr="+clientCVR+", requested_cpr="+requestedCPR);
-	}
-
 }

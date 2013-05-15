@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" version="1.1">
+    
+    <include schemaLocation="Import.xsd"/>
+    
+    <element name="MunicipalityCode" type="cpr:AuthorityCodeType">
+        <annotation>
+            <documentation> The code of a municipality. The plain text of a municipality is to be
+                found by reference to the authority-data in the civilregistrationsystem. The code
+                will always be unique." </documentation>
+        </annotation>
+    </element>
+</schema>

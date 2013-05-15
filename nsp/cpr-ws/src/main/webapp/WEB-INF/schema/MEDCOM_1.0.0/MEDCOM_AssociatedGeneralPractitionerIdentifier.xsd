@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:element name="AssociatedGeneralPractitionerIdentifier"
+    type="medcom:AssociatedGeneralPractitionerIdentifierType">
+    <xs:annotation>
+      <xs:documentation>Ydernummeret paa egen laege som er tilknyttet patienten.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:simpleType name="AssociatedGeneralPractitionerIdentifierType">
+    <xs:annotation>
+      <xs:documentation>Ydernummeret paa egen laege, paa 6 cifre.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:integer">
+      <xs:totalDigits value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

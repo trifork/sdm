@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/">
+    <element name="SuiteIdentifier" type="dkcc:SuiteIdentifierType">
+        <annotation>
+            <documentation> Identification which describes the location of a specific entrance door
+                on a floor or level (repos) in the staircase referred to. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="SuiteIdentifierType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="4"/>
+        </restriction>
+    </simpleType>
+</schema>

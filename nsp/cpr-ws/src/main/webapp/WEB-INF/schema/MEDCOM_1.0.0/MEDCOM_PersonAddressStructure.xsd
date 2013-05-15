@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+  xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+  xmlns:cpr2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:cb-ois="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+  targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+    schemaLocation="../OIO/XKOM_2006.01.06/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+    schemaLocation="../OIO/CPR_2006.09.01/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+    schemaLocation="../OIO/ITST_2005.06.24/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+    schemaLocation="../OIO/OIS_2006.04.25/Import.xsd"/>
+  <xs:element name="PersonAddressStructure" type="medcom:PersonAddressStructureType">
+    <xs:annotation>
+      <xs:documentation>Adresseoplysninger</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="PersonAddressStructureType">
+    <xs:annotation>
+      <xs:documentation>Postaddresse paa en person i Danmark samt information vedr.
+        adressebeskyttelse.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="itst:CareOfName" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Angiver om denne adresse er en C/O adresse</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="xkom:AddressComplete">
+        <xs:annotation>
+          <xs:documentation>Adresse i danmark</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="cpr2:PersonInformationProtectionStartDate" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Hvis dette felt forekommer er adressen beskyttet fra denne dato, ellers
+            ingen beskyttelse.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="cb-ois:CountyCode"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

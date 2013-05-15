@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" version="1.1">
+    <element name="DistrictName" type="dkcc:DistrictNameType">
+        <annotation>
+            <documentation> Declares the name of a postal district in plain text. The field contains
+                20 positions, which enables it to fit a window envelope together with the postal
+                code and one free position in addition. The postal district is defined by
+                municipalitycode, roadcode, postalcode, housenumber from/to together with a code,
+                which declares whether the roadsection in question contains even or uneven
+                housenumbers. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="DistrictNameType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="20"/>
+        </restriction>
+    </simpleType>
+</schema>

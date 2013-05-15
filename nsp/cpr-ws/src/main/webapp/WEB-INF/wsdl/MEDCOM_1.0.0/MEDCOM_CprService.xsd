@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+    elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/">
+    
+    <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        schemaLocation="../../schema/OIO/CPR_2005.03.18/Import.xsd"/>
+    
+    <xs:import namespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+               schemaLocation="../../schema/MEDCOM_1.0.0/MEDCOM_DGCPR_1.0.0.xsd"/>
+    
+    <xs:element name="getPersonWithHealthCareInformationIn">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="cpr:PersonCivilRegistrationIdentifier"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getPersonInformationIn">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="cpr:PersonCivilRegistrationIdentifier"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getPersonWithHealthCareInformationOut">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="medcom:PersonWithHealthCareInformationStructure"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getPersonInformationOut">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="medcom:PersonInformationStructure"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

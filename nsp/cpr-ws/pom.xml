@@ -117,10 +117,63 @@
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jaxws-maven-plugin</artifactId>
-      </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>jaxws-maven-plugin</artifactId>
+            <version>1.12</version>
+            <configuration>
+                <args>
+                    <arg>-B-XautoNameResolution</arg>
+                </args>
+                <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
+                <sei/>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>generate-sources-102</id>
+                    <goals>
+                        <goal>wsimport</goal>
+                    </goals>
+                    <configuration>
+                        <packageName>dk.nsi.stamdata.jaxws.generated102</packageName>
+                        <bindingFiles>
+                            <bindingFile>../main/webapp/WEB-INF/wsdl/MEDCOM_1.0.2/DetGodeCprOpslag.xjb.xml</bindingFile>
+                        </bindingFiles>
+                        <wsdlFiles>
+                            <wsdlFile>/MEDCOM_1.0.2/DetGodeCprOpslag.wsdl</wsdlFile>
+                        </wsdlFiles>
+                        <staleFile>${project.build.directory}/jaxws/stale/wsdl.1.done</staleFile>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>generate-sources-100</id>
+                    <goals>
+                        <goal>wsimport</goal>
+                    </goals>
+                    <configuration>
+                        <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+                        <wsdlFiles>
+                            <wsdlFile>/MEDCOM_1.0.0/DetGodeCprOpslag.wsdl</wsdlFile>
+                        </wsdlFiles>
+                        <staleFile>${project.build.directory}/jaxws/stale/wsdl.2.done</staleFile>
+                    </configuration>
+                </execution>
+            </executions>
+            <!--
+             | In order to use JAX-WS 2.2, we will have to
+             | change the generator version.
+             | We still target 2.0 to avoid endorsing jar
+             | in maven which is a real pain for Eclipse and
+             | IDEA. These IDE plugins don't support it well.
+             -->
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun.xml.ws</groupId>
+                    <artifactId>jaxws-tools</artifactId>
+                    <version>2.1.7</version>
+                </dependency>
+            </dependencies>
+        </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -167,6 +220,7 @@
               <jMeterRemoteLocation>
                   http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.8.zip
               </jMeterRemoteLocation>
+                <input/>
             </configuration>
             <executions>
               <!-- CPR WS StamdataPersonLookup -->

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+	xmlns:cpr2005="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+	xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+		schemaLocation="../DKCC_2005.03.15/Import.xsd"/>
+	
+	<include schemaLocation="Import.xsd"/>
+
+	<element name="PersonBirthDateStructure" type="cpr:PersonBirthDateStructureType"/>
+	<complexType name="PersonBirthDateStructureType">
+		<sequence>
+			<element ref="cpr2005:BirthDate"/>
+			<element ref="cpr:BirthDateUncertaintyIndicator"/>
+		</sequence>
+	</complexType>
+</schema>

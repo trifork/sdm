@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/">
+    <element name="PostOfficeBoxIdentifier" type="dkcc:PostOfficeBoxIdentifierType">
+        <annotation>
+            <documentation> Declaration of a Post Office Box. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="PostOfficeBoxIdentifierType">
+        <annotation>
+            <documentation>Declaration of a Post Office Box.</documentation>
+        </annotation>
+        <restriction base="integer">
+            <minInclusive value="1"/>
+            <maxInclusive value="9999"/>
+        </restriction>
+    </simpleType>
+</schema>

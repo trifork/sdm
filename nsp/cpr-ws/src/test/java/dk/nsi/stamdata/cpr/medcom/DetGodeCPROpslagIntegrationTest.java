@@ -42,14 +42,12 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.joda.time.DateTime;
 import org.joda.time.Instant;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

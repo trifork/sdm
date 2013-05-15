@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" version="1.1">
+    <element name="AuthorityCode" type="cpr:AuthorityCodeType">
+        <annotation>
+            <documentation>Code, which identifies an authority. Every AuthorityCode belongs to a
+                specific authority (reference to data of authorities in CPR). The AuthorityCode is
+                unique. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="AuthorityCodeType">
+        <restriction base="string">
+            <pattern value="[0-9]{4}"/>
+        </restriction>
+    </simpleType>
+</schema>

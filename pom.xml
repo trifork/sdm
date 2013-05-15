@@ -331,9 +331,9 @@
           <artifactId>jaxws-maven-plugin</artifactId>
           <version>1.12</version>
           <configuration>
-            <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
-            <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
-            <wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl</wsdlDirectory>
+              <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
+              <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+              <wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl</wsdlDirectory>
           </configuration>
           <executions>
             <execution>
@@ -407,6 +407,7 @@
        <configuration>
          <source>1.6</source>
          <target>1.6</target>
+           <encoding>UTF-8</encoding>
        </configuration>
      </plugin>
       <!--

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+    elementFormDefault="qualified">
+    <element name="BirthDateUncertaintyIndicator" type="boolean"/>
+</schema>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:medcom="urn:oio:medcom:cprservice:1.0.2"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oio:medcom:cprservice:1.0.2"
+	elementFormDefault="qualified">
+	<include schemaLocation="MEDCOM_AddressPostal.xsd"/>
+	<include schemaLocation="MEDCOM_AddressAccess.xsd"/>
+	<element name="AddressComplete" type="medcom:AddressCompleteType"/>
+	<complexType name="AddressCompleteType">
+		<sequence>
+			<element ref="medcom:AddressAccess"/>
+			<element ref="medcom:AddressPostal"/>
+		</sequence>
+	</complexType>
+</schema>

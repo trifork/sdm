@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions
+  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+  xmlns:tns="urn:oio:medcom:cprservice:1.0.1"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  targetNamespace="urn:oio:medcom:cprservice:1.0.1"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:oio:medcom:cprservice:1.0.1">
+      <include schemaLocation="MEDCOM_CprService.xsd"/>
+    </schema>  
+  </wsdl:types>
+  
+  <wsdl:message name="getPersonWithHealthCareInformationIn">
+    <wsdl:part name="body" element="tns:GetPersonWithHealthCareInformationIn"/>
+  </wsdl:message>
+  <wsdl:message name="getPersonWithHealthCareInformationOut">
+    <wsdl:part name="body" element="tns:GetPersonWithHealthCareInformationOut"/>
+  </wsdl:message>
+  
+  <wsdl:message name="getPersonInformationIn">
+    <wsdl:part name="body" element="tns:GetPersonInformationIn"/>
+  </wsdl:message>
+  <wsdl:message name="getPersonInformationOut">
+    <wsdl:part name="body" element="tns:GetPersonInformationOut"/>
+  </wsdl:message>
+  
+  
+  <wsdl:portType name="DetGodeCPROpslag">
+    <wsdl:operation name="getPersonInformation">
+      <wsdl:input message="tns:getPersonInformationIn"/>
+      <wsdl:output message="tns:getPersonInformationOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="getPersonWithHealthCareInformation">
+      <wsdl:input message="tns:getPersonWithHealthCareInformationIn"/>
+      <wsdl:output message="tns:getPersonWithHealthCareInformationOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  
+  <wsdl:binding name="DetGodeCPROpslagBinding" type="tns:DetGodeCPROpslag">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getPersonInformation">
+      <soap:operation
+        soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonInformation"
+        style="document"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="body"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="body"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getPersonWithHealthCareInformation">
+      <soap:operation
+        soapAction="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/getPersonWithHealthCareInformation"
+        style="document"/>
+      <wsdl:input>
+        <soap:body use="literal" parts="body"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" parts="body"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Test">
+    <wsdl:port name="TestPort" binding="tns:DetGodeCPROpslagBinding">
+      <soap:address location="http://www.google.com/"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

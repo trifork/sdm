@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/">
+    <element name="MailDeliverySublocationIdentifier"
+        type="dkcc:MailDeliverySublocationIdentifierType">
+        <annotation>
+            <documentation> The given name of a farm, estate, building or dwelling, which is used as
+                a additional postal address identifier. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="MailDeliverySublocationIdentifierType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="34"/>
+        </restriction>
+    </simpleType>
+</schema>

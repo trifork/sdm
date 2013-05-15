@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/">
+    <element name="FloorIdentifier" type="dkcc:FloorIdentifierType">
+        <annotation>
+            <documentation> Identification which describes the floor or level on which a specific
+                entrance door, appartment or suite is placed, in the staircase refered to.
+            </documentation>
+        </annotation>
+    </element>
+    <simpleType name="FloorIdentifierType">
+        <restriction base="string">
+            <pattern value="[1-9]|[1-9][0-9]|KL|ST|kl|st|k[2-9]|K[2-9]"/>
+        </restriction>
+    </simpleType>
+</schema>

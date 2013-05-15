@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+    targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+    xmlns:cpr2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    elementFormDefault="qualified">
+
+    <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        schemaLocation="../CPR_2005.03.18/Import.xsd"/>
+    <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+        schemaLocation="../CPR_2005.11.24/Import.xsd"/>
+    <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+        schemaLocation="../DKCC_2003.02.13/Import.xsd"/>
+
+
+    <xs:include schemaLocation="CPR_PersonCivilRegistrationStatusStartDate.xsd"/>
+    <xs:include schemaLocation="CPR_SimpleCPRPerson.xsd"/>
+    <xs:include schemaLocation="CPR_PersonCivilRegistrationStatusStructure.xsd"/>
+    <xs:include schemaLocation="CPR_RegularCPRPerson.xsd"/>
+
+
+</xs:schema>

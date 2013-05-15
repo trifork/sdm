@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    targetNamespace="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+
+    <xs:include schemaLocation="OIS_CountyCode.xsd"/>
+
+</xs:schema>
