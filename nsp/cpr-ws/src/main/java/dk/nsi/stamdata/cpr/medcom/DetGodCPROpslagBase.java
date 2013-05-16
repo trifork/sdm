@@ -9,7 +9,6 @@ import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -52,12 +51,9 @@ public class DetGodCPROpslagBase {
 
         Person person;
 
-        try
-        {
+        try {
             person = fetcher.fetch(Person.class, pnr);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             throw SoapUtils.newServerErrorFault(e);
         }
 
@@ -67,8 +63,7 @@ public class DetGodCPROpslagBase {
         // which would
         // be a nicer protocol.
 
-        if (person == null)
-        {
+        if (person == null) {
             throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
         }
 
@@ -80,8 +75,7 @@ public class DetGodCPROpslagBase {
 
     protected void checkInputParameters(@Nullable String pnr)
     {
-        if (StringUtils.isBlank(pnr))
-        {
+        if (StringUtils.isBlank(pnr)) {
             // This service should match functionality from a service that was
             // not DGWS protected.
             // Callers expect to be met with a SOAP sender fault.
@@ -91,7 +85,7 @@ public class DetGodCPROpslagBase {
     }
 
 
-    protected void logAccess(String requestedCPR) throws DGWSFault
+    protected void logAccess(String requestedCPR)
     {
         logger.info("type=auditlog, service=stamdata-cpr, client_cvr="+clientCVR+", requested_cpr="+requestedCPR);
     }

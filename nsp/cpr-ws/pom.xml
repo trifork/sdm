@@ -122,9 +122,9 @@
             <artifactId>jaxws-maven-plugin</artifactId>
             <version>1.12</version>
             <configuration>
-                <args>
-                    <arg>-B-XautoNameResolution</arg>
-                </args>
+                <bindingFiles>
+                    <bindingFile>../main/webapp/WEB-INF/wsdl/bindings.xjb.xml</bindingFile>
+                </bindingFiles>
                 <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
                 <sei/>
             </configuration>
@@ -135,10 +135,6 @@
                         <goal>wsimport</goal>
                     </goals>
                     <configuration>
-                        <packageName>dk.nsi.stamdata.jaxws.generated102</packageName>
-                        <bindingFiles>
-                            <bindingFile>../main/webapp/WEB-INF/wsdl/MEDCOM_1.0.2/DetGodeCprOpslag.xjb.xml</bindingFile>
-                        </bindingFiles>
                         <wsdlFiles>
                             <wsdlFile>/MEDCOM_1.0.2/DetGodeCprOpslag.wsdl</wsdlFile>
                         </wsdlFiles>
@@ -151,7 +147,7 @@
                         <goal>wsimport</goal>
                     </goals>
                     <configuration>
-                        <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+                        <!--<packageName>dk.nsi.stamdata.jaxws.generated</packageName>-->
                         <wsdlFiles>
                             <wsdlFile>/MEDCOM_1.0.0/DetGodeCprOpslag.wsdl</wsdlFile>
                         </wsdlFiles>

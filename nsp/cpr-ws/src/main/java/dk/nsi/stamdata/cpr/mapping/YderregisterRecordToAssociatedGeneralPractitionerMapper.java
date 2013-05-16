@@ -28,7 +28,7 @@ import java.math.BigInteger;
 
 import com.trifork.stamdata.persistence.Record;
 
-import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.AssociatedGeneralPractitionerStructureType;
 
 public class YderregisterRecordToAssociatedGeneralPractitionerMapper {
 

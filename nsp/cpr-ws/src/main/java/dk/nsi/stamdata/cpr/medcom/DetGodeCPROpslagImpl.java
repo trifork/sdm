@@ -24,8 +24,6 @@
  */
 package dk.nsi.stamdata.cpr.medcom;
 
-import static com.trifork.stamdata.Preconditions.checkNotNull;
-
 import java.sql.SQLException;
 
 import javax.jws.WebParam;
@@ -33,6 +31,11 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import dk.nsi.stamdata.cpr.mapping.PersonMapper;
+import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.*;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 
 import com.google.inject.Inject;
@@ -43,25 +46,15 @@ import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.Transactional;
 
-import dk.nsi.stamdata.cpr.PersonMapper;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
-import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
-import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
-import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
-import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
 import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.sosi.seal.model.SystemIDCard;
 import org.apache.log4j.Logger;
 
 
-@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag")
+@WebService(endpointInterface="dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.DetGodeCPROpslag")
 @GuiceWebservice
 @SchemaValidation
 public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGodeCPROpslag
@@ -72,11 +65,17 @@ public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGode
 	private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd";
 	private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
-    private final PersonMapper personMapper;
+    private final PersonMapper100 personMapper;
     private final SLALogItem slaLogItem;
 
+    public DetGodeCPROpslagImpl() {
+        super(null, null, null);
+        slaLogItem = null;
+        personMapper = null;
+    }
+
     @Inject
-	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, SLALogItem slaLogItem)
+	DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper100 personMapper, SystemIDCard card, SLALogItem slaLogItem)
 	{
         super(fetcher, recordFetcher, card.getSystemInfo().getCareProvider().getID());
         this.personMapper = personMapper;
@@ -116,7 +115,7 @@ public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGode
 		GetPersonInformationOut output = new GetPersonInformationOut();
 		PersonInformationStructureType personInformation;
 
-		personInformation = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
+		personInformation = personMapper.map(person, PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData, PersonMapper100.CPRProtectionLevel.DoNotCensorCPR);
 
 		output.setPersonInformationStructure(personInformation);
 
@@ -155,24 +154,17 @@ public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGode
 		Person person = fetchPersonWithPnr(pnr);
 
 		Record sikredeRecord = null;
-		try 
-		{
+		try {
 		    sikredeRecord = getSikredeRecord(pnr);
-		}
-		catch (SQLException e)
-		{
+		} catch (SQLException e) {
             throw SoapUtils.newServerErrorFault(e);		    
 		}
         
 		Record yderRecord = null;
-		if(sikredeRecord != null)
-		{
-		    try
-		    {
+		if(sikredeRecord != null) {
+		    try {
 		        yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"));
-		    }
-	        catch (SQLException e)
-	        {
+		    } catch (SQLException e) {
 	            throw SoapUtils.newServerErrorFault(e);         
 	        }
 		}
@@ -183,12 +175,9 @@ public class DetGodeCPROpslagImpl extends DetGodCPROpslagBase implements DetGode
 		GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
 		PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
 
-		try
-		{
+		try {
 			personWithHealthCareInformation = personMapper.map(person, sikredeRecord, yderRecord);
-		}
-		catch (DatatypeConfigurationException e)
-		{
+		} catch (DatatypeConfigurationException e) {
 			throw SoapUtils.newServerErrorFault(e);
 		}
 

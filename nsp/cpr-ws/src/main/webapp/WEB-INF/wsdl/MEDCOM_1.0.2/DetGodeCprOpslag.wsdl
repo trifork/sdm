@@ -8,22 +8,10 @@
         xmlns:dgws="http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd"
         targetNamespace="urn:oio:medcom:cprservice:1.0.2"
         xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-    <wsdl:types>
 
-        <xs:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-                   targetNamespace="urn:oio:medcom:cprservice:1.0.2"
-                   jaxb:version="2.1"
-                   elementFormDefault="qualified">
+    <wsdl:types>
+        <xs:schema targetNamespace="urn:oio:medcom:cprservice:1.0.2">
             <xs:include schemaLocation="MEDCOM_CprService.xsd"/>
-            <xs:annotation>
-                <xs:appinfo>
-                    <jaxb:globalBindings>
-                        <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
-                                       parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
-                                       printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
-                    </jaxb:globalBindings>
-                </xs:appinfo>
-            </xs:annotation>
         </xs:schema>
         <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
             <xs:include schemaLocation="../wsse.xsd" />
@@ -58,7 +46,7 @@
         <wsdl:part name="fault" element="dgws:FaultCode" />
     </wsdl:message>
 
-    <wsdl:portType name="DetGodeCPROpslag">
+    <wsdl:portType name="DetGodeCPROpslag102">
         <wsdl:operation name="getPersonInformation">
             <wsdl:input message="tns:getPersonInformationIn"/>
             <wsdl:output message="tns:getPersonInformationOut"/>
@@ -70,7 +58,7 @@
             <wsdl:fault message="tns:DGWSFault" name="DGWSFault" />
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="DetGodeCPROpslagBinding" type="tns:DetGodeCPROpslag">
+    <wsdl:binding name="DetGodeCPROpslagBinding102" type="tns:DetGodeCPROpslag102">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="getPersonInformation">
             <soap:operation
@@ -111,7 +99,7 @@
     </wsdl:binding>
 
     <wsdl:service name="DetGodeCPROpslagService102">
-        <wsdl:port name="DetGodeCPROpslag102" binding="tns:DetGodeCPROpslagBinding">
+        <wsdl:port name="DetGodeCPROpslag102" binding="tns:DetGodeCPROpslagBinding102">
             <soap:address location="http://localhost:8080/DetGodeCPROpslagService102" />
         </wsdl:port>
     </wsdl:service>

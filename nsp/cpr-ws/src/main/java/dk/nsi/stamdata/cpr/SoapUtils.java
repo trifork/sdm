@@ -26,6 +26,7 @@ package dk.nsi.stamdata.cpr;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -37,11 +38,11 @@ import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.Linking;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.nsi.stamdata.jaxws.generated.Timestamp;
+import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.DGWSFault;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sosi.seal.model.constants.FlowStatusValues;
 
@@ -50,14 +51,14 @@ public final class SoapUtils
 {
 	private static final TimeZone DGWS_TIMEZONE = TimeZone.getTimeZone("UTC");
 	
-	private SoapUtils()
-	{
-
+	private SoapUtils() {
 	}
 
-
-	public static DGWSFault newDGWSFault(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, String status, String errorMsg)
-	{
+	public static <T> T newDGWSFault(Holder<Security> securityHeaderHolder,
+                                     Holder<Header> medcomHeaderHolder,
+                                     String status,
+                                     String errorMsg,
+                                     Class<T> clazz) {
 		checkNotNull(securityHeaderHolder, "securityHeaderHolder");
 		checkNotNull(medcomHeaderHolder, "medcomHeaderHolder");
 		checkNotNull(status, "status");
@@ -89,21 +90,22 @@ public final class SoapUtils
 		medcomHeaderHolder.value = medcom;
 		medcomHeaderHolder.value.setFlowStatus(status);
 
-		return new DGWSFault(errorMsg, DGWS_ERROR_MSG);
+        try {
+            return clazz.getConstructor(String.class, String.class).newInstance(errorMsg, DGWS_ERROR_MSG);
+        } catch (Exception e) {
+            return null;
+        }
 	}
 
 
-	public static SOAPFaultException newSOAPSenderFault(String message)
-	{
+	public static SOAPFaultException newSOAPSenderFault(String message) {
 		checkNotNull(message, "message");
 
 		SOAPFault fault;
 
-		try
-		{
+		try {
 			// We have to make sure to use the same protocol version
 			// as defined in the WSDL.
-
 			SOAPFactory factory = SOAPFactory.newInstance(SOAPConstants.SOAP_1_1_PROTOCOL);
 
 			fault = factory.createFault();
@@ -113,9 +115,7 @@ public final class SoapUtils
 			// even when the locale is set in this next call.
 
 			fault.setFaultString(message);
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw newServerErrorFault(e);
 		}
 
@@ -123,23 +123,20 @@ public final class SoapUtils
 	}
 
 
-	public static RuntimeException newServerErrorFault(Exception e)
-	{
+	public static RuntimeException newServerErrorFault(Exception e) {
 		checkNotNull(e, "e");
 
 		return new RuntimeException(FaultMessages.INTERNAL_SERVER_ERROR, e);
 	}
 
 
-	public static void setHeadersToOutgoing(Holder<Security> wsseHeader, Holder<Header> medcomHeader)
-	{
+	public static void setHeadersToOutgoing(Holder<Security> wsseHeader, Holder<Header> medcomHeader) {
 		setSecurityHeaderToOutgoing(wsseHeader);
 		setMedcomHeaderToOutgoing(medcomHeader);
 	}
 
 
-	private static void setSecurityHeaderToOutgoing(Holder<Security> wsseHeader)
-	{
+	private static void setSecurityHeaderToOutgoing(Holder<Security> wsseHeader) {
 		Security sec = new Security();
 		Timestamp timestamp = new Timestamp();
 		Calendar cal = Calendar.getInstance(DGWS_TIMEZONE);
@@ -150,8 +147,7 @@ public final class SoapUtils
 	}
 
 
-	private static void setMedcomHeaderToOutgoing(Holder<Header> medcomHeader)
-	{
+	private static void setMedcomHeaderToOutgoing(Holder<Header> medcomHeader) {
 		Header medcom = new Header();
 		medcom.setFlowStatus(FlowStatusValues.FLOW_FINALIZED_SUCCESFULLY);
 

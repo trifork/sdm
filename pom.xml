@@ -332,7 +332,7 @@
           <version>1.12</version>
           <configuration>
               <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
-              <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+              <!--<packageName>dk.nsi.stamdata.jaxws.generated</packageName>-->
               <wsdlDirectory>${basedir}/src/main/webapp/WEB-INF/wsdl</wsdlDirectory>
           </configuration>
           <executions>

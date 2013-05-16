@@ -39,9 +39,10 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import dk.nsi._2011._09._23.stamdatacpr.*;
+import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,20 +54,12 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
-import dk.nsi.stamdata.jaxws.generated.CivilRegistrationNumberListPersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 
 /**
  * This test class is ignored as it is only used for testing a deployed war
@@ -204,7 +197,7 @@ public class CallingJbossServerTest
     {
         persons.add(Factories.createPersonWithBirthday(TWO_DAYS_AGO));
 
-        XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
+        XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper100.newXMLGregorianCalendar(YESTERDAY);
         request.setBirthDatePersonQuery(REQUESTED_BIRTHDAY);
 
         prepareDatabaseAndSendRequest();
@@ -220,7 +213,7 @@ public class CallingJbossServerTest
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_1999));
 
-        XMLGregorianCalendar birthday = PersonMapper.newXMLGregorianCalendar(Factories.YEAR_2000);
+        XMLGregorianCalendar birthday = PersonMapper100.newXMLGregorianCalendar(Factories.YEAR_2000);
         request.setBirthDatePersonQuery(birthday);
 
         prepareDatabaseAndSendRequest();

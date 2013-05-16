@@ -9,20 +9,8 @@
         xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
     <wsdl:types>
 
-        <xs:schema xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-                   targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/"
-                   jaxb:version="2.1"
-                   elementFormDefault="qualified">
+        <xs:schema targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/">
             <xs:include schemaLocation="MEDCOM_CprService.xsd"/>
-            <xs:annotation>
-                <xs:appinfo>
-                    <jaxb:globalBindings>
-                        <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
-                                       parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
-                                       printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
-                    </jaxb:globalBindings>
-                </xs:appinfo>
-            </xs:annotation>
         </xs:schema>
         <xs:schema targetNamespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
             <xs:include schemaLocation="../wsse.xsd" />

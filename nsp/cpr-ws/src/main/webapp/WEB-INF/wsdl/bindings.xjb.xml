@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jaxb:bindings xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+               xmlns:xs="http://www.w3.org/2001/XMLSchema"
+               version="2.1">
+    <jaxb:globalBindings>
+        <jaxb:javaType name="java.util.Calendar" xmlType="xs:dateTime"
+                       parseMethod="javax.xml.bind.DatatypeConverter.parseDateTime"
+                       printMethod="javax.xml.bind.DatatypeConverter.printDateTime" />
+    </jaxb:globalBindings>
+    <jaxb:bindings schemaLocation="wsse.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="dk.nsi.stamdata.jaxws.generated" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="saml.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="dk.nsi.stamdata.jaxws.generated" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="medcom.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="dk.nsi.stamdata.jaxws.generated" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="wsu.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="dk.nsi.stamdata.jaxws.generated" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+    <jaxb:bindings schemaLocation="ds.xsd">
+        <jaxb:schemaBindings>
+            <jaxb:package name="dk.nsi.stamdata.jaxws.generated" />
+        </jaxb:schemaBindings>
+    </jaxb:bindings>
+</jaxb:bindings>

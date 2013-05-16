@@ -22,9 +22,7 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr;
-
-import static dk.sosi.seal.model.constants.SubjectIdentifierTypeValues.CVR_NUMBER;
+package dk.nsi.stamdata.cpr.mapping;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -34,9 +32,20 @@ import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 import dk.nsi.stamdata.security.WhitelistService;
+import dk.oio.rep.cpr_dk.xml.schemas.core._2005._11._24.PersonBirthDateStructureType;
+import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.PersonCivilRegistrationStatusStructureType;
+import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.RegularCPRPersonType;
+import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.SimpleCPRPersonType;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
+import dk.oio.rep.itst_dk.xml.schemas._2006._01._17.PersonNameStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.*;
+import dk.oio.rep.xkom_dk.xml.schemas._2005._03._15.AddressAccessType;
+import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
+import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.Instant;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
@@ -44,87 +53,27 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.Preconditions;
 import com.trifork.stamdata.persistence.Record;
 
-import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
-import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
-import dk.nsi.stamdata.cpr.mapping.SikredeRecordToPersonPublicHealhInsuranceMapper;
-import dk.nsi.stamdata.cpr.mapping.YderregisterRecordToAssociatedGeneralPractitionerMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 
-import dk.nsi.stamdata.jaxws.generated.AddressAccessType;
-import dk.nsi.stamdata.jaxws.generated.AddressCompleteType;
-import dk.nsi.stamdata.jaxws.generated.AddressPostalType;
-import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
-import dk.nsi.stamdata.jaxws.generated.CountryIdentificationCodeType;
-import dk.nsi.stamdata.jaxws.generated.CountryIdentificationSchemeType;
-import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
-import dk.nsi.stamdata.jaxws.generated.PersonAddressStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonBirthDateStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonCivilRegistrationStatusStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
-import dk.nsi.stamdata.jaxws.generated.PersonHealthCareInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonNameStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
-import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
-import dk.nsi.stamdata.jaxws.generated.RegularCPRPersonType;
-import dk.nsi.stamdata.jaxws.generated.SimpleCPRPersonType;
 import dk.sosi.seal.model.SystemIDCard;
 
 
 @RequestScoped
-public class PersonMapper
+public class PersonMapper100 extends PersonMapper
 {
-	private static final String UKENDT = "UKENDT";
-
-	private static final int AUTHORITY_CODE_LENGTH = 4;
-    private static final String SERVICE_NAME_DGCPR = WhitelistService.DEFAULT_SERVICE_NAME;//"dgcpr";
-    private WhitelistService whitelistService;
-
-
-    public static enum ServiceProtectionLevel
-	{
-		AlwaysCensorProtectedData,
-		CensorProtectedDataForNonAuthorities
-	}
-
-
-	public static enum CPRProtectionLevel
-	{
-		CensorCPR,
-		DoNotCensorCPR
-	}
-
-
-	private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
-	private static final String PROTECTED_CPR = "0000000000";
-
-	private final SystemIDCard idCard;
-
-	private final MunicipalityMapper munucipalityMapper;
-
 
 	@Inject
-	PersonMapper(WhitelistService whitelistService, SystemIDCard idCard, MunicipalityMapper munucipalityMapper)
-	{
-		// Once we get this far the filter should have gotten rid of id cards
-		// that are not CVR authenticated System ID Cards.
-        this.whitelistService = whitelistService;
-		this.idCard = idCard;
-		this.munucipalityMapper = munucipalityMapper;
+    public PersonMapper100(WhitelistService whitelistService, SystemIDCard idCard, MunicipalityMapper munucipalityMapper) {
+        super(whitelistService, idCard, munucipalityMapper);
 	}
 
-
-	public PersonInformationStructureType map(Person person, ServiceProtectionLevel protectionLevel, CPRProtectionLevel cprProtection)
-	{
-		boolean censorData = isPersonProtected(person) && (protectionLevel == ServiceProtectionLevel.AlwaysCensorProtectedData || !isClientAnAuthority());
-
+	public PersonInformationStructureType map(Person person, ServiceProtectionLevel protectionLevel, CPRProtectionLevel cprProtection) {
+		boolean censorData = isPersonProtected(person) &&
+                (protectionLevel == ServiceProtectionLevel.AlwaysCensorProtectedData || !isClientAnAuthority());
 		return (censorData) ? createOutputWithCensoredDate(person, cprProtection) : createOutputWithRealDate(person);
 	}
 
-
-	private PersonInformationStructureType createOutputWithCensoredDate(Person person, CPRProtectionLevel cprProtection)
-	{
+	private PersonInformationStructureType createOutputWithCensoredDate(Person person, CPRProtectionLevel cprProtection) {
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
 		mapCurrentPersonCivilRegistrationIdentifier(person, output);
 
@@ -153,7 +102,7 @@ public class PersonMapper
 		// included),
 		// we might as well always protect it.
 
-		regularCprPerson.setPersonGenderCode(PersonGenderCodeType.UNKNOWN);
+        regularCprPerson.setPersonGenderCode(PersonGenderCodeType.UNKNOWN);
 
 		regularCprPerson.setPersonInformationProtectionIndicator(true);
 
@@ -186,8 +135,7 @@ public class PersonMapper
 	}
 
 
-	private PersonInformationStructureType createOutputWithRealDate(Person person)
-	{
+	private PersonInformationStructureType createOutputWithRealDate(Person person) {
 		// There are many cases in which we cannot fulfill the output format
 		// just by using data present in the db. Therefore we have to 'fill'
 		// in the gaps with e.g. 'UNKNOWN'.
@@ -251,12 +199,10 @@ public class PersonMapper
 
 		boolean shouldIncludeAddress = !CivilRegistrationStatusCodes.STATUSES_WITH_NO_ADDRESS.contains(person.getStatus());
 
-		if (shouldIncludeAddress)
-		{
+		if (shouldIncludeAddress) {
 			PersonAddressStructureType personAddress = new PersonAddressStructureType();
 
-			if (person.navnebeskyttelsestartdato != null)
-			{
+			if (person.navnebeskyttelsestartdato != null) {
 				personAddress.setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.navnebeskyttelsestartdato));
 			}
 
@@ -267,15 +213,12 @@ public class PersonMapper
 			AddressAccessType addressAccess = new AddressAccessType();
 			addressComplete.setAddressAccess(addressAccess);
 
-			if (StringUtils.isNotBlank(person.kommuneKode))
-			{
+			if (StringUtils.isNotBlank(person.kommuneKode)) {
 				String municipalityCode = StringUtils.leftPad(person.kommuneKode, AUTHORITY_CODE_LENGTH, "0");
 
 				addressAccess.setMunicipalityCode(municipalityCode);
 				personAddress.setCountyCode(munucipalityMapper.toCountyCode(municipalityCode));
-			}
-			else
-			{
+			} else {
 				addressAccess.setMunicipalityCode("0000");
 				personAddress.setCountyCode("0000");
 			}
@@ -337,8 +280,7 @@ public class PersonMapper
 			// FIXME: The importer does not import this field.
 			// We can though figure it out using the Postal Codes.
 
-			if (StringUtils.isNotBlank(""))
-			{
+			if (StringUtils.isNotBlank("")) {
 				CountryIdentificationCodeType country = new CountryIdentificationCodeType();
 
 				// Two alpha-numerical characters.
@@ -349,9 +291,7 @@ public class PersonMapper
 
 			personAddress.setAddressComplete(addressComplete);
 			output.setPersonAddressStructure(personAddress);
-		}
-		else
-		{
+		} else {
 			output.setPersonAddressStructure(createFakePersonAddressStructure(UKENDT));
 		}
 
@@ -361,8 +301,7 @@ public class PersonMapper
 	}
 
 
-	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable Record sikredeRecord, @Nullable Record yderRecord) throws DatatypeConfigurationException
-	{
+	public PersonWithHealthCareInformationStructureType map(Person person, @Nullable Record sikredeRecord, @Nullable Record yderRecord) throws DatatypeConfigurationException {
 		Preconditions.checkNotNull(person, "person");
 		
 		PersonWithHealthCareInformationStructureType personWithHealthCare = new PersonWithHealthCareInformationStructureType();
@@ -377,40 +316,27 @@ public class PersonMapper
 		
 		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner;
 		
-		if (isPersonProtected(person))
-		{
+		if (isPersonProtected(person)) {
 			associatedGeneralPractitioner = createDummyPractitioner(ADRESSEBESKYTTET);
-		}
-		else if (yderRecord == null)
-		{
+		} else if (yderRecord == null) {
 			associatedGeneralPractitioner = createDummyPractitioner(UKENDT);
-		}
-		else
-		{
+		} else {
 		    YderregisterRecordToAssociatedGeneralPractitionerMapper yderregisterRecordToAssociatedGeneralPractitionerMapper = new YderregisterRecordToAssociatedGeneralPractitionerMapper();
 		    associatedGeneralPractitioner = yderregisterRecordToAssociatedGeneralPractitionerMapper.map(yderRecord);
 		}
 		
 		personHealthCareInformation.setAssociatedGeneralPractitionerStructure(associatedGeneralPractitioner);
-
 		PersonPublicHealthInsuranceType personPublicHealthInsurance;
-		
-		if (isPersonProtected(person))
-		{
+		if (isPersonProtected(person)) {
 			personPublicHealthInsurance = createDummyPublicHealthInsurance(ADRESSEBESKYTTET);
-		}
-		else if (sikredeRecord == null)
-		{
+		} else if (sikredeRecord == null) {
 			personPublicHealthInsurance = createDummyPublicHealthInsurance(UKENDT);
-		}
-		else
-		{
+		} else {
 			SikredeRecordToPersonPublicHealhInsuranceMapper sikredeRecordToPersonPublicHealhInsuranceMapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
             personPublicHealthInsurance = sikredeRecordToPersonPublicHealhInsuranceMapper.map(sikredeRecord);
 		}
 		
 		personHealthCareInformation.setPersonPublicHealthInsurance(personPublicHealthInsurance);
-
 		return personWithHealthCare;
 	}
 
@@ -441,18 +367,6 @@ public class PersonMapper
 		personPublicHealthInsurance.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1);
 
 		return personPublicHealthInsurance;
-	}
-
-
-	private String actualOrUnknown(String actual)
-	{
-		return !StringUtils.isBlank(actual) ? actual : UKENDT;
-	}
-	
-
-	private String actualOrNull(String actual)
-	{
-		return !StringUtils.isBlank(actual) ? actual : null;
 	}
 
 
@@ -489,71 +403,25 @@ public class PersonMapper
 	}
 
 
-	private void mapCurrentPersonCivilRegistrationIdentifier(Person person, PersonInformationStructureType output)
-	{
-		if (StringUtils.isNotBlank(person.getGaeldendeCPR()))
-		{
+	private void mapCurrentPersonCivilRegistrationIdentifier(Person person, PersonInformationStructureType output) {
+		if (StringUtils.isNotBlank(person.getGaeldendeCPR())) {
 			output.setCurrentPersonCivilRegistrationIdentifier(person.getGaeldendeCPR());
 		}
 	}
 
-
-	private String getBuildingIdentifier(Person person)
-	{
-		// NSPSUPPORT-129 : buildingidentifier er alene husnummer + evt bogstav (fx 13B). Dette er indeholdt i person.husnummer
-		return person.husnummer; // + person.bygningsnummer;
-	}
-
-
-	private boolean isClientAnAuthority()
-	{
-		String careProviderType = idCard.getSystemInfo().getCareProvider().getType();
-
-		Preconditions.checkState(CVR_NUMBER.equals(careProviderType), "ID Card Care provider is not a CVR. This is a programming error.");
-
-		String clientCVR = idCard.getSystemInfo().getCareProvider().getID();
-
-		return whitelistService.isCvrWhitelisted(clientCVR, SERVICE_NAME_DGCPR);
-	}
-
-
-	private boolean isPersonProtected(Person person)
-	{
-		if (person.getNavnebeskyttelsestartdato() == null) return false;
-
-		// We have to make the guard above to avoid null being passed into the
-		// Instant
-		// it is converted to the beginning of the era.
-
-		Preconditions.checkState(person.getNavnebeskyttelseslettedato() != null, "The protection end date was not present. This is most unexpected and a programming error.");
-
-		Instant protectionStart = new Instant(person.getNavnebeskyttelsestartdato());
-		Instant protectionEnd = new Instant(person.getNavnebeskyttelseslettedato());
-
-		return protectionStart.isEqualNow() || (protectionStart.isBeforeNow() && protectionEnd.isAfterNow());
-	}
-
-
-	private PersonGenderCodeType mapGenderToGenderCode(String genderString)
-	{
-		if ("M".equalsIgnoreCase(genderString))
-		{
+	private PersonGenderCodeType mapGenderToGenderCode(String genderString) {
+		if ("M".equalsIgnoreCase(genderString)) {
 			return PersonGenderCodeType.MALE;
-		}
-		else if ("K".equalsIgnoreCase(genderString))
-		{
+		} else if ("K".equalsIgnoreCase(genderString)) {
 			return PersonGenderCodeType.FEMALE;
-		}
-		else
-		{
+		} else {
 			return PersonGenderCodeType.UNKNOWN;
 		}
 	}
 
 
-	public static XMLGregorianCalendar newXMLGregorianCalendar(Date date)
-	{
-		DatatypeFactory factory = null;
+	public static XMLGregorianCalendar newXMLGregorianCalendar(Date date) {
+		DatatypeFactory factory;
 		try {
 			factory = DatatypeFactory.newInstance();
 		} catch (DatatypeConfigurationException e) {

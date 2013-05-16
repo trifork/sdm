@@ -25,10 +25,10 @@
 package dk.nsi.stamdata.cpr.security;
 
 import com.google.inject.servlet.RequestScoped;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.security.ClientVocesCvr;
 import dk.nsi.stamdata.security.WhitelistService;
 import dk.nsi.stamdata.security.Whitelisted;
+import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.DGWSFault;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -64,6 +64,7 @@ class WhitelistInterceptor implements MethodInterceptor
             logger.error("CVR '" + clientCvr + "' is not in whitelist for component name " + serviceName);
             result = null;
 
+            // TODO!!! Get back here and throw appropriate fault
             throw new DGWSFault("The request CVR number is not authorized to use this service.", FaultCodeValues.NOT_AUTHORIZED);
         }
 

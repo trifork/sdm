@@ -42,6 +42,8 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType;
+import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
@@ -63,13 +65,6 @@ import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
-import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslag;
-import dk.nsi.stamdata.jaxws.generated.DetGodeCPROpslagService;
-import dk.nsi.stamdata.jaxws.generated.GetPersonInformationIn;
-import dk.nsi.stamdata.jaxws.generated.GetPersonInformationOut;
-import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationIn;
-import dk.nsi.stamdata.jaxws.generated.GetPersonWithHealthCareInformationOut;
-import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
 @RunWith(GuiceTestRunner.class)
 public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test

@@ -37,30 +37,29 @@ import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.junit.Before;
 import org.junit.Test;
 
-import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
+import dk.nsi.stamdata.cpr.mapping.PersonMapper.CPRProtectionLevel;
+import dk.nsi.stamdata.cpr.mapping.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 
-public class PersonMapperFieldMappingForProtectedPersonTest
-{
+public class PersonMapperFieldMappingForProtectedPersonTest {
     private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
     private Person person;
     private PersonInformationStructureType output;
 
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         person = Factories.createPersonWithAddressProtection();
 
         doMap();
@@ -68,71 +67,61 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsGaeldendeToCurrentPersonCivilRegistrationIdentifier() throws Exception
-    {
+    public void mapsGaeldendeToCurrentPersonCivilRegistrationIdentifier() throws Exception {
         assertEquals(person.getGaeldendeCPR(), output.getCurrentPersonCivilRegistrationIdentifier());
     }
 
 
     @Test
-    public void alwaysUses01ForPersonCivilRegistrationCode()
-    {
+    public void alwaysUses01ForPersonCivilRegistrationCode() {
         assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("01")));
     }
 
 
     @Test
-    public void setsCivilRegistrationStatusStartDateToStartOfEra() throws DatatypeConfigurationException
-    {
+    public void setsCivilRegistrationStatusStartDateToStartOfEra() throws DatatypeConfigurationException {
         assertEquals(new Date(0), output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusStartDate().toGregorianCalendar().getTime());
     }
 
 
     @Test
-    public void usesAddresseBeskyttetForPersonNameForAddressingName() throws DatatypeConfigurationException
-    {
+    public void usesAddresseBeskyttetForPersonNameForAddressingName() throws DatatypeConfigurationException {
         assertEquals(ADRESSEBESKYTTET, output.getRegularCPRPerson().getPersonNameForAddressingName());
     }
 
 
     @Test
-    public void omitsForStreetNameForAddressingName() throws DatatypeConfigurationException
-    {
+    public void omitsForStreetNameForAddressingName() throws DatatypeConfigurationException {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName());
     }
 
 
     @Test
-    public void usesAddresseBeskyttetForGivenName() throws Exception
-    {
+    public void usesAddresseBeskyttetForGivenName() throws Exception {
         assertEquals(ADRESSEBESKYTTET, output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName());
     }
 
 
     @Test
-    public void omitsMiddleName() throws Exception
-    {
+    public void omitsMiddleName() throws Exception {
         assertNull(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonMiddleName());
     }
 
 
     @Test
-    public void usesAddresseBeskyttetForSurname() throws Exception
-    {
+    public void usesAddresseBeskyttetForSurname() throws Exception {
         assertEquals(ADRESSEBESKYTTET, output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonSurnameName());
     }
 
 
     @Test
-    public void mapsCprToPersonCivilRegistrationIdentifier() throws Exception
-    {
+    public void mapsCprToPersonCivilRegistrationIdentifier() throws Exception {
         assertEquals(person.getCpr(), output.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
     }
 
 
     @Test
-    public void mapsKoenMToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenMToGenderCodeUnknown() throws Exception {
         person.setKoen("M");
         doMap();
 
@@ -141,8 +130,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsKoenKToGenderCodeFemale() throws Exception
-    {
+    public void mapsKoenKToGenderCodeFemale() throws Exception {
         person.setKoen("K");
         doMap();
 
@@ -151,8 +139,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsKoenEmptystringToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenEmptystringToGenderCodeUnknown() throws Exception {
         person.setKoen("");
         doMap();
 
@@ -161,8 +148,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsKoenSinglespaceToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenSinglespaceToGenderCodeUnknown() throws Exception {
         person.setKoen(" ");
         doMap();
 
@@ -171,8 +157,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsKoenSomeSingleletterCodeToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenSomeSingleletterCodeToGenderCodeUnknown() throws Exception {
         person.setKoen("X");
         doMap();
 
@@ -181,151 +166,130 @@ public class PersonMapperFieldMappingForProtectedPersonTest
 
 
     @Test
-    public void mapsFoedselsdatoToBirthdate() throws Exception
-    {
+    public void mapsFoedselsdatoToBirthdate() throws Exception {
         assertThat(output.getRegularCPRPerson().getPersonBirthDateStructure().getBirthDate().toGregorianCalendar().getTime(), is(not(person.getFoedselsdato())));
     }
 
 
     @Test
-    public void omitsCareOfName() throws Exception
-    {
+    public void omitsCareOfName() throws Exception {
         assertNull(output.getPersonAddressStructure().getCareOfName());
     }
 
 
     @Test
-    public void uses0000ForMunicipalityCode() throws Exception
-    {
+    public void uses0000ForMunicipalityCode() throws Exception {
         assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getMunicipalityCode());
     }
 
 
     @Test
-    public void uses0000ForStreetCode() throws Exception
-    {
+    public void uses0000ForStreetCode() throws Exception {
         assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
     }
 
 
     @Test
-    public void uses1ForStreetBuildingIdentifierInAddressAccess() throws Exception
-    {
+    public void uses1ForStreetBuildingIdentifierInAddressAccess() throws Exception {
         assertEquals("1", output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetBuildingIdentifier());
     }
 
 
     @Test
-    public void uses1ForStreetBuildingIdentifierInAddressPostal() throws Exception
-    {
+    public void uses1ForStreetBuildingIdentifierInAddressPostal() throws Exception {
         assertEquals("1", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
     }
 
 
     @Test
-    public void omitsMailDeliverySublocationIdentifier() throws Exception
-    {
+    public void omitsMailDeliverySublocationIdentifier() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getMailDeliverySublocationIdentifier());
     }
 
 
     @Test
-    public void usesAdressebeskyttetForStreetName() throws Exception
-    {
+    public void usesAdressebeskyttetForStreetName() throws Exception {
         assertEquals(ADRESSEBESKYTTET, output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetName());
     }
 
 
     @Test
-    public void omitsStreetnameForAddressingName() throws Exception
-    {
+    public void omitsStreetnameForAddressingName() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName());
     }
 
 
     @Test
-    public void omitsFloorIdentifier() throws Exception
-    {
+    public void omitsFloorIdentifier() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getFloorIdentifier());
     }
 
 
     @Test
-    public void omitsSuiteIdentifier() throws Exception
-    {
+    public void omitsSuiteIdentifier() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getSuiteIdentifier());
     }
 
 
     @Test
-    public void usesTrueForBirthdateUncertaintyIndicator() throws Exception
-    {
+    public void usesTrueForBirthdateUncertaintyIndicator() throws Exception {
         assertTrue(output.getRegularCPRPerson().getPersonBirthDateStructure().isBirthDateUncertaintyIndicator());
     }
 
 
     @Test
-    public void uses0000ForPostCodeIdentifier() throws Exception
-    {
+    public void uses0000ForPostCodeIdentifier() throws Exception {
         assertEquals("0000", output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostCodeIdentifier());
     }
 
 
     @Test
-    public void usesAdressebeskyttetForDistrictName() throws Exception
-    {
+    public void usesAdressebeskyttetForDistrictName() throws Exception {
         assertEquals(ADRESSEBESKYTTET, output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getDistrictName());
     }
 
 
     @Test
-    public void usesPersonInformationProtectionStartDate() throws Exception
-    {
+    public void usesPersonInformationProtectionStartDate() throws Exception {
         assertThat(output.getPersonAddressStructure().getPersonInformationProtectionStartDate().toGregorianCalendar().getTime(), is(person.getNavnebeskyttelsestartdato()));
     }
 
 
     @Test
-    public void usesTrueForPersonInformationProtectionIndicator() throws Exception
-    {
+    public void usesTrueForPersonInformationProtectionIndicator() throws Exception {
         assertTrue(output.getRegularCPRPerson().isPersonInformationProtectionIndicator());
     }
 
 
     @Test
-    public void omitsDistrictSubdivisionIdentifier() throws Exception
-    {
+    public void omitsDistrictSubdivisionIdentifier() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getDistrictSubdivisionIdentifier());
     }
 
 
     @Test
-    public void omitsPostOfficeBoxIdentifier() throws Exception
-    {
+    public void omitsPostOfficeBoxIdentifier() throws Exception {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostOfficeBoxIdentifier());
     }
 
 
     @Test
-    public void omitsCountryIdentificationCode()
-    {
+    public void omitsCountryIdentificationCode() {
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getCountryIdentificationCode());
     }
 
 
     @Test
-    public void omitsCountyCode()
-    {
+    public void omitsCountyCode() {
         assertThat(output.getPersonAddressStructure().getCountyCode(), is("0000"));
     }
 
 
-    private void doMap() throws Exception
-    {
+    private void doMap() throws Exception {
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678", AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 
-        PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
+        PersonMapper100 personMapper = new PersonMapper100(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
         output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
     }

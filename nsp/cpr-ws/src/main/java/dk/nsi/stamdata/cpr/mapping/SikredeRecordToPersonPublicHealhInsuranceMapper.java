@@ -28,21 +28,20 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonPublicHealthInsuranceType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.ObjectFactory;
 import org.joda.time.DateTime;
 
 import com.trifork.stamdata.persistence.Record;
 
-import dk.nsi.stamdata.jaxws.generated.ObjectFactory;
-import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
-import dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType;
 
 public class SikredeRecordToPersonPublicHealhInsuranceMapper 
 {
     private static final String SYGESIKRINGSGRUPPE_1_FIELD_VALUE = "1";
     private static final String SYGESIKRINGSGRUPPE_2_FIELD_VALUE = "2";
 
-    public PersonPublicHealthInsuranceType map(Record record)
-    {
+    public PersonPublicHealthInsuranceType map(Record record) {
         // TODO: If SikredeFields was also available, it would be possible to verify content before mapping
         PersonPublicHealthInsuranceType healthInsuranceType = new ObjectFactory().createPersonPublicHealthInsuranceType();
 
@@ -50,16 +49,11 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
         //
         Object sSikrGrpKodeFieldValue = record.get("SSikrGrpKode");
 
-        if (SYGESIKRINGSGRUPPE_1_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
-        {
+        if (SYGESIKRINGSGRUPPE_1_FIELD_VALUE.equals(sSikrGrpKodeFieldValue)) {
             healthInsuranceType.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1);
-        }
-        else if (SYGESIKRINGSGRUPPE_2_FIELD_VALUE.equals(sSikrGrpKodeFieldValue))
-        {
+        } else if (SYGESIKRINGSGRUPPE_2_FIELD_VALUE.equals(sSikrGrpKodeFieldValue)) {
             healthInsuranceType.setPublicHealthInsuranceGroupIdentifier(PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2);
-        }
-        else
-        {
+        } else {
             throw new IllegalStateException("Unknown value for SSikrGrpKode: " + sSikrGrpKodeFieldValue);
         }
         
@@ -76,15 +70,11 @@ public class SikredeRecordToPersonPublicHealhInsuranceMapper
         return healthInsuranceType;
     }
     
-    static XMLGregorianCalendar newXMLGregorianCalendar(int year, int month, int day)
-    {
-        DatatypeFactory factory = null;
-        try 
-        {
+    static XMLGregorianCalendar newXMLGregorianCalendar(int year, int month, int day) {
+        DatatypeFactory factory;
+        try {
             factory = DatatypeFactory.newInstance();
-        } 
-        catch (DatatypeConfigurationException e) 
-        {
+        } catch (DatatypeConfigurationException e) {
             throw new RuntimeException(e);
         }
         return factory.newXMLGregorianCalendar(new DateTime(year, month, day, 0, 0).toGregorianCalendar());

@@ -106,6 +106,10 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxws-maven-plugin</artifactId>
+        <configuration>
+          <packageName>dk.nsi.stamdata.jaxws.generated</packageName>
+          <sei/>
+        </configuration>
         <executions>
           <execution>
             <phase>generate-sources</phase>

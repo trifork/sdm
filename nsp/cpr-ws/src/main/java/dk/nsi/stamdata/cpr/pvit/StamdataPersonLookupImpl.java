@@ -31,6 +31,10 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 
+import dk.nsi._2011._09._23.stamdatacpr.DGWSFault;
+import dk.nsi._2011._09._23.stamdatacpr.PersonLookupRequestType;
+import dk.nsi._2011._09._23.stamdatacpr.PersonLookupResponseType;
+import dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookup;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
 
@@ -40,17 +44,13 @@ import com.trifork.stamdata.persistence.Transactional;
 
 import dk.nsi.stamdata.cpr.SoapUtils;
 import dk.nsi.stamdata.cpr.medcom.FaultMessages;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
 import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
-@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup")
+@WebService(endpointInterface="dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookup")
 @GuiceWebservice
 @SchemaValidation
 public class StamdataPersonLookupImpl implements StamdataPersonLookup
@@ -75,8 +75,10 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
     @Override
     @Transactional
-    public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader, Holder<Header> medcomHeader, PersonLookupRequestType request) throws DGWSFault
-    {
+    public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader,
+                                                     Holder<Header> medcomHeader,
+                                                     PersonLookupRequestType request)
+            throws DGWSFault {
         SoapUtils.updateSlaLog(medcomHeader, "getPersonDetails", slaLogItem);
         verifyExactlyOneQueryParameterIsNonNull(wsseHeader, medcomHeader, request);
 
@@ -84,44 +86,36 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
         // This has to be done according to the DGWS specifications
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
-        try
-        {
-            if (request.getCivilRegistrationNumberPersonQuery() != null)
-            {
+        try {
+            if (request.getCivilRegistrationNumberPersonQuery() != null) {
                 return stamdataPersonResponseFinder.answerCprRequest(clientCVR, request.getCivilRegistrationNumberPersonQuery());
             }
 
-            if (request.getCivilRegistrationNumberListPersonQuery() != null)
-            {
+            if (request.getCivilRegistrationNumberListPersonQuery() != null) {
                 return stamdataPersonResponseFinder.answerCivilRegistrationNumberListPersonRequest(clientCVR, request.getCivilRegistrationNumberListPersonQuery().getCivilRegistrationNumber());
             }
 
-            if (request.getBirthDatePersonQuery() != null)
-            {
+            if (request.getBirthDatePersonQuery() != null) {
                 return stamdataPersonResponseFinder.answerBirthDatePersonRequest(clientCVR, request.getBirthDatePersonQuery());
             }
 
-            if (request.getNamePersonQuery() != null)
-            {
+            if (request.getNamePersonQuery() != null) {
                 return stamdataPersonResponseFinder.answerNamePersonRequest(clientCVR, request.getNamePersonQuery());
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             logger.error(e.getMessage(), e); // TODO: Log medcom flow id
-            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM, DGWSFault.class);
         }
-        catch (DatatypeConfigurationException e)
-        {
+        catch (DatatypeConfigurationException e) {
             logger.error(e.getMessage(), e); // TODO: Log medcom flow id
-            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM, DGWSFault.class);
         }
 
         throw new AssertionError("Unreachable point: exactly one of the previous clauses is true");
     }
 
-    private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault
-    {
+    private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault {
         // FIXME: This is actually handled by the @SchemaValidation annotation.
 
         Object[] queryParameters = new Object[4];
@@ -132,20 +126,17 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
         queryParameters[3] = request.getNamePersonQuery();
 
         int nonNullParameters = 0;
-        for (Object parameter : queryParameters)
-        {
-            if (parameter != null)
-            {
+        for (Object parameter : queryParameters) {
+            if (parameter != null) {
                 nonNullParameters += 1;
             }
         }
 
-        if (nonNullParameters != 1)
-        {
+        if (nonNullParameters != 1) {
             // TODO: This way of throwing faults was taken from DGCPROpslag and
             // does not contain any meaningful information for the caller.
 
-            throw SoapUtils.newDGWSFault(securityHeaderHolder, medcomHeaderHolder, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+            throw SoapUtils.newDGWSFault(securityHeaderHolder, medcomHeaderHolder, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM, DGWSFault.class);
         }
     }
 }

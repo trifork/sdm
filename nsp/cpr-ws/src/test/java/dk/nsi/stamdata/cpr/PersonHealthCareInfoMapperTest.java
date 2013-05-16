@@ -25,9 +25,7 @@
 package dk.nsi.stamdata.cpr;
 
 import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
-import static dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
-import static dk.nsi.stamdata.jaxws.generated.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
+import static dk.nsi.stamdata.cpr.mapping.PersonMapper100.newXMLGregorianCalendar;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -37,6 +35,14 @@ import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.AssociatedGeneralPractitionerStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonPublicHealthInsuranceType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
+
+import static dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_1;
+import static dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2;
+
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,16 +51,12 @@ import com.trifork.stamdata.persistence.Record;
 
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonPublicHealthInsuranceType;
-import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 
-public class PersonHealthCareInfoMapperTest
-{
+public class PersonHealthCareInfoMapperTest {
     private static final String NOT_WHITELISTED_CVR = "99999999";
     private static final String ADRESSEBESKYTTET = "ADRESSEBESKYTTET";
     private static final String UKENDT = "UKENDT";
@@ -67,25 +69,22 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         person = Factories.createPerson();
         yderRecord = Factories.createYderRecord("1234");
         sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
     }
 
-    private void doMapping() throws DatatypeConfigurationException
-    {
+    private void doMapping() throws DatatypeConfigurationException {
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
-        output = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
+        output = new PersonMapper100(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
     }
 
 
     @Test
-    public void itInsertsRealDataIfNoneAreMissing() throws DatatypeConfigurationException
-    {
+    public void itInsertsRealDataIfNoneAreMissing() throws DatatypeConfigurationException {
         doMapping();
 
         assertThatRelationIsRealData();
@@ -94,8 +93,7 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Test
-    public void itInsertsDummyDataIfTheYderDataIsMissing() throws DatatypeConfigurationException
-    {
+    public void itInsertsDummyDataIfTheYderDataIsMissing() throws DatatypeConfigurationException {
         yderRecord = null;
 
         doMapping();
@@ -106,8 +104,7 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Test
-    public void itInsertsDummyDataIfThePersonIsProtectedAndDataIsMissing() throws DatatypeConfigurationException
-    {
+    public void itInsertsDummyDataIfThePersonIsProtectedAndDataIsMissing() throws DatatypeConfigurationException {
         person = Factories.createPersonWithAddressProtection();
         yderRecord = null;
         sikredeRecord = null;
@@ -120,8 +117,7 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Test
-    public void itInsertsDummyDataIfPersonIsProtected() throws DatatypeConfigurationException
-    {
+    public void itInsertsDummyDataIfPersonIsProtected() throws DatatypeConfigurationException {
         person = Factories.createPersonWithAddressProtection();
 
         doMapping();
@@ -132,8 +128,7 @@ public class PersonHealthCareInfoMapperTest
 
 
     @Test
-    public void itInsertsDummyDataIfBothAreMissing() throws DatatypeConfigurationException
-    {
+    public void itInsertsDummyDataIfBothAreMissing() throws DatatypeConfigurationException {
         sikredeRecord = null;
         yderRecord = null;
 
@@ -144,8 +139,7 @@ public class PersonHealthCareInfoMapperTest
     }
 
 
-    private void assertThatGeneralPractitionerIsDummy(String placeholderText)
-    {
+    private void assertThatGeneralPractitionerIsDummy(String placeholderText) {
         AssociatedGeneralPractitionerStructureType g = output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure();
 
         assertThat(g.getAssociatedGeneralPractitionerOrganisationName(), is(placeholderText));
@@ -158,8 +152,7 @@ public class PersonHealthCareInfoMapperTest
     }
 
 
-    private void assertThatGeneralPractitionerIsRealData()
-    {
+    private void assertThatGeneralPractitionerIsRealData() {
         AssociatedGeneralPractitionerStructureType g = output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure();
 
         assertThat(g.getAssociatedGeneralPractitionerOrganisationName(), is(yderRecord.get("PrakBetegn")));
@@ -172,8 +165,7 @@ public class PersonHealthCareInfoMapperTest
     }
 
 
-    private void assertThatRelationIsDummy() throws DatatypeConfigurationException
-    {
+    private void assertThatRelationIsDummy() throws DatatypeConfigurationException {
         PersonPublicHealthInsuranceType g = output.getPersonHealthCareInformationStructure().getPersonPublicHealthInsurance();
 
         assertThat(g.getPublicHealthInsuranceGroupIdentifier(), is(SYGESIKRINGSGRUPPE_1));
@@ -181,8 +173,7 @@ public class PersonHealthCareInfoMapperTest
     }
 
 
-    private void assertThatRelationIsRealData() throws DatatypeConfigurationException
-    {
+    private void assertThatRelationIsRealData() throws DatatypeConfigurationException {
         PersonPublicHealthInsuranceType g = output.getPersonHealthCareInformationStructure().getPersonPublicHealthInsurance();
 
         assertThat(g.getPublicHealthInsuranceGroupIdentifier(), is(SYGESIKRINGSGRUPPE_2));
