@@ -35,7 +35,7 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(GuiceTestRunner.class)
 public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmentJUnit4Test {
-    public static final QName DET_GODE_CPR_OPSLAG_102_SERVICE = new QName("urn:oio:medcom:cprservice:1.0.2", "DetGodeCPROpslagService102");
+    public static final QName DET_GODE_CPR_OPSLAG_102_SERVICE = new QName("urn:oio:medcom:cprservice:1.0.2", "DetGodeCPROpslagService");
     public static final String RANDOM_CVR = "87654321";
 
     @Inject
@@ -44,7 +44,7 @@ public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmen
     @Inject
     private Provider<Connection> connectionProvider;
 
-    private DetGodeCPROpslag102 client;
+    private DetGodeCPROpslag client;
 
     private GetPersonInformationIn request = new GetPersonInformationIn();
     private GetPersonInformationOut response;
@@ -58,11 +58,11 @@ public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmen
 
     @Before
     public void setUp() throws MalformedURLException {
-        URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag102?wsdl");
-        DetGodeCPROpslagService102 serviceCatalog =
-                new DetGodeCPROpslagService102(wsdlLocation, DET_GODE_CPR_OPSLAG_102_SERVICE);
+        URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag-1.0.2?wsdl");
+        DetGodeCPROpslagService serviceCatalog =
+                new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_102_SERVICE);
         serviceCatalog.setHandlerResolver(new SealNamespaceResolver());
-        client = serviceCatalog.getDetGodeCPROpslag102();
+        client = serviceCatalog.getDetGodeCPROpslag();
     }
 
     private void sendPersonRequest() throws Exception {

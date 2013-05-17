@@ -22,16 +22,18 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.medcom;
+package dk.nsi.stamdata.cpr.medcom.v102;
 
 import com.google.inject.Inject;
 import com.sun.xml.ws.developer.SchemaValidation;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.jaxws.GuiceInstanceResolver.GuiceWebservice;
+import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordFetcher;
 import com.trifork.stamdata.persistence.Transactional;
 import dk.nsi.stamdata.cpr.SoapUtils;
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v102.PersonMapper;
+import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagCommon;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.jaxws.generated.*;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
@@ -40,22 +42,33 @@ import oio.medcom.cprservice._1_0.*;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
+import java.sql.SQLException;
 
-@WebService(endpointInterface="oio.medcom.cprservice._1_0.DetGodeCPROpslag102")
+@WebService(endpointInterface="oio.medcom.cprservice._1_0.DetGodeCPROpslag")
 @GuiceWebservice
 @SchemaValidation
-public class DetGodeCPROpslagImpl102 extends DetGodCPROpslagBase implements DetGodeCPROpslag102
+public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetGodeCPROpslag
 {
     private static final String NS_DET_GODE_CPR_OPSLAG_102 = "urn:oio:medcom:cprservice:1.0.2";
     private static final String NS_DGWS_1_0 = "http://www.medcom.dk/dgws/2006/04/dgws-1.0.xsd";
     private static final String NS_WS_SECURITY = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
-    private final PersonMapper100 personMapper;
+    private final PersonMapper personMapper;
     private final SLALogItem slaLogItem;
 
+    /**
+     * Dummy
+     */
+    public DetGodeCPROpslagImpl() {
+        super(null, null, null);
+        slaLogItem = null;
+        personMapper = null;
+    }
+
     @Inject
-    DetGodeCPROpslagImpl102(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper100 personMapper, SystemIDCard card, SLALogItem slaLogItem)
+    DetGodeCPROpslagImpl(Fetcher fetcher, RecordFetcher recordFetcher, PersonMapper personMapper, SystemIDCard card, SLALogItem slaLogItem)
     {
         super(fetcher, recordFetcher, card.getSystemInfo().getCareProvider().getID());
         this.personMapper = personMapper;
@@ -70,7 +83,46 @@ public class DetGodeCPROpslagImpl102 extends DetGodCPROpslagBase implements DetG
             @WebParam(name = "getPersonWithHealthCareInformationIn", targetNamespace = NS_DET_GODE_CPR_OPSLAG_102, partName = "parameters") GetPersonWithHealthCareInformationIn input)
             throws DGWSFault
     {
-        return null;
+        SoapUtils.updateSlaLog(medcomHeader, "getPersonWithHealthCareInformation", slaLogItem);
+        SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
+
+        // 1. Check the white list to see if the client is authorized.
+        String pnr = input.getPersonCivilRegistrationIdentifier();
+        logAccess(pnr);
+
+        // 2. Validate the input parameters.
+        checkInputParameters(pnr);
+
+        // 2. Fetch the person from the database.
+        Person person = fetchPersonWithPnr(pnr);
+
+        Record sikredeRecord;
+        try {
+            sikredeRecord = getSikredeRecord(pnr);
+        } catch (SQLException e) {
+            throw SoapUtils.newServerErrorFault(e);
+        }
+
+        Record yderRecord = null;
+        if(sikredeRecord != null) {
+            try {
+                yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"));
+            } catch (SQLException e) {
+                throw SoapUtils.newServerErrorFault(e);
+            }
+        }
+
+        // If the relation is not found we have to use fake data to satisfy the
+        // output format.
+        GetPersonWithHealthCareInformationOut output = new GetPersonWithHealthCareInformationOut();
+        PersonWithHealthCareInformationStructureType personWithHealthCareInformation = null;
+        try {
+            personWithHealthCareInformation = personMapper.map(person, sikredeRecord, yderRecord);
+        } catch (DatatypeConfigurationException e) {
+            throw SoapUtils.newServerErrorFault(e);
+        }
+        output.setPersonWithHealthCareInformationStructure(personWithHealthCareInformation);
+        return output;
     }
 
     @Override
@@ -83,27 +135,22 @@ public class DetGodeCPROpslagImpl102 extends DetGodCPROpslagBase implements DetG
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
         // 1. Check the white list to see if the client is authorized.
-
         String pnr = input.getPersonCivilRegistrationIdentifier();
-
         logAccess(pnr);
 
         // 2. Validate the input parameters.
-
         checkInputParameters(pnr);
 
         // 3. Fetch the person from the database.
-
         Person person = fetchPersonWithPnr(pnr);
 
         // We now have the requested person. Use it to fill in
         // the response.
-
         GetPersonInformationOut output = new GetPersonInformationOut();
-        PersonInformationStructureType personInformation = null;
 
-//        personInformation = personMapper.map(person, PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData,
-//                PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
+        PersonInformationStructureType personInformation =
+                personMapper.map(person, PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData,
+                        PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
 
         output.setPersonInformationStructure(personInformation);
 

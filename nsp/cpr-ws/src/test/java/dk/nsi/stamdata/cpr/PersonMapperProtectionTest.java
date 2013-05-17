@@ -33,7 +33,7 @@ import java.util.Collections;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.nsi.stamdata.security.WhitelistService;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
@@ -84,8 +84,8 @@ public class PersonMapperProtectionTest {
         sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
     }
 
-    public PersonMapper100 mapper(boolean isClientAnAuthority) {
-        return new PersonMapper100(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard, municipalityMapper);
+    public PersonMapper mapper(boolean isClientAnAuthority) {
+        return new PersonMapper(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard, municipalityMapper);
     }
 
     @Test

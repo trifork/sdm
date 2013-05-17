@@ -22,30 +22,22 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.mapping;
+package dk.nsi.stamdata.cpr.mapping.v100;
 
-import java.math.BigInteger;
 import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 
+import dk.nsi.stamdata.cpr.mapping.*;
 import dk.nsi.stamdata.security.WhitelistService;
-import dk.oio.rep.cpr_dk.xml.schemas.core._2005._11._24.PersonBirthDateStructureType;
-import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.PersonCivilRegistrationStatusStructureType;
 import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.RegularCPRPersonType;
-import dk.oio.rep.cpr_dk.xml.schemas.core._2006._01._17.SimpleCPRPersonType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationCodeType;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.CountryIdentificationSchemeType;
-import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
-import dk.oio.rep.itst_dk.xml.schemas._2006._01._17.PersonNameStructureType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.*;
 import dk.oio.rep.xkom_dk.xml.schemas._2005._03._15.AddressAccessType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressCompleteType;
 import dk.oio.rep.xkom_dk.xml.schemas._2006._01._06.AddressPostalType;
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateTime;
 
 import com.google.inject.Inject;
 import com.google.inject.servlet.RequestScoped;
@@ -57,13 +49,15 @@ import dk.nsi.stamdata.cpr.models.Person;
 
 import dk.sosi.seal.model.SystemIDCard;
 
-
+/**
+ * Person mapper for wsdl version 1.0.0
+ */
 @RequestScoped
-public class PersonMapper100 extends PersonMapper
+public class PersonMapper extends dk.nsi.stamdata.cpr.mapping.PersonMapper
 {
 
 	@Inject
-    public PersonMapper100(WhitelistService whitelistService, SystemIDCard idCard, MunicipalityMapper munucipalityMapper) {
+    public PersonMapper(WhitelistService whitelistService, SystemIDCard idCard, MunicipalityMapper munucipalityMapper) {
         super(whitelistService, idCard, munucipalityMapper);
 	}
 
@@ -77,55 +71,9 @@ public class PersonMapper100 extends PersonMapper
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
 		mapCurrentPersonCivilRegistrationIdentifier(person, output);
 
-		RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();
-		SimpleCPRPersonType simpleCprPerson = new SimpleCPRPersonType();
-
-		// PERSON NAME STRUCTURE SECTION
-
-		PersonNameStructureType personName = new PersonNameStructureType();
-		simpleCprPerson.setPersonNameStructure(personName);
-
-		personName.setPersonGivenName(ADRESSEBESKYTTET);
-		personName.setPersonMiddleName(null);
-		personName.setPersonSurnameName(ADRESSEBESKYTTET);
-
-		// For some searches we also need to censor the CPR number.
-
-		boolean isCPRHidden = cprProtection == CPRProtectionLevel.CensorCPR;
-		simpleCprPerson.setPersonCivilRegistrationIdentifier(isCPRHidden ? PROTECTED_CPR : person.getCpr());
-
-		regularCprPerson.setSimpleCPRPerson(simpleCprPerson);
-
-		regularCprPerson.setPersonNameForAddressingName(ADRESSEBESKYTTET);
-
-		// Even though the CPR can be read from the CPR (when the CPR is
-		// included),
-		// we might as well always protect it.
-
-        regularCprPerson.setPersonGenderCode(PersonGenderCodeType.UNKNOWN);
-
-		regularCprPerson.setPersonInformationProtectionIndicator(true);
-
-		// BIRTH DATE
-
-		PersonBirthDateStructureType personBirthDate = new PersonBirthDateStructureType();
-
-		personBirthDate.setBirthDate(newXMLGregorianCalendar(new Date(0)));
-		personBirthDate.setBirthDateUncertaintyIndicator(true);
-
-		regularCprPerson.setPersonBirthDateStructure(personBirthDate);
-
-		// CIVIL STATUS
-
-		PersonCivilRegistrationStatusStructureType personCivil = new PersonCivilRegistrationStatusStructureType();
-
-		personCivil.setPersonCivilRegistrationStatusCode(BigInteger.ONE);
-		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(new Date(0)));
-
-		regularCprPerson.setPersonCivilRegistrationStatusStructure(personCivil);
+        RegularCPRPersonType regularCprPerson = createCensoredRegularPerson(person.getCpr(), cprProtection);
 
 		// PERSON ADDRESS
-
 		output.setPersonAddressStructure(createFakePersonAddressStructure(ADRESSEBESKYTTET));
 		output.getPersonAddressStructure().setPersonInformationProtectionStartDate(newXMLGregorianCalendar(person.getNavnebeskyttelsestartdato()));
 
@@ -141,55 +89,9 @@ public class PersonMapper100 extends PersonMapper
 		// in the gaps with e.g. 'UNKNOWN'.
 
 		PersonInformationStructureType output = new ObjectFactory().createPersonInformationStructureType();
-
 		mapCurrentPersonCivilRegistrationIdentifier(person, output);
 
-		RegularCPRPersonType regularCprPerson = new RegularCPRPersonType();
-		SimpleCPRPersonType simpleCprPerson = new SimpleCPRPersonType();
-		regularCprPerson.setSimpleCPRPerson(simpleCprPerson);
-
-		// PERSON NAME STRUCTURE SECTION
-		//
-		// Many of these values might not be present in the database
-		// this is because that 'Such is life' and sometimes we simply
-		// don't know a person's first name, address or birthday.
-
-		PersonNameStructureType personName = new PersonNameStructureType();
-		simpleCprPerson.setPersonNameStructure(personName);
-
-		personName.setPersonGivenName(actualOrUnknown(person.fornavn));
-
-		// Middle name is optional.
-
-		personName.setPersonMiddleName(actualOrNull(person.mellemnavn));
-
-		personName.setPersonSurnameName(actualOrUnknown(person.efternavn));
-
-		simpleCprPerson.setPersonCivilRegistrationIdentifier(person.cpr);
-
-		regularCprPerson.setPersonNameForAddressingName(actualOrUnknown(person.getNavnTilAdressering()));
-
-		regularCprPerson.setPersonGenderCode(mapGenderToGenderCode(person.koen));
-
-		regularCprPerson.setPersonInformationProtectionIndicator(false);
-
-		// BIRTH DATE
-
-		PersonBirthDateStructureType personBirthDate = new PersonBirthDateStructureType();
-
-		personBirthDate.setBirthDate(newXMLGregorianCalendar(person.foedselsdato));
-		personBirthDate.setBirthDateUncertaintyIndicator(person.getFoedselsdatoMarkering());
-
-		regularCprPerson.setPersonBirthDateStructure(personBirthDate);
-
-		// CIVIL STATUS
-
-		PersonCivilRegistrationStatusStructureType personCivil = new PersonCivilRegistrationStatusStructureType();
-
-		personCivil.setPersonCivilRegistrationStatusCode(new BigInteger(person.getStatus()));
-		personCivil.setPersonCivilRegistrationStatusStartDate(newXMLGregorianCalendar(person.getStatusDato()));
-
-		regularCprPerson.setPersonCivilRegistrationStatusStructure(personCivil);
+		RegularCPRPersonType regularCprPerson = createRegularPerson(person);
 
 		// PERSON ADDRESS
 		//
@@ -226,7 +128,7 @@ public class PersonMapper100 extends PersonMapper
 			personAddress.setCareOfName(actualOrNull(person.coNavn));
 
 			addressAccess.setStreetCode(StringUtils.leftPad(person.vejKode, AUTHORITY_CODE_LENGTH, "0"));
-			addressAccess.setStreetBuildingIdentifier(getBuildingIdentifier(person));
+			addressAccess.setStreetBuildingIdentifier(person.husnummer);
 
 			AddressPostalType addressPostal = new AddressPostalType();
 			addressComplete.setAddressPostal(addressPostal);
@@ -248,7 +150,7 @@ public class PersonMapper100 extends PersonMapper
 
 			addressPostal.setStreetNameForAddressingName(actualOrNull(person.getVejnavnTilAdressering()));
 
-			addressPostal.setStreetBuildingIdentifier(actualOrNull(getBuildingIdentifier(person)));
+			addressPostal.setStreetBuildingIdentifier(actualOrNull(person.husnummer));
 
 			addressPostal.setFloorIdentifier(actualOrNull(person.getEtage()));
 
@@ -268,11 +170,6 @@ public class PersonMapper100 extends PersonMapper
 
 			// Post Box is excluded since a persons address cannot be a Post
 			// Box.
-			//
-			// if (StringUtils.isNotBlank(""))
-			// {
-			// addressPostal.setPostOfficeBoxIdentifier(-1);
-			// }
 
 			addressPostal.setPostCodeIdentifier(person.postnummer);
 			addressPostal.setDistrictName(person.postdistrikt);
@@ -332,7 +229,7 @@ public class PersonMapper100 extends PersonMapper
 		} else if (sikredeRecord == null) {
 			personPublicHealthInsurance = createDummyPublicHealthInsurance(UKENDT);
 		} else {
-			SikredeRecordToPersonPublicHealhInsuranceMapper sikredeRecordToPersonPublicHealhInsuranceMapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
+			SikredeRecordToPersonPublicHealthInsuranceMapper sikredeRecordToPersonPublicHealhInsuranceMapper = new SikredeRecordToPersonPublicHealthInsuranceMapper();
             personPublicHealthInsurance = sikredeRecordToPersonPublicHealhInsuranceMapper.map(sikredeRecord);
 		}
 		
@@ -340,23 +237,6 @@ public class PersonMapper100 extends PersonMapper
 		return personWithHealthCare;
 	}
 
-
-	private AssociatedGeneralPractitionerStructureType createDummyPractitioner(String placeholderText)
-	{
-		Preconditions.checkNotNull(placeholderText, "placeholderText");
-
-		AssociatedGeneralPractitionerStructureType associatedGeneralPractitioner = new AssociatedGeneralPractitionerStructureType();
-		associatedGeneralPractitioner.setAssociatedGeneralPractitionerIdentifier(BigInteger.ZERO);
-		associatedGeneralPractitioner.setAssociatedGeneralPractitionerOrganisationName(placeholderText);
-		associatedGeneralPractitioner.setDistrictName(placeholderText);
-		associatedGeneralPractitioner.setEmailAddressIdentifier(placeholderText + "@example.com");
-		associatedGeneralPractitioner.setPostCodeIdentifier("0000");
-
-		associatedGeneralPractitioner.setStandardAddressIdentifier(placeholderText);
-		associatedGeneralPractitioner.setTelephoneSubscriberIdentifier("00000000");
-
-		return associatedGeneralPractitioner;
-	}
 
 	public PersonPublicHealthInsuranceType createDummyPublicHealthInsurance(String placeholderText) throws DatatypeConfigurationException
 	{
@@ -409,24 +289,4 @@ public class PersonMapper100 extends PersonMapper
 		}
 	}
 
-	private PersonGenderCodeType mapGenderToGenderCode(String genderString) {
-		if ("M".equalsIgnoreCase(genderString)) {
-			return PersonGenderCodeType.MALE;
-		} else if ("K".equalsIgnoreCase(genderString)) {
-			return PersonGenderCodeType.FEMALE;
-		} else {
-			return PersonGenderCodeType.UNKNOWN;
-		}
-	}
-
-
-	public static XMLGregorianCalendar newXMLGregorianCalendar(Date date) {
-		DatatypeFactory factory;
-		try {
-			factory = DatatypeFactory.newInstance();
-		} catch (DatatypeConfigurationException e) {
-			throw new RuntimeException(e);
-		}
-		return factory.newXMLGregorianCalendar(new DateTime(date).toGregorianCalendar());
-	}
 }

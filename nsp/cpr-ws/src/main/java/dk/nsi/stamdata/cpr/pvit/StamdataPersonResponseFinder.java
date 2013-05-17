@@ -34,7 +34,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
 
 import dk.nsi._2011._09._23.stamdatacpr.NamePersonQueryType;
 import dk.nsi._2011._09._23.stamdatacpr.PersonLookupResponseType;
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.apache.commons.lang.StringUtils;
 
@@ -51,11 +51,11 @@ public class StamdataPersonResponseFinder
     private final static Logger logger = Logger.getLogger(StamdataPersonResponseFinder.class);
 
     private final Fetcher fetcher;
-    private final PersonMapper100 personMapper;
+    private final PersonMapper personMapper;
 
 
     @Inject
-    StamdataPersonResponseFinder(Fetcher fetcher, PersonMapper100 personMapper)
+    StamdataPersonResponseFinder(Fetcher fetcher, PersonMapper personMapper)
     {
         this.fetcher = fetcher;
         this.personMapper = personMapper;
@@ -75,7 +75,7 @@ public class StamdataPersonResponseFinder
 
         if (wasFound)
         {
-            personInformationStructure.add(personMapper.map(person, PersonMapper100.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper100.CPRProtectionLevel.DoNotCensorCPR));
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
         }
 
         return response;
@@ -97,7 +97,7 @@ public class StamdataPersonResponseFinder
 
             if (wasFound)
             {
-                personInformationStructure.add(personMapper.map(person, PersonMapper100.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper100.CPRProtectionLevel.DoNotCensorCPR));
+                personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.DoNotCensorCPR));
             }
         }
 
@@ -119,7 +119,7 @@ public class StamdataPersonResponseFinder
         {
             logger.info("type=auditlog, client_cvr="+cvr+", cpr_of_returned_person="+person.getCpr());
 
-            personInformationStructure.add(personMapper.map(person, PersonMapper100.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper100.CPRProtectionLevel.CensorCPR));
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
         }
 
         return response;
@@ -148,7 +148,7 @@ public class StamdataPersonResponseFinder
         {
             logger.info("type=auditlog, client_cvr="+cvr+", cvr_of_returned_person="+person.getCpr());
 
-            personInformationStructure.add(personMapper.map(person, PersonMapper100.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper100.CPRProtectionLevel.CensorCPR));
+            personInformationStructure.add(personMapper.map(person, PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities, PersonMapper.CPRProtectionLevel.CensorCPR));
         }
 
         return response;

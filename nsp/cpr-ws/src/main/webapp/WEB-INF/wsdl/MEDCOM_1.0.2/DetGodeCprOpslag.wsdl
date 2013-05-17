@@ -46,7 +46,7 @@
         <wsdl:part name="fault" element="dgws:FaultCode" />
     </wsdl:message>
 
-    <wsdl:portType name="DetGodeCPROpslag102">
+    <wsdl:portType name="DetGodeCPROpslag">
         <wsdl:operation name="getPersonInformation">
             <wsdl:input message="tns:getPersonInformationIn"/>
             <wsdl:output message="tns:getPersonInformationOut"/>
@@ -58,7 +58,7 @@
             <wsdl:fault message="tns:DGWSFault" name="DGWSFault" />
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="DetGodeCPROpslagBinding102" type="tns:DetGodeCPROpslag102">
+    <wsdl:binding name="DetGodeCPROpslagBinding" type="tns:DetGodeCPROpslag">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
         <wsdl:operation name="getPersonInformation">
             <soap:operation
@@ -98,9 +98,9 @@
         </wsdl:operation>
     </wsdl:binding>
 
-    <wsdl:service name="DetGodeCPROpslagService102">
-        <wsdl:port name="DetGodeCPROpslag102" binding="tns:DetGodeCPROpslagBinding102">
-            <soap:address location="http://localhost:8080/DetGodeCPROpslagService102" />
+    <wsdl:service name="DetGodeCPROpslagService">
+        <wsdl:port name="DetGodeCPROpslag" binding="tns:DetGodeCPROpslagBinding">
+            <soap:address location="http://localhost:8080/DetGodeCPROpslagService-1.0.2" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

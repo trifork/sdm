@@ -37,7 +37,7 @@ import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.junit.Before;
@@ -289,7 +289,7 @@ public class PersonMapperFieldMappingForProtectedPersonTest {
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard("12345678", AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
 
-        PersonMapper100 personMapper = new PersonMapper100(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
+        PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
         output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
     }

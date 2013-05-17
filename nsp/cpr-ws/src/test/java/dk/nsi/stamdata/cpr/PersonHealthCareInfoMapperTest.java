@@ -25,7 +25,7 @@
 package dk.nsi.stamdata.cpr;
 
 import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static dk.nsi.stamdata.cpr.mapping.PersonMapper100.newXMLGregorianCalendar;
+import static dk.nsi.stamdata.cpr.mapping.v100.PersonMapper.newXMLGregorianCalendar;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -35,7 +35,7 @@ import java.util.Date;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.AssociatedGeneralPractitionerStructureType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonPublicHealthInsuranceType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
@@ -79,7 +79,7 @@ public class PersonHealthCareInfoMapperTest {
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
         SystemIDCard idCard = MockSecureTokenService.createSignedSystemIDCard(NOT_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
 
-        output = new PersonMapper100(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
+        output = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper).map(person, sikredeRecord, yderRecord);
     }
 
 

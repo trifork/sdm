@@ -40,7 +40,7 @@ import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import dk.nsi._2011._09._23.stamdatacpr.*;
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.Before;
@@ -197,7 +197,7 @@ public class CallingJbossServerTest
     {
         persons.add(Factories.createPersonWithBirthday(TWO_DAYS_AGO));
 
-        XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper100.newXMLGregorianCalendar(YESTERDAY);
+        XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
         request.setBirthDatePersonQuery(REQUESTED_BIRTHDAY);
 
         prepareDatabaseAndSendRequest();
@@ -213,7 +213,7 @@ public class CallingJbossServerTest
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_1999));
 
-        XMLGregorianCalendar birthday = PersonMapper100.newXMLGregorianCalendar(Factories.YEAR_2000);
+        XMLGregorianCalendar birthday = PersonMapper.newXMLGregorianCalendar(Factories.YEAR_2000);
         request.setBirthDatePersonQuery(birthday);
 
         prepareDatabaseAndSendRequest();

@@ -26,6 +26,7 @@ package dk.nsi.stamdata.cpr.mapping;
 
 import static org.junit.Assert.assertEquals;
 
+import dk.nsi.stamdata.cpr.mapping.v100.SikredeRecordToPersonPublicHealthInsuranceMapper;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonPublicHealthInsuranceType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType;
 import org.junit.Test;
@@ -62,7 +63,7 @@ public class SikredeRecordToPersonPublicHealthInsuranceTest {
                 .put("SSikrGrpKode", sygesikringsGruppeKategori)
                 .put("SIkraftDatoGrp", sygesikringsGruppeStartDato);
 
-        SikredeRecordToPersonPublicHealhInsuranceMapper mapper = new SikredeRecordToPersonPublicHealhInsuranceMapper();
+        SikredeRecordToPersonPublicHealthInsuranceMapper mapper = new SikredeRecordToPersonPublicHealthInsuranceMapper();
         PersonPublicHealthInsuranceType xmlStructurer = mapper.map(record);
 
         assertEquals(expectedCategory, xmlStructurer.getPublicHealthInsuranceGroupIdentifier());

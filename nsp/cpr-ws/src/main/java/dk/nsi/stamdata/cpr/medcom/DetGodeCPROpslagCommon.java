@@ -16,41 +16,35 @@ import java.sql.SQLException;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
-public class DetGodCPROpslagBase {
+abstract public class DetGodeCPROpslagCommon {
 
     protected final Fetcher fetcher;
     protected final RecordFetcher recordFetcher;
 
     protected final String clientCVR;
 
-    private static final Logger logger = Logger.getLogger(DetGodCPROpslagBase.class);
+    private static final Logger logger = Logger.getLogger(DetGodeCPROpslagCommon.class);
 
-    public DetGodCPROpslagBase(Fetcher fetcher, RecordFetcher recordFetcher, String clientCVR) {
+    public DetGodeCPROpslagCommon(Fetcher fetcher, RecordFetcher recordFetcher, String clientCVR) {
         this.fetcher = fetcher;
         this.recordFetcher = recordFetcher;
         this.clientCVR = clientCVR;
     }
 
     @Transactional
-    protected Record getSikredeRecord(String pnr) throws SQLException
-    {
+    protected Record getSikredeRecord(String pnr) throws SQLException {
         return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC, "CPRnr");
     }
 
     @Transactional
-    protected Record getYderRecord(String ydernummer) throws SQLException
-    {
+    protected Record getYderRecord(String ydernummer) throws SQLException {
         return recordFetcher.fetchCurrent(ydernummer, YderregisterRecordSpecs.YDER_RECORD_TYPE, "YdernrYder");
     }
 
     // HELPERS
-
-    protected Person fetchPersonWithPnr(String pnr)
-    {
+    protected Person fetchPersonWithPnr(String pnr) {
         checkNotNull(pnr, "pnr");
-
         Person person;
-
         try {
             person = fetcher.fetch(Person.class, pnr);
         } catch (Exception e) {
@@ -62,7 +56,6 @@ public class DetGodCPROpslagBase {
         // fault if no person is found. We cannot change this to return nil
         // which would
         // be a nicer protocol.
-
         if (person == null) {
             throw SoapUtils.newSOAPSenderFault(FaultMessages.NO_DATA_FOUND_FAULT_MSG);
         }
@@ -70,11 +63,8 @@ public class DetGodCPROpslagBase {
         return person;
     }
 
-
     // HELPERS
-
-    protected void checkInputParameters(@Nullable String pnr)
-    {
+    protected void checkInputParameters(@Nullable String pnr) {
         if (StringUtils.isBlank(pnr)) {
             // This service should match functionality from a service that was
             // not DGWS protected.
@@ -84,9 +74,7 @@ public class DetGodCPROpslagBase {
         }
     }
 
-
-    protected void logAccess(String requestedCPR)
-    {
+    protected void logAccess(String requestedCPR) {
         logger.info("type=auditlog, service=stamdata-cpr, client_cvr="+clientCVR+", requested_cpr="+requestedCPR);
     }
 

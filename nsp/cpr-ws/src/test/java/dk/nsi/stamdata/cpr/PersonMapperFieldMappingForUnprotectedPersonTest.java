@@ -25,7 +25,7 @@
 package dk.nsi.stamdata.cpr;
 
 import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static dk.nsi.stamdata.cpr.mapping.PersonMapper100.newXMLGregorianCalendar;
+import static dk.nsi.stamdata.cpr.mapping.v100.PersonMapper.newXMLGregorianCalendar;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,8 +35,7 @@ import static org.junit.Assert.assertThat;
 import java.math.BigInteger;
 import java.util.Collections;
 
-import dk.nsi.stamdata.cpr.mapping.PersonMapper;
-import dk.nsi.stamdata.cpr.mapping.PersonMapper100;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.junit.Before;
@@ -352,8 +351,8 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest {
     private void doMap() throws Exception {
 
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
-        PersonMapper100 personMapper = new PersonMapper100(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
+        PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
-        output = personMapper.map(person, PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData, PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
+        output = personMapper.map(person, dk.nsi.stamdata.cpr.mapping.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData, dk.nsi.stamdata.cpr.mapping.PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
     }
 }

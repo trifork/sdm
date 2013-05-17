@@ -72,7 +72,6 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
         this.slaLogItem = slaLogItem;
     }
 
-
     @Override
     @Transactional
     public PersonLookupResponseType getPersonDetails(Holder<Security> wsseHeader,
@@ -117,9 +116,7 @@ public class StamdataPersonLookupImpl implements StamdataPersonLookup
 
     private void verifyExactlyOneQueryParameterIsNonNull(Holder<Security> securityHeaderHolder, Holder<Header> medcomHeaderHolder, PersonLookupRequestType request) throws DGWSFault {
         // FIXME: This is actually handled by the @SchemaValidation annotation.
-
         Object[] queryParameters = new Object[4];
-
         queryParameters[0] = request.getBirthDatePersonQuery();
         queryParameters[1] = request.getCivilRegistrationNumberListPersonQuery();
         queryParameters[2] = request.getCivilRegistrationNumberPersonQuery();
