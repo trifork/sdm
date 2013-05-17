@@ -30,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,22 +50,22 @@ public class RecordFetcher
         this.connectionProvider = connectionProvider;
     }
     
-    public Record fetchCurrent(String key, RecordSpecification recordSpecification, String lookupColumn) throws SQLException
+    public Record fetchCurrent(String key, RecordSpecification recordSpecification,
+                               String lookupColumn, Date currentTime) throws SQLException
     {
         PreparedStatement preparedStatement = null;
         Connection connection = null;
         try {
-            String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND validTo IS NULL", recordSpecification.getTable(), lookupColumn);
+            String queryString = String.format("SELECT * FROM %s WHERE %s = ? AND (validTo IS NULL OR validTo>?)",
+                    recordSpecification.getTable(), lookupColumn);
             connection = connectionProvider.get();
             preparedStatement = connection.prepareStatement(queryString);
             preparedStatement.setObject(1, key);
+            preparedStatement.setObject(2, currentTime);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next())
-            {
+            if (resultSet.next()) {
                 return createRecordFromResultSet(recordSpecification, resultSet);
-            }
-            else
-            {
+            } else {
                 return null;
             }
         } finally {
@@ -77,9 +78,9 @@ public class RecordFetcher
         }
     }
     
-    public Record fetchCurrent(String key, RecordSpecification recordSpecification) throws SQLException
+    public Record fetchCurrent(String key, RecordSpecification recordSpecification, Date currentTime) throws SQLException
     {
-        return fetchCurrent(key, recordSpecification, recordSpecification.getKeyColumn());
+        return fetchCurrent(key, recordSpecification, recordSpecification.getKeyColumn(), currentTime);
     }
 
     public List<RecordMetadata> fetchSince(RecordSpecification recordSpecification, long fromPID, Instant fromModifiedDate, int limit) throws SQLException

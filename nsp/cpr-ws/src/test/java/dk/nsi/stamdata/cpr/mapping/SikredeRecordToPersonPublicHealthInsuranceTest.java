@@ -55,6 +55,46 @@ public class SikredeRecordToPersonPublicHealthInsuranceTest {
         testSimpleMappingContainingAllFieldsHelper("1", null, "A0110628", 0, 0, 0);
     }
 
+    @Test
+    public void testSimpleMappingContainingAllFieldsInCategory2_v102() {
+        testSimpleMappingContainingAllFieldsHelperVersion102("2",
+                oio.medcom.cprservice._1_0.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_2, "20110628", 2011, 6, 28);
+    }
+
+    @Test
+    public void testSimpleMappingContainingAllFieldsInCategory9_v102() {
+        testSimpleMappingContainingAllFieldsHelperVersion102("9",
+                oio.medcom.cprservice._1_0.PublicHealthInsuranceGroupIdentifierType.SYGESIKRINGSGRUPPE_9, "20110628", 2011, 6, 28);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSimpleMappingWithIlleagalSygesikringsgruppe_v102() {
+        testSimpleMappingContainingAllFieldsHelperVersion102("3", null, "20110628", 0, 0, 0);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public void testSimpleMappingWithIlleagalSygesikringsGruppeStartDato_v102() {
+        testSimpleMappingContainingAllFieldsHelperVersion102("1", null, "A0110628", 0, 0, 0);
+    }
+
+    private void testSimpleMappingContainingAllFieldsHelperVersion102(
+            String sygesikringsGruppeKategori, oio.medcom.cprservice._1_0.PublicHealthInsuranceGroupIdentifierType expectedCategory,
+            String sygesikringsGruppeStartDato, int expectedYear, int expectedMonth, int expectedDay) {
+        // These record names are taken from the document "NSI - NOTUS Sikrede -def.pdf"
+        Record record = new Record()
+                .put("SSikrGrpKode", sygesikringsGruppeKategori)
+                .put("SIkraftDatoGrp", sygesikringsGruppeStartDato);
+
+        dk.nsi.stamdata.cpr.mapping.v102.SikredeRecordToPersonPublicHealthInsuranceMapper mapper =
+                new dk.nsi.stamdata.cpr.mapping.v102.SikredeRecordToPersonPublicHealthInsuranceMapper();
+        oio.medcom.cprservice._1_0.PersonPublicHealthInsuranceType xmlStructurer = mapper.map(record);
+
+        assertEquals(expectedCategory, xmlStructurer.getPublicHealthInsuranceGroupIdentifier());
+        assertEquals(expectedYear, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getYear());
+        assertEquals(expectedMonth, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getMonth());
+        assertEquals(expectedDay, xmlStructurer.getPublicHealthInsuranceGroupStartDate().getDay());
+    }
+
     private void testSimpleMappingContainingAllFieldsHelper(
             String sygesikringsGruppeKategori, PublicHealthInsuranceGroupIdentifierType expectedCategory,
             String sygesikringsGruppeStartDato, int expectedYear, int expectedMonth, int expectedDay) {

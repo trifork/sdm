@@ -2,24 +2,24 @@
 <endpoints xmlns="http://java.sun.com/xml/ns/jax-ws/ri/runtime" version="2.0">
 
 	<!-- This binding is for DetGodeCPROpslag SOAP 1.1 -->
-	<endpoint name="DetGodeCprOpslag" wsdl="wsdl/MEDCOM_1.0.0/DetGodeCprOpslag.wsdl"
+	<endpoint name="DetGodeCprOpslag" wsdl="WEB-INF/wsdl/MEDCOM_1.0.0/DetGodeCprOpslag.wsdl"
 		service="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslagService"
 		port="{http://rep.oio.dk/medcom.sundcom.dk/xml/wsdl/2007/06/28/}DetGodeCPROpslag"
 		implementation="dk.nsi.stamdata.cpr.medcom.v100.DetGodeCPROpslagImpl" url-pattern="/service/DetGodeCPROpslag" />
 
-    <endpoint name="DetGodeCprOpslag102" wsdl="wsdl/MEDCOM_1.0.2/DetGodeCprOpslag.wsdl"
+    <endpoint name="DetGodeCprOpslag102" wsdl="WEB-INF/wsdl/MEDCOM_1.0.2/DetGodeCprOpslag.wsdl"
               service="{urn:oio:medcom:cprservice:1.0.2}DetGodeCPROpslagService"
               port="{urn:oio:medcom:cprservice:1.0.2}DetGodeCPROpslag"
               implementation="dk.nsi.stamdata.cpr.medcom.v102.DetGodeCPROpslagImpl" url-pattern="/service/DetGodeCPROpslag-1.0.2" />
 		
 	<!-- This binding is for PersonLookupService SOAP 1.1, not using SOAP 1.2 due to SEAL limitations -->
-	<endpoint name="StamdataPersonLookup" wsdl="wsdl/StamdataPersonLookup.wsdl"
+	<endpoint name="StamdataPersonLookup" wsdl="WEB-INF/wsdl/StamdataPersonLookup.wsdl"
 		service="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookupService"
 		port="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookup"
 		implementation="dk.nsi.stamdata.cpr.pvit.StamdataPersonLookupImpl" url-pattern="/service/StamdataPersonLookup" />
 
     <!-- This binding is for PersonLookupWithSubscriptionService SOAP 1.1, not using SOAP 1.2 due to SEAL limitations -->
-    <endpoint name="StamdataPersonLookupWithSubscription" wsdl="wsdl/StamdataPersonLookupWithSubscription.wsdl"
+    <endpoint name="StamdataPersonLookupWithSubscription" wsdl="WEB-INF/wsdl/StamdataPersonLookupWithSubscription.wsdl"
               service="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookupWithSubscriptionService"
               port="{http://nsi.dk/2011/09/23/StamdataCpr/}StamdataPersonLookupWithSubscription"
               implementation="dk.nsi.stamdata.cpr.pvit.StamdataPersonLookupWithSubscriptionImpl"

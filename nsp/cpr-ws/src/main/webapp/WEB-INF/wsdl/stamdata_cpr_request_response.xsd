@@ -1,8 +1,8 @@
 <schema targetNamespace="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:ns4="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" xmlns:sd="http://nsi.dk/2011/09/23/StamdataCpr/" xmlns:Q1="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/" xmlns:Q2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" xmlns:Q3="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/">
-    <import schemaLocation="../schema/MEDCOM_1.0.0/MEDCOM_DGCPR_1.0.0.xsd" namespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"></import>
-    <import schemaLocation="../schema/OIO/CPR_2005.03.18/Import.xsd" namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"></import>
-    <import schemaLocation="../schema/OIO/CPR_2005.11.24/Import.xsd" namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"></import>
-    <import schemaLocation="../schema/OIO/DKCC_2003.02.13/Import.xsd" namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"></import>
+    <import schemaLocation="schema/MEDCOM_1.0.0/MEDCOM_DGCPR_1.0.0.xsd" namespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"></import>
+    <import schemaLocation="schema/OIO/CPR_2005.03.18/Import.xsd" namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"></import>
+    <import schemaLocation="schema/OIO/CPR_2005.11.24/Import.xsd" namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"></import>
+    <import schemaLocation="schema/OIO/DKCC_2003.02.13/Import.xsd" namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"></import>
 
     <element name="PersonLookupRequest" type="sd:PersonLookupRequestType" />
 

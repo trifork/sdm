@@ -6,9 +6,9 @@
     targetNamespace="urn:oio:medcom:cprservice:1.0.2">
 
     <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
-        schemaLocation="../../schema/OIO/CPR_2005.03.18/Import.xsd"/>
+        schemaLocation="../schema/OIO/CPR_2005.03.18/Import.xsd"/>
     
-    <xs:include schemaLocation="../../schema/MEDCOM_1.0.2/MEDCOM_DGCPR_1.0.2.xsd"/>
+    <xs:include schemaLocation="../schema/MEDCOM_1.0.2/MEDCOM_DGCPR_1.0.2.xsd"/>
     
     <xs:element name="getPersonWithHealthCareInformationIn">
         <xs:complexType>

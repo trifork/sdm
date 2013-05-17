@@ -45,6 +45,7 @@ import javax.jws.WebService;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.ws.Holder;
 import java.sql.SQLException;
+import java.util.Date;
 
 @WebService(endpointInterface="oio.medcom.cprservice._1_0.DetGodeCPROpslag")
 @GuiceWebservice
@@ -86,6 +87,8 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
         SoapUtils.updateSlaLog(medcomHeader, "getPersonWithHealthCareInformation", slaLogItem);
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
+        Date now = new Date();
+
         // 1. Check the white list to see if the client is authorized.
         String pnr = input.getPersonCivilRegistrationIdentifier();
         logAccess(pnr);
@@ -98,7 +101,7 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
 
         Record sikredeRecord;
         try {
-            sikredeRecord = getSikredeRecord(pnr);
+            sikredeRecord = getSikredeRecord(pnr, now);
         } catch (SQLException e) {
             throw SoapUtils.newServerErrorFault(e);
         }
@@ -106,7 +109,7 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
         Record yderRecord = null;
         if(sikredeRecord != null) {
             try {
-                yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"));
+                yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"), now);
             } catch (SQLException e) {
                 throw SoapUtils.newServerErrorFault(e);
             }

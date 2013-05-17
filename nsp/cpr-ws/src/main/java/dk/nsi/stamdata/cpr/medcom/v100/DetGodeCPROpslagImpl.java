@@ -25,6 +25,7 @@
 package dk.nsi.stamdata.cpr.medcom.v100;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
@@ -127,6 +128,8 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
         SoapUtils.updateSlaLog(medcomHeader, "getPersonWithHealthCareInformation", slaLogItem);
         SoapUtils.setHeadersToOutgoing(wsseHeader, medcomHeader);
 
+        Date now = new Date();
+
 		// 1. Check the white list to see if the client is authorized.
 		String pnr = parameters.getPersonCivilRegistrationIdentifier();
 		logAccess(pnr);
@@ -144,7 +147,7 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
 
 		Record sikredeRecord;
 		try {
-		    sikredeRecord = getSikredeRecord(pnr);
+		    sikredeRecord = getSikredeRecord(pnr, now);
 		} catch (SQLException e) {
             throw SoapUtils.newServerErrorFault(e);		    
 		}
@@ -152,7 +155,7 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
 		Record yderRecord = null;
 		if(sikredeRecord != null) {
 		    try {
-		        yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"));
+		        yderRecord = getYderRecord((String) sikredeRecord.get("SYdernr"), now);
 		    } catch (SQLException e) {
 	            throw SoapUtils.newServerErrorFault(e);         
 	        }

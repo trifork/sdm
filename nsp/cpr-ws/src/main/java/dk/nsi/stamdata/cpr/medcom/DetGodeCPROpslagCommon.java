@@ -1,3 +1,27 @@
+/**
+ * The contents of this file are subject to the Mozilla Public
+ * License Version 1.1 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.mozilla.org/MPL/
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ * Contributor(s): Contributors are attributed in the source code
+ * where applicable.
+ *
+ * The Original Code is "Stamdata".
+ *
+ * The Initial Developer of the Original Code is Trifork Public A/S.
+ *
+ * Portions created for the Original Code are Copyright 2011,
+ * Lægemiddelstyrelsen. All Rights Reserved.
+ *
+ * Portions created for the FMKi Project are Copyright 2011,
+ * National Board of e-Health (NSI). All Rights Reserved.
+ */
 package dk.nsi.stamdata.cpr.medcom;
 
 import com.trifork.stamdata.Fetcher;
@@ -13,6 +37,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.sql.SQLException;
+import java.util.Date;
 
 import static com.trifork.stamdata.Preconditions.checkNotNull;
 
@@ -32,13 +57,13 @@ abstract public class DetGodeCPROpslagCommon {
     }
 
     @Transactional
-    protected Record getSikredeRecord(String pnr) throws SQLException {
-        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC, "CPRnr");
+    protected Record getSikredeRecord(String pnr, Date currentDate) throws SQLException {
+        return recordFetcher.fetchCurrent(pnr, SikredeRecordSpecs.ENTRY_RECORD_SPEC, "CPRnr", currentDate);
     }
 
     @Transactional
-    protected Record getYderRecord(String ydernummer) throws SQLException {
-        return recordFetcher.fetchCurrent(ydernummer, YderregisterRecordSpecs.YDER_RECORD_TYPE, "YdernrYder");
+    protected Record getYderRecord(String ydernummer, Date currentDate) throws SQLException {
+        return recordFetcher.fetchCurrent(ydernummer, YderregisterRecordSpecs.YDER_RECORD_TYPE, "YdernrYder", currentDate);
     }
 
     // HELPERS
