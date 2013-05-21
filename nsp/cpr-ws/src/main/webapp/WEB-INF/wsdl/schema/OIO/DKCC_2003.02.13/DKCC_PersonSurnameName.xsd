@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" 
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" 
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<element name="PersonSurnameName" type="dkcc:PersonSurnameNameType"/>
+	<simpleType name="PersonSurnameNameType">
+		<annotation>
+			<documentation>Declaration of an individuals surname.</documentation>
+		</annotation>
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="40"/>
+		</restriction>
+	</simpleType>
+</schema>
+

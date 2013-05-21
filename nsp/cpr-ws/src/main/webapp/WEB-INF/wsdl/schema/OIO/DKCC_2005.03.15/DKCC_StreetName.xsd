@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/">
+    <element name="StreetName" type="dkcc:StreetNameType">
+        <annotation>
+            <documentation>The approved name of a road, a street, a square, a path and the like.
+                Further more street names can be connected to other particularly limited areas like
+                garden associations or summer residence areas without road network, large commercial
+                or institutional areas with a large number of buildings, smaller islands without
+                road network, larger sporting facilities and the like. </documentation>
+        </annotation>
+    </element>
+    <simpleType name="StreetNameType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="40"/>
+        </restriction>
+    </simpleType>
+</schema>

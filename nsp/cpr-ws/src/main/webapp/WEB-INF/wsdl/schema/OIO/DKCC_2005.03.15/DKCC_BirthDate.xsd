@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+	targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+	elementFormDefault="qualified">
+	<element name="BirthDate" type="date">
+		<annotation>
+			<documentation>Declares on which date an individuals birth has taken place, and are
+				consecutive used to declare an individuals age.</documentation>
+		</annotation>
+	</element>
+</schema>

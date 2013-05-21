@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/">
+    <element name="DistrictSubdivisionIdentifier" type="dkcc:DistrictSubdivisionIdentifierType">
+        <annotation>
+            <documentation> Name of a village, city or subdivision of a city or district, which is
+                determined as a part of the official address specification for a certain street or
+                specific parts of a street, defined by intervals of street building identifiers (da:
+                house numbers). </documentation>
+        </annotation>
+    </element>
+    <simpleType name="DistrictSubdivisionIdentifierType">
+        <restriction base="string">
+            <minLength value="1"/>
+            <maxLength value="34"/>
+        </restriction>
+    </simpleType>
+</schema>

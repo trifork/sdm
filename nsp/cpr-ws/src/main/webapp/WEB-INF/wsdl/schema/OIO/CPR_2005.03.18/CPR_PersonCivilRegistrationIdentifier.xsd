@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+	elementFormDefault="qualified" version="1.1">
+	<element name="PersonCivilRegistrationIdentifier"
+		type="cpr:PersonCivilRegistrationIdentifierType">
+		<annotation>
+			<documentation> CivilRegistrationNumber (PNR) Description: Unique identification of a
+				person The Civil Registration System contains: - Data on persons, who after 1968
+				April 2nd Danish registry of citizens. As for Greenland the corresponding date is
+				1972 may 1st. - Danish citizens living outside Denmark (who must pay duty and ATP)
+				has also been given a civil registration number. - Civil registration numbers are
+				also assigned for other administrative purposes. Value space: The civil registration
+				number consists of two parts. The first part is the valid birthday in the form
+				DDMMYY. The following part is a serial number of four digits. The civil registration
+				number may also hold the value 0000000000. This value is used where the civil
+				registration number is required but unknown. Lifecycle: The civil registration
+				number is generated and assigned at birth, entry and change of civil registration
+				number of for administrative reasons. The civil registration number may be assigned
+				via hospitals. The civil registration number is not to be deleted. Remarks: 1994
+				June 11th the civil registration number was changed according to this description.
+			</documentation>
+		</annotation>
+	</element>
+	<simpleType name="PersonCivilRegistrationIdentifierType">
+		<restriction base="string">
+			<pattern
+				value="((((0[1-9]|1[0-9]|2[0-9]|3[0-1])(01|03|05|07|08|10|12))|((0[1-9]|1[0-9]|2[0-9]|30)(04|06|09|11))|((0[1-9]|1[0-9]|2[0-9])(02)))[0-9]{6})|0000000000"
+			/>
+		</restriction>
+	</simpleType>
+</schema>

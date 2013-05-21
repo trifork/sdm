@@ -35,6 +35,7 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 
+import dk.nsi._2011._09._23.stamdatacpr.*;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,13 +49,8 @@ import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 import dk.sosi.seal.model.AuthenticationLevel;
 
 @RunWith(GuiceTestRunner.class)

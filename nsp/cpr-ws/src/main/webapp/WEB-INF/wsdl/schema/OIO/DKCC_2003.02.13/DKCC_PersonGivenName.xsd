@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<element name="PersonGivenName" type="dkcc:PersonGivenNameType">
+		<annotation>
+			<documentation>Declaration of an individual’s first name(s).</documentation>
+		</annotation>
+	</element>
+	<simpleType name="PersonGivenNameType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="50"/>
+		</restriction>
+	</simpleType>
+</schema>

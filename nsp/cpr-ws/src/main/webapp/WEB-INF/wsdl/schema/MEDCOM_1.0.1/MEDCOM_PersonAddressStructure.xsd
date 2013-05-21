@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" xmlns:medcom2="urn:oio:medcom:cprservice:1.0.1"
+  xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+  xmlns:cpr2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="urn:oio:medcom:cprservice:1.0.1"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  
+  <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/09/01/"
+    schemaLocation="../OIO/CPR_2006.09.01/Import.xsd"/>
+  
+  <xs:import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+    schemaLocation="../OIO/ITST_2005.06.24/Import.xsd"/>
+  
+  <xs:include schemaLocation="MEDCOM_DGCPR_1.0.1.xsd"/>
+  
+  <xs:element name="PersonAddressStructure" type="medcom2:PersonAddressStructureType">
+    <xs:annotation>
+      <xs:documentation>Adresseoplysninger</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  
+  <xs:complexType name="PersonAddressStructureType">
+    <xs:annotation>
+      <xs:documentation>Postaddresse paa en person samt information vedr.
+        adressebeskyttelse.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="itst:CareOfName" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Angiver om denne adresse er en C/O adresse</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element ref="medcom2:AddressDenmark"/>
+        <xs:element ref="medcom2:AddressForeign"/>
+      </xs:choice>
+      <xs:element ref="cpr2:PersonInformationProtectionStartDate" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Hvis dette felt forekommer er adressen beskyttet fra denne dato, ellers
+            ingen beskyttelse.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:xkom-1="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+	xmlns:xkom-2="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+	elementFormDefault="qualified">
+	<import schemaLocation="../XKOM_2005.03.15/Import.xsd"
+		namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"/>
+	<include schemaLocation="XKOM_AddressPostal.xsd"/>
+	<element name="AddressComplete" type="xkom-1:AddressCompleteType"/>
+	<complexType name="AddressCompleteType">
+		<sequence>
+			<element ref="xkom-2:AddressAccess"/>
+			<element ref="xkom-1:AddressPostal"/>
+		</sequence>
+	</complexType>
+</schema>

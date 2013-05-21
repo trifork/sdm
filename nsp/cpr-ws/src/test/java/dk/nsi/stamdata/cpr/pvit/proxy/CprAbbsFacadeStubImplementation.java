@@ -36,20 +36,20 @@ import javax.xml.ws.Holder;
 import javax.xml.ws.WebServiceContext;
 import javax.xml.ws.handler.MessageContext;
 
+import dk.nsi.cprabbs._2011._10.CprAbbsFacade;
+import dk.nsi.cprabbs._2011._10.CprAbbsRequestType;
+import dk.nsi.cprabbs._2011._10.CprAbbsResponse;
+import dk.nsi.cprabbs._2011._10.DGWSFault;
 import dk.nsi.stamdata.security.DenGodeWebServiceFilter;
 import org.joda.time.DateTime;
 
 import com.sun.xml.ws.developer.SchemaValidation;
 
-import dk.nsi.stamdata.jaxws.generated.CprAbbsFacade;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsResponse;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
 import dk.nsi.stamdata.jaxws.generated.Security;
 import dk.sosi.seal.model.SystemIDCard;
 
-@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.CprAbbsFacade")
+@WebService(endpointInterface="dk.nsi.cprabbs._2011._10.CprAbbsFacade")
 @SchemaValidation
 public class CprAbbsFacadeStubImplementation implements CprAbbsFacade {
 	public static final DateTime SINCE_VALUE_TRIGGERING_CPR_WITH_ALL_ONES = new DateTime(2011, 4, 14, 12, 0, 0);

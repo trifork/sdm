@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="urn:oio:medcom:cprservice:1.0.2"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:oio:medcom:cprservice:1.0.2"
+    elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+    <xs:element name="PublicHealthInsuranceGroupIdentifier"
+        type="medcom:PublicHealthInsuranceGroupIdentifierType">
+        <xs:annotation>
+            <xs:documentation>Sygesikringsgruppenummer</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:simpleType name="PublicHealthInsuranceGroupIdentifierType">
+        <xs:annotation>
+            <xs:documentation>Sygesikringsgruppe, angiver daekning af sundhedsydelser (og
+                andet).</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sygesikringsgruppe_1">
+                <xs:annotation>
+                    <xs:documentation>Gruppe 1 daekning.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_2">
+                <xs:annotation>
+                    <xs:documentation>Gruppe 2 daekning.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_4">
+                <xs:annotation>
+                    <xs:documentation>Er optaget i faengselsvaesnets institutioner efter dom (3 maaneder eller mere).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_5">
+                <xs:annotation>
+                    <xs:documentation>Er vaernepligtig (3 maaneder eller mere).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_6">
+                <xs:annotation>
+                    <xs:documentation>Er institutionsanbragt (112).</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_7">
+                <xs:annotation>
+                    <xs:documentation>Har bopael i udlandet.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_8">
+                <xs:annotation>
+                    <xs:documentation>Har status afgangsfoert - fraflyttet regionen, ihjelslagne, (personer der har haft 2 CPR numre), forsvundne eller omnummererede.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="sygesikringsgruppe_9">
+                <xs:annotation>
+                    <xs:documentation>Er doed.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

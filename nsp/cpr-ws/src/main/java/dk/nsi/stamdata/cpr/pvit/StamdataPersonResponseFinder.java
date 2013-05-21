@@ -32,17 +32,17 @@ import javax.inject.Inject;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import dk.nsi._2011._09._23.stamdatacpr.NamePersonQueryType;
+import dk.nsi._2011._09._23.stamdatacpr.PersonLookupResponseType;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.apache.commons.lang.StringUtils;
 
 import com.google.common.collect.Maps;
 import com.trifork.stamdata.Fetcher;
 import com.trifork.stamdata.persistence.Transactional;
 
-import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import org.apache.log4j.Logger;
 
 

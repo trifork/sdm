@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+	xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/" elementFormDefault="qualified">
+	<element name="PersonCivilRegistrationStatusCode"
+		type="cpr:PersonCivilRegistrationStatusCodeType"/>
+	<simpleType name="PersonCivilRegistrationStatusCodeType">
+		<restriction base="integer">
+			<enumeration value="01"/>
+			<enumeration value="03"/>
+			<enumeration value="05"/>
+			<enumeration value="07"/>
+			<enumeration value="20"/>
+			<enumeration value="30"/>
+			<enumeration value="50"/>
+			<enumeration value="60"/>
+			<enumeration value="70"/>
+			<enumeration value="80"/>
+			<enumeration value="90"/>
+		</restriction>
+	</simpleType>
+</schema>

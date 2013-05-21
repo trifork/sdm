@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns:medcom="urn:oio:medcom:cprservice:1.0.2"
+  elementFormDefault="qualified"
+  targetNamespace="urn:oio:medcom:cprservice:1.0.2" version="1.0"
+  xmlns="http://www.w3.org/2001/XMLSchema">
+
+  
+  <element name="CountyCode" type="medcom:CountyCodeType"/>
+
+  <simpleType name="CountyCodeType">
+    <restriction base="string">
+      <pattern value="[0-9]{4}|99"/>
+    </restriction>
+  </simpleType>
+  
+
+</schema>

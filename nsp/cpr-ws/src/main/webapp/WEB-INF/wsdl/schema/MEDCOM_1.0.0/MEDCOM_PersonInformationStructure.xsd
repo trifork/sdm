@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  xmlns:cprnr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+  xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+    schemaLocation="../OIO/CPR_2006.01.17/Import.xsd"/>
+  <xs:include schemaLocation="MEDCOM_PersonAddressStructure.xsd"/>
+  <xs:include schemaLocation="MEDCOM_PersonHealthCareInformationStructure.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    schemaLocation="../OIO/CPR_2005.03.18/Import.xsd"/>
+  <xs:element name="PersonInformationStructure" type="medcom:PersonInformationStructureType">
+    <xs:annotation>
+      <xs:documentation>Informationer om en Person</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="PersonInformationStructureType">
+    <xs:annotation>
+      <xs:documentation>Informationer i CPR-registret omkring en person.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="CurrentPersonCivilRegistrationIdentifier"
+        type="cprnr:PersonCivilRegistrationIdentifierType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Hvis personen har faaet tildelt et nyt cpr-nr angives det
+            her.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="cpr:RegularCPRPerson">
+        <xs:annotation>
+          <xs:documentation>Informationer vedr. identifikation af personen</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="medcom:PersonAddressStructure">
+        <xs:annotation>
+          <xs:documentation>Personens postadresse</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

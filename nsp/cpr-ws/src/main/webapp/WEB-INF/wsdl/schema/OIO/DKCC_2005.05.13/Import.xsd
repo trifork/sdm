@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+    elementFormDefault="qualified">
+
+    <xs:include
+        schemaLocation="DKCC_PostOfficeBoxIdentifier.xsd"
+    />
+    
+</xs:schema>

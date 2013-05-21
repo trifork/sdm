@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/" elementFormDefault="qualified"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/">
+    <element name="CountryIdentificationCode" type="dkcc:CountryIdentificationCodeType"/>
+    <complexType name="CountryIdentificationCodeType">
+        <annotation>
+            <documentation xml:lang="en-uk">The country code based on the 4 diffent
+                schemes.</documentation>
+            <documentation xml:lang="da-dk">Landeidentifikations kode baseret paa de 4 forskellige
+                formater.</documentation>
+        </annotation>
+        <simpleContent>
+            <extension base="dkcc:_CountryIdentificationCodeType">
+                <attribute name="scheme" type="dkcc:_CountryIdentificationSchemeType" use="required"
+                />
+            </extension>
+        </simpleContent>
+    </complexType>
+    <simpleType name="_CountryIdentificationCodeType">
+        <annotation>
+            <documentation xml:lang="en-uk">This is a support type for
+                CountryIdentificationCodeType. The pattern is a choice of 4 different patterns for
+                different schems. ISO 3166 standard, alpha 2: [a-z,A-Z]{2}. Eksample "DK" for
+                Danmark. ISO 3166 standard, alpha 3: [a-z,A-Z]{3}. Eksample "DKN" for Danmark. UN
+                Statistics Divisions country codes: [0-9]{3}. Eksample "208" for Danmark
+                AuthorityCode from the Central Office of Civil Registration: [0-9]{4}. Eksample
+                "5100" for Danmark.</documentation>
+            <documentation xml:lang="da-dk">Dette er en stoettetype til
+                CountryIdentificationCodeType. Det regulaere udtryk er et valg for de 4 forskellige
+                regulaere udtryk for de forskellige formater. ISO 3166 standard, alpha 2:
+                [a-z,A-Z]{2}. Eksempel "DK" for Danmark. ISO 3166 standard, alpha 3: [a-z,A-Z]{3}.
+                Eksempel "DKN" for Danmark. UN Statistics Divisions country codes: [0-9]{3}.
+                Eksempel "208" for Danmark AuthorityCode from the Central Office of Civil
+                Registration: [0-9]{4}. Eksempel "5100" for Danmark.</documentation>
+        </annotation>
+        <restriction base="string">
+            <pattern value="[a-z,A-Z]{2}|[a-z,A-Z]{3}|[0-9]{3}|[0-9]{4}"/>
+        </restriction>
+    </simpleType>
+    <simpleType name="_CountryIdentificationSchemeType">
+        <annotation>
+            <documentation xml:lang="en-uk">This is a support type for
+                CountryIdentificationCodeType.</documentation>
+            <documentation xml:lang="da-dk">Dette er en stoettetype til
+                CountryIdentificationCodeType.</documentation>
+        </annotation>
+        <restriction base="string">
+            <enumeration value="iso3166-alpha2">
+                <annotation>
+                    <documentation xml:lang="en-uk">This scheme follows the ISO 3166 standard, alpha
+                        2.</documentation>
+                    <documentation xml:lang="da-dk">Dette format foelge ISO 3166 standarden, alpha
+                        2.</documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="iso3166-alpha3">
+                <annotation>
+                    <documentation xml:lang="en-uk">This scheme follows the ISO 3166 standard, alpha
+                        3.</documentation>
+                    <documentation xml:lang="da-dk">Dette format foelge ISO 3166 standarden, alpha
+                        3.</documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="un-numeric3">
+                <annotation>
+                    <documentation xml:lang="en-uk">This scheme follows the UN Statistics Divisions
+                        country codes.</documentation>
+                    <documentation xml:lang="da-dk">Dette format foelger FNs Statistik Kontor
+                        landekoder</documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="imk">
+                <annotation>
+                    <documentation xml:lang="en-uk">This scheme follows the AuthorityCode from the
+                        Central Office of Civil Registration.</documentation>
+                    <documentation xml:lang="da-dk">Dette format foelger MyndighedsKoden fra Det
+                        Centrale Personregister</documentation>
+                </annotation>
+            </enumeration>
+        </restriction>
+    </simpleType>
+</schema>

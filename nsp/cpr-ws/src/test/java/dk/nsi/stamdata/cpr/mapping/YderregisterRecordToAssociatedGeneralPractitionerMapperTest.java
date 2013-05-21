@@ -28,13 +28,12 @@ import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
 
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.AssociatedGeneralPractitionerStructureType;
 import org.junit.Test;
 
 import com.trifork.stamdata.persistence.Record;
 import com.trifork.stamdata.persistence.RecordBuilder;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
-
-import dk.nsi.stamdata.jaxws.generated.AssociatedGeneralPractitionerStructureType;
 
 public class YderregisterRecordToAssociatedGeneralPractitionerMapperTest {
 

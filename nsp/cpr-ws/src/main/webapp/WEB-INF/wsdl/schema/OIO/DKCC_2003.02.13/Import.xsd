@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+    targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+    elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="DKCC_CountryIdentificationCode.xsd"/>
+    <xs:include schemaLocation="DKCC_StreetBuildingIdentifier.xsd"/>
+    <xs:include schemaLocation="DKCC_FloorIdentifier.xsd"/>
+    <xs:include schemaLocation="DKCC_SuiteIdentifier.xsd"/>
+    <xs:include schemaLocation="DKCC_MailDeliverySublocationIdentifier.xsd"/>
+    <xs:include schemaLocation="DKCC_PersonGenderCode.xsd"/>
+    <xs:include schemaLocation="DKCC_PersonGivenName.xsd"/>
+    <xs:include schemaLocation="DKCC_PersonMiddleName.xsd"/>
+    <xs:include schemaLocation="DKCC_PersonSurnameName.xsd"/>
+</xs:schema>
