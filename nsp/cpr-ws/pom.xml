@@ -5,7 +5,7 @@
   <parent>
     <groupId>dk.nsi.stamdata</groupId>
     <artifactId>stamdata-parent</artifactId>
-    <version>3.5.2-SNAPSHOT</version>
+    <version>3.5.2</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -126,7 +126,7 @@
                     <bindingFile>../main/webapp/WEB-INF/wsdl/bindings.xjb.xml</bindingFile>
                 </bindingFiles>
                 <sourceDestDir>${project.build.directory}/generated-sources/jaxws</sourceDestDir>
-                <sei/>
+                <sei />
             </configuration>
             <executions>
                 <execution>
@@ -216,7 +216,7 @@
               <jMeterRemoteLocation>
                   http://apache.mirrors.webname.dk/jmeter/binaries/apache-jmeter-2.8.zip
               </jMeterRemoteLocation>
-                <input/>
+                <input />
             </configuration>
             <executions>
               <!-- CPR WS StamdataPersonLookup -->
