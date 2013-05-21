@@ -1,0 +1,4 @@
+Stamdata 3.5.2 Release Notes
+=============================
+- SDM-20: DetGodeCprOpslag version 1.0.2 implementeret på nyt endpoint.
+- SDM-11: Dokumentation opdateret
