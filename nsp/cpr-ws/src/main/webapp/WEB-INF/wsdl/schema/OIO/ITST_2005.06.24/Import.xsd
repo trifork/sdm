@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+    targetNamespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="ITST_CareOfName.xsd"/>
+    <xs:include schemaLocation="ITST_StandardAddressIdentifier.xsd"/>
+    
+</xs:schema>

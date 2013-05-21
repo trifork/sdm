@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<element name="PersonGenderCode" type="dkcc:PersonGenderCodeType">
+		<annotation>
+			<documentation>Declares the individuals gender by distinguish between male and
+				female.</documentation>
+		</annotation>
+	</element>
+	<simpleType name="PersonGenderCodeType">
+		<restriction base="string">
+			<enumeration value="male"/>
+			<enumeration value="female"/>
+			<enumeration value="unknown"/>
+		</restriction>
+	</simpleType>
+</schema>

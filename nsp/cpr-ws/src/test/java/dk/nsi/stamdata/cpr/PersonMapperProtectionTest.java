@@ -24,168 +24,150 @@
  */
 package dk.nsi.stamdata.cpr;
 
-import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData;
-import static dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities;
+import static dk.nsi.stamdata.cpr.mapping.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData;
+import static dk.nsi.stamdata.cpr.mapping.PersonMapper.ServiceProtectionLevel.CensorProtectedDataForNonAuthorities;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Set;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.nsi.stamdata.security.WhitelistService;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.google.common.collect.Sets;
 import com.trifork.stamdata.persistence.Record;
 
-import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
+import dk.nsi.stamdata.cpr.mapping.PersonMapper.CPRProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
-import dk.nsi.stamdata.jaxws.generated.PersonWithHealthCareInformationStructureType;
 import dk.nsi.stamdata.testing.MockSecureTokenService;
 import dk.sosi.seal.model.AuthenticationLevel;
 import dk.sosi.seal.model.SystemIDCard;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PersonMapperProtectionTest
-{
-	private final boolean FOR_AUTORITY_CLIENT = true;
-	private final boolean FOR_NON_AUTORITY_CLIENT = false;
-	
-	private Person person;
-	
-	private final static String WHITELISTED_CVR = "12345678";
-	private SystemIDCard whitelistedIDCard;
-	
-	private static final String NON_WHITELISTED_CVR = "23456789";
-	private SystemIDCard nonWhitelistedIDCard;
-	
-	private static final String CENSORED = "ADRESSEBESKYTTET";
-	
-	private WhitelistService whitelist;
-	private MunicipalityMapper municipalityMapper;
-	private Record yderRecord;
-	private Record sikredeRecord;
-	
-	@Before
-	public void setUp()
-	{
+public class PersonMapperProtectionTest {
+    private final boolean FOR_AUTORITY_CLIENT = true;
+    private final boolean FOR_NON_AUTORITY_CLIENT = false;
+
+    private Person person;
+
+    private final static String WHITELISTED_CVR = "12345678";
+    private SystemIDCard whitelistedIDCard;
+
+    private static final String NON_WHITELISTED_CVR = "23456789";
+    private SystemIDCard nonWhitelistedIDCard;
+
+    private static final String CENSORED = "ADRESSEBESKYTTET";
+
+    private WhitelistService whitelist;
+    private MunicipalityMapper municipalityMapper;
+    private Record yderRecord;
+    private Record sikredeRecord;
+
+    @Before
+    public void setUp() {
         whitelist = new StubWhitelistService(Collections.singletonList(WHITELISTED_CVR));
-		nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
-		whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
-		
-		municipalityMapper = new MunicipalityMapper();
-		person = Factories.createPerson();
-		yderRecord = Factories.createYderRecord("1234");
-		sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
-	}
-	
-	public PersonMapper mapper(boolean isClientAnAuthority)
-	{
-		return new PersonMapper(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard, municipalityMapper);
-	}
-	
-	@Test
-	public void shouldNotProtectPersonWithNoActiveProtection() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(null);
-		person.setNavnebeskyttelseslettedato(null);
-		
-		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldProtectPersonWithActiveProtectionIfClientIsNotAuthority() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
-		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
-		
-		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldNotProtectPersonWithActiveProtectionIfClientIsAuthority() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
-		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
-		
-		assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldAlwaysProtectPersonWithActiveProtectionIfAuthoritiesHaveNoSpecialRights() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
-		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
-		
-		assertThatPersonIsProtected(mapper(FOR_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
-		assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldNotProtectPersonIfProtectionHasNotStartedYet() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.TOMORROW);
-		person.setNavnebeskyttelseslettedato(Factories.IN_TWO_DAYS);
-		
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldNotProtectPersonIfProtectionHasEnded() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
-		person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
-		
-		assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
-	}
-	
-	@Test
-	public void shouldProtectPersonHealthCareInfoIfProtectionIsActive() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
-		person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
-		
-		assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
-	}
-	
-	@Test
-	public void shouldNotProtectPersonHealthCareInfoIfProtectionIsNotActive() throws DatatypeConfigurationException
-	{
-		person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
-		person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
-		
-		assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
-	}
-	
-	private void assertThatPersonIsNotProtected(PersonInformationStructureType output)
-	{
-		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
-	}
-	
-	private void assertThatPersonIsProtected(PersonInformationStructureType output)
-	{
-		assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(CENSORED));
-	}
-	
-	private void assertThatHealthCareInfoIsProtected(PersonWithHealthCareInformationStructureType output)
-	{
-		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(CENSORED));
-	}
-	
-	private void assertThatHealthCareInfoIsNotProtected(PersonWithHealthCareInformationStructureType output)
-	{
-		assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderRecord.get("PostdistYder")));
-	}
-    
+        nonWhitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(NON_WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
+        whitelistedIDCard = MockSecureTokenService.createSignedSystemIDCard(WHITELISTED_CVR, AuthenticationLevel.VOCES_TRUSTED_SYSTEM);
+
+        municipalityMapper = new MunicipalityMapper();
+        person = Factories.createPerson();
+        yderRecord = Factories.createYderRecord("1234");
+        sikredeRecord = Factories.createSikredeRecordFor(person, yderRecord, "2", new DateTime(Factories.YESTERDAY));
+    }
+
+    public PersonMapper mapper(boolean isClientAnAuthority) {
+        return new PersonMapper(whitelist, isClientAnAuthority ? whitelistedIDCard : nonWhitelistedIDCard, municipalityMapper);
+    }
+
+    @Test
+    public void shouldNotProtectPersonWithNoActiveProtection() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(null);
+        person.setNavnebeskyttelseslettedato(null);
+
+        assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
+        assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldProtectPersonWithActiveProtectionIfClientIsNotAuthority() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+        person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
+
+        assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldNotProtectPersonWithActiveProtectionIfClientIsAuthority() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+        person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
+
+        assertThatPersonIsNotProtected(mapper(FOR_AUTORITY_CLIENT).map(person, CensorProtectedDataForNonAuthorities, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldAlwaysProtectPersonWithActiveProtectionIfAuthoritiesHaveNoSpecialRights() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+        person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
+
+        assertThatPersonIsProtected(mapper(FOR_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+        assertThatPersonIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldNotProtectPersonIfProtectionHasNotStartedYet() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.TOMORROW);
+        person.setNavnebeskyttelseslettedato(Factories.IN_TWO_DAYS);
+
+        assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldNotProtectPersonIfProtectionHasEnded() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
+        person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
+
+        assertThatPersonIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR));
+    }
+
+    @Test
+    public void shouldProtectPersonHealthCareInfoIfProtectionIsActive() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.YESTERDAY);
+        person.setNavnebeskyttelseslettedato(Factories.TOMORROW);
+
+        assertThatHealthCareInfoIsProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
+    }
+
+    @Test
+    public void shouldNotProtectPersonHealthCareInfoIfProtectionIsNotActive() throws DatatypeConfigurationException {
+        person.setNavnebeskyttelsestartdato(Factories.TWO_DAYS_AGO);
+        person.setNavnebeskyttelseslettedato(Factories.YESTERDAY);
+
+        assertThatHealthCareInfoIsNotProtected(mapper(FOR_NON_AUTORITY_CLIENT).map(person, sikredeRecord, yderRecord));
+    }
+
+    private void assertThatPersonIsNotProtected(PersonInformationStructureType output) {
+        assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
+    }
+
+    private void assertThatPersonIsProtected(PersonInformationStructureType output) {
+        assertThat(output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(CENSORED));
+    }
+
+    private void assertThatHealthCareInfoIsProtected(PersonWithHealthCareInformationStructureType output) {
+        assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(CENSORED));
+    }
+
+    private void assertThatHealthCareInfoIsNotProtected(PersonWithHealthCareInformationStructureType output) {
+        assertThat(output.getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getDistrictName(), is(yderRecord.get("PostdistYder")));
+    }
+
 }

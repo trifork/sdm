@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:medcom="urn:oio:medcom:cprservice:1.0.2" targetNamespace="urn:oio:medcom:cprservice:1.0.2"
+    elementFormDefault="qualified">
+
+    <xs:include schemaLocation="MEDCOM_PersonWithHealthCareInformationStructure.xsd"/>
+    <xs:include schemaLocation="MEDCOM_AddressAccess.xsd"/>
+    <xs:include schemaLocation="MEDCOM_AddressComplete.xsd"/>
+    <xs:include schemaLocation="MEDCOM_PersonAddressStructure.xsd"/>
+    <xs:include schemaLocation="MEDCOM_AddressPostal.xsd"/>
+    <xs:include schemaLocation="MEDCOM_PersonInformationStructure.xsd"/>
+    <xs:include schemaLocation="MEDCOM_CountyCode.xsd"/>
+
+</xs:schema>

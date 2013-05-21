@@ -32,6 +32,10 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 import javax.xml.ws.Holder;
 
+import dk.nsi._2011._09._23.stamdatacpr.DGWSFault;
+import dk.nsi._2011._09._23.stamdatacpr.PersonLookupResponseType;
+import dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookupWithSubscription;
+import dk.nsi.cprabbs._2011._10.CprAbbsRequestType;
 import dk.nsi.stamdata.jaxws.generated.*;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import org.apache.log4j.Logger;
@@ -49,7 +53,7 @@ import dk.sosi.seal.model.SystemIDCard;
 import dk.sosi.seal.model.constants.FaultCodeValues;
 
 
-@WebService(endpointInterface="dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription")
+@WebService(endpointInterface="dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookupWithSubscription")
 @GuiceWebservice
 @SchemaValidation
 public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonLookupWithSubscription
@@ -95,14 +99,13 @@ public class StamdataPersonLookupWithSubscriptionImpl implements StamdataPersonL
         catch (SQLException e)
         {
             logger.error(e.getMessage() + " - Throwing DGWSFault", e);
-            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM, DGWSFault.class);
         }
         catch (CprAbbsException e)
         {
             logger.error(e.getMessage() + " - Throwing DGWSFault", e);
-            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM);
+            throw SoapUtils.newDGWSFault(wsseHeader, medcomHeader, FaultMessages.INTERNAL_SERVER_ERROR, FaultCodeValues.PROCESSING_PROBLEM, DGWSFault.class);
         }
-
         return response;
     }
 }

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+	xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2006/01/17/"
+	xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns:cpr-2="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+	elementFormDefault="qualified">
+
+	<import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+		schemaLocation="../ITST_2005.02.22/Import.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+		schemaLocation="../DKCC_2003.02.13/Import.xsd"/>
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/11/24/"
+		schemaLocation="../CPR_2005.11.24/Import.xsd"/>
+
+	<include schemaLocation="Import.xsd"/>
+
+	<element name="RegularCPRPerson" type="cpr:RegularCPRPersonType"/>
+	<complexType name="RegularCPRPersonType">
+		<sequence>
+			<element ref="cpr:SimpleCPRPerson"/>
+			<element ref="itst:PersonNameForAddressingName"/>
+			<element ref="dkcc:PersonGenderCode"/>
+			<element ref="cpr-2:PersonInformationProtectionIndicator"/>
+			<element ref="cpr-2:PersonBirthDateStructure"/>
+			<element ref="cpr:PersonCivilRegistrationStatusStructure"/>
+		</sequence>
+	</complexType>
+</schema>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns:cb-ois="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+  xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/" elementFormDefault="qualified"
+  targetNamespace="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/" version="1.0"
+  xmlns="http://www.w3.org/2001/XMLSchema">
+
+  <import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    schemaLocation="../CPR_2005.03.18/Import.xsd"/>
+  <element name="CountyCode" type="cpr:AuthorityCodeType"/>
+</schema>

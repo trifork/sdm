@@ -29,6 +29,10 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import dk.nsi._2011._09._23.stamdatacpr.PersonLookupResponseType;
+import dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookupWithSubscription;
+import dk.nsi._2011._09._23.stamdatacpr.StamdataPersonLookupWithSubscriptionService;
+import dk.nsi.cprabbs._2011._10.CprAbbsRequestType;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -38,10 +42,6 @@ import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
-import dk.nsi.stamdata.jaxws.generated.CprAbbsRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscription;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupWithSubscriptionService;
 
 /**
  * Performance Test used by JMeter.

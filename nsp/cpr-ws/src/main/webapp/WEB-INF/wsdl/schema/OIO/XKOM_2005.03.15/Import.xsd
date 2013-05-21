@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+    targetNamespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="XKOM_EmailAddressIdentifier.xsd"/>
+    <xs:include schemaLocation="XKOM_AddressAccess.xsd"/>
+    
+</xs:schema>

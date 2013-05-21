@@ -41,6 +41,8 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Holder;
 import javax.xml.ws.soap.SOAPFaultException;
 
+import dk.nsi._2011._09._23.stamdatacpr.*;
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.nsi.stamdata.security.WhitelistService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -55,25 +57,16 @@ import com.trifork.stamdata.Nullable;
 import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.cpr.Factories;
-import dk.nsi.stamdata.cpr.PersonMapper;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
 import dk.nsi.stamdata.guice.GuiceTestRunner;
-import dk.nsi.stamdata.jaxws.generated.CivilRegistrationNumberListPersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.DGWSFault;
 import dk.nsi.stamdata.jaxws.generated.Header;
-import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
 import dk.nsi.stamdata.jaxws.generated.Security;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 
 
 @RunWith(GuiceTestRunner.class)
-public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test
-{
+public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironmentJUnit4Test {
     public static final QName PVIT_SERVICE_QNAME = new QName("http://nsi.dk/2011/09/23/StamdataCpr/", "StamdataPersonLookupService");
 
     private List<Person> persons = Lists.newArrayList();
@@ -87,7 +80,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     private static StamdataPersonLookupService serviceCatalog;
 
     private boolean isClientAuthority = false;
-    
+
     @Inject
     private Session session;
 
@@ -96,11 +89,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         connection.setAutoCommit(false);
         Statement statement = connection.createStatement();
-        statement.executeUpdate("INSERT IGNORE INTO whitelist_config SET component_name='"+ WhitelistService.DEFAULT_SERVICE_NAME +"', cvr='" + WHITELISTED_CVR + "'");
+        statement.executeUpdate("INSERT IGNORE INTO whitelist_config SET component_name='" + WhitelistService.DEFAULT_SERVICE_NAME + "', cvr='" + WHITELISTED_CVR + "'");
         connection.commit();
 
 
@@ -118,8 +110,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test(expected = SOAPFaultException.class)
-    public void requestWithoutAnyQueryTypeGivesSenderSoapFault() throws Exception
-    {
+    public void requestWithoutAnyQueryTypeGivesSenderSoapFault() throws Exception {
         request = new PersonLookupRequestType();
 
         prepareDatabaseAndSendRequest();
@@ -127,8 +118,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test(expected = SOAPFaultException.class)
-    public void requestWithTwoQueryTypeGivesSenderSoapFault() throws Exception
-    {
+    public void requestWithTwoQueryTypeGivesSenderSoapFault() throws Exception {
         request.setCivilRegistrationNumberPersonQuery("2805842569");
 
         NamePersonQueryType namePersonQueryType = new NamePersonQueryType();
@@ -142,12 +132,11 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithACprNumberNotPresentInDatabaseReturnsNothing() throws Exception
-    {
+    public void requestWithACprNumberNotPresentInDatabaseReturnsNothing() throws Exception {
         persons.add(Factories.createPersonWithCPR("2905853347"));
 
         request.setCivilRegistrationNumberPersonQuery("0103952595");
-        
+
         prepareDatabaseAndSendRequest();
 
         assertThat(response.getPersonInformationStructure().size(), is(0));
@@ -155,8 +144,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithACprNumberPresentInDatabase() throws Exception
-    {
+    public void requestWithACprNumberPresentInDatabase() throws Exception {
         Person person = Factories.createPerson();
 
         persons.add(person);
@@ -171,8 +159,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithSeveralCprNumbersNoneOfWhichAreInTheDatabase() throws Exception
-    {
+    public void requestWithSeveralCprNumbersNoneOfWhichAreInTheDatabase() throws Exception {
         persons.add(Factories.createPersonWithCPR("0000000000"));
 
         request.setCivilRegistrationNumberListPersonQuery(new CivilRegistrationNumberListPersonQueryType());
@@ -186,8 +173,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithSeveralCprNumbersOfWhichSomeAreInTheDatabase() throws Exception
-    {
+    public void requestWithSeveralCprNumbersOfWhichSomeAreInTheDatabase() throws Exception {
         String EXISTING_CPR_1 = "0302801961";
         String EXISTING_CPR_2 = "0905852363";
         String NON_EXISTING_CPR = "0405852364";
@@ -207,8 +193,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithBirthDateNotFoundInDatabase() throws Exception
-    {
+    public void requestWithBirthDateNotFoundInDatabase() throws Exception {
         persons.add(Factories.createPersonWithBirthday(TWO_DAYS_AGO));
 
         XMLGregorianCalendar REQUESTED_BIRTHDAY = PersonMapper.newXMLGregorianCalendar(YESTERDAY);
@@ -221,8 +206,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithBirthDateFoundInDatabaseSeveralTimes() throws Exception
-    {
+    public void requestWithBirthDateFoundInDatabaseSeveralTimes() throws Exception {
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_2000));
         persons.add(Factories.createPersonWithBirthday(Factories.YEAR_1999));
@@ -237,8 +221,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithNameNotFoundInDatabase() throws Exception
-    {
+    public void requestWithNameNotFoundInDatabase() throws Exception {
         createPersonWithName("Peter", "Konrad", "Sørensen");
         createPersonWithName("Anders", null, "Thuesen");
 
@@ -254,8 +237,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithNameFoundOnceInDatabase() throws Exception
-    {
+    public void requestWithNameFoundOnceInDatabase() throws Exception {
         createPersonWithName("Peter", "Konrad", "Sørensen");
         createPersonWithName("Thomas", "Greve", "Kristensen");
 
@@ -271,8 +253,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithNameFoundSeveralTimesInDatabase() throws Exception
-    {
+    public void requestWithNameFoundSeveralTimesInDatabase() throws Exception {
         createPersonWithName("Peter", "Konrad", "Sørensen");
         createPersonWithName("Thomas", "Greve", "Kristensen");
         createPersonWithName("Peter", null, "Sørensen");
@@ -289,8 +270,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
-    public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws Exception
-    {
+    public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws Exception {
         Person person = Factories.createPersonWithAddressProtection();
         persons.add(person);
 
@@ -301,13 +281,12 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
         assertThat(givenName, is("ADRESSEBESKYTTET"));
     }
-    
-    
+
+
     @Test
-    public void requestWithWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnRealData() throws Exception
-    {
+    public void requestWithWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnRealData() throws Exception {
         isClientAuthority = true;
-        
+
         Person person = Factories.createPersonWithAddressProtection();
         persons.add(person);
 
@@ -320,8 +299,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     }
 
     @Test
-    public void testThatServiceIsAbleToHandleTwentySuccessiveRequests() throws Exception
-    {
+    public void testThatServiceIsAbleToHandleTwentySuccessiveRequests() throws Exception {
         isClientAuthority = true;
 
         Person person = Factories.createPersonWithAddressProtection();
@@ -330,15 +308,13 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         request.setCivilRegistrationNumberPersonQuery(person.getCpr());
 
         prepareDatabaseAndSendRequest();
-        
-        for(int i = 0; i < 30; i++)
-        {
+
+        for (int i = 0; i < 30; i++) {
             sendRequest();
         }
     }
 
-    private Person createPersonWithName(String givenName, @Nullable String middleName, String surName)
-    {
+    private Person createPersonWithName(String givenName, @Nullable String middleName, String surName) {
         Person person = Factories.createPerson();
         person.setFornavn(givenName);
         person.setMellemnavn(middleName);
@@ -350,12 +326,10 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     }
 
 
-    private void prepareDatabaseAndSendRequest() throws Exception
-    {
+    private void prepareDatabaseAndSendRequest() throws Exception {
         Transaction t = session.beginTransaction();
         session.createQuery("DELETE FROM Person").executeUpdate();
-        for (Person person : persons)
-        {
+        for (Person person : persons) {
             session.persist(person);
         }
         t.commit();
@@ -363,18 +337,15 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
         sendRequest();
     }
 
-    private void sendRequest() throws Exception, DGWSFault {
+    private void sendRequest() throws Exception {
         Holder<Security> securityHeader;
         Holder<Header> medcomHeader;
 
-        if (isClientAuthority)
-        {
+        if (isClientAuthority) {
             SecurityWrapper secutityHeadersNotWhitelisted = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(WHITELISTED_CVR, "foo2", "bar2");
             securityHeader = secutityHeadersNotWhitelisted.getSecurity();
             medcomHeader = secutityHeadersNotWhitelisted.getMedcomHeader();
-        }
-        else
-        {
+        } else {
             SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(NON_WHITELISTED_CVR, "foo", "bar");
             securityHeader = securityHeaders.getSecurity();
             medcomHeader = securityHeaders.getMedcomHeader();

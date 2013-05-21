@@ -25,7 +25,7 @@
 package dk.nsi.stamdata.cpr;
 
 import static dk.nsi.stamdata.cpr.Factories.YESTERDAY;
-import static dk.nsi.stamdata.cpr.PersonMapper.newXMLGregorianCalendar;
+import static dk.nsi.stamdata.cpr.mapping.v100.PersonMapper.newXMLGregorianCalendar;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,22 +35,20 @@ import static org.junit.Assert.assertThat;
 import java.math.BigInteger;
 import java.util.Collections;
 
+import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
+import dk.oio.rep.ebxml.xml.schemas.dkcc._2003._02._13.PersonGenderCodeType;
+import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import dk.nsi.stamdata.cpr.PersonMapper.CPRProtectionLevel;
-import dk.nsi.stamdata.cpr.PersonMapper.ServiceProtectionLevel;
 import dk.nsi.stamdata.cpr.mapping.CivilRegistrationStatusCodes;
 import dk.nsi.stamdata.cpr.mapping.MunicipalityMapper;
 import dk.nsi.stamdata.cpr.models.Person;
-import dk.nsi.stamdata.jaxws.generated.PersonGenderCodeType;
-import dk.nsi.stamdata.jaxws.generated.PersonInformationStructureType;
 import dk.sosi.seal.model.SystemIDCard;
 
 
-public class PersonMapperFieldMappingForUnprotectedPersonTest
-{
+public class PersonMapperFieldMappingForUnprotectedPersonTest {
     private SystemIDCard idCard;
     private Person person;
     private PersonInformationStructureType output;
@@ -60,8 +58,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         person = Factories.createPerson();
 
         doMap();
@@ -69,8 +66,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsUnknownFieldToUkendtString() throws Exception
-    {
+    public void mapsUnknownFieldToUkendtString() throws Exception {
         person.fornavn = null;
 
         doMap();
@@ -81,10 +77,8 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void dontOutputAddressesForTheDeadOrPeopleThatAreInOneOfTheOtherNoAddressCatagories() throws Exception
-    {
-        for (String statusCode : CivilRegistrationStatusCodes.STATUSES_WITH_NO_ADDRESS)
-        {
+    public void dontOutputAddressesForTheDeadOrPeopleThatAreInOneOfTheOtherNoAddressCatagories() throws Exception {
+        for (String statusCode : CivilRegistrationStatusCodes.STATUSES_WITH_NO_ADDRESS) {
             person.setStatus(statusCode);
 
             doMap();
@@ -95,78 +89,67 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsGaeldendeToCprCurrentPersonCivilRegistrationIdentifier() throws Exception
-    {
+    public void mapsGaeldendeToCprCurrentPersonCivilRegistrationIdentifier() throws Exception {
         assertEquals(person.getGaeldendeCPR(), output.getCurrentPersonCivilRegistrationIdentifier());
     }
 
 
     @Test
-    public void mapCivilRegistrationCode() throws Exception
-    {
+    public void mapCivilRegistrationCode() throws Exception {
         assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("01")));
     }
 
 
     @Test
-    public void mapCivilRegistrationCodeStartDate() throws Exception
-    {
+    public void mapCivilRegistrationCodeStartDate() throws Exception {
         assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusStartDate(), is(newXMLGregorianCalendar(YESTERDAY)));
     }
 
 
     @Test
-    public void mapNameForAddressingName() throws Exception
-    {
+    public void mapNameForAddressingName() throws Exception {
         assertThat(output.getRegularCPRPerson().getPersonNameForAddressingName(), is("Peter,Andersen"));
     }
 
 
     @Test
-    public void alwaysUses02ForPersonCivilRegistrationStatusCode()
-    {
+    public void alwaysUses02ForPersonCivilRegistrationStatusCode() {
         assertThat(output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode(), is(new BigInteger("01")));
     }
 
 
     @Test
-    public void mapStreetNameForAddressingName() throws Exception
-    {
+    public void mapStreetNameForAddressingName() throws Exception {
         assertThat(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName(), is("Østergd."));
     }
 
 
     @Test
-    public void mapsFornavnToGivenName() throws Exception
-    {
+    public void mapsFornavnToGivenName() throws Exception {
         assertEquals(person.getFornavn(), output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName());
     }
 
 
     @Test
-    public void mapsMellemnavnToMiddleName() throws Exception
-    {
+    public void mapsMellemnavnToMiddleName() throws Exception {
         assertEquals(person.getMellemnavn(), output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonMiddleName());
     }
 
 
     @Test
-    public void mapsEfternavnToSurname() throws Exception
-    {
+    public void mapsEfternavnToSurname() throws Exception {
         assertEquals(person.getEfternavn(), output.getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonSurnameName());
     }
 
 
     @Test
-    public void mapsCprToPersonCivilRegistrationIdentifier() throws Exception
-    {
+    public void mapsCprToPersonCivilRegistrationIdentifier() throws Exception {
         assertEquals(person.getCpr(), output.getRegularCPRPerson().getSimpleCPRPerson().getPersonCivilRegistrationIdentifier());
     }
 
 
     @Test
-    public void mapsKoenMToGenderCodeMale() throws Exception
-    {
+    public void mapsKoenMToGenderCodeMale() throws Exception {
         person.setKoen("M");
         doMap();
 
@@ -175,8 +158,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsKoenKToGenderCodeFemale() throws Exception
-    {
+    public void mapsKoenKToGenderCodeFemale() throws Exception {
         person.setKoen("K");
         doMap();
 
@@ -185,8 +167,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsKoenEmptystringToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenEmptystringToGenderCodeUnknown() throws Exception {
         person.setKoen("");
         doMap();
 
@@ -195,8 +176,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsKoenSinglespaceToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenSinglespaceToGenderCodeUnknown() throws Exception {
         person.setKoen(" ");
         doMap();
 
@@ -205,8 +185,7 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsKoenSomeSingleletterCodeToGenderCodeUnknown() throws Exception
-    {
+    public void mapsKoenSomeSingleletterCodeToGenderCodeUnknown() throws Exception {
         person.setKoen("X");
         doMap();
 
@@ -215,51 +194,44 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsFoedselsdatoToBirthdate() throws Exception
-    {
+    public void mapsFoedselsdatoToBirthdate() throws Exception {
         assertEquals(person.getFoedselsdato(), output.getRegularCPRPerson().getPersonBirthDateStructure().getBirthDate().toGregorianCalendar().getTime());
     }
 
 
     @Test
-    public void mapsCoNavnToCareOfName() throws Exception
-    {
+    public void mapsCoNavnToCareOfName() throws Exception {
         assertEquals(person.getCoNavn(), output.getPersonAddressStructure().getCareOfName());
     }
 
 
     @Test
-    public void mapsKommuneKodeToMunicipalityCode() throws Exception
-    {
+    public void mapsKommuneKodeToMunicipalityCode() throws Exception {
         assertEquals(person.getKommuneKode(), output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getMunicipalityCode());
     }
 
 
     @Test
-    public void mapsVejkodeToStreetCode() throws Exception
-    {
+    public void mapsVejkodeToStreetCode() throws Exception {
         assertEquals(person.getVejKode(), output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetCode());
     }
 
 
     @Test
-    public void mapsHusnummerAndBygningsnummerToStreetBuildingIdentifierInAddressAccess() throws Exception
-    {
+    public void mapsHusnummerAndBygningsnummerToStreetBuildingIdentifierInAddressAccess() throws Exception {
         assertEquals(person.getHusnummer(), output.getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetBuildingIdentifier());
     }
 
 
     @Test
-    public void mapsHusnummerAndBygningsnummerToStreetBuildingIdentifierInAddressPostal() throws Exception
-    {
+    public void mapsHusnummerAndBygningsnummerToStreetBuildingIdentifierInAddressPostal() throws Exception {
         assertEquals(person.getHusnummer(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
     }
 
 
     @Test
     @Ignore("Is anything mapped to Maildelivery Subdivision identifier? Lokalitet is not, it's mapped to DistrictSubdivisionIdentifier")
-    public void mapsLokalitetToMailDeliverySublocationIdentifier() throws Exception
-    {
+    public void mapsLokalitetToMailDeliverySublocationIdentifier() throws Exception {
 
         // From the xsd's:
         //
@@ -281,108 +253,93 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
 
 
     @Test
-    public void mapsVejnavnToStreetName() throws Exception
-    {
+    public void mapsVejnavnToStreetName() throws Exception {
         assertEquals(person.getVejnavn(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetName());
     }
 
 
     @Test
-    public void mapsVejnavnTilAddresseringToStreetnameForAddressingName() throws Exception
-    {
+    public void mapsVejnavnTilAddresseringToStreetnameForAddressingName() throws Exception {
         assertEquals(person.getVejnavnTilAdressering(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetNameForAddressingName());
     }
 
 
     @Test
-    public void mapsEtageToFloorIdentifier() throws Exception
-    {
+    public void mapsEtageToFloorIdentifier() throws Exception {
         assertEquals(person.getEtage(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getFloorIdentifier());
     }
 
 
     @Test
-    public void mapsSideDoerNummerToSuiteIdentifier() throws Exception
-    {
+    public void mapsSideDoerNummerToSuiteIdentifier() throws Exception {
         assertEquals(person.getSideDoerNummer(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getSuiteIdentifier());
     }
 
 
     @Test
-    public void mapsFoedselsdatoMarkeringToBirthdateUncertaintyIndicator() throws Exception
-    {
+    public void mapsFoedselsdatoMarkeringToBirthdateUncertaintyIndicator() throws Exception {
         assertEquals(person.getFoedselsdatoMarkering(), output.getRegularCPRPerson().getPersonBirthDateStructure().isBirthDateUncertaintyIndicator());
     }
 
 
     @Test
-    public void mapsStatusToPersonCivilRegistrationStatusCode() throws Exception
-    {
+    public void mapsStatusToPersonCivilRegistrationStatusCode() throws Exception {
         assertEquals(new BigInteger(person.getStatus()), output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusCode());
     }
 
 
     @Test
-    public void mapsStatusDatoToPersonCivilRegistrationStatusStartDate() throws Exception
-    {
+    public void mapsStatusDatoToPersonCivilRegistrationStatusStartDate() throws Exception {
         assertEquals(person.getStatusDato(), output.getRegularCPRPerson().getPersonCivilRegistrationStatusStructure().getPersonCivilRegistrationStatusStartDate().toGregorianCalendar().getTime());
     }
 
 
     @Test
-    public void mapsPostnummerToPostCodeIdentifier() throws Exception
-    {
+    public void mapsPostnummerToPostCodeIdentifier() throws Exception {
         assertEquals(person.getPostnummer(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostCodeIdentifier());
     }
 
 
     @Test
-    public void mapsPostdistriktToDistrictName() throws Exception
-    {
+    public void mapsPostdistriktToDistrictName() throws Exception {
         assertEquals(person.getPostdistrikt(), output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getDistrictName());
     }
 
 
     @Test
-    public void omitsNavnebeskyttelsestartdatoToPersonInformationProtectionStartDate() throws Exception
-    {
+    public void omitsNavnebeskyttelsestartdatoToPersonInformationProtectionStartDate() throws Exception {
         assertNull(output.getPersonAddressStructure().getPersonInformationProtectionStartDate());
     }
 
 
     @Test
-    public void usesFalseForPersonInformationProtectionIndicator() throws Exception
-    {
+    public void usesFalseForPersonInformationProtectionIndicator() throws Exception {
         assertFalse(output.getRegularCPRPerson().isPersonInformationProtectionIndicator());
     }
 
 
     @Test
-    public void mapsLokalitetToDistrictSubdivisionIdentifier() throws Exception
-    {
+    public void mapsLokalitetToDistrictSubdivisionIdentifier() throws Exception {
         assertEquals(person.lokalitet, output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getDistrictSubdivisionIdentifier());
     }
 
 
     @Test
-    public void nothingIsMappedToPostOfficeBoxIdentifier() throws Exception
-    {
+    public void nothingIsMappedToPostOfficeBoxIdentifier() throws Exception {
         // Just to document the fact
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getPostOfficeBoxIdentifier());
     }
 
 
     @Test
-    public void nothingIsMappedToCountryIdentificationCode()
-    {
+    public void nothingIsMappedToCountryIdentificationCode() {
         // Just to document the fact
         assertNull(output.getPersonAddressStructure().getAddressComplete().getAddressPostal().getCountryIdentificationCode());
     }
 
 
     @Test
-    public void theMunicipalityIsMappedToTheCorrectCounty() throws Exception
-    {
+    public void theMunicipalityIsMappedToTheCorrectCounty() throws Exception {
         person.kommuneKode = VIBORG;
 
         doMap();
@@ -391,12 +348,11 @@ public class PersonMapperFieldMappingForUnprotectedPersonTest
     }
 
 
-    private void doMap() throws Exception
-    {
+    private void doMap() throws Exception {
 
         MunicipalityMapper municipalityMapper = new MunicipalityMapper();
         PersonMapper personMapper = new PersonMapper(new StubWhitelistService(Collections.<String>emptyList()), idCard, municipalityMapper);
 
-        output = personMapper.map(person, ServiceProtectionLevel.AlwaysCensorProtectedData, CPRProtectionLevel.DoNotCensorCPR);
+        output = personMapper.map(person, dk.nsi.stamdata.cpr.mapping.PersonMapper.ServiceProtectionLevel.AlwaysCensorProtectedData, dk.nsi.stamdata.cpr.mapping.PersonMapper.CPRProtectionLevel.DoNotCensorCPR);
     }
 }

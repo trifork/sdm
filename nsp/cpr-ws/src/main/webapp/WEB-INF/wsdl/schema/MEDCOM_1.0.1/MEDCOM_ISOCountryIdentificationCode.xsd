@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:medcom="urn:oio:medcom:cprservice:1.0.1" targetNamespace="urn:oio:medcom:cprservice:1.0.1"
+    elementFormDefault="qualified">
+    
+    <xs:element name="ISOCountryIdentificationCode" type="medcom:ISOCountryIdentificationCodeType"/>
+    
+    <xs:simpleType name="ISOCountryIdentificationCodeType">
+        <xs:annotation>
+            <xs:documentation>ISO 3166 Alpha 3 country codes</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NCName">
+            <xs:length value="3"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

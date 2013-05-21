@@ -38,12 +38,7 @@ import dk.nsi.stamdata.security.Whitelisted;
 public class SecurityModule extends AbstractModule {
 
     @Override
-    protected void configure()
-    {
+    protected void configure() {
         bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
-
-        WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
-        requestInjection(whitelistInterceptor);
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
     }
 }

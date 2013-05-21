@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+    xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+    xmlns:cb-ois="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+    xmlns:dkcc2005="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+    xmlns:dkcc2005-2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+    xmlns:medcom="urn:oio:medcom:cprservice:1.0.1" targetNamespace="urn:oio:medcom:cprservice:1.0.1"
+    elementFormDefault="qualified">
+    <xs:import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+        schemaLocation="../OIO/CPR_2005.03.18/Import.xsd"/>
+
+    <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+        schemaLocation="../OIO/DKCC_2003.02.13/Import.xsd"/>
+
+    <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+        schemaLocation="../OIO/DKCC_2005.03.15/Import.xsd"/>
+    <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+        schemaLocation="../OIO/DKCC_2005.05.13/Import.xsd"/>
+
+    <xs:import namespace="http://rep.oio.dk/ois.dk/xml/schemas/2006/04/25/"
+        schemaLocation="../OIO/OIS_2006.04.25/Import.xsd"/>
+
+
+    <xs:element name="AddressDenmark" type="medcom:AddressDenmarkType"/>
+
+    <xs:complexType name="AddressDenmarkType">
+        <xs:sequence>
+            <xs:element ref="cb-ois:CountyCode"/>
+            <xs:element ref="cpr:MunicipalityCode"/>
+            <xs:element ref="cpr:StreetCode" minOccurs="0"/>
+            <xs:element ref="dkcc:MailDeliverySublocationIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc2005:StreetName"/>
+            <xs:element ref="cpr:StreetNameForAddressingName" minOccurs="0"/>
+            <xs:element ref="dkcc:StreetBuildingIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc:FloorIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc:SuiteIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc2005:DistrictSubdivisionIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc2005-2:PostOfficeBoxIdentifier" minOccurs="0"/>
+            <xs:element ref="dkcc2005:PostCodeIdentifier"/>
+            <xs:element ref="dkcc2005:DistrictName"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,13 @@
+<schema xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+	elementFormDefault="qualified">
+	<!-- -->
+	<element name="PersonNameForAddressingName" type="itst:PersonNameForAddressingNameType"/>
+	<simpleType name="PersonNameForAddressingNameType">
+		<restriction base="string">
+			<minLength value="1"/>
+			<maxLength value="34"/>
+		</restriction>
+	</simpleType>
+</schema>

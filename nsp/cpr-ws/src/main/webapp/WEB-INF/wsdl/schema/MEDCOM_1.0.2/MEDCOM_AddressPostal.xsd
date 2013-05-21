@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns:medcom="urn:oio:medcom:cprservice:1.0.2" xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2006/01/06/"
+	xmlns:cpr="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+	xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+	xmlns:dkcc2005="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+	xmlns:dkcc2005-2="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="urn:oio:medcom:cprservice:1.0.2"
+	elementFormDefault="qualified">
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/"
+		schemaLocation="../OIO/DKCC_2005.03.15/Import.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2003/02/13/"
+		schemaLocation="../OIO/DKCC_2003.02.13/Import.xsd"/>
+	<import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/05/13/"
+		schemaLocation="../OIO/DKCC_2005.05.13/Import.xsd"/>
+	<import namespace="http://rep.oio.dk/cpr.dk/xml/schemas/core/2005/03/18/"
+		schemaLocation="../OIO/CPR_2005.03.18/Import.xsd"/>
+	<element name="AddressPostal" type="medcom:AddressPostalType"/>
+	<complexType name="AddressPostalType">
+		<sequence>
+			<element ref="dkcc:MailDeliverySublocationIdentifier" minOccurs="0"/>
+			<element ref="dkcc2005:StreetName"/>
+			<element ref="cpr:StreetNameForAddressingName" minOccurs="0"/>
+			<element ref="dkcc:StreetBuildingIdentifier" minOccurs="0"/>
+			<element ref="dkcc:FloorIdentifier" minOccurs="0"/>
+			<element ref="dkcc:SuiteIdentifier" minOccurs="0"/>
+			<element ref="dkcc2005:DistrictSubdivisionIdentifier" minOccurs="0"/>
+			<element ref="dkcc2005-2:PostOfficeBoxIdentifier" minOccurs="0"/>
+			<element ref="dkcc2005:PostCodeIdentifier"/>
+			<element ref="dkcc2005:DistrictName"/>
+			<element ref="dkcc:CountryIdentificationCode" minOccurs="0"/>
+		</sequence>
+	</complexType>
+</schema>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:medcom="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" xmlns:ebxml="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" xmlns:itst="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" xmlns:xkom="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" xmlns:dkcc="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rep.oio.dk/medcom.sundcom.dk/xml/schemas/2007/02/01/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <xs:include schemaLocation="MEDCOM_AssociatedGeneralPractitionerIdentifier.xsd"/>
+  <xs:include schemaLocation="MEDCOM_AssociatedGeneralPractitionerOrganisationName.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/06/24/" schemaLocation="../OIO/ITST_2005.06.24/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/03/15/" schemaLocation="../OIO/DKCC_2005.03.15/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/ebxml/xml/schemas/dkcc/2005/09/01/" schemaLocation="../OIO/DKCC_2005.09.01/Import.xsd"/>
+  <xs:import namespace="http://rep.oio.dk/xkom.dk/xml/schemas/2005/03/15/" schemaLocation="../OIO/XKOM_2005.03.15/Import.xsd"/>
+  <xs:element name="AssociatedGeneralPractitionerStructure" type="medcom:AssociatedGeneralPractitionerStructureType">
+    <xs:annotation>
+      <xs:documentation>Tildelt praktiserende laege.</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AssociatedGeneralPractitionerStructureType">
+    <xs:annotation>
+      <xs:documentation>Informationer om den praktiserende laege der er tildelt en person.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element ref="medcom:AssociatedGeneralPractitionerIdentifier">
+        <xs:annotation>
+          <xs:documentation>Ydernummeret paa den praktiserende laege</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="medcom:AssociatedGeneralPractitionerOrganisationName">
+        <xs:annotation>
+          <xs:documentation>Navn paa laegepraksis eller den praktiserende laege.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="itst:StandardAddressIdentifier">
+        <xs:annotation>
+          <xs:documentation>Postadresse paa laegepraksis</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="ebxml:PostCodeIdentifier">
+        <xs:annotation>
+          <xs:documentation>Postnummeret paa laegepraksis</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="ebxml:DistrictName">
+        <xs:annotation>
+          <xs:documentation>Bynavn for laegepraksis</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="dkcc:TelephoneSubscriberIdentifier" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Telefonnummer paa laege/praksis.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element ref="xkom:EmailAddressIdentifier" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Email-adresse paa laege/praksis.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

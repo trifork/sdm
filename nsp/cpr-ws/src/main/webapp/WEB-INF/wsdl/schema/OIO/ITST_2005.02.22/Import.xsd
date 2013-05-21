@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+    targetNamespace="http://rep.oio.dk/itst.dk/xml/schemas/2005/02/22/"
+    elementFormDefault="qualified">
+    
+    <xs:include schemaLocation="ITST_PersonNameForAddressingName.xsd"></xs:include>
+    
+</xs:schema>

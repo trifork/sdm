@@ -29,6 +29,7 @@ import java.net.URL;
 
 import javax.xml.namespace.QName;
 
+import dk.nsi._2011._09._23.stamdatacpr.*;
 import org.apache.jmeter.config.Arguments;
 import org.apache.jmeter.protocol.java.sampler.AbstractJavaSamplerClient;
 import org.apache.jmeter.protocol.java.sampler.JavaSamplerContext;
@@ -38,11 +39,6 @@ import com.trifork.stamdata.jaxws.SealNamespaceResolver;
 
 import dk.nsi.stamdata.dgws.DGWSHeaderUtil;
 import dk.nsi.stamdata.dgws.SecurityWrapper;
-import dk.nsi.stamdata.jaxws.generated.NamePersonQueryType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupRequestType;
-import dk.nsi.stamdata.jaxws.generated.PersonLookupResponseType;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookup;
-import dk.nsi.stamdata.jaxws.generated.StamdataPersonLookupService;
 
 
 /**
