@@ -113,7 +113,7 @@ public class PersonMapper extends dk.nsi.stamdata.cpr.mapping.PersonMapper {
 
             personAddress.setCareOfName(actualOrNull(person.coNavn));
             addressAccess.setStreetCode(StringUtils.leftPad(person.vejKode, AUTHORITY_CODE_LENGTH, "0"));
-            addressAccess.setStreetBuildingIdentifier(person.husnummer);
+            addressAccess.setStreetBuildingIdentifier(actualOrNull(person.husnummer));
 
             AddressPostalType addressPostal = new AddressPostalType();
             addressComplete.setAddressPostal(addressPostal);

@@ -84,7 +84,11 @@ public class Factories
     }
 
 
-    public static Person createPerson()
+    public static Person createPerson() {
+        return createPerson(true);
+    }
+
+    public static Person createPerson(boolean hasHouseNo)
     {
         Person person = new Person();
 
@@ -106,9 +110,14 @@ public class Factories
 
         person.setKommuneKode("0461");
         person.setVejKode("0234");
-        person.setHusnummer("10");
+        if (hasHouseNo) {
+            person.setHusnummer("10");
+        } else {
+            person.setHusnummer("");
+        }
         person.setBygningsnummer("A");
         person.setLokalitet("Birkely");
+
         person.setVejnavn("Ørstedgade");
         person.setVejnavnTilAdressering("Østergd.");
         person.setEtage("12");

@@ -53,6 +53,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.util.List;
 
+import static junit.framework.Assert.assertNull;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -108,6 +109,23 @@ public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmen
         sendPersonRequest();
 
         assertThat(response.getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
+    }
+
+    @Test
+    public void requestPersonWithNoStreetbuildingIdentifier() throws Exception {
+        Person person = Factories.createPerson(false);
+        Record yder = Factories.createYderRecord("1234");
+        Record sikredeRecord1 = Factories.createSikredeRecordFor(person, yder, "9", new DateTime(2011, 10, 10, 0, 0));
+        persons.add(person);
+        yderRecords.add(yder);
+        sikredeRecords.add(sikredeRecord1);
+
+        healthCareRequest.setPersonCivilRegistrationIdentifier(person.getCpr());
+        sendHealthCareRequest();
+
+        assertNull(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonInformationStructure().getPersonAddressStructure().getAddressComplete().getAddressAccess().getStreetBuildingIdentifier());
+        assertNull(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonInformationStructure().getPersonAddressStructure().getAddressComplete().getAddressPostal().getStreetBuildingIdentifier());
+        assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonInformationStructure().getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName(), is(person.getFornavn()));
     }
 
     @Test
