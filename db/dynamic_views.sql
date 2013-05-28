@@ -245,7 +245,7 @@ INSERT IGNORE INTO SKRSViewMapping (register, datatype, version, tableName, crea
 SET @lastDosUni := (SELECT idSKRSViewMapping FROM SKRSViewMapping WHERE register='doseringsforslag' AND datatype='dosageunit' AND version=1);
 INSERT IGNORE INTO SKRSColumns (viewMap, isPID, tableColumnName, feedColumnName, feedPosition, dataType, maxLength) VALUES
 (@lastDosUni, 1, 'DosageUnitPID',            NULL, 0, -5, NULL),
-(@lastDosUni, 0, 'code',                   'code', 2, -5, NULL),
+(@lastDosUni, 0, 'code',                   'code', 2, 4, NULL),
 (@lastDosUni, 0, 'releaseNumber', 'releaseNumber', 1, -5, NULL),
 (@lastDosUni, 0, 'textSingular',   'textSingular', 3, 12, NULL),
 (@lastDosUni, 0, 'textPlural',       'textPlural', 4, 12, NULL),
