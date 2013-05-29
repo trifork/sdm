@@ -140,11 +140,15 @@ public class DenGodeWebServiceFilter implements Filter {
 			// or invalid in some other way.
 
 			IDCard idCard = factory.deserializeRequest(xml).getIDCard();
+            boolean validInTime = idCard.isValidInTime();
 			
 			// We have to make sure ourselves that the ID Cards NIST level etc. is as expected.
-			if (dgwsLevels.contains(idCard.getAuthenticationLevel().getLevel())) {
+			if (dgwsLevels.contains(idCard.getAuthenticationLevel().getLevel()) && validInTime) {
 			    request.setAttribute(IDCARD_REQUEST_ATTRIBUTE_KEY, idCard);
 	            chain.doFilter(httpRequest, response);
+            } else if (!validInTime) {
+                Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.EXPIRED_IDCARD, "IDCard expired.");
+                writeFaultToResponse(httpResponse, reply);
 			} else {
 			    Reply reply = factory.createNewErrorReply(DGWSConstants.VERSION_1_0_1, "0", "0", FaultCodeValues.SECURITY_LEVEL_FAILED, "Invalid security level.");
 	            writeFaultToResponse(httpResponse, reply);

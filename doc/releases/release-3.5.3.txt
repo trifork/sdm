@@ -1,0 +1,3 @@
+Stamdata 3.5.3 Release Notes
+=============================
+- SDM-40: Alle services checker ikke ID-kort udløb
