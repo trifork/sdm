@@ -36,6 +36,7 @@ import dk.nsi.stamdata.cpr.mapping.v102.PersonMapper;
 import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagCommon;
 import dk.nsi.stamdata.cpr.models.Person;
 import dk.nsi.stamdata.jaxws.generated.*;
+import dk.nsi.stamdata.security.Whitelisted;
 import dk.sdsd.nsp.slalog.api.SLALogItem;
 import dk.sosi.seal.model.SystemIDCard;
 import oio.medcom.cprservice._1_0.*;
@@ -77,6 +78,7 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
     }
 
     @Override
+    @Whitelisted
     @Transactional
     public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(
             @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
@@ -129,6 +131,8 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
     }
 
     @Override
+    @Whitelisted
+    @Transactional
     public GetPersonInformationOut getPersonInformation(
             @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, header = true, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
             @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, header = true, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,

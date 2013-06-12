@@ -34,6 +34,7 @@ import javax.xml.ws.Holder;
 
 import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
 import dk.nsi.stamdata.cpr.medcom.DetGodeCPROpslagCommon;
+import dk.nsi.stamdata.security.Whitelisted;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonInformationStructureType;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PersonWithHealthCareInformationStructureType;
 import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.*;
@@ -87,7 +88,8 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
 	}
 
 	@Override
-	@Transactional
+    @Whitelisted
+    @Transactional
 	public GetPersonInformationOut getPersonInformation(
             @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
             @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,
@@ -119,7 +121,8 @@ public class DetGodeCPROpslagImpl extends DetGodeCPROpslagCommon implements DetG
 
 
 	@Override
-	@Transactional
+    @Whitelisted
+    @Transactional
 	public GetPersonWithHealthCareInformationOut getPersonWithHealthCareInformation(
             @WebParam(name = "Security", targetNamespace = NS_WS_SECURITY, mode = WebParam.Mode.INOUT, partName = "wsseHeader") Holder<Security> wsseHeader,
             @WebParam(name = "Header", targetNamespace = NS_DGWS_1_0, mode = WebParam.Mode.INOUT, partName = "medcomHeader") Holder<Header> medcomHeader,

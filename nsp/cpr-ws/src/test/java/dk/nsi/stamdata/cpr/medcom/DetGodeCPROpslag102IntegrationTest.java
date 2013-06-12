@@ -48,6 +48,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.soap.SOAPFaultException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
@@ -83,7 +84,9 @@ public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmen
     private List<Record> sikredeRecords = Lists.newArrayList();
 
     @Before
-    public void setUp() throws MalformedURLException {
+    public void setUp() throws Exception {
+        WhitelistHelper.whitelistCvr(session, RANDOM_CVR);
+
         URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag-1.0.2?wsdl");
         DetGodeCPROpslagService serviceCatalog =
                 new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_102_SERVICE);
@@ -92,13 +95,26 @@ public class DetGodeCPROpslag102IntegrationTest extends AbstractWebAppEnvironmen
     }
 
     private void sendPersonRequest() throws Exception {
+        sendPersonRequest(RANDOM_CVR);
+    }
+
+    private void sendPersonRequest(String cvr) throws Exception {
         Transaction t = session.beginTransaction();
         session.createQuery("DELETE FROM Person").executeUpdate();
         for (Person person : persons) session.persist(person);
         t.commit();
 
-        SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(RANDOM_CVR, "foo", "bar");
+        SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(cvr, "foo", "bar");
         response = client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
+    }
+
+    @Test(expected = SOAPFaultException.class)
+    public void nonWhitelistCvrShouldFail() throws Exception {
+        Person person = Factories.createPerson();
+        persons.add(person);
+        request.setPersonCivilRegistrationIdentifier(person.getCpr());
+        // Send request with a non whitelistet cvr, which should result in an exception
+        sendPersonRequest("12341234");
     }
 
     @Test

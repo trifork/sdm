@@ -43,11 +43,13 @@ import javax.xml.ws.soap.SOAPFaultException;
 
 import dk.nsi._2011._09._23.stamdatacpr.*;
 import dk.nsi.stamdata.cpr.mapping.v100.PersonMapper;
+import dk.nsi.stamdata.cpr.medcom.WhitelistHelper;
 import dk.nsi.stamdata.security.WhitelistService;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hisrc.hifaces20.testing.webappenvironment.testing.junit4.AbstractWebAppEnvironmentJUnit4Test;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -73,8 +75,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
     private PersonLookupRequestType request = new PersonLookupRequestType();
     private PersonLookupResponseType response;
 
-    public static final String WHITELISTED_CVR = "12345678";
-    public static final String NON_WHITELISTED_CVR = "87654321";
+    public static final String NON_WHITELISTED_CVR = "12345678";
+    public static final String WHITELISTED_CVR = "87654321";
 
     private static StamdataPersonLookup client;
     private static StamdataPersonLookupService serviceCatalog;
@@ -90,11 +92,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
     @Before
     public void setUp() throws Exception {
-        connection.setAutoCommit(false);
-        Statement statement = connection.createStatement();
-        statement.executeUpdate("INSERT IGNORE INTO whitelist_config SET component_name='" + WhitelistService.DEFAULT_SERVICE_NAME + "', cvr='" + WHITELISTED_CVR + "'");
-        connection.commit();
-
+        WhitelistHelper.whitelistCvr(session, WHITELISTED_CVR);
 
         URL wsdlLocation = new URL("http://localhost:8100/service/StamdataPersonLookup?wsdl");
         serviceCatalog = new StamdataPersonLookupService(wsdlLocation, PVIT_SERVICE_QNAME);
@@ -270,6 +268,7 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
 
     @Test
+    @Ignore // Hvis alle skal være whitelistet giver denne test / funktionalitet ikke mening
     public void requestWithNonWhitelistedCVRAndAPersonWithActiveProtectionShouldReturnCensoredData() throws Exception {
         Person person = Factories.createPersonWithAddressProtection();
         persons.add(person);
@@ -294,7 +293,8 @@ public class StamdataPersonLookupIntegrationTest extends AbstractWebAppEnvironme
 
         prepareDatabaseAndSendRequest();
 
-        String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
+        String givenName = response.getPersonInformationStructure().get(0).getRegularCPRPerson().
+                getSimpleCPRPerson().getPersonNameStructure().getPersonGivenName();
         assertThat(givenName, is(person.getFornavn()));
     }
 

@@ -28,6 +28,7 @@ import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -44,6 +45,7 @@ import com.google.inject.Provider;
 import com.trifork.stamdata.specs.SikredeRecordSpecs;
 import com.trifork.stamdata.specs.YderregisterRecordSpecs;
 
+import dk.nsi.stamdata.security.WhitelistService;
 import dk.nsi.stamdata.testing.RequestHelper;
 import dk.oio.rep.medcom_sundcom_dk.xml.schemas._2007._02._01.PublicHealthInsuranceGroupIdentifierType;
 import dk.oio.rep.medcom_sundcom_dk.xml.wsdl._2007._06._28.*;
@@ -96,10 +98,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 
     @Before
-    public void setUp() throws MalformedURLException
-    {
-
-        // This client is used to access the web-service.
+    public void setUp() throws Exception {
 
         URL wsdlLocation = new URL("http://localhost:8100/service/DetGodeCPROpslag?wsdl");
         DetGodeCPROpslagService serviceCatalog = new DetGodeCPROpslagService(wsdlLocation, DET_GODE_CPR_OPSLAG_SERVICE);
@@ -110,14 +109,25 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     }
 
     @Before
-    public void setupDatabase() throws SQLException
-    {
+    public void setupDatabase() throws Exception {
         String sqlSchema = RecordMySQLTableGenerator.createSqlSchema(SikredeRecordSpecs.ENTRY_RECORD_SPEC);
         session.beginTransaction();
         Connection connection = session.connection();
         Statement statement = connection.createStatement();
         statement.executeUpdate("DROP TABLE IF EXISTS " + SikredeRecordSpecs.ENTRY_RECORD_SPEC.getTable());
         statement.executeUpdate(sqlSchema);
+        statement.close();
+
+        WhitelistHelper.whitelistCvr(session, RANDOM_CVR);
+    }
+
+    @Test(expected = SOAPFaultException.class)
+    public void nonWhitelistCvrShouldFail() throws Exception {
+        Person person = Factories.createPerson();
+        persons.add(person);
+        request.setPersonCivilRegistrationIdentifier(person.getCpr());
+        // Send request with a non whitelistet cvr, which should result in an exception
+        sendPersonRequest("12341234");
     }
 
 
@@ -151,8 +161,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     }
 
     @Test(expected = SOAPFaultException.class)
-    public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception
-    {
+    public void requestWithoutPersonIdentifierGivesSenderSoapFault() throws Exception {
         request.setPersonCivilRegistrationIdentifier(null);
 
         sendPersonRequest();
@@ -160,8 +169,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 
     @Test(expected = SOAPFaultException.class)
-    public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception
-    {
+    public void requestWithNonExistingPersonIdentifierGivesSenderSoapFault() throws Exception {
         persons.add(Factories.createPersonWithCPR("2905852467"));
 
         request.setPersonCivilRegistrationIdentifier("2905852569");
@@ -171,8 +179,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 
     @Test
-    public void requestForPersonWithActiveProtectionResultsInProtectedData() throws Exception
-    {
+    public void requestForPersonWithActiveProtectionResultsInProtectedData() throws Exception {
         Person person = Factories.createPersonWithAddressProtection();
         persons.add(person);
 
@@ -185,8 +192,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
 
 
     @Test
-    public void requestForExistingPersonGivesPersonInformation() throws Exception
-    {
+    public void requestForExistingPersonGivesPersonInformation() throws Exception {
         Person person = Factories.createPerson();
         persons.add(person);
      
@@ -198,8 +204,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     }
 
     @Test
-    public void requestPersonWithHealthcareInformationButNoPublicHealthInsuranceInformation() throws Exception
-    {
+    public void requestPersonWithHealthcareInformationButNoPublicHealthInsuranceInformation() throws Exception {
         Person person1 = Factories.createPerson();
         persons.add(person1);
         Person person2 = Factories.createPerson();
@@ -229,8 +234,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     }
 
     @Test
-    public void requestPersonWithFullHealthcareInformation() throws Exception
-    {
+    public void requestPersonWithFullHealthcareInformation() throws Exception {
         Person person1 = Factories.createPerson();
         persons.add(person1);
         Person person2 = Factories.createPerson();
@@ -259,8 +263,7 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
     }
     
     @Test
-    public void requestForExistingPersonWhereHealthCareInformationCouldNotBeFoundReturnsMockData() throws Exception
-    {
+    public void requestForExistingPersonWhereHealthCareInformationCouldNotBeFoundReturnsMockData() throws Exception {
         Person person = Factories.createPerson();
         persons.add(person);
         
@@ -272,21 +275,23 @@ public class DetGodeCPROpslagIntegrationTest extends AbstractWebAppEnvironmentJU
         assertThat(healthCareResponse.getPersonWithHealthCareInformationStructure().getPersonHealthCareInformationStructure().getAssociatedGeneralPractitionerStructure().getAssociatedGeneralPractitionerOrganisationName(), is("UKENDT"));
     }
 
-
-    private void sendPersonRequest() throws Exception
-    {
+    private void sendPersonRequest(String cvr) throws Exception {
         Transaction t = session.beginTransaction();
         session.createQuery("DELETE FROM Person").executeUpdate();
         for (Person person : persons) session.persist(person);
         t.commit();
 
-        SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(RANDOM_CVR, "foo", "bar");
+        SecurityWrapper securityHeaders = DGWSHeaderUtil.getVocesTrustedSecurityWrapper(cvr, "foo", "bar");
         response = client.getPersonInformation(securityHeaders.getSecurity(), securityHeaders.getMedcomHeader(), request);
     }
 
 
-    private void sendHealthCareRequest() throws Exception
-    {
+    private void sendPersonRequest() throws Exception {
+        sendPersonRequest(RANDOM_CVR);
+    }
+
+
+    private void sendHealthCareRequest() throws Exception {
         Transaction t = session.beginTransaction();
 
         session.createQuery("DELETE FROM Person").executeUpdate();

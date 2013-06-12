@@ -22,27 +22,21 @@
  * Portions created for the FMKi Project are Copyright 2011,
  * National Board of e-Health (NSI). All Rights Reserved.
  */
-package dk.nsi.stamdata.cpr.security;
+package dk.nsi.stamdata.cpr.medcom;
 
-import com.google.inject.AbstractModule;
-import com.google.inject.matcher.Matchers;
 import dk.nsi.stamdata.security.WhitelistService;
-import dk.nsi.stamdata.security.WhitelistServiceProvider;
-import dk.nsi.stamdata.security.Whitelisted;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
-/**
- * SecuriyModule responsible for providing Whitelist service and interceptor
- *
- * @Author frj
- */
-public class SecurityModule extends AbstractModule {
+public class WhitelistHelper {
 
-    @Override
-    protected void configure() {
-        bind(WhitelistService.class).toProvider(WhitelistServiceProvider.class);
-
-        WhitelistInterceptor whitelistInterceptor = new WhitelistInterceptor();
-        requestInjection(whitelistInterceptor);
-        bindInterceptor(Matchers.any(), Matchers.annotatedWith(Whitelisted.class), whitelistInterceptor);
+    public static void whitelistCvr(Session session, String cvr) throws Exception {
+        session.beginTransaction();
+        session.connection().createStatement().executeUpdate("DELETE FROM whitelist_config WHERE component_name='" +
+                WhitelistService.DEFAULT_SERVICE_NAME + "' AND cvr='" + cvr + "'");
+        session.connection().createStatement().executeUpdate("INSERT INTO whitelist_config SET component_name='" +
+                WhitelistService.DEFAULT_SERVICE_NAME + "', cvr='" + cvr + "'");
+        session.flush();
     }
+
 }
