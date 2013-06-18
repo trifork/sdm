@@ -1,3 +1,9 @@
+FLYTTET
+===============================================
+Dette repository er flyttet til
+https://svn.nspop.dk/svn/trifork/sdm/trunk/
+
+
 Guide til byg, test og codecoverage af Stamdata
 ===============================================
 
