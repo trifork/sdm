@@ -26,7 +26,7 @@
     <jboss6.jaxws.version>2.2</jboss6.jaxws.version>
     <guice.version>3.0</guice.version>
     <hamcrest.version>1.1</hamcrest.version>
-    <junit.version>4.8.2</junit.version>
+    <junit.version>4.13.1</junit.version>
     <mockito.version>1.8.5</mockito.version>
     <netic.provided.mysql.version>5.1.16</netic.provided.mysql.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
