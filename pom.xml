@@ -21,7 +21,7 @@
 	<db.password />
 
     <log4j.version>1.2.14</log4j.version>
-    <jboss6.hibernate.version>3.6.0.Final</jboss6.hibernate.version>
+    <jboss6.hibernate.version>5.4.24.Final</jboss6.hibernate.version>
     <jboss6.xalan.version>2.7.1</jboss6.xalan.version>
     <jboss6.jaxws.version>2.2</jboss6.jaxws.version>
     <guice.version>3.0</guice.version>
